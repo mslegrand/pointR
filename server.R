@@ -77,16 +77,6 @@ shinyServer(function(input, output,session) {
     ex.getPtDefs(values$sourceCode)
   })
 
-  source2PtDefs<-reactive({
-    ptDefs<-NULL
-    if(grepl("ptDefs",values$sourceCode)==TRUE){
-      try({
-        ptDefTxt<-getDef(values$sourceCode, defTag="ptDefs")
-        cat("parse-eval:",ptDefTxt,"\n")
-        eval(parse(text=ptDefTxt))
-      })
-    } 
-  })
   
   getPtArray<-reactive(
     ex.getPts( values$sourceCode, input$ptSet )
@@ -96,8 +86,6 @@ shinyServer(function(input, output,session) {
   
   # set index on change of point vector selection
   observeEvent( input$ptSet, {
-      #ptDefs<-values$ptDefs
-     # source2PtDefs()
     ptDefs<-getPtDefs()
     tmp<-length(ptDefs) 
       
@@ -112,8 +100,6 @@ shinyServer(function(input, output,session) {
   observeEvent( input$removePt, {
     selection<-input$ptSet
     if(selection!=""){
-      #ptDefs<-values$ptDefs
-      #source2PtDefs()
       ptDefs<-getPtDefs()
       tmp<-ptDefs[[selection]]
       indx=selectedPoint$index 
@@ -140,8 +126,6 @@ shinyServer(function(input, output,session) {
   # forword button
   observeEvent(input$forwardPt,{
     selection<-input$ptSet
-    #ptDefs<-values$ptDefs
-    #source2PtDefs()
     ptDefs<-getPtDefs()
     len<-length(ptDefs[[selection ]])/2
     selectedPoint$index<-min(len, selectedPoint$index+1)
@@ -286,8 +270,6 @@ observe({
       
       pt<-eval(parse(text=pt)) #we assume this is an array??
       
-      #ptDefs<-values$ptDefs #copy ptDefs
-      #source2PtDefs()
       ptDefs<-getPtDefs()
       if(cmd=='add'){ #add point
         newPt<-pt
@@ -363,7 +345,6 @@ output$svghtml <- renderUI({
   svgBarCmd<-input$svgNavBar
   if(svgBarCmd=="points"){
     ptName<-input$ptSet
-    #source2PtDefs() #ptDefs<-values$ptDefs
     ptDefs<-getPtDefs()
     selectedPointIndx<-selectedPoint$index
   } else {
@@ -397,7 +378,6 @@ output$svghtml <- renderUI({
     }
     
     showPts<-function(ptName){
-      #source2PtDefs()
       ptDefs<-getPtDefs()
       if(is.null(ptName)){
         return(NULL)
