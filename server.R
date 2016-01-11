@@ -196,59 +196,16 @@ observe({
       lenptDefs<-length(ptDefs)
       tmp<-length(ptDefs) 
       choices<-names(ptDefs)
-#       cat("tmp=",tmp,"\n")
-#       cat("choices=",choices,"\n")
-#       cat("ptDefs[[1]]",ptDefs[[1]],"\n")
-#       cat("selectedPoint$index=",selectedPoint$index,"\n")
       if(tmp<1 || is.null(ptDefs[[1]])){
         selectedPoint$index<-0
       } else {
-#         cat("hi\n")
-#         cat("2selectedPoint$index=",selectedPoint$index,"\n")
         spi<-as.numeric(selectedPoint$index)
-#         cat("hello\n")
-#         tt<-input$ptSet
-#         if(is.null(tt)){cat("tt is NULL")}
-#         cat("input$ptSet=",tt,"\n")
-#         cat("class(spi)=",class(spi),"\n")
-#         cat("spi=",spi,"\n")
         if( spi<1 ){
-#           cat("inside hello\n")
-#           tt<-input$ptSet
-#           if(is.null(tt)){cat("tt is NULL")}
-#           cat("(tt) input$ptSet=",tt,"\n")
           selectedPoint$index<-length(ptDefs[[input$ptSet]])/2
         }
       }
       updateSelectInput(session, "ptSet", label = "Selected Pt Vec Def", choices=choices )
-    })
-    
-#     
-#     
-#     choices<-names(ptDefs)
-#     if(grepl("ptDefs",src)==TRUE){
-#       try(
-#         {
-#         values$sourceCode<-src
-#         ptDefs<-
-#         ptDefTxt<-getDef(src, defTag="ptDefs")
-#         eval(parse(text=ptDefTxt))
-#         choices<-names(ptDefs)
-#         values$ptDefs<-ptDefs
-#         tmp<-length(ptDefs) 
-#         if(tmp<1 || is.null(ptDefs[[1]])){
-#           selectedPoint$index<-0
-#         } else {
-#           if(selectedPoint$index==0){
-#             selectedPoint$index<-length(ptDefs[[input$ptSet]])/2
-#           }
-#         }
-#         #cat("before update\n")
-#         updateSelectInput(session, "ptSet", label = label, choices=choices )
-#         #cat("after update\n") #debug
-#         }
-#       )
-#     } 
+    })   
   })
 
 
@@ -306,7 +263,6 @@ observe({
           src<-tr2src( src, tid, trDefDelta2 )
       }
       if(cmd=='rotate'){ # rotate
-        #cat('cmd=rotate\n')
         tid<-input$mydata[3]
         tmp<-input$mydata[2]
         trDefDelta<-formatC(eval(parse(text=tmp)))
@@ -314,11 +270,7 @@ observe({
         trDefDelta2<-paste0(trDefDelta,collapse=" ")
         src<-tr2src( src, tid, trDefDelta2 )
       }
-      
-      
-      #update point values
-      #values$ptDefs<-ptDefs
-            
+                  
       # update internal source
       values$sourceCode<-src
       #update editor
@@ -392,7 +344,6 @@ output$svghtml <- renderUI({
           id<-paste("pd",ptName,i,sep="-")
           pt<-m[,i]
           color='red'
-          cat("length(pts)=",length(pts)/2,"\n")
           if(i==selectedPointIndx){
             color='green'
           } else{
