@@ -76,7 +76,7 @@ shinyUI(fluidPage(
       style="background-color: #88AAAA; padding-top: 0px", 
       
       br(),br(),
-      h3(textOutput( "editTitle")),
+      h3(textOutput( "fileName")),
       
       aceEditor( outputId = "source", value="sourceCode", mode="r", theme="katzenmilch",
                  height = "600px", fontSize=16, autoComplete="live", 

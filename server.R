@@ -21,9 +21,8 @@ js.scripts<-list(
   translate=readFile("transIO.js"),
   rotate=readFile("rotIO.js")
 )
-#----end external rc------------
 
-getPts<-function(src, selection){
+ex.getPts<-function(src, selection){
   pts<-NULL
   if(grepl("ptDefs",src)==TRUE & !is.null(selection)){
     try({
@@ -35,51 +34,128 @@ getPts<-function(src, selection){
   pts
 }
 
+ex.getPtDefs<-function(src){
+  ptDefs<-NULL
+  if(grepl("ptDefs",src)==TRUE ){
+    try({
+      ptDefTxt<-getDef(src, defTag="ptDefs")
+      eval(parse(text=ptDefTxt))
+    })
+  }
+  ptDefs
+}
+
+
+pts2Source<-function(txt,ptDefs){
+  fPtDefs<-sapply(ptDefs, formatPts)
+  tmp<-paste0("   ",names(fPtDefs),"=",fPtDefs,collapse=",\n")
+  replacement<-paste0("ptDefs<-list(\n",tmp,"\n)")
+  txt<-replaceDef(txt, replacement, defTag="ptDefs") 
+}
+
+#----end external rc------------
 
 #---begin server--------------
+
 shinyServer(function(input, output,session) {
+ 
+# Reactive values----------
   
-  # should these be split up???
   values <- reactiveValues(
-              ptDefs=list(x=c()),
+              #ptDefs=list(x=c()),
               sourceCode=codeTemplate
             ) 
   
   file<-reactiveValues( name="newFile.R")
   panel<-reactiveValues(E.type="ptSet") #can we eliminate this???
+  #  index selection of point array
+  selectedPoint<-reactiveValues(index=0)
   
-  source2Pts<-reactive({
+ 
+# Reactive expressions------------- 
+  getPtDefs<-reactive({
+    ex.getPtDefs(values$sourceCode)
+  })
+
+  source2PtDefs<-reactive({
     ptDefs<-NULL
     if(grepl("ptDefs",values$sourceCode)==TRUE){
       try({
         ptDefTxt<-getDef(values$sourceCode, defTag="ptDefs")
+        cat("parse-eval:",ptDefTxt,"\n")
         eval(parse(text=ptDefTxt))
       })
     } 
   })
   
   getPtArray<-reactive(
-    getPts(values$sourceCode, input$ptSet)
+    ex.getPts( values$sourceCode, input$ptSet )
   )
   
-#  index selection of point array
-  selectedPoint<-reactiveValues(index=0)
+# Event Observers--------------------------------  
   
-  
-
   # set index on change of point vector selection
-  observeEvent( input$ptSet,{
-      ptDefs<-values$ptDefs
-      tmp<-length(ptDefs) 
+  observeEvent( input$ptSet, {
+      #ptDefs<-values$ptDefs
+     # source2PtDefs()
+    ptDefs<-getPtDefs()
+    tmp<-length(ptDefs) 
       
       if(tmp<1 || is.null(ptDefs[[1]])){
         selectedPoint$index<-0
       } else {
-        selectedPoint$index<-length(ptDefs[[input$ptSet]])
+        selectedPoint$index<-length(ptDefs[[input$ptSet]])/2
       }
   })
-
-#---fileNavBar -------
+  
+  #---remove last point  button-----
+  observeEvent( input$removePt, {
+    selection<-input$ptSet
+    if(selection!=""){
+      #ptDefs<-values$ptDefs
+      #source2PtDefs()
+      ptDefs<-getPtDefs()
+      tmp<-ptDefs[[selection]]
+      indx=selectedPoint$index 
+      if(indx>=1){
+        tmp<-tmp[-c(2*indx,2*indx-1)]
+        selectedPoint$index<-selectedPoint$index-1
+      } else {
+        tmp<-NULL
+        selectedPoint$index<-0
+      }
+      
+      ptDefs[[selection]]<-tmp
+      if(length(ptDefs)==0){
+        ptDefs<-list(x=c())
+      }   
+      src<-values$sourceCode
+      src<-pts2Source(src,ptDefs)
+      values$sourceCode<-src
+      #values$ptDefs<-ptDefs
+      updateAceEditor( session,"source", value=src)
+    }
+  })
+  
+  # forword button
+  observeEvent(input$forwardPt,{
+    selection<-input$ptSet
+    #ptDefs<-values$ptDefs
+    #source2PtDefs()
+    ptDefs<-getPtDefs()
+    len<-length(ptDefs[[selection ]])/2
+    selectedPoint$index<-min(len, selectedPoint$index+1)
+  })
+  
+  # back button
+  observeEvent(input$backwardPt,{
+    #decrement selectedPointIndex
+    selectedPoint$index<-max(1,selectedPoint$index-1)
+  })
+  
+#observers --------------------------
+  
+#---fileNavBar ------- (file io)
   observe({
     #input$fileNavBar
     fileBarCmd<-input$fileNavBar
@@ -118,119 +194,80 @@ shinyServer(function(input, output,session) {
     }
   })
 
-#---svgNavBar-------
+#---svgNavBar------- (svg io)
 observe({
   input$svgNavBar
   panel$E.type<-input$svgNavBar
 })
 
-#Title above editor
-  output$editTitle <- renderText({ 
-    fileName<-file$name
-    if(is.null(fileName) ){
-      fileName==""
-    }
-    paste("Editing", fileName)
-  })
 
-#---remove last point  button-----
-observeEvent( input$removePt,{
-    selection<-input$ptSet
-    if(selection!=""){
-      ptDefs<-values$ptDefs
-      tmp<-ptDefs[[selection]]
-      indx=selectedPoint$index 
-      if(indx>=1){
-        tmp<-tmp[-c(2*indx,2*indx-1)]
-        selectedPoint$index<-selectedPoint$index-1
-      } else {
-        tmp<-NULL
-        selectedPoint$index<-0
-      }
-      
-      ptDefs[[selection]]<-tmp
-      if(length(ptDefs)==0){
-        ptDefs<-list(x=c())
-      }   
-      src<-values$sourceCode
-      src<-pts2Source(src,ptDefs)
-      values$sourceCode<-src
-      values$ptDefs<-ptDefs
-      updateAceEditor( session,"source", value=src)
-    }
-})
-
-# forword button
-observeEvent(input$forwardPt,{
-  selection<-input$ptSet
-  ptDefs<-values$ptDefs
-  len<-length(ptDefs[[selection ]])/2
-  selectedPoint$index<-min(len, selectedPoint$index+1)
-})
-
-# back button
-observeEvent(input$backwardPt,{
-  #decrement selectedPointIndex
-    selectedPoint$index<-max(1,selectedPoint$index-1)
-})
-
-
-#---commit  button-----
+#---commit  button----- (update sourceCode with editor contents)
   observe({ 
     input$commit
     #get text from editor
     
-    label<-"Selected Pt Vec Def"
-    isolate(src<-input$source)
-    #choices<-list("Missing ptDef")
-    # if not ptDefs insert?
+    isolate({
+      src<-input$source
+      ptDefs<-getPtDefs()
+      lenptDefs<-length(ptDefs)
+      tmp<-length(ptDefs) 
+      choices<-names(ptDefs)
+#       cat("tmp=",tmp,"\n")
+#       cat("choices=",choices,"\n")
+#       cat("ptDefs[[1]]",ptDefs[[1]],"\n")
+#       cat("selectedPoint$index=",selectedPoint$index,"\n")
+      if(tmp<1 || is.null(ptDefs[[1]])){
+        selectedPoint$index<-0
+      } else {
+#         cat("hi\n")
+#         cat("2selectedPoint$index=",selectedPoint$index,"\n")
+        spi<-as.numeric(selectedPoint$index)
+#         cat("hello\n")
+#         tt<-input$ptSet
+#         if(is.null(tt)){cat("tt is NULL")}
+#         cat("input$ptSet=",tt,"\n")
+#         cat("class(spi)=",class(spi),"\n")
+#         cat("spi=",spi,"\n")
+        if( spi<1 ){
+#           cat("inside hello\n")
+#           tt<-input$ptSet
+#           if(is.null(tt)){cat("tt is NULL")}
+#           cat("(tt) input$ptSet=",tt,"\n")
+          selectedPoint$index<-length(ptDefs[[input$ptSet]])/2
+        }
+      }
+      updateSelectInput(session, "ptSet", label = "Selected Pt Vec Def", choices=choices )
+    })
     
-    if(grepl("ptDefs",src)==TRUE){
-      try(
-        {
-        values$sourceCode<-src
-        #cat("setting sourceCode\n") #debug
-        ptDefTxt<-getDef(src, defTag="ptDefs")
-        #cat("\n",ptDefTxt,"\n")
-        eval(parse(text=ptDefTxt))
-        choices<-names(ptDefs)
-        values$ptDefs<-ptDefs
-        
-        #
-        #ptDefs<-values$ptDefs
-        tmp<-length(ptDefs) 
-#         cat("selectedPoint$index=",selectedPoint$index,"\n")
-#         cat("input$ptSet=",input$ptSet,"\n")
-#         cat("pointdefs=", paste( ptDefs[[input$ptSet]], collapse=", "), "\nß")
-#         cat("length(ptDefs[[input$ptSet]]=",length(ptDefs[[input$ptSet]]),"\n" )
-        if(tmp<1 || is.null(ptDefs[[1]])){
-          selectedPoint$index<-0
-        } else {
-          if(selectedPoint$index==0){
-            selectedPoint$index<-length(ptDefs[[input$ptSet]])/2
-          }
-        }
-        #
-        
-        
-        #cat("before update\n")
-        updateSelectInput(session, "ptSet", label = label, choices=choices )
-        #cat("after update\n") #debug
-        }
-      )
-    } 
+#     
+#     
+#     choices<-names(ptDefs)
+#     if(grepl("ptDefs",src)==TRUE){
+#       try(
+#         {
+#         values$sourceCode<-src
+#         ptDefs<-
+#         ptDefTxt<-getDef(src, defTag="ptDefs")
+#         eval(parse(text=ptDefTxt))
+#         choices<-names(ptDefs)
+#         values$ptDefs<-ptDefs
+#         tmp<-length(ptDefs) 
+#         if(tmp<1 || is.null(ptDefs[[1]])){
+#           selectedPoint$index<-0
+#         } else {
+#           if(selectedPoint$index==0){
+#             selectedPoint$index<-length(ptDefs[[input$ptSet]])/2
+#           }
+#         }
+#         #cat("before update\n")
+#         updateSelectInput(session, "ptSet", label = label, choices=choices )
+#         #cat("after update\n") #debug
+#         }
+#       )
+#     } 
   })
 
 
-pts2Source<-function(txt,ptDefs)
-{
-  # update sourceCode with ptDefs
-  # format points to insert
-  fPtDefs<-sapply(ptDefs, formatPts)
-  tmp<-paste0("   ",names(fPtDefs),"=",fPtDefs,collapse=",\n")
-  replacement<-paste0("ptDefs<-list(\n",tmp,"\n)")
-  txt<-replaceDef(txt, replacement, defTag="ptDefs") 
-}
 
 
 #---mouse click--------
@@ -249,7 +286,9 @@ observe({
       
       pt<-eval(parse(text=pt)) #we assume this is an array??
       
-      ptDefs<-values$ptDefs #copy ptDefs
+      #ptDefs<-values$ptDefs #copy ptDefs
+      #source2PtDefs()
+      ptDefs<-getPtDefs()
       if(cmd=='add'){ #add point
         newPt<-pt
         #get selection
@@ -272,7 +311,7 @@ observe({
         #reassign point
         ptDefs[[selection]][indx:(indx+1)]<-pt
         #update point values
-        values$ptDefs<-ptDefs
+        #values$ptDefs<-ptDefs
         src<-pts2Source(src,ptDefs)
       }
       #transformations
@@ -308,13 +347,24 @@ observe({
   )
 })
 
-
+# Output------------------------------------
+#------fileName-------------
+  output$fileName <- renderText({ 
+    fileName<-file$name
+    if(is.null(fileName) ){
+      fileName==""
+    }
+    paste("Editing", fileName)
+  })
+  
+  
 #----svg window-------------------
 output$svghtml <- renderUI({
   svgBarCmd<-input$svgNavBar
   if(svgBarCmd=="points"){
     ptName<-input$ptSet
-    source2Pts() #ptDefs<-values$ptDefs
+    #source2PtDefs() #ptDefs<-values$ptDefs
+    ptDefs<-getPtDefs()
     selectedPointIndx<-selectedPoint$index
   } else {
     ptName<-NULL
@@ -347,7 +397,8 @@ output$svghtml <- renderUI({
     }
     
     showPts<-function(ptName){
-      source2Pts() 
+      #source2PtDefs()
+      ptDefs<-getPtDefs()
       if(is.null(ptName)){
         return(NULL)
       }
