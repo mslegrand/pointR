@@ -61,8 +61,8 @@ shinyServer(function(input, output,session) {
  
 # Reactive values----------
   
-  values <- reactiveValues(
-              sourceCode=codeTemplate
+  user <- reactiveValues(
+              code=codeTemplate
             ) 
   
   file<-reactiveValues( name="newFile.R")
@@ -73,12 +73,12 @@ shinyServer(function(input, output,session) {
  
 # Reactive expressions------------- 
   getPtDefs<-reactive({
-    ex.getPtDefs(values$sourceCode)
+    ex.getPtDefs(user$code)
   })
 
   
   getPtArray<-reactive(
-    ex.getPts( values$sourceCode, input$ptSet )
+    ex.getPts( user$code, input$ptSet )
   )
   
 # Event Observers--------------------------------  
@@ -114,10 +114,9 @@ shinyServer(function(input, output,session) {
       if(length(ptDefs)==0){
         ptDefs<-list(x=c())
       }   
-      src<-values$sourceCode
+      src<-user$code
       src<-pts2Source(src,ptDefs)
-      values$sourceCode<-src
-      #values$ptDefs<-ptDefs
+      user$code<-src
       updateAceEditor( session,"source", value=src)
     }
   })
@@ -144,7 +143,7 @@ shinyServer(function(input, output,session) {
     fileBarCmd<-input$fileNavBar
     if(fileBarCmd=="newSource"){
       txt<-codeTemplate
-      values$sourceCode<-codeTemplate
+      user$code<-codeTemplate
       # the next  line update the ptDefs; probably should redo with observer
       file$name<-"newSVG.R"
 
@@ -169,7 +168,7 @@ shinyServer(function(input, output,session) {
       try(fileName<-file.choose(new=TRUE), silent=TRUE)
       if(fileName!=""){ 
         file$name<-fileName
-        txt<-values$sourceCode
+        txt<-user$code
         writeLines(txt, fileName)
         updateAceEditor( session,"source", value=txt)
       }
@@ -192,7 +191,7 @@ observe({
     isolate({
       src<-input$source
       if(nchar(src)>0){
-        values$sourceCode<-src
+        user$code<-src
         ptDefs<-getPtDefs()
         lenptDefs<-length(ptDefs)
         tmp<-length(ptDefs) 
@@ -222,7 +221,7 @@ observe({
       #lapply(1:length(svgMsg), function(i){ cat("svgMsg[",i,"]=", svgMsg[i],"\n")})#debug code
       cmd<-input$mydata[1]
       pt<-input$mydata[2]
-      src<-values$sourceCode
+      src<-user$code
       #todo: error check
       
       pt<-eval(parse(text=pt)) #we assume this is an array??
@@ -236,7 +235,6 @@ observe({
         indx<-selectedPoint$index
         ptDefs[[selection]]<-append(ptDefs[[selection]],newPt,2*indx) 
         #update point values
-        values$ptDefs<-ptDefs
         selectedPoint$index<-selectedPoint$index+1
         src<-pts2Source(src,ptDefs)
       } 
@@ -250,7 +248,6 @@ observe({
         #reassign point
         ptDefs[[selection]][indx:(indx+1)]<-pt
         #update point values
-        #values$ptDefs<-ptDefs
         src<-pts2Source(src,ptDefs)
       }
       #transformations
@@ -272,7 +269,7 @@ observe({
       }
                   
       # update internal source
-      values$sourceCode<-src
+      user$code<-src
       #update editor
       isolate( #no dependency on editor
         updateAceEditor( session,"source", value=src)
@@ -304,7 +301,7 @@ output$svghtml <- renderUI({
   }
 
   script2<-js.scripts[[ svgBarCmd ]]
-  src<-values$sourceCode
+  src<-user$code
   src<-usingDraggable(src)
   
   svgX<-function(...){
