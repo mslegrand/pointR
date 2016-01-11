@@ -62,7 +62,6 @@ shinyServer(function(input, output,session) {
 # Reactive values----------
   
   values <- reactiveValues(
-              #ptDefs=list(x=c()),
               sourceCode=codeTemplate
             ) 
   
@@ -192,23 +191,24 @@ observe({
     
     isolate({
       src<-input$source
-      ptDefs<-getPtDefs()
-      lenptDefs<-length(ptDefs)
-      tmp<-length(ptDefs) 
-      choices<-names(ptDefs)
-      if(tmp<1 || is.null(ptDefs[[1]])){
-        selectedPoint$index<-0
-      } else {
-        spi<-as.numeric(selectedPoint$index)
-        if( spi<1 ){
-          selectedPoint$index<-length(ptDefs[[input$ptSet]])/2
+      if(nchar(src)>0){
+        values$sourceCode<-src
+        ptDefs<-getPtDefs()
+        lenptDefs<-length(ptDefs)
+        tmp<-length(ptDefs) 
+        choices<-names(ptDefs)
+        if(tmp<1 || is.null(ptDefs[[1]])){
+          selectedPoint$index<-0
+        } else {
+          spi<-as.numeric(selectedPoint$index)
+          if( spi<1 ){
+            selectedPoint$index<-length(ptDefs[[input$ptSet]])/2
+          }
         }
-      }
-      updateSelectInput(session, "ptSet", label = "Selected Pt Vec Def", choices=choices )
+        updateSelectInput(session, "ptSet", label = "Selected Pt Vec Def", choices=choices )
+        }
     })   
   })
-
-
 
 
 #---mouse click--------
@@ -288,7 +288,7 @@ observe({
     if(is.null(fileName) ){
       fileName==""
     }
-    paste("Editing", fileName)
+    paste("Editing", basename(fileName))
   })
   
   

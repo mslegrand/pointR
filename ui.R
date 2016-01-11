@@ -78,7 +78,7 @@ shinyUI(fluidPage(
       br(),br(),
       h3(textOutput( "fileName")),
       
-      aceEditor( outputId = "source", value="sourceCode", mode="r", theme="katzenmilch",
+      aceEditor( outputId = "source", value="", mode="r", theme="katzenmilch",
                  height = "600px", fontSize=16, autoComplete="live", 
                  autoCompleteList =names(svgR:::eleDefs)),
       
