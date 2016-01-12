@@ -74,32 +74,27 @@ svgR(wh=WH,
      )
 )'
 
-# parent<-function(sdf){
-#   if(is.numeric(sdf)){
-#     sdf<-subset(df, df$id==sdf)
-#   }
-#   subset(df, df$id %in% sdf$parent) 
-# }
 
 siblings<-function(sdf){
   if(is.numeric(sdf)){
-    sdf<-subset(df, df$id==sdf)
+    sdf<-subset(df, id==sdf)
   }
   par<-parent(sdf)
-  subset(df, df$parent %in% par) 
+  subset(df, parent %in% par) 
 }
 
 ancestors<-function(id, df, count=4){ 
   rid<-id
   for(i in 0:count){
     cid<-rid[length(rid)]
-    s<-subset(df, df$id==cid)
+    s<-subset(df, id==cid)
     if(nrow(s)>0){
       rid<-c(rid,s$parent)
     }
   }
   rid
 }
+
 
 rng2txt<-function(lines, ssdf){ 
   l2<-lines[[ssdf$line2]]
@@ -134,19 +129,19 @@ usingDraggable<-function(txt){
   ep<-parse(text=txt)
   df<-getParseData(ep)
    
-  drag<-subset(df, df$text %in% c('"draggable"', "'draggable'"))
-  pDrag<-subset(df, df$id %in% drag$parent) 
+  drag<-subset(df, text %in% c('"draggable"', "'draggable'"))
+  pDrag<-subset(df, id %in% drag$parent) 
   gpDrag<-pDrag$parent
-  tr<-subset(df, df$text=="transform" & df$terminal==TRUE & df$parent %in% gpDrag)
+  tr<-subset(df, text=="transform" & terminal==TRUE & parent %in% gpDrag)
   
-  sibNodes<-subset(df, df$id %in% (tr$id+2))
+  sibNodes<-subset(df, id %in% (tr$id+2))
   if(nrow(sibNodes)==0){
     return(txt)
   }
   lapply(split(sibNodes, 1:nrow(sibNodes)), function(x){
     if(x$text=='matrix'){ #get grandparent
-      px<-subset(df, df$id ==x$parent )
-      x<-subset(df, df$id ==px$parent )
+      px<-subset(df, id ==x$parent )
+      x<-subset(df, id ==px$parent )
     }
     x 
   })->tmp
@@ -209,7 +204,7 @@ tr2src<-function( src, tid, trDefDelta ){
 
 
 getDefPos2<-function(lines, df, defTag){  
-  df.def<-subset(df, df$text==defTag)
+  df.def<-subset(df, text==defTag)
   parent(parent(df.def))[1,]->info
   #print(info)
   #assert info$parent==0 as check
@@ -226,21 +221,6 @@ txt2def<-function(txt, df, defTag="ptDefs"){
 }
 
 
-# formatVal<-function(defTag, defVal ){
-#   switch(defTag)(
-#     ptDefs= if(is.null(pts)){
-#               "c()"
-#             } else{
-#               tmp<-unlist(pts)
-#               tmp<-matrix(tmp,2,)
-#               tmp<-apply(tmp, 2, function(x)paste(x,collapse=","))
-#               tmp<-paste("c(",tmp,")")
-#               tmp<-paste(tmp, collapse=",")
-#               paste0("c(", tmp, ")")
-#             },
-#     trDefs=paste0('"', defVals ,'"')
-#   ) 
-# }
 
 
 def2txt<-function(defVal, txt, df, defTag="ptDefs"){
@@ -253,8 +233,8 @@ def2txt<-function(defVal, txt, df, defTag="ptDefs"){
 
 #testcode
 # 
-#  src<-txt
-# # ep<-parse(text=src)
-# # df<-getParseData(ep)
+#   src<-txt
+# ep<-parse(text=src)
+# df<-getParseData(ep)
 #  src<-usingDraggable(src)
 
