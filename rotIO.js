@@ -175,7 +175,8 @@ function deselectElement(evt) {
     var currentMatrixAsString="c(" + currentMatrix.join(',') + ")";
     
     var cxyStr="c("+cxy.x+","+cxy.y+")"; //to use for display?
-    chosen=["rotate", currentMatrixAsString, tid, cxyStr];
+    //chosen=["rotate", currentMatrixAsString, tid, cxyStr];
+    chosen=["rotate", currentMatrixAsString, tid];
     Shiny.onInputChange("mydata",chosen);
     
     selectedElement.removeAttributeNS(null, "onmousemove");

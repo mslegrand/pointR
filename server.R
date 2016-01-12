@@ -206,6 +206,7 @@ observe({
       src<-user$code
       #todo: error check???
       
+      
       pt<-eval(parse(text=pt)) #we assume this is an array??
       
       ptDefs<-getPtDefs()
@@ -245,7 +246,7 @@ observe({
         tmp<-input$mydata[2]
         trDefDelta<-formatC(eval(parse(text=tmp)))
         trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2,)" )
-        src<-tr2src( src, tid, trDefDelta )
+        src<-tr2src( src, tid, trDefDelta2 )
       }            
       # update internal user source
       user$code<-src
@@ -366,8 +367,8 @@ output$svghtml <- renderUI({
           graphPaper(wh=WH),
           ...,
           newPtLayer(),
-          showPts(ptName),
-          boundingBox()
+          showPts(ptName)#,
+          #boundingBox()
     )  
   }
   
