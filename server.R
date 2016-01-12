@@ -64,7 +64,6 @@ shinyServer(function(input, output,session) {
   user <- reactiveValues( code=codeTemplate )   #  internal copy of user code
   file<-reactiveValues( name="newFile.R")       #  file path
   selectedPoint<-reactiveValues(index=0)        #  index selection of point array
-  #panel<-reactiveValues(E.type="ptSet")         #  can we eliminate this???
  
 # Reactive expressions------------- 
   getPtDefs<-reactive({ ex.getPtDefs(user$code) })  #extract points from user code
@@ -166,12 +165,6 @@ shinyServer(function(input, output,session) {
       updateNavbarPage(session, "fileNavBar", selected ="edit")
     }
   })
-
-#---svgNavBar------- (svg control)
-# observe({
-#   #input$svgNavBar
-#   panel$E.type<-input$svgNavBar
-# })
 
 
 #---commit  button----- (update sourceCode with editor contents)
@@ -382,11 +375,8 @@ output$svghtml <- renderUI({
   src<-gsub("svgR","svgX",src)
   
   svg<-eval(parse(text=src))
-#   paste0( '<div style="width:600px ;height: 580px; border: 1px solid red; overflow: auto;">',
-#     as.character(svg),
-#     '</div>')->svgOut 
   as.character(svg)->svgOut 
-  return(HTML(svgOut))
+  HTML(svgOut)
 })
 
  
