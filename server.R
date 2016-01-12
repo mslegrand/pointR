@@ -48,7 +48,7 @@ ex.getPtDefs<-function(src){
 
 pts2Source<-function(txt,ptDefs){
   fPtDefs<-sapply(ptDefs, formatPts)
-  tmp<-paste0("   ",names(fPtDefs),"=",fPtDefs,collapse=",\n")
+  tmp<-paste0("  ",names(fPtDefs),"=",fPtDefs,collapse=",\n")
   replacement<-paste0("ptDefs<-list(\n",tmp,"\n)")
   txt<-replaceDef(txt, replacement, defTag="ptDefs") 
 }
@@ -61,24 +61,16 @@ shinyServer(function(input, output,session) {
  
 # Reactive values----------
   
-  user <- reactiveValues(
-              code=codeTemplate
-            ) 
-  
-  file<-reactiveValues( name="newFile.R")
-  panel<-reactiveValues(E.type="ptSet") #can we eliminate this???
-  #  index selection of point array
-  selectedPoint<-reactiveValues(index=0)
-  
+  user <- reactiveValues( code=codeTemplate )   #  internal copy of user code
+  file<-reactiveValues( name="newFile.R")       #  file path
+  selectedPoint<-reactiveValues(index=0)        #  index selection of point array
+  #panel<-reactiveValues(E.type="ptSet")         #  can we eliminate this???
  
 # Reactive expressions------------- 
-  getPtDefs<-reactive({
-    ex.getPtDefs(user$code)
-  })
+  getPtDefs<-reactive({ ex.getPtDefs(user$code) })  #extract points from user code
 
-  
   getPtArray<-reactive(
-    ex.getPts( user$code, input$ptSet )
+    ex.getPts( user$code, input$ptSet ) #not used anymore
   )
   
 # Event Observers--------------------------------  
@@ -86,8 +78,7 @@ shinyServer(function(input, output,session) {
   # set index on change of point vector selection
   observeEvent( input$ptSet, {
     ptDefs<-getPtDefs()
-    tmp<-length(ptDefs) 
-      
+    tmp<-length(ptDefs)    
       if(tmp<1 || is.null(ptDefs[[1]])){
         selectedPoint$index<-0
       } else {
@@ -176,11 +167,11 @@ shinyServer(function(input, output,session) {
     }
   })
 
-#---svgNavBar------- (svg io)
-observe({
-  input$svgNavBar
-  panel$E.type<-input$svgNavBar
-})
+#---svgNavBar------- (svg control)
+# observe({
+#   #input$svgNavBar
+#   panel$E.type<-input$svgNavBar
+# })
 
 
 #---commit  button----- (update sourceCode with editor contents)
@@ -217,12 +208,10 @@ observe({
   isolate(
     if(length(input$mydata)>0){
       #get cmd
-      #svgMsg<-input$mydata #debug
-      #lapply(1:length(svgMsg), function(i){ cat("svgMsg[",i,"]=", svgMsg[i],"\n")})#debug code
       cmd<-input$mydata[1]
-      pt<-input$mydata[2]
+      pt<- input$mydata[2]
       src<-user$code
-      #todo: error check
+      #todo: error check???
       
       pt<-eval(parse(text=pt)) #we assume this is an array??
       
@@ -255,20 +244,17 @@ observe({
           tid<-input$mydata[3]
           tmp<-input$mydata[2]
           trDefDelta<-formatC(eval(parse(text=tmp)))
-          trDefDelta2<-paste0("matrix(",paste0(trDefDelta,collapse=" "),")")
-          trDefDelta2<-paste0(trDefDelta,collapse=" ")
+          trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2,)" )
           src<-tr2src( src, tid, trDefDelta2 )
       }
       if(cmd=='rotate'){ # rotate
         tid<-input$mydata[3]
         tmp<-input$mydata[2]
         trDefDelta<-formatC(eval(parse(text=tmp)))
-        trDefDelta2<-paste0("matrix(",paste0(trDefDelta,collapse=" "),")")
-        trDefDelta2<-paste0(trDefDelta,collapse=" ")
-        src<-tr2src( src, tid, trDefDelta2 )
-      }
-                  
-      # update internal source
+        trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2,)" )
+        src<-tr2src( src, tid, trDefDelta )
+      }            
+      # update internal user source
       user$code<-src
       #update editor
       isolate( #no dependency on editor
@@ -299,6 +285,7 @@ output$svghtml <- renderUI({
   } else {
     ptName<-NULL
   }
+  showGrid<-input$showGrid
 
   script2<-js.scripts[[ svgBarCmd ]]
   src<-user$code
@@ -307,6 +294,9 @@ output$svghtml <- renderUI({
   svgX<-function(...){
   
     graphPaper<-function(wh=c(600,600), dxy=c(50, 50), labels=TRUE ){
+      if(showGrid==FALSE){
+        return(NULL)
+      }
       seq(0,wh[1],dxy[1])->xs
       seq(0,wh[2],dxy[2])->ys
       grph<-c(
@@ -392,8 +382,11 @@ output$svghtml <- renderUI({
   src<-gsub("svgR","svgX",src)
   
   svg<-eval(parse(text=src))
+#   paste0( '<div style="width:600px ;height: 580px; border: 1px solid red; overflow: auto;">',
+#     as.character(svg),
+#     '</div>')->svgOut 
   as.character(svg)->svgOut 
-  HTML(svgOut) 
+  return(HTML(svgOut))
 })
 
  

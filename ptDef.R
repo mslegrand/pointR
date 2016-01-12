@@ -46,7 +46,7 @@ formatPts<-function(pts){
     tmp<-apply(tmp, 2, function(x)paste(x,collapse=","))
     tmp<-paste("c(",tmp,")")
     tmp<-paste(tmp, collapse=",")
-    tmp<-paste0("c(", tmp, ")")
+    tmp<-paste0("matrix(c(", tmp, "),2,)")
 }
 
 

@@ -49,7 +49,7 @@ svgR(wh=WH,
      ),
      circle( class="draggable", 
              cxy=c(100,230), r=50, fill="red", opacity=.5,
-             transform="matrix(1 0 0 1 344 -45)"
+             transform=matrix(c(1, 0, 0, 1, 34, -45)2,)
      )
 )
 '
@@ -70,7 +70,7 @@ svgR(wh=WH,
      ),
      circle( class="draggable", 
              cxy=c(100,230), r=50, fill="red", opacity=.5,
-             transform="matrix(1 0 0 1 303 -55)"
+             transform=matrix(c(1, 0, 0, 1, 303, -55),2,)
      )
 )'
 
@@ -89,10 +89,31 @@ siblings<-function(sdf){
   subset(df, df$parent %in% par) 
 }
 
+ancestors<-function(id, df, count=4){ 
+  rid<-id
+  for(i in 0:count){
+    cid<-rid[length(rid)]
+    s<-subset(df, df$id==cid)
+    if(nrow(s)>0){
+      rid<-c(rid,s$parent)
+    }
+  }
+  rid
+}
+
+rng2txt<-function(lines, ssdf){ 
+  l2<-lines[[ssdf$line2]]
+  lines[[ssdf$line2]]<-substr(l2, 1, ssdf$col2)
+  l1<-lines[[ssdf$line1]]
+  lines[[ssdf$line1]]<-substr(l1, ssdf$col1, nchar(l1))
+  lines<-lines[ssdf$line1:ssdf$line2]
+  paste0(lines, collapse="\n")  
+}
+
 insertAt<-function(lines, replacements){
   N<-length(replacements)
   if(N>0){
-    #cat("N=",N,"\n")
+    
     for(i in N:1){
       repl<-replacements[[i]]
       row<-repl$row
@@ -109,65 +130,64 @@ insertAt<-function(lines, replacements){
 }
   
 usingDraggable<-function(txt){
+
   ep<-parse(text=txt)
   df<-getParseData(ep)
+   
+  drag<-subset(df, df$text %in% c('"draggable"', "'draggable'"))
+  pDrag<-subset(df, df$id %in% drag$parent) 
+  gpDrag<-pDrag$parent
+  tr<-subset(df, df$text=="transform" & df$terminal==TRUE & df$parent %in% gpDrag)
   
-  # get dragglable transforms
-  #fn.tr<-function(){
-    #browser()
-    drag<-subset(df, df$text %in% c('"draggable"', "'draggable'"))
-    pDrag<-subset(df, df$id %in% drag$parent) 
-    gpDrag<-pDrag$parent
-    tr<-subset(df, df$text=="transform" & df$terminal==TRUE & df$parent %in% gpDrag)
-  #}
-  
-  #fn.tr()->tr
-  #cat("   nrow(tr)=",nrow(tr),"\n")
-  #get sib nodes (values expressions) for pos of replacements
   sibNodes<-subset(df, df$id %in% (tr$id+2))
-  
+  if(nrow(sibNodes)==0){
+    return(txt)
+  }
+  lapply(split(sibNodes, 1:nrow(sibNodes)), function(x){
+    if(x$text=='matrix'){ #get grandparent
+      px<-subset(df, df$id ==x$parent )
+      x<-subset(df, df$id ==px$parent )
+    }
+    x 
+  })->tmp
   #save sib node table, and original source
+  lapply(tmp, function(x)paste("tid",x$line1,x$col1,x$col2,sep="-"))->tr.id
   
   #form tid from sib node values
-  lapply(split(sibNodes, 1:nrow(sibNodes)), function(x)paste("tid",x$line1,x$col1,x$col2,sep="-"))->tr.id
+  #lapply(split(sibNodes, 1:nrow(sibNodes)), function(x)paste("tid",x$line1,x$col1,x$col2,sep="-"))->tr.id
   names(tr.id)<-tr$id
   
   #get end pos of parent Nodes of tr ( or sib nodes) for insertion of tid and mousedown
   # form list in increasing order of names of sib nodes and endPos of parent Nodes
-  replacements<-lapply(tr$id, function(i){ 
+  insertions<-lapply(tr$id, function(i){ 
     #x<-parent(i) 
     parent.id<-subset(df, id==i)$parent
     x<-subset(df, id==parent.id)
     list(id=i, 
          row=as.numeric(x$line2), 
-         start=as.numeric(x$col2-1), 
-         end=as.numeric(x$col2),
-         replace=paste0(", tid='",tr.id[[as.character(i)]], "', onmousedown='selectElement(evt)'")) 
+         pos=as.numeric(x$col2), 
+         txt=paste0(", tid='",tr.id[[as.character(i)]], "', onmousedown='selectElement(evt)'")) 
   })
   
-  #cat("length(replacements)=",length(replacements),"\n")
+  
   # sub into source to produce sourceX 
   lines<-strsplit(txt,"\n")[[1]]
-  #cat("length(replacements)=",length(replacements),"\n")
- 
-  N<-length(replacements)
+  
+  N<-length(insertions)
   if(N>0){
-    #cat("N=",N,"\n")
+    
     for(i in N:1){
-      repl<-replacements[[i]]
-      row<-repl$row
+      item<-insertions[[i]]
+      row<-item$row
       line<-lines[ row ]
-      start<-repl$start
-      end<-repl$end
-      pre<-substr(line, 1, start)
-      post<-substr(line, end, nchar(line))
-      line<-paste0(pre, repl$replace, post)
+      pos<-item$pos
+      pre<-substr(line, 1, pos-1) #upto but not including pos
+      post<-substr(line,   pos, nchar(line)) #the rest
+      line<-paste0(pre, item$txt, post)
       lines[row]<-line
     }
   }
   src<-paste(lines, collapse="\n")
-  #src<-insertAt(lines, replacements)
-  #cat("src:\n:",src,"\n")
   src
 }
 
@@ -179,18 +199,12 @@ tr2src<-function( src, tid, trDefDelta ){
   as.numeric(coords[3])->start
   as.numeric(coords[4])->end
   lines<-strsplit(src,"\n")[[1]]
-  replacement<-list(
-      list(
-        id=13, 
-        row=as.numeric(as.numeric(coords[2])), 
-        start=as.numeric(as.numeric(coords[3])), 
-        end=as.numeric(as.numeric(coords[4])),
-        replace=paste0("matrix(",paste0(trDefDelta,collapse=" "),")")
-      )
-  )
-  src2<-insertAt(lines, replacement)
-  #cat(src2)
-  src2
+  line<-lines[[row]]
+  pre<-substr(line,1,start-1)
+  post<-substr(line, end+1, nchar(line))
+  line<-paste0(pre, trDefDelta, post)
+  lines[row]<-line
+  paste(lines, collapse="\n")
 }
 
 
@@ -238,7 +252,7 @@ def2txt<-function(defVal, txt, df, defTag="ptDefs"){
 
 
 #testcode
-
+# 
 #  src<-txt
 # # ep<-parse(text=src)
 # # df<-getParseData(ep)

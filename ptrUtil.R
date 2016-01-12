@@ -11,9 +11,10 @@ paste0("#svgR elements: ", element.names, "\n",
 #Defined by mouse: edit with care!
 ptDefs<-list( x=c() )
 
-svgR(wh=WH 
+svgR(wh=WH, 
   #your custom code goes here
-
+  
+  NULL
   
   
  
@@ -40,7 +41,7 @@ svgR(wh=WH,
              transform=\"matrix(1 0 0 1 179 223)\"
      )
 )
-")->codeTemplate
+")->codeTemplate2
 
 
 #---external fns----
@@ -112,10 +113,11 @@ formatPts<-function(pts){
     tmp<-apply(tmp, 2, function(x)paste(x,collapse=","))
     tmp<-paste("c(",tmp,")")
     tmp<-paste(tmp, collapse=",")
-    tmp<-paste0("c(", tmp, ")")
+    tmp<-paste0("matrix(\n    c(", tmp, "),\n  2,)")
     return(tmp)
   }
 }
+
 formatTrs<-function(tr){
   paste0('"',tr,'"')
 
