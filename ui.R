@@ -11,23 +11,6 @@ library(shinyAce)
 source("ptDef.R")
 source("trUtils.R")
 
-#source("modal.R")
-
-fileOpen<-function (inputId, label, multiple = FALSE, accept = NULL, width = NULL) 
-{
-  inputTag <- tags$input(id = inputId, name = inputId, type = "file")
-  if (multiple) 
-    inputTag$attribs$multiple <- "multiple"
-  if (length(accept) > 0) 
-    inputTag$attribs$accept <- paste(accept, collapse = ",")
-  div(class = "form-group shiny-input-container", style = if (!is.null(width)) 
-    paste0("width: ", validateCssUnit(width), ";"), 
-    #label %AND% tags$label(label), 
-    inputTag, 
-    tags$div(id = paste(inputId, "_progress", sep = ""), 
-             class = "progress progress-striped active shiny-file-input-progress", 
-             tags$div(class = "progress-bar")))
-}
 
 shinyUI(fluidPage(
   
@@ -50,7 +33,6 @@ shinyUI(fluidPage(
         line-height: 1.1;
         color: #48ca3b;
       }
-
     "))
   ),
   headerPanel(
