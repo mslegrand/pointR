@@ -11,9 +11,6 @@ var currentMatrix = 0;
 var svg = document.querySelector("svg");
 var pt  = svg.createSVGPoint();
 
-//POINTS
-
-
 //called to create a new point
 function newPoint(evt) {
   pt.x = evt.clientX;
@@ -21,7 +18,6 @@ function newPoint(evt) {
   
   // The cursor point, translated into svg coordinates
   var cursorpt =  pt.matrixTransform(svg.getScreenCTM().inverse());
-  //console.log("(" + cursorpt.x + ", " + cursorpt.y + ")");
   ptTxt="c(" + cursorpt.x + ", " + cursorpt.y + ")";
   chosen=["add", ptTxt];
   Shiny.onInputChange("mydata",chosen);
@@ -58,27 +54,17 @@ function movePoint(evt){
 
 function deselectPoint(evt){
   if(selectedElement != 0){
-    //alert("delsected")
     pt.x = evt.clientX;
     pt.y = evt.clientY;
   
     // The cursor point, translated into svg coordinates
     var cursorpt =  pt.matrixTransform(svg.getScreenCTM().inverse());
-    //console.log("(" + cursorpt.x + ", " + cursorpt.y + ")");
     ptTxt="c(" + cursorpt.x + ", " + cursorpt.y + ")";
     var id = selectedElement.getAttribute("id");
 
-
-    //ptTxt="c(" + cursorpt.x + ", " + cursorpt.y + ")"
     chosen=["move", ptTxt, id];
     Shiny.onInputChange("mydata",chosen);
     
-    //movedTo=[ptTxt];
-    //alert("movedTo=["+movedToId+" "+movedToX])
-    //Shiny.onInputChange("movedTo", movedTo);
-    // selectedPtId= 
-    //var id = selectedElement.getAttribute("id");
-    // Shiny.onInputChange("id",id);
     selectedElement.removeAttributeNS(null, "onmousemove");
     selectedElement.removeAttributeNS(null, "onmouseout");
     selectedElement.removeAttributeNS(null, "onmouseup");

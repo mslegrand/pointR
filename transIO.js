@@ -20,7 +20,6 @@ function selectElement(evt) {
   currentY = evt.clientY;
   origX=evt.clientX;
   origY=evt.clientY;
-  //alert("current point=c(" + currentX + ","+ currentY +")" );
   currentMatrix = selectedElement.getAttributeNS(null, "transform").slice(7,-1).split(' ');
   for(var i=0; i<currentMatrix.length; i++) {
     currentMatrix[i] = parseFloat(currentMatrix[i]);
