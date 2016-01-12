@@ -52,18 +52,11 @@ function deselectElement(evt) {
   if(selectedElement != 0){
     var movedByX = evt.clientX - origX;
     var movedByY = evt.clientY - origY;
-    // alert("deselecting1")
     
     var tid = selectedElement.getAttribute("tid");
-    //alert("tid=" + tid);
-    //currentMatrix = selectedElement.getAttributeNS(null, "transform");
-    //currentMatrix = selectedElement.getAttributeNS(null, "transform").slice(7,-1).split(' ');
-   // alert("currentMatrix="  + currentMatrix);
     
     var currentMatrixAsString="c(" + currentMatrix.join(',') + ")";
-   // alert("currentMatrixAsString=" +currentMatrixAsString);
     chosen=["trans", currentMatrixAsString, tid];
-    //alert("chosen=" + chosen[1] + chosen[2]+ chosen[3]);
     Shiny.onInputChange("mydata",chosen);
     
     selectedElement.removeAttributeNS(null, "onmousemove");
