@@ -40,7 +40,7 @@ ptDefs<-list(
 )
 
 
-svgR(wh=WH, 
+svgR(wh=c(100,200), 
      
      polygon(points=ptDefs$x, fill="blue",opacity=.5),
      rect( class="draggable", opacity=.5,
@@ -61,7 +61,7 @@ ptDefs<-list(
    x=c(c( 123.5,392 ),c( 110.5,180 ),c( 329.5,157 ),c( 357.5,329 ))
 )
 
-svgR(wh=WH, 
+svgR(wh=c(100,200), 
      
      polygon(points=ptDefs$x, fill="blue",opacity=.5),
      rect( class="draggable", opacity=.5,
@@ -233,8 +233,30 @@ def2txt<-function(defVal, txt, df, defTag="ptDefs"){
 
 #testcode
 # 
-#   src<-txt
-# ep<-parse(text=src)
-# df<-getParseData(ep)
+#    src<-txt
+#  ep<-parse(text=src)
+#  df<-getParseData(ep)
 #  src<-usingDraggable(src)
+
+
+extractWH<-function(src){
+  ep<-parse(text=src)
+  df<-getParseData(ep)
+  # 1 find svgR
+  subset(df, text=='svgR' & token=='SYMBOL_FUNCTION_CALL')->svgR.df
+  subset(df, id==svgR.df$parent)$parent->gp.svgR
+  #2 find wh whose parent is the svgR
+  subset(df, text=='wh' & parent==gp.svgR)->WH.df
+  #3 target id <-wh id +2
+  #targ.id<-WH.df$id
+  target.df<-subset(df,id==WH.df$id+2)
+  #4 if target is SYMBOL_fUNCTION_call
+  if(target$token=='SYMBOL_FUNCTION_CALL'){
+    gip.id<-subset(df, id==target$parent)$parent
+    target<-subset(df, id=gip.id)
+  }
+  txt<-rng2txt(target)
+  lines<-strsplit(src,"\n")[[1]]
+  rng2txt(lines, target)  
+}
 
