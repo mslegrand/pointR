@@ -68,9 +68,9 @@ shinyServer(function(input, output,session) {
 # Reactive expressions------------- 
   getPtDefs<-reactive({ ex.getPtDefs(user$code) })  #extract points from user code
 
-  getPtArray<-reactive(
-    ex.getPts( user$code, input$ptSet ) #not used anymore
-  )
+#   getPtArray<-reactive(
+#     ex.getPts( user$code, input$ptSet ) #not used anymore
+#   )
   
 # Event Observers--------------------------------  
   
@@ -173,9 +173,11 @@ shinyServer(function(input, output,session) {
     #get text from editor
     
     isolate({
-      src<-input$source
+      src<-input$source #ace editor
       if(nchar(src)>0){
         user$code<-src
+        # this is all about the ptvec def selection
+        selected<-input$ptSet
         ptDefs<-getPtDefs()
         lenptDefs<-length(ptDefs)
         tmp<-length(ptDefs) 
@@ -188,7 +190,10 @@ shinyServer(function(input, output,session) {
             selectedPoint$index<-length(ptDefs[[input$ptSet]])/2
           }
         }
-        updateSelectInput(session, "ptSet", label = "Selected Pt Vec Def", choices=choices )
+        if(!(selected %in% choices)){
+          selected<-NULL
+        }
+        updateSelectInput(session, "ptSet", label = "Selected Pt Vec Def", choices=choices, selected=selected )
         }
     })   
   })
