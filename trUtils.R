@@ -212,7 +212,7 @@ getDefPos2<-function(lines, df, defTag){
   c(cnt[max(1,info$line1-1)]+info$col1, cnt[max(1,info$line2-1)]+info$col2)
 }
 
-txt2def<-function(txt, df, defTag="ptDefs"){
+txt2def<-function(txt, df, defTag){
   lines<-strsplit(txt,"\n")[[1]]
   pos<-getDefPos2(lines, df, defTag)
   str<-substr(txt, pos[1], pos[2])
@@ -223,7 +223,7 @@ txt2def<-function(txt, df, defTag="ptDefs"){
 
 
 
-def2txt<-function(defVal, txt, df, defTag="ptDefs"){
+def2txt<-function(defVal, txt, df, defTag){
   lines<-strsplit(txt,"\n")[[1]]
   rpl<-paste0(defTag,"=", formatValue(defTag, defVal))
   pos<-getDefPos2(lines, df, defTag)
@@ -260,3 +260,14 @@ extractWH<-function(src){
   rng2txt(lines, target)  
 }
 
+subSVGX<-function(txt){
+  ep<-parse(text=txt)
+  df<-getParseData(ep)
+  svgR.df<-subset(df,text=='svgR' & token=='SYMBOL_FUNCTION_CALL')
+  lines<-strsplit(txt,"\n")[[1]]
+  line<-lines[svgR.df$line1]
+  cmp<-c(substr(line,1,svgR.df$col1-1), "svgX", substr(line,svgR.df$col2+1,nchar(line)) )
+  paste0(cmp,collapse="")->line
+  lines[svgR.df$line1]<-line
+  txt.out<-paste(lines, collapse="\n")
+}
