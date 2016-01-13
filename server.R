@@ -15,6 +15,7 @@ library(stringr)
 source("ptrUtil.R")
 source("trUtils.R")
 
+defTag<-"Pts"
 
 js.scripts<-list(
   points=readFile("www/pointsIO.js"),
@@ -22,24 +23,27 @@ js.scripts<-list(
   rotate=readFile("www/rotIO.js")
 )
 
-ex.getPts<-function(src, selection){
-  pts<-NULL
-  if(grepl("ptDefs",src)==TRUE & !is.null(selection)){
-    try({
-      ptDefTxt<-getDef(src, defTag="ptDefs")
-      eval(parse(text=ptDefTxt))
-      pts<-pts[[selection]]
-    })
-  }
-  pts
-}
+# ex.getPts<-function(src, selection){
+#   pts<-NULL
+#   defTag<-Pts" #ptDefs"
+#   if(grepl(defTag,src)==TRUE & !is.null(selection)){
+#     try({
+#       ptDefTxt<-getDef(src, defTag=defTag)
+#       eval(parse(text=ptDefTxt))
+#       pts<-pts[[selection]]
+#     })
+#   }
+#   pts
+# }
 
 ex.getPtDefs<-function(src){
   ptDefs<-NULL
-  if(grepl("ptDefs",src)==TRUE ){
+  defTag<-"Pts" #ptDefs"
+  if(grepl(defTag,src)==TRUE ){
     try({
-      ptDefTxt<-getDef(src, defTag="ptDefs")
+      ptDefTxt<-getDef(src, defTag=defTag)
       eval(parse(text=ptDefTxt))
+      ptDefs<-get(defTag)
     })
   }
   ptDefs
@@ -49,8 +53,8 @@ ex.getPtDefs<-function(src){
 pts2Source<-function(txt,ptDefs){
   fPtDefs<-sapply(ptDefs, formatPts)
   tmp<-paste0("  ",names(fPtDefs),"=",fPtDefs,collapse=",\n")
-  replacement<-paste0("ptDefs<-list(\n",tmp,"\n)")
-  txt<-replaceDef(txt, replacement, defTag="ptDefs") 
+  replacement<-paste0(defTag,"<-list(\n",tmp,"\n)")
+  txt<-replaceDef(txt, replacement, defTag=defTag) 
 }
 
 
@@ -186,7 +190,6 @@ shinyServer(function(input, output,session) {
       updateNavbarPage(session, "fileNavBar", selected ="edit")
     }
     if(fileBarCmd=="save"){
-      cat("save: fileBarCmd=",fileBarCmd,"\n")
       fileName=""
       try(fileName<-file.choose(new=TRUE), silent=TRUE)
       if(fileName!=""){ 
@@ -398,8 +401,8 @@ output$svghtml <- renderUI({
   }
   
 
-  src<-gsub("svgR","svgX",src)
-  
+  #src<-gsub("svgR\\(","svgX(",src)
+  src<-subSVGX(src)
   svg<-eval(parse(text=src))
   as.character(svg)->svgOut 
   HTML(svgOut)
