@@ -80,7 +80,7 @@ shinyUI(fluidPage(
                   h3('svgR plot', style="color: #4d3a7d; margin-top: 0px;"),
                   checkboxInput("showGrid", "Show Coordinate Grid", value = TRUE, width = "200px")
       ),
-      div( style="width:600px ;height: 560px; border: 1px solid darkblue; overflow: auto;",
+      div( style="width:600px ;height: 560px; border: 1px solid darkblue; overflow: auto; background-color: white;",
            htmlOutput("svghtml")
            )
       ,br(),
