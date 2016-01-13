@@ -17,9 +17,9 @@ source("trUtils.R")
 
 
 js.scripts<-list(
-  points=readFile("pointsIO.js"),
-  translate=readFile("transIO.js"),
-  rotate=readFile("rotIO.js")
+  points=readFile("www/pointsIO.js"),
+  translate=readFile("www/transIO.js"),
+  rotate=readFile("www/rotIO.js")
 )
 
 ex.getPts<-function(src, selection){
