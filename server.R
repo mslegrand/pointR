@@ -53,6 +53,26 @@ pts2Source<-function(txt,ptDefs){
   txt<-replaceDef(txt, replacement, defTag="ptDefs") 
 }
 
+
+ex.getSelectInfo<-function(ptDefs, selected, point.index){
+  choices<-names(ptDefs)
+  #cat("length(choices)=",length(choices),"\n")
+  if(length(choices)==0){
+    rtv<-list(selected=NULL, point.index =0 )  
+    return(rtv)
+  }
+  if(!(selected %in% choices)){
+    rtv<-list(
+      selected=choices[1],
+      point.index=length(ptDefs[[1]])
+    )
+    return(rtv)
+  }
+  point.index=max(point.index, length( ptDefs[[selected]])/2 )
+  rtv<-list(selected=selected, point.index=point.index)
+  return(rtv)  
+}
+
 #----end external rc------------
 
 #---begin server--------------
@@ -72,6 +92,9 @@ shinyServer(function(input, output,session) {
 #     ex.getPts( user$code, input$ptSet ) #not used anymore
 #   )
   
+ 
+
+
 # Event Observers--------------------------------  
   
   # set index on change of point vector selection
@@ -128,32 +151,42 @@ shinyServer(function(input, output,session) {
 #observers --------------------------
   
 #---fileNavBar ------- (file io)
-  observe({
-    #input$fileNavBar
+  observeEvent( input$fileNavBar, { 
     fileBarCmd<-input$fileNavBar
     if(fileBarCmd=="newSource"){
       txt<-codeTemplate
       user$code<-codeTemplate
       # the next  line update the ptDefs; probably should redo with observer
       file$name<-"newSVG.R"
-
+      selectedPoint$index<-0
       isolate(
          updateAceEditor( session,"source", value=txt)
-      )  
-      updateNavbarPage(session, "fileNavBar", selected ="edit")
+      ) 
+      updateSelectInput(session, "ptSet", label = "Selected Pt Vec Def", choices=c("x"), selected=NULL ) 
+      updateNavbarPage(session, "fileNavBar", selected ="edit")  
     }
     if(fileBarCmd=="open"){
       fileName=""
       try(fileName<-file.choose(), silent=TRUE)
       if(fileName!=""){ 
-        txt<-paste(readLines(fileName), collapse = "\n")
+        src<-paste(readLines(fileName), collapse = "\n")
         file$name<-fileName
-        updateAceEditor( session,"source", value=txt)
-        #probably should update accordingly
+        if(nchar(src)>0){
+          user$code<-src 
+          point.index<-selectedPoint$index
+          selected<-input$ptSet
+          ptDefs<-getPtDefs()
+          #cat("names(ptDefs)=",paste(names(ptDefs),collapse=", "),"\n")
+          res<-ex.getSelectInfo(ptDefs, selected, point.index)
+          selectedPoint$index<-res$point.index
+          updateSelectInput(session, "ptSet", label = "Selected Pt Vec Def", choices=names(ptDefs), selected=res$selected ) 
+          updateAceEditor( session,"source", value=src)
+        }
       }
       updateNavbarPage(session, "fileNavBar", selected ="edit")
     }
     if(fileBarCmd=="save"){
+      cat("save: fileBarCmd=",fileBarCmd,"\n")
       fileName=""
       try(fileName<-file.choose(new=TRUE), silent=TRUE)
       if(fileName!=""){ 
@@ -168,34 +201,22 @@ shinyServer(function(input, output,session) {
 
 
 #---commit  button----- (update sourceCode with editor contents)
+# alternatively can use observeEvent( input$commit, { ... })
   observe({ 
     input$commit
     #get text from editor
-    
     isolate({
       src<-input$source #ace editor
       if(nchar(src)>0){
         user$code<-src
-        # this is all about the ptvec def selection
+        point.index<-selectedPoint$index
         selected<-input$ptSet
         ptDefs<-getPtDefs()
-        lenptDefs<-length(ptDefs)
-        tmp<-length(ptDefs) 
-        choices<-names(ptDefs)
-        if(tmp<1 || is.null(ptDefs[[1]])){
-          selectedPoint$index<-0
-        } else {
-          spi<-as.numeric(selectedPoint$index)
-          if( spi<1 ){
-            selectedPoint$index<-length(ptDefs[[input$ptSet]])/2
-          }
-        }
-        if(!(selected %in% choices)){
-          selected<-NULL
-        }
-        updateSelectInput(session, "ptSet", label = "Selected Pt Vec Def", choices=choices, selected=selected )
-        }
-    })   
+        res<-ex.getSelectInfo(ptDefs, selected, point.index)
+        selectedPoint$index<-res$point.index
+        updateSelectInput(session, "ptSet", label = "Selected Pt Vec Def", choices=names(ptDefs), selected=res$selected )  
+      }
+    })
   })
 
 
@@ -211,9 +232,8 @@ observe({
       src<-user$code
       #todo: error check???
       
-      
       pt<-eval(parse(text=pt)) #we assume this is an array??
-      
+ 
       ptDefs<-getPtDefs()
       if(cmd=='add'){ #add point
         newPt<-pt

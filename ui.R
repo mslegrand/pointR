@@ -8,7 +8,6 @@
 library(shiny)
 library(svgR)
 library(shinyAce)
-#source("ptDef.R")
 source("trUtils.R")
 
 
