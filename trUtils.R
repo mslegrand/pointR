@@ -1,4 +1,11 @@
 
+stop.unless<-function(expr, mssg){
+  if(!(expr)){
+    stop(mssg, call.=FALSE)
+    
+  }
+}
+
 # txt<-'
 #   WH<-c(600,620)
 # 
@@ -271,3 +278,54 @@ subSVGX<-function(txt){
   lines[svgR.df$line1]<-line
   txt.out<-paste(lines, collapse="\n")
 }
+
+
+
+subSVGX2<-function(txt, insert.beg, insert.end){
+  ep<-parse(text=txt)
+  df<-getParseData(ep)
+  #svgR.df<-subset(df,text=='svgR' & token=='SYMBOL_FUNCTION_CALL')
+  svgR.df<-df[df$text=="svgR",] #svgr
+  stop.unless(nrow(svgR.df)==1, "Trouble finding the svgR")
+  svgR2.df<-df[df$id==svgR.df$parent,] #
+  stop.unless(nrow(svgR2.df)==1, "Trouble finding the svgR")
+  gpid<-svgR2.df$parent
+  stop.unless(gpid!=0, "Trouble finding the svgR call")
+  
+  df2<-subset(df,parent==gpid)
+  n<-nrow(df2)
+  stop.unless(n>2, "Ill formed svgR call")
+  stop.unless(df2$token[2]=="'('" , "failed to find left paren in call to svgR")  
+  stop.unless(df2$token[n]=="')'" , "failed to find right paren in call to svgR")  
+  l1<-df2$line1[2]; c1<-df2$col1[2] #pos of left paren
+  l2<-df2$line1[n]; c2<-df2$col1[n] #pos of right paren
+  
+  lines<-strsplit(txt,"\n")[[1]]
+  
+  lines.pre<-c(
+    if(l1>1) lines[1:(l1-1)] else NULL, 
+    substr(lines[l1],1,c1)
+  )
+  lines.post<-c(
+    substr(lines[l2],c2,nchar(lines[l2])), 
+    if(l2<length(lines)) lines[(l2+1):length(lines)] else  NULL
+  )
+  if(l1==l2){
+    lines.mid<- substr(lines[l1],(c1+1),c(c2-1))
+  } else {
+    lines.mid<-c(
+      substr(lines[l1],(c1+1),nchar( lines[l1] )), 
+      if(l2>l1+1) lines[(l1+1):(l2-1)] else NULL,
+      substr(lines[l2],1, c2-1)
+    )
+  }
+  
+
+  lines.out<-na.omit(c(lines.pre, insert.beg, lines.mid,  insert.end, lines.post))
+
+  txt.out<-paste(lines.out, collapse="\n")
+
+  txt.out
+}
+
+

@@ -313,96 +313,97 @@ output$svghtml <- renderUI({
   src<-user$code
   src<-usingDraggable(src)
   
-  svgX<-function(...){
   
-    graphPaper<-function(wh=c(600,600), dxy=c(50, 50), labels=TRUE ){
-      if(showGrid==FALSE){
-        return(NULL)
-      }
-      seq(0,wh[1],dxy[1])->xs
-      seq(0,wh[2],dxy[2])->ys
-      grph<-c(
-        lapply(xs, function(x)line(xy1=c(x,0),xy2=c(x,wh[2]))),
-        lapply(ys, function(y)line(xy1=c(0,y),xy2=c(wh[1],y)))
+  graphPaper<-function(wh=c(600,600), dxy=c(50, 50), labels=TRUE ){
+    if(showGrid==FALSE){
+      return(NULL)
+    }
+    seq(0,wh[1],dxy[1])->xs
+    seq(0,wh[2],dxy[2])->ys
+    grph<-c(
+      lapply(xs, function(x)line(xy1=c(x,0),xy2=c(x,wh[2]))),
+      lapply(ys, function(y)line(xy1=c(0,y),xy2=c(wh[1],y)))
+    )
+    if(labels){
+      grph<-c(grph, 
+              lapply(xs, function(x)text(xy=c(x+2,10),x)),
+              lapply(ys, function(y)text(xy=c(2,y),y))
       )
-      if(labels){
-        grph<-c(grph, 
-                lapply(xs, function(x)text(xy=c(x+2,10),x)),
-                lapply(ys, function(y)text(xy=c(2,y),y))
-        )
-      }
-      g( stroke.width=1,
-         font.size=10,
-         stroke="grey",
-         grph
-      )       
     }
-    
-    showPts<-function(ptName){
-      ptDefs<-getPtDefs()
-      if(is.null(ptName)){
-        return(NULL)
-      }
-      pts<- p <- ptDefs[[ptName]]
-      #pts<-getPtArray()
-      if(length(pts)<2){
-        return(NULL)
-      } else{
-        m<-matrix(pts,2,)
-        lapply(1:ncol(m), function(i){
-          id<-paste("pd",ptName,i,sep="-")
-          pt<-m[,i]
-          color='red'
-          if(i==selectedPointIndx){
-            color='green'
-          } else{
-            if(i==length(pts)/2) { #ncol(m)){
-              color='orange'
-            }
-          } 
-          circle(class="draggable", 
-                 id=id,  
-                 cxy=pt, r=8, fill=color, 
-                 transform="matrix(1 0 0 1 0 0)", 
-                 onmousedown="selectPoint(evt)" )
-        })
-      }
-    }
-    newPtLayer<-function(){
-      if(svgBarCmd=="points" ){
-        rect(xy=c(0,0), wh=WH, fill="#ADADFF", stroke='black', opacity=.0, onmousedown="newPoint(evt)")
-      } else {
-        NULL
-      } 
-    }
-    
-    boundingBox<-function(){
-      if(svgBarCmd=="rotate"){
-        rect(id='x-bdd-rect', cxy=WH/2, wh=WH/4, stroke='red',fill='none', opacity=.5)
-      } else {
-        NULL
-      }
-    }
-    
-    svgR( style(".draggable {
-             cursor: move;
-          }"),
-          script( script2  ),      
-          # background
-          use(
-            filter=filter( feFlood(flood.color='white') )
-          ),
-          graphPaper(wh=WH),
-          ...,
-          newPtLayer(),
-          showPts(ptName)#,
-          #boundingBox()
-    )  
+    g( stroke.width=1,
+       font.size=10,
+       stroke="grey",
+       grph
+    )       
   }
+    
+  showPts<-function(ptName){
+    ptDefs<-getPtDefs()
+    if(is.null(ptName)){
+      return(NULL)
+    }
+    pts<- p <- ptDefs[[ptName]]
+    #pts<-getPtArray()
+    if(length(pts)<2){
+      return(NULL)
+    } else{
+      m<-matrix(pts,2,)
+      lapply(1:ncol(m), function(i){
+        id<-paste("pd",ptName,i,sep="-")
+        pt<-m[,i]
+        color='red'
+        if(i==selectedPointIndx){
+          color='green'
+        } else{
+          if(i==length(pts)/2) { #ncol(m)){
+            color='orange'
+          }
+        } 
+        circle(class="draggable", 
+               id=id,  
+               cxy=pt, r=8, fill=color, 
+               transform="matrix(1 0 0 1 0 0)", 
+               onmousedown="selectPoint(evt)" )
+      })
+    }
+  }
+  newPtLayer<-function(){
+    if(svgBarCmd=="points" ){
+      rect(xy=c(0,0), wh=WH, fill="#ADADFF", stroke='black', opacity=.0, onmousedown="newPoint(evt)")
+    } else {
+      NULL
+    } 
+  }
+    
+  boundingBox<-function(){
+    if(svgBarCmd=="rotate"){
+      rect(id='x-bdd-rect', cxy=WH/2, wh=WH/4, stroke='red',fill='none', opacity=.5)
+    } else {
+      NULL
+    }
+  }
+  
+  cat("length(script2)=",length(script2),"\n")
+  cat("mode(script3)=",length(script2),"\n")
+    
+  insert.beg<-c( 
+    'style(".draggable {','cursor: move;','}"),', 
+     gsub('script2', script2, "script('script2'),"),      
+    "use(filter=filter( feFlood(flood.color='white') )),",
+    "graphPaper(wh=WH),"
+  )
+  
+  insert.end<-c(
+    ',newPtLayer(),',
+    'showPts(ptName)'
+    #boundingBox()
+  )    
+  
+
   
 
   #src<-gsub("svgR\\(","svgX(",src)
-  src<-subSVGX(src)
+  src<-subSVGX2(src, insert.beg, insert.end)
   svg<-eval(parse(text=src))
   as.character(svg)->svgOut 
   HTML(svgOut)
