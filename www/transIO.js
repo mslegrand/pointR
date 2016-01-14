@@ -20,7 +20,7 @@ function selectElement(evt) {
   currentY = evt.clientY;
   origX=evt.clientX;
   origY=evt.clientY;
-  currentMatrix = selectedElement.getAttributeNS(null, "transform").slice(7,-1).split(' ');
+  currentMatrix = selectedElement.getAttributeNS(null, "transform").slice(7,-1).split(" ");
   for(var i=0; i<currentMatrix.length; i++) {
     currentMatrix[i] = parseFloat(currentMatrix[i]);
   }
@@ -33,13 +33,13 @@ function selectElement(evt) {
 
 // translation of an element
 function moveElement(evt) {
-  if(selectedElement!=0){ // this shouldn't be necessary
+  if(selectedElement!=0){ // this shouldn"t be necessary
     var dx = evt.clientX - currentX;
     var dy = evt.clientY - currentY;
     currentMatrix[4] += dx;
     currentMatrix[5] += dy;
 
-    selectedElement.setAttributeNS(null, "transform", "matrix(" + currentMatrix.join(' ') + ")");
+    selectedElement.setAttributeNS(null, "transform", "matrix(" + currentMatrix.join(" ") + ")");
     currentX = evt.clientX;
     currentY = evt.clientY;
   }
@@ -54,7 +54,7 @@ function deselectElement(evt) {
     
     var tid = selectedElement.getAttribute("tid");
     
-    var currentMatrixAsString="c(" + currentMatrix.join(',') + ")";
+    var currentMatrixAsString="c(" + currentMatrix.join(",") + ")";
     chosen=["trans", currentMatrixAsString, tid];
     Shiny.onInputChange("mydata",chosen);
     

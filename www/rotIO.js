@@ -88,7 +88,7 @@ function selectElement(evt) {
 
 // translation of an element
 function moveElement(evt) {
-  if(selectedElement!==0){ // this shouldn't be necessary 
+  if(selectedElement!==0){ // this shouldn"t be necessary 
     var pt = cursorPoint(evt);
     var vt =  diff(pt, cxy);
     var lenvt = length(vt);
@@ -98,7 +98,7 @@ function moveElement(evt) {
     var rotationMatrix=rotM( cxy, vt, ut );
     var ctm=rotationMatrix.multiply(originalCTM );
     currentMatrix=[ctm.a, ctm.b, ctm.c, ctm.d, ctm.e, ctm.f];
-    selectedElement.setAttributeNS(null, "transform", "matrix(" + currentMatrix.join(' ') + ")");   
+    selectedElement.setAttributeNS(null, "transform", "matrix(" + currentMatrix.join(" ") + ")");   
   }
   
 }
@@ -107,7 +107,7 @@ function moveElement(evt) {
 function deselectElement(evt) {
   if(selectedElement !== 0){
     var tid = selectedElement.getAttribute("tid");    
-    var currentMatrixAsString="c(" + currentMatrix.join(',') + ")";    
+    var currentMatrixAsString="c(" + currentMatrix.join(",") + ")";    
     //var cxyStr="c("+cxy.x+","+cxy.y+")"; //to use for display?
     //chosen=["rotate", currentMatrixAsString, tid, cxyStr];
     chosen=["rotate", currentMatrixAsString, tid];
