@@ -383,8 +383,6 @@ output$svghtml <- renderUI({
     }
   }
   
-  cat("length(script2)=",length(script2),"\n")
-  cat("mode(script3)=",length(script2),"\n")
     
   insert.beg<-c( 
     'style(".draggable {','cursor: move;','}"),', 
