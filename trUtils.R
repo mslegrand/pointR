@@ -267,17 +267,6 @@ extractWH<-function(src){
   rng2txt(lines, target)  
 }
 
-subSVGX<-function(txt){
-  ep<-parse(text=txt)
-  df<-getParseData(ep)
-  svgR.df<-subset(df,text=='svgR' & token=='SYMBOL_FUNCTION_CALL')
-  lines<-strsplit(txt,"\n")[[1]]
-  line<-lines[svgR.df$line1]
-  cmp<-c(substr(line,1,svgR.df$col1-1), "svgX", substr(line,svgR.df$col2+1,nchar(line)) )
-  paste0(cmp,collapse="")->line
-  lines[svgR.df$line1]<-line
-  txt.out<-paste(lines, collapse="\n")
-}
 
 
 
