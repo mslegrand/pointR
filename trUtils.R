@@ -6,60 +6,7 @@ stop.unless<-function(expr, mssg){
   }
 }
 
-# txt<-'
-#   WH<-c(600,620)
-# 
-# #points defined by mouse clicks, edit with care!
-# ptDefs<-list(
-#  x=c(c( 123.5,392 ),c( 198.5,100 ),c( 288.5,210 ))
-# )
-# 
-# trDefs<-list(
-#   rect="matrix(1 0 0 1 304 264)",
-#   circle="matrix(1 0 0 1 344 -45)"
-# )
-# 
-# svgR(wh=WH, 
-# 
-#   polygon(points=ptDefs$x, fill="blue",opacity=.5),
-#   rect( class="draggable", opacity=.5,
-#     xy=c(0,30), wh=c(80,80), fill="blue", 
-#     transform="matrix(1 0 0 1 304 264)"
-#   ),
-#   circle( class="draggable", 
-#    cxy=c(100,230), r=50, fill="red", opacity=.5,
-#    transform="matrix(1 0 0 1 344 -45)"
-#   )
-# )
-# '
-# 
-# ep<-parse(text=txt)
-# df<-getParseData(ep)
 
-
-
-txt<-'#svgR elements: font-face glyph missing-glyph hkern vkern font font-face-name font-face-format font-face-uri animate animateColor animateMotion animateTransform set mpath feFuncA feFuncB feFuncG feFuncR feDistantLight feTurbulence feConvolveMatrix feDiffuseLighting feOffset filter feBlend feColorMatrix feComponentTransfer feComposite feDisplacementMap feFlood feGaussianBlur feImage feMerge feMorphology feSpecularLighting feTile feSpotLight fePointLight svg a altGlyph circle clipPath cursor defs ellipse foreignObject g image line linearGradient marker mask path pattern polygon polyline radialGradient rect script switch symbol text textPath tref tspan use view altGlyphDef altGlyphItem color-profile desc feMergeNode font-face-src glyphRef metadata stop style title font.face missing.glyph font.face.name font.face.format font.face.uri color.profile font.face.src getNode script
-WH<-c(600,620)
-
-#points defined by mouse clicks, edit with care!
-ptDefs<-list(
-  x=c(c( 123.5,392 ),c( 198.5,100 ),c( 288.5,210 ),c( 357.5,329 ))
-)
-
-
-svgR(wh=c(100,200), 
-     
-     polygon(points=ptDefs$x, fill="blue",opacity=.5),
-     rect( class="draggable", opacity=.5,
-           xy=c(0,30), wh=c(80,80), fill="blue", 
-           transform="matrix(1 0 0 1 304 264)"
-     ),
-     circle( class="draggable", 
-             cxy=c(100,230), r=50, fill="red", opacity=.5,
-             transform=matrix(c(1, 0, 0, 1, 34, -45)2,)
-     )
-)
-'
 txt<-'#svgR elements: font-face glyph missing-glyph hkern vkern font font-face-name font-face-format font-face-uri animate animateColor animateMotion animateTransform set mpath feFuncA feFuncB feFuncG feFuncR feDistantLight feTurbulence feConvolveMatrix feDiffuseLighting feOffset filter feBlend feColorMatrix feComponentTransfer feComposite feDisplacementMap feFlood feGaussianBlur feImage feMerge feMorphology feSpecularLighting feTile feSpotLight fePointLight svg a altGlyph circle clipPath cursor defs ellipse foreignObject g image line linearGradient marker mask path pattern polygon polyline radialGradient rect script switch symbol text textPath tref tspan use view altGlyphDef altGlyphItem color-profile desc feMergeNode font-face-src glyphRef metadata stop style title font.face missing.glyph font.face.name font.face.format font.face.uri color.profile font.face.src getNode script
 WH<-c(600,620)
 
@@ -81,14 +28,14 @@ svgR(wh=c(100,200),
      )
 )'
 
-
-siblings<-function(sdf){
-  if(is.numeric(sdf)){
-    sdf<-subset(df, id==sdf)
-  }
-  par<-parent(sdf)
-  subset(df, parent %in% par) 
-}
+# 
+# siblings<-function(sdf){
+#   if(is.numeric(sdf)){
+#     sdf<-subset(df, id==sdf)
+#   }
+#   par<-parent(sdf)
+#   subset(df, parent %in% par) 
+# }
 
 ancestors<-function(id, df, count=4){ 
   rid<-id
@@ -112,24 +59,24 @@ rng2txt<-function(lines, ssdf){
   paste0(lines, collapse="\n")  
 }
 
-insertAt<-function(lines, replacements){
-  N<-length(replacements)
-  if(N>0){
-    
-    for(i in N:1){
-      repl<-replacements[[i]]
-      row<-repl$row
-      line<-lines[ row ]
-      start<-repl$start
-      end<-repl$end
-      pre<-substr(line, 1, start)
-      post<-substr(line, end, nchar(line))
-      line<-paste0(pre, repl$replace, post)
-      lines[[row]]<-line
-    }
-  }
-  paste(lines, collapse="\n")
-}
+# insertAt<-function(lines, replacements){
+#   N<-length(replacements)
+#   if(N>0){
+#     
+#     for(i in N:1){
+#       repl<-replacements[[i]]
+#       row<-repl$row
+#       line<-lines[ row ]
+#       start<-repl$start
+#       end<-repl$end
+#       pre<-substr(line, 1, start)
+#       post<-substr(line, end, nchar(line))
+#       line<-paste0(pre, repl$replace, post)
+#       lines[[row]]<-line
+#     }
+#   }
+#   paste(lines, collapse="\n")
+# }
   
 usingDraggable<-function(txt){
 
@@ -193,8 +140,6 @@ usingDraggable<-function(txt){
   src
 }
 
-
-
 tr2src<-function( src, tid, trDefDelta ){
   strsplit(tid,'-')[[1]]->coords
   as.numeric(coords[2])->row
@@ -208,7 +153,6 @@ tr2src<-function( src, tid, trDefDelta ){
   lines[row]<-line
   paste(lines, collapse="\n")
 }
-
 
 getDefPos2<-function(lines, df, defTag){  
   df.def<-subset(df, text==defTag)
@@ -227,23 +171,12 @@ txt2def<-function(txt, df, defTag){
   str
 }
 
-
-
-
 def2txt<-function(defVal, txt, df, defTag){
   lines<-strsplit(txt,"\n")[[1]]
   rpl<-paste0(defTag,"=", formatValue(defTag, defVal))
   pos<-getDefPos2(lines, df, defTag)
   substr(txt,pos[1],pos[2])<-rpl
 } 
-
-
-#testcode
-# 
-#    src<-txt
-#  ep<-parse(text=src)
-#  df<-getParseData(ep)
-#  src<-usingDraggable(src)
 
 
 extractWH<-function(src){
@@ -308,12 +241,8 @@ subSVGX2<-function(txt, insert.beg, insert.end){
       substr(lines[l2],1, c2-1)
     )
   }
-  
-
   lines.out<-na.omit(c(lines.pre, insert.beg, lines.mid,  insert.end, lines.post))
-
   txt.out<-paste(lines.out, collapse="\n")
-
   txt.out
 }
 
