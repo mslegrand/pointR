@@ -157,7 +157,7 @@ shinyServer(function(input, output,session) {
 #---fileNavBar ------- (file io)
   observeEvent( input$fileNavBar, { 
     fileBarCmd<-input$fileNavBar
-    if(fileBarCmd=="newSource"){
+    if(fileBarCmd=="newSource"){ #-----new
       txt<-codeTemplate
       user$code<-codeTemplate
       # the next  line update the ptDefs; probably should redo with observer
@@ -169,7 +169,7 @@ shinyServer(function(input, output,session) {
       updateSelectInput(session, "ptSet", label = "Selected Pt Vec Def", choices=c("x"), selected=NULL ) 
       updateNavbarPage(session, "fileNavBar", selected ="edit")  
     }
-    if(fileBarCmd=="open"){
+    if(fileBarCmd=="open"){ #-----open 
       fileName=""
       try(fileName<-file.choose(), silent=TRUE)
       if(fileName!=""){ 
@@ -189,7 +189,7 @@ shinyServer(function(input, output,session) {
       }
       updateNavbarPage(session, "fileNavBar", selected ="edit")
     }
-    if(fileBarCmd=="save"){
+    if(fileBarCmd=="save"){ #-----save
       fileName=""
       try(fileName<-file.choose(new=TRUE), silent=TRUE)
       if(fileName!=""){ 
@@ -209,7 +209,7 @@ shinyServer(function(input, output,session) {
     input$commit
     #get text from editor
     isolate({
-      src<-input$source #ace editor
+      src<-input$source #------ace editor
       if(nchar(src)>0){
         user$code<-src
         point.index<-selectedPoint$index
@@ -236,9 +236,8 @@ observe({
       #todo: error check???
       
       pt<-eval(parse(text=pt)) #we assume this is an array??
- 
       ptDefs<-getPtDefs()
-      if(cmd=='add'){ #add point
+      if(cmd=='add'){ #---------add point
         newPt<-pt
         #get selection
         selection<-input$ptSet
@@ -249,7 +248,7 @@ observe({
         selectedPoint$index<-selectedPoint$index+1
         src<-pts2Source(src,ptDefs)
       } 
-      if(cmd=='move'){ # move point
+      if(cmd=='move'){ # --------move point
         id<-input$mydata[3]
         vid<-strsplit(id,"-")[[1]]
         #get selection
@@ -261,15 +260,15 @@ observe({
         #update point values
         src<-pts2Source(src,ptDefs)
       }
-      #transformations
-      if(cmd=='trans'){ # translate
+      #-------transformations
+      if(cmd=='trans'){ # -- translate
           tid<-input$mydata[3]
           tmp<-input$mydata[2]
           trDefDelta<-formatC(eval(parse(text=tmp)))
           trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2,)" )
           src<-tr2src( src, tid, trDefDelta2 )
       }
-      if(cmd=='rotate'){ # rotate
+      if(cmd=='rotate'){ # ----rotate
         tid<-input$mydata[3]
         tmp<-input$mydata[2]
         trDefDelta<-formatC(eval(parse(text=tmp)))
@@ -375,7 +374,7 @@ output$svghtml <- renderUI({
     } 
   }
     
-  boundingBox<-function(){
+  boundingBox<-function(){ #not used!!! may consider to use in future
     if(svgBarCmd=="rotate"){
       rect(id='x-bdd-rect', cxy=WH/2, wh=WH/4, stroke='red',fill='none', opacity=.5)
     } else {
@@ -397,10 +396,6 @@ output$svghtml <- renderUI({
     #boundingBox()
   )    
   
-
-  
-
-  #src<-gsub("svgR\\(","svgX(",src)
   src<-subSVGX2(src, insert.beg, insert.end)
   svg<-eval(parse(text=src))
   as.character(svg)->svgOut 
