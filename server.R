@@ -313,7 +313,7 @@ output$svghtml <- renderUI({
   src<-usingDraggable(src)
   
   
-  graphPaper<-function(wh=c(600,600), dxy=c(50, 50), labels=TRUE ){
+  graphPaper %<c-% function(wh=c(600,600), dxy=c(50, 50), labels=TRUE ){
     if(showGrid==FALSE){
       return(NULL)
     }
@@ -336,7 +336,7 @@ output$svghtml <- renderUI({
     )       
   }
     
-  showPts<-function(ptName){
+  showPts %<c-% function(ptName){
     ptDefs<-getPtDefs()
     if(is.null(ptName)){
       return(NULL)
@@ -366,7 +366,8 @@ output$svghtml <- renderUI({
       })
     }
   }
-  newPtLayer<-function(){
+  
+  newPtLayer %<c-% function(){
     if(svgBarCmd=="points" ){
       rect(xy=c(0,0), wh=WH, fill="#ADADFF", stroke='black', opacity=.0, onmousedown="newPoint(evt)")
     } else {
@@ -374,7 +375,7 @@ output$svghtml <- renderUI({
     } 
   }
     
-  boundingBox<-function(){ #not used!!! may consider to use in future
+  boundingBox %<c-% function(){ #not used!!! may consider to use in future
     if(svgBarCmd=="rotate"){
       rect(id='x-bdd-rect', cxy=WH/2, wh=WH/4, stroke='red',fill='none', opacity=.5)
     } else {

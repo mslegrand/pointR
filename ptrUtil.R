@@ -136,7 +136,7 @@ formatTrs<-function(tr){
 q.svgX<-quote(
   svgX<-function(...){
     args<-list(...)
-    graphPaper<-function(wh=c(600,600), dxy=c(50, 50), labels=TRUE ){
+    graphPaper %<c-% function(wh=c(600,600), dxy=c(50, 50), labels=TRUE ){
       seq(0,wh[1],dxy[1])->xs
       seq(0,wh[2],dxy[2])->ys
       grph<-c(
@@ -155,7 +155,7 @@ q.svgX<-quote(
          grph
       )       
     }
-    showPts<-function(ptName){
+    showPts  %<c-% function(ptName){
       if(is.null(ptName)){
         return(NULL)
       }
