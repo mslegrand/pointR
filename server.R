@@ -18,9 +18,9 @@ source("trUtils.R")
 defTag<-"Pts"
 
 js.scripts<-list(
-  points=readFile("www/pointsIO.js"),
-  translate=readFile("www/transIO.js"),
-  rotate=readFile("www/rotIO.js")
+  Points=readFile("www/pointsIO.js"),
+  Translate=readFile("www/transIO.js"),
+  Rotate=readFile("www/rotIO.js")
 )
 
 # ex.getPts<-function(src, selection){
@@ -157,7 +157,7 @@ shinyServer(function(input, output,session) {
 #---fileNavBar ------- (file io)
   observeEvent( input$fileNavBar, { 
     fileBarCmd<-input$fileNavBar
-    if(fileBarCmd=="newSource"){ #-----new
+    if(fileBarCmd=="New"){ #-----new
       txt<-codeTemplate
       user$code<-codeTemplate
       # the next  line update the ptDefs; probably should redo with observer
@@ -167,9 +167,9 @@ shinyServer(function(input, output,session) {
          updateAceEditor( session,"source", value=txt)
       ) 
       updateSelectInput(session, "ptSet", label = "Selected Pt Vec Def", choices=c("x"), selected=NULL ) 
-      updateNavbarPage(session, "fileNavBar", selected ="edit")  
+      updateNavbarPage(session, "fileNavBar", selected ="Edit")  
     }
-    if(fileBarCmd=="open"){ #-----open 
+    if(fileBarCmd=="Open"){ #-----open 
       fileName=""
       try(fileName<-file.choose(), silent=TRUE)
       if(fileName!=""){ 
@@ -187,9 +187,9 @@ shinyServer(function(input, output,session) {
           updateAceEditor( session,"source", value=src)
         }
       }
-      updateNavbarPage(session, "fileNavBar", selected ="edit")
+      updateNavbarPage(session, "fileNavBar", selected ="Edit")
     }
-    if(fileBarCmd=="save"){ #-----save
+    if(fileBarCmd=="Save"){ #-----save
       fileName=""
       try(fileName<-file.choose(new=TRUE), silent=TRUE)
       if(fileName!=""){ 
@@ -198,7 +198,7 @@ shinyServer(function(input, output,session) {
         writeLines(txt, fileName)
         updateAceEditor( session,"source", value=txt)
       }
-      updateNavbarPage(session, "fileNavBar", selected ="edit")
+      updateNavbarPage(session, "fileNavBar", selected ="Edit")
     }
   })
 
@@ -299,7 +299,7 @@ observe({
 #----svg window-------------------
 output$svghtml <- renderUI({
   svgBarCmd<-input$svgNavBar
-  if(svgBarCmd=="points"){
+  if(svgBarCmd=="Points"){
     ptName<-input$ptSet
     ptDefs<-getPtDefs()
     selectedPointIndx<-selectedPoint$index
@@ -368,7 +368,7 @@ output$svghtml <- renderUI({
   }
   
   newPtLayer %<c-% function(){
-    if(svgBarCmd=="points" ){
+    if(svgBarCmd=="Points" ){
       rect(xy=c(0,0), wh=WH, fill="#ADADFF", stroke='black', opacity=.0, onmousedown="newPoint(evt)")
     } else {
       NULL

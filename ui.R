@@ -41,12 +41,12 @@ shinyUI(fluidPage(
   
   sidebarLayout( 
     sidebarPanel( width=6, #editor panel
-                  navbarPage("File:", inverse=TRUE,  fluid=FALSE,
+                  navbarPage("Source:", inverse=TRUE,  fluid=FALSE,
                              id="fileNavBar", 
-                             tabPanel("newSource"),
-                             tabPanel("open"),
-                             tabPanel("save"),
-                             tabPanel("edit"),
+                             tabPanel("New"),
+                             tabPanel("Open"),
+                             tabPanel("Save"),
+                             tabPanel("Edit"),
                              tabPanel(HTML("</a></li><li><a target=\"_blank\" href=\"http://mslegrand.github.io/svgR/User_Guide.html\">Users Guide"))
                   ),
       style="background-color: #88AAAA; padding-top: 0px", 
@@ -61,16 +61,16 @@ shinyUI(fluidPage(
 
     # svgR plot panel
     mainPanel( width=6, style="background-color: #88AAAA;", 
-      navbarPage("Editing:", inverse=TRUE, id="svgNavBar", fluid=FALSE, style="color: #4d3a7d; margin-bottom: 0px;",
-          tabPanel("points", style="background-color: #88AAAA; margin-bottom: 0px; margin-top: 0px;",
+      navbarPage("Plot:", inverse=TRUE, id="svgNavBar", fluid=FALSE, style="color: #4d3a7d; margin-bottom: 0px;",
+          tabPanel("Points", style="background-color: #88AAAA; margin-bottom: 0px; margin-top: 0px;",
              selectInput("ptSet", "Selected Pt Vec Def",  list("x"), width="250px"  )
           ),
-          tabPanel("translate", style="background-color: #88AAAA; border-color: #88AAAA; margin-top: 0px; margin-bottom: 0px;",
+          tabPanel("Translate", style="background-color: #88AAAA; border-color: #88AAAA; margin-top: 0px; margin-bottom: 0px;",
                    #checkboxInput("rotate", "rotate", value = FALSE, width = "250px")
                    #selectInput("transforms", "Selected Transform",  list("translate", "rotate"), width="250px"  )
                    br(),br()
           ),
-          tabPanel("rotate", style="background-color: #88AAAA; border-color: #88AAAA; margin-top: 0px; margin-bottom: 0px;",
+          tabPanel("Rotate", style="background-color: #88AAAA; border-color: #88AAAA; margin-top: 0px; margin-bottom: 0px;",
                     #checkboxInput("rotate", "rotate", value = FALSE, width = "250px")
                     #selectInput("transforms", "Selected Transform",  list("translate", "rotate"), width="250px"  )
                     br(),br()
@@ -84,7 +84,7 @@ shinyUI(fluidPage(
            htmlOutput("svghtml")
            )
       ,br(),
-      conditionalPanel( "input.svgNavBar=='points'",
+      conditionalPanel( "input.svgNavBar=='Points'",
         actionButton("removePt", label = "Remove Selected", style="background-color: black; color: white"),
         actionButton("forwardPt", label = "Select Forward", style="background-color: black; color: white"),
         actionButton("backwardPt", label = "Select Back", style="background-color: black; color: white"),
