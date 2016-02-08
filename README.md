@@ -1,13 +1,13 @@
 # pointR
 
-pointR is a shiny-based poor mans ide for coding svgR applications. 
-
-To clarify:
+pointR is a shiny-based minimalist ide for scripting in svgR. 
 
 -  pointR is a shiny server application
 -  pointR uses the ACE editor for coding
 -  pointR is designed to create small svgR scripts
--  svgR is a package to ease coding of svg within the R programming language
 
-pointR is an attempt to bridge the gap coding and between point and click.
+- pointR is an attempt to bridge the gap between coding and point&click.
+- svgR bridges the gap between R and svg, providing the ability to create customized graphics
+
+Related information can be found at http://mslegrand.github.io/svgR/
   
