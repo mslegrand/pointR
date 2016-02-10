@@ -20,7 +20,7 @@ Related information can be found at http://mslegrand.github.io/svgR/
 
 # Reporting issues
 Please report any bugs/issue in the 
-[Github Issue tracker.](pointR/issues)
+[Github Issue tracker.](issues)
 
 #Contributing
 If you wish to contribute to the pointR project, now is the time. Thanks.
