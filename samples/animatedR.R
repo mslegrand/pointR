@@ -37,11 +37,11 @@ mkCircularPath<-function(n, r, cxy=WH/2){
   d
 }
 
-R.outerD<-mkRPath(ptDefs$p)
-R.innerD<-mkRPath(ptDefs$q)
+R.outerD<-mkRPath(Pts$p)
+R.innerD<-mkRPath(Pts$q)
 
-circle.outerD<-mkCircularPath( ncol(ptDefs$p), r=200)
-circle.innerD<-mkCircularPath( ncol(ptDefs$q), r=10)
+circle.outerD<-mkCircularPath( ncol(Pts$p), r=200)
+circle.innerD<-mkCircularPath( ncol(Pts$q), r=10)
 
 dur=5
 
