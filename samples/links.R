@@ -4,23 +4,30 @@ WH<-c(600,620)
 #Defined by mouse: edit with care!
 Pts<-list(
   pos=matrix(
-    c(c( 14.5,90 ),c( 15.5,219 ),c( 14.5,356 )),
+    c(c( 14.5,90 ),c( 57,135 ),c( 19,202 ),c( 69,242 ),c( 25,299 ),c( 60,352 ),c( 186,471 )),
   2,)
 )
 
 txt<-c(
-    "http://mslegrand.github.io/svgR/",
+    "Shiny Server as Framework",
+    "http://shiny.rstudio.com/",
+    "Ace Editor for coding",
     "http://trestletech.com/",
-    "http://shiny.rstudio.com/"
+    "svgR package for svg graphics",
+    "http://mslegrand.github.io/svgR/",
+    "(c) m.s.legrand 2016"
 )
 
+fs<-c(40,40,40,40,40,35,20)
+sc<-c("red","red","green","green","blue","blue","grey")
 s<-0
 svgR(wh=WH, 
   #your custom code goes here
   
-  lapply(1:3, function(i){
+  lapply(1:7, function(i){
     color<-ifelse(i==s, 'red', 'blue') 
-    text(txt[i], xy=Pts$pos[,i], font.size=40, stroke=color)
+    text(txt[i], xy=Pts$pos[,i], font.size=fs[i], stroke=sc[i],
+    fill=sc[i])
   })
   
   
