@@ -37,6 +37,7 @@ svgR(wh=c(100,200),
 #   subset(df, parent %in% par) 
 # }
 
+#used for testing
 ancestors<-function(id, df, count=4){ 
   rid<-id
   for(i in 0:count){
@@ -49,7 +50,7 @@ ancestors<-function(id, df, count=4){
   rid
 }
 
-
+#used by extractWH
 rng2txt<-function(lines, ssdf){ 
   l2<-lines[[ssdf$line2]]
   lines[[ssdf$line2]]<-substr(l2, 1, ssdf$col2)
@@ -78,6 +79,11 @@ rng2txt<-function(lines, ssdf){
 #   paste(lines, collapse="\n")
 # }
   
+
+# used by server.R:output$svghtml
+# detects transforms with draggable and 
+# returns a modified copy of txt with
+# tid for the Draggable
 usingDraggable<-function(txt){
 
   ep<-parse(text=txt)
@@ -140,6 +146,14 @@ usingDraggable<-function(txt){
   src
 }
 
+
+# the tid (transform id) 
+# ASSUMES the transform is on a single line (not a good idea)
+# row is the line, start, end are the character positions
+# This is grouped into a single string.
+#
+# tr2src finds the location in src and replaces everthing
+# between the 2 boundries with trDefDelta
 tr2src<-function( src, tid, trDefDelta ){
   strsplit(tid,'-')[[1]]->coords
   as.numeric(coords[2])->row
@@ -178,7 +192,8 @@ def2txt<-function(defVal, txt, df, defTag){
   substr(txt,pos[1],pos[2])<-rpl
 } 
 
-
+# intended to be used to find WH for graphPaper
+# but currently not used
 extractWH<-function(src){
   ep<-parse(text=src)
   df<-getParseData(ep)
@@ -245,5 +260,4 @@ subSVGX2<-function(txt, insert.beg, insert.end){
   txt.out<-paste(lines.out, collapse="\n")
   txt.out
 }
-
 
