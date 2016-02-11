@@ -15,7 +15,7 @@ var pt  = svg.createSVGPoint();
 
 // selectElement 
 function selectElement(evt) {
-  selectedElement = evt.target;
+  selectedElement = evt.currentTarget;
   currentX = evt.clientX;
   currentY = evt.clientY;
   origX=evt.clientX;

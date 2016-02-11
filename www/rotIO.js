@@ -61,7 +61,7 @@ function rotM( cxy, u, v){
 
 // selectElement 
 function selectElement(evt) {
-  selectedElement = evt.target;
+  selectedElement = evt.currentTarget;
     
   originalCTM=selectedElement.getCTM();
   
