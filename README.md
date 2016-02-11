@@ -25,6 +25,8 @@ Please report any bugs/issue in the
 #Contributing
 If you wish to contribute to the pointR project, now is the time. Thanks.
 
+#Caution
+To quote from TrestleTech: *As with any online application, it is a genuinely bad idea to allow arbitrary users to execute code on your server.* **BE CAREFUL!!**
 
 #Licensing
 
