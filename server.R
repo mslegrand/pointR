@@ -15,30 +15,19 @@ library(stringr)
 source("ptrUtil.R")
 source("trUtils.R")
 
-defTag<-"Pts"
+defTag<-"ptR"
 
 js.scripts<-list(
   Points=readFile("www/pointsIO.js"),
   Translate=readFile("www/transIO.js"),
-  Rotate=readFile("www/rotIO.js")
+  Rotate=readFile("www/rotIO.js"),
+  Scale=readFile("www/scaleIO.js")
 )
 
-# ex.getPts<-function(src, selection){
-#   pts<-NULL
-#   defTag<-Pts" #ptDefs"
-#   if(grepl(defTag,src)==TRUE & !is.null(selection)){
-#     try({
-#       ptDefTxt<-getDef(src, defTag=defTag)
-#       eval(parse(text=ptDefTxt))
-#       pts<-pts[[selection]]
-#     })
-#   }
-#   pts
-# }
 
 ex.getPtDefs<-function(src){
   ptDefs<-NULL
-  defTag<-"Pts" #ptDefs"
+  #defTag<-"Pts" #ptDefs"
   if(grepl(defTag,src)==TRUE ){
     try({
       ptDefTxt<-getDef(src, defTag=defTag)
@@ -77,7 +66,7 @@ ex.getSelectInfo<-function(ptDefs, selected, point.index){
   return(rtv)  
 }
 
-#----end external rc------------
+#----end external ------------
 
 #---begin server--------------
 
@@ -211,6 +200,26 @@ shinyServer(function(input, output,session) {
     isolate({
       src<-input$source #------ace editor
       if(nchar(src)>0){
+        lines<-strsplit(src,"\n")
+        lines<-lines[[1]]
+        ptRPos<-grep("^\\s*ptR<-",lines)
+        svgRPos<-grep("^\\s*svgR\\(",lines)
+        Err<-NULL
+        if(length(ptRPos)!=1){
+          Err<-"Missing ptR list or multiple  ptR lists"
+        }
+        if(length(svgRPos)!=1){
+          Err<-"Missing svgR call or multiple svgR calls"
+        }
+        if(is.null(Err) & !(ptRPos[1]<svgRPos[1])){
+          Err<-"ptR list must come prior to svgR call"
+        }
+        if(!is.null(Err)){
+          session$sendCustomMessage(type='testmessage', message=Err)
+          src<-""
+        } 
+      }
+      if(nchar(src)>0){
         user$code<-src
         point.index<-selectedPoint$index
         selected<-input$ptSet
@@ -260,7 +269,7 @@ observe({
         #update point values
         src<-pts2Source(src,ptDefs)
       }
-      #-------transformations
+      #-------transformations 
       if(cmd=='trans'){ # -- translate
           tid<-input$mydata[3]
           tmp<-input$mydata[2]
@@ -274,7 +283,14 @@ observe({
         trDefDelta<-formatC(eval(parse(text=tmp)))
         trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2,)" )
         src<-tr2src( src, tid, trDefDelta2 )
-      }            
+      } 
+      if(cmd=='scale'){ # ----scale
+        tid<-input$mydata[3]
+        tmp<-input$mydata[2]
+        trDefDelta<-formatC(eval(parse(text=tmp)))
+        trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2,)" )
+        src<-tr2src( src, tid, trDefDelta2 )
+      } 
       # update internal user source
       user$code<-src
       #update editor
