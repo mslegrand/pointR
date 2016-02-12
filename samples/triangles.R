@@ -2,7 +2,7 @@
 WH<-c(600,620)
 
 #Defined by mouse: edit with care!
-Pts<-list(
+ptR<-list(
   x=matrix(
     c(c( 79.5,195 ),c( 218.5,87 ),c( 229.5,350 )),
   2,)
@@ -12,7 +12,7 @@ svgR(wh=WH,
   #your custom code goes here
   
   polygon(
-    points=Pts$x,
+    points=ptR$x,
     fill='red',
     opacity=.5,
     transform=matrix(c(0.4211, -0.907, 0.907, 0.4211, 85.26, 277.6),2,),

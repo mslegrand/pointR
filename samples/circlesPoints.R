@@ -2,13 +2,13 @@
 WH<-c(600,620)
 
 #Defined by mouse: edit with care!
-Pts<-list(
+ptR<-list(
   x=matrix(
     c(c( 131.5,180 ),c( 150.5,341 ),c( 245.5,180 ),c( 295.5,309 ),c( 246.5,413 ),c( 382.5,164 ),c( 395.5,328 ),c( 192.5,85 )),
   2,)
 )
 
-cxy<-Pts$x
+cxy<-ptR$x
 
 concentric %<c-% function(cxy){
   lapply(1:4, function(i){
@@ -18,7 +18,7 @@ concentric %<c-% function(cxy){
 
 svgR(wh=WH, 
   #your custom code goes here
-    apply(Pts$x, 2, function(cxy2){
+    apply(ptR$x, 2, function(cxy2){
         concentric(cxy2)
     })
   

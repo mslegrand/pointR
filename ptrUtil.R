@@ -9,7 +9,7 @@ paste0("#svgR elements: ", element.names, "\n",
 "WH<-c(600,620)
 
 #Defined by mouse: edit with care!
-Pts<-list( x=c() )
+ptR<-list( x=c() )
 
 svgR(wh=WH, 
   #your custom code goes here

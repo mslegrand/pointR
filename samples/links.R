@@ -2,7 +2,7 @@
 WH<-c(600,620)
 
 #Defined by mouse: edit with care!
-Pts<-list(
+ptR<-list(
   pos=matrix(
     c(c( 14.5,90 ),c( 57,135 ),c( 19,202 ),c( 69,242 ),c( 25,299 ),c( 60,352 ),c( 186,471 )),
   2,)
@@ -26,7 +26,7 @@ svgR(wh=WH,
   
   lapply(1:7, function(i){
     color<-ifelse(i==s, 'red', 'blue') 
-    text(txt[i], xy=Pts$pos[,i], font.size=fs[i], stroke=sc[i],
+    text(txt[i], xy=ptR$pos[,i], font.size=fs[i], stroke=sc[i],
     fill=sc[i])
   })
   

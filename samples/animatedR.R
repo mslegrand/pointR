@@ -2,7 +2,7 @@
 WH<-c(600,620)
 
 #Defined by mouse: edit with care!
-Pts<-list(
+ptR<-list(
   p=matrix(
     c(c( 151,500 ),c( 150,90 ),c( 351,88 ),c( 489,201 ),c( 389,324 ),c( 504,500 ),c( 442,503 ),c( 332,329 ),c( 204,331 ),c( 204,500 )),
     2,),
@@ -37,11 +37,11 @@ mkCircularPath<-function(n, r, cxy=WH/2){
   d
 }
 
-R.outerD<-mkRPath(Pts$p)
-R.innerD<-mkRPath(Pts$q)
+R.outerD<-mkRPath(ptR$p)
+R.innerD<-mkRPath(ptR$q)
 
-circle.outerD<-mkCircularPath( ncol(Pts$p), r=200)
-circle.innerD<-mkCircularPath( ncol(Pts$q), r=10)
+circle.outerD<-mkCircularPath( ncol(ptR$p), r=200)
+circle.innerD<-mkCircularPath( ncol(ptR$q), r=10)
 
 dur=5
 

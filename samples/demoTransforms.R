@@ -5,7 +5,7 @@
 WH<-c(600,620)
 
 #points defined by mouse clicks, edit with care!
-Pts<-list(
+ptR<-list(
   x=matrix(
     c(c( 137,339 ),c( 111.5,153 ),c( 329.5,157 ),c( 357.5,329 ),c( 281.5,461 )),
   2,)
@@ -14,7 +14,7 @@ Pts<-list(
 
 svgR(wh=WH, 
      
-     polygon(points=Pts$x, fill="blue",opacity=.5),
+     polygon(points=ptR$x, fill="blue",opacity=.5),
      rect( class="draggable", opacity=.5,
            xy=c(0,30), wh=c(80,80), fill="blue", 
            transform=matrix(c(1, 0, 0, 1, 166, 25),2,)
