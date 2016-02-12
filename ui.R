@@ -12,8 +12,8 @@ source("trUtils.R")
 
 
 shinyUI(fluidPage(
-  
-  tags$head(
+  singleton(tags$head(
+    tags$script(src = "message-handler.js"),
     tags$style(HTML(" 
       @font-face {
                font-family: 'ChunkFiveRegular';
@@ -33,7 +33,7 @@ shinyUI(fluidPage(
         color: #48ca3b;
       }
     "))
-  ),
+  )),
   headerPanel(
     h1("pointR  -An svgR programming tool-", 
        style = "font-family: 'ChunkFiveRegular'; font-style: italic; font-weight: 500; line-height: 1.1;  color: #4d3a7d;")),
@@ -73,9 +73,10 @@ shinyUI(fluidPage(
                    br(),br()
           ),
           tabPanel("Rotate", style="background-color: #88AAAA; border-color: #88AAAA; margin-top: 0px; margin-bottom: 0px;",
-                    #checkboxInput("rotate", "rotate", value = FALSE, width = "250px")
-                    #selectInput("transforms", "Selected Transform",  list("translate", "rotate"), width="250px"  )
                     br(),br()
+          ),
+          tabPanel("Scale", style="background-color: #88AAAA; border-color: #88AAAA; margin-top: 0px; margin-bottom: 0px;",
+                   br(),br()
           )
       ),
       splitLayout(cellWidths = c("70%", "30%"),
