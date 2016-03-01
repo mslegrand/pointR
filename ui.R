@@ -35,7 +35,7 @@ shinyUI(fluidPage(
     "))
   )),
   headerPanel(
-    h1("pointR  -An svgR programming tool- (v 0.2.1)", 
+    h1("pointR  -An svgR programming tool- (v 0.2.2)", 
        style = "font-family: 'ChunkFiveRegular'; font-style: italic; font-weight: 500; line-height: 1.1;  color: #4d3a7d;")
     
     ),
