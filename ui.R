@@ -35,10 +35,10 @@ shinyUI(fluidPage(
     "))
   )),
   headerPanel(
-    h1("pointR  -An svgR programming tool-", 
-       style = "font-family: 'ChunkFiveRegular'; font-style: italic; font-weight: 500; line-height: 1.1;  color: #4d3a7d;")),
-
-  
+    h1("pointR  -An svgR programming tool- (v 0.2.1)", 
+       style = "font-family: 'ChunkFiveRegular'; font-style: italic; font-weight: 500; line-height: 1.1;  color: #4d3a7d;")
+    
+    ),
   sidebarLayout( 
     sidebarPanel( width=6, #editor panel
                   navbarPage("Source:", inverse=TRUE,  fluid=FALSE,

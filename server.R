@@ -403,7 +403,7 @@ output$svghtml <- renderUI({
   insert.beg<-c( 
     'style(".draggable {','cursor: move;','}"),', 
      gsub('script2', script2, "script('script2'),"),      
-    "use(filter=filter( feFlood(flood.color='white') )),",
+    "use(filter=filter(filterUnits=\"userSpaceOnUse\", feFlood(flood.color='white') )),",
     "graphPaper(wh=WH),"
   )
   
