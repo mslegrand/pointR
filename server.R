@@ -7,6 +7,7 @@
 
 library(shiny)
 library(stringr)
+library(svDialogs)
 
 #options(shiny.error = recover)
 
@@ -160,8 +161,9 @@ shinyServer(function(input, output,session) {
     }
     if(fileBarCmd=="Open"){ #-----open 
       fileName=""
-      try(fileName<-file.choose(), silent=TRUE)
-      if(fileName!=""){ 
+      try(fileName<-dlgOpen(title = "Select one R file", 
+            filters = dlgFilters[c("R", "All"), ])$res)
+      if(length(fileName)>0){ 
         src<-paste(readLines(fileName), collapse = "\n")
         file$name<-fileName
         if(nchar(src)>0){
@@ -180,7 +182,10 @@ shinyServer(function(input, output,session) {
     }
     if(fileBarCmd=="Save"){ #-----save
       fileName=""
-      try(fileName<-file.choose(new=TRUE), silent=TRUE)
+      default="newfile.R"
+      try(fileName<-dlgSave(title = "Save R script to", 
+            filters = dlgFilters[c("R", "All"), ])$res
+      )
       if(fileName!=""){ 
         file$name<-fileName
         txt<-user$code
