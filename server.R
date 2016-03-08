@@ -320,6 +320,7 @@ observe({
 #----svg window-------------------
 output$svghtml <- renderUI({
   svgBarCmd<-input$svgNavBar
+  WH<-c(600,620)
   if(svgBarCmd=="Points"){
     ptName<-input$ptSet
     ptDefs<-getPtDefs()
@@ -333,30 +334,30 @@ output$svghtml <- renderUI({
   src<-user$code
   src<-usingDraggable(src)
   
-  
-  graphPaper %<c-% function(wh=c(600,600), dxy=c(50, 50), labels=TRUE ){
-    if(showGrid==FALSE){
-      return(NULL)
-    }
-    seq(0,wh[1],dxy[1])->xs
-    seq(0,wh[2],dxy[2])->ys
-    grph<-c(
-      lapply(xs, function(x)line(xy1=c(x,0),xy2=c(x,wh[2]))),
-      lapply(ys, function(y)line(xy1=c(0,y),xy2=c(wh[1],y)))
-    )
-    if(labels){
-      grph<-c(grph, 
-              lapply(xs, function(x)text(xy=c(x+2,10),x)),
-              lapply(ys, function(y)text(xy=c(2,y),y))
-      )
-    }
-    g( stroke.width=1,
-       font.size=10,
-       stroke="grey",
-       grph
-    )       
-  }
-    
+#   
+#   graphPaper %<c-% function(wh=c(600,600), dxy=c(50, 50), labels=TRUE ){
+#     if(showGrid==FALSE){
+#       return(NULL)
+#     }
+#     seq(0,wh[1],dxy[1])->xs
+#     seq(0,wh[2],dxy[2])->ys
+#     grph<-c(
+#       lapply(xs, function(x)line(xy1=c(x,0),xy2=c(x,wh[2]))),
+#       lapply(ys, function(y)line(xy1=c(0,y),xy2=c(wh[1],y)))
+#     )
+#     if(labels){
+#       grph<-c(grph, 
+#               lapply(xs, function(x)text(xy=c(x+2,10),x)),
+#               lapply(ys, function(y)text(xy=c(2,y),y))
+#       )
+#     }
+#     g( stroke.width=1,
+#        font.size=10,
+#        stroke="grey",
+#        grph
+#     )       
+#   }
+#     
   showPts %<c-% function(ptName){
     ptDefs<-getPtDefs()
     if(is.null(ptName)){
@@ -388,9 +389,9 @@ output$svghtml <- renderUI({
     }
   }
   
-  newPtLayer %<c-% function(){
+  newPtLayer %<c-% function(svgBarCmd, wh=c(1200,800)){
     if(svgBarCmd=="Points" ){
-      rect(xy=c(0,0), wh=WH, fill="#ADADFF", stroke='black', opacity=.0, onmousedown="newPoint(evt)")
+      rect(xy=c(0,0), wh=wh, fill="#ADADFF", stroke='black', opacity=.0, onmousedown="newPoint(evt)")
     } else {
       NULL
     } 
@@ -409,11 +410,12 @@ output$svghtml <- renderUI({
     'style(".draggable {','cursor: move;','}"),', 
      gsub('script2', script2, "script('script2'),"),      
     "use(filter=filter(filterUnits=\"userSpaceOnUse\", feFlood(flood.color='white') )),",
-    "graphPaper(wh=WH),"
+    "graphPaper( wh=c(600,600), dxy=c(50, 50), labels=TRUE ),"
   )
   
   insert.end<-c(
-    ',newPtLayer(),',
+    #paste(',newPtLayer("',svgBarCmd,'"),'),
+    ',newPtLayer(svgBarCmd, WH),',
     'showPts(ptName)'
     #boundingBox()
   )    
