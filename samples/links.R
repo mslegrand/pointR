@@ -9,25 +9,31 @@ ptR<-list(
 )
 
 txt<-c(
-    "Shiny Server as Framework",
-    "http://shiny.rstudio.com/",
     "Ace Editor for coding",
     "http://trestletech.com/",
     "svgR package for svg graphics",
     "http://mslegrand.github.io/svgR/",
+    "Shiny Server as Framework",
+    "http://shiny.rstudio.com/",
     "(c) m.s.legrand 2016"
 )
 
 fs<-c(40,40,40,40,40,35,20)
 sc<-c("red","red","green","green","blue","blue","grey")
+# sc<-c("darkred","darkred","green","green","blue","blue","grey")
+# sc<-c("darkred","darkred","darkgreen","darkgreen","blue","blue","grey")
+# sc<-c("darkred","darkred","green","green","black","black","grey")
+
+N<-0
+indx=c(-1,0)+2*N
+
 s<-0
 svgR(wh=WH, 
   #your custom code goes here
-  
+  text("R", font.size=400, cxy=WH/2, fill=as.rgb(156,156, 255)),
   lapply(1:7, function(i){
-    color<-ifelse(i==s, 'red', 'blue') 
     text(txt[i], xy=ptR$pos[,i], font.size=fs[i], stroke=sc[i],
-    fill=sc[i])
+    fill=sc[i], opacity=.5+.5*(i%in%indx))
   })
   
   
