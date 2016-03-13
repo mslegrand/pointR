@@ -47,8 +47,8 @@ shinyUI(fluidPage(
                              tabPanel("Open"),
                              tabPanel("Save"),
                              tabPanel("Edit"),
-                             tabPanel(HTML("</a></li><li><a  href=\"http://mslegrand.github.io/svgR/User_Guide.html\">Users Guide </li></a>")),
-                             tabPanel(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/\">io.svgR</a>"))
+                             tabPanel(HTML("</a></li><li><a  href=\"http://mslegrand.github.io/svgR/User_Guide.html\"  target=\"_blank\" >User Guide </li></a>")),
+                             tabPanel(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/\"  target=\"_blank\" >io.svgR</a>"))
                              
                   ),
       style="background-color: #88AAAA; padding-top: 0px", 
