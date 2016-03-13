@@ -48,6 +48,8 @@ pts2Source<-function(txt,ptDefs){
 }
 
 
+# called by either a newloaded source
+# or upon a commit
 ex.getSelectInfo<-function(ptDefs, selected, point.index){
   choices<-names(ptDefs)
   #cat("length(choices)=",length(choices),"\n")
@@ -55,13 +57,16 @@ ex.getSelectInfo<-function(ptDefs, selected, point.index){
     rtv<-list(selected=NULL, point.index =0 )  
     return(rtv)
   }
-  if(!(selected %in% choices)){
+  if(!(selected %in% choices)){ # a new choice
+    #pick the first choice candidate
+    N<-1
     rtv<-list(
-      selected=choices[1],
-      point.index=length(ptDefs[[1]])
+      selected=choices[N],
+      point.index=length(ptDefs[[N]])/2
     )
     return(rtv)
   }
+  #default: an existing choice
   point.index=max(point.index, length( ptDefs[[selected]])/2 )
   rtv<-list(selected=selected, point.index=point.index)
   return(rtv)  
@@ -91,7 +96,7 @@ shinyServer(function(input, output,session) {
 
 # Event Observers--------------------------------  
   
-  # set index on change of point vector selection
+  # set index on change of point set selection
   observeEvent( input$ptSet, {
     ptDefs<-getPtDefs()
     tmp<-length(ptDefs)    
@@ -128,7 +133,7 @@ shinyServer(function(input, output,session) {
     }
   })
   
-  # forword button
+  # forward button (selected point forward)
   observeEvent(input$forwardPt,{
     selection<-input$ptSet
     ptDefs<-getPtDefs()
@@ -136,10 +141,17 @@ shinyServer(function(input, output,session) {
     selectedPoint$index<-min(len, selectedPoint$index+1)
   })
   
-  # back button
+  # back button (selected point backward)
   observeEvent(input$backwardPt,{
     #decrement selectedPointIndex
-    selectedPoint$index<-max(1,selectedPoint$index-1)
+    selection<-input$ptSet
+    ptDefs<-getPtDefs()
+    len<-length(ptDefs[[selection ]])/2
+    if(len>0){
+        selectedPoint$index<-max(1,selectedPoint$index-1)
+    } else {
+        selectedPoint$index<-0
+    }
   })
   
 #observers --------------------------
@@ -334,8 +346,8 @@ output$svghtml <- renderUI({
   src<-user$code
   src<-usingDraggable(src)
   
-#   
-#   graphPaper %<c-% function(wh=c(600,600), dxy=c(50, 50), labels=TRUE ){
+  
+#   graphPaper2 %<c-% function(wh=c(600,600), dxy=c(50, 50), labels=TRUE ){
 #     if(showGrid==FALSE){
 #       return(NULL)
 #     }
@@ -409,9 +421,11 @@ output$svghtml <- renderUI({
   insert.beg<-c( 
     'style(".draggable {','cursor: move;','}"),', 
      gsub('script2', script2, "script('script2'),"),      
-    "use(filter=filter(filterUnits=\"userSpaceOnUse\", feFlood(flood.color='white') )),",
-    "graphPaper( wh=c(600,600), dxy=c(50, 50), labels=TRUE ),"
+    "use(filter=filter(filterUnits=\"userSpaceOnUse\", feFlood(flood.color='white') )),"
   )
+  if(showGrid==TRUE){
+    insert.beg<-c(insert.beg, "graphPaper( wh=c(1200,1200), dxy=c(50, 50), labels=TRUE ),")
+  }
   
   insert.end<-c(
     #paste(',newPtLayer("',svgBarCmd,'"),'),
