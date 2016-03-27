@@ -1,7 +1,7 @@
 
 
 #---------------------------------------------------------------
-#graphPaper background
+#code template 
 
 paste(names(svgR:::eleDefs), collapse=" ")->element.names
 
@@ -20,7 +20,9 @@ svgR(wh=WH,
  
 )
 ")->codeTemplate
+#-------------------------------------------------
 
+#debug template
 paste0("#svgR elements: ", element.names, "\n",
        "WH<-c(600,620)
 
@@ -43,6 +45,7 @@ svgR(wh=WH,
 )
 ")->codeTemplate2
 
+#-------------------------------
 
 #---external fns----
 as.text<-function(q){
@@ -58,7 +61,16 @@ readFile<-function(fileName){
   paste0(readLines(fileName),collapse="\n")
 }
 
-
+#'  get the position of the defTag
+#'  @param txt the text to be analysized
+#'  @parma defTag  the tag (such as ptR) to seek
+#'  @return a vector constisting of the starting pos of the 
+#'  deftag and the position of the match for the first "(" 
+#'  appearing after the deftag.
+#'  
+#'  @note The approach here is a pure text search, and NO
+#'  parsing is involved. The only thing we do is find the
+#'  stuff between the matching parens() following the deftag
 getDefPos<-function(txt, defTag){
   str_locate(txt,defTag)->beg
   if(is.na(beg[1])){
