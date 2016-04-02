@@ -185,6 +185,7 @@ txt2def<-function(txt, df, defTag){
   str
 }
 
+#appears not used
 def2txt<-function(defVal, txt, df, defTag){
   lines<-strsplit(txt,"\n")[[1]]
   rpl<-paste0(defTag,"=", formatValue(defTag, defVal))
