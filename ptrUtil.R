@@ -1,5 +1,5 @@
 
-
+source("parsingUtil.R")
 #---------------------------------------------------------------
 #code template 
 
@@ -10,6 +10,8 @@ paste0("#svgR elements: ", element.names, "\n",
 
 #Defined by mouse: edit with care!
 ptR<-list( x=c() )
+
+ptR.df<-list(x=data.frame(ptIndx=1))
 
 svgR(wh=WH, 
   #your custom code goes here
@@ -43,7 +45,7 @@ svgR(wh=WH,
              transform=\"matrix(1 0 0 1 179 223)\"
      )
 )
-")->codeTemplate2
+")->debugTemplate2
 
 #-------------------------------
 
@@ -55,7 +57,6 @@ as.text<-function(q){
 getScript<-function(file){
   paste0(readLines(file),collapse="\n")
 }
-
 
 readFile<-function(fileName){
   paste0(readLines(fileName),collapse="\n")
@@ -71,32 +72,39 @@ readFile<-function(fileName){
 #'  @note The approach here is a pure text search, and NO
 #'  parsing is involved. The only thing we do is find the
 #'  stuff between the matching parens() following the deftag
+# getDefPos<-function(txt, defTag){
+#   str_locate(txt,defTag)->beg
+#   if(is.na(beg[1])){
+#     stop(paste("bad",defTag))
+#   }
+#   
+#   str_locate_all(txt,"\\(")->ilft
+#   str_locate_all(txt,"\\)")->irt
+#   
+#   apply(ilft[[1]],1,function(x)x[1])->tmp1
+#   apply(irt[[1]],1,function(x)x[1])->tmp2
+#   
+#   v<-rep(0,nchar(txt))
+#   lft2<-rep(0,nchar(txt))
+#   lft2[tmp1]<-1
+#   rt2<-rep(0,nchar(txt))
+#   rt2[tmp2]<-1
+#   
+#   cumsum(lft2-rt2)->tmp
+#   tmp[1:beg[[2]]]<-5
+#   tmp
+#   
+#   ti<-2:length(tmp)
+#   which(tmp[ti]==0 & tmp[ti-1]==1)->nn
+#   nn<-nn+1
+#   return( c(start=beg[1], end=nn) )
+# }
+
 getDefPos<-function(txt, defTag){
-  str_locate(txt,defTag)->beg
-  if(is.na(beg[1])){
-    stop(paste("bad",defTag))
-  }
-  
-  str_locate_all(txt,"\\(")->ilft
-  str_locate_all(txt,"\\)")->irt
-  
-  apply(ilft[[1]],1,function(x)x[1])->tmp1
-  apply(irt[[1]],1,function(x)x[1])->tmp2
-  
-  v<-rep(0,nchar(txt))
-  lft2<-rep(0,nchar(txt))
-  lft2[tmp1]<-1
-  rt2<-rep(0,nchar(txt))
-  rt2[tmp2]<-1
-  
-  cumsum(lft2-rt2)->tmp
-  tmp[1:beg[[2]]]<-5
-  tmp
-  
-  ti<-2:length(tmp)
-  which(tmp[ti]==0 & tmp[ti-1]==1)->nn
-  nn<-nn+1
-  return( c(start=beg[1], end=nn) )
+  p.df<-getParseDataFrame(txt)
+  cumCharLines<-getcumCharLines(txt)
+  tag.df<-extractTagDF(p.df, tag="ptR")
+  pos<-extractPositions(cumCharLines, tag.df)
 }
 
 
@@ -110,11 +118,31 @@ replaceDef<-function(txt, replacement, defTag){
   )
 }
 
+replaceTxt<-function(txt, replacements, positions){
+  stopifnot(length(replacments)+1==ncol(positions))
+  txtKeep<-textOutsidePos(txt, positions)
+  replacements<-c(replacements,"")
+  newtxt<-rbind(txtKeep,replacements)
+  newtxt<-paste0(nextxt, collapse="")
+}
+
+replaceDefs<-function(txt, replacements, defTags){
+  positions<-sapply(defTags, function(defTag)
+    getDefsPos(txt, defTag)
+  )
+  replaceTxt(txt, replacements, defTags)
+}
+  
+  
+
+
+
 getDef<-function(txt, defTag){
   pos<-getDefPos(txt, defTag)
-  #cat(paste0("getDefs: ",defTag,"=",substr(txt, pos[1], pos[2]),"\n")) #debug code
   return(substr(txt, pos[1], pos[2]))
 }
+
+
 
 formatPts<-function(pts){
   if(length(pts)==0 ){
@@ -130,9 +158,8 @@ formatPts<-function(pts){
   }
 }
 
-formatTrs<-function(tr){
+formatTrs<-function(tr){ #not used
   paste0('"',tr,'"')
-
 }
 
 
