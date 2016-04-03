@@ -49,6 +49,13 @@ svgR(wh=WH,
 
 #-------------------------------
 
+# defines
+
+
+indent<-function(n){
+  rep(" ", n*2)
+}
+
 #---external fns----
 as.text<-function(q){
   paste(deparse(q), collapse="\n")
@@ -62,43 +69,6 @@ readFile<-function(fileName){
   paste0(readLines(fileName),collapse="\n")
 }
 
-#'  get the position of the defTag
-#'  @param txt the text to be analysized
-#'  @parma defTag  the tag (such as ptR) to seek
-#'  @return a vector constisting of the starting pos of the 
-#'  deftag and the position of the match for the first "(" 
-#'  appearing after the deftag.
-#'  
-#'  @note The approach here is a pure text search, and NO
-#'  parsing is involved. The only thing we do is find the
-#'  stuff between the matching parens() following the deftag
-# getDefPos<-function(txt, defTag){
-#   str_locate(txt,defTag)->beg
-#   if(is.na(beg[1])){
-#     stop(paste("bad",defTag))
-#   }
-#   
-#   str_locate_all(txt,"\\(")->ilft
-#   str_locate_all(txt,"\\)")->irt
-#   
-#   apply(ilft[[1]],1,function(x)x[1])->tmp1
-#   apply(irt[[1]],1,function(x)x[1])->tmp2
-#   
-#   v<-rep(0,nchar(txt))
-#   lft2<-rep(0,nchar(txt))
-#   lft2[tmp1]<-1
-#   rt2<-rep(0,nchar(txt))
-#   rt2[tmp2]<-1
-#   
-#   cumsum(lft2-rt2)->tmp
-#   tmp[1:beg[[2]]]<-5
-#   tmp
-#   
-#   ti<-2:length(tmp)
-#   which(tmp[ti]==0 & tmp[ti-1]==1)->nn
-#   nn<-nn+1
-#   return( c(start=beg[1], end=nn) )
-# }
 
 getDefPos<-function(txt, defTag){
   p.df<-getParseDataFrame(txt)
@@ -133,30 +103,27 @@ replaceDefs<-function(txt, replacements, defTags){
   replaceTxt(txt, replacements, defTags)
 }
   
-  
-
-
-
 getDef<-function(txt, defTag){
   pos<-getDefPos(txt, defTag)
   return(substr(txt, pos[1], pos[2]))
 }
 
+# formatPts<-function(pts){
+#   if(length(pts)==0 ){
+#     return("c()")
+#   } else{
+#     
+#     tmp<-unlist(pts)
+#     tmp<-matrix(tmp,2)
+#     tmp<-apply(tmp, 2, function(x)paste(x,collapse=","))
+#     tmp<-paste("c(",tmp,")")
+#     tmp<-paste(tmp, collapse=",")
+#     tmp<-paste0("matrix(\n    c(", tmp, "),\n  2,)")
+#     return(tmp)
+#   }
+# }
 
 
-formatPts<-function(pts){
-  if(length(pts)==0 ){
-    return("c()")
-  } else{
-    tmp<-unlist(pts)
-    tmp<-matrix(tmp,2,)
-    tmp<-apply(tmp, 2, function(x)paste(x,collapse=","))
-    tmp<-paste("c(",tmp,")")
-    tmp<-paste(tmp, collapse=",")
-    tmp<-paste0("matrix(\n    c(", tmp, "),\n  2,)")
-    return(tmp)
-  }
-}
 
 formatTrs<-function(tr){ #not used
   paste0('"',tr,'"')

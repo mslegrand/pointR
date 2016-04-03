@@ -39,40 +39,40 @@ shinyUI(fluidPage(
       .navbar-default .navbar-brand {
           color: #333388;
       }
-.navbar .nav > li > a {
-    color: #333388;
-}
-.navbar .nav > li > a:hover {
-    float: none;
-    color: #FFFFFF;
-    background-color: transparent;
-}
-.navbar-default .navbar-nav > li > a:focus {
-  color: white;
-  background-color: transparent;
-}
-.navbar-default .navbar-nav > .active > a,
-.navbar-default .navbar-nav > .active > a:hover,
-.navbar-default .navbar-nav > .active > a:focus {
-  color: black;
-  font-weight: bold;
-  background-color: white;
-  opacity: 0.5;
-}
+      .navbar .nav > li > a {
+          color: #333388;
+      }
+      .navbar .nav > li > a:hover {
+          float: none;
+          color: #FFFFFF;
+          background-color: transparent;
+      }
+      .navbar-default .navbar-nav > li > a:focus {
+        color: white;
+        background-color: transparent;
+      }
+      .navbar-default .navbar-nav > .active > a,
+      .navbar-default .navbar-nav > .active > a:hover,
+      .navbar-default .navbar-nav > .active > a:focus {
+        color: black;
+        font-weight: bold;
+        background-color: white;
+        opacity: 0.5;
+      }
       .navbar {
         color: #333388;
         border-color: black;
         font-weight: bold;
         /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#6199c7+-1,cedbe9+0,aac5de+0,aac5de+0,6199c7+0,419ad6+16,419ad6+17,8dceef+51,3a8bc2+84,26558b+100 */
-background: #6199c7; /* Old browsers */
-background: -moz-linear-gradient(top, #6199c7 -1%, #cedbe9 0%, #aac5de 0%, #aac5de 0%, #6199c7 0%, #419ad6 16%, #419ad6 17%, #8dceef 51%, #3a8bc2 84%, #26558b 100%); /* FF3.6-15 */
-background: -webkit-linear-gradient(top, #6199c7 -1%,#cedbe9 0%,#aac5de 0%,#aac5de 0%,#6199c7 0%,#419ad6 16%,#419ad6 17%,#8dceef 51%,#3a8bc2 84%,#26558b 100%); /* Chrome10-25,Safari5.1-6 */
-background: linear-gradient(to bottom, #6199c7 -1%,#cedbe9 0%,#aac5de 0%,#aac5de 0%,#6199c7 0%,#419ad6 16%,#419ad6 17%,#8dceef 51%,#3a8bc2 84%,#26558b 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6199c7', endColorstr='#26558b',GradientType=0 ); /* IE6-9 */      }
-    "))
+        background: #6199c7; /* Old browsers */
+        background: -moz-linear-gradient(top, #6199c7 -1%, #cedbe9 0%, #aac5de 0%, #aac5de 0%, #6199c7 0%, #419ad6 16%, #419ad6 17%, #8dceef 51%, #3a8bc2 84%, #26558b 100%); /* FF3.6-15 */
+        background: -webkit-linear-gradient(top, #6199c7 -1%,#cedbe9 0%,#aac5de 0%,#aac5de 0%,#6199c7 0%,#419ad6 16%,#419ad6 17%,#8dceef 51%,#3a8bc2 84%,#26558b 100%); /* Chrome10-25,Safari5.1-6 */
+        background: linear-gradient(to bottom, #6199c7 -1%,#cedbe9 0%,#aac5de 0%,#aac5de 0%,#6199c7 0%,#419ad6 16%,#419ad6 17%,#8dceef 51%,#3a8bc2 84%,#26558b 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6199c7', endColorstr='#26558b',GradientType=0 ); /* IE6-9 */      }
+        "))
   )),
   headerPanel(
-    h1("pointR  -An svgR programming tool- (v 0.2.4.1)", 
+    h1("pointR  -An svgR programming tool- (v 0.3)", 
        style = "font-family: 'ChunkFiveRegular'; font-style: italic; font-weight: 500; line-height: 1.1;  color: #4d3a7d;")
     ),
   sidebarLayout( 

@@ -12,7 +12,7 @@ library(svDialogs)
 #options(shiny.error = recover)
 
 #----begin external rc------------
-
+source("format.R")
 source("ptrUtil.R")
 source("trUtils.R")
 
@@ -41,9 +41,10 @@ ex.getPtDefs<-function(src){
 
 
 pts2Source<-function(txt,ptDefs){
-  fPtDefs<-sapply(ptDefs, formatPts)
-  tmp<-paste0("  ",names(fPtDefs),"=",fPtDefs,collapse=",\n")
-  replacement<-paste0(defTag,"<-list(\n",tmp,"\n)")
+  # fPtDefs<-sapply(ptDefs, formatPts)
+  # tmp<-paste0("  ",names(fPtDefs),"=",fPtDefs,collapse=",\n")
+  # replacement<-paste0(defTag,"<-list(\n",tmp,"\n)")
+  replacement<-formatPtDefs(defTag=defTag, ptDefs=ptDefs)
   txt<-replaceDef(txt, replacement, defTag=defTag) 
 }
 
