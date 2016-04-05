@@ -46,6 +46,9 @@ getcumCharLines<-function(txt){
 extractTagDF<-function(p.df, tag="ptR"){
   #df1<-p.df[p.df$token=="SYMBOL" & p.df$text==tag & ggid==0,  ]
   df1<-subset(p.df, token=='SYMBOL' & text ==tag & ggid==0)
+  if(nrow(df1)==0){ #use this as a check
+    return(NULL)
+  }
   stopifnot(nrow(df1)==1)
   # todo: some additional checks (such as <-)
   # check list

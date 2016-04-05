@@ -26,33 +26,33 @@ js.scripts<-list(
 )
 
 
-ex.getPtDefs<-function(src){
-  ptDefs<-NULL
-  #defTag<-"Pts" #ptDefs"
-  if( any(grepl(defTag,src) ) ){
-    try({
-      ptDefTxt<-getDef(src, defTag=defTag)
-      eval(parse(text=ptDefTxt))
-      ptDefs<-get(defTag)
-    })
-  }
-  ptDefs
-}
+# ex.getPtDefs<-function(src){
+#   ptRList<-NULL
+#   #defTag<-"Pts" #ptRList"
+#   if( any(grepl(defTag,src) ) ){
+#     try({
+#       ptDefTxt<-getDef(src, defTag=defTag)
+#       eval(parse(text=ptDefTxt))
+#       ptRList<-get(defTag)
+#     })
+#   }
+#   ptRList
+# }
 
 
-pts2Source<-function(txt,ptDefs){
-  # fPtDefs<-sapply(ptDefs, formatPts)
+pts2Source<-function(txt,ptRList){
+  # fPtDefs<-sapply(ptRList, formatPts)
   # tmp<-paste0("  ",names(fPtDefs),"=",fPtDefs,collapse=",\n")
   # replacement<-paste0(defTag,"<-list(\n",tmp,"\n)")
-  replacement<-formatPtDefs(defTag=defTag, ptDefs=ptDefs)
+  replacement<-formatPtDefs(defTag=defTag, ptRList=ptRList)
   txt<-replaceDef(txt, replacement, defTag=defTag) 
 }
 
 
 # called by either a newloaded source
 # or upon a commit
-ex.getSelectInfo<-function(ptDefs, selected, point.index){
-  choices<-names(ptDefs)
+ex.getSelectInfo<-function(ptRList, selected, point.index){
+  choices<-names(ptRList)
   #cat("length(choices)=",length(choices),"\n")
   if(length(choices)==0){
     rtv<-list(selected=NULL, point.index =0 )  
@@ -63,12 +63,12 @@ ex.getSelectInfo<-function(ptDefs, selected, point.index){
     N<-1
     rtv<-list(
       selected=choices[N],
-      point.index=length(ptDefs[[N]])/2
+      point.index=length(ptRList[[N]])/2
     )
     return(rtv)
   }
   #default: an existing choice
-  point.index=max(point.index, length( ptDefs[[selected]])/2 )
+  point.index=max(point.index, length( ptRList[[selected]])/2 )
   rtv<-list(selected=selected, point.index=point.index)
   return(rtv)  
 }
@@ -108,12 +108,12 @@ shinyServer(function(input, output,session) {
 
   # set index on change of point set selection
   observeEvent( input$ptSet, {
-    ptDefs<-getPtDefs()
-    tmp<-length(ptDefs)    
-      if(tmp<1 || is.null(ptDefs[[1]])){
+    ptRList<-getPtDefs()$pts
+    tmp<-length(ptRList)    
+      if(tmp<1 || is.null(ptRList[[1]])){
         selectedPoint$index<-0
       } else {
-        selectedPoint$index<-length(ptDefs[[input$ptSet]])/2
+        selectedPoint$index<-length(ptRList[[input$ptSet]])/2
       }
   })
 
@@ -123,8 +123,8 @@ shinyServer(function(input, output,session) {
   observeEvent( input$removePt, {
     selection<-input$ptSet
     if(selection!=""){
-      ptDefs<-getPtDefs()
-      tmp<-ptDefs[[selection]]
+      ptRList<-getPtDefs()$pts
+      tmp<-ptRList[[selection]]
       indx=selectedPoint$index 
       if(indx>=1){
         tmp<-tmp[-c(2*indx,2*indx-1)]
@@ -134,12 +134,12 @@ shinyServer(function(input, output,session) {
         selectedPoint$index<-0
       }
       
-      ptDefs[[selection]]<-tmp
-      if(length(ptDefs)==0){
-        ptDefs<-list(x=c())
+      ptRList[[selection]]<-tmp
+      if(length(ptRList)==0){
+        ptRList<-list(x=c())
       }   
       src<-user$code
-      src<-pts2Source(src,ptDefs)
+      src<-pts2Source(src,ptRList)
       user$code<-src
       updateAceEditor( session,"source", value=src)
     }
@@ -148,8 +148,8 @@ shinyServer(function(input, output,session) {
   # forward button (selected point forward)
   observeEvent(input$forwardPt,{
     selection<-input$ptSet
-    ptDefs<-getPtDefs()
-    len<-length(ptDefs[[selection ]])/2
+    ptRList<-getPtDefs()$pts
+    len<-length(ptRList[[selection ]])/2
     selectedPoint$index<-min(len, selectedPoint$index+1)
   })
   
@@ -157,8 +157,8 @@ shinyServer(function(input, output,session) {
   observeEvent(input$backwardPt,{
     #decrement selectedPointIndex
     selection<-input$ptSet
-    ptDefs<-getPtDefs()
-    len<-length(ptDefs[[selection ]])/2
+    ptRList<-getPtDefs()$pts
+    len<-length(ptRList[[selection ]])/2
     if(len>0){
         selectedPoint$index<-max(1,selectedPoint$index-1)
     } else {
@@ -197,10 +197,10 @@ shinyServer(function(input, output,session) {
         user$code<-src
         point.index<-selectedPoint$index
         selected<-input$ptSet
-        ptDefs<-getPtDefs()
-        res<-ex.getSelectInfo(ptDefs, selected, point.index)
+        ptRList<-getPtDefs()$pts
+        res<-ex.getSelectInfo(ptRList, selected, point.index)
         selectedPoint$index<-res$point.index
-        updateSelectInput(session, "ptSet", label = "Selected Pt Vec Def", choices=names(ptDefs), selected=res$selected )  
+        updateSelectInput(session, "ptSet", label = "Selected Pt Vec Def", choices=names(ptRList), selected=res$selected )  
       }
     })
   })
@@ -215,7 +215,7 @@ observeEvent( input$editNavBar, {
   if(fileCmd=="New"){ #-----new
     txt<-codeTemplate
     user$code<-codeTemplate
-    # the next  line update the ptDefs; probably should redo with observer
+    # the next  line update the ptRList; probably should redo with observer
     file$name<-"newSVG.R"
     selectedPoint$index<-0
     isolate(
@@ -235,11 +235,11 @@ observeEvent( input$editNavBar, {
         user$code<-src 
         point.index<-selectedPoint$index
         selected<-input$ptSet
-        ptDefs<-getPtDefs()
-        #cat("names(ptDefs)=",paste(names(ptDefs),collapse=", "),"\n")
-        res<-ex.getSelectInfo(ptDefs, selected, point.index)
+        ptRList<-getPtDefs()$pts
+        #cat("names(ptRList)=",paste(names(ptRList),collapse=", "),"\n")
+        res<-ex.getSelectInfo(ptRList, selected, point.index)
         selectedPoint$index<-res$point.index
-        updateSelectInput(session, "ptSet", label = "Selected Pt Vec Def", choices=names(ptDefs), selected=res$selected ) 
+        updateSelectInput(session, "ptSet", label = "Selected Pt Vec Def", choices=names(ptRList), selected=res$selected ) 
         updateAceEditor( session,"source", value=src)
       }
     }
@@ -275,17 +275,17 @@ observe({
       #todo: error check???
       
       pt<-eval(parse(text=pt)) #we assume this is an array??
-      ptDefs<-getPtDefs()
+      ptRList<-getPtDefs()$pts
       if(cmd=='add'){ #---------add point
         newPt<-pt
         #get selection
         selection<-input$ptSet
-        #update local ptDefs
+        #update local ptRList
         indx<-selectedPoint$index
-        ptDefs[[selection]]<-append(ptDefs[[selection]],newPt,2*indx) 
+        ptRList[[selection]]<-append(ptRList[[selection]],newPt,2*indx) 
         #update point values
         selectedPoint$index<-selectedPoint$index+1
-        src<-pts2Source(src,ptDefs)
+        src<-pts2Source(src,ptRList)
       } 
       if(cmd=='move'){ # --------move point
         id<-input$mydata[3]
@@ -295,9 +295,9 @@ observe({
         #get point index
         indx<-2*as.numeric(vid[3])-1
         #reassign point
-        ptDefs[[selection]][indx:(indx+1)]<-pt
+        ptRList[[selection]][indx:(indx+1)]<-pt
         #update point values
-        src<-pts2Source(src,ptDefs)
+        src<-pts2Source(src,ptRList)
       }
       #-------transformations 
       if(cmd=='trans'){ # -- translate
@@ -348,7 +348,7 @@ output$svghtml <- renderUI({
   WH<-c(600,620)
   if(svgBarCmd=="Points"){
     ptName<-input$ptSet
-    ptDefs<-getPtDefs()
+    ptRList<-getPtDefs()$pts
     selectedPointIndx<-selectedPoint$index
     scriptName<-"Points"
     #todo use input$pointOption :
@@ -370,11 +370,11 @@ output$svghtml <- renderUI({
   
   
   showPts %<c-% function(ptName){
-    ptDefs<-getPtDefs()
+    ptRList<-getPtDefs()$pts
     if(is.null(ptName)){
       return(NULL)
     }
-    pts<- p <- ptDefs[[ptName]]
+    pts<- p <- ptRList[[ptName]]
     #pts<-getPtArray()
     if(length(pts)<2){
       return(NULL)
