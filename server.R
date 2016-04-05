@@ -29,7 +29,7 @@ js.scripts<-list(
 ex.getPtDefs<-function(src){
   ptDefs<-NULL
   #defTag<-"Pts" #ptDefs"
-  if(grepl(defTag,src)==TRUE ){
+  if( any(grepl(defTag,src) ) ){
     try({
       ptDefTxt<-getDef(src, defTag=defTag)
       eval(parse(text=ptDefTxt))
@@ -96,6 +96,8 @@ shinyServer(function(input, output,session) {
 
 
 # Event Observers--------------------------------  
+  
+# Initialization
   observeEvent(
     tmp<-init$val,{
       isolate(
@@ -114,6 +116,8 @@ shinyServer(function(input, output,session) {
         selectedPoint$index<-length(ptDefs[[input$ptSet]])/2
       }
   })
+
+  #----BUTTON EVENTS BEGIN-----------------
   
   #---remove last point  button-----
   observeEvent( input$removePt, {
@@ -162,64 +166,8 @@ shinyServer(function(input, output,session) {
     }
   })
   
-#observers --------------------------
-
-#---navbarMenuBar--------
-observeEvent( input$fileNavBar, { 
-  fileCmd<-input$fileNavBar
-  
-  if(fileCmd=="New"){ #-----new
-    txt<-codeTemplate
-    user$code<-codeTemplate
-    # the next  line update the ptDefs; probably should redo with observer
-    file$name<-"newSVG.R"
-    selectedPoint$index<-0
-    isolate(
-      updateAceEditor( session,"source", value=txt)
-    ) 
-    updateSelectInput(session, "ptSet", label = "Selected Pt Vec Def", choices=c("x"), selected=NULL ) 
-    #updateNavbarPage(session, "fileNavBar", selected =NULL)  
-  }
-  if(fileCmd=="Open"){ #-----open 
-    fileName=""
-    try(fileName<-dlgOpen(title = "Select one R file", 
-                          filters = dlgFilters[c("R", "All"), ])$res)
-    if(length(fileName)>0){ 
-      src<-paste(readLines(fileName), collapse = "\n")
-      file$name<-fileName
-      if(nchar(src)>0){
-        user$code<-src 
-        point.index<-selectedPoint$index
-        selected<-input$ptSet
-        ptDefs<-getPtDefs()
-        #cat("names(ptDefs)=",paste(names(ptDefs),collapse=", "),"\n")
-        res<-ex.getSelectInfo(ptDefs, selected, point.index)
-        selectedPoint$index<-res$point.index
-        updateSelectInput(session, "ptSet", label = "Selected Pt Vec Def", choices=names(ptDefs), selected=res$selected ) 
-        updateAceEditor( session,"source", value=src)
-      }
-    }
-    #updateNavbarPage(session, "fileNavBar", selected =NULL)
-  }
-  if(fileCmd=="Save"){ #-----save
-    fileName=""
-    default="newfile.R"
-    try(fileName<-dlgSave(title = "Save R script to", 
-                          filters = dlgFilters[c("R", "All"), ])$res
-    )
-    if(fileName!=""){ 
-      file$name<-fileName
-      txt<-user$code
-      writeLines(txt, fileName)
-      updateAceEditor( session,"source", value=txt)
-    }
-    #updateNavbarPage(session, "fileNavBar", selected =NULL)
-  }
-})
-
-
-#---commit  button----- (update sourceCode with editor contents)
-# alternatively can use observeEvent( input$commit, { ... })
+  #---commit  button----- (update sourceCode with editor contents)
+  # alternatively can use observeEvent( input$commit, { ... })
   observe({ 
     input$commit
     #get text from editor
@@ -256,6 +204,62 @@ observeEvent( input$fileNavBar, {
       }
     })
   })
+  
+#----BUTTON EVENTS END-----------------
+  
+#observers --------------------------
+#---navbarMenuBar--------
+observeEvent( input$fileNavBar, { 
+  fileCmd<-input$fileNavBar
+  
+  if(fileCmd=="New"){ #-----new
+    txt<-codeTemplate
+    user$code<-codeTemplate
+    # the next  line update the ptDefs; probably should redo with observer
+    file$name<-"newSVG.R"
+    selectedPoint$index<-0
+    isolate(
+      updateAceEditor( session,"source", value=txt)
+    ) 
+    updateSelectInput(session, "ptSet", label = "Selected Pt Vec Def", choices=c("x"), selected=NULL ) 
+    updateNavbarPage(session, "fileNavBar", selected ="Source")  
+  }
+  if(fileCmd=="Open"){ #-----open 
+    fileName=""
+    try(fileName<-dlgOpen(title = "Select one R file", 
+                          filters = dlgFilters[c("R", "All"), ])$res)
+    if(length(fileName)>0){ 
+      src<-paste(readLines(fileName), collapse = "\n")
+      file$name<-fileName
+      if(nchar(src)>0){
+        user$code<-src 
+        point.index<-selectedPoint$index
+        selected<-input$ptSet
+        ptDefs<-getPtDefs()
+        #cat("names(ptDefs)=",paste(names(ptDefs),collapse=", "),"\n")
+        res<-ex.getSelectInfo(ptDefs, selected, point.index)
+        selectedPoint$index<-res$point.index
+        updateSelectInput(session, "ptSet", label = "Selected Pt Vec Def", choices=names(ptDefs), selected=res$selected ) 
+        updateAceEditor( session,"source", value=src)
+      }
+    }
+    updateNavbarPage(session, "fileNavBar", selected ="Source")
+  }
+  if(fileCmd=="Save"){ #-----save
+    fileName=""
+    default="newfile.R"
+    try(fileName<-dlgSave(title = "Save R script to", 
+                          filters = dlgFilters[c("R", "All"), ])$res
+    )
+    if(fileName!=""){ 
+      file$name<-fileName
+      txt<-user$code
+      writeLines(txt, fileName)
+      updateAceEditor( session,"source", value=txt)
+    }
+    updateNavbarPage(session, "fileNavBar", selected ="Source")
+  }
+})
 
 
 #---mouse click--------
@@ -327,7 +331,7 @@ observe({
   )
 })
 
-# Output------------------------------------
+#---------BEGIN OUTPUT PANELS------------------------------------
 #------fileName-------------
   output$fileName <- renderText({ 
     fileName<-file$name
@@ -338,7 +342,7 @@ observe({
   })
   
   
-#----svg window-------------------
+#----SVG window-------------------
 output$svghtml <- renderUI({
   svgBarCmd<-input$svgNavBar
   WH<-c(600,620)
@@ -375,7 +379,7 @@ output$svghtml <- renderUI({
     if(length(pts)<2){
       return(NULL)
     } else{
-      m<-matrix(pts,2,)
+      m<-matrix(pts,2)
       lapply(1:ncol(m), function(i){
         id<-paste("pd",ptName,i,sep="-")
         pt<-m[,i]
@@ -434,6 +438,8 @@ output$svghtml <- renderUI({
   as.character(svg)->svgOut 
   HTML(svgOut)
 })
+
+#---------END OUTPUT PANELS------------------------------------
 
  
 })
