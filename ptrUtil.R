@@ -44,8 +44,12 @@ readFile<-function(fileName){
 getDefPos<-function(txt, defTag){
   p.df<-getParseDataFrame(txt)
   cumCharLines<-getcumCharLines(txt)
-  tag.df<-extractTagDF(p.df, tag="ptR")
-  pos<-extractPositions(cumCharLines, tag.df)
+  tag.df<-extractTagDF(p.df, tag=defTag)
+  if( !is.null(tag.df) ){
+    pos<-extractPositions(cumCharLines, tag.df)
+  } else {
+    pos<-NULL
+  }
 }
 
 # getDefPos<-function(tag="ptR", txt, p.df, cumCharLines){
@@ -80,11 +84,33 @@ replaceDefs<-function(txt, replacements, defTags){
   replaceTxt(txt, replacements, defTags)
 }
   
-getDef<-function(txt, defTag){
+getDef<-function(txt, defTag ){
   pos<-getDefPos(txt, defTag)
+  if(is.null(pos)){
+    return(NULL)
+  }
   return(substr(txt, pos[1], pos[2]))
 }
 
+
+ex.getPtDefs<-function(src, ptTag="ptR", dfTag="ptR.df"){
+  ptDefs<-list(pts=NULL, df=NULL)
+  #defTag<-"Pts" #ptDefs"
+  if( any(grepl(ptTag,src) ) ){
+    try({
+      ptDefTxt1<-getDef(src, defTag=ptTag)
+      stopifnot(!is.null(ptDefTxt1))
+      eval(parse(text=ptDefTxt1))
+      ptDefs$pts<-get(ptTag)
+      ptDefTxt2<-getDef(src, defTag=dfTag)
+      if(!is.null(ptDefTxt2)){ # ptR.df is optional!
+        eval(parse(text=ptDefTxt2))
+        ptDefs$df<-get(dfTag)
+      }
+    })
+  }
+  ptDefs
+}
 
 
 # formatPts<-function(pts){
