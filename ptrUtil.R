@@ -8,22 +8,22 @@ source("parsingUtil.R")
 paste(names(svgR:::eleDefs), collapse=" ")->element.names
 
 paste0("#svgR elements: ", element.names, "\n",
-       "WH<-c(600,620)
-       
-       #Defined by mouse: edit with care!
-       ptR<-list( x=c() )
-       
-       ptR.df<-list(x=data.frame(tag=1))
-       
-       svgR(wh=WH, 
-       #your custom code goes here
-       
-       NULL
-       
-       
-       
-       )
-       ")->codeTemplate
+"WH<-c(600,620)
+
+#Defined by mouse: edit with care!
+ptR<-list( x=c() )
+
+ptR.df<-list(x=data.frame(tag=1))
+
+svgR(wh=WH, 
+#your custom code goes here
+
+NULL
+
+
+
+)
+")->codeTemplate
 #------------------------
 
 
@@ -92,7 +92,7 @@ getDef<-function(txt, defTag ){
   return(substr(txt, pos[1], pos[2]))
 }
 
-
+#Todo  fix df
 ex.getPtDefs<-function(src, ptTag="ptR", dfTag="ptR.df"){
   ptDefs<-list(pts=NULL, df=NULL)
   #defTag<-"Pts" #ptDefs"
@@ -104,7 +104,12 @@ ex.getPtDefs<-function(src, ptTag="ptR", dfTag="ptR.df"){
       ptDefs$pts<-get(ptTag)
       ptDefTxt2<-getDef(src, defTag=dfTag)
       if(!is.null(ptDefTxt2)){ # ptR.df is optional!
+        #1. replace data.frame with list
         eval(parse(text=ptDefTxt2))
+        #2 dfList<-get(dfTag)
+        #3 pad using list2DF
+        # tmp.df<-list2DF(dflist)
+        # 4 set ptDefs to tmp.df
         ptDefs$df<-get(dfTag)
       }
     })
