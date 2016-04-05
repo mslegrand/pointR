@@ -175,7 +175,7 @@ shinyServer(function(input, output,session) {
   observeEvent(input$tagPt, {
     selection<-input$ptSet
     ptDefs<-getPtDefs()
-    dfList<-ptDefs$df
+    dfList<- ptDefs$df
     ptsList<-ptDefs$pts
     len<-length(ptsList[[selection]])/2
     if(selection %in% names(dfList) & len>0){

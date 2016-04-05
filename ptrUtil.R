@@ -103,18 +103,28 @@ ex.getPtDefs<-function(src, ptTag="ptR", dfTag="ptR.df"){
       eval(parse(text=ptDefTxt1))
       ptDefs$pts<-get(ptTag)
       ptDefTxt2<-getDef(src, defTag=dfTag)
+      # if(!is.null(ptDefTxt2)){ # ptR.df is optional!
+      #   eval(parse(text=ptDefTxt2))
+      #   ptDefs$df<-get(dfTag)
+      # }
+      
       if(!is.null(ptDefTxt2)){ # ptR.df is optional!
         #1. replace data.frame with list
-        eval(parse(text=ptDefTxt2))
+        dfListText<-sub("data.frame","list",ptDefTxt2)
+        eval(parse(text=dfListText))
         #2 dfList<-get(dfTag)
-        #3 pad using list2DF
-        # tmp.df<-list2DF(dflist)
+        dfList<-get(dfTag)
+        3 #pad list back as data.frame
+        df<-sapply(dfList, list2DF,
+          simplify = FALSE
+        )
         # 4 set ptDefs to tmp.df
-        ptDefs$df<-get(dfTag)
+        ptDefs$df<-df
+        
       }
     })
   }
-  ptDefs
+  return(ptDefs)
 }
 
 
