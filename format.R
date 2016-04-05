@@ -58,7 +58,25 @@ formatDFDefs<-function(dfDefs, dfDefsTag="ptR.df"){
   tmp2<-paste0(
     paste0(dfDefsTag,"<-list(\n"),
     tmp1,
-    "\n)\n"
+    "\n)"
   )
-}    
+}  
+
+#converts named list to data.frame, padding if necessary
+#technically not a format, but rather a padder
+list2DF<-function(plist){
+  n<-length(plist$tags)
+  tmp<-sapply(plist, function(x){
+    m<-length(x)
+    if(m<n){
+      y<-tail(x,1)
+      yy<-rep_len(y, n-m)
+      x<-c(x,yy)
+    }
+    x[1:n]
+  },
+  simplify = FALSE)
+  as.data.frame(tmp)
+}
+
 
