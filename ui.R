@@ -50,7 +50,7 @@ shinyUI(fluidPage(
                    style="background-color: #222244; color: white;
                    border-radius: 24px; ")
     ),
-
+#---------------------------------------------------------------
     # svgR plot panel
     mainPanel( width=6, style="background-color: #88B0CA;", 
       navbarPage("Plot:",  id="plotNavBar", fluid=TRUE, 
