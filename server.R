@@ -48,6 +48,11 @@ pts2Source<-function(txt,ptRList){
   txt<-replaceDef(txt, replacement, defTag=defTag) 
 }
 
+df2Source<-function(txt, dfList){
+  replacement<-formatDFDefs(dfList)
+  txt<-replaceDef(txt, replacement, defTag="ptR.df") 
+}
+
 
 # called by either a newloaded source
 # or upon a commit
@@ -166,6 +171,29 @@ shinyServer(function(input, output,session) {
     }
   })
   
+  # tag button (end point tag)
+  observeEvent(input$tagPt, {
+    selection<-input$ptSet
+    ptDefs<-getPtDefs()
+    dfList<-ptDefs$df
+    ptsList<-ptDefs$pts
+    len<-length(ptsList[[selection]])/2
+    if(selection %in% names(dfList) & len>0){
+      df<-dfList[[selection]]
+      if("tag" %in% names(df)){
+        tmp.df<-tail(df,1)
+        tmp.df$tag<-len
+        df<-rbind(df, tmp.df)
+        dfList[[selection]]<-df
+        src<-user$code
+        src<-df2Source(src,dfList)
+        user$code<-src
+        updateAceEditor( session,"source", value=src)
+      }
+    }
+  })
+  
+  
   #---commit  button----- (update sourceCode with editor contents)
   # alternatively can use observeEvent( input$commit, { ... })
   observe({ 
@@ -204,6 +232,9 @@ shinyServer(function(input, output,session) {
       }
     })
   })
+  
+  
+  
   
 #----BUTTON EVENTS END-----------------
   
