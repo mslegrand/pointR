@@ -1,60 +1,31 @@
-
+#source("coreConfig.R")
 source("parsingUtil.R")
-#---------------------------------------------------------------
-#code template 
 
+
+# defines
+#options(shiny.error = recover)
+#-------------------------------
 paste(names(svgR:::eleDefs), collapse=" ")->element.names
 
 paste0("#svgR elements: ", element.names, "\n",
-"WH<-c(600,620)
-
-#Defined by mouse: edit with care!
-ptR<-list( x=c() )
-
-ptR.df<-list(x=data.frame(ptIndx=1))
-
-svgR(wh=WH, 
-  #your custom code goes here
-  
-  NULL
-  
-  
- 
-)
-")->codeTemplate
-#-------------------------------------------------
-
-#debug template
-paste0("#svgR elements: ", element.names, "\n",
        "WH<-c(600,620)
+       
+       #Defined by mouse: edit with care!
+       ptR<-list( x=c() )
+       
+       ptR.df<-list(x=data.frame(tag=1))
+       
+       svgR(wh=WH, 
+       #your custom code goes here
+       
+       NULL
+       
+       
+       
+       )
+       ")->codeTemplate
+#------------------------
 
-ptDefs<-list(
-   x=c(c( 137,339 ),c( 110.5,180 ),c( 329.5,157 ),c( 357.5,329 ))
-)
-
-
-svgR(wh=WH, 
-     
-     polygon(points=ptDefs$x, fill=\"blue\",opacity=.5),
-     rect( class=\"draggable\", opacity=.5,
-           xy=c(100,100), wh=c(100,100), fill=\"blue\", 
-           transform=\"matrix(1 0 0 1 200 0)\"
-     ),
-     circle( class=\"draggable\", 
-             cxy=c(100,230), r=50, fill=\"red\", opacity=.5,
-             transform=\"matrix(1 0 0 1 179 223)\"
-     )
-)
-")->debugTemplate2
-
-#-------------------------------
-
-# defines
-
-
-indent<-function(n){
-  rep(" ", n*2)
-}
 
 #---external fns----
 as.text<-function(q){
@@ -76,6 +47,12 @@ getDefPos<-function(txt, defTag){
   tag.df<-extractTagDF(p.df, tag="ptR")
   pos<-extractPositions(cumCharLines, tag.df)
 }
+
+# getDefPos<-function(tag="ptR", txt, p.df, cumCharLines){
+#   tag.df<-extractTagDF(p.df, tag="ptR")
+#   pos<-extractPositions(cumCharLines, tag.df)  
+# }
+# 
 
 
 replaceDef<-function(txt, replacement, defTag){
@@ -107,6 +84,8 @@ getDef<-function(txt, defTag){
   pos<-getDefPos(txt, defTag)
   return(substr(txt, pos[1], pos[2]))
 }
+
+
 
 # formatPts<-function(pts){
 #   if(length(pts)==0 ){
