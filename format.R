@@ -16,8 +16,8 @@ formatPts<-function(pts){
 }
 
 
-formatPtDefs<-function(defTag, ptDefs){
-  fPtDefs<-sapply(ptDefs, formatPts)
+formatPtDefs<-function(defTag, ptRList){
+  fPtDefs<-sapply(ptRList, formatPts)
   tmp<-paste0(sp,names(fPtDefs),"=",fPtDefs,collapse=",\n")
   replacement<-paste0(defTag,"<-list(\n",tmp,"\n)")
   return(replacement)
