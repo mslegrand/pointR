@@ -25,7 +25,7 @@ shinyUI(fluidPage(
   sidebarLayout( 
     sidebarPanel( width=6, #editor panel
                   navbarPage("Edit:",   fluid=TRUE, 
-                             id="fileNavBar",
+                             id="editNavBar",
                              navbarMenu("File", 
                                         tabPanel("New"),
                                         tabPanel("Open"),
@@ -53,7 +53,7 @@ shinyUI(fluidPage(
 
     # svgR plot panel
     mainPanel( width=6, style="background-color: #88B0CA;", 
-      navbarPage("Plot:",  id="svgNavBar", fluid=TRUE, 
+      navbarPage("Plot:",  id="plotNavBar", fluid=TRUE, 
           tabPanel("Points", 
                     wellPanel( 
                            style="background-color: #8888AA; 
@@ -121,7 +121,7 @@ shinyUI(fluidPage(
            htmlOutput("svghtml")
            )
       ,br(),
-      conditionalPanel( "input.svgNavBar=='Points'",
+      conditionalPanel( "input.plotNavBar=='Points'",
         actionButton("removePt", label = "Remove Selected", 
                   style="background-color: #222244; color: white;
                   border-radius: 24px; "),

@@ -209,8 +209,8 @@ shinyServer(function(input, output,session) {
   
 #observers --------------------------
 #---navbarMenuBar--------
-observeEvent( input$fileNavBar, { 
-  fileCmd<-input$fileNavBar
+observeEvent( input$editNavBar, { 
+  fileCmd<-input$editNavBar
   
   if(fileCmd=="New"){ #-----new
     txt<-codeTemplate
@@ -222,7 +222,7 @@ observeEvent( input$fileNavBar, {
       updateAceEditor( session,"source", value=txt)
     ) 
     updateSelectInput(session, "ptSet", label = "Selected Pt Vec Def", choices=c("x"), selected=NULL ) 
-    updateNavbarPage(session, "fileNavBar", selected ="Source")  
+    updateNavbarPage(session, "editNavBar", selected ="Source")  
   }
   if(fileCmd=="Open"){ #-----open 
     fileName=""
@@ -243,7 +243,7 @@ observeEvent( input$fileNavBar, {
         updateAceEditor( session,"source", value=src)
       }
     }
-    updateNavbarPage(session, "fileNavBar", selected ="Source")
+    updateNavbarPage(session, "editNavBar", selected ="Source")
   }
   if(fileCmd=="Save"){ #-----save
     fileName=""
@@ -257,7 +257,7 @@ observeEvent( input$fileNavBar, {
       writeLines(txt, fileName)
       updateAceEditor( session,"source", value=txt)
     }
-    updateNavbarPage(session, "fileNavBar", selected ="Source")
+    updateNavbarPage(session, "editNavBar", selected ="Source")
   }
 })
 
@@ -344,7 +344,7 @@ observe({
   
 #----SVG window-------------------
 output$svghtml <- renderUI({
-  svgBarCmd<-input$svgNavBar
+  svgBarCmd<-input$plotNavBar
   WH<-c(600,620)
   if(svgBarCmd=="Points"){
     ptName<-input$ptSet
