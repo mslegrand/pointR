@@ -39,7 +39,7 @@ df2Source<-function(txt, dfList){
 preProcCode<-function(src){
   ptDefs<-ex.getPtDefs(src)
   ptRList<-ptDefs$pts
-  dfList<-ptDefs$ptDefs$df
+  dfList<-ptDefs$df
   src<-pts2Source(src,ptRList)
   if(!is.null(dfList)){
     src<-df2Source(src, dfList)
@@ -91,13 +91,10 @@ shinyServer(function(input, output,session) {
 # Reactive expressions------------- 
   getPtDefs<-reactive({ ex.getPtDefs(user$code) })  #extract points from user code
 
- 
-  
 
 # Event Observers--------------------------------  
 
 # -----------ACE EDITOR------------------------
-
 observeEvent(
   user$code, {
     if(mssg$error==""){
@@ -106,6 +103,39 @@ observeEvent(
   }
 )
 
+  # -----------ACTIVE POINT MATRIX------------------------
+  observeEvent(
+    user$code, {
+      point.index<-selectedPoint$index
+      selected<-input$ptSet
+      ptRList<-getPtDefs()$pts
+      res<-ex.getSelectInfo(ptRList, selected, point.index)
+      selectedPoint$index<-res$point.index
+      updateSelectInput(session, "ptSet", 
+                        choices=names(ptRList), selected=res$selected )
+    }
+  )
+  
+  # -----------ACTIVE TAG ------------------------
+  observeEvent(
+    user$code, {
+      point.index<-selectedPoint$index
+      selected<-input$ptSet
+      ptRList<-getPtDefs()$pts
+      tagRList<-getPtDefs()$df
+      values<-intersect(names(ptRList),tagRList)
+      # if(length(values)>0){
+      #   
+      # } else {
+      #   
+      # }
+      # res<-ex.getSelectInfo(ptRList, selected, point.index)
+      # selectedPoint$index<-res$point.index
+      # updateSelectInput(session, "ptSet", 
+      #                   choices=names(ptRList), selected=res$selected )
+    }
+  )
+  
 
   # set index on change of point set selection
   observeEvent( input$ptSet, {
@@ -199,7 +229,7 @@ observeEvent(
   observe({ 
     input$commit
     #get text from editor
-    isolate({
+    isolate({ 
       src<-input$source #------ace editor
       if(nchar(src)>0){
         lines<-strsplit(src,"\n")
@@ -222,25 +252,18 @@ observeEvent(
         } 
       }
       if(nchar(src)>0){
-        
         #check source and update if ok
-        try({
-          user$code<-src
-          dfList<-getPtDefs()$df
-          if(!is.null(dfList)){
-            src<-df2Source(src, dfList)
-            user$code<-src
-            #updateAceEditor( session,"source", value=src)
-          }
-          
-          point.index<-selectedPoint$index
-          selected<-input$ptSet
-          ptRList<-getPtDefs()$pts
-          res<-ex.getSelectInfo(ptRList, selected, point.index)
-          selectedPoint$index<-res$point.index
-          updateSelectInput(session, "ptSet", 
-                            choices=names(ptRList), selected=res$selected )  
-        })
+        src<-preProcCode(src)
+        user$code<-src
+        
+        # point.index<-selectedPoint$index
+        # selected<-input$ptSet
+        # ptRList<-getPtDefs()$pts
+        # res<-ex.getSelectInfo(ptRList, selected, point.index)
+        # selectedPoint$index<-res$point.index
+        # updateSelectInput(session, "ptSet", 
+        #                   choices=names(ptRList), selected=res$selected )  
+      #})
       }
     })
   })
@@ -258,9 +281,6 @@ observeEvent( input$editNavBar, {
     # the next  line update the ptRList; probably should redo with observer
     file$name<-"newSVG.R"
     selectedPoint$index<-0
-    # isolate(
-    #   updateAceEditor( session,"source", value=txt)
-    # ) 
     updateSelectInput(session, "ptSet",  choices=c("x"), selected="x" ) 
     updateNavbarPage(session, "editNavBar", selected ="Source")  
   }
@@ -272,14 +292,15 @@ observeEvent( input$editNavBar, {
       src<-paste(readLines(fileName), collapse = "\n")
       file$name<-fileName
       if(nchar(src)>0){
-        user$code<-src 
-        point.index<-selectedPoint$index
-        selected<-input$ptSet
-        ptRList<-getPtDefs()$pts
-        res<-ex.getSelectInfo(ptRList, selected, point.index)
-        selectedPoint$index<-res$point.index
-        updateSelectInput(session, "ptSet",  choices=names(ptRList), selected=res$selected ) 
-        #updateAceEditor( session,"source", value=src)
+        src<-preProcCode(src)
+        user$code<-src
+        # point.index<-selectedPoint$index
+        # selected<-input$ptSet
+        # ptRList<-getPtDefs()$pts
+        # res<-ex.getSelectInfo(ptRList, selected, point.index)
+        # selectedPoint$index<-res$point.index
+        # updateSelectInput(session, "ptSet",  choices=names(ptRList), selected=res$selected ) 
+        
       }
     }
     updateNavbarPage(session, "editNavBar", selected ="Source")
