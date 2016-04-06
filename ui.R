@@ -113,7 +113,7 @@ shinyUI(fluidPage(
                      fluidRow(
                        column(2, 
                               selectInput(
-                                "ptSet2", "Tagged Points",
+                                "tagPts", "Tagged Points",
                                 multiple=FALSE, size=3, selectize = FALSE,
                                 list("x"),  selected="x", 
                                 width="100px"  
@@ -121,7 +121,7 @@ shinyUI(fluidPage(
                        ),
                        column(2, 
                               selectInput(
-                                "ptSet4", "Tag Index",
+                                "tagIndx", "Tag Index",
                                 multiple=FALSE, size=3, selectize = FALSE,
                                 list(1,3,2,4,5), selected=3,
                                 width="60px"  
@@ -129,7 +129,7 @@ shinyUI(fluidPage(
                        ),
                        column(2, 
                               selectInput(
-                                "ptSet23", "Column Name",
+                                "tagCol", "Column Name",
                                 multiple=FALSE, size=3, selectize = FALSE,
                                 list("x"),  selected="x", 
                                 width="100px"  
@@ -138,13 +138,13 @@ shinyUI(fluidPage(
                        
                        column(3, 
                               selectInput(
-                                "ptSet5", "Column Value",
+                                "tagColVal", "Column Value",
                                 multiple=FALSE, size=4, selectize = FALSE,
                                 list("x"),  selected="x", 
                                 width="100px"  
                               )
                        ),
-                       column(3, textInput("val", "Use This New Value Instead"))
+                       column(3, textInput("tagValEd", "Use This New Value Instead"))
                       ),
                      style="background-color: #8888AA; border-color: #88AAAA; 
                             margin-top: 0px; margin-bottom: 0px; margin-left:0; margin-right:0"
