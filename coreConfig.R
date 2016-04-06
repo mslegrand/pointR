@@ -61,6 +61,8 @@ background: linear-gradient(to bottom, #6199c7 -1%,#cedbe9 0%,#aac5de 0%,#aac5de
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6199c7', endColorstr='#26558b',GradientType=0 ); /* IE6-9 */      }
 "
 
+
+style="background-color: #8888AA; border-color: #88AAAA; margin-top: 0px; margin-bottom: 0px;"
 #---------------------------------------------------------------
 #code template 
 

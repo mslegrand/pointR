@@ -11,6 +11,30 @@ paste0("#svgR elements: ", element.names, "\n",
 "WH<-c(600,620)
 
 #Defined by mouse: edit with care!
+ptR<-list(
+  x=c()
+)
+
+svgR(wh=WH, 
+#your custom code goes here
+
+NULL
+
+
+
+)
+")->codeTemplate
+#------------------------
+
+# defines
+#options(shiny.error = recover)
+#-------------------------------
+paste(names(svgR:::eleDefs), collapse=" ")->element.names
+
+paste0("#svgR elements: ", element.names, "\n",
+"WH<-c(600,620)
+
+#Defined by mouse: edit with care!
 ptR<-list( x=c() )
 
 tagR<-list(x=data.frame(tag=1))
@@ -23,7 +47,7 @@ NULL
 
 
 )
-")->codeTemplate
+")->codeTemplate2
 #------------------------
 
 
@@ -52,21 +76,17 @@ getDefPos<-function(txt, defTag){
   }
 }
 
-# getDefPos<-function(tag="ptR", txt, p.df, cumCharLines){
-#   tag.df<-extractTagDF(p.df, tag="ptR")
-#   pos<-extractPositions(cumCharLines, tag.df)  
-# }
-# 
 
 
 replaceDef<-function(txt, replacement, defTag){
   pos<-getDefPos(txt, defTag)
-  paste0(
+  s<-paste0(
     substr(txt, 1, pos[1]-1),
     replacement,
-    substr(txt,pos[2]+1,nchar(txt)),
+    substr(txt,pos[2]+1, nchar(txt) ),
     sep=""
   )
+  return(s)
 }
 
 replaceTxt<-function(txt, replacements, positions){
@@ -102,6 +122,7 @@ ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
       stopifnot(!is.null(ptDefTxt1))
       eval(parse(text=ptDefTxt1))
       ptDefs$pts<-get(ptTag)
+      
       ptDefTxt2<-getDef(src, defTag=dfTag)
       # if(!is.null(ptDefTxt2)){ # ptR.df is optional!
       #   eval(parse(text=ptDefTxt2))
