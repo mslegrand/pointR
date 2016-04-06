@@ -50,7 +50,7 @@ pts2Source<-function(txt,ptRList){
 
 df2Source<-function(txt, dfList){
   replacement<-formatDFDefs(dfList)
-  txt<-replaceDef(txt, replacement, defTag="ptR.df") 
+  txt<-replaceDef(txt, replacement, defTag="tagR") 
 }
 
 
@@ -74,7 +74,10 @@ ex.getSelectInfo<-function(ptRList, selected, point.index){
   }
   #default: an existing choice
   point.index=max(point.index, length( ptRList[[selected]])/2 )
-  rtv<-list(selected=selected, point.index=point.index)
+  rtv<-list(
+    selected=selected, 
+    point.index=point.index
+  )
   return(rtv)  
 }
 
@@ -88,7 +91,7 @@ shinyServer(function(input, output,session) {
   
   user <- reactiveValues( code=codeTemplate )   #  internal copy of user code
   file<-reactiveValues( name="newFile.R")       #  file path
-  selectedPoint<-reactiveValues(index=0)        #  index selection of point array
+  selectedPoint<-reactiveValues(index=0)        #  selected (column) in current point array
   init<-reactiveValues(val=0)                   #  kludge for initialization (shouldn't need this)
 # Reactive expressions------------- 
   getPtDefs<-reactive({ ex.getPtDefs(user$code) })  #extract points from user code
@@ -222,13 +225,23 @@ shinyServer(function(input, output,session) {
         } 
       }
       if(nchar(src)>0){
-        user$code<-src
-        point.index<-selectedPoint$index
-        selected<-input$ptSet
-        ptRList<-getPtDefs()$pts
-        res<-ex.getSelectInfo(ptRList, selected, point.index)
-        selectedPoint$index<-res$point.index
-        updateSelectInput(session, "ptSet", label = "Selected Pt Vec Def", choices=names(ptRList), selected=res$selected )  
+        
+        #check source and update if ok
+        try({
+          user$code<-src
+          dfList<-getPtDefs()$df
+          src<-df2Source(src, dfList)
+          user$code<-src
+          updateAceEditor( session,"source", value=src)
+          
+          point.index<-selectedPoint$index
+          selected<-input$ptSet
+          ptRList<-getPtDefs()$pts
+          res<-ex.getSelectInfo(ptRList, selected, point.index)
+          selectedPoint$index<-res$point.index
+          updateSelectInput(session, "ptSet", 
+                            choices=names(ptRList), selected=res$selected )  
+        })
       }
     })
   })
@@ -252,7 +265,7 @@ observeEvent( input$editNavBar, {
     isolate(
       updateAceEditor( session,"source", value=txt)
     ) 
-    updateSelectInput(session, "ptSet", label = "Selected Pt Vec Def", choices=c("x"), selected=NULL ) 
+    updateSelectInput(session, "ptSet",  choices=c("x"), selected="x" ) 
     updateNavbarPage(session, "editNavBar", selected ="Source")  
   }
   if(fileCmd=="Open"){ #-----open 
@@ -270,7 +283,7 @@ observeEvent( input$editNavBar, {
         #cat("names(ptRList)=",paste(names(ptRList),collapse=", "),"\n")
         res<-ex.getSelectInfo(ptRList, selected, point.index)
         selectedPoint$index<-res$point.index
-        updateSelectInput(session, "ptSet", label = "Selected Pt Vec Def", choices=names(ptRList), selected=res$selected ) 
+        updateSelectInput(session, "ptSet",  choices=names(ptRList), selected=res$selected ) 
         updateAceEditor( session,"source", value=src)
       }
     }

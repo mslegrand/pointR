@@ -13,7 +13,7 @@ paste0("#svgR elements: ", element.names, "\n",
 #Defined by mouse: edit with care!
 ptR<-list( x=c() )
 
-ptR.df<-list(x=data.frame(tag=1))
+tagR<-list(x=data.frame(tag=1))
 
 svgR(wh=WH, 
 #your custom code goes here
@@ -93,7 +93,7 @@ getDef<-function(txt, defTag ){
 }
 
 #Todo  fix df
-ex.getPtDefs<-function(src, ptTag="ptR", dfTag="ptR.df"){
+ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
   ptDefs<-list(pts=NULL, df=NULL)
   #defTag<-"Pts" #ptDefs"
   if( any(grepl(ptTag,src) ) ){

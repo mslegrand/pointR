@@ -33,6 +33,8 @@ shinyUI(fluidPage(
                              ),
                              navbarMenu("Code", 
                                         tabPanel("Source"),
+                                        tabPanel("Insert TagR"),
+                                        tabPanel("TagR Choices"),
                                         tabPanel("Compounds")
                              ),
                              tabPanel(HTML("</a></li><li><a  href=\"http://mslegrand.github.io/svgR/User_Guide.html\"  target=\"_blank\" >User Guide </li></a>")),
@@ -44,16 +46,19 @@ shinyUI(fluidPage(
       br(),br(),
       h3(textOutput( "fileName")),
       aceEditor( outputId = "source", value="", mode="r", theme="katzenmilch",
-                 height = "600px", fontSize=16, autoComplete="live", 
+                 height = "650px", fontSize=16, autoComplete="live", 
                  autoCompleteList =names(svgR:::eleDefs)),
       actionButton("commit", label = "COMMIT EDIT", 
                    style="background-color: #222244; color: white;
                    border-radius: 24px; ")
     ),
 #---------------------------------------------------------------
-    # svgR plot panel
+#---------------plotNavBar  ------------------------------------
+# svgR plot panel
     mainPanel( width=6, style="background-color: #88B0CA;", 
-      navbarPage("Plot:",  id="plotNavBar", fluid=TRUE, 
+      navbarPage("Plot Design:",  id="plotNavBar", fluid=TRUE, 
+                 
+#---------------points  ------------------------------------
           tabPanel("Points", 
                     wellPanel( 
                            style="background-color: #8888AA; 
@@ -62,9 +67,10 @@ shinyUI(fluidPage(
                       fluidRow(
                         column(6, 
                           selectInput(
-                            "ptSet", "Selected Pt Vec Def",
-                            #multiple=TRUE, size=3, selectize = FALSE,
-                            list("x"), width="150px"  
+                            "ptSet", "Active Points",
+                            multiple=FALSE, size=3, selectize = FALSE,
+                            list("x"), selected="x", 
+                            width="150px"  
                           )
                         ),
                         column(6,
@@ -101,6 +107,9 @@ shinyUI(fluidPage(
                               
              
  #         ),
+
+#---------------Transform  ------------------------------------
+
           tabPanel("Transform", 
                    style="background-color: #8888AA; 
                    border-color: #88AAAA; margin-top: 0px; 
@@ -111,8 +120,67 @@ shinyUI(fluidPage(
                      tabPanel("Scale"),
                      type="pills"
                    ) 
+          ),
+#---------------TAGS  ------------------------------------
+          # tabPanel("TagData", 
+          #          style="background-color: #8888AA; 
+          #                    border-color: #88AAAA; margin-top: 0px; 
+          #                    margin-bottom: 0px;",
+          #          tabsetPanel( id="dfOption",
+          #                       tabPanel("tag"), 
+          #                       tabPanel("fill"),  
+          #                       tabPanel("stroke"), 
+          #                       type="pills"
+          #          ) 
+          # )
+#---------------TAGS  ------------------------------------
+          tabPanel("Tags",
+                   wellPanel( 
+                     style="background-color: #8888AA; border-color: #88AAAA; 
+                            margin-top: 0px; margin-bottom: 0px;",
+                     fluidRow(
+                       column(2, 
+                              selectInput(
+                                "ptSet2", "Tagged Points",
+                                multiple=FALSE, size=3, selectize = FALSE,
+                                list("x"),  selected="x", 
+                                width="100px"  
+                              )
+                       ),
+                       column(2, 
+                              selectInput(
+                                "ptSet4", "Tag Index",
+                                multiple=FALSE, size=3, selectize = FALSE,
+                                list(1,3,2,4,5), selected=3,
+                                width="60px"  
+                              )
+                       ),
+                       column(2, 
+                              selectInput(
+                                "ptSet23", "Column Name",
+                                multiple=FALSE, size=3, selectize = FALSE,
+                                list("x"),  selected="x", 
+                                width="100px"  
+                              )
+                       ),
+                       
+                       column(3, 
+                              selectInput(
+                                "ptSet5", "Column Value",
+                                multiple=FALSE, size=4, selectize = FALSE,
+                                list("x"),  selected="x", 
+                                width="100px"  
+                              )
+                       ),
+                       column(3, textInput("val", "Use This New Value Instead"))
+                      ),
+                     style="background-color: #8888AA; border-color: #88AAAA; 
+                            margin-top: 0px; margin-bottom: 0px; margin-left:0; margin-right:0"
+                   )
           )
+
       ),
+#-----------Plot--------------------------------------------
       splitLayout(cellWidths = c("70%", "30%"),
                   h3('svgR plot', style="color: #4d3a7d; margin-top: 0px;"),
                   checkboxInput("showGrid", "Show Coordinate Grid", value = TRUE, width = "200px")

@@ -42,7 +42,7 @@ formatDFValue<-function(df){
   }
 }
 
-formatDFDefs<-function(dfDefs, dfDefsTag="ptR.df"){
+formatDFDefs<-function(dfDefs, dfDefsTag="tagR"){
   dfdNames<-names(dfDefs)
   tmp0<-lapply(dfdNames, function(nm){
     df<-dfDefs[[nm]]
@@ -65,6 +65,7 @@ formatDFDefs<-function(dfDefs, dfDefsTag="ptR.df"){
 #converts named list to data.frame, padding if necessary
 #technically not a format, but rather a padder
 list2DF<-function(plist){
+  plist<-plist[!sapply(plist, is.null)]
   n<-length(plist$tag)
   tmp<-sapply(plist, function(x){
     m<-length(x)
