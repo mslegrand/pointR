@@ -36,6 +36,18 @@ df2Source<-function(txt, dfList){
   txt<-replaceDef(txt, replacement, defTag="tagR") 
 }
 
+preProcCode<-function(src){
+  ptDefs<-ex.getPtDefs(src)
+  ptRList<-ptDefs$pts
+  dfList<-ptDefs$ptDefs$df
+  src<-pts2Source(src,ptRList)
+  if(!is.null(dfList)){
+    src<-df2Source(src, dfList)
+  }
+   return(src)
+}
+
+
 
 # called by either a newloaded source
 # or upon a commit
@@ -71,6 +83,7 @@ shinyServer(function(input, output,session) {
  
 # Reactive values----------
   user <- reactiveValues( code=codeTemplate )   #  internal copy of user code
+  mssg<-reactiveValues(error="")
   file<-reactiveValues( name="newFile.R")       #  file path
   selectedPoint<-reactiveValues(index=0)        #  selected (column) in current point array
   init<-reactiveValues(val=0)                   #  kludge for initialization (shouldn't need this)
@@ -79,15 +92,20 @@ shinyServer(function(input, output,session) {
   getPtDefs<-reactive({ ex.getPtDefs(user$code) })  #extract points from user code
 
  
+  
+
 # Event Observers--------------------------------  
-# Initialization
-  observeEvent(
-    tmp<-init$val,{
-      isolate(
-        updateAceEditor( session,"source", value=user$code)
-      ) 
+
+# -----------ACE EDITOR------------------------
+
+observeEvent(
+  user$code, {
+    if(mssg$error==""){
+      updateAceEditor( session,"source", value=user$code)
     }
-  )
+  }
+)
+
 
   # set index on change of point set selection
   observeEvent( input$ptSet, {
@@ -101,7 +119,131 @@ shinyServer(function(input, output,session) {
   })
 
 #----BUTTON EVENTS BEGIN-----------------
-source("serverButtons.R")
+
+  #---remove last point  button-----
+  observeEvent( input$removePt, {
+    selection<-input$ptSet
+    if(selection!=""){
+      ptRList<-getPtDefs()$pts
+      tmp<-ptRList[[selection]]
+      indx=selectedPoint$index 
+      if(indx>=1){
+        tmp<-tmp[-c(2*indx,2*indx-1)]
+        selectedPoint$index<-selectedPoint$index-1
+      } else {
+        tmp<-NULL
+        selectedPoint$index<-0
+      }
+      
+      ptRList[[selection]]<-tmp
+      if(length(ptRList)==0){
+        ptRList<-list(x=c())
+      }   
+      src<-user$code
+      src<-pts2Source(src,ptRList)
+      user$code<-src
+      #updateAceEditor( session,"source", value=src)
+    }
+  })
+  
+  #---selected point forward button-----
+  observeEvent(input$forwardPt,{
+    selection<-input$ptSet
+    ptRList<-getPtDefs()$pts
+    len<-length(ptRList[[selection ]])/2
+    selectedPoint$index<-min(len, selectedPoint$index+1)
+  })
+  
+  #---selected point backward button-----
+  observeEvent(input$backwardPt,{
+    #decrement selectedPointIndex
+    selection<-input$ptSet
+    ptRList<-getPtDefs()$pts
+    len<-length(ptRList[[selection ]])/2
+    if(len>0){
+        selectedPoint$index<-max(1,selectedPoint$index-1)
+    } else {
+        selectedPoint$index<-0
+    }
+  })
+  
+  #---tag end point button-----
+  observeEvent(input$tagPt, {
+    selection<-input$ptSet
+    ptDefs<-getPtDefs()
+    dfList<- ptDefs$df
+    ptsList<-ptDefs$pts
+    len<-length(ptsList[[selection]])/2 #number of points in sleection
+    if(len>0){
+      df<-dfList[[selection]]
+      if(length(df)==0){ # selection is not listed in tags
+        df<-data.frame(tag=1)
+      }
+      if("tag" %in% names(df)){ # if not, then do nothing
+        tmp.df<-tail(df,1)
+        tmp.df$tag<-len
+        df<-rbind(df, tmp.df)
+        dfList[[selection]]<-df
+        src<-user$code
+        src<-df2Source(src,dfList)
+        user$code<-src
+        #updateAceEditor( session,"source", value=src)
+      }
+    }
+  })
+  
+  
+  #---commit  button----- 
+  #(updates user$code with editor contents)
+  # alternatively can use observeEvent( input$commit, { ... })
+  observe({ 
+    input$commit
+    #get text from editor
+    isolate({
+      src<-input$source #------ace editor
+      if(nchar(src)>0){
+        lines<-strsplit(src,"\n")
+        lines<-lines[[1]]
+        ptRPos<-grep("^\\s*ptR<-",lines)
+        svgRPos<-grep("^\\s*svgR\\(",lines)
+        Err<-NULL
+        if(length(ptRPos)!=1){
+          Err<-"Missing ptR list or multiple  ptR lists"
+        }
+        if(length(svgRPos)!=1){
+          Err<-"Missing svgR call or multiple svgR calls"
+        }
+        if(is.null(Err) & !(ptRPos[1]<svgRPos[1])){
+          Err<-"ptR list must come prior to svgR call"
+        }
+        if(!is.null(Err)){
+          session$sendCustomMessage(type='testmessage', message=Err)
+          src<-""
+        } 
+      }
+      if(nchar(src)>0){
+        
+        #check source and update if ok
+        try({
+          user$code<-src
+          dfList<-getPtDefs()$df
+          if(!is.null(dfList)){
+            src<-df2Source(src, dfList)
+            user$code<-src
+            #updateAceEditor( session,"source", value=src)
+          }
+          
+          point.index<-selectedPoint$index
+          selected<-input$ptSet
+          ptRList<-getPtDefs()$pts
+          res<-ex.getSelectInfo(ptRList, selected, point.index)
+          selectedPoint$index<-res$point.index
+          updateSelectInput(session, "ptSet", 
+                            choices=names(ptRList), selected=res$selected )  
+        })
+      }
+    })
+  })
 #----BUTTON EVENTS END-----------------
   
   
@@ -116,9 +258,9 @@ observeEvent( input$editNavBar, {
     # the next  line update the ptRList; probably should redo with observer
     file$name<-"newSVG.R"
     selectedPoint$index<-0
-    isolate(
-      updateAceEditor( session,"source", value=txt)
-    ) 
+    # isolate(
+    #   updateAceEditor( session,"source", value=txt)
+    # ) 
     updateSelectInput(session, "ptSet",  choices=c("x"), selected="x" ) 
     updateNavbarPage(session, "editNavBar", selected ="Source")  
   }
@@ -137,7 +279,7 @@ observeEvent( input$editNavBar, {
         res<-ex.getSelectInfo(ptRList, selected, point.index)
         selectedPoint$index<-res$point.index
         updateSelectInput(session, "ptSet",  choices=names(ptRList), selected=res$selected ) 
-        updateAceEditor( session,"source", value=src)
+        #updateAceEditor( session,"source", value=src)
       }
     }
     updateNavbarPage(session, "editNavBar", selected ="Source")
@@ -152,7 +294,7 @@ observeEvent( input$editNavBar, {
       file$name<-fileName
       txt<-user$code
       writeLines(txt, fileName)
-      updateAceEditor( session,"source", value=txt)
+      #updateAceEditor( session,"source", value=txt)
     }
     updateNavbarPage(session, "editNavBar", selected ="Source")
   }
@@ -221,9 +363,9 @@ observe({
       # update internal user source
       user$code<-src
       #update editor
-      isolate( #no dependency on editor
-        updateAceEditor( session,"source", value=src)
-      )
+      # isolate( #no dependency on editor
+      #   updateAceEditor( session,"source", value=src)
+      # )
     }
   )
 })
