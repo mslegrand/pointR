@@ -86,27 +86,10 @@ shinyUI(fluidPage(
                       )
                     ) 
                   ),
-              #      style="background-color: #8888AA; 
-              #      border-color: #88AAAA; margin-top: 0px; 
-              #      margin-bottom: 0px;",
-              # splitLayout(cellWidths = c("50%", "50%"),
-              #             selectInput("ptSet", "Selected Pt Vec Def",  
-              #                         list("x"), width="200px"  ),
-              #             
-              #             tabsetPanel( id="pointOption",
-              #               tabPanel("Insert"), 
-              #               tabPanel("Edit"), 
-              #               #tabPanel("Tag"),
-              #               type="pills"
-              #             )              
-              #)
-
 #               fixedRow( column(6, style = "background-color:yellow;", 
 #                                div(style = "height:50px;"))
 #               ),
-                              
-             
- #         ),
+#         ),
 
 #---------------Transform  ------------------------------------
 
@@ -121,18 +104,7 @@ shinyUI(fluidPage(
                      type="pills"
                    ) 
           ),
-#---------------TAGS  ------------------------------------
-          # tabPanel("TagData", 
-          #          style="background-color: #8888AA; 
-          #                    border-color: #88AAAA; margin-top: 0px; 
-          #                    margin-bottom: 0px;",
-          #          tabsetPanel( id="dfOption",
-          #                       tabPanel("tag"), 
-          #                       tabPanel("fill"),  
-          #                       tabPanel("stroke"), 
-          #                       type="pills"
-          #          ) 
-          # )
+
 #---------------TAGS  ------------------------------------
           tabPanel("Tags",
                    wellPanel( 
