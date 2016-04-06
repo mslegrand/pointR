@@ -10,7 +10,7 @@ formatPts<-function(pts){
     tmp<-apply(tmp, 2, function(x)paste(x,collapse=","))
     tmp<-paste("c(",tmp,")")
     tmp<-paste(tmp, collapse=",")
-    tmp<-paste0("matrix(\n",sp,sp,"c(", tmp, "),\n,",sp,"2,)")
+    tmp<-paste0("matrix(\n",sp,sp,"c(", tmp, "), 2\n",sp,")")
     return(tmp)
   }
 }
