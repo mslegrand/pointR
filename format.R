@@ -37,6 +37,8 @@ formatDFValue<-function(df){
       value<-paste(value, collapse=", ")  #value ='a, b, c, '
       paste0(sp,name,"=c(",value,")")
     })
+    dfTxt<-c(dfTxt, paste0(sp, "stringsAsFactors =FALSE"))
+    
     dfTxt2<-paste0(sp, dfTxt, collapse=",\n")
     return(dfTxt2)
   }
@@ -50,7 +52,7 @@ formatDFDefs<-function(dfDefs, dfDefsTag="tagR"){
     dfSpec<-c(
       paste0(sp,nm, "=data.frame("), 
       dfVal, 
-      paste0(sp,")")
+      paste0(sp,sp,")")
     )
     dfSpec<-paste0( dfSpec, collapse="\n")
   })
@@ -66,6 +68,8 @@ formatDFDefs<-function(dfDefs, dfDefsTag="tagR"){
 #technically not a format, but rather a padder
 list2DF<-function(plist){
   plist<-plist[!sapply(plist, is.null)]
+  nms<-setdiff(names(plist), "stringsAsFactors")
+  plist<-plist[nms]
   n<-length(plist$tag)
   tmp<-sapply(plist, function(x){
     m<-length(x)
@@ -77,7 +81,7 @@ list2DF<-function(plist){
     x[1:n]
   },
   simplify = FALSE)
-  as.data.frame(tmp)
+  as.data.frame(tmp, stringsAsFactors =FALSE)
 }
 
 
