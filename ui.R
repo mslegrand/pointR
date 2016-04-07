@@ -115,7 +115,7 @@ shinyUI(fluidPage(
                               selectInput(
                                 "tagPts", "Tagged Points",
                                 multiple=FALSE, size=3, selectize = FALSE,
-                                list("x"),  selected="x", 
+                                list(),  selected=NULL, 
                                 width="100px"  
                               )
                        ),
@@ -123,7 +123,7 @@ shinyUI(fluidPage(
                               selectInput(
                                 "tagIndx", "Tag Index",
                                 multiple=FALSE, size=3, selectize = FALSE,
-                                list(1,3,2,4,5), selected=3,
+                                list(), selected=NULL,
                                 width="60px"  
                               )
                        ),
@@ -131,26 +131,29 @@ shinyUI(fluidPage(
                               selectInput(
                                 "tagCol", "Column Name",
                                 multiple=FALSE, size=3, selectize = FALSE,
-                                list("x"),  selected="x", 
+                                list(),  selected=NULL, 
                                 width="100px"  
                               )
                        ),
                        
                        column(3, 
                               selectInput(
-                                "tagColVal", "Column Value",
-                                multiple=FALSE, size=4, selectize = FALSE,
-                                list("x"),  selected="x", 
+                                "tagColVal", "Column-Tag Value Choice",
+                                multiple=FALSE, size=3, selectize = FALSE,
+                                list(),  selected=NULL, 
                                 width="100px"  
                               )
                        ),
-                       column(3, textInput("tagValEd", "Use This New Value Instead"))
+                       column(3, textInput("tagValEd", "Alternate Value", 
+                                           value=""),
+                              actionButton("insertVal2Col", label = "Insert Val", 
+                                           style="background-color: #222244; color: white; border-radius: 24px; ")
+                              )
                       ),
                      style="background-color: #8888AA; border-color: #88AAAA; 
                             margin-top: 0px; margin-bottom: 0px; margin-left:0; margin-right:0"
                    )
           )
-
       ),
 #-----------Plot--------------------------------------------
       splitLayout(cellWidths = c("70%", "30%"),
