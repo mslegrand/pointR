@@ -23,7 +23,7 @@ NULL
 
 
 )
-")->codeTemplate
+")->codeTemplate2
 #------------------------
 
 # defines
@@ -37,7 +37,7 @@ paste0("#svgR elements: ", element.names, "\n",
 #Defined by mouse: edit with care!
 ptR<-list( x=c() )
 
-tagR<-list(x=data.frame(tag=1))
+tagR<-list(x=data.frame(tag=1, stringsAsFactors =FALSE))
 
 svgR(wh=WH, 
 #your custom code goes here
@@ -47,7 +47,7 @@ NULL
 
 
 )
-")->codeTemplate2
+")->codeTemplate
 #------------------------
 
 
