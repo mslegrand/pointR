@@ -82,10 +82,13 @@ ex.getSelectInfo<-function(ptRList, selected, point.index){
 shinyServer(function(input, output,session) {
  
 # Reactive values----------
-  user <- reactiveValues( code=codeTemplate )   #  internal copy of user code
+  user <- reactiveValues( code=codeTemplate) #  internal copy of user code
   mssg<-reactiveValues(error="")
   file<-reactiveValues( name="newFile.R")       #  file path
-  selectedPoint<-reactiveValues(index=0)        #  selected (column) in current point array
+  selectedPoint<-reactiveValues(
+    name=NULL, # name of current point array
+    index=0  #  selected (column) in current point array
+  )       
   init<-reactiveValues(val=0)                   #  kludge for initialization (shouldn't need this)
 
 # Reactive expressions------------- 
@@ -144,18 +147,12 @@ observeEvent(
           updateSelectInput(session, "tagCols",
             choices=tagIndxChoices, selected=tagIndxChoices[1])
         } else { #hide it
-          updateSelectInput(session, "tagCol",
-                            choices="none", selected=NULL) 
+          updateSelectInput(session, "tagCol",choices=list(), selected=NULL) 
         }
       } else {
-        updateSelectInput(session, "tagPts",
-                          choices="none", selected=NULL) 
-        updateSelectInput(session, "tagIndx",
-                          choices="none", selected=NULL )
-        updateSelectInput(session, "tagCol",
-                          choices="none", selected=NULL) 
-        updateSelectInput(session, "tagColVal",
-                          choices="none", selected=NULL )
+        lapply(c("tagPts","tagIndx","tagCol","tagColVal" ), function(id){
+          updateSelectInput(session, id, choices=list(), selected=NULL)
+        })
       }
     }
   )
@@ -176,6 +173,7 @@ observeEvent(
       } else { #hide it
         updateSelectInput(session, "tagCol",
                           choices="none", selected=NULL) 
+        
       }      
     }
   )
@@ -198,6 +196,23 @@ observeEvent(
   }) 
     
 #----BUTTON EVENTS BEGIN-----------------
+  
+  #---Insert Value-------------------
+  observeEvent(  
+    input$insertVal2Col, {
+    tagIndx<-as.numeric(input$tagIndx)
+    tagCol<- input$tagCol
+    if(length(tagCol)>0){ #or not NULL
+      value<-input$tagValEd
+      tagRList<-getPtDefs()$df
+      tagPtName<-input$tagPts
+      df<-tagRList[[tagPtName]]
+      choices<-c(df[[tagCol]], value)
+      choices<-sort(unique(choices))
+      updateSelectInput(session, "tagColVal", choices=choices, selected=value )
+      #TODO update the src
+    }
+  })
 
   #---remove last point  button-----
   observeEvent( input$removePt, {
@@ -246,27 +261,34 @@ observeEvent(
     }
   })
   
-  #---tag end point button-----
+  #---TAG POINT button-----
   observeEvent(input$tagPt, {
     selection<-input$ptSet
     ptDefs<-getPtDefs()
-    dfList<- ptDefs$df
     ptsList<-ptDefs$pts
-    len<-length(ptsList[[selection]])/2 #number of points in sleection
+    dfList<-ptDefs$df
+    len<-length(ptsList[[selection]])/2 #number of points in selection
+    
+    point.index<-selectedPoint$index #can change later
     if(len>0){
       df<-dfList[[selection]]
       if(length(df)==0){ # selection is not listed in tags
         df<-data.frame(tag=1)
       }
       if("tag" %in% names(df)){ # if not, then do nothing
-        tmp.df<-tail(df,1)
-        tmp.df$tag<-len
-        df<-rbind(df, tmp.df)
-        dfList[[selection]]<-df
-        src<-user$code
-        src<-df2Source(src,dfList)
-        user$code<-src
-        #updateAceEditor( session,"source", value=src)
+        tags<-df$tag
+        if(!(point.index %in% tags)){
+          row<-max(tags[tags<point.index])
+          tmp.df<-subset(df,tag==row)
+          tmp.df$tag<-point.index
+          df<-rbind(df, tmp.df)
+          ordrows<-order(df$tag)
+          df<-df[ordrows,,drop=FALSE]
+          dfList[[selection]]<-df
+          #src<-user$code
+          user$code<-df2Source(user$code,dfList)
+          #user$code<-src
+        }
       }
     }
   })
