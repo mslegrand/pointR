@@ -5,7 +5,7 @@ output$svghtml <- renderUI({
   if(svgBarCmd=="Points"){
     ptName<-input$ptSet
     ptRList<-getPtDefs()$pts
-    selectedPointIndx<-selectedPoint$index
+    selectedPointIndx<-selectedPoint$point.index
     scriptName<-"Points"
     #todo use input$pointOption :
     # pointOpt=c("Insert", "Edit","Tag")

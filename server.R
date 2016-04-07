@@ -83,14 +83,15 @@ shinyServer(function(input, output,session) {
  
 # Reactive values----------
   user <- reactiveValues( code=codeTemplate) #  internal copy of user code
-  mssg<-reactiveValues(error="")
   file<-reactiveValues( name="newFile.R")       #  file path
   selectedPoint<-reactiveValues(
     name=NULL, # name of current point array
-    index=0  #  selected (column) in current point array
-  )       
+    index=0    #  selected pt.indx (column) in current point array
+  ) 
+  
   init<-reactiveValues(val=0)                   #  kludge for initialization (shouldn't need this)
-
+  mssg<-reactiveValues(error="")
+  
 # Reactive expressions------------- 
   getPtDefs<-reactive({ ex.getPtDefs(user$code) })  #extract points from user code
 
@@ -109,11 +110,11 @@ observeEvent(
   # -----------ACTIVE POINT MATRIX------------------------
   observeEvent(
     user$code, {
-      point.index<-selectedPoint$index
+      point.index<-selectedPoint$point.index
       selected<-input$ptSet
       ptRList<-getPtDefs()$pts
       res<-ex.getSelectInfo(ptRList, selected, point.index)
-      selectedPoint$index<-res$point.index
+      selectedPoint$point.index<-res$point.index
       updateSelectInput(session, "ptSet", 
                         choices=names(ptRList), selected=res$selected )
     }
@@ -122,7 +123,7 @@ observeEvent(
   # -----------ACTIVE TAG PT------------------------
   observeEvent(
     user$code, {
-      point.index<-selectedPoint$index
+      point.index<-selectedPoint$point.index
       selected<-input$ptSet
       ptRList<-getPtDefs()$pts
       tagRList<-getPtDefs()$df
@@ -220,13 +221,13 @@ observeEvent(
     if(selection!=""){
       ptRList<-getPtDefs()$pts
       tmp<-ptRList[[selection]]
-      indx=selectedPoint$index 
+      indx=selectedPoint$point.index 
       if(indx>=1){
         tmp<-tmp[-c(2*indx,2*indx-1)]
-        selectedPoint$index<-selectedPoint$index-1
+        selectedPoint$point.index<-selectedPoint$point.index-1
       } else {
         tmp<-NULL
-        selectedPoint$index<-0
+        selectedPoint$point.index<-0
       }
       
       ptRList[[selection]]<-tmp
@@ -245,7 +246,7 @@ observeEvent(
     selection<-input$ptSet
     ptRList<-getPtDefs()$pts
     len<-length(ptRList[[selection ]])/2
-    selectedPoint$index<-min(len, selectedPoint$index+1)
+    selectedPoint$point.index<-min(len, selectedPoint$point.index+1)
   })
   
   #---selected point backward button-----
@@ -255,9 +256,9 @@ observeEvent(
     ptRList<-getPtDefs()$pts
     len<-length(ptRList[[selection ]])/2
     if(len>0){
-        selectedPoint$index<-max(1,selectedPoint$index-1)
+        selectedPoint$point.index<-max(1,selectedPoint$point.index-1)
     } else {
-        selectedPoint$index<-0
+        selectedPoint$point.index<-0
     }
   })
   
@@ -269,7 +270,7 @@ observeEvent(
     dfList<-ptDefs$df
     len<-length(ptsList[[selection]])/2 #number of points in selection
     
-    point.index<-selectedPoint$index #can change later
+    point.index<-selectedPoint$point.index #can change later
     if(len>0){
       df<-dfList[[selection]]
       if(length(df)==0){ # selection is not listed in tags
@@ -327,7 +328,7 @@ observeEvent(
         src<-preProcCode(src)
         user$code<-src
         
-        # point.index<-selectedPoint$index
+        # point.index<-selectedPoint$point.index
         # selected<-input$ptSet
         # ptRList<-getPtDefs()$pts
         # res<-ex.getSelectInfo(ptRList, selected, point.index)
@@ -351,7 +352,7 @@ observeEvent( input$editNavBar, {
     user$code<-codeTemplate
     # the next  line update the ptRList; probably should redo with observer
     file$name<-"newSVG.R"
-    selectedPoint$index<-0
+    selectedPoint$point.index<-0
     updateSelectInput(session, "ptSet",  choices=c("x"), selected="x" ) 
     updateNavbarPage(session, "editNavBar", selected ="Source")  
   }
@@ -365,11 +366,11 @@ observeEvent( input$editNavBar, {
       if(nchar(src)>0){
         src<-preProcCode(src)
         user$code<-src
-        # point.index<-selectedPoint$index
+        # point.index<-selectedPoint$point.index
         # selected<-input$ptSet
         # ptRList<-getPtDefs()$pts
         # res<-ex.getSelectInfo(ptRList, selected, point.index)
-        # selectedPoint$index<-res$point.index
+        # selectedPoint$point.index<-res$point.index
         # updateSelectInput(session, "ptSet",  choices=names(ptRList), selected=res$selected ) 
         
       }
@@ -412,7 +413,7 @@ observe({
         #get selection
         selection<-input$ptSet
         #update local ptRList
-        indx<-selectedPoint$index
+        indx<-selectedPoint$point.index
         ptRList[[selection]]<-append(ptRList[[selection]],newPt,2*indx) 
         #update point values
         selectedPoint$index<-selectedPoint$index+1
