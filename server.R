@@ -116,38 +116,87 @@ observeEvent(
     }
   )
   
-  # -----------ACTIVE TAG ------------------------
+  # -----------ACTIVE TAG PT------------------------
   observeEvent(
     user$code, {
       point.index<-selectedPoint$index
       selected<-input$ptSet
       ptRList<-getPtDefs()$pts
       tagRList<-getPtDefs()$df
-      values<-intersect(names(ptRList),tagRList)
-      # if(length(values)>0){
-      #   
-      # } else {
-      #   
-      # }
-      # res<-ex.getSelectInfo(ptRList, selected, point.index)
-      # selectedPoint$index<-res$point.index
-      # updateSelectInput(session, "ptSet", 
-      #                   choices=names(ptRList), selected=res$selected )
+      choices<-intersect(names(ptRList),names(tagRList))
+      if(length(choices)>0){
+        #TODO: use selection of ptSet if in choices, ow.
+        ptChosen<-input$ptSet
+        if(ptChosen %in% choices){
+          tagName<-ptChosen
+        } else{
+          tagName<-choices[[1]]
+          updateSelectInput(session, "ptSet", selected=tagName )
+        }
+        updateSelectInput(session, "tagPts",
+                         choices=choices, selected=tagName )
+        df<-tagRList[[tagName]]
+        tagIndxChoices<-df[["tag"]]
+        updateSelectInput(session, "tagIndx",
+            choices=tagIndxChoices, selected=tagIndxChoices[1])
+        tagColChoices<-setdiff(names(df),"tag")
+        if(length(tagColChoices)>0){
+          updateSelectInput(session, "tagCols",
+            choices=tagIndxChoices, selected=tagIndxChoices[1])
+        } else { #hide it
+          updateSelectInput(session, "tagCol",
+                            choices="none", selected=NULL) 
+        }
+      } else {
+        updateSelectInput(session, "tagPts",
+                          choices="none", selected=NULL) 
+        updateSelectInput(session, "tagIndx",
+                          choices="none", selected=NULL )
+        updateSelectInput(session, "tagCol",
+                          choices="none", selected=NULL) 
+        updateSelectInput(session, "tagColVal",
+                          choices="none", selected=NULL )
+      }
     }
   )
-  
-
-  # set index on change of point set selection
-  observeEvent( input$ptSet, {
-    ptRList<-getPtDefs()$pts
-    tmp<-length(ptRList)    
-      if(tmp<1 || is.null(ptRList[[1]])){
-        selectedPoint$index<-0
-      } else {
-        selectedPoint$index<-length(ptRList[[input$ptSet]])/2
+# -----------ACTIVE TAG INDX COL------------------------
+  observeEvent(
+    input$tagPts, {
+      tagName<-input$tagPts
+      tagRList<-getPtDefs()$df
+      df<-tagRList[[tagName]]
+      tagIndxChoices<-df[["tag"]]
+      updateSelectInput(session, "tagIndx",
+                        choices=tagIndxChoices, selected=tagIndxChoices[1])
+      tagColChoices<-setdiff(names(df),"tag")
+      if(length(tagColChoices)>0){
+        tagColChoices<-sort(tagColChoices)
+        updateSelectInput(session, "tagCol",
+                          choices=tagColChoices, selected=tagColChoices[1])
+      } else { #hide it
+        updateSelectInput(session, "tagCol",
+                          choices="none", selected=NULL) 
+      }      
+    }
+  )
+# -----------ACTIVE TAG VALUE------------------------
+  observe({
+    tagIndx<-as.numeric(input$tagIndx)
+    tagCol<- input$tagCol
+    isolate({
+      if(length(tagCol)>0){ #or not NULL
+        tagRList<-getPtDefs()$df
+        tagPtName<-input$tagPts
+        df<-tagRList[[tagPtName]]
+        choices<-sort(unique(df[[tagCol]]))
+        value<-subset(df,df$tag==tagIndx)[[tagCol]]
+        updateSelectInput(session, "tagColVal",
+                          choices=choices, selected=value )
+        
       }
-  })
-
+    })  
+  }) 
+    
 #----BUTTON EVENTS BEGIN-----------------
 
   #---remove last point  button-----
