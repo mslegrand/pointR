@@ -75,31 +75,7 @@ ex.getSelectInfo<-function(ptRList, selected, point.index){
   return(rtv)  
 }
 
-# called by either a new/load source or upon a commit
-# ex.getSelectInfo<-function(ptRList, selected, point.index){
-# getSafeNameIndexPair<-function(choiceList, name, index){
-#   choices<-names(choiceList)
-#   if(length(choices)==0){
-#     rtv<-list(name=NULL, index =0 )
-#     return(rtv)
-#   }
-#   if(!(name %in% choices)){ # a new choice
-#     #pick the last choice candidate
-#     name=tail(choices,1)
-#     index=length(choiceList[[name]])/2
-#   }
-#   return( list( name=name, index=index) )
-# }
-
-#getSafeName<-function(list, oldName)  
-  
-#   #default: an existing choice
-#   point.index=max(point.index, length( ptRList[[selected]])/2 )
-#   rtv<-list(
-#     selected=selected, 
-#     point.index=point.in
-# 
-
+#
 #----end external ------------
 
 #---begin server--------------
@@ -132,82 +108,6 @@ observeEvent(
   }
 )
  
-  
-# -----UPON CODE UPDATE-------------------------------------------  
-#---------UPDATE SELECTION + INDEX GIVEN NAVBAR    ---------------
-#   observe({
-#     user$code
-# #    activeNavBar<-input$plotNavBar
-#     isolate({ 
-#       activeNavBar<-input$plotNavBar
-#       #This only get triggered if code changes, so we can
-#       # assume that the activeNavBar is the same as before code change
-#       if( activeNavBar %in% c("Points" ,"Transform") ){
-#         point.index<-selectedPoint$point.index 
-#         selected<-input$ptSet 
-#         ptRList<-getPtDefs()$pts 
-#         choices<-names(ptRList)
-#         if( length(choices)==0 ){ #this should never happen!!!
-#           selectedPoint$point.index<-0
-#           updateSelectInput(session, "ptSet",  choices=NULL, selected=NULL )
-#         } else if( !(selected%in%choices) ){
-#           selected=tail(choices,1)
-#           index=length(ptRList[[selected]])/2 # end
-#           updateSelectInput(session, "ptSet", 
-#                             choices=choices,
-#                             selected= selected )
-#         } else{
-#           selectedPoint$point.index<-
-#             min(selectedPoint$point.index, length(ptRList[[selected]])/2 )
-#         }
-#       }
-#       if( activeNavBar=="Tags"){
-#         # point.index<-selectedPoint$point.index
-#         # selected   <-input$ptSet
-#         ptRList    <-getPtDefs()$pts
-#         tagRList   <-getPtDefs()$df
-#         tagChoices    <-intersect(names(ptRList),names(tagRList))
-#         tagName <- input$tagPts
-#         if(length(tagChoices==0)){ 
-#           # set all tag... to empty and return
-#         } else {
-#           if(!(tagName %in% tagChoices) ){
-#             tagName=tail(choices,1)
-#           }
-#           df<-tagRList[[tagName]]
-#           tags<-df$tag
-#           if(length(tags)==0 || !(1 %in% tags)){
-#             # set all tag... to empty and return
-#           } else {
-#             #adjust tag index.
-#             # update tags and index
-#             #next do columns
-#             #col vals
-#             
-#           }
-#           
-#           index=length(tagRList[[selected]]) # end
-#           
-#         } else {
-#           
-#         }
-#         if(length(tagNamechoices)>0){
-#           # Use selection of ptSet if in choices, ow last avail.
-#           ptChosen<-input$ptSet
-#           if(ptChosen %in% tagNamechoices){
-#             tagName<-ptChosen
-#           } else{
-#             tagName<-tail(tagNamechoices,1)
-#             updateSelectInput(session, "ptSet", selected=tagName )
-#           }
-#           updateSelectInput(session, "tagPts", choices=tagNamechoices, selected=tagName )
-#         }
-#       }
-#       
-#     })
-#   })
-#   #   
-
   # -----------ACTIVE POINT MATRIX------------------------
   #  observes code and plotNavBar
   #  sets active Point, point selection,  and selectedPoint$point.index
