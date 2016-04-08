@@ -36,6 +36,7 @@ df2Source<-function(txt, dfList){
   txt<-replaceDef(txt, replacement, defTag="tagR") 
 }
 
+#used by open and commit
 preProcCode<-function(src){
   ptDefs<-ex.getPtDefs(src)
   ptRList<-ptDefs$pts
@@ -44,13 +45,12 @@ preProcCode<-function(src){
   if(!is.null(dfList)){
     src<-df2Source(src, dfList)
   }
-   return(src)
+  return(src)
 }
 
 
 
-# called by either a newloaded source
-# or upon a commit
+# called by either a new/load source or upon a commit
 ex.getSelectInfo<-function(ptRList, selected, point.index){
   choices<-names(ptRList)
   if(length(choices)==0){
@@ -75,6 +75,31 @@ ex.getSelectInfo<-function(ptRList, selected, point.index){
   return(rtv)  
 }
 
+# called by either a new/load source or upon a commit
+# ex.getSelectInfo<-function(ptRList, selected, point.index){
+# getSafeNameIndexPair<-function(choiceList, name, index){
+#   choices<-names(choiceList)
+#   if(length(choices)==0){
+#     rtv<-list(name=NULL, index =0 )
+#     return(rtv)
+#   }
+#   if(!(name %in% choices)){ # a new choice
+#     #pick the last choice candidate
+#     name=tail(choices,1)
+#     index=length(choiceList[[name]])/2
+#   }
+#   return( list( name=name, index=index) )
+# }
+
+#getSafeName<-function(list, oldName)  
+  
+#   #default: an existing choice
+#   point.index=max(point.index, length( ptRList[[selected]])/2 )
+#   rtv<-list(
+#     selected=selected, 
+#     point.index=point.in
+# 
+
 #----end external ------------
 
 #---begin server--------------
@@ -83,10 +108,10 @@ shinyServer(function(input, output,session) {
  
 # Reactive values----------
   user <- reactiveValues( code=codeTemplate) #  internal copy of user code
-  file<-reactiveValues( name="newFile.R")       #  file path
-  selectedPoint<-reactiveValues(
-    name=NULL, # name of current point array
-    index=0    #  selected pt.indx (column) in current point array
+  file <-reactiveValues( name="newFile.R")       #  file path
+  selectedPoint <- reactiveValues(
+    name=NULL,       # name of current point array
+    point.index=0    #  selected pt.indx (column) in current point array
   ) 
   
   init<-reactiveValues(val=0)                   #  kludge for initialization (shouldn't need this)
@@ -106,100 +131,258 @@ observeEvent(
     }
   }
 )
+ 
+  
+# -----UPON CODE UPDATE-------------------------------------------  
+#---------UPDATE SELECTION + INDEX GIVEN NAVBAR    ---------------
+#   observe({
+#     user$code
+# #    activeNavBar<-input$plotNavBar
+#     isolate({ 
+#       activeNavBar<-input$plotNavBar
+#       #This only get triggered if code changes, so we can
+#       # assume that the activeNavBar is the same as before code change
+#       if( activeNavBar %in% c("Points" ,"Transform") ){
+#         point.index<-selectedPoint$point.index 
+#         selected<-input$ptSet 
+#         ptRList<-getPtDefs()$pts 
+#         choices<-names(ptRList)
+#         if( length(choices)==0 ){ #this should never happen!!!
+#           selectedPoint$point.index<-0
+#           updateSelectInput(session, "ptSet",  choices=NULL, selected=NULL )
+#         } else if( !(selected%in%choices) ){
+#           selected=tail(choices,1)
+#           index=length(ptRList[[selected]])/2 # end
+#           updateSelectInput(session, "ptSet", 
+#                             choices=choices,
+#                             selected= selected )
+#         } else{
+#           selectedPoint$point.index<-
+#             min(selectedPoint$point.index, length(ptRList[[selected]])/2 )
+#         }
+#       }
+#       if( activeNavBar=="Tags"){
+#         # point.index<-selectedPoint$point.index
+#         # selected   <-input$ptSet
+#         ptRList    <-getPtDefs()$pts
+#         tagRList   <-getPtDefs()$df
+#         tagChoices    <-intersect(names(ptRList),names(tagRList))
+#         tagName <- input$tagPts
+#         if(length(tagChoices==0)){ 
+#           # set all tag... to empty and return
+#         } else {
+#           if(!(tagName %in% tagChoices) ){
+#             tagName=tail(choices,1)
+#           }
+#           df<-tagRList[[tagName]]
+#           tags<-df$tag
+#           if(length(tags)==0 || !(1 %in% tags)){
+#             # set all tag... to empty and return
+#           } else {
+#             #adjust tag index.
+#             # update tags and index
+#             #next do columns
+#             #col vals
+#             
+#           }
+#           
+#           index=length(tagRList[[selected]]) # end
+#           
+#         } else {
+#           
+#         }
+#         if(length(tagNamechoices)>0){
+#           # Use selection of ptSet if in choices, ow last avail.
+#           ptChosen<-input$ptSet
+#           if(ptChosen %in% tagNamechoices){
+#             tagName<-ptChosen
+#           } else{
+#             tagName<-tail(tagNamechoices,1)
+#             updateSelectInput(session, "ptSet", selected=tagName )
+#           }
+#           updateSelectInput(session, "tagPts", choices=tagNamechoices, selected=tagName )
+#         }
+#       }
+#       
+#     })
+#   })
+#   #   
 
   # -----------ACTIVE POINT MATRIX------------------------
-  observeEvent(
-    user$code, {
-      point.index<-selectedPoint$point.index
-      selected<-input$ptSet
-      ptRList<-getPtDefs()$pts
-      res<-ex.getSelectInfo(ptRList, selected, point.index)
-      selectedPoint$point.index<-res$point.index
-      updateSelectInput(session, "ptSet", 
-                        choices=names(ptRList), selected=res$selected )
-    }
-  )
+  #  observes code and plotNavBar
+  #  sets active Point, point selection,  and selectedPoint$point.index
   
-  # -----------ACTIVE TAG PT------------------------
-  observeEvent(
-    user$code, {
-      point.index<-selectedPoint$point.index
-      selected<-input$ptSet
-      ptRList<-getPtDefs()$pts
-      tagRList<-getPtDefs()$df
-      choices<-intersect(names(ptRList),names(tagRList))
-      if(length(choices)>0){
-        #TODO: use selection of ptSet if in choices, ow.
-        ptChosen<-input$ptSet
-        if(ptChosen %in% choices){
-          tagName<-ptChosen
-        } else{
-          tagName<-choices[[1]]
-          updateSelectInput(session, "ptSet", selected=tagName )
-        }
-        updateSelectInput(session, "tagPts",
-                         choices=choices, selected=tagName )
-        df<-tagRList[[tagName]]
-        tagIndxChoices<-df[["tag"]]
-        updateSelectInput(session, "tagIndx",
-            choices=tagIndxChoices, selected=tagIndxChoices[1])
-        tagColChoices<-setdiff(names(df),"tag")
-        if(length(tagColChoices)>0){
-          updateSelectInput(session, "tagCols",
-            choices=tagIndxChoices, selected=tagIndxChoices[1])
-        } else { #hide it
-          updateSelectInput(session, "tagCol",choices=list(), selected=NULL) 
-        }
-      } else {
-        lapply(c("tagPts","tagIndx","tagCol","tagColVal" ), function(id){
-          updateSelectInput(session, id, choices=list(), selected=NULL)
-        })
-      }
-    }
-  )
-# -----------ACTIVE TAG INDX COL------------------------
-  observeEvent(
-    input$tagPts, {
-      tagName<-input$tagPts
-      tagRList<-getPtDefs()$df
-      df<-tagRList[[tagName]]
-      tagIndxChoices<-df[["tag"]]
-      updateSelectInput(session, "tagIndx",
-                        choices=tagIndxChoices, selected=tagIndxChoices[1])
-      tagColChoices<-setdiff(names(df),"tag")
-      if(length(tagColChoices)>0){
-        tagColChoices<-sort(tagColChoices)
-        updateSelectInput(session, "tagCol",
-                          choices=tagColChoices, selected=tagColChoices[1])
-      } else { #hide it
-        updateSelectInput(session, "tagCol",
-                          choices="none", selected=NULL) 
-        
-      }      
-    }
-  )
-# -----------ACTIVE TAG VALUE------------------------
   observe({
+    user$code
+    plotMode<-input$plotNavBar
+    isolate({
+      #if( plotMode=='Points'){
+        point.index<-selectedPoint$point.index
+        selected<-input$ptSet
+        ptRList<-getPtDefs()$pts
+        res<-ex.getSelectInfo(ptRList, selected, point.index)
+        selectedPoint$point.index<-res$point.index
+        updateSelectInput(session, "ptSet",
+                          choices=names(ptRList),
+                          selected= res$selected )
+      #}
+    })
+  })
+
+   
+  # -----------ACTIVE TAG PT------------------------
+  #  observes code and plotNavBar
+  #  sets active Tag and Tag index
+  #       tagPts
+  #       tagIndx
+  #       ptSet
+  #       point.index
+
+  observe({
+    user$code
+    input$plotNavBar
+    isolate({
+      #if(input$plotNavBar=="Tags"){
+        point.index<-selectedPoint$point.index
+        selected   <-input$ptSet
+        ptRList    <-getPtDefs()$pts
+        tagRList   <-getPtDefs()$df
+        tagNamechoices    <-intersect(names(ptRList),names(tagRList))
+        if(length(tagNamechoices)>0){
+          # Use selection of ptSet if in choices, ow last avail.
+          ptChosen<-input$ptSet
+          if(ptChosen %in% tagNamechoices){
+            tagName<-ptChosen
+          } else{
+            tagName<-tail(tagNamechoices,1)
+            updateSelectInput(session, "ptSet", selected=tagName )
+          }
+          updateSelectInput(session, "tagPts", choices=tagNamechoices, selected=tagName )
+        }
+      #}
+    })
+  })
+
+  
+# -----------ACTIVE TAG INDX ------------------------
+# observers tagPts
+# sets tagIndx
+#     
+  
+  observe({ 
+    input$tagPts
+    user$code
+    input$plotNavBar
+    isolate({ 
+      #if(input$plotNavBar=="Tags"){
+        tagName<-input$tagPts
+        if(!is.null(tagName)){
+            tagRList<-getPtDefs()$df
+            df<-tagRList[[tagName]]
+            tagIndxChoices<-df[["tag"]]
+            pt.indx<-max(1,selectedPoint$point.index)
+            selectedTagIndx<-max(tagIndxChoices[ tagIndxChoices<= pt.indx])
+            if(selectedPoint$point.index>0){
+              selectedPoint$point.index<-selectedTagIndx
+            }
+            updateSelectInput(session, "tagIndx",
+                            choices=tagIndxChoices,
+                            selected=selectedTagIndx
+            )
+            updateSelectInput(session, "ptSet",
+                              choices=names(getPtDefs()$pts),
+                              selected=tagName
+            )
+        }
+      #}
+    })
+  })
+
+# -----------ACTIVE TAG COL------------------------
+# observers tagPts
+# sets tagCol
+    
+  observe({
+    input$tagPts
+    user$code
+    input$plotNavBar
+    isolate({
+      #if(input$plotNavBar=="Tags"){
+        tagName<-input$tagPts
+        if(!is.null(tagName)){
+          tagRList<-getPtDefs()$df
+          df<-tagRList[[tagName]]
+          tagColChoices<-setdiff(names(df),"tag")
+          tagColChoice<-input$tagCol
+          if(length(tagColChoices)>0){
+            tagColChoices<-sort(tagColChoices)
+            if( length(tagColChoice)==0 || 
+                !(tagColChoice %in% tagColChoices ) ){
+              tagColChoice<-tagColChoices[length(tagColChoices)]
+            }
+            updateSelectInput(session, "tagCol",
+                              choices=tagColChoices, selected=tagColChoices)
+          } else { #hide it
+            updateSelectInput(session, "tagCol",
+                              choices=list(), selected=NULL)
+            
+          }
+        }
+      #}
+    })
+  })
+
+  
+  
+# -----------ACTIVE TAG VALUE------------------------
+  
+  observe({ 
+    tagPtName<-input$tagPts
     tagIndx<-as.numeric(input$tagIndx)
     tagCol<- input$tagCol
-    isolate({
-      if(length(tagCol)>0){ #or not NULL
-        tagRList<-getPtDefs()$df
-        tagPtName<-input$tagPts
-        df<-tagRList[[tagPtName]]
-        choices<-sort(unique(df[[tagCol]]))
-        value<-subset(df,df$tag==tagIndx)[[tagCol]]
-        updateSelectInput(session, "tagColVal",
-                          choices=choices, selected=value )
-        
-      }
-    })  
-  }) 
+    user$code
+    isolate({ 
+      #if( input$plotNavBar=="Tags"){
+        if(length(tagCol)>0){ #or not NULL
+          tagRList<-getPtDefs()$df
+          
+          df<-tagRList[[tagPtName]]
+          choices<-sort(unique(df[[tagCol]]))
+          value<-subset(df,df$tag==tagIndx)[[tagCol]]
+          updateSelectInput(session, "tagColVal",
+                            choices=choices, selected=value )
+        }        
+      #}
+
+    })
+  })
+  
+  # -----------CHANGE TAG VALUE SEL------------------------
+  
+  # observe({
+  #   input$tagValue
+  #   isolate({
+  #     if(length(tagCol)>0){ #or not NULL
+  #       tagRList<-getPtDefs()$df
+  #       tagPtName<-input$tagPts
+  #       df<-tagRList[[tagPtName]]
+  #       choices<-sort(unique(df[[tagCol]]))
+  #       value<-subset(df,df$tag==tagIndx)[[tagCol]]
+  #       updateSelectInput(session, "tagColVal",
+  #                         choices=choices, selected=value )
+  #     }
+  #   })
+  # })
+  
+  
+  
+  
     
 #----BUTTON EVENTS BEGIN-----------------
   
-  #---Insert Value-------------------
-  observeEvent(  
+  # #---Insert Value-------------------
+  
+  observeEvent(
     input$insertVal2Col, {
     tagIndx<-as.numeric(input$tagIndx)
     tagCol<- input$tagCol
@@ -208,10 +391,11 @@ observeEvent(
       tagRList<-getPtDefs()$df
       tagPtName<-input$tagPts
       df<-tagRList[[tagPtName]]
-      choices<-c(df[[tagCol]], value)
-      choices<-sort(unique(choices))
-      updateSelectInput(session, "tagColVal", choices=choices, selected=value )
-      #TODO update the src
+      df[df$tag==tagIndx,tagCol]<-value
+      tagRList[[tagPtName]]<-df
+      user$code<-df2Source(user$code, tagRList)
+      # updateSelectInput(session, "tagColVal",
+      #                   choices=choices, selected=value )
     }
   })
 
@@ -270,7 +454,7 @@ observeEvent(
     dfList<-ptDefs$df
     len<-length(ptsList[[selection]])/2 #number of points in selection
     
-    point.index<-selectedPoint$point.index #can change later
+    point.index<-max(1,selectedPoint$point.index) #can change later
     if(len>0){
       df<-dfList[[selection]]
       if(length(df)==0){ # selection is not listed in tags
@@ -327,6 +511,15 @@ observeEvent(
         #check source and update if ok
         src<-preProcCode(src)
         user$code<-src
+        # if input$plotNavBar=="Points" or "Transform"
+        #    get safe name and index for ptSet
+        #    and if necessary, 
+        #       set ptSet$selection<-name
+        # if input$plotNavBar=="tagPts"
+        #    get safe points and index for tagPts
+        #    and if necessary
+        #        set ptSet$selection<-name
+        
         
         # point.index<-selectedPoint$point.index
         # selected<-input$ptSet
@@ -354,7 +547,8 @@ observeEvent( input$editNavBar, {
     file$name<-"newSVG.R"
     selectedPoint$point.index<-0
     updateSelectInput(session, "ptSet",  choices=c("x"), selected="x" ) 
-    updateNavbarPage(session, "editNavBar", selected ="Source")  
+    updateNavbarPage(session, "editNavBar", selected ="Source") 
+    updateNavbarPage(session, "plotNavBar", selected ="Points") 
   }
   if(fileCmd=="Open"){ #-----open 
     fileName=""
@@ -376,6 +570,7 @@ observeEvent( input$editNavBar, {
       }
     }
     updateNavbarPage(session, "editNavBar", selected ="Source")
+    updateNavbarPage(session, "plotNavBar", selected ="Points") 
   }
   if(fileCmd=="Save"){ #-----save
     fileName=""
@@ -398,7 +593,8 @@ observeEvent( input$editNavBar, {
   #todo: onmove get the new postion and update
 observe({
   input$mydata #may want to rename this
-  isolate(
+  isolate({
+     
     if(length(input$mydata)>0){
       #get cmd
       cmd<-input$mydata[1]
@@ -416,7 +612,7 @@ observe({
         indx<-selectedPoint$point.index
         ptRList[[selection]]<-append(ptRList[[selection]],newPt,2*indx) 
         #update point values
-        selectedPoint$index<-selectedPoint$index+1
+        selectedPoint$point.index<-selectedPoint$point.index+1
         src<-pts2Source(src,ptRList)
       } 
       if(cmd=='move'){ # --------move point
@@ -455,12 +651,13 @@ observe({
       } 
       # update internal user source
       user$code<-src
+      
       #update editor
       # isolate( #no dependency on editor
       #   updateAceEditor( session,"source", value=src)
       # )
     }
-  )
+  })
 })
 
 #---------BEGIN OUTPUT PANELS------------------------------------
