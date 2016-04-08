@@ -5,6 +5,7 @@ output$svghtml <- renderUI({
   if(svgBarCmd=="Points"){
     ptName<-input$ptSet
     ptRList<-getPtDefs()$pts
+
     selectedPointIndx<-selectedPoint$point.index
     scriptName<-"Points"
     #todo use input$pointOption :
@@ -26,6 +27,7 @@ output$svghtml <- renderUI({
   } 
   
   
+  
   showGrid<-input$showGrid
   
   script2<-js.scripts[[ scriptName]]
@@ -37,6 +39,7 @@ output$svghtml <- renderUI({
       return(NULL)
     }  
     
+    semitransparent<-.3
     colorScheme<-c(default="blue", ending="red", current="green")
     ptRList<-getPtDefs()$pts
     
@@ -59,10 +62,14 @@ output$svghtml <- renderUI({
         tags<-c()
         tag.indx<-0
       }
-      tags<-c(0,tags,ncol(m)+1)
-      t1<-max(tags[tags<=tag.indx])
-      t2<-min(tags[tag.indx<tags])
-      
+      if(ncol(m)>0){
+        tags<-c(0,tags,ncol(m)+1)
+        t1<-max(tags[tags<=tag.indx])
+        t2<-min(tags[tag.indx<tags])
+      } else {
+        t1=0; t2=1000
+      }
+            
       
       lapply(1:ncol(m), function(i){
         id<-paste("pd",ptName,i,sep="-")
@@ -78,7 +85,7 @@ output$svghtml <- renderUI({
         if( t1<=i && i<t2 ){ 
           opac<-1 
         } else {
-          opac<-.5
+          opac<-semitransparent
         }
         circle(class="draggable", 
                id=id,  
