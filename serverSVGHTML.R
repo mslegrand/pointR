@@ -9,46 +9,80 @@ output$svghtml <- renderUI({
     scriptName<-"Points"
     #todo use input$pointOption :
     # pointOpt=c("Insert", "Edit","Tag")
-    
-  } else {
-    ptName<-NULL
-    if(svgBarCmd=="Transform"){ #Temp kludge for transform)
-      scriptName<-input$transformOption
-    } else { # just make it any thing for now
-      scriptName<-"Points"
-    }
+    tag.indx<-NULL
+  } 
+  if(svgBarCmd=="Tags"){
+    ptName<-input$ptSet
+    ptRList<-getPtDefs()$pts
+    selectedPointIndx<-selectedPoint$point.index
+    scriptName<-"Points"
+    #todo use input$pointOption :
+    # pointOpt=c("Insert", "Edit","Tag")
+    tag.indx<-input$tagIndx
   }
+  if(svgBarCmd=="Transform"){ #Temp kludge for transform)
+    ptName<-NULL
+    scriptName<-input$transformOption
+  } 
+  
+  
   showGrid<-input$showGrid
   
   script2<-js.scripts[[ scriptName]]
   src<-user$code
   src<-usingDraggable(src)
   
-  showPts %<c-% function(ptName){
-    ptRList<-getPtDefs()$pts
+  showPts %<c-% function(ptName, tag.indx=NULL){
     if(is.null(ptName)){
       return(NULL)
-    }
-    pts<- p <- ptRList[[ptName]]
-    #pts<-getPtArray()
+    }  
+    
+    colorScheme<-c(default="blue", ending="red", current="green")
+    ptRList<-getPtDefs()$pts
+    
+    
+    pts<- ptRList[[ptName]]
+    tagRList<-getPtDefs()$df
+    
     if(length(pts)<2){
       return(NULL)
     } else{
       m<-matrix(pts,2)
+      
+      
+      if(!is.null(tagList) && 
+         !is.null(tag.indx) && 
+         !is.null(tagRList[[ptName]] 
+      )){
+        tags<-tagRList[[ptName]]$tag
+      } else {
+        tags<-c()
+        tag.indx<-0
+      }
+      tags<-c(0,tags,ncol(m)+1)
+      t1<-max(tags[tags<=tag.indx])
+      t2<-min(tags[tag.indx<tags])
+      
+      
       lapply(1:ncol(m), function(i){
         id<-paste("pd",ptName,i,sep="-")
         pt<-m[,i]
-        color='red'
+        color=colorScheme['default']
         if(i==selectedPointIndx){
-          color='green'
+          color=colorScheme['current']      
         } else{
           if(i==length(pts)/2) { #ncol(m)){
-            color='orange'
+            color=colorScheme['ending']   
           }
         } 
+        if( t1<=i && i<t2 ){ 
+          opac<-1 
+        } else {
+          opac<-.5
+        }
         circle(class="draggable", 
                id=id,  
-               cxy=pt, r=8, fill=color, 
+               cxy=pt, r=8, fill=color, opacity=opac,
                transform="matrix(1 0 0 1 0 0)", 
                onmousedown="selectPoint(evt)" )
       })
@@ -84,7 +118,7 @@ output$svghtml <- renderUI({
   insert.end<-c(
     #paste(',newPtLayer("',svgBarCmd,'"),'),
     ',newPtLayer(svgBarCmd, WH),',
-    'showPts(ptName)'
+    'showPts(ptName, tag.indx)'
     #boundingBox()
   )    
   
