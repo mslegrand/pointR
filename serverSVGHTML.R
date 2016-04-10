@@ -47,11 +47,13 @@ output$svghtml <- renderUI({
     }  
     tag.indx<-showPtOptions$tag.indx
    
-    # print(paste0("selectedPointIndx=",selectedPointIndx))
-    # print(paste0("tag.indx=",tag.indx))
+    print(paste0("selectedPointIndx=",selectedPointIndx))
+    print(paste0("tag.indx=",tag.indx))
+    print(paste0("class(tag.indx)=",class(tag.indx)))
+    
 
     semitransparent<-0.3
-    colorScheme<-c(default="blue", ending="red", current="green")
+    colorScheme<-c(default="blue", ending="red", current="blue")
     #TODO: move this out!!!
     ptRList<-getPtDefs()$pts
     pts<- ptRList[[ptName]]
@@ -97,7 +99,7 @@ output$svghtml <- renderUI({
           opac<-semitransparent
         }
         list(
-          if(i==selectedPointIndx){
+          if(i==selectedPointIndx && svgBarCmd!="Tags"){
             circle(class="draggable", 
                    id=id,  
                    cxy=pt, r=9, fill="yellow", 
