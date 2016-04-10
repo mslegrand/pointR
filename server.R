@@ -403,6 +403,7 @@ observe({
         ptRList[[selection]][indx:(indx+1)]<-pt
         #update point values
         src<-pts2Source(src,ptRList)
+        selectedPoint$point.index<-(indx+1)/2
       }
       #-------transformations 
       if(cmd=='trans'){ # -- translate
