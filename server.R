@@ -89,6 +89,7 @@ shinyServer(function(input, output,session) {
     name=NULL,       # name of current point array
     point.index=0    #  selected pt.indx (column) in current point array
   ) 
+  tagVal<-reactiveValues(hasTag=FALSE)
   
   init<-reactiveValues(val=0)                   #  kludge for initialization (shouldn't need this)
   mssg<-reactiveValues(error="")
@@ -96,6 +97,7 @@ shinyServer(function(input, output,session) {
 # Reactive expressions------------- 
   getPtDefs<-reactive({ ex.getPtDefs(user$code) })  #extract points from user code
 
+  
 
 # Event Observers--------------------------------  
 
@@ -128,6 +130,14 @@ observeEvent(
       #}
     })
   })
+  
+  observe({
+    input$ptSet
+    isolate({
+      ptRList<-getPtDefs()$pts
+      selectedPoint$point.index<-length(ptRList[[input$ptSet]])
+    })
+  })
 
    
   # -----------ACTIVE TAG PT------------------------
@@ -142,8 +152,8 @@ observeEvent(
     user$code
     input$plotNavBar
     isolate({
-      #if(input$plotNavBar=="Tags"){
-        point.index<-selectedPoint$point.index
+      if(input$plotNavBar=="Tags"){
+        #point.index<-selectedPoint$point.index
         selected   <-input$ptSet
         ptRList    <-getPtDefs()$pts
         tagRList   <-getPtDefs()$df
@@ -159,7 +169,7 @@ observeEvent(
           }
           updateSelectInput(session, "tagPts", choices=tagNamechoices, selected=tagName )
         }
-      #}
+      }
     })
   })
 
@@ -174,7 +184,7 @@ observeEvent(
     user$code
     input$plotNavBar
     isolate({ 
-      #if(input$plotNavBar=="Tags"){
+      if(input$plotNavBar=="Tags"){
         tagName<-input$tagPts
         if(!is.null(tagName)){
             tagRList<-getPtDefs()$df
@@ -194,7 +204,7 @@ observeEvent(
                               selected=tagName
             )
         }
-      #}
+      }
     })
   })
 
@@ -207,7 +217,7 @@ observeEvent(
     user$code
     input$plotNavBar
     isolate({
-      #if(input$plotNavBar=="Tags"){
+      if(input$plotNavBar=="Tags"){
         tagName<-input$tagPts
         if(!is.null(tagName)){
           tagRList<-getPtDefs()$df
@@ -228,7 +238,7 @@ observeEvent(
             
           }
         }
-      #}
+      }
     })
   })
 
@@ -242,7 +252,7 @@ observeEvent(
     tagCol<- input$tagCol
     user$code
     isolate({ 
-      #if( input$plotNavBar=="Tags"){
+      if( input$plotNavBar=="Tags"){
         if(length(tagCol)>0){ #or not NULL
           tagRList<-getPtDefs()$df
           
@@ -252,7 +262,7 @@ observeEvent(
           updateSelectInput(session, "tagColVal",
                             choices=choices, selected=value )
         }        
-      #}
+      }
 
     })
   })
@@ -299,28 +309,48 @@ observeEvent(
     }
   })
 
-  #---remove last point  button-----
+  #---BUTTON: remove last point  -----
   observeEvent( input$removePt, {
     selection<-input$ptSet
     if(selection!=""){
       ptRList<-getPtDefs()$pts
-      tmp<-ptRList[[selection]]
+      pts<-ptRList[[selection]]
       indx=selectedPoint$point.index 
+      src<-user$code
+      
       if(indx>=1){
-        tmp<-tmp[-c(2*indx,2*indx-1)]
+        pts<-pts[-c(2*indx,2*indx-1)]
         selectedPoint$point.index<-selectedPoint$point.index-1
       } else {
-        tmp<-NULL
+        pts<-NULL
         selectedPoint$point.index<-0
       }
-      
-      ptRList[[selection]]<-tmp
-      if(length(ptRList)==0){
-        ptRList<-list(x=c())
-      }   
-      src<-user$code
+      ptRList[[selection]]<-pts
       src<-pts2Source(src,ptRList)
-      user$code<-src
+      
+      tagList<-getPtDefs()$df
+      if(!is.null(tagList)){
+        df<-tagList[[selection]]
+        if(!is.null(df)){
+          tags<-df$tag
+          if(indx %in% tags){ #remove the tag row
+            df<-df[tags!=indx,]
+            tags<-df$tag
+          } 
+          #slide tags nos. down
+          tags2move<-tags>indx
+          if(length(tags2move)>0){
+            tags[tags>indx]<-tags[tags>indx]-1
+            df$tag<-tags
+            tagList[[selection]]<-df
+            src<-df2Source(src,tagList)
+          }
+        }
+      }
+      #if(length(ptRList)==0){
+        #ptRList<-list(x=c())
+      #}   
+       user$code<-src
       #updateAceEditor( session,"source", value=src)
     }
   })
@@ -352,30 +382,44 @@ observeEvent(
     ptDefs<-getPtDefs()
     ptsList<-ptDefs$pts
     dfList<-ptDefs$df
-    len<-length(ptsList[[selection]])/2 #number of points in selection
-    
-    point.index<-max(1,selectedPoint$point.index) #can change later
-    if(len>0){
-      df<-dfList[[selection]]
-      if(length(df)==0){ # selection is not listed in tags
-        df<-data.frame(tag=1)
-      }
-      if("tag" %in% names(df)){ # if not, then do nothing
-        tags<-df$tag
-        if(!(point.index %in% tags)){
-          row<-max(tags[tags<point.index])
-          tmp.df<-subset(df,tag==row)
-          tmp.df$tag<-point.index
-          df<-rbind(df, tmp.df)
-          ordrows<-order(df$tag)
-          df<-df[ordrows,,drop=FALSE]
-          dfList[[selection]]<-df
-          #src<-user$code
-          user$code<-df2Source(user$code,dfList)
-          #user$code<-src
+    ok=TRUE
+    if(ok && is.null(dfList) ){
+      message="Need to add tagR list prior to calling this" 
+      session$sendCustomMessage(type='error', message=message )
+      ok=FALSE
+    } 
+    if(ok && is.null(dfList[[selection]]) ){
+      message=paste0("Need to add ", selection," to tagR list") 
+      session$sendCustomMessage(type='error', message=message )
+      ok=FALSE
+    }
+    if(ok ){
+      len<-length(ptsList[[selection]])/2 #number of points in selection
+      point.index<-max(1,selectedPoint$point.index) #can change later
+      if(len>0){
+        df<-dfList[[selection]]
+        if(length(df)==0){ # selection is not listed in tags
+          df<-data.frame(tag=1)
+        }
+        if("tag" %in% names(df)){ # if not, then do nothing
+          tags<-df$tag
+          if(!(point.index %in% tags)){
+            row<-max(tags[tags<point.index])
+            tmp.df<-subset(df,tag==row)
+            tmp.df$tag<-point.index
+            df<-rbind(df, tmp.df)
+            ordrows<-order(df$tag)
+            df<-df[ordrows,,drop=FALSE]
+            dfList[[selection]]<-df
+            #src<-user$code
+            user$code<-df2Source(user$code,dfList)
+            #user$code<-src
+          }
         }
       }
+      
     }
+    
   })
   
   
@@ -489,8 +533,8 @@ observeEvent( input$editNavBar, {
 })
 
 
-#-----------------------mouse click---------------------------------
-  #todo: onmove get the new postion and update
+#-----------------------MOUSE CLICKS---------------------------------
+#todo: onmove get the new postion and update
 observe({
   input$mydata #may want to rename this
   isolate({
@@ -510,7 +554,25 @@ observe({
         selection<-input$ptSet
         #update local ptRList
         indx<-selectedPoint$point.index
-        ptRList[[selection]]<-append(ptRList[[selection]],newPt,2*indx) 
+        ptRList[[selection]]<-append(ptRList[[selection]],newPt,2*indx)
+      
+          df<-NULL
+          tagList<-getPtDefs()$df
+          if(!is.null(tagList)){
+            df<-tagList[[selection]]
+            if(!is.null(df)){
+              tags<-df$tag
+              # locate the position of the new point
+              #wrt the tags
+              tags2move<-tags>indx
+              if(length(tags2move)>0){
+                tags[tags2move]<-1+ tags[tags2move]
+                df$tag<-tags
+                tagList[[selection]]<-df
+                src<-df2Source(src,tagList)
+              }
+            }
+          }
         #update point values
         selectedPoint$point.index<-selectedPoint$point.index+1
         src<-pts2Source(src,ptRList)
