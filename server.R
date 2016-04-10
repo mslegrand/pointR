@@ -382,20 +382,49 @@ observeEvent(
     ptDefs<-getPtDefs()
     ptsList<-ptDefs$pts
     dfList<-ptDefs$df
+    point.index<-max(1,selectedPoint$point.index) #can change later
     ok=TRUE
     if(ok && is.null(dfList) ){
-      message="Need to add tagR list prior to calling this" 
-      session$sendCustomMessage(type='error', message=message )
+      if(!is.null(selection)){
+        if(point.index>1){
+          tags<-c(1,point.index)
+        }else {
+          tags<-1
+        }
+        df<-data.frame(tag=tags)
+        dfList= structure( list( df) , names=selection )
+        replacement<-paste("\n\n", formatDFDefs(dfList),"\n\n")
+        src<-user$code
+        pos<-getDefPos(src, "ptR")     
+        src<-paste0( substr(src, 1, pos[2]), replacement,  
+                  substr(src, pos[2]+1, nchar(src))) 
+        user$code<-src        
+      } 
+        
+      #get position of ptDefs$ptR,
+      #copy ptDefs txt
+      # set up dfList 
+      # get replacement for dfList
+      # past ptR and tagR together and insert
+      #message="Need to add tagR list prior to calling this" 
+      #session$sendCustomMessage(type='error', message=message )
       ok=FALSE
     } 
     if(ok && is.null(dfList[[selection]]) ){
-      message=paste0("Need to add ", selection," to tagR list") 
-      session$sendCustomMessage(type='error', message=message )
+      if(point.index>1){
+        tags<-c(1,point.index)
+      }else {
+        tags<-1
+      }
+      df<-data.frame(tag=tags)
+      dfList[[selection]]<-df
+      user$code<-df2Source(user$code,dfList)
+      #message=paste0("Need to add ", selection," to tagR list") 
+      #session$sendCustomMessage(type='error', message=message )
       ok=FALSE
     }
     if(ok ){
       len<-length(ptsList[[selection]])/2 #number of points in selection
-      point.index<-max(1,selectedPoint$point.index) #can change later
       if(len>0){
         df<-dfList[[selection]]
         if(length(df)==0){ # selection is not listed in tags
