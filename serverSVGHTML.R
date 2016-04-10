@@ -47,17 +47,19 @@ output$svghtml <- renderUI({
     }  
     tag.indx<-showPtOptions$tag.indx
    
-    print(paste0("selectedPointIndx=",selectedPointIndx))
+    print(paste0("selectedPointIndx=",selectedPointIndx)) #TODO: move this out!!!
     print(paste0("tag.indx=",tag.indx))
     print(paste0("class(tag.indx)=",class(tag.indx)))
     
 
     semitransparent<-0.3
     colorScheme<-c(default="blue", ending="red", current="blue")
-    #TODO: move this out!!!
-    ptRList<-getPtDefs()$pts
+    
+    
+    ptRList<-getPtDefs()$pts #TODO: move this out!!!
+    
     pts<- ptRList[[ptName]]
-    tagRList<-getPtDefs()$df
+    tagRList<-getPtDefs()$df #TODO: move this out!!!
     
     if(length(pts)<2){
       return(NULL)
@@ -128,7 +130,7 @@ output$svghtml <- renderUI({
   }
   
   newPtLayer %<c-% function(svgBarCmd, wh=c(1200,800)){
-    if(svgBarCmd=="Points" ){
+    if(svgBarCmd=="Points" && input$insertMode==TRUE){
       rect(xy=c(0,0), wh=wh, fill="#ADADFF", stroke='black', opacity=.0, onmousedown="newPoint(evt)")
     } else {
       NULL
