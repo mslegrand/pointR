@@ -4,22 +4,25 @@ output$svghtml <- renderUI({
   WH<-c(600,620)
   if(svgBarCmd=="Points"){
     ptName<-input$ptSet
-    ptRList<-getPtDefs()$pts
-
+    ptRList<-getPtDefs()$pt
     selectedPointIndx<-selectedPoint$point.index
+    ptDisplayMode<-input$ptDisplayMode
     scriptName<-"Points"
     #todo use input$pointOption :
     # pointOpt=c("Insert", "Edit","Tag")
     tag.indx<-NULL
+    showPtOptions<-list(ptDisplayMode=ptDisplayMode, tag.indx=NULL)
   } 
   if(svgBarCmd=="Tags"){
     ptName<-input$ptSet
     ptRList<-getPtDefs()$pts
     selectedPointIndx<-selectedPoint$point.index
+    ptDisplayMode<-input$ptDisplayMode
     scriptName<-"Points"
     #todo use input$pointOption :
     # pointOpt=c("Insert", "Edit","Tag")
     tag.indx<-input$tagIndx
+    showPtOptions<-list(ptDisplayMode=ptDisplayMode, tag.indx=tag.indx)
   }
   if(svgBarCmd=="Transform"){ #Temp kludge for transform)
     ptName<-NULL
@@ -34,16 +37,23 @@ output$svghtml <- renderUI({
   src<-user$code
   src<-usingDraggable(src)
   
-  showPts %<c-% function(ptName, tag.indx=NULL){
-    if(is.null(ptName)){
+  showPts %<c-% function(ptName,  showPtOptions=NULL){
+    if(is.null(ptName) || is.null(showPtOptions) 
+       || 
+       (showPtOptions$ptDisplayMode=="Hidden" && 
+        is.null(showPtOptions$tag.indx))
+       ){
       return(NULL)
     }  
-    
-    semitransparent<-.3
+    tag.indx<-showPtOptions$tag.indx
+   
+    # print(paste0("selectedPointIndx=",selectedPointIndx))
+    # print(paste0("tag.indx=",tag.indx))
+
+    semitransparent<-0.3
     colorScheme<-c(default="blue", ending="red", current="green")
+    #TODO: move this out!!!
     ptRList<-getPtDefs()$pts
-    
-    
     pts<- ptRList[[ptName]]
     tagRList<-getPtDefs()$df
     
@@ -51,8 +61,6 @@ output$svghtml <- renderUI({
       return(NULL)
     } else{
       m<-matrix(pts,2)
-      
-      
       if(!is.null(tagList) && 
          !is.null(tag.indx) && 
          !is.null(tagRList[[ptName]] 
@@ -64,13 +72,14 @@ output$svghtml <- renderUI({
       }
       if(ncol(m)>0){
         tags<-c(0,tags,ncol(m)+1)
+        # print(paste0("ptName=",ptName))
+        # print("tags=",tags)
+        # print(paste0("tag.indx=",tag.indx))
         t1<-max(tags[tags<=tag.indx])
         t2<-min(tags[tag.indx<tags])
       } else {
         t1=0; t2=1000
       }
-            
-      
       lapply(1:ncol(m), function(i){
         id<-paste("pd",ptName,i,sep="-")
         pt<-m[,i]
@@ -87,11 +96,31 @@ output$svghtml <- renderUI({
         } else {
           opac<-semitransparent
         }
-        circle(class="draggable", 
-               id=id,  
-               cxy=pt, r=8, fill=color, opacity=opac,
-               transform="matrix(1 0 0 1 0 0)", 
-               onmousedown="selectPoint(evt)" )
+        list(
+          if(i==selectedPointIndx){
+            circle(class="draggable", 
+                   id=id,  
+                   cxy=pt, r=9, fill="yellow", 
+                   opacity=opac,
+                   stroke='green', stroke.width=3,
+                   transform="matrix(1 0 0 1 0 0)", 
+                   onmousedown="selectPoint(evt)" )
+          } else {
+            circle(class="draggable", 
+                   id=id,  
+                   cxy=pt, r=8, fill=color, opacity=opac,
+                   transform="matrix(1 0 0 1 0 0)", 
+                   onmousedown="selectPoint(evt)" )
+          }
+          ,
+          
+          if(showPtOptions$ptDisplayMode=="Labeled"){
+            text(paste(i), cxy=pt+10*c(1,-1),  
+                 stroke='black', font.size=12, opacity=opac)
+          } else {
+            NULL
+          }
+        )
       })
     }
   }
@@ -125,7 +154,7 @@ output$svghtml <- renderUI({
   insert.end<-c(
     #paste(',newPtLayer("',svgBarCmd,'"),'),
     ',newPtLayer(svgBarCmd, WH),',
-    'showPts(ptName, tag.indx)'
+    'showPts(ptName,  showPtOptions)'
     #boundingBox()
   )    
   
