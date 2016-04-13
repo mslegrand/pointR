@@ -32,10 +32,11 @@ shinyUI(fluidPage(
                                         tabPanel("Save")
                              ),
                              navbarMenu("Code", 
-                                        tabPanel("Edit Main" , value="Source"),
+                                        tabPanel("Edit Main" , value="Source")
+                                        #,
                                         #tabPanel("Insert TagR"),
-                                        tabPanel("Compounds"),
-                                        tabPanel("Options")
+                                        #tabPanel("Compounds"),
+                                        #tabPanel("Options")
                              ),
                              tabPanel(HTML("</a></li><li><a  href=\"http://mslegrand.github.io/svgR/User_Guide.html\"  target=\"_blank\" >User Guide </li></a>")),
                              tabPanel(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/\"  target=\"_blank\" >io.svgR</a>"))
@@ -47,7 +48,7 @@ shinyUI(fluidPage(
       h3(textOutput( "fileName")),
       aceEditor( outputId = "source", value="", mode="r", theme="katzenmilch",
                  height = "650px", fontSize=16, autoComplete="live", 
-                 autoCompleteList =names(svgR:::eleDefs)),
+                 autoCompleteList =list(svgR=names(svgR:::eleDefs))),
       actionButton("commit", label = "COMMIT EDIT", 
                    style="background-color: #222244; color: white;
                    border-radius: 24px; ")
@@ -159,10 +160,10 @@ shinyUI(fluidPage(
       ),
 #-----------plotNavBar:Plot--------------------------------------------
       splitLayout(cellWidths = c("70%", "30%"),
-                  h3('svgR plot', style="color: #4d3a7d; margin-top: 0px;"),
+                  h5('svgR plot', style="color: #4d3a7d; margin-top: 0px;margin-bottom: 0px;"),
                   checkboxInput("showGrid", "Show Coordinate Grid", value = TRUE, width = "200px")
       ),
-      div( style="width:600px ;height: 560px; border: 1px solid darkblue; overflow: auto; background-color: white;",
+      div( style="width:600px ;height: 540px; border: 1px solid darkblue; overflow: auto; background-color: white;",
            htmlOutput("svghtml")
            )
       ,br(),
