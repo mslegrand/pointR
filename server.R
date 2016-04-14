@@ -91,6 +91,7 @@ shinyServer(function(input, output,session) {
     point.index=0    #  selected pt.indx (column) in current point array
   ) 
   tagVal<-reactiveValues(hasTag=FALSE)
+  #errorText <-reactiveValues( mssg="hello") 
   
   init<-reactiveValues(val=0)                   #  kludge for initialization (shouldn't need this)
   mssg<-reactiveValues(error="")
@@ -268,26 +269,6 @@ observeEvent(
     })
   })
   
-  # -----------CHANGE TAG VALUE SEL------------------------
-  
-  # observe({
-  #   input$tagValue
-  #   isolate({
-  #     if(length(tagCol)>0){ #or not NULL
-  #       tagRList<-getPtDefs()$df
-  #       tagPtName<-input$tagPts
-  #       df<-tagRList[[tagPtName]]
-  #       choices<-sort(unique(df[[tagCol]]))
-  #       value<-subset(df,df$tag==tagIndx)[[tagCol]]
-  #       updateSelectInput(session, "tagColVal",
-  #                         choices=choices, selected=value )
-  #     }
-  #   })
-  # })
-  
-  
-  
-  
     
 #----BUTTON EVENTS BEGIN-----------------
 source("serverButtons.R",local = TRUE)
@@ -319,13 +300,6 @@ observeEvent( input$editNavBar, {
       if(nchar(src)>0){
         src<-preProcCode(src)
         user$code<-src
-        # point.index<-selectedPoint$point.index
-        # selected<-input$ptSet
-        # ptRList<-getPtDefs()$pts
-        # res<-ex.getSelectInfo(ptRList, selected, point.index)
-        # selectedPoint$point.index<-res$point.index
-        # updateSelectInput(session, "ptSet",  choices=names(ptRList), selected=res$selected ) 
-        
       }
     }
     updateNavbarPage(session, "editNavBar", selected ="Source")
@@ -341,7 +315,6 @@ observeEvent( input$editNavBar, {
       file$name<-fileName
       txt<-user$code
       writeLines(txt, fileName)
-      #updateAceEditor( session,"source", value=txt)
     }
     updateNavbarPage(session, "editNavBar", selected ="Source")
   }
@@ -349,7 +322,7 @@ observeEvent( input$editNavBar, {
 
 
 #-----------------------MOUSE CLICKS---------------------------------
-#todo: onmove get the new postion and update
+
 observe({
   input$mydata #may want to rename this
   isolate({
@@ -361,7 +334,7 @@ observe({
       src<-user$code
       #todo: error check???
       
-      pt<-eval(parse(text=pt)) #we assume this is an array??
+      pt<-eval(parse(text=pt)) 
       ptRList<-getPtDefs()$pts
       if(cmd=='add'){ #---------add point
         newPt<-pt
@@ -430,10 +403,7 @@ observe({
       # update internal user source
       user$code<-src
       
-      #update editor
-      # isolate( #no dependency on editor
-      #   updateAceEditor( session,"source", value=src)
-      # )
+      
     }
   })
 })
@@ -450,6 +420,14 @@ observe({
   
   
 source("serverSVGHTML.R", local=TRUE)
+  
+# output$errorPanel <- renderText({ 
+#     errorText$mssg
+# })
+  output$out_log <- renderText({
+    mssg$error
+  })
+
 #---------END OUTPUT PANELS------------------------------------
 
  

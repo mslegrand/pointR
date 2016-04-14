@@ -192,27 +192,17 @@ observe({
     }
     if(nchar(src)>0){
       #check source and update if ok
-      src<-preProcCode(src)
-      user$code<-src
-      # if input$plotNavBar=="Points" or "Transform"
-      #    get safe name and index for ptSet
-      #    and if necessary, 
-      #       set ptSet$selection<-name
-      # if input$plotNavBar=="tagPts"
-      #    get safe points and index for tagPts
-      #    and if necessary
-      #        set ptSet$selection<-name
-      
-      
-      # point.index<-selectedPoint$point.index
-      # selected<-input$ptSet
-      # ptRList<-getPtDefs()$pts
-      # res<-ex.getSelectInfo(ptRList, selected, point.index)
-      # selectedPoint$index<-res$point.index
-      # updateSelectInput(session, "ptSet", 
-      #                   choices=names(ptRList), selected=res$selected )  
-      #})
-    }
+      tryCatch({
+        src<-preProcCode(src)
+        user$code<-src
+      }, 
+      error=function(e){
+        session$sendCustomMessage(type='testmessage', message=e)
+        mssg$error<-paste(mssg$error, e, collapse="\n", sep="\n")
+      }
+        
+      )
+     }
   })
 })
 #----BUTTON EVENTS END-----------------

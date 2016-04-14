@@ -2,6 +2,8 @@
 output$svghtml <- renderUI({
   svgBarCmd<-input$plotNavBar
   WH<-c(600,620)
+  
+  
   if(svgBarCmd=="Points"){
     ptName<-input$ptSet
     ptRList<-getPtDefs()$pt
@@ -47,13 +49,13 @@ output$svghtml <- renderUI({
     }  
     tag.indx<-showPtOptions$tag.indx
    
-    print(paste0("selectedPointIndx=",selectedPointIndx)) #TODO: move this out!!!
-    print(paste0("tag.indx=",tag.indx))
-    print(paste0("class(tag.indx)=",class(tag.indx)))
-    
+    # print(paste0("selectedPointIndx=",selectedPointIndx)) #TODO: move this out!!!
+    # print(paste0("tag.indx=",tag.indx))
+    # print(paste0("class(tag.indx)=",class(tag.indx)))
+    # 
 
     semitransparent<-0.3
-    colorScheme<-c(default="blue", ending="red", current="blue")
+    colorScheme<-c(default="green", ending="red", selected="blue")
     
     
     ptRList<-getPtDefs()$pts #TODO: move this out!!!
@@ -76,9 +78,6 @@ output$svghtml <- renderUI({
       }
       if(ncol(m)>0){
         tags<-c(0,tags,ncol(m)+1)
-        # print(paste0("ptName=",ptName))
-        # print("tags=",tags)
-        # print(paste0("tag.indx=",tag.indx))
         t1<-max(tags[tags<=tag.indx])
         t2<-min(tags[tag.indx<tags])
       } else {
@@ -88,13 +87,9 @@ output$svghtml <- renderUI({
         id<-paste("pd",ptName,i,sep="-")
         pt<-m[,i]
         color=colorScheme['default']
-        if(i==selectedPointIndx){
-          color=colorScheme['current']      
-        } else{
-          if(i==length(pts)/2) { #ncol(m)){
+        if(i==length(pts)/2) { #ncol(m)){
             color=colorScheme['ending']   
-          }
-        } 
+        }
         if( t1<=i && i<t2 ){ 
           opac<-1 
         } else {
@@ -106,7 +101,7 @@ output$svghtml <- renderUI({
                    id=id,  
                    cxy=pt, r=9, fill="yellow", 
                    opacity=opac,
-                   stroke='green', stroke.width=3,
+                   stroke=colorScheme['selected'], stroke.width=3,
                    transform="matrix(1 0 0 1 0 0)", 
                    onmousedown="selectPoint(evt)" )
           } else {
@@ -163,11 +158,17 @@ output$svghtml <- renderUI({
   )    
   
   src<-subSVGX2(src, insert.beg, insert.end)
-  svg<-eval(parse(text=src))
-  
-  
-  
-  
-  as.character(svg)->svgOut 
-  HTML(svgOut)
+  tryCatch({
+    
+    parsedCode<-parse(text=src)
+    svg<-eval(parsedCode)
+
+    as.character(svg)->svgOut 
+    HTML(svgOut)
+  },
+  error=function(e){
+    session$sendCustomMessage(type='testmessage', message=e)
+    mssg$error<-paste(mssg$error, e, collapse="\n", sep="\n")
+  }  
+  )
 })
