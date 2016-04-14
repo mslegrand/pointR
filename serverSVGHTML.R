@@ -2,6 +2,9 @@
 output$svghtml <- renderUI({
   svgBarCmd<-input$plotNavBar
   WH<-c(600,620)
+  if(svgBarCmd=="Log"){
+    return("")
+  }
   
   
   if(svgBarCmd=="Points"){
@@ -26,12 +29,12 @@ output$svghtml <- renderUI({
     tag.indx<-input$tagIndx
     showPtOptions<-list(ptDisplayMode=ptDisplayMode, tag.indx=tag.indx)
   }
-  if(svgBarCmd=="Transform"){ #Temp kludge for transform)
+  if(svgBarCmd=="Transforms"){ #Temp kludge for transform)
     ptName<-NULL
     scriptName<-input$transformOption
   } 
   
-  
+    
   
   showGrid<-input$showGrid
   
@@ -77,9 +80,9 @@ output$svghtml <- renderUI({
         tag.indx<-0
       }
       if(ncol(m)>0){
-        tags<-c(0,tags,ncol(m)+1)
-        t1<-max(tags[tags<=tag.indx])
-        t2<-min(tags[tag.indx<tags])
+        tagsX<-c(0,tags,ncol(m)+1) # has at least 2 elements
+        t1<-max(tagsX[tagsX<=tag.indx])
+        t2<-min(tagsX[tag.indx<tagsX])
       } else {
         t1=0; t2=1000
       }
@@ -158,17 +161,17 @@ output$svghtml <- renderUI({
   )    
   
   src<-subSVGX2(src, insert.beg, insert.end)
-  tryCatch({
-    
-    parsedCode<-parse(text=src)
-    svg<-eval(parsedCode)
-
-    as.character(svg)->svgOut 
-    HTML(svgOut)
-  },
-  error=function(e){
-    session$sendCustomMessage(type='testmessage', message=e)
-    mssg$error<-paste(mssg$error, e, collapse="\n", sep="\n")
-  }  
-  )
+  
+    tryCatch({
+        parsedCode<-parse(text=src)
+        svg<-eval(parsedCode)
+        as.character(svg)->svgOut 
+        HTML(svgOut)
+      },
+      error=function(e){
+        session$sendCustomMessage(type='testmessage', message=e)
+        mssg$error<-paste(mssg$error, e, collapse="\n", sep="\n")
+      } 
+    )  
+ 
 })

@@ -38,9 +38,8 @@ shinyUI(fluidPage(
                                         #tabPanel("Compounds"),
                                         #tabPanel("Options")
                              ),
-                             tabPanel(HTML("</a></li><li><a  href=\"http://mslegrand.github.io/svgR/User_Guide.html\"  target=\"_blank\" >User Guide </li></a>")),
-                             tabPanel(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/\"  target=\"_blank\" >io.svgR</a>"))
-                             
+                             tabPanel(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/User_Guide.html\"  target=\"_blank\" >User Guide </a></li>")),
+                             tabPanel(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/\"  target=\"_blank\" >io.svgR</a></li>"))
                   ),
       style="background-color: #88B0CA; padding-top: 0px;", 
 
@@ -73,19 +72,27 @@ shinyUI(fluidPage(
                           width="150px"  
                         )
                       ),
-                      column(4,
+                      column(3,
                         radioButtons("ptDisplayMode", 
                           "Display Mode", 
                           c("Normal","Labeled","Hidden"),
                           width = "150px"
                         )
                       ),
-                      column(4,
-                             checkboxInput("insertMode",
-                                "Insert Mode",
-                                value = TRUE, width = "150px"
-                              )
-                    )
+                      column(2,
+                             selectInput(
+                               "tagFreq", "Auto Tag",
+                               multiple=FALSE, size=1, selectize = FALSE,
+                               c(list("Off"),1:20), selected="Off", 
+                               width="80px"  
+                             )
+                     ),
+                     column(3,
+                            checkboxInput("insertMode",
+                                          "Insert Mode",
+                                          value = TRUE, width = "100px"
+                            )
+                     )
                   ) 
                 )
 #             fixedRow( column(6, style = "background-color:yellow;", 
@@ -93,19 +100,6 @@ shinyUI(fluidPage(
 #             ),
         ),
 
-#---------------plotNavBar:Transform  ------------------------------------
-
-        tabPanel("Transform", 
-                 style="background-color: #8888AA; 
-                 border-color: #88AAAA; margin-top: 0px; 
-                 margin-bottom: 0px;",
-                 tabsetPanel( id="transformOption",
-                   tabPanel("Translate"), 
-                   tabPanel("Rotate"), 
-                   tabPanel("Scale"),
-                   type="pills"
-                 ) 
-        ),
 
 #---------------plotNavBar:TAGS  ------------------------------------
         tabPanel("Tags",
@@ -156,6 +150,20 @@ shinyUI(fluidPage(
                     margin-top: 0px; margin-bottom: 0px; margin-left:0; margin-right:0"
           ) #well panel end
         ), #tab panel Tags end
+#---------------plotNavBar:Transform  ------------------------------------
+
+        tabPanel("Transforms", 
+               style="background-color: #8888AA; 
+                       border-color: #88AAAA; margin-top: 0px; 
+                       margin-bottom: 0px;",
+               tabsetPanel( id="transformOption",
+                            tabPanel("Translate"), 
+                            tabPanel("Rotate"), 
+                            tabPanel("Scale"),
+                            type="pills"
+               ) 
+        ),
+
         tabPanel("Log",
          div( style="width:600px ;height: 640px; border: 1px solid darkblue; overflow: auto; background-color: white;",
               verbatimTextOutput("out_log")
@@ -165,7 +173,7 @@ shinyUI(fluidPage(
 #-----------plotNavBar:Plot--------------------------------------------
       conditionalPanel( "input.plotNavBar!='Log'",
         splitLayout(cellWidths = c("70%", "30%"),
-                    h5('svgR plot', style="color: #4d3a7d; margin-top: 0px;margin-bottom: 0px;"),
+                    #h5('svgR plot', style="color: #4d3a7d; margin-top: 0px;margin-bottom: 0px;"),
                     checkboxInput("showGrid", "Show Coordinate Grid", value = TRUE, width = "200px")
         ),
         div( style="width:600px ;height: 540px; border: 1px solid darkblue; overflow: auto; background-color: white;",
@@ -175,16 +183,17 @@ shinyUI(fluidPage(
       ,br(),
 #-----------plotNavBar:Buttons--------------------------------------------
       conditionalPanel( "input.plotNavBar=='Points'",
-        actionButton("removePt", label = "Remove Selected", 
-                  style="background-color: #222244; color: white;
-                  border-radius: 24px; "),
+        
         actionButton("forwardPt", label = "Select Forward", 
                   style="background-color: #222244; color: white;
                   border-radius: 24px; "),
         actionButton("backwardPt", label = "Select Back", 
                   style="background-color: #222244; color: white;
                   border-radius: 24px; "),
-        actionButton("tagPt", label = "Tag Selected", 
+        actionButton("removePt", label = "Selected Delete", 
+                     style="background-color: #222244; color: white;
+                  border-radius: 24px; "),
+        actionButton("tagPt", label = "Selected Tag", 
                   style="background-color: #222244; color: white;
                   border-radius: 24px; "),
         br(),br()

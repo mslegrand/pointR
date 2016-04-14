@@ -91,6 +91,9 @@ shinyServer(function(input, output,session) {
     point.index=0    #  selected pt.indx (column) in current point array
   ) 
   tagVal<-reactiveValues(hasTag=FALSE)
+  
+  reactiveTag<-reactiveValues(freq=list())
+  
   #errorText <-reactiveValues( mssg="hello") 
   
   init<-reactiveValues(val=0)                   #  kludge for initialization (shouldn't need this)
@@ -99,6 +102,59 @@ shinyServer(function(input, output,session) {
 # Reactive expressions------------- 
   getPtDefs<-reactive({ ex.getPtDefs(user$code) })  #extract points from user code
 
+
+# TODO ------------------------------
+#  If the user changes the code, (and deletes or adds a 
+#  named data.tabele )then we  need to update reactiveTag$freq
+#  This will happen only upon
+#  1. code edit (submit)
+#  2. new
+#  3. load
+# observe(user$code, 
+#   isolate({
+#     plotMode<-input$plotNavBar
+#     if(plotMode=="points"){
+#       # 1. pick out any tags that have disappered 
+#       # and delete from reactiveTag$freq
+#       # 2. pick out an new tags and add to reactiveTag$freq[[newTag]]<-0
+#     }
+#   })
+# )
+
+
+# If the user changes the name point Selection
+# must update the tag selection.
+#
+#
+
+
+
+#  If the user changes the tag freq selection
+#  Need to update reactiveTag$freq
+  
+observe({
+  input$tagFreq
+  isolate({
+    if(input$ptSet %in% names( reactiveTag$freq)){
+      reactiveTag$freq[[input$ptSet]]<-input$tagFreq
+    }
+  })  
+})
+  
+  
+# If the user adds a point, use reactivTag$freq  
+# observe(addingPt,
+#   isolate({
+#     if(pointName %in% namesreactiveTag$freq){
+#       indxLast<-getIndx of last tag with pointName
+#       indxPt<-getIndx of Pt with pointName
+#       if(indxPt==(indxLast + reactiveTag$freq[[pointName]]){
+#           tag this point
+#       }
+#     }
+#   })
+# )
+  
   
 
 # Event Observers--------------------------------  
@@ -120,7 +176,6 @@ observeEvent(
     user$code
     plotMode<-input$plotNavBar
     isolate({
-      #if( plotMode=='Points'){
         point.index<-selectedPoint$point.index
         selected<-input$ptSet
         ptRList<-getPtDefs()$pts
@@ -129,7 +184,6 @@ observeEvent(
         updateSelectInput(session, "ptSet",
                           choices=names(ptRList),
                           selected= res$selected )
-      #}
     })
   })
   
@@ -138,6 +192,13 @@ observeEvent(
     isolate({
       ptRList<-getPtDefs()$pts
       selectedPoint$point.index<-length(ptRList[[input$ptSet]])
+      if(input$ptSet %in% names( reactiveTag$freq) ){
+        updateSelectInput(session, "tagFreq", 
+                          selected=reactiveTag$freq[[input$ptSet]] )
+      } else {
+        updateSelectInput(session, "tagFreq", 
+                          selected="Off" )
+      }
     })
   })
 
@@ -288,7 +349,8 @@ observeEvent( input$editNavBar, {
     selectedPoint$point.index<-0
     updateSelectInput(session, "ptSet",  choices=c("x"), selected="x" ) 
     updateNavbarPage(session, "editNavBar", selected ="Source") 
-    updateNavbarPage(session, "plotNavBar", selected ="Points") 
+    updateNavbarPage(session, "plotNavBar", selected ="Points")
+    updateNavbarPage(session, "tagFreq", selected ="Off") 
   }
   if(fileCmd=="Open"){ #-----open 
     fileName=""
@@ -304,6 +366,7 @@ observeEvent( input$editNavBar, {
     }
     updateNavbarPage(session, "editNavBar", selected ="Source")
     updateNavbarPage(session, "plotNavBar", selected ="Points") 
+    updateNavbarPage(session, "tagFreq", selected ="Off") 
   }
   if(fileCmd=="Save"){ #-----save
     fileName=""
@@ -343,7 +406,7 @@ observe({
         #update local ptRList
         indx<-selectedPoint$point.index
         ptRList[[selection]]<-append(ptRList[[selection]],newPt,2*indx)
-      
+        
           df<-NULL
           tagList<-getPtDefs()$df
           if(!is.null(tagList)){
@@ -352,12 +415,25 @@ observe({
               tags<-df$tag
               # locate the position of the new point
               #wrt the tags
-              tags2move<-tags>indx
+              tags2move<-which(tags>indx)
               if(length(tags2move)>0){
                 tags[tags2move]<-1+ tags[tags2move]
                 df$tag<-tags
                 tagList[[selection]]<-df
                 src<-df2Source(src,tagList)
+              } else { #we are at the end
+                freq<-reactiveTag$freq
+                if(freq!='Off'){
+                  freq<-as.integer(freq)
+                  offset<-1+indx-tail(tags,1)
+                  if(offset==freq){ # at the end and needs to be tagged
+                    df2append<-tail(df,1)
+                    df2append$tag<-1+indx
+                    df<-rbind(df,df2append)
+                    tagList[[selection]]<-df
+                    src<-df2Source(src,tagList)
+                  }
+                }
               }
             }
           }
