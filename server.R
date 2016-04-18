@@ -9,7 +9,6 @@ library(shiny)
 library(stringr)
 library(svDialogs)
 
-
 #options(shiny.error = recover)
 
 #----begin external rc------------

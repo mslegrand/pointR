@@ -4,7 +4,7 @@ WH<-c(600,620)
 #Defined by mouse: edit with care!
 ptR<-list(
   x=matrix(
-    c(c( 434,100 ),c( 506.5,215 )),
+    c(c( 424,147 ),c( 532,220 )),
   2,)
 )
 
@@ -23,7 +23,7 @@ svgR(wh=WH,
      ),
      g(
        class='draggable',
-       transform=matrix(c(0.6096, 0.7928, -0.7928, 0.6096, 207.7, -122.2),2,),
+       transform=NULL,
        ellipse(cxy=ce, rxy=cwh/2, 
         fill=radialGradient(colors=c('green','blue','black'))
        ),

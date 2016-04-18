@@ -1,4 +1,4 @@
-
+#helper fn
 stop.unless<-function(expr, mssg){
   if(!(expr)){
     stop(mssg, call.=FALSE)
@@ -7,58 +7,43 @@ stop.unless<-function(expr, mssg){
 }
 
 
-txt<-'#svgR elements: font-face glyph missing-glyph hkern vkern font font-face-name font-face-format font-face-uri animate animateColor animateMotion animateTransform set mpath feFuncA feFuncB feFuncG feFuncR feDistantLight feTurbulence feConvolveMatrix feDiffuseLighting feOffset filter feBlend feColorMatrix feComponentTransfer feComposite feDisplacementMap feFlood feGaussianBlur feImage feMerge feMorphology feSpecularLighting feTile feSpotLight fePointLight svg a altGlyph circle clipPath cursor defs ellipse foreignObject g image line linearGradient marker mask path pattern polygon polyline radialGradient rect script switch symbol text textPath tref tspan use view altGlyphDef altGlyphItem color-profile desc feMergeNode font-face-src glyphRef metadata stop style title font.face missing.glyph font.face.name font.face.format font.face.uri color.profile font.face.src getNode script
-WH<-c(600,620)
-
-#points defined by mouse clicks, edit with care!
-ptDefs<-list(
-   x=c(c( 123.5,392 ),c( 110.5,180 ),c( 329.5,157 ),c( 357.5,329 ))
-)
-
-svgR(wh=c(100,200), 
-     
-     polygon(points=ptDefs$x, fill="blue",opacity=.5),
-     rect( class="draggable", opacity=.5,
-           xy=c(0,30), wh=c(80,80), fill="blue", 
-           transform="matrix(1 0 0 1 193 211)"
-     ),
-     circle( class="draggable", 
-             cxy=c(100,230), r=50, fill="red", opacity=.5,
-             transform=matrix(c(1, 0, 0, 1, 303, -55),2,)
-     )
-)'
-
+# txt and ancestors can be used for debugging
 # 
-# siblings<-function(sdf){
-#   if(is.numeric(sdf)){
-#     sdf<-subset(df, id==sdf)
+# txt<-'#svgR elements: font-face glyph missing-glyph hkern vkern font font-face-name font-face-format font-face-uri animate animateColor animateMotion animateTransform set mpath feFuncA feFuncB feFuncG feFuncR feDistantLight feTurbulence feConvolveMatrix feDiffuseLighting feOffset filter feBlend feColorMatrix feComponentTransfer feComposite feDisplacementMap feFlood feGaussianBlur feImage feMerge feMorphology feSpecularLighting feTile feSpotLight fePointLight svg a altGlyph circle clipPath cursor defs ellipse foreignObject g image line linearGradient marker mask path pattern polygon polyline radialGradient rect script switch symbol text textPath tref tspan use view altGlyphDef altGlyphItem color-profile desc feMergeNode font-face-src glyphRef metadata stop style title font.face missing.glyph font.face.name font.face.format font.face.uri color.profile font.face.src getNode script
+# WH<-c(600,620)
+# 
+# #points defined by mouse clicks, edit with care!
+# ptDefs<-list(
+#    x=c(c( 123.5,392 ),c( 110.5,180 ),c( 329.5,157 ),c( 357.5,329 ))
+# )
+# 
+# svgR(wh=c(100,200), 
+#      
+#      polygon(points=ptDefs$x, fill="blue",opacity=.5),
+#      rect( class="draggable", opacity=.5,
+#            xy=c(0,30), wh=c(80,80), fill="blue", 
+#            transform="matrix(1 0 0 1 193 211)"
+#      ),
+#      circle( class="draggable", 
+#              cxy=c(100,230), r=50, fill="red", opacity=.5,
+#              transform=matrix(c(1, 0, 0, 1, 303, -55),2,)
+#      )
+# )'
+# 
+# 
+# 
+# #used for testing
+# ancestors<-function(id, df, count=4){ 
+#   rid<-id
+#   for(i in 0:count){
+#     cid<-rid[length(rid)]
+#     s<-subset(df, id==cid)
+#     if(nrow(s)>0){
+#       rid<-c(rid,s$parent)
+#     }
 #   }
-#   par<-parent(sdf)
-#   subset(df, parent %in% par) 
+#   rid
 # }
-
-#used for testing
-ancestors<-function(id, df, count=4){ 
-  rid<-id
-  for(i in 0:count){
-    cid<-rid[length(rid)]
-    s<-subset(df, id==cid)
-    if(nrow(s)>0){
-      rid<-c(rid,s$parent)
-    }
-  }
-  rid
-}
-
-#used by extractWH
-rng2txt<-function(lines, ssdf){ 
-  l2<-lines[[ssdf$line2]]
-  lines[[ssdf$line2]]<-substr(l2, 1, ssdf$col2)
-  l1<-lines[[ssdf$line1]]
-  lines[[ssdf$line1]]<-substr(l1, ssdf$col1, nchar(l1))
-  lines<-lines[ssdf$line1:ssdf$line2]
-  paste0(lines, collapse="\n")  
-}
 
 # insertAt<-function(lines, replacements){
 #   N<-length(replacements)
@@ -185,13 +170,25 @@ txt2def<-function(txt, df, defTag){
   str
 }
 
-#appears not used
-def2txt<-function(defVal, txt, df, defTag){
-  lines<-strsplit(txt,"\n")[[1]]
-  rpl<-paste0(defTag,"=", formatValue(defTag, defVal))
-  pos<-getDefPos2(lines, df, defTag)
-  substr(txt,pos[1],pos[2])<-rpl
-} 
+# #appears not used
+# def2txt<-function(defVal, txt, df, defTag){
+#   lines<-strsplit(txt,"\n")[[1]]
+#   rpl<-paste0(defTag,"=", formatValue(defTag, defVal))
+#   pos<-getDefPos2(lines, df, defTag)
+#   substr(txt,pos[1],pos[2])<-rpl
+# } 
+
+
+
+#used by extractWH
+rng2txt<-function(lines, ssdf){ 
+  l2<-lines[[ssdf$line2]]
+  lines[[ssdf$line2]]<-substr(l2, 1, ssdf$col2)
+  l1<-lines[[ssdf$line1]]
+  lines[[ssdf$line1]]<-substr(l1, ssdf$col1, nchar(l1))
+  lines<-lines[ssdf$line1:ssdf$line2]
+  paste0(lines, collapse="\n")  
+}
 
 # intended to be used to find WH for graphPaper
 # but currently not used
@@ -216,9 +213,7 @@ extractWH<-function(src){
   rng2txt(lines, target)  
 }
 
-
-
-
+#used in showPts::serverSVGHTML.R
 subSVGX2<-function(txt, insert.beg, insert.end){
   ep<-parse(text=txt)
   df<-getParseData(ep)

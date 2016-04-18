@@ -1,9 +1,5 @@
-#source("coreConfig.R")
-#source("utilParser.R")
-
 
 # defines
-#options(shiny.error = recover)
 #-------------------------------
 paste(names(svgR:::eleDefs), collapse=" ")->element.names
 
@@ -26,31 +22,6 @@ NULL
 ")->codeTemplate
 #------------------------
 
-# defines
-#options(shiny.error = recover)
-#-------------------------------
-paste(names(svgR:::eleDefs), collapse=" ")->element.names
-
-paste0("#svgR elements: ", element.names, "\n",
-"WH<-c(600,620)
-
-#Defined by mouse: edit with care!
-ptR<-list( x=c() )
-
-tagR<-list(x=data.frame(tag=1, stringsAsFactors =FALSE))
-
-svgR(wh=WH, 
-#your custom code goes here
-
-NULL
-
-
-
-)
-")->codeTemplate2
-#------------------------
-
-
 #---external fns----
 as.text<-function(q){
   paste(deparse(q), collapse="\n")
@@ -64,7 +35,6 @@ readFile<-function(fileName){
   paste0(readLines(fileName),collapse="\n")
 }
 
-
 getDefPos<-function(txt, defTag){
   p.df<-getParseDataFrame(txt)
   cumCharLines<-getcumCharLines(txt)
@@ -75,7 +45,6 @@ getDefPos<-function(txt, defTag){
     pos<-NULL
   }
 }
-
 
 
 replaceDef<-function(txt, replacement, defTag){
@@ -112,7 +81,7 @@ getDef<-function(txt, defTag ){
   return(substr(txt, pos[1], pos[2]))
 }
 
-#Todo  fix df
+
 ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
   ptDefs<-list(pts=NULL, df=NULL)
   #defTag<-"Pts" #ptDefs"
@@ -124,10 +93,6 @@ ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
       ptDefs$pts<-get(ptTag)
       
       ptDefTxt2<-getDef(src, defTag=dfTag)
-      # if(!is.null(ptDefTxt2)){ # ptR.df is optional!
-      #   eval(parse(text=ptDefTxt2))
-      #   ptDefs$df<-get(dfTag)
-      # }
       
       if(!is.null(ptDefTxt2)){ # ptR.df is optional!
         #1. replace data.frame with list
@@ -149,93 +114,9 @@ ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
 }
 
 
-# formatPts<-function(pts){
-#   if(length(pts)==0 ){
-#     return("c()")
-#   } else{
-#     
-#     tmp<-unlist(pts)
-#     tmp<-matrix(tmp,2)
-#     tmp<-apply(tmp, 2, function(x)paste(x,collapse=","))
-#     tmp<-paste("c(",tmp,")")
-#     tmp<-paste(tmp, collapse=",")
-#     tmp<-paste0("matrix(\n    c(", tmp, "),\n  2,)")
-#     return(tmp)
-#   }
-# }
-
-
 
 formatTrs<-function(tr){ #not used
   paste0('"',tr,'"')
 }
 
 
-# findTransforms<-functions(txt){
-#   pos<-str_locate_all(txt,"transform", boundry="word")
-#   N<-length(pos)
-#   lapply(1:N, )
-# }
-
-
-#todo: modify script1, so either edit points or edit transform
-
-q.svgX<-quote(
-  svgX<-function(...){
-    args<-list(...)
-    graphPaper %<c-% function(wh=c(600,600), dxy=c(50, 50), labels=TRUE ){
-      seq(0,wh[1],dxy[1])->xs
-      seq(0,wh[2],dxy[2])->ys
-      grph<-c(
-        lapply(xs, function(x)line(xy1=c(x,0),xy2=c(x,wh[2]))),
-        lapply(ys, function(y)line(xy1=c(0,y),xy2=c(wh[1],y)))
-      )
-      if(labels){
-        grph<-c(grph, 
-                lapply(xs, function(x)text(xy=c(x+2,10),x)),
-                lapply(ys, function(y)text(xy=c(2,y),y))
-        )
-      }
-      g( stroke.width=1,
-         font.size=10,
-         stroke="grey",
-         grph
-      )       
-    }
-    showPts  %<c-% function(ptName){
-      if(is.null(ptName)){
-        return(NULL)
-      }
-      pts<-ptDefs[[ptName]]
-      if(length(pts)<2){
-        return(NULL)
-      } else{
-        m<-matrix(pts,2,)
-        lapply(1:ncol(m), function(i){
-          id<-paste("pd",ptName,i,sep="-")
-          pt<-m[,i]
-          circle(class="draggable", 
-                 id=id,  
-                 cxy=pt, r=8, fill="red", 
-                 transform="matrix(1 0 0 1 0 0)", 
-                 onmousedown="selectPoint(evt)" )
-        })
-      }
-    }
-
- 
-    svgR( style(".draggable {
-             cursor: move;
-          }"),
-          script( js.scripts[ svgBarCmd ]  ),      
-          # background
-          rect(xy=c(0,0), wh=WH, fill="#FFFFFF", stroke='black', opacity=1),
-          graphPaper(wh=WH),
-          rect(xy=c(0,0), wh=WH, fill="#ADADFF", stroke='black', opacity=.0, onmousedown="newPoint(evt)"),
-          args,
-          showPts(selPtSet)
-    )
-
-    
-  }
-)
