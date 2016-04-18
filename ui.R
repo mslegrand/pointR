@@ -36,10 +36,10 @@ shinyUI(fluidPage(
                              tabPanel(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/\"  target=\"_blank\" >io.svgR</a></li>"))
                   ),
       style=cstyle$sidePanel, 
-      br(),br(),
+      #br(),br(),
       h3(textOutput( "fileName")),
       aceEditor( outputId = "source", value="", mode="r", theme="katzenmilch",
-                 height = "650px", fontSize=16, autoComplete="live", 
+                 height = "690px", fontSize=16, autoComplete="live", 
                  autoCompleteList =list(svgR=names(svgR:::eleDefs))),
       actionButton("commit", label = "COMMIT EDIT", 
                    style=cstyle$button)
@@ -153,7 +153,7 @@ shinyUI(fluidPage(
       ,br(),
 #-----------plotNavBar:Buttons--------------------------------------------
       conditionalPanel( "input.plotNavBar=='Points'",
-        
+
         actionButton("forwardPt", label = "Select Forward", style=cstyle$button),
         actionButton("backwardPt", label = "Select Back", style=cstyle$button),
         actionButton("removePt", label = "Selected Delete", style=cstyle$button),
