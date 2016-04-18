@@ -15,8 +15,8 @@ library(svDialogs)
 #----begin external rc------------
 source("utilFormat.R")
 source("utilParser.R")
-source("ptrUtil.R")
-source("trUtils.R")
+source("utilptR.R")
+source("utilTransform.R")
 
 defTag<-"ptR"
 
