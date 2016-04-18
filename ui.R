@@ -8,8 +8,7 @@
 library(shiny)
 library(svgR)
 library(shinyAce)
-source("coreConfig.R")
-#source("trUtils.R")
+source("utilStyle.R")
 
 
 shinyUI(fluidPage(
