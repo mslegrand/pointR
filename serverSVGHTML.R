@@ -8,7 +8,7 @@ output$svghtml <- renderUI({
   
   
   if(svgBarCmd=="Points"){
-    ptName<-input$ptSet
+    ptName<-input$ptRSelect
     ptRList<-getPtDefs()$pt
     selectedPointIndx<-selectedPoint$point.index
     ptDisplayMode<-input$ptDisplayMode
@@ -19,7 +19,7 @@ output$svghtml <- renderUI({
     showPtOptions<-list(ptDisplayMode=ptDisplayMode, tag.indx=NULL)
   } 
   if(svgBarCmd=="Tags"){
-    ptName<-input$ptSet
+    ptName<-input$ptRSelect
     ptRList<-getPtDefs()$pts
     selectedPointIndx<-selectedPoint$point.index
     ptDisplayMode<-input$ptDisplayMode
@@ -161,7 +161,7 @@ output$svghtml <- renderUI({
   )    
   
   src<-subSVGX2(src, insert.beg, insert.end)
-  
+  res<-""
     tryCatch({
         parsedCode<-parse(text=src)
         svg<-eval(parsedCode)

@@ -143,7 +143,7 @@ observe({
     if(value=="Off"){
       value<-NULL
     } else { 
-      selection<-input$ptSet
+      selection<-input$ptRSelect
       tagList<-getPtDefs()$df
       if(!is.null(tagList) && !is.null(tagList[[selection]])){
       #get the last tagged element and iterate the tagging
@@ -168,7 +168,7 @@ observe({
          }
       }
     }
-    freq[[input$ptSet]]<-value
+    freq[[input$ptRSelect]]<-value
     reactiveTag$freq<-freq
   })  
 })
@@ -209,22 +209,22 @@ observeEvent(
     plotMode<-input$plotNavBar
     isolate({
         point.index<-selectedPoint$point.index
-        selected<-input$ptSet
+        selected<-input$ptRSelect
         ptRList<-getPtDefs()$pts
         res<-ex.getSelectInfo(ptRList, selected, point.index)
         selectedPoint$point.index<-res$point.index
-        updateSelectInput(session, "ptSet",
+        updateSelectInput(session, "ptRSelect",
                           choices=names(ptRList),
                           selected= res$selected )
     })
   })
   
   observe({
-    input$ptSet
+    input$ptRSelect
     isolate({
       ptRList<-getPtDefs()$pts
-      selectedPoint$point.index<-length(ptRList[[input$ptSet]])
-      selected=reactiveTag$freq[[input$ptSet]] 
+      selectedPoint$point.index<-length(ptRList[[input$ptRSelect]])
+      selected=reactiveTag$freq[[input$ptRSelect]] 
       if(is.null(selected)){
         selected<-"Off"
       }
@@ -238,7 +238,7 @@ observeEvent(
   #  sets active Tag and Tag index
   #       tagPts
   #       tagIndx
-  #       ptSet
+  #       ptRSelect
   #       point.index
 
   observe({
@@ -247,18 +247,18 @@ observeEvent(
     isolate({
       if(input$plotNavBar=="Tags"){
         #point.index<-selectedPoint$point.index
-        selected   <-input$ptSet
+        selected   <-input$ptRSelect
         ptRList    <-getPtDefs()$pts
         tagRList   <-getPtDefs()$df
         tagNamechoices    <-intersect(names(ptRList),names(tagRList))
         if(length(tagNamechoices)>0){
-          # Use selection of ptSet if in choices, ow last avail.
-          ptChosen<-input$ptSet
+          # Use selection of ptRSelect if in choices, ow last avail.
+          ptChosen<-input$ptRSelect
           if(ptChosen %in% tagNamechoices){
             tagName<-ptChosen
           } else{
             tagName<-tail(tagNamechoices,1)
-            updateSelectInput(session, "ptSet", selected=tagName )
+            updateSelectInput(session, "ptRSelect", selected=tagName )
           }
           updateSelectInput(session, "tagPts", choices=tagNamechoices, selected=tagName )
         }
@@ -292,7 +292,7 @@ observeEvent(
                             choices=tagIndxChoices,
                             selected=selectedTagIndx
             )
-            updateSelectInput(session, "ptSet",
+            updateSelectInput(session, "ptRSelect",
                               choices=names(getPtDefs()$pts),
                               selected=tagName
             )
@@ -377,7 +377,7 @@ observeEvent( input$editNavBar, {
     # the next  line update the ptRList; probably should redo with observer
     file$name<-"newSVG.R"
     selectedPoint$point.index<-0
-    updateSelectInput(session, "ptSet",  choices=c("x"), selected="x" ) 
+    updateSelectInput(session, "ptRSelect",  choices=c("x"), selected="x" ) 
     updateNavbarPage(session, "editNavBar", selected ="Source") 
     updateNavbarPage(session, "plotNavBar", selected ="Points")
     updateNavbarPage(session, "tagFreq", selected ="Off") 
@@ -432,7 +432,7 @@ observe({
       if(cmd=='add'){ #---------add point
         newPt<-pt
         #get selection
-        selection<-input$ptSet
+        selection<-input$ptRSelect
         #update local ptRList
         indx<-selectedPoint$point.index
         ptRList[[selection]]<-append(ptRList[[selection]],newPt,2*indx)

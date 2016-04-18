@@ -56,7 +56,7 @@ shinyUI(fluidPage(
             fluidRow(
               column(4, 
                 selectInput(
-                  "ptSet", "Active Points",
+                  "ptRSelect", "Active Points",
                   multiple=FALSE, size=3, selectize = FALSE,
                   list("x"), selected="x", 
                   width="150px"  

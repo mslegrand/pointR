@@ -21,7 +21,7 @@ observeEvent(
 
 #---BUTTON: remove last point  -----
 observeEvent( input$removePt, {
-  selection<-input$ptSet
+  selection<-input$ptRSelect
   if(selection!=""){
     ptRList<-getPtDefs()$pts
     pts<-ptRList[[selection]]
@@ -67,7 +67,7 @@ observeEvent( input$removePt, {
 
 #---selected point forward button-----
 observeEvent(input$forwardPt,{
-  selection<-input$ptSet
+  selection<-input$ptRSelect
   ptRList<-getPtDefs()$pts
   len<-length(ptRList[[selection ]])/2
   selectedPoint$point.index<-min(len, selectedPoint$point.index+1)
@@ -76,7 +76,7 @@ observeEvent(input$forwardPt,{
 #---selected point backward button-----
 observeEvent(input$backwardPt,{
   #decrement selectedPointIndex
-  selection<-input$ptSet
+  selection<-input$ptRSelect
   ptRList<-getPtDefs()$pts
   len<-length(ptRList[[selection ]])/2
   if(len>0){
@@ -88,7 +88,7 @@ observeEvent(input$backwardPt,{
 
 #---TAG POINT button-----
 observeEvent(input$tagPt, {
-  selection<-input$ptSet
+  selection<-input$ptRSelect
   ptDefs<-getPtDefs()
   ptsList<-ptDefs$pts
   dfList<-ptDefs$df
