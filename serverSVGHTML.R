@@ -166,12 +166,17 @@ output$svghtml <- renderUI({
         parsedCode<-parse(text=src)
         svg<-eval(parsedCode)
         as.character(svg)->svgOut 
-        HTML(svgOut)
+        res<-HTML(svgOut)
+        backup$code<-user$code
+        backup$res<-res
       },
       error=function(e){
-        session$sendCustomMessage(type='testmessage', message=e)
+        #session$sendCustomMessage(type='testmessage', message=e)
         mssg$error<-paste(mssg$error, e, collapse="\n", sep="\n")
+        user$code<-backup$code
+        updateNavbarPage(session, "plotNavBar", selected ="Log")
       } 
-    )  
+    )
+  res
  
 })
