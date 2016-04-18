@@ -193,6 +193,7 @@ observe({
       if(!is.null(Err)){
         src<-""
         updateNavbarPage(session, "plotNavBar", selected ="Log")
+        mssg$error<-Err
       } 
     }
     if(nchar(src)>0){
@@ -200,6 +201,10 @@ observe({
       tryCatch({
         src<-preProcCode(src)
         user$code<-src
+        mssg$error<-"" #ie. ok
+        if(input$plotNavBar=="Log"){
+          updateNavbarPage(session, "plotNavBar", selected ="Points")
+        }
       }, 
       error=function(e){
         mssg$error<-paste(mssg$error, e, collapse="\n", sep="\n")
