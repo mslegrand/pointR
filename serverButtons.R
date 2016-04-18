@@ -106,7 +106,7 @@ observeEvent(input$tagPt, {
         tags<-1
       }
       
-      reactiveTag$freq[[selection]]<-"Off"
+      reactiveTag$freq[[selection]]<-NULL
       updateSelectInput(session, "tagFreq", selected="Off" )
       
       df<-data.frame(tag=tags)
@@ -127,8 +127,9 @@ observeEvent(input$tagPt, {
     }else {
       tags<-1
     }
-    reactiveTag$freq[[tagName]]<-"Off"
-    updateSelectInput(session, "tagFreq", selected="Off" )
+    # freq<-reactiveTag$freq
+    # reactiveTag$freq[[tagName]]<-NULL
+    # updateSelectInput(session, "tagFreq", selected="Off" )
     
     df<-data.frame(tag=tags)
     dfList[[selection]]<-df
@@ -190,8 +191,8 @@ observe({
         Err<-"ptR list must come prior to svgR call"
       }
       if(!is.null(Err)){
-        session$sendCustomMessage(type='testmessage', message=Err)
         src<-""
+        updateNavbarPage(session, "plotNavBar", selected ="Log")
       } 
     }
     if(nchar(src)>0){
@@ -201,8 +202,8 @@ observe({
         user$code<-src
       }, 
       error=function(e){
-        session$sendCustomMessage(type='testmessage', message=e)
         mssg$error<-paste(mssg$error, e, collapse="\n", sep="\n")
+        updateNavbarPage(session, "plotNavBar", selected ="Log")
       }
         
       )
