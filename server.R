@@ -13,7 +13,8 @@ library(svDialogs)
 #options(shiny.error = recover)
 
 #----begin external rc------------
-source("format.R")
+source("utilFormat.R")
+source("utilParser.R")
 source("ptrUtil.R")
 source("trUtils.R")
 
@@ -48,7 +49,6 @@ preProcCode<-function(src){
   }
   return(src)
 }
-
 
 
 # called by either a new/load source or upon a commit
