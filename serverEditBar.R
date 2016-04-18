@@ -1,17 +1,20 @@
 observeEvent( input$editNavBar, { 
   fileCmd<-input$editNavBar
   if(fileCmd=="New"){ #-----new
-    txt<-codeTemplate
-    user$code<-codeTemplate
+    mssg$error<-""
+    src<-codeTemplate
     # the next  line update the ptRList; probably should redo with observer
     file$name<-"newSVG.R"
+    user$code<-src
     selectedPoint$point.index<-0
     updateSelectInput(session, "ptRSelect",  choices=c("x"), selected="x" ) 
     updateNavbarPage(session, "editNavBar", selected ="Source") 
     updateNavbarPage(session, "plotNavBar", selected ="Points")
     updateNavbarPage(session, "tagFreq", selected ="Off") 
+    updateAceEditor( session,"source", value=user$code)
   }
   if(fileCmd=="Open"){ #-----open 
+    mssg$error<-""
     fileName=""
     try(fileName<-dlgOpen(title = "Select one R file", 
                           filters = dlgFilters[c("R", "All"), ])$res
