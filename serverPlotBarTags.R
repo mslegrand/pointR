@@ -27,6 +27,8 @@ observe({
           updateSelectInput(session, "ptRSelect", selected=tagName )
         }
         updateSelectInput(session, "tagPts", choices=tagNamechoices, selected=tagName )
+      } else {
+        updateSelectInput(session, "tagPts", choices=list(), selected=NULL )
       }
     }
   })
@@ -44,11 +46,20 @@ observe({
   input$plotNavBar
   isolate({ 
     if(input$plotNavBar=="Tags"){
+      tagRList<-NULL
+      df<-NULL
+      tagIndxChoices<-NULL
       tagName<-input$tagPts
       if(!is.null(tagName)){
         tagRList<-getPtDefs()$df
+      }
+      if( !is.null(tagRList)){
         df<-tagRList[[tagName]]
+      }
+      if( !is.null(df)){
         tagIndxChoices<-df[["tag"]]
+      }
+      if(!is.null(tagIndxChoices)){
         pt.indx<-max(1,selectedPoint$point.index)
         selectedTagIndx<-max(tagIndxChoices[ tagIndxChoices<= pt.indx])
         if(selectedPoint$point.index>0){
@@ -61,6 +72,11 @@ observe({
         updateSelectInput(session, "ptRSelect",
                           choices=names(getPtDefs()$pts),
                           selected=tagName
+        )
+      } else {
+        updateSelectInput(session, "tagIndx",
+                          choices=list(),
+                          selected=NULL
         )
       }
     }
@@ -94,9 +110,8 @@ observe({
         } else { #hide it
           updateSelectInput(session, "tagCol",
                             choices=list(), selected=NULL)
-          
         }
-      }
+      } 
     }
   })
 })
@@ -120,7 +135,10 @@ observe({
         value<-subset(df,df$tag==tagIndx)[[tagCol]]
         updateSelectInput(session, "tagColVal",
                           choices=choices, selected=value )
-      }        
+      } else {
+        updateSelectInput(session, "tagColVal",
+                          choices=list(), selected=NULL )
+      }
     }
     
   })
