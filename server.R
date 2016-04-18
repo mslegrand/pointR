@@ -82,9 +82,10 @@ ex.getSelectInfo<-function(ptRList, selected, point.index){
 #---begin server--------------
 
 shinyServer(function(input, output,session) {
- 
+
 # Reactive values----------
   user <- reactiveValues( code=codeTemplate) #  internal copy of user code
+  backup<-reactiveValues( code=codeTemplate) # last good copy of user code
   file <-reactiveValues( name="newFile.R")       #  file path
   selectedPoint <- reactiveValues(
     name=NULL,       # name of current point array
@@ -105,7 +106,7 @@ shinyServer(function(input, output,session) {
 
 # TODO ------------------------------
 #  If the user changes the code, (and deletes or adds a 
-#  named data.tabele )then we  need to update reactiveTag$freq
+#  named data.table )then we  need to update reactiveTag$freq
 #  This will happen only upon
 #  1. code edit (submit)
 #  2. new
@@ -135,9 +136,40 @@ shinyServer(function(input, output,session) {
 observe({
   input$tagFreq
   isolate({
-    if(input$ptSet %in% names( reactiveTag$freq)){
-      reactiveTag$freq[[input$ptSet]]<-input$tagFreq
+    ptNames<-names(getPtDefs()$pts)
+    freq<-reactiveTag$freq
+    freq<-lapply(ptNames, function(n)freq[[n]])
+    value<-input$tagFreq
+    if(value=="Off"){
+      value<-NULL
+    } else { 
+      selection<-input$ptSet
+      tagList<-getPtDefs()$df
+      if(!is.null(tagList) && !is.null(tagList[[selection]])){
+      #get the last tagged element and iterate the tagging
+         dn<-as.integer(value)
+         df<-tagList[[selection]]
+         df1<-tail(df,1)
+         n1<-df1$tag
+         ptList<-getPtDefs()$pts
+         n2<-length(ptList[[selection]])/2
+         if(n2>n1){
+           s<-seq(from=n1,to=n2,by=dn)
+           s<-s[-1]
+           if(length(s)>0){
+             df2List<-lapply(s, function(tn){ df2<-df1; df2$tag<-tn; df2})
+             df3<-do.call(rbind, df2List )
+             df4<-rbind(df,df3)
+             tagList[[selection]]<-df4
+             src<-user$code
+             src<-df2Source(src,dfList = tagList)
+             user$code<-src 
+           }
+         }
+      }
     }
+    freq[[input$ptSet]]<-value
+    reactiveTag$freq<-freq
   })  
 })
   
@@ -192,13 +224,11 @@ observeEvent(
     isolate({
       ptRList<-getPtDefs()$pts
       selectedPoint$point.index<-length(ptRList[[input$ptSet]])
-      if(input$ptSet %in% names( reactiveTag$freq) ){
-        updateSelectInput(session, "tagFreq", 
-                          selected=reactiveTag$freq[[input$ptSet]] )
-      } else {
-        updateSelectInput(session, "tagFreq", 
-                          selected="Off" )
+      selected=reactiveTag$freq[[input$ptSet]] 
+      if(is.null(selected)){
+        selected<-"Off"
       }
+      updateSelectInput(session, "tagFreq", selected=selected )
     })
   })
 
@@ -355,8 +385,9 @@ observeEvent( input$editNavBar, {
   if(fileCmd=="Open"){ #-----open 
     fileName=""
     try(fileName<-dlgOpen(title = "Select one R file", 
-                          filters = dlgFilters[c("R", "All"), ])$res)
-    if(length(fileName)>0){ 
+        filters = dlgFilters[c("R", "All"), ])$res
+    )
+    if(length(fileName)>0 && nchar(fileName)>0){ 
       src<-paste(readLines(fileName), collapse = "\n")
       file$name<-fileName
       if(nchar(src)>0){
@@ -389,7 +420,6 @@ observeEvent( input$editNavBar, {
 observe({
   input$mydata #may want to rename this
   isolate({
-     
     if(length(input$mydata)>0){
       #get cmd
       cmd<-input$mydata[1]
@@ -406,7 +436,6 @@ observe({
         #update local ptRList
         indx<-selectedPoint$point.index
         ptRList[[selection]]<-append(ptRList[[selection]],newPt,2*indx)
-        
           df<-NULL
           tagList<-getPtDefs()$df
           if(!is.null(tagList)){
@@ -422,8 +451,8 @@ observe({
                 tagList[[selection]]<-df
                 src<-df2Source(src,tagList)
               } else { #we are at the end
-                freq<-reactiveTag$freq
-                if(freq!='Off'){
+                freq<-reactiveTag$freq[[selection]]
+                if(!is.null(freq)) {
                   freq<-as.integer(freq)
                   offset<-1+indx-tail(tags,1)
                   if(offset==freq){ # at the end and needs to be tagged
