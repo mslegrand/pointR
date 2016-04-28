@@ -21,7 +21,7 @@ shinyUI(fluidPage(
     ),
   sidebarLayout( 
     sidebarPanel( width=6, #editor panel
-                  navbarPage("Edit:",   fluid=TRUE, 
+                  navbarPage("Edit:", fluid=TRUE, 
                              id="editNavBar",
                              navbarMenu("File", 
                                         tabPanel("New"),
@@ -30,6 +30,7 @@ shinyUI(fluidPage(
                              ),
                              navbarMenu("Code", 
                                         tabPanel("Edit Main" , value="Source")
+                #                        tabPanel("Source" , value="Source")
                              ),
                              tabPanel(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/User_Guide.html\"  target=\"_blank\" >User Guide </a></li>")),
                              tabPanel(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/\"  target=\"_blank\" >io.svgR</a></li>"))
@@ -38,7 +39,8 @@ shinyUI(fluidPage(
       #br(),br(),
       h3(textOutput( "fileName")),
       aceEditor( outputId = "source", value="", mode="r", theme="katzenmilch",
-                 height = "690px", fontSize=16, autoComplete="live", 
+                 height = panelHeights["aceHeight" ], #"490px", 
+                 fontSize=16, autoComplete="live", 
                  autoCompleteList =list(svgR=names(svgR:::eleDefs))),
       actionButton("commit", label = "COMMIT EDIT", 
                    style=cstyle$button)

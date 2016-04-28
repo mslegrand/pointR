@@ -1,5 +1,8 @@
 library(svgR)
 
+panelHeights<-c(
+  aceHeight = "490px", svg="340px", log="640px"
+)
 
 cstyle<-list(
   h1="font-family: 'ChunkFiveRegular'; font-style: italic; font-weight: 500; line-height: 1.1;  color: #4d3a7d;",
@@ -8,9 +11,16 @@ cstyle<-list(
   wellPanel="background-color: #88B0CA; padding-top: 0px;",
   button="background-color: #222244; color: white; border-radius: 24px;",
   wellPoint="background-color: #8888AA; border-color: #88AAAA; margin-top: 0px; margin-bottom: 0px;",
-  svg="width:600px ;height: 540px; border: 1px solid darkblue; overflow: auto; background-color: white;",
-  log="width:600px ;height: 640px; border: 1px solid darkblue; overflow: auto; background-color: white;"
+  svg=paste0("width:600px ;height: ",
+             panelHeights["svg"] ,
+             "; border: 1px solid darkblue; overflow: auto; background-color: white;"
+             ),
+  log=paste0("width:600px ;height: ",
+             panelHeights["log"], #"640px",
+            "; border: 1px solid darkblue; overflow: auto; background-color: white;"
+    )
 )
+
 
 
 
