@@ -16,7 +16,6 @@ Videos for pointR can be found at http://mslegrand.github.io/pointRmedia/
 - library(devtools)
 - install_github("shiny", "rstudio")
 - install_github("shinyAce", "trestletech")
-- install_github("XML", "omegahat")
 - install_github("svgR", "mslegrand")
 
 # Reporting issues
