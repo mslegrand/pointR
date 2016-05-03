@@ -17,7 +17,7 @@ shinyUI(fluidPage(
     tags$style(HTML(styleSpec))
   )),
   headerPanel(
-    h1("pointR  -An svgR programming tool- (v 0.3)", style = cstyle$h1)
+    h1("pointR  -An svgR programming tool- (v 0.3.0)", style = cstyle$h1)
     ),
   sidebarLayout( 
     sidebarPanel( width=6, #editor panel
@@ -29,7 +29,7 @@ shinyUI(fluidPage(
                                         tabPanel("Save")
                              ),
                              navbarMenu("Code", 
-                                        tabPanel("Edit Main" , value="Source")
+                                        tabPanel("Edit svgR" , value="Source")
                 #                        tabPanel("Source" , value="Source")
                              ),
                              tabPanel(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/User_Guide.html\"  target=\"_blank\" >User Guide </a></li>")),
@@ -58,17 +58,23 @@ shinyUI(fluidPage(
               column(4, 
                 selectInput(
                   "ptRSelect", "Active Points",
-                  multiple=FALSE, size=3, selectize = FALSE,
+                  multiple=FALSE, size=1, selectize = FALSE,
                   list("x"), selected="x", 
                   width="150px"  
                 )
               ),
               column(3,
-                radioButtons("ptDisplayMode", 
-                  "Display Mode", 
-                  c("Normal","Labeled","Hidden"),
-                  width = "150px"
-                )
+                     selectInput(
+                       "ptDisplayMode", "Display Mode",
+                       multiple=FALSE, size=1, selectize = FALSE,
+                       list("Normal","Labeled","Hidden"), selected="Normal", 
+                       width="150px"  
+                     )
+                # radioButtons("ptDisplayMode", 
+                #   "Display Mode", 
+                #   "Normal", #c("Normal","Labeled","Hidden"),
+                #   width = "150px"
+                # )
               ),
               column(2,
                 selectInput("tagFreq", "Auto Tag",
@@ -80,7 +86,10 @@ shinyUI(fluidPage(
               column(3,
                 checkboxInput("insertMode","Insert Mode",
                   value = TRUE, width = "100px"
-                )
+                ),
+                checkboxInput("showGrid", "Show Grid", 
+                              value = TRUE, width = "100px")
+                
               )
             ) 
           )#end of well panel
@@ -146,9 +155,9 @@ shinyUI(fluidPage(
       ), #plotNavBar end
 #-----------plotNavBar:Plot--------------------------------------------
       conditionalPanel( "input.plotNavBar!='Log'",
-        splitLayout(cellWidths = c("70%", "30%"),
-                    checkboxInput("showGrid", "Show Coordinate Grid", value = TRUE, width = "200px")
-        ),
+        # splitLayout(cellWidths = c("70%", "30%"),
+        #             checkboxInput("showGrid", "Show Coordinate Grid", value = TRUE, width = "200px")
+        # ),
         div( style=cstyle$svg,htmlOutput("svghtml"))
       )
       ,br(),

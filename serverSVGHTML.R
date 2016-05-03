@@ -150,7 +150,7 @@ output$svghtml <- renderUI({
     "use(filter=filter(filterUnits=\"userSpaceOnUse\", feFlood(flood.color='white') )),"
   )
   if(showGrid==TRUE){
-    insert.beg<-c(insert.beg, "graphPaper( wh=c(1200,1200), dxy=c(50, 50), labels=TRUE ),")
+    insert.beg<-c(insert.beg, "graphPaper( wh=c(2000,2000), dxy=c(50, 50), labels=TRUE ),")
   }
   
   insert.end<-c(
