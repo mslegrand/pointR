@@ -21,151 +21,136 @@ shinyUI(fluidPage(
     tags$style("#tagValEd{margin: 0px; font-size: 12px;}"),
     tags$style(HTML(styleSpec))
   )),
-  # headerPanel(
-  #   h1("pointR  -An svgR programming tool- (v 0.3.0)", style = cstyle$h1)
-  #   ),
-  #sidebarLayout(
-    absolutePanel( left=0, top=0, width=650, #editor panel
-                  navbarPage("ptR (v.0.3.0)", fluid=TRUE, 
-                             id="editNavBar",
-                             navbarMenu("File", 
-                                        tabPanel("New"),
-                                        tabPanel("Open"),
-                                        tabPanel("Save")
-                             ),
-                             navbarMenu("Code", 
-                                        tabPanel("Edit svgR" , value="Source")
-                #                        tabPanel("Source" , value="Source")
-                             ),
-                             tabPanel(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/User_Guide.html\"  target=\"_blank\" >User Guide </a></li>")),
-                             tabPanel(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/\"  target=\"_blank\" >io.svgR</a></li>"))
-                  ),
-      style=cstyle$sidePanel, 
-      #br(),br(),
-      h3(textOutput( "fileName")),
-      aceEditor( outputId = "source", value="", mode="r", theme="katzenmilch",
-                 height = panelHeights["aceHeight" ], #"490px", 
-                 fontSize=16, autoComplete="live", 
-                 autoCompleteList =list(svgR=names(svgR:::eleDefs))),
-      actionButton("commit", label = "COMMIT EDIT", 
-                   style=cstyle$button)
+  absolutePanel( left=0, top=0, width=650, #editor panel
+    navbarPage("ptR (v.0.3.0)", fluid=TRUE, 
+      id="editNavBar",
+      navbarMenu("File", 
+        tabPanel("New"),
+        tabPanel("Open"),
+        tabPanel("Save")
+      ),
+      navbarMenu("Code", 
+        tabPanel("Edit svgR" , value="Source")
+      ),
+      tabPanel(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/User_Guide.html\"  target=\"_blank\" >User Guide </a></li>")),
+      tabPanel(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/\"  target=\"_blank\" >io.svgR</a></li>"))
     ),
+    style=cstyle$sidePanel, 
+    h3(textOutput( "fileName")),
+    aceEditor( outputId = "source", value="", mode="r", theme="katzenmilch",
+      height = panelHeights["aceHeight" ], #"490px", 
+      fontSize=16, autoComplete="live", 
+      autoCompleteList =list(svgR=names(svgR:::eleDefs))),
+    actionButton("commit", label = "COMMIT EDIT", style=cstyle$button)
+  ),
 #---------------------------------------------------------------
 #---------------plotNavBar  ------------------------------------
 # svgR plot panel
-    absolutePanel( top=0, left=670, width=650, height=660,style=cstyle$wellPanel, 
-      navbarPage("ptR (v.0.3.0)",  id="plotNavBar", fluid=TRUE, 
-#---------------plotNavBar:points  ------------------------------------
-        tabPanel("Points"#, 
-          # absolutePanel( top=130, left=0, width=650, draggable=FALSE,
-          #                       style=cstyle$svg, htmlOutput("svghtml")),
-        ), #end of tab panel "Points"
-#---------------plotNavBar:TAGS  ------------------------------------
-        tabPanel("Tags"
-                  ), #tab panel Tags end
-#---------------plotNavBar:Transform  ------------------------------------
-        tabPanel("Transforms", 
-               style=cstyle$wellPoint,
-               tabsetPanel( id="transformOption", 
-                            tabPanel("Translate"), 
-                            tabPanel("Rotate"), 
-                            tabPanel("Scale"),
-                            type="pills"
-               ) 
-        ),
-#---------------plotNavBar:Log  ------------------------------------
-        tabPanel("Log",br(),br(),
-          absolutePanel( top=130, left=0, right=0,  draggable=FALSE,
-                         style=cstyle$svg,
-             #"width:600px ;height: 640px; border: 1px solid darkblue; overflow: auto; background-color: white;",
-              verbatimTextOutput("out_log")
-         )
-        )
-      ), #plotNavBar end
-  #style=cstyle$sidePanel,
-#-----------plotNavBar:SVGHTML--------------------------------------------
-      conditionalPanel( "input.plotNavBar!='Log'",
-        absolutePanel( top=130, left=0, right=0,  draggable=FALSE,
-                       style=cstyle$svg, htmlOutput("svghtml")
-        )
+  absolutePanel( top=0, left=670, width=650, height=660, style=cstyle$wellPanel, 
+    navbarPage("ptR (v.0.3.0)",  id="plotNavBar", fluid=TRUE, 
+    #---------------plotNavBar:points  ------------------------------------
+      tabPanel("Points" ), #end of tab panel "Points"
+      #---------------plotNavBar:TAGS  ------------------------------------
+      tabPanel("Tags"), #tab panel Tags end
+      #---------------plotNavBar:Transform  ------------------------------------
+      tabPanel("Transforms", 
+        style=cstyle$wellPoint,
+        tabsetPanel( id="transformOption", 
+          tabPanel("Translate"), 
+          tabPanel("Rotate"), 
+          tabPanel("Scale"),
+          type="pills"
+        ) 
       ),
-      br(),
-conditionalPanel( "input.plotNavBar=='Points'",
-  absolutePanel( top=50, left=0, width=650, draggable=TRUE,
-     style=cstyle$wellPoint,
-     fluidRow(
-       column(4, 
-          selectInput(
-            "ptRSelect", "Active Points",
-            multiple=FALSE, size=1, selectize = FALSE,
-            list("x"), selected="x", 
-            width="150px"  
-          )
-       ),
-       column(3,
-          selectInput(
-            "ptDisplayMode", "Display Mode",
-            multiple=FALSE, size=1, selectize = FALSE,
-            list("Normal","Labeled","Hidden"), selected="Normal", 
-            width="150px"  
-          )
-       ),
-       column(2,
-          selectInput("tagFreq", "Auto Tag",
-                      multiple=FALSE, size=1, selectize = FALSE,
-                      c(list("Off"),1:20), selected="Off", 
-                      width="80px"  
-          )
-       ),
-       column(3,
-          checkboxInput("insertMode","Insert Mode",
-                        value = TRUE, width = "100px"
+      #---------------plotNavBar:Log  ------------------------------------
+      tabPanel("Log",br(),br(),
+        absolutePanel( top=130, left=0, right=0, draggable=FALSE, style=cstyle$svg,
+            verbatimTextOutput("out_log")
+        )
+      )
+    ), #navbarPage end
+    #--------CONDITIONALS-----------------------------------------------------
+    #-------CONDITIONAL----plotNavBar:SVGHTML---------------------------------
+    conditionalPanel( "input.plotNavBar!='Log'",
+      absolutePanel( top=130, left=0, right=0,  draggable=FALSE,
+                     style=cstyle$svg, htmlOutput("svghtml")
+      )
+    ),
+    br(),
+    #-------CONDITIONAL----plotNavBar:POINTS---------------------------------
+    conditionalPanel( "input.plotNavBar=='Points'",
+      absolutePanel( top=50, left=0, width=650, draggable=TRUE,
+         style=cstyle$wellPoint,
+         fluidRow(
+           column(4, 
+              selectInput(
+                "ptRSelect", "Active Points",
+                multiple=FALSE, size=1, selectize = FALSE,
+                list("x"), selected="x", 
+                width="150px"  
+              )
+           ),
+           column(3,
+              selectInput(
+                "ptDisplayMode", "Display Mode",
+                multiple=FALSE, size=1, selectize = FALSE,
+                list("Normal","Labeled","Hidden"), selected="Normal", 
+                width="150px"  
+              )
+           ),
+           column(2,
+              selectInput("tagFreq", "Auto Tag",
+                          multiple=FALSE, size=1, selectize = FALSE,
+                          c(list("Off"),1:20), selected="Off", 
+                          width="80px"  
+              )
+           ),
+           column(3,
+              checkboxInput("insertMode","Insert Mode",
+                            value = TRUE, width = "100px"
+              ),
+              checkboxInput("showGrid", "Show Grid", 
+                            value = TRUE, width = "100px")
+           )
+         ) 
+    )), #POINTS panel end
+    #-------CONDITIONAL----plotNavBar:TAGS---------------------------------
+    conditionalPanel( "input.plotNavBar=='Tags'",
+      absolutePanel( top=50, left=0, width=650, draggable=TRUE, 
+        style=cstyle$wellPoint,
+        fluidRow(
+          column(2, 
+            selectInput( "tagPts", "Tagged Points",
+              multiple=FALSE, size=3, selectize = FALSE,
+              list(),  selected=NULL, width="100px"  
+            )
           ),
-          checkboxInput("showGrid", "Show Grid", 
-                        value = TRUE, width = "100px")
-       )
-     ) 
-)), #end of well panel
-
-conditionalPanel( "input.plotNavBar=='Tags'",
-  absolutePanel( top=50, left=0, width=650, draggable=TRUE, 
-                 style=cstyle$wellPoint,
-                 fluidRow(
-                   column(2, 
-                          selectInput(
-                            "tagPts", "Tagged Points",
-                            multiple=FALSE, size=3, selectize = FALSE,
-                            list(),  selected=NULL, 
-                            width="100px"  
-                          )
-                   ),
-                   column(2, 
-                          selectInput("tagIndx", "Tag Index",
-                                      multiple=FALSE, size=3, selectize = FALSE, list(), selected=NULL,
-                                      width="60px"  
-                          )
-                   ),
-                   column(2, 
-                          selectInput("tagCol", "Column Name",
-                                      multiple=FALSE, size=3, selectize = FALSE, list(),  selected=NULL, 
-                                      width="100px"  
-                          )
-                   ),
-                   column(3, 
-                          selectInput("tagColVal", "Column-Value", 
-                                      multiple=FALSE, size=3, selectize = FALSE,  list(),  selected=NULL, 
-                                      width="100px"  
-                          )
-                   ),
-                   column(3, 
-                          textInput("tagValEd", "Alternate Value", value=""),
-                          actionButton("insertVal2Col", label = "Insert Val", style=cstyle$button)
-                   )
-                 ),
-                 style=cstyle$wellPoint
-  )) #well panel end
-,
-#-----------plotNavBar:Buttons--------------------------------------------
+          column(2, 
+            selectInput("tagIndx", "Tag Index",
+              multiple=FALSE, size=3, selectize = FALSE, 
+              list(), selected=NULL, width="60px"  
+            )
+          ),
+          column(2, 
+            selectInput("tagCol", "Column Name",
+              multiple=FALSE, size=3, selectize = FALSE, 
+              list(),  selected=NULL, width="100px"  
+            )
+          ),
+          column(3, 
+            selectInput("tagColVal", "Column-Value", 
+              multiple=FALSE, size=3, selectize = FALSE,  
+              list(),  selected=NULL, width="100px"  
+            )
+          ),
+          column(3, 
+            textInput("tagValEd", "Alternate Value", value=""),
+            actionButton("insertVal2Col", label = "Insert Val", style=cstyle$button)
+          )
+        ),
+        style=cstyle$wellPoint
+      )), #TAGS panel end
+    #-------CONDITIONAL----plotNavBar:BUTTONS---------------------------------
       conditionalPanel( "input.plotNavBar=='Points'",
         absolutePanel( bottom=0, left=0, width=650, draggable=FALSE,
                         style="margin:0px; padding:0px;",
@@ -174,10 +159,9 @@ conditionalPanel( "input.plotNavBar=='Tags'",
           actionButton("removePt", label = "Selected Delete", style=cstyle$button),
           actionButton("tagPt", label = "Selected Tag", style=cstyle$button)
         )
-      )
-    )
-  )
+      ) #BUTTONS PANEL END
+    ) # end of absolute panel containing navbar
+  ) # end of fluidpage
 )
-
-#  ------------------------------------------------------------------------
+#  ------------------END OF SHINY UI------------------------------------------------------
 
