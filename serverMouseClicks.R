@@ -1,10 +1,10 @@
 observe({
-  input$mydata #may want to rename this
+  input$mouseMssg #may want to rename this
   isolate({
-    if(length(input$mydata)>0){
+    if(length(input$mouseMssg)>0){
       #get cmd
-      cmd<-input$mydata[1]
-      pt<- input$mydata[2]
+      cmd<-input$mouseMssg[1]
+      pt<- input$mouseMssg[2]
       src<-user$code
       #todo: error check???
       
@@ -52,7 +52,7 @@ observe({
         src<-pts2Source(src,ptRList)
       } 
       if(cmd=='move'){ # --------move point
-        id<-input$mydata[3]
+        id<-input$mouseMssg[3]
         vid<-strsplit(id,"-")[[1]]
         #get selection
         selection<-vid[2]
@@ -66,22 +66,22 @@ observe({
       }
       #-------transformations 
       if(cmd=='trans'){ # -- translate
-        tid<-input$mydata[3]
-        tmp<-input$mydata[2]
+        tid<-input$mouseMssg[3]
+        tmp<-input$mouseMssg[2]
         trDefDelta<-formatC(eval(parse(text=tmp)))
         trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2,)" )
         src<-tr2src( src, tid, trDefDelta2 )
       }
       if(cmd=='rotate'){ # ----rotate
-        tid<-input$mydata[3]
-        tmp<-input$mydata[2]
+        tid<-input$mouseMssg[3]
+        tmp<-input$mouseMssg[2]
         trDefDelta<-formatC(eval(parse(text=tmp)))
         trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2,)" )
         src<-tr2src( src, tid, trDefDelta2 )
       } 
       if(cmd=='scale'){ # ----scale
-        tid<-input$mydata[3]
-        tmp<-input$mydata[2]
+        tid<-input$mouseMssg[3]
+        tmp<-input$mouseMssg[2]
         trDefDelta<-formatC(eval(parse(text=tmp)))
         trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2,)" )
         src<-tr2src( src, tid, trDefDelta2 )

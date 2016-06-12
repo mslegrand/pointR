@@ -1,7 +1,7 @@
 #----SVG window-------------------
 output$svghtml <- renderUI({
   svgBarCmd<-input$plotNavBar
-  WH<-c(600,620)
+  WH<-c(650,620)
   if(svgBarCmd=="Log"){
     return("")
   }
@@ -33,8 +33,6 @@ output$svghtml <- renderUI({
     ptName<-NULL
     scriptName<-input$transformOption
   } 
-  
-    
   
   showGrid<-input$showGrid
   
@@ -81,8 +79,13 @@ output$svghtml <- renderUI({
       }
       if(ncol(m)>0){
         tagsX<-c(0,tags,ncol(m)+1) # has at least 2 elements
-        t1<-max(tagsX[tagsX<=tag.indx])
-        t2<-min(tagsX[tag.indx<tagsX])
+        #print(tagsX)
+        #print(tag.indx)
+        #t1<-max(tagsX[tagsX<=tag.indx])
+        #t2<-min(tagsX[tag.indx<tagsX])
+        t1<-as.numeric(tag.indx)
+        t2<-as.numeric(tagsX[1+which(tag.indx==tagsX)]) 
+        #print(c(t1,t2))
       } else {
         t1=0; t2=1000
       }
@@ -94,9 +97,9 @@ output$svghtml <- renderUI({
             color=colorScheme['ending']   
         }
         if( t1<=i && i<t2 ){ 
-          opac<-1 
+          opac <- 1 
         } else {
-          opac<-semitransparent
+          opac <- semitransparent
         }
         list(
           if(i==selectedPointIndx && svgBarCmd!="Tags"){
@@ -178,5 +181,4 @@ output$svghtml <- renderUI({
       } 
     )
   res
- 
 })

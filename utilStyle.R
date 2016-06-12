@@ -1,25 +1,42 @@
 library(svgR)
 
 panelHeights<-c(
-  aceHeight = "490px", svg="440px", log="640px"
+  aceHeight = "490px", svg="490px", log="640px"
 )
+
+# cstyle<-list(
+#   h1="font-family: 'ChunkFiveRegular'; font-style: italic; font-weight: 500; line-height: 1.1;  color: #4d3a7d; margin-bottom:5px; padding-bottom:5px;",
+#   sidePanel="background-color: #88B0CA; padding-top: 0px; margin:0px; ", 
+#   
+#   wellPanel="width:500px; background-color: #88B0CA; padding-top:0px; margin:0px; padding-bottom:0px; margin-bottom:0px; margin-left:0px;",
+#   button="background-color: #222244; color: white; border-radius: 24px;",
+#   wellPoint="opacity:0.7, width:500px; background-color: #8888AA; border-color: #88AAAA; padding-top:0px; padding-bottom:0px; margin-left:-15px; margin-right:15px; margin-top:0px; margin-bottom:0px;",
+#   svg=paste0("width:700px ;height: ",
+#              panelHeights["svg"] ,
+#              "; border: 1px solid darkblue; overflow: auto; background-color: white; margin:0px"
+#              ),
+#   log=paste0("width:500px ;height: ",
+#              panelHeights["log"], #"640px",
+#             "; border: 1px solid darkblue; overflow: auto; background-color: white;"
+#     )
+# )
 
 cstyle<-list(
   h1="font-family: 'ChunkFiveRegular'; font-style: italic; font-weight: 500; line-height: 1.1;  color: #4d3a7d;",
   sidePanel="background-color: #88B0CA; padding-top: 0px;", 
-  
   wellPanel="background-color: #88B0CA; padding-top: 0px;",
   button="background-color: #222244; color: white; border-radius: 24px;",
-  wellPoint="background-color: #8888AA; border-color: #88AAAA; padding-top: 0px; padding-bottom: 0px; margin-left: 0;",
-  svg=paste0("width:600px ;height: ",
+  wellPoint="background-color: #8888AA; border-color: #88AAAA; margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-size:12px; padding-left: 5px;padding-right: 5px;",
+  svg=paste0("width:650px ;height: ",
              panelHeights["svg"] ,
              "; border: 1px solid darkblue; overflow: auto; background-color: white;"
-             ),
+  ),
   log=paste0("width:600px ;height: ",
              panelHeights["log"], #"640px",
-            "; border: 1px solid darkblue; overflow: auto; background-color: white;"
-    )
+             "; border: 1px solid darkblue; overflow: auto; background-color: white;"
+  )
 )
+
 
 
 
@@ -41,8 +58,8 @@ font-style: normal;
 }
 background-color: #66999;
 h1 {
-font-family: 'ChunkFiveRegular', cursive;
-font-weight: 500;
+font-family: 'Arial', cursive;
+font-weight: 400;
 line-height: 1.1;
 color: #48ca3b;
 }
