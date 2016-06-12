@@ -1,18 +1,18 @@
 var chosen =[];
 var movedTo=[];
 
-var selectedElement = 0;
-var currentMatrix   = 0;
+var ptR_selectedElement = 0;
+var ptR_currentMatrix   = 0;
 
-var svg = document.querySelector("svg");
-var cxy = svg.createSVGPoint();  //center of shape
-var ut  = svg.createSVGPoint();
-var originalCTM=svg.createSVGMatrix();
+var ptR_svg = document.querySelector("svg");
+var ptR_cxy = ptR_svg.createSVGPoint();  //center of shape
+var ptR_ut  = ptR_svg.createSVGPoint();
+var ptR_originalCTM=ptR_svg.createSVGMatrix();
 
 function cursorPoint(evt){
-  var tmp=svg.createSVGPoint();
+  var tmp=ptR_svg.createSVGPoint();
   tmp.x = evt.clientX; tmp.y = evt.clientY;
-  return tmp.matrixTransform(svg.getScreenCTM().inverse());
+  return tmp.matrixTransform(ptR_svg.getScreenCTM().inverse());
 }
 
 function dot(v1,v2){
@@ -42,7 +42,7 @@ function getSin( u, v ){
 }
 
 function diff(u,v){
-  var tmp=svg.createSVGPoint();
+  var tmp=ptR_svg.createSVGPoint();
   tmp.x = u.x - v.x; 
   tmp.y = u.y - v.y;
   return tmp;
@@ -53,7 +53,7 @@ function rotM( cxy, u, v){
   var s=getSin(u,v);
   var h=cxy.x;
   var k=cxy.y;
-  var m=svg.createSVGMatrix();
+  var m=ptR_svg.createSVGMatrix();
   m.a=c; m.b=s; m.c=-s; m.d=c; m.e=h+k*s-h*c; m.f= k-h*s-k*c;
   return m;
 }
@@ -61,60 +61,60 @@ function rotM( cxy, u, v){
 
 // selectElement 
 function selectElement(evt) {
-  selectedElement = evt.currentTarget;
+  ptR_selectedElement = evt.currentTarget;
     
-  originalCTM=selectedElement.getCTM();
+  ptR_originalCTM=ptR_selectedElement.getCTM();
   
   // extract cxy
-  var bbBox = selectedElement.getBBox();
-  cxy.x= bbBox.x+bbBox.width/2;
-  cxy.y=bbBox.y+bbBox.height/2;
-  cxy=cxy.matrixTransform(originalCTM);
+  var bbBox = ptR_selectedElement.getBBox();
+    ptR_cxy.x= bbBox.x+bbBox.width/2;
+    ptR_cxy.y=bbBox.y+bbBox.height/2;
+    ptR_cxy=  ptR_cxy.matrixTransform( ptR_originalCTM);
   // extract u
   var qt=cursorPoint(evt);
-  ut=diff(qt,cxy);
-  var lenut = length(ut);
+  ptR_ut=diff(qt,  ptR_cxy);
+  var lenut = length(ptR_ut);
   if( lenut < 0.001 ){ //not too close
-    selectedElement=0;
+    ptR_selectedElement=0;
     return;
   }
   
   //add eventattrs to element
-  selectedElement.parentNode.appendChild( selectedElement ); //brings to top
-  selectedElement.setAttributeNS(null, "onmousemove", "moveElement(evt)");
-  selectedElement.setAttributeNS(null, "onmouseout", "deselectElement(evt)");
-  selectedElement.setAttributeNS(null, "onmouseup",  "deselectElement(evt)");
+  ptR_selectedElement.parentNode.appendChild( ptR_selectedElement ); //brings to top
+  ptR_selectedElement.setAttributeNS(null, "onmousemove", "moveElement(evt)");
+  ptR_selectedElement.setAttributeNS(null, "onmouseout", "deselectElement(evt)");
+  ptR_selectedElement.setAttributeNS(null, "onmouseup",  "deselectElement(evt)");
 }
 
 // translation of an element
 function moveElement(evt) {
-  if(selectedElement!==0){ // this shouldn"t be necessary 
+  if(ptR_selectedElement!==0){ // this shouldn"t be necessary 
     var pt = cursorPoint(evt);
-    var vt =  diff(pt, cxy);
+    var vt =  diff(pt,   ptR_cxy);
     var lenvt = length(vt);
     if( lenvt < 0.001 ){ //not too close
       return;
     }
-    var rotationMatrix=rotM( cxy, vt, ut );
-    var ctm=rotationMatrix.multiply(originalCTM );
-    currentMatrix=[ctm.a, ctm.b, ctm.c, ctm.d, ctm.e, ctm.f];
-    selectedElement.setAttributeNS(null, "transform", "matrix(" + currentMatrix.join(" ") + ")");   
+    var rotationMatrix=rotM(   ptR_cxy, vt, ptR_ut );
+    var ctm=rotationMatrix.multiply( ptR_originalCTM );
+    ptR_currentMatrix=[ctm.a, ctm.b, ctm.c, ctm.d, ctm.e, ctm.f];
+    ptR_selectedElement.setAttributeNS(null, "transform", "matrix(" + ptR_currentMatrix.join(" ") + ")");   
   }
   
 }
 
 // deselect that element
 function deselectElement(evt) {
-  if(selectedElement !== 0){
-    var tid = selectedElement.getAttribute("tid");    
-    var currentMatrixAsString="c(" + currentMatrix.join(",") + ")";    
-    //var cxyStr="c("+cxy.x+","+cxy.y+")"; //to use for display?
-    //chosen=["rotate", currentMatrixAsString, tid, cxyStr];
+  if(ptR_selectedElement !== 0){
+    var tid = ptR_selectedElement.getAttribute("tid");    
+    var currentMatrixAsString="c(" + ptR_currentMatrix.join(",") + ")";    
+    //var cxyStr="c("+  ptR_cxy.x+","+  ptR_cxy.y+")"; //to use for display?
+    //chosen=["rotate", ptR_currentMatrixAsString, tid, cxyStr];
     chosen=["rotate", currentMatrixAsString, tid];
-    Shiny.onInputChange("mydata",chosen);    
-    selectedElement.removeAttributeNS(null, "onmousemove");
-    selectedElement.removeAttributeNS(null, "onmouseout");
-    selectedElement.removeAttributeNS(null, "onmouseup");
-    selectedElement = 0;
+    Shiny.onInputChange("mouseMssg",chosen);    
+    ptR_selectedElement.removeAttributeNS(null, "onmousemove");
+    ptR_selectedElement.removeAttributeNS(null, "onmouseout");
+    ptR_selectedElement.removeAttributeNS(null, "onmouseup");
+    ptR_selectedElement = 0;
   }
 }
