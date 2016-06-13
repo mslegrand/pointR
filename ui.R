@@ -145,7 +145,7 @@ shinyUI(fluidPage(
           ),
           column(3, 
             textInput("tagValEd", "Alternate Value", value=""),
-            actionButton("insertVal2Col", label = "Insert Val", style=cstyle$button)
+            actionButton("insertVal2Col", label = "Apply Alternate Val", style=cstyle$buttonSmall)
           )
         ),
         style=cstyle$wellPoint

@@ -26,6 +26,7 @@ cstyle<-list(
   sidePanel="background-color: #88B0CA; padding-top: 0px;", 
   wellPanel="background-color: #88B0CA; padding-top: 0px;",
   button="background-color: #222244; color: white; border-radius: 24px;",
+  buttonSmall="background-color: #222244; color: white; border-radius: 24px; font-size: 12px;",
   wellPoint="background-color: #8888AA; border-color: #88AAAA; margin-top: 0px; margin-bottom: 0px; padding-top: 0px; padding-bottom: 0px; font-size:12px; padding-left: 5px;padding-right: 5px;",
   svg=paste0("width:650px ;height: ",
              panelHeights["svg"] ,
