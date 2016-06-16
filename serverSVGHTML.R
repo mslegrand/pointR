@@ -26,7 +26,7 @@ output$svghtml <- renderUI({
     scriptName<-"Points"
     #todo use input$pointOption :
     # pointOpt=c("Insert", "Edit","Tag")
-    tag.indx<-input$tagIndx
+    tag.indx<-as.numeric(input$tagIndx)
     showPtOptions<-list(ptDisplayMode=ptDisplayMode, tag.indx=tag.indx)
   }
   if(svgBarCmd=="Transforms"){ #Temp kludge for transform)
@@ -48,7 +48,7 @@ output$svghtml <- renderUI({
        ){
       return(NULL)
     }  
-    tag.indx<-as.numeric(showPtOptions$tag.indx)
+    tag.indx<-showPtOptions$tag.indx
  
     semitransparent<-0.3
     colorScheme<-c(default="green", ending="red", selected="blue")
@@ -69,6 +69,7 @@ output$svghtml <- renderUI({
         tagInterval<-tagInterval==ti
         tagInterval[tagInterval==0]<-semitransparent
         opac<-tagInterval
+        #selectedPointIndx<-0 #so tags will not show selectes
       } else {
         opac<-rep(1, ncol(m) )
       }
@@ -80,7 +81,7 @@ output$svghtml <- renderUI({
             color=colorScheme['ending']   
         }
         list(
-          if(i==selectedPointIndx ){ #show selected point for points mode (or transform???)
+          if(i==selectedPointIndx && is.null(tag.indx)){ #show selected point for points mode (or transform???)
             circle(class="draggable", 
                    id=id,  
                    cxy=pt, r=9, fill="yellow", 
