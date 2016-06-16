@@ -48,22 +48,13 @@ output$svghtml <- renderUI({
        ){
       return(NULL)
     }  
-    tag.indx<-showPtOptions$tag.indx
-   
-    # print(paste0("selectedPointIndx=",selectedPointIndx)) #TODO: move this out!!!
-    # print(paste0("tag.indx=",tag.indx))
-    # print(paste0("class(tag.indx)=",class(tag.indx)))
-    # 
-
+    tag.indx<-as.numeric(showPtOptions$tag.indx)
+ 
     semitransparent<-0.3
     colorScheme<-c(default="green", ending="red", selected="blue")
-    
-    
     ptRList<-getPtDefs()$pts #TODO: move this out!!!
-    
     pts<- ptRList[[ptName]]
     tagRList<-getPtDefs()$df #TODO: move this out!!!
-    
     if(length(pts)<2){
       return(NULL)
     } else{
@@ -73,21 +64,13 @@ output$svghtml <- renderUI({
          !is.null(tagRList[[ptName]] 
       )){
         tags<-tagRList[[ptName]]$tag
+        ti<-which(tag.indx==tags)
+        tagInterval<-findInterval(sequence(ncol(m)),tags)
+        tagInterval<-tagInterval==ti
+        tagInterval[tagInterval==0]<-semitransparent
+        opac<-tagInterval
       } else {
-        tags<-c()
-        tag.indx<-0
-      }
-      if(ncol(m)>0){
-        tagsX<-c(0,tags,ncol(m)+1) # has at least 2 elements
-        #print(tagsX)
-        #print(tag.indx)
-        #t1<-max(tagsX[tagsX<=tag.indx])
-        #t2<-min(tagsX[tag.indx<tagsX])
-        t1<-as.numeric(tag.indx)
-        t2<-as.numeric(tagsX[1+which(tag.indx==tagsX)]) 
-        #print(c(t1,t2))
-      } else {
-        t1=0; t2=1000
+        opac<-rep(1, ncol(m) )
       }
       lapply(1:ncol(m), function(i){
         id<-paste("pd",ptName,i,sep="-")
@@ -96,24 +79,19 @@ output$svghtml <- renderUI({
         if(i==length(pts)/2) { #ncol(m)){
             color=colorScheme['ending']   
         }
-        if( t1<=i && i<t2 ){ 
-          opac <- 1 
-        } else {
-          opac <- semitransparent
-        }
         list(
-          if(i==selectedPointIndx && svgBarCmd!="Tags"){
+          if(i==selectedPointIndx ){ #show selected point for points mode (or transform???)
             circle(class="draggable", 
                    id=id,  
                    cxy=pt, r=9, fill="yellow", 
-                   opacity=opac,
+                   opacity=opac[i],
                    stroke=colorScheme['selected'], stroke.width=3,
                    transform="matrix(1 0 0 1 0 0)", 
                    onmousedown="selectPoint(evt)" )
-          } else {
+          } else { #a non-selected point
             circle(class="draggable", 
                    id=id,  
-                   cxy=pt, r=8, fill=color, opacity=opac,
+                   cxy=pt, r=8, fill=color, opacity=opac[i],
                    transform="matrix(1 0 0 1 0 0)", 
                    onmousedown="selectPoint(evt)" )
           }
@@ -121,7 +99,7 @@ output$svghtml <- renderUI({
           
           if(showPtOptions$ptDisplayMode=="Labeled"){
             text(paste(i), cxy=pt+10*c(1,-1),  
-                 stroke='black', font.size=12, opacity=opac)
+                 stroke='black', font.size=12, opacity=1) #opac)
           } else {
             NULL
           }
