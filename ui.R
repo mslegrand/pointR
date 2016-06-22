@@ -154,12 +154,22 @@ shinyUI(fluidPage(
       conditionalPanel( "input.plotNavBar=='Points'",
         absolutePanel( bottom=0, left=0, width=650, draggable=FALSE,
                         style="margin:0px; padding:0px;",
-          actionButton("forwardPt", label = "Select Forward", style=cstyle$button),
-          actionButton("backwardPt", label = "Select Back", style=cstyle$button),
-          actionButton("removePt", label = "Selected Delete", style=cstyle$button),
-          actionButton("tagPt", label = "Selected Tag", style=cstyle$button)
+          actionButton("forwardPt", label = "Forward Pt", style=cstyle$button),
+          actionButton("backwardPt", label = "Backward Pt", style=cstyle$button),
+          actionButton("removePt", label = "Delete Pt", style=cstyle$button),
+          actionButton("tagPt", label = "Tag Pt", style=cstyle$button)
         )
-      ) #BUTTONS PANEL END
+      )#, #BUTTONS PANEL END
+    #   conditionalPanel( "input.plotNavBar=='Tags'",
+    #                   absolutePanel( bottom=0, left=0, width=650, draggable=FALSE,
+    #                                  style="margin:0px; padding:0px;",
+    #                                  actionButton("copy", label = "Copy", style=cstyle$button),
+    #                                  actionButton("paste", label = "Paste", style=cstyle$button),
+    #                                  actionButton("delete", label = "Delete", style=cstyle$button),
+    #                                  actionButton("move", label = "Move", style=cstyle$button)
+    #                   )
+    # ) #BUTTONS PANEL END
+    
     ) # end of absolute panel containing navbar
   ) # end of fluidpage
 )
