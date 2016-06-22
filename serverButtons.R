@@ -111,7 +111,7 @@ observeEvent(input$tagPt, {
       
       df<-data.frame(tag=tags)
       dfList= structure( list( df) , names=selection )
-      replacement<-paste("\n\n", formatDFDefs(dfList),"\n\n")
+      replacement<-paste0("\n\n", formatDFDefs(dfList),"\n\n")
       src<-user$code
       pos<-getDefPos(src, "ptR")     
       src<-paste0( substr(src, 1, pos[2]), replacement,  
