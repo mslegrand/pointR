@@ -49,6 +49,9 @@ getDefPos<-function(txt, defTag){
 
 replaceDef<-function(txt, replacement, defTag){
   pos<-getDefPos(txt, defTag)
+  if(length(replacement)==0){
+    replacement=" "
+  }
   s<-paste0(
     substr(txt, 1, pos[1]-1),
     replacement,

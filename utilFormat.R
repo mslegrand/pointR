@@ -25,9 +25,9 @@ formatPtDefs<-function(defTag, ptRList){
 
 
 formatDFValue<-function(df){
-  if(nrow(df)==0 ){
-    return("c()")
-  } else {
+  # if(nrow(df)==0 ){
+  #   return("c()")
+  # } else {
     dfNames<-names(df)
     dfTxt<-sapply(dfNames, function(name){
       value<-df[[name]]
@@ -41,10 +41,13 @@ formatDFValue<-function(df){
     
     dfTxt2<-paste0(sp, dfTxt, collapse=",\n")
     return(dfTxt2)
-  }
+  #}
 }
 
 formatDFDefs<-function(dfDefs, dfDefsTag="tagR"){
+  if(length(dfDefs)==0 ){
+    return("")
+  }
   dfdNames<-names(dfDefs)
   tmp0<-lapply(dfdNames, function(nm){
     df<-dfDefs[[nm]]
