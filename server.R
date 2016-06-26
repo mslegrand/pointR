@@ -33,7 +33,11 @@ pts2Source<-function(txt,ptRList){
 }
 
 df2Source<-function(txt, dfList){
-  replacement<-formatDFDefs(dfList)
+  if(length(dfList)>0){
+    replacement<-formatDFDefs(dfList)
+  } else {
+    replacement<-""
+  }
   txt<-replaceDef(txt, replacement, defTag="tagR") 
 }
 
