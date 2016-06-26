@@ -1,5 +1,5 @@
 #----BUTTON EVENTS BEGIN-----------------
-
+#-----POINTS--------------------------
 # #---Insert Value-------------------
 
 observeEvent(
@@ -19,47 +19,63 @@ observeEvent(
     }
   })
 
-#---BUTTON: remove last point  -----
+#---BUTTON: remove selected point  -----
 observeEvent( input$removePt, {
   selection<-input$ptRSelect
   if(selection!=""){
     ptRList<-getPtDefs()$pts
     pts<-ptRList[[selection]]
+    if(length(pts)==0){  #if no points, return
+      return(NULL)
+    }
     indx=selectedPoint$point.index 
     src<-user$code
     
+    #delete the point from the ptR list
+    
     if(indx>=1){
       pts<-pts[-c(2*indx,2*indx-1)]
-      selectedPoint$point.index<-selectedPoint$point.index-1
+      selectedPoint$point.index<-max(1,selectedPoint$point.index-1)
+    } 
+    if( indx==0 || length(pts)<1 ){
+      pts<-list(NULL)
+      selectedPoint$point.index<-0 
+      ptRList[selection]<-pts
     } else {
-      pts<-NULL
-      selectedPoint$point.index<-0
+      ptRList[[selection]]<-pts
     }
-    ptRList[[selection]]<-pts
+    
+    
     src<-pts2Source(src,ptRList)
     
     tagList<-getPtDefs()$df
-    if(!is.null(tagList)){
-      df<-tagList[[selection]]
-      if(!is.null(df)){
-        tags<-df$tag
-        if(indx %in% tags){ #remove the tag row
-          df<-df[tags!=indx,]
+    if(!is.null(tagList)){ #tagR exists
+      df<-tagList[[selection]] 
+      if(!is.null(df)){ #df==tagR$x exists
+        if(length(pts)==0){ #no points 
+          df<-NULL
+          tagList[[selection]]<-df #remove tagR$x
+        } else { # has points
           tags<-df$tag
-        } 
-        #slide tags nos. down
-        tags2move<-tags>indx
-        if(length(tags2move)>0){
-          tags[tags>indx]<-tags[tags>indx]-1
-          df$tag<-tags
-          tagList[[selection]]<-df
-          src<-df2Source(src,tagList)
+          if(indx==1 && !(2 %in% tags)){ #do nothing
+            
+          } else {
+            if(indx %in% tags){ #remove the tag row
+              df<-subset(df,tags!=indx)
+              tags<-df$tag
+            }
+          }
+          #slide tags nos. down
+          tags2move<-tags>indx
+          if(length(tags2move)>0){
+            tags[tags>indx]<-tags[tags>indx]-1
+            df$tag<-tags
+            tagList[[selection]]<-df
+          }
         }
+        src<-df2Source(src,tagList)
       }
     }
-    #if(length(ptRList)==0){
-    #ptRList<-list(x=c())
-    #}   
     user$code<-src
     #updateAceEditor( session,"source", value=src)
   }
@@ -85,6 +101,7 @@ observeEvent(input$backwardPt,{
     selectedPoint$point.index<-0
   }
 })
+
 
 #---TAG POINT button-----
 observeEvent(input$tagPt, {
@@ -165,6 +182,11 @@ observeEvent(input$tagPt, {
   }
   
 })
+
+#------TAG BUTTONS
+# if moveTag 
+# load tagmove script and reload svgR, wait for movement
+# and update ptR
 
 
 #---commit  button----- 
