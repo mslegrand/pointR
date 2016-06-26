@@ -52,9 +52,9 @@ observeEvent( input$removePt, {
     if(!is.null(tagList)){ #tagR exists
       df<-tagList[[selection]] 
       if(!is.null(df)){ #df==tagR$x exists
-        if(length(pts)==0){ #no points 
-          df<-NULL
-          tagList[[selection]]<-df #remove tagR$x
+        if(length(ptRList[[selection]])==0){ #no points 
+          tagList[selection]<-NULL #remove tagR$x
+         # browser()
         } else { # has points
           tags<-df$tag
           if(indx==1 && !(2 %in% tags)){ #do nothing
