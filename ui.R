@@ -163,10 +163,10 @@ shinyUI(fluidPage(
     #   conditionalPanel( "input.plotNavBar=='Tags'",
     #                   absolutePanel( bottom=0, left=0, width=650, draggable=FALSE,
     #                                  style="margin:0px; padding:0px;",
-    #                                  actionButton("copy", label = "Copy", style=cstyle$button),
-    #                                  actionButton("paste", label = "Paste", style=cstyle$button),
-    #                                  actionButton("delete", label = "Delete", style=cstyle$button),
-    #                                  actionButton("move", label = "Move", style=cstyle$button)
+    #                                  actionButton("copyTag", label = "Copy", style=cstyle$button),
+    #                                  actionButton("pasteTag", label = "Paste", style=cstyle$button),
+    #                                  actionButton("deleteTag", label = "Delete", style=cstyle$button),
+    #                                  actionButton("moveTag", label = "Move", style=cstyle$button)
     #                   )
     # ) #BUTTONS PANEL END
     
