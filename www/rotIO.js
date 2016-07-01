@@ -1,5 +1,5 @@
-var chosen =[];
-var movedTo=[];
+// var chosen =[];
+// var movedTo=[];
 
 var ptR_selectedElement = 0;
 var ptR_currentMatrix   = 0;
@@ -110,7 +110,7 @@ function deselectElement(evt) {
     var currentMatrixAsString="c(" + ptR_currentMatrix.join(",") + ")";    
     //var cxyStr="c("+  ptR_cxy.x+","+  ptR_cxy.y+")"; //to use for display?
     //chosen=["rotate", ptR_currentMatrixAsString, tid, cxyStr];
-    chosen=["rotate", currentMatrixAsString, tid];
+    var chosen=["rotate", currentMatrixAsString, tid];
     Shiny.onInputChange("mouseMssg",chosen);    
     ptR_selectedElement.removeAttributeNS(null, "onmousemove");
     ptR_selectedElement.removeAttributeNS(null, "onmouseout");

@@ -1,5 +1,7 @@
-var chosen =[];
-var movedTo=[];
+// implements moving a single point
+
+// var chosen =[];
+// var movedTo=[];
 
 var ptR_selectedElement = 0;
 var ptR_currentX = 0;
@@ -16,13 +18,13 @@ function newPoint(evt) {
   // The cursor point, translated into svg coordinates
   var cursorpt =  pt.matrixTransform(ptR_svg.getScreenCTM().inverse());
   var ptTxt="c(" + cursorpt.x + ", " + cursorpt.y + ")";
-  chosen=["add", ptTxt];
+  var chosen=["add", ptTxt];
   Shiny.onInputChange("mouseMssg",chosen);
 }
 
 function selectPoint(evt){
   ptR_selectedElement = evt.target;
-  ptR_currentX= evt.clientX;
+  ptR_currentX = evt.clientX;
   ptR_currentY = evt.clientY;
   ptR_selectedElement.setAttributeNS(null, "onmousemove", "movePoint(evt)");
   ptR_selectedElement.setAttributeNS(null, "onmouseout", "deselectPoint(evt)");

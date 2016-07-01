@@ -1,5 +1,7 @@
-var chosen =[];
-var movedTo=[];
+// moves an element 
+
+// var chosen =[];
+// var movedTo=[];
 
 var ptR_selectedElement = 0;
 var ptR_currentX = 0;
@@ -8,8 +10,8 @@ var ptR_origX = 0;
 var ptR_origY = 0;
 var ptR_currentMatrix = 0;
 
-//var ptR_svg = document.querySelector("svg"); // make this into 1 line???
-//var pt  = ptR_svg.createSVGPoint();
+// var ptR_svg = document.querySelector("svg"); // make this into 1 line???
+// var pt  = ptR_svg.createSVGPoint();
 
 //TRANSFORM
 
@@ -43,7 +45,6 @@ function moveElement(evt) {
     ptR_currentX = evt.clientX;
     ptR_currentY = evt.clientY;
   }
-  
 }
 
 // deselect that element
@@ -55,7 +56,7 @@ function deselectElement(evt) {
     var tid = ptR_selectedElement.getAttribute("tid");
     
     var currentMatrixAsString="c(" + ptR_currentMatrix.join(",") + ")";
-    chosen=["trans", currentMatrixAsString, tid];
+    var chosen=["trans", currentMatrixAsString, tid];
     Shiny.onInputChange("mouseMssg",chosen);
     
     ptR_selectedElement.removeAttributeNS(null, "onmousemove");

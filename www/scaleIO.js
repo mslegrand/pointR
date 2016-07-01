@@ -1,5 +1,6 @@
-var chosen =[];
-var movedTo=[];
+// scales an element
+// var chosen =[];
+// var movedTo=[];
 
 var ptR_selectedElement = 0;
 var ptR_currentMatrix   = 0;
@@ -104,7 +105,7 @@ function deselectElement(evt) {
   if(ptR_selectedElement !== 0){
     var tid = ptR_selectedElement.getAttribute("tid");    
     var currentMatrixAsString="c(" + ptR_currentMatrix.join(",") + ")";    
-    chosen=["scale", currentMatrixAsString, tid];
+    var chosen=["scale", currentMatrixAsString, tid];
     Shiny.onInputChange("mouseMssg",chosen);    
     ptR_selectedElement.removeAttributeNS(null, "onmousemove");
     ptR_selectedElement.removeAttributeNS(null, "onmouseout");
