@@ -8,8 +8,8 @@ pointR is a shiny-based minimalist ide for R scripting using svgR
 -  pointR is an attempt to bridge the gap between coding and point&click.
 -  svgR bridges the gap between R and SVG
 
-Related information can be found at http://mslegrand.github.io/svgR/
 Videos for pointR can be found at http://mslegrand.github.io/pointRmedia/
+Related information can be found at http://mslegrand.github.io/svgR/
   
 # Installation
 - install.packages("devtools")
