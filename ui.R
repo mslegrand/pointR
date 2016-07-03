@@ -10,6 +10,7 @@ library(svgR)
 library(shinyAce)
 source("utilStyle.R")
 
+version="ptR (v.0.3.1)"
 
 shinyUI(fluidPage(
   singleton(tags$head(
@@ -22,7 +23,7 @@ shinyUI(fluidPage(
     tags$style(HTML(styleSpec))
   )),
   absolutePanel( left=0, top=0, width=650, #editor panel
-    navbarPage("ptR (v.0.3.0)", fluid=TRUE, 
+    navbarPage(version, fluid=TRUE, 
       id="editNavBar",
       navbarMenu("File", 
         tabPanel("New"),
@@ -47,11 +48,18 @@ shinyUI(fluidPage(
 #---------------plotNavBar  ------------------------------------
 # svgR plot panel
   absolutePanel( top=0, left=670, width=650, height=660, style=cstyle$wellPanel, 
-    navbarPage("ptR (v.0.3.0)",  id="plotNavBar", fluid=TRUE, 
+    navbarPage(version,  id="plotNavBar", fluid=TRUE, 
     #---------------plotNavBar:points  ------------------------------------
       tabPanel("Points" ), #end of tab panel "Points"
       #---------------plotNavBar:TAGS  ------------------------------------
-      tabPanel("Tags"), #tab panel Tags end
+      navbarMenu("Tags", 
+                 tabPanel("Value", value="tagValues"),
+                 tabPanel("Drag",  value="dragTag"),
+                 tabPanel("Wag"),
+                 tabPanel("Mag")
+      ),
+      # tabPanel("Tags",
+      #          tabsetPanel("Tag")), #tab panel Tags end
       #---------------plotNavBar:Transform  ------------------------------------
       tabPanel("Transforms", 
         style=cstyle$wellPoint,
@@ -115,7 +123,7 @@ shinyUI(fluidPage(
          ) 
     )), #POINTS panel end
     #-------CONDITIONAL----plotNavBar:TAGS---------------------------------
-    conditionalPanel( "input.plotNavBar=='Tags'",
+    conditionalPanel( "input.plotNavBar=='tagValues'",
       absolutePanel( top=50, left=0, width=650, draggable=TRUE, 
         style=cstyle$wellPoint,
         fluidRow(
