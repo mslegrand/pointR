@@ -1,75 +1,121 @@
 #----SVG window-------------------
+
+# workflow:
+# 1 get svgBarCmd
+# 2 get points, indx
+# 3 get tags, tag.indx
+#    load jjscript
+# 4 form showPts
+# 5 form prolog
+# 6 form epilog
+# 7 
 output$svghtml <- renderUI({
   svgBarCmd<-input$plotNavBar
   WH<-c(650,620)
   if(svgBarCmd=="Log"){
     return("")
   }
-  
- # prep: pick script, get vbles 
-  if(svgBarCmd=="Points"){
     ptName<-input$ptRSelect
     ptRList<-getPtDefs()$pt
-    selectedPointIndx<-selectedPoint$point.index
-    ptDisplayMode<-input$ptDisplayMode
+    pts<-NULL
+    if(svgBarCmd!="Transforms" && !is.null(ptName) && !is.null(ptRList)){
+      pts<- ptRList[[ptName]]
+      selectedPointIndx<-selectedPoint$point.index
+    }
+  
+ # preperation: pick script, get dependent vbls 
+  if(svgBarCmd=="Points"){
+    ptDisplayMode<-input$ptDisplayMode 
     scriptName<-"Points"
-    #todo use input$pointOption :
-    # pointOpt=c("Insert", "Edit","Tag")
+    ptTags<-NULL #tagRList[[ptName]]  #we donot show tags here
     tag.indx<-NULL
-    showPtOptions<-list(ptDisplayMode=ptDisplayMode, tag.indx=NULL)
+    if(ptDisplayMode=="Hidden"){
+        pts<-NULL
+    }
+    showPtOptions<-list(
+      ptDisplayMode=ptDisplayMode, 
+      ptTags=ptTags,
+      selectedPointIndx=selectedPointIndx,
+      tag.indx=tag.indx
+    )
   } 
-  if(svgBarCmd=="Tags"){
-    ptName<-input$ptRSelect
-    ptRList<-getPtDefs()$pts
-    selectedPointIndx<-selectedPoint$point.index
+  
+  if(svgBarCmd=="tagValues"){
+#    ptName<-input$ptRSelect
+#    ptRList<-getPtDefs()$pts
+#    pts<- ptRList[[ptName]]
+#    
+#    selectedPointIndx<-selectedPoint$point.index
     ptDisplayMode<-input$ptDisplayMode
     scriptName<-"Points"
-    # todo use input$pointOption :
-    # pointOpt=c("Insert", "Edit","Tag")
     tag.indx<-as.numeric(input$tagIndx)
-    showPtOptions<-list(ptDisplayMode=ptDisplayMode, tag.indx=tag.indx)
+    tagRList<-getPtDefs()$df 
+    if(!is.null(tagList)){
+      ptTags<-tagRList[[ptName]]
+    } else {
+      ptTags<-NULL
+    }
+    showPtOptions<-list(
+      ptDisplayMode=ptDisplayMode, 
+      ptTags=ptTags,
+      selectedPointIndx=selectedPointIndx,
+      tag.indx=tag.indx
+    )
+  }
+  if(svgBarCmd=="dragTag"){
+    ptDisplayMode<-input$ptDisplayMode #do not use here
+    scriptName<-"transTag"
+
+    tag.indx<-as.numeric(input$tagIndx)
+    tagRList<-getPtDefs()$df 
+    if(!is.null(tagList)){
+      ptTags<-tagRList[[ptName]]
+    } else {
+      ptTags<-NULL
+    }
+    
+    showPtOptions<-list(
+      ptDisplayMode=ptDisplayMode, 
+      ptTags=ptTags,
+      selectedPointIndx=selectedPointIndx,
+      tag.indx=tag.indx
+    )
   }
   if(svgBarCmd=="Transforms"){ #Temp kludge for transform)
     ptName<-NULL
+    pts<- NULL
+    ptTags<-NULL
     scriptName<-input$transformOption
   } 
   
   showGrid<-input$showGrid
   
-  script2<-js.scripts[[ scriptName]]
+  ptrDisplayScript<-js.scripts[[ scriptName]]
   src<-user$code
   src<-usingDraggable(src)
   
-  # called when we need to show points
+  # called when we need to show points (in epilog)
   # to do: rewrite to make this work with call for tags
   # where each tag is a group, so that we can edit a tag set 
   # to provide ability for translate, rotate, scale of points
-  showPts %<c-% function(ptName,  showPtOptions=NULL){
-    if(is.null(ptName) || is.null(showPtOptions) 
-       || 
-       (showPtOptions$ptDisplayMode=="Hidden" && 
-        is.null(showPtOptions$tag.indx))
-       ){
+  showPts %<c-% function(pts, ptTags, showPtOptions=NULL){
+    if(is.null(pts) ){
       return(NULL)
     } 
-    ptRList<-getPtDefs()$pts #TODO: move this out!!!
     pts<- ptRList[[ptName]]
-    if(length(pts)<2){
+    
+    if(length(pts)<2 ){ #do we still need this?????
       return(NULL)
     }
-    tagRList<-getPtDefs()$df #TODO: move this out!!!
     tag.indx<-showPtOptions$tag.indx
  
     semitransparent<-0.3
     colorScheme<-c(default="green", ending="red", selected="blue")
-    m<-matrix(pts,2)
+    m<-matrix(pts,2) # is this really necessary????
      
     #preproc for tagList 
-    if(!is.null(tagList) && 
-       !is.null(tag.indx) && 
-       !is.null(tagRList[[ptName]] 
-    )){
-      tags<-tagRList[[ptName]]$tag
+    if(!is.null(ptTags) && !is.null(tag.indx) ){
+      tags<-ptTags$tag
       ti<-which(tag.indx==tags)
       tagInterval<-findInterval(sequence(ncol(m)),tags)
       tagInterval<-tagInterval==ti
@@ -120,7 +166,7 @@ output$svghtml <- renderUI({
     } else {
       NULL
     } 
-  }
+  } 
   
   boundingBox %<c-% function(){ #not used!!! may consider to use in future
     if(svgBarCmd=="rotate"){
@@ -130,23 +176,26 @@ output$svghtml <- renderUI({
     }
   }
   
-  
+  #defining the prolog 
   insert.beg<-c( 
     'style(".draggable {','cursor: move;','}"),', 
-    gsub('script2', script2, "script('script2'),"),      
+    gsub('ptrDisplayScript', ptrDisplayScript, "script('ptrDisplayScript'),"),      
     "use(filter=filter(filterUnits=\"userSpaceOnUse\", feFlood(flood.color='white') )),"
   )
+  
   if(showGrid==TRUE){
     insert.beg<-c(insert.beg, "graphPaper( wh=c(2000,2000), dxy=c(50, 50), labels=TRUE ),")
   }
   
+  #defining the epilog
   insert.end<-c(
     #paste(',newPtLayer("',svgBarCmd,'"),'),
     ',newPtLayer(svgBarCmd, WH),',
-    'showPts(ptName,  showPtOptions)'
+    'showPts(pts, ptTags,  showPtOptions)'
     #boundingBox()
   )    
   
+  #put it together
   src<-subSVGX2(src, insert.beg, insert.end)
   res<-""
     tryCatch({

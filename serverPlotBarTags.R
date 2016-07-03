@@ -11,7 +11,7 @@ observe({
   user$code
   input$plotNavBar
   isolate({
-    if(input$plotNavBar=="Tags"){
+    if(input$plotNavBar=="tagValues"){
       #point.index<-selectedPoint$point.index
       selected   <-input$ptRSelect
       ptRList    <-getPtDefs()$pts
@@ -45,7 +45,7 @@ observe({
   user$code
   input$plotNavBar
   isolate({ 
-    if(input$plotNavBar=="Tags"){
+    if(input$plotNavBar=="tagValues"){
       tagRList<-NULL
       df<-NULL
       tagIndxChoices<-NULL
@@ -92,7 +92,7 @@ observe({
   user$code
   input$plotNavBar
   isolate({
-    if(input$plotNavBar=="Tags"){
+    if(input$plotNavBar=="tagValues"){
       tagName<-input$tagPts
       if(!is.null(tagName)){
         tagRList<-getPtDefs()$df
@@ -126,7 +126,7 @@ observe({
   tagCol<- input$tagCol
   user$code
   isolate({ 
-    if( input$plotNavBar=="Tags"){
+    if( input$plotNavBar=="tagValues"){
       if(length(tagCol)>0){ #or not NULL
         tagRList<-getPtDefs()$df
         

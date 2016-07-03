@@ -23,7 +23,8 @@ js.scripts<-list(
   Points=readFile("www/pointsIO.js"),
   Translate=readFile("www/transIO.js"),
   Rotate=readFile("www/rotIO.js"),
-  Scale=readFile("www/scaleIO.js")
+  Scale=readFile("www/scaleIO.js"),
+  transTag=readFile("www/transTag.js")
 )
 
 
