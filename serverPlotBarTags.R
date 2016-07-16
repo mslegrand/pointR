@@ -7,18 +7,24 @@
 #       ptRSelect
 #       point.index
 
+#sets ptR$select, tagPts, 
 observe({
   user$code
   input$plotNavBar
   isolate({
-    if(input$plotNavBar=="tagValues"){
+    if(input$plotNavBar=="tagValues" ||
+       input$plotNavBar=="dragTag"){
+      tagPtsId<-switch( input$plotNavBar,
+        tagValues="tagPts",
+        dragTag="tagPts2"
+      )
       #point.index<-selectedPoint$point.index
       selected   <-input$ptRSelect
       ptRList    <-getPtDefs()$pts
       tagRList   <-getPtDefs()$df
       tagNamechoices    <-intersect(names(ptRList),names(tagRList))
       if(length(tagNamechoices)>0){
-        # Use selection of ptRSelect if in choices, ow last avail.
+        # Use selection of ptRSelect if in choices, ow last avail. tagPts2
         ptChosen<-input$ptRSelect
         if(ptChosen %in% tagNamechoices){
           tagName<-ptChosen
@@ -26,9 +32,9 @@ observe({
           tagName<-tail(tagNamechoices,1)
           updateSelectInput(session, "ptRSelect", selected=tagName )
         }
-        updateSelectInput(session, "tagPts", choices=tagNamechoices, selected=tagName )
+        updateSelectInput(session, tagPtsId, choices=tagNamechoices, selected=tagName )
       } else {
-        updateSelectInput(session, "tagPts", choices=list(), selected=NULL )
+        updateSelectInput(session, tagPtsId, choices=list(), selected=NULL )
       }
     }
   })
@@ -39,13 +45,25 @@ observe({
 # observers tagPts
 # sets tagIndx
 #     
-
+#sets ptR$select, tagIndx, 
+#observes: tagPts, code, plotNavBar
+#uses values of getPtDefs()
 observe({ 
   input$tagPts
+  input$tagPts2
   user$code
   input$plotNavBar
   isolate({ 
-    if(input$plotNavBar=="tagValues"){
+    if(input$plotNavBar=="tagValues" ||
+       input$plotNavBar=="dragTag"){
+      tagIndxId<-switch( input$plotNavBar,
+                       tagValues="tagIndx",
+                       dragTag="tagIndx2"
+      )
+      tagName<-switch( input$plotNavBar,
+                         tagValues=input$tagPts,
+                         dragTag=input$tagPts2
+      )
       tagRList<-NULL
       df<-NULL
       tagIndxChoices<-NULL
@@ -65,7 +83,7 @@ observe({
         if(selectedPoint$point.index>0){
           selectedPoint$point.index<-selectedTagIndx
         }
-        updateSelectInput(session, "tagIndx",
+        updateSelectInput(session, tagIndxId,
                           choices=tagIndxChoices,
                           selected=selectedTagIndx
         )
@@ -74,7 +92,7 @@ observe({
                           selected=tagName
         )
       } else {
-        updateSelectInput(session, "tagIndx",
+        updateSelectInput(session, tagIndxId,
                           choices=list(),
                           selected=NULL
         )
@@ -89,6 +107,7 @@ observe({
 
 observe({
   input$tagPts
+  input$tagPts2
   user$code
   input$plotNavBar
   isolate({
@@ -116,7 +135,15 @@ observe({
   })
 })
 
-
+# ----------tagIndx----------------------------------
+# observe({
+#   input$tagIndx2
+#   isolate({
+#     if( input$plotNavBar=="dragTag"){
+#       tagIndx<-as.numeric(input$tagIndx2)
+#     } 
+#   })
+# })
 
 # -----------ACTIVE TAG VALUE------------------------
 

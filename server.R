@@ -96,7 +96,6 @@ shinyServer(function(input, output,session) {
     point.index=0    #  selected pt.indx (column) in current point array
   ) 
   tagVal<-reactiveValues(hasTag=FALSE)
-  
   reactiveTag<-reactiveValues(freq=list())
   
   #errorText <-reactiveValues( mssg="hello") 

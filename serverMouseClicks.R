@@ -1,9 +1,11 @@
-observe({
+observe({ 
   input$mouseMssg #may want to rename this
   isolate({
     if(length(input$mouseMssg)>0){
       #get cmd
       cmd<-input$mouseMssg[1]
+      # tmp<-paste(input$mouseMssg,collapse="\n** ")
+      # cat( file=stderr(), paste("mouseMssg: cmd=",tmp,"\n>\n\n")  ) 
       pt<- input$mouseMssg[2]
       src<-user$code
       #todo: error check???
@@ -53,7 +55,7 @@ observe({
       } 
       if(cmd=='move'){ # --------move point
         id<-input$mouseMssg[3]
-        vid<-strsplit(id,"-")[[1]]
+        vid<-strsplit(id,"-")[[1]] 
         #get selection
         selection<-vid[2]
         #get point index
@@ -64,26 +66,57 @@ observe({
         src<-pts2Source(src,ptRList)
         selectedPoint$point.index<-(indx+1)/2
       }
+      if(cmd=='transGrp'){
+        tid<-input$mouseMssg[3]
+        tmp<-input$mouseMssg[2]
+        dxy<-eval(parse(text=tmp))
+        # get the tag name, 
+        ptName<-input$ptRSelect
+        # get points
+        pts<-ptRList[[ptName]]
+        tagRList<-getPtDefs()$df
+        tag.indx<-as.numeric(input$tagIndx) 
+        ptTags<-tagRList[[ptName]]
+        if(!is.null(tagList)){
+          ptTags<-tagRList[[ptName]]
+        } else {
+          ptTags<-NULL
+        }
+        if( !is.null(tag.indx) && !is.null(ptTags)){
+          tags<-ptTags$tag
+          ti<-which(tag.indx==tags) 
+          id.nos<-sequence(ncol(pts))
+        # the tag point range
+          tagInterval<-findInterval(id.nos,tags)
+          tmp1<-pts[,tagInterval==ti][1,]+dxy[1]
+          tmp2<-pts[,tagInterval==ti][2,]+dxy[2]
+          pts[,tagInterval==ti]<-rbind(tmp1,tmp2)
+          ptRList[[ptName]]<-pts
+          src<-pts2Source(src,ptRList)
+        # add to the corresponding points cxy
+        # update the source
+        }
+      }
       #-------transformations 
       if(cmd=='trans'){ # -- translate
         tid<-input$mouseMssg[3]
         tmp<-input$mouseMssg[2]
         trDefDelta<-formatC(eval(parse(text=tmp)))
-        trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2,)" )
+        trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2,)" ) 
         src<-tr2src( src, tid, trDefDelta2 )
       }
       if(cmd=='rotate'){ # ----rotate
         tid<-input$mouseMssg[3]
         tmp<-input$mouseMssg[2]
         trDefDelta<-formatC(eval(parse(text=tmp)))
-        trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2,)" )
+        trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2,)" ) 
         src<-tr2src( src, tid, trDefDelta2 )
       } 
       if(cmd=='scale'){ # ----scale
         tid<-input$mouseMssg[3]
         tmp<-input$mouseMssg[2]
         trDefDelta<-formatC(eval(parse(text=tmp)))
-        trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2,)" )
+        trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2,)" ) 
         src<-tr2src( src, tid, trDefDelta2 )
       } 
       # update internal user source

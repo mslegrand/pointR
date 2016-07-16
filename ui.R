@@ -54,9 +54,9 @@ shinyUI(fluidPage(
       #---------------plotNavBar:TAGS  ------------------------------------
       navbarMenu("Tags", 
                  tabPanel("Value", value="tagValues"),
-                 tabPanel("Drag",  value="dragTag"),
-                 tabPanel("Wag"),
-                 tabPanel("Mag")
+                 tabPanel("Drag",  value="dragTag")
+                 # tabPanel("Wag"),
+                 # tabPanel("Mag")
       ),
       # tabPanel("Tags",
       #          tabsetPanel("Tag")), #tab panel Tags end
@@ -92,7 +92,7 @@ shinyUI(fluidPage(
          fluidRow(
            column(4, 
               selectInput(
-                "ptRSelect", "Active Points",
+                "ptRSelect", "Point Matrix",
                 multiple=FALSE, size=1, selectize = FALSE,
                 list("x"), selected="x", 
                 width="150px"  
@@ -122,37 +122,57 @@ shinyUI(fluidPage(
            )
          ) 
     )), #POINTS panel end
+    #-------CONDITIONAL----plotNavBar:dragTag---------------------------------
+    #------------------
+    conditionalPanel( "input.plotNavBar=='dragTag'",
+    absolutePanel( top=50, left=0, width=250, draggable=TRUE,
+     style=cstyle$wellPoint,
+     fluidRow(
+       column(8, 
+              selectInput( "tagPts2", "Tagged Points",
+                           multiple=FALSE, size=1, selectize = FALSE,
+                           list(),  selected=NULL, width="140px"  
+              )
+       ),
+       column(4, 
+              selectInput("tagIndx2", "Tag Index",
+                          multiple=FALSE, size=1, selectize = FALSE, 
+                          list(), selected=NULL, width="60px"  
+              )
+       )
+     ) #fluid
+    )),
     #-------CONDITIONAL----plotNavBar:TAGS---------------------------------
     conditionalPanel( "input.plotNavBar=='tagValues'",
       absolutePanel( top=50, left=0, width=650, draggable=TRUE, 
         style=cstyle$wellPoint,
         fluidRow(
           column(2, 
-            selectInput( "tagPts", "Tagged Points",
+            selectInput( "tagPts", "Point Matrix",
               multiple=FALSE, size=3, selectize = FALSE,
               list(),  selected=NULL, width="100px"  
             )
           ),
           column(2, 
-            selectInput("tagIndx", "Tag Index",
+            selectInput("tagIndx", "Tag-No",
               multiple=FALSE, size=3, selectize = FALSE, 
               list(), selected=NULL, width="60px"  
             )
           ),
           column(2, 
-            selectInput("tagCol", "Column Name",
+            selectInput("tagCol", "Col-Name",
               multiple=FALSE, size=3, selectize = FALSE, 
               list(),  selected=NULL, width="100px"  
             )
           ),
           column(3, 
-            selectInput("tagColVal", "Column-Value", 
+            selectInput("tagColVal", "Col-Value", 
               multiple=FALSE, size=3, selectize = FALSE,  
               list(),  selected=NULL, width="100px"  
             )
           ),
           column(3, 
-            textInput("tagValEd", "Alternate Value", value=""),
+            textInput("tagValEd", "Alt-Value", value=""),
             actionButton("insertVal2Col", label = "Apply Alternate Val", style=cstyle$buttonSmall)
           )
         ),

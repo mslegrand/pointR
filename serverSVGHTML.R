@@ -41,11 +41,6 @@ output$svghtml <- renderUI({
   } 
   
   if(svgBarCmd=="tagValues"){
-#    ptName<-input$ptRSelect
-#    ptRList<-getPtDefs()$pts
-#    pts<- ptRList[[ptName]]
-#    
-#    selectedPointIndx<-selectedPoint$point.index
     ptDisplayMode<-input$ptDisplayMode
     scriptName<-"Points"
     tag.indx<-as.numeric(input$tagIndx)
@@ -65,10 +60,11 @@ output$svghtml <- renderUI({
   if(svgBarCmd=="dragTag"){
     ptDisplayMode<-input$ptDisplayMode #do not use here
     scriptName<-"transTag"
-
+    #scriptName<-"Points"
     tag.indx<-as.numeric(input$tagIndx)
+    #tag.indx<-as.numeric(input$tagIndx2)
     tagRList<-getPtDefs()$df 
-    if(!is.null(tagList)){
+    if(!is.null(tagRList)){
       ptTags<-tagRList[[ptName]]
     } else {
       ptTags<-NULL
@@ -89,16 +85,18 @@ output$svghtml <- renderUI({
   } 
   
   showGrid<-input$showGrid
-  
   ptrDisplayScript<-js.scripts[[ scriptName]]
   src<-user$code
-  src<-usingDraggable(src)
+  if(svgBarCmd=="Transforms"){
+    src<-usingDraggable(src)
+  }
+  
   
   # called when we need to show points (in epilog)
   # to do: rewrite to make this work with call for tags
   # where each tag is a group, so that we can edit a tag set 
   # to provide ability for translate, rotate, scale of points
-  showPts %<c-% function(pts, ptTags, showPtOptions=NULL){
+  showPts.olde %<c-% function(pts, ptTags, showPtOptions=NULL){
     if(is.null(pts) ){
       return(NULL)
     } 
@@ -138,7 +136,7 @@ output$svghtml <- renderUI({
         if(i==selectedPointIndx && is.null(tag.indx)){ #show selected point for points mode (or transform???)
           circle(class="draggable", 
                  id=id,  
-                 cxy=pt, r=9, fill="yellow", 
+                 cxy=pt, r=9, fill=color, 
                  opacity=opac[i],
                  stroke=colorScheme['selected'], stroke.width=3,
                  transform="matrix(1 0 0 1 0 0)", 
@@ -159,6 +157,137 @@ output$svghtml <- renderUI({
       )
     }) #end lapply
   } #end showPts
+  
+  # called when we need to show points (in epilog)
+  # to do: rewrite to make this work with call for tags
+  # where each tag is a group, so that we can edit a tag set 
+  # to provide ability for translate, rotate, scale of points
+  showPts.PtCmd %<c-% function(pts, ptTags, showPtOptions=NULL){
+    if(is.null(pts) ){
+      return(NULL)
+    } 
+    pts<- ptRList[[ptName]]
+    
+    if(length(pts)<2 ){ #do we still need this?????
+      return(NULL)
+    }
+    colorScheme<-c(default="green", ending="red", selected="blue")
+    m<-matrix(pts,2) # is this really necessary????
+     
+    #form list of  all point renderings
+    lapply(1:ncol(m), function(i){
+      id<-paste("pd",ptName,i,sep="-")
+      pt<-m[,i]
+      color=colorScheme['default']
+      if(i==length(pts)/2) { #ncol(m)){
+          color=colorScheme['ending']   
+      }
+      list(
+        if(i==selectedPointIndx && is.null(tag.indx)){ #show selected point for points mode (or transform???)
+          circle(class="draggable", 
+                 id=id,  
+                 cxy=pt, r=9, fill="yellow", 
+                 opacity=1,
+                 stroke=colorScheme['selected'], stroke.width=3,
+                 transform="matrix(1 0 0 1 0 0)", 
+                 onmousedown="selectPoint(evt)" )
+        } else { #a non-selected point
+          circle(class="draggable", 
+                 id=id,  
+                 cxy=pt, r=8, fill=color, opacity=1,
+                 transform="matrix(1 0 0 1 0 0)", 
+                 onmousedown="selectPoint(evt)" )
+        },
+        if(showPtOptions$ptDisplayMode=="Labeled"){
+          text(paste(i), cxy=pt+10*c(1,-1),  
+               stroke='black', font.size=12, opacity=1) 
+        } else {
+          NULL
+        }
+      )
+    }) #end lapply
+  } #end showPts.PtCmd
+  
+  # called when we need to show points
+# to do: rewrite to make this work with call for tags
+# where each tag is a group, so that we can edit a tag set 
+# to provide ability for translate, rotate, scale of points
+
+# dragtag, magtag, wagtag, zagtag ? bagtag?
+
+showPts.dragTag %<c-% function(pts, ptTags, showPtOptions){
+  #cat(file=stderr(),"entering drag.Tag\n")
+  if( is.null(pts) ) {
+    return(NULL)
+  } 
+  if(length(pts)<2){
+    return(NULL)
+  }
+  tag.indx<-showPtOptions$tag.indx #this is the position of the first point of the tagged set 
+  
+  semitransparent<-0.3
+  colorScheme<-c(default="purple", ending="red", selected="blue")
+  color<-colorScheme[1]
+  m<-matrix(pts,2)
+  if( !is.null(tag.indx) && !is.null(ptTags)){
+    tags<-ptTags$tag
+    ti<-which(tag.indx==tags) 
+    id.nos<-sequence(ncol(m))
+    ids<-paste("pd",ptName,id.nos,sep="-")
+    tagInterval<-findInterval(id.nos,tags)
+    tagIntList<-tapply(id.nos, findInterval(id.nos,tags), list )
+    opacity<-rep(semitransparent, nrow(ptTags))
+    opacity[ti]<-1
+    # iterate over tagIntList
+    indx<-unique(tagInterval)
+    indx<-indx[-ti]
+    list(
+      g( opacity=opacity[ti], 
+         #class='draggable', #this is for dragtag
+         fill='purple',
+         transform="matrix(1 0 0 1 0 0)", 
+         onmousedown="selectElement(evt)",
+         tid=paste0("ptR_Tag_",ti),
+         lapply(tagIntList[[ti]], function(j){
+           circle(   cxy=m[,j], r=8)
+         })
+      ),
+      lapply(indx, function(i){
+        g( opacity=opacity[i], 
+           #class='draggable', #this is for dragtag
+           fill='purple',
+           transform="matrix(1 0 0 1 0 0)", 
+           #onmousedown="selectElement(evt)",
+           tid=paste0("ptR_Tag_",i),
+           lapply(tagIntList[[i]], function(j){
+             circle(   cxy=m[,j], r=8)
+           })
+        )
+      })
+    )
+    } #end if
+} #end showPts
+
+  
+  showPts<-function(pts, ptTags, showPtOptions=NULL){
+    switch(svgBarCmd,
+      Points=showPts.PtCmd(pts, ptTags, showPtOptions),
+      dragTag=showPts.dragTag(pts, ptTags, showPtOptions),
+      showPts.olde(pts, ptTags, showPtOptions)
+    )
+    # if(svgBarCmd=="Points"){
+    #   return( showPts.PtCmd(pts, ptTags, showPtOptions) )
+    # } 
+    # if( svgBarCmd=="dragTag"){
+    #   cat(file=stderr(),  "dragTag scriptName=", scriptName,"\n" )
+    #   cat(file=stderr(),"\n",ptrDisplayScript,"\n")
+    #   return( showPts.dragTag(pts, ptTags, showPtOptions) )
+    # }
+    # else {
+    #   showPts.olde(pts, ptTags, showPtOptions)
+    # }
+    # 
+  }
   
   newPtLayer %<c-% function(svgBarCmd, wh=c(1200,800)){
     if(svgBarCmd=="Points" && input$insertMode==TRUE){
