@@ -8,16 +8,19 @@
 # 4 form showPts
 # 5 form prolog
 # 6 form epilog
-# 7 
+
+
 output$svghtml <- renderUI({
   svgBarCmd<-input$plotNavBar
   WH<-c(650,620)
   if(svgBarCmd=="Log"){
     return("")
   }
-    ptName<-input$ptRSelect
+    # ptName<-input$ptRSelect
+    ptName<-selectedPoint$name
     ptRList<-getPtDefs()$pt
     pts<-NULL
+    #selectedPointIndx<-NULL
     if(svgBarCmd!="Transforms" && !is.null(ptName) && !is.null(ptRList)){
       pts<- ptRList[[ptName]]
       selectedPointIndx<-selectedPoint$point.index
@@ -25,25 +28,28 @@ output$svghtml <- renderUI({
   
  # preperation: pick script, get dependent vbls 
   if(svgBarCmd=="Points"){
-    ptDisplayMode<-input$ptDisplayMode 
+    ptDisplayMode<-input$ptDisplayMode
+    #ptDisplayMode<-showOptions$showPoints
     scriptName<-"Points"
     ptTags<-NULL #tagRList[[ptName]]  #we donot show tags here
     tag.indx<-NULL
-    if(ptDisplayMode=="Hidden"){
+    if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){
         pts<-NULL
     }
     showPtOptions<-list(
       ptDisplayMode=ptDisplayMode, 
       ptTags=ptTags,
-      selectedPointIndx=selectedPointIndx,
+      selectedPointIndx=selectedPoint$point.indx,
       tag.indx=tag.indx
     )
   } 
   
   if(svgBarCmd=="tagValues"){
-    ptDisplayMode<-input$ptDisplayMode
+    #ptDisplayMode<-input$ptDisplayMode
+    ptDisplayMode<-TRUE #showOptions$showPoints
     scriptName<-"Points"
-    tag.indx<-as.numeric(input$tagIndx)
+    #tag.indx<-as.numeric(input$tagIndx) 
+    tag.indx<-selectedPoint$point.index
     tagRList<-getPtDefs()$df 
     if(!is.null(tagList)){
       ptTags<-tagRList[[ptName]]
@@ -53,15 +59,17 @@ output$svghtml <- renderUI({
     showPtOptions<-list(
       ptDisplayMode=ptDisplayMode, 
       ptTags=ptTags,
-      selectedPointIndx=selectedPointIndx,
+      selectedPointIndx=selectedPoint$point.index,
       tag.indx=tag.indx
     )
   }
   if(svgBarCmd=="dragTag"){
-    ptDisplayMode<-input$ptDisplayMode #do not use here
+    #ptDisplayMode<-input$ptDisplayMode #do not use here
+    ptDisplayMode<-TRUE #showOptions$showPoints
     scriptName<-"transTag"
     #scriptName<-"Points"
-    tag.indx<-as.numeric(input$tagIndx)
+    #tag.indx<-as.numeric(input$tagIndx)
+    tag.indx<-selectedPoint$point.index
     #tag.indx<-as.numeric(input$tagIndx2)
     tagRList<-getPtDefs()$df 
     if(!is.null(tagRList)){
@@ -84,7 +92,8 @@ output$svghtml <- renderUI({
     scriptName<-input$transformOption
   } 
   
-  showGrid<-input$showGrid
+  #showGrid<-input$showGrid
+  showGrid<-showOptions$showGrid
   ptrDisplayScript<-js.scripts[[ scriptName]]
   src<-user$code
   if(svgBarCmd=="Transforms"){
@@ -119,7 +128,7 @@ output$svghtml <- renderUI({
       tagInterval<-tagInterval==ti
       tagInterval[tagInterval==0]<-semitransparent
       opac<-tagInterval
-      #selectedPointIndx<-0 #so tags will not show selectes
+      selectedPointIndx<-0 #so tags will not show selectes
     } else {
       opac<-rep(1, ncol(m) )
     }
@@ -148,8 +157,9 @@ output$svghtml <- renderUI({
                  transform="matrix(1 0 0 1 0 0)", 
                  onmousedown="selectPoint(evt)" )
         },
-        if(showPtOptions$ptDisplayMode=="Labeled"){
-          text(paste(i), cxy=pt+10*c(1,-1),  
+        #if(showPtOptions$ptDisplayMode=="Labeled"){
+        if(input$ptDisplayMode=="Labeled"){
+            text(paste(i), cxy=pt+10*c(1,-1),  
                stroke='black', font.size=12, opacity=1) #opac)
         } else {
           NULL
@@ -198,8 +208,9 @@ output$svghtml <- renderUI({
                  transform="matrix(1 0 0 1 0 0)", 
                  onmousedown="selectPoint(evt)" )
         },
-        if(showPtOptions$ptDisplayMode=="Labeled"){
-          text(paste(i), cxy=pt+10*c(1,-1),  
+        #if(showPtOptions$ptDisplayMode=="Labeled"){
+        if(input$ptDisplayMode=="Labeled"){
+            text(paste(i), cxy=pt+10*c(1,-1),  
                stroke='black', font.size=12, opacity=1) 
         } else {
           NULL
@@ -290,7 +301,7 @@ showPts.dragTag %<c-% function(pts, ptTags, showPtOptions){
   }
   
   newPtLayer %<c-% function(svgBarCmd, wh=c(1200,800)){
-    if(svgBarCmd=="Points" && input$insertMode==TRUE){
+    if(svgBarCmd=="Points" && showOptions$insertMode==TRUE){
       rect(xy=c(0,0), wh=wh, fill="#ADADFF", stroke='black', opacity=.0, onmousedown="newPoint(evt)")
     } else {
       NULL
@@ -312,9 +323,11 @@ showPts.dragTag %<c-% function(pts, ptTags, showPtOptions){
     "use(filter=filter(filterUnits=\"userSpaceOnUse\", feFlood(flood.color='white') )),"
   )
   
-  if(showGrid==TRUE){
+  if(showOptions$showGrid==TRUE){
+    #browser()
     insert.beg<-c(insert.beg, "graphPaper( wh=c(2000,2000), dxy=c(50, 50), labels=TRUE ),")
-  }
+    insert.beg
+  } 
   
   #defining the epilog
   insert.end<-c(
@@ -338,6 +351,7 @@ showPts.dragTag %<c-% function(pts, ptTags, showPtOptions){
       error=function(e){
         #session$sendCustomMessage(type='testmessage', message=e)
         mssg$error<-paste(mssg$error, e, collapse="\n", sep="\n")
+        #cat(mssg$error)
         user$code<-backup$code
         updateNavbarPage(session, "plotNavBar", selected ="Log")
       } 

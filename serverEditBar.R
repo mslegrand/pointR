@@ -7,6 +7,7 @@ observeEvent( input$editNavBar, {
     file$name<-"newSVG.R"
     user$code<-src
     selectedPoint$point.index<-0
+    selectedPoint$name<-"x"
     updateSelectInput(session, "ptRSelect",  choices=c("x"), selected="x" ) 
     updateNavbarPage(session, "editNavBar", selected ="Source") 
     updateNavbarPage(session, "plotNavBar", selected ="Points")

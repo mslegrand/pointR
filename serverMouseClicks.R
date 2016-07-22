@@ -15,7 +15,8 @@ observe({
       if(cmd=='add'){ #---------add point
         newPt<-pt
         #get selection
-        selection<-input$ptRSelect
+        #selection<-input$ptRSelect
+        selection<-selectedPoint$name
         #update local ptRList
         indx<-selectedPoint$point.index
         ptRList[[selection]]<-append(ptRList[[selection]],newPt,2*indx)
@@ -71,7 +72,8 @@ observe({
         tmp<-input$mouseMssg[2]
         dxy<-eval(parse(text=tmp))
         # get the tag name, 
-        ptName<-input$ptRSelect
+        ptName<-selectedPoint$name
+        #ptName<-input$ptRSelect
         # get points
         pts<-ptRList[[ptName]]
         tagRList<-getPtDefs()$df
