@@ -124,18 +124,18 @@ shinyServer(function(input, output,session) {
     name="x", #NULL,       # name of current point array
     point.index=0    #  selected pt.indx (column) in current point array
   ) 
-  tagVal<-reactiveValues(hasTag=FALSE)
+  #tagVal<-reactiveValues(hasTag=FALSE)
   reactiveTag<-reactiveValues(freq=list())
   
-  selectedTag<-reactiveValues(
-    name=NULL,        # name of current point array
-    point.index=0    #  selected pt.indx (column) in current point array
-  ) 
+# selectedTag<-reactiveValues(
+#   name=NULL,        # name of current point array
+#   point.index=0    #  selected pt.indx (column) in current point array
+# ) 
   
-  showOptions<-reactiveValues(
+  displayOptions<-reactiveValues(
     insertMode=TRUE,
     showGrid=TRUE,
-    showPoints=TRUE
+    ptMode="Normal"
   )
   
   
@@ -154,7 +154,7 @@ shinyServer(function(input, output,session) {
   
   #call with ptsDefs$df as 
 
-
+  
 
   
 # If the user adds a point, use reactivTag$freq  

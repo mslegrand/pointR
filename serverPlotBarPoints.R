@@ -70,4 +70,11 @@ observe({
   }
 })
 
+observe({
+  displayOptions$insertMode<-input$insertMode
+  displayOptions$showGrid<-input$showGrid
+  displayOptions$ptMode<-input$ptDisplayMode
+  #showOptions$showGrid<-input$showGrid
+})
+
 

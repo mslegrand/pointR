@@ -58,8 +58,6 @@ shinyUI(fluidPage(
                  # tabPanel("Wag"),
                  # tabPanel("Mag")
       ),
-      # tabPanel("Tags",
-      #          tabsetPanel("Tag")), #tab panel Tags end
       #---------------plotNavBar:Transform  ------------------------------------
       tabPanel("Transforms", 
         style=cstyle$wellPoint,
@@ -90,98 +88,6 @@ shinyUI(fluidPage(
     uiOutput("TagDragPanel"),
     uiOutput("TagValuesPanel"),
     
-#    conditionalPanel( "input.plotNavBar=='Points'",
-#      absolutePanel( top=50, left=0, width=650, draggable=TRUE,
-#         style=cstyle$wellPoint,
-#         fluidRow(
-#           column(4, 
-#              selectInput(
-#                "ptRSelect", "Point Matrix",
-#                multiple=FALSE, size=1, selectize = FALSE,
-#                list("x"), selected="x", 
-#                width="150px"  
-#              )
-#           ),
-#           column(3,
-#              selectInput(
-#                "ptDisplayMode", "Display Mode",
-#                multiple=FALSE, size=1, selectize = FALSE,
-#                list("Normal","Labeled","Hidden"), selected="Normal", 
-#                width="150px"  
-#              )
-#           ),
-#           column(2,
-#              selectInput("tagFreq", "Auto Tag",
-#                          multiple=FALSE, size=1, selectize = FALSE,
-#                          c(list("Off"),1:20), selected="Off", 
-#                          width="80px"  
-#              )
-#           ),
-#           column(3,
-#              checkboxInput("insertMode","Insert Mode",
-#                            value = TRUE, width = "100px"
-#              ),
-#              checkboxInput("showGrid", "Show Grid", 
-#                            value = TRUE, width = "100px")
-#           )
-#         ) 
-#    )), #POINTS panel end
-#    #-------CONDITIONAL----plotNavBar:dragTag---------------------------------
-#    #------------------
-#    conditionalPanel( "input.plotNavBar=='dragTag'",
-#    absolutePanel( top=50, left=0, width=250, draggable=TRUE,
-#     style=cstyle$wellPoint,
-#     fluidRow(
-#       column(8, 
-#              selectInput( "tagPts2", "Tagged Points",
-#                           multiple=FALSE, size=1, selectize = FALSE,
-#                           list(),  selected=NULL, width="140px"  
-#              )
-#       ),
-#       column(4, 
-#              selectInput("tagIndx2", "Tag Index",
-#                          multiple=FALSE, size=1, selectize = FALSE, 
-#                          list(), selected=NULL, width="60px"  
-#              )
-#       )
-#     ) #fluid
-#    )),
-#    #-------CONDITIONAL----plotNavBar:TAGS---------------------------------
-#    conditionalPanel( "input.plotNavBar=='tagValues'",
-#      absolutePanel( top=50, left=0, width=650, draggable=TRUE, 
-#        style=cstyle$wellPoint,
-#        fluidRow(
-#          column(2, 
-#            selectInput( "tagPts", "Point Matrix",
-#              multiple=FALSE, size=3, selectize = FALSE,
-#              list(),  selected=NULL, width="100px"  
-#            )
-#          ),
-#          column(2, 
-#            selectInput("tagIndx", "Tag-No",
-#              multiple=FALSE, size=3, selectize = FALSE, 
-#              list(), selected=NULL, width="60px"  
-#            )
-#          ),
-#          column(2, 
-#            selectInput("tagCol", "Col-Name",
-#              multiple=FALSE, size=3, selectize = FALSE, 
-#              list(),  selected=NULL, width="100px"  
-#            )
-#          ),
-#          column(3, 
-#            selectInput("tagColVal", "Col-Value", 
-#              multiple=FALSE, size=3, selectize = FALSE,  
-#              list(),  selected=NULL, width="100px"  
-#            )
-#          ),
-#          column(3, 
-#            textInput("tagValEd", "Alt-Value", value=""),
-#            actionButton("insertVal2Col", label = "Apply Alternate Val", style=cstyle$buttonSmall)
-#          )
-#        ),
-#        style=cstyle$wellPoint
-#      )), #TAGS panel end
     #-------CONDITIONAL----plotNavBar:BUTTONS---------------------------------
       conditionalPanel( "input.plotNavBar=='Points'",
         absolutePanel( bottom=0, left=0, width=650, draggable=FALSE,

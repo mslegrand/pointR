@@ -53,7 +53,7 @@ observe({
  
  observe({
   if(input$plotNavBar=="dragTag"){
-    input$tagName
+    input$tagName2
     isolate({
       print("dragTag input$tagName change")
       if(!is.null(input$tagName2)){
@@ -65,7 +65,7 @@ observe({
 
 observe({
   if(input$plotNavBar=="dragTag"){
-    input$tagIndx
+    input$tagIndx2
     isolate({
     print("dragTag input$tagIndx2 change")
       if(!is.null(input$tagIndx2)){
