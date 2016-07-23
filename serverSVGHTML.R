@@ -82,6 +82,7 @@ output$svghtml <- renderUI({
       tag.indx=tag.indx
     )
   }
+  
   if(svgBarCmd=="dragTag"){
     #ptDisplayMode<-input$ptDisplayMode #do not use here
     ptDisplayMode<-TRUE #showOptions$showPoints
@@ -179,8 +180,8 @@ output$svghtml <- renderUI({
                  transform="matrix(1 0 0 1 0 0)", 
                  onmousedown="selectPoint(evt)" )
         },
-        #if(showPtOptions$ptDisplayMode=="Labeled"){
-        if(input$ptDisplayMode=="Labeled"){
+        if(showPtOptions$ptDisplayMode=="Labeled"){
+        #if(input$ptDisplayMode=="Labeled"){
             text(paste(i), cxy=pt+10*c(1,-1),  
                stroke='black', font.size=12, opacity=1) #opac)
         } else {
@@ -194,10 +195,11 @@ output$svghtml <- renderUI({
   
   showPts.valTag %<c-% function(pts, ptTags, showPtOptions){
     #cat(file=stderr(),"entering drag.Tag\n")
-    if( is.null(pts) ) {return(NULL)} 
+    if( is.null(pts) ){return(NULL)} 
     if(length(pts)<2){return(NULL)}
-    tag.indx<-showPtOptions$tag.indx #this is the position of the first point of the tagged set 
-    
+    #tag.indx<-showPtOptions$tag.indx #this is the position of the first point of the tagged set 
+    tag.indx<-showPtOptions$selectedPointIndx
+    selectedPointIndx<-showPtOptions$selectedPointIndx
     semitransparent<-0.3
     colorScheme<-c(default="green", ending="red", selected="blue")
     
@@ -221,21 +223,11 @@ output$svghtml <- renderUI({
           color=colorScheme['ending']   
       }
       list(
-        if(i==selectedPointIndx && is.null(tag.indx)){ #show selected point for points mode (or transform???)
-          circle(class="draggable", 
-                 id=id,  
-                 cxy=pt, r=9, fill=color, 
-                 opacity=opac[i],
-                 stroke=colorScheme['selected'], stroke.width=3,
-                 transform="matrix(1 0 0 1 0 0)", 
-                 onmousedown="selectPoint(evt)" )
-        } else { #a non-selected point
           circle(class="draggable", 
                  id=id,  
                  cxy=pt, r=8, fill=color, opacity=opac[i],
                  transform="matrix(1 0 0 1 0 0)", 
-                 onmousedown="selectPoint(evt)" )
-        },
+                 onmousedown="selectPoint(evt)" ),
         if(showPtOptions$ptDisplayMode=="Labeled"){
             text(paste(i), cxy=pt+10*c(1,-1),  
                stroke='black', font.size=12, opacity=1) #opac)
@@ -252,14 +244,10 @@ output$svghtml <- renderUI({
   # where each tag is a group, so that we can edit a tag set 
   # to provide ability for translate, rotate, scale of points
   showPts.PtCmd %<c-% function(pts, ptTags, showPtOptions=NULL){
-    if(is.null(pts) ){
-      return(NULL)
-    } 
+    if(is.null(pts) ){ return(NULL) } 
     pts<- ptRList[[ptName]]
+    if(length(pts)<2 ){ return(NULL)}
     
-    if(length(pts)<2 ){ #do we still need this?????
-      return(NULL)
-    }
     colorScheme<-c(default="green", ending="red", selected="blue")
     m<-matrix(pts,2) # is this really necessary????
      
@@ -272,7 +260,7 @@ output$svghtml <- renderUI({
           color=colorScheme['ending']   
       }
       list(
-        if(i==selectedPointIndx && is.null(tag.indx)){ #show selected point for points mode (or transform???)
+        if(i==selectedPointIndx ){ #show selected point for points mode (or transform???)
           circle(class="draggable", 
                  id=id,  
                  cxy=pt, r=9, fill="yellow", 
@@ -309,7 +297,7 @@ output$svghtml <- renderUI({
     #cat(file=stderr(),"entering drag.Tag\n")
     if( is.null(pts) ) {return(NULL) } 
     if(length(pts)<2)  {return(NULL) }
-    tag.indx<-showPtOptions$tag.indx #this is the position of the first point of the tagged set 
+    tag.indx<-showPtOptions$selectedPointIndx #this is the position of the first point of the tagged set 
     
     semitransparent<-0.3
     colorScheme<-c(default="purple", ending="red", selected="blue")
@@ -365,6 +353,7 @@ output$svghtml <- renderUI({
     )
   }
   
+  #Only applies when svgBarCmd=="Points"
   newPtLayer %<c-% function(svgBarCmd, wh=c(1200,800)){
     if(svgBarCmd=="Points" && displayOptions$insertMode==TRUE){
       rect(xy=c(0,0), wh=wh, fill="#ADADFF", stroke='black', opacity=.0, onmousedown="newPoint(evt)")
