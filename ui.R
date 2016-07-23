@@ -98,6 +98,7 @@ shinyUI(fluidPage(
           actionButton("tagPt", label = "Tag Pt", style=cstyle$button)
         )
       )#, #BUTTONS PANEL END
+      
     #   conditionalPanel( "input.plotNavBar=='Tags'",
     #                   absolutePanel( bottom=0, left=0, width=650, draggable=FALSE,
     #                                  style="margin:0px; padding:0px;",
