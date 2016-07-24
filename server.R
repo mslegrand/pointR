@@ -54,7 +54,7 @@ preProcCode<-function(src){
     src<-df2Source(src, dfList)
   }
   return(src)
-}
+} 
 
 
 # called by either a new/load source or upon a commit

@@ -101,7 +101,6 @@ output$svghtml <- renderUI({
         ptDisplayMode<-"normal"
         showPts.dragTag(ptName, pts=pts, selectedPointIndx=selectedPointIndx, ptDisplayMode=ptDisplayMode,  tags=tags)
       },
-      
       Transforms = NULL,
       NULL
     )
@@ -128,14 +127,10 @@ output$svghtml <- renderUI({
   insert.beg<-c( 
     'style(".draggable {','cursor: move;','}"),', 
     gsub('ptrDisplayScript', ptrDisplayScript, "script('ptrDisplayScript'),"),      
-    "use(filter=filter(filterUnits=\"userSpaceOnUse\", feFlood(flood.color='white') )),"
+    "use(filter=filter(filterUnits=\"userSpaceOnUse\", feFlood(flood.color='white') )),",
+    if(displayOptions$showGrid==TRUE){"graphPaper( wh=c(2000,2000), dxy=c(50, 50), labels=TRUE ),"} 
+    else { NULL }
   )
-  
-  #print(displayOptions$showGrid)
-  if( displayOptions$showGrid==TRUE){
-    insert.beg<-c(insert.beg, "graphPaper( wh=c(2000,2000), dxy=c(50, 50), labels=TRUE ),")
-    insert.beg
-  } 
   
   #defining the epilog
   insert.end<-c(
@@ -146,7 +141,6 @@ output$svghtml <- renderUI({
   
   #put it together
   src<-subSVGX2(src, insert.beg, insert.end)
-  
   
   res<-""
     tryCatch({
