@@ -17,30 +17,10 @@ output$svghtml <- renderUI({
     return("")
   }
    
-
   ptName<-selectedPoint$name
   ptRList<-getPtDefs()$pt
   ptDisplayMode<-displayOptions$ptMode
-  
-#pts<-NULL  
-# # preperation: pick script, get dependent vbls 
-#  if(svgBarCmd=="Points"){
-#    scriptName<-"Points"
-#  } 
-#  
-#  if(svgBarCmd=="tagValues"){
-#    if(ptDisplayMode=="hidden"){
-#      ptDisplayMode<-"normal"
-#    }
-#    scriptName<-"Points"
-#  }
-  
-#  if(svgBarCmd=="dragTag"){
-#    #ptDisplayMode<-input$ptDisplayMode #do not use here
-#    ptDisplayMode<-"normal" #showOptions$showPoints
-#    scriptName<-"transTag"
-#  }
-  
+    
   showGrid<-displayOptions$showGrid
   if(is.null(showGrid)){
     return(NULL)
@@ -60,7 +40,6 @@ output$svghtml <- renderUI({
   }
   
   showPts.transform %<c-% function(){ NULL }
-  
   
 # called when we need to show points
 # to do: rewrite to make this work with call for tags
