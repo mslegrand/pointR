@@ -53,10 +53,9 @@ shinyUI(fluidPage(
       tabPanel("Points" ), #end of tab panel "Points"
       #---------------plotNavBar:TAGS  ------------------------------------
       navbarMenu("Tags", 
-                 tabPanel("Value", value="tagValues"),
-                 tabPanel("Drag",  value="dragTag")
-                 # tabPanel("Wag"),
-                 # tabPanel("Mag")
+        tabPanel("Value", value="tagValues"),
+        tabPanel("Drag",  value="dragTag")  # tabPanel("Wag"), # tabPanel("Mag")
+        #tabPanel("CPDX")
       ),
       #---------------plotNavBar:Transform  ------------------------------------
       tabPanel("Transforms", 
