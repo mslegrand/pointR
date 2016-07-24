@@ -22,31 +22,39 @@ output$svghtml <- renderUI({
   ptRList<-getPtDefs()$pt
   ptDisplayMode<-displayOptions$ptMode
   
-  pts<-NULL
- # preperation: pick script, get dependent vbls 
-  if(svgBarCmd=="Points"){
-    scriptName<-"Points"
-  } 
+#pts<-NULL  
+# # preperation: pick script, get dependent vbls 
+#  if(svgBarCmd=="Points"){
+#    scriptName<-"Points"
+#  } 
+#  
+#  if(svgBarCmd=="tagValues"){
+#    if(ptDisplayMode=="hidden"){
+#      ptDisplayMode<-"normal"
+#    }
+#    scriptName<-"Points"
+#  }
   
-  if(svgBarCmd=="tagValues"){
-    if(ptDisplayMode=="hidden"){
-      ptDisplayMode<-"normal"
-    }
-    scriptName<-"Points"
-  }
-  
-  if(svgBarCmd=="dragTag"){
-    #ptDisplayMode<-input$ptDisplayMode #do not use here
-    ptDisplayMode<-"normal" #showOptions$showPoints
-    scriptName<-"transTag"
-  }
+#  if(svgBarCmd=="dragTag"){
+#    #ptDisplayMode<-input$ptDisplayMode #do not use here
+#    ptDisplayMode<-"normal" #showOptions$showPoints
+#    scriptName<-"transTag"
+#  }
   
   showGrid<-displayOptions$showGrid
   if(is.null(showGrid)){
     return(NULL)
   }
-  ptrDisplayScript<-js.scripts[[ scriptName]]
+  
+  ptrDisplayScript<-switch(svgBarCmd,
+    Points     =js.scripts[[ "Points"]],
+    tagValues  =js.scripts[[ "Points"]],
+    dragTag    =js.scripts[[ "transTag"]],
+    Transforms = js.scripts[[ input$transformOption ]]
+  )
+  
   src<-user$code
+  
   if(svgBarCmd=="Transforms"){
     src<-usingDraggable(src)
   }
@@ -54,14 +62,14 @@ output$svghtml <- renderUI({
   showPts.transform %<c-% function(){ NULL }
   
   
-  # called when we need to show points
+# called when we need to show points
 # to do: rewrite to make this work with call for tags
 # where each tag is a group, so that we can edit a tag set 
 # to provide ability for translate, rotate, scale of points
 
 # dragtag, magtag, wagtag, zagtag ? bagtag?
   
-  showPts<-function(ptName, ptRList, ptDisplayMode=NULL){
+  showPts<-function(ptName, ptRList, ptDisplayMode){
     if(!is.null(ptName) && !is.null(ptRList)){
       pts<- ptRList[[ptName]]
       selectedPointIndx<-as.numeric( selectedPoint$point.index )
@@ -80,16 +88,17 @@ output$svghtml <- renderUI({
         } else {
           ptTags<-NULL
         }
+        if(ptDisplayMode=="hidden"){ptDisplayMode<-"normal"}
         showPts.valTag(ptName, pts=pts, selectedPointIndx=selectedPointIndx, ptDisplayMode=ptDisplayMode,  ptTags=ptTags)
       },      
       dragTag    = { 
-        #browser()
         tagRList<-getPtDefs()$df 
         if(!is.null(tagRList)){
           tags<-tagRList[[ptName]]$tag
         } else {
           tags<-NULL
         }
+        ptDisplayMode<-"normal"
         showPts.dragTag(ptName, pts=pts, selectedPointIndx=selectedPointIndx, ptDisplayMode=ptDisplayMode,  tags=tags)
       },
       
@@ -137,6 +146,7 @@ output$svghtml <- renderUI({
   
   #put it together
   src<-subSVGX2(src, insert.beg, insert.end)
+  
   
   res<-""
     tryCatch({
