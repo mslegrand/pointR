@@ -110,7 +110,7 @@ observe({
   tagIndx<-selectedPoint$point.index
   if(input$plotNavBar=="tagValues"){
     isolate({
-      print("plotBar or user$code change")
+      #print("plotBar or user$code change")
       
       tagNameChoices<-getTagNameChoices() #uses getPtDefs()
       
@@ -137,7 +137,7 @@ observe({
   if(input$plotNavBar=="tagValues"){
     input$tagName
     isolate({
-    print("input$tagName change")
+    #print("input$tagName change")
       if(!is.null(input$tagName)){
         selectedPoint$name<-input$tagName
       }
@@ -149,7 +149,7 @@ observe({
   if(input$plotNavBar=="tagValues"){
     input$tagIndx
     isolate({
-      print("input$tagIndx change")
+      #print("input$tagIndx change")
       if(!is.null(input$tagIndx)){
         selectedPoint$point.index<-input$tagIndx
       }
@@ -162,7 +162,7 @@ observe({
   if(input$plotNavBar=="tagValues"){
     input$tagIndx
     isolate({
-      print("tagIndx change")
+      #print("tagIndx change")
       #tagColSelection   
       df<-getPtDefs()$df[[selectedPoint$name]]
       tagColChoices<-setdiff(names(df),"tag") #choices
@@ -176,7 +176,7 @@ observe({
   if(input$plotNavBar=="tagValues"){
     tagColChoice<-input$tagCol
     isolate({
-      print("tagCol change")
+      #print("tagCol change")
       tagIndx<-selectedPoint$point.indx #input$tagIndx
       df<-getPtDefs()$df[[selectedPoint$name]]
       #tagValueSelection
@@ -195,5 +195,51 @@ observe({
     })
   }
 })
+
+
+#----------------------------------------------------------------
+  showPts.valTag%<c-% function(ptName, pts, selectedPointIndx, ptDisplayMode,  ptTags=NULL){
+    #cat(file=stderr(),"entering drag.Tag\n")
+    if( is.null(pts) ){return(NULL)} 
+    if(length(pts)<2){return(NULL)}
+    #print("entering val.Tag\n")
+    tag.indx<-selectedPointIndx
+    semitransparent<-0.3
+    colorScheme<-c(default="green", ending="red", selected="blue")
+    
+    m<-matrix(pts,2)
+    if( is.null(tag.indx) ){ stop("unexpected null for tag.indx") }
+    if( is.null(ptTags)   ){ stop("ptTags is null") }
+
+    tags<-ptTags$tag
+    ti<-which(tag.indx==tags) 
+    tagInterval<-findInterval(sequence(ncol(m)),tags)
+    tagInterval<-tagInterval==ti
+    tagInterval[tagInterval==0]<-semitransparent
+    opac<-tagInterval
+      
+    # iterate over tagIntList
+    lapply(1:ncol(m), function(i){
+      id<-paste("pd",ptName,i,sep="-")
+      pt<-m[,i]
+      color=colorScheme['default']
+      if(i==length(pts)/2) { #ncol(m)){
+        color=colorScheme['ending']   
+      }
+      list(
+        circle(class="draggable", 
+          id=id,  
+          cxy=pt, r=8, fill=color, opacity=opac[i],
+          transform="matrix(1 0 0 1 0 0)", onmousedown="selectPoint(evt)" 
+        ),
+        if(ptDisplayMode=="Labeled"){
+          text(paste(i), cxy=pt+10*c(1,-1),  stroke='black', font.size=12, opacity=opac[i]) #opac)
+        } else {
+          NULL
+        }
+      )
+    }) #end lapply
+  } #end showPts
+
 
 

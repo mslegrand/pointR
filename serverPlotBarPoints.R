@@ -77,4 +77,55 @@ observe({
   #showOptions$showGrid<-input$showGrid
 })
 
+#---------ShowPts----------------------------------
+
+  # called when we need to show points (in epilog)
+  # to do: rewrite to make this work with call for tags
+  # where each tag is a group, so that we can edit a tag set 
+  # to provide ability for translate, rotate, scale of points
+  showPts.PtCmd %<c-% function(ptName, pts=NULL,  selectedPointIndx=NULL, ptDisplayMode="Normal"){
+    if(is.null(pts) ){ return(NULL) } 
+    if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
+    if(length(pts)<2 ){ return(NULL)}
+    #print("entering showPts.PtCmd")
+    selectedPointIndx<-as.numeric(selectedPointIndx)
+    
+    colorScheme<-c(default="green", ending="red", selected="blue")
+    m<-matrix(pts,2) # is this really necessary????
+     
+    #form list of  all point renderings
+    lapply(1:ncol(m), function(i){
+      id<-paste("pd",ptName,i,sep="-")
+      pt<-m[,i]
+      color=colorScheme['default']
+      if(i==length(pts)/2) { #ncol(m)){
+          color=colorScheme['ending']   
+      }
+      list(
+        if(identical(selectedPointIndx, as.numeric(i) )){
+          circle(class="draggable", 
+                 id=id,  
+                 cxy=pt, r=9, fill="yellow", 
+                 opacity=1,
+                 stroke=colorScheme['selected'], stroke.width=3,
+                 transform="matrix(1 0 0 1 0 0)", 
+                 onmousedown="selectPoint(evt)" )
+        } else { #a non-selected point
+          circle(class="draggable", 
+                 id=id,  
+                 cxy=pt, r=8, fill=color, opacity=1,
+                 transform="matrix(1 0 0 1 0 0)", 
+                 onmousedown="selectPoint(evt)" )
+        },
+        if(ptDisplayMode=="Labeled"){
+            text(paste(i), cxy=pt+10*c(1,-1),  
+               stroke='black', font.size=12, opacity=1) 
+        } else {
+          NULL
+        }
+      )
+    }) #end lapply
+  } #end showPts.PtCmd
+  
+
 
