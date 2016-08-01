@@ -1,5 +1,5 @@
 
-tagValModuleUI<-function(id, input, output) { 
+moduleTagValUI<-function(id, input, output) { 
   ns <- NS(id)
   absolutePanel( top=50, left=0, width=650, draggable=TRUE, 
       style=cstyle$wellPoint,
@@ -32,7 +32,7 @@ tagValModuleUI<-function(id, input, output) {
   ) #absolute panel end
 }
 
-tagValModule<-function(input, output, session, 
+moduleTagVal<-function(input, output, session, 
   barName, 
   getTagNameChoices,
   getTagName, 
