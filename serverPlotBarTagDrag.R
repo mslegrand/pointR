@@ -1,80 +1,80 @@
 
 
-output$TagDragPanel<-renderUI({
-  conditionalPanel( "input.plotNavBar=='dragTag'",   
-    absolutePanel( top=60, left=0, width=650, draggable=TRUE,
-      style=cstyle$wellPoint,
-      fluidRow(
-        column(8, 
-          selectInput( "tagName2", "Tagged Points", list(), 
-          selected=NULL,  multiple=FALSE,  selectize = FALSE,  
-          width="140px" , size=1 )
-        ),
-        column(4, 
-        selectInput("tagIndx2", "Tag Index", list(),
-        selected=NULL,  multiple=FALSE,  selectize = FALSE,  
-        width="60px" , size=1 )
-        )
-      ) #fluid
-    )
-  ) #dragtag
-})
-
-
-observe({
-  user$code
-  #input$plotNavBar
-  tagName<-selectedPoint$name
-  tagIndx<-selectedPoint$point.index
-  if(input$plotNavBar=="dragTag"){
-    isolate({
-      #print("plotBar or user$code change")
-      
-      tagNameChoices<-getTagNameChoices() #uses getPtDefs()
-      
-      tagName<-exGetTagName( tagNameChoices, tagName)
-      if(length(tagName)>0){
-        selectedPoint$name<-tagName #here is where the potential issue arrises
-      }
-      updateSelectInput(session, "tagName2", choices=tagNameChoices, selected=tagName)
-      
-      df<-getPtDefs()$df[[tagName]]
-      tagIndxChoices<-df$tag
-      #print(tagIndx)
-      tagIndx<-exGetTagIndx(tagIndxChoices, tagIndx)
-      #print(tagIndx)
-      if( length(tagName)>0 && length(tagIndx>0)){
-        selectedPoint$point.index<-tagIndx 
-      }
-      updateSelectInput(session, "tagIndx2", choices=tagIndxChoices, selected=tagIndx)
-    })
-  }
- })
- 
- observe({
-  if(input$plotNavBar=="dragTag"){
-    input$tagName2
-    isolate({
-      #print("dragTag input$tagName change")
-      if(!is.null(input$tagName2)){
-        selectedPoint$name<-input$tagName2
-      }
-    })  
-  }
-})
-
-observe({
-  if(input$plotNavBar=="dragTag"){
-    input$tagIndx2
-    isolate({
-    #print("dragTag input$tagIndx2 change")
-      if(!is.null(input$tagIndx2)){
-        selectedPoint$point.index<-input$tagIndx2
-      }
-    })
-  }
-})
-
+#output$TagDragPanel<-renderUI({
+#  conditionalPanel( "input.plotNavBar=='dragTag'",   
+#    absolutePanel( top=60, left=0, width=650, draggable=TRUE,
+#      style=cstyle$wellPoint,
+#      fluidRow(
+#        column(8, 
+#          selectInput( "tagName2", "Tagged Points", list(), 
+#          selected=NULL,  multiple=FALSE,  selectize = FALSE,  
+#          width="140px" , size=1 )
+#        ),
+#        column(4, 
+#        selectInput("tagIndx2", "Tag Index", list(),
+#        selected=NULL,  multiple=FALSE,  selectize = FALSE,  
+#        width="60px" , size=1 )
+#        )
+#      ) #fluid
+#    )
+#  ) #dragtag
+#})
+#
+#
+#observe({
+#  user$code
+#  #input$plotNavBar
+#  tagName<-selectedPoint$name
+#  tagIndx<-selectedPoint$point.index
+#  if(input$plotNavBar=="dragTag"){
+#    isolate({
+#      #print("plotBar or user$code change")
+#      
+#      tagNameChoices<-getTagNameChoices() #uses getPtDefs()
+#      
+#      tagName<-exGetTagName( tagNameChoices, tagName)
+#      if(length(tagName)>0){
+#        selectedPoint$name<-tagName #here is where the potential issue arrises
+#      }
+#      updateSelectInput(session, "tagName2", choices=tagNameChoices, selected=tagName)
+#      
+#      df<-getPtDefs()$df[[tagName]]
+#      tagIndxChoices<-df$tag
+#      #print(tagIndx)
+#      tagIndx<-exGetTagIndx(tagIndxChoices, tagIndx)
+#      #print(tagIndx)
+#      if( length(tagName)>0 && length(tagIndx>0)){
+#        selectedPoint$point.index<-tagIndx 
+#      }
+#      updateSelectInput(session, "tagIndx2", choices=tagIndxChoices, selected=tagIndx)
+#    })
+#  }
+# })
+# 
+# observe({
+#  if(input$plotNavBar=="dragTag"){
+#    input$tagName2
+#    isolate({
+#      #print("dragTag input$tagName change")
+#      if(!is.null(input$tagName2)){
+#        selectedPoint$name<-input$tagName2
+#      }
+#    })  
+#  }
+#})
+#
+#observe({
+#  if(input$plotNavBar=="dragTag"){
+#    input$tagIndx2
+#    isolate({
+#    #print("dragTag input$tagIndx2 change")
+#      if(!is.null(input$tagIndx2)){
+#        selectedPoint$point.index<-input$tagIndx2
+#      }
+#    })
+#  }
+#})
+#
 
 #-------------------------------------------
 

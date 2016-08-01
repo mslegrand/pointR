@@ -18,10 +18,10 @@ output$svghtml <- renderUI({
   }
    
   ptName<-selectedPoint$name
-  ptRList<-getPtDefs()$pt
-  ptDisplayMode<-displayOptions$ptMode
+  ptRList<-getPtDefs()$pts
+  ptDisplayMode<-displayMode()
     
-  showGrid<-displayOptions$showGrid
+  showGrid<-showGrid()
   if(is.null(showGrid)){
     return(NULL)
   }
@@ -51,7 +51,7 @@ output$svghtml <- renderUI({
   showPts<-function(ptName, ptRList, ptDisplayMode){
     if(!is.null(ptName) && !is.null(ptRList)){
       pts<- ptRList[[ptName]]
-      selectedPointIndx<-as.numeric( selectedPoint$point.index )
+      selectedPointIndx<-as.numeric( getPtIndex() )
     } else {
       pts<-NULL
       selectedPointIndx<-0
@@ -68,7 +68,9 @@ output$svghtml <- renderUI({
           ptTags<-NULL
         }
         if(ptDisplayMode=="hidden"){ptDisplayMode<-"normal"}
-        showPts.valTag(ptName, pts=pts, selectedPointIndx=selectedPointIndx, ptDisplayMode=ptDisplayMode,  ptTags=ptTags)
+        showPts.valTag(ptName, pts=pts, selectedPointIndx=selectedPointIndx, 
+        ptDisplayMode=ptDisplayMode,  
+        ptTags=ptTags)
       },      
       dragTag    = { 
         tagRList<-getPtDefs()$df 
@@ -78,7 +80,9 @@ output$svghtml <- renderUI({
           tags<-NULL
         }
         ptDisplayMode<-"normal"
-        showPts.dragTag(ptName, pts=pts, selectedPointIndx=selectedPointIndx, ptDisplayMode=ptDisplayMode,  tags=tags)
+        showPts.dragTag(ptName, pts=pts, 
+        selectedPointIndx=selectedPointIndx, 
+        ptDisplayMode=ptDisplayMode,  tags=tags)
       },
       Transforms = NULL,
       NULL
@@ -107,7 +111,7 @@ output$svghtml <- renderUI({
     'style(".draggable {','cursor: move;','}"),', 
     gsub('ptrDisplayScript', ptrDisplayScript, "script('ptrDisplayScript'),"),      
     "use(filter=filter(filterUnits=\"userSpaceOnUse\", feFlood(flood.color='white') )),",
-    if(displayOptions$showGrid==TRUE){"graphPaper( wh=c(2000,2000), dxy=c(50, 50), labels=TRUE ),"} 
+    if(showGrid()==TRUE){"graphPaper( wh=c(2000,2000), dxy=c(50, 50), labels=TRUE ),"} 
     else { NULL }
   )
   

@@ -20,6 +20,7 @@ shinyUI(fluidPage(
     tags$style("#tagCol{margin: 0px; font-size: 12px;}"),
     tags$style("#tagColVal{margin: 0px; font-size: 12px;}"),
     tags$style("#tagValEd{margin: 0px; font-size: 12px;}"),
+    #tags$style(type='text/css', "select {font-size: 10px;} "),
     tags$style(HTML(styleSpec))
   )),
   absolutePanel( left=0, top=0, width=650, #editor panel
@@ -48,7 +49,7 @@ shinyUI(fluidPage(
 #---------------plotNavBar  ------------------------------------
 # svgR plot panel
   absolutePanel( top=0, left=670, width=650, height=660, style=cstyle$wellPanel, 
-    navbarPage(version,  id="plotNavBar", fluid=TRUE, 
+    navbarPage(version,  id="plotNavBar", fluid=TRUE, selected="Points",
     #---------------plotNavBar:points  ------------------------------------
       tabPanel("Points" ), #end of tab panel "Points"
       #---------------plotNavBar:TAGS  ------------------------------------

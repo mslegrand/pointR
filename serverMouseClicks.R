@@ -77,7 +77,8 @@ observe({
         # get points
         pts<-ptRList[[ptName]]
         tagRList<-getPtDefs()$df
-        tag.indx<-as.numeric(input$tagIndx2) #!!! tagIndx2 should be replaced with a safer alternative
+        #as.numeric(input$tagIndx2)
+        tag.indx<-as.numeric(tagDragInfoList$index() ) #!!! tagIndx2 should be replaced with a safer alternative
         ptTags<-tagRList[[ptName]]
         if(!is.null(tagList)){
           ptTags<-tagRList[[ptName]]
