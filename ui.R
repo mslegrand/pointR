@@ -77,7 +77,12 @@ shinyUI(fluidPage(
     ), #navbarPage end
     #--------CONDITIONALS-----------------------------------------------------
     #-------CONDITIONAL----plotNavBar:SVGHTML---------------------------------
-    conditionalPanel( "input.plotNavBar!='Log'",
+    
+    uiOutput("PointsPanelPlot"),
+    uiOutput("svgTagValuesPanel"),
+    uiOutput("svgTagDragPanel"),
+    
+    conditionalPanel( "input.plotNavBar!='Log' && input.plotNavBar!='Points' && input.plotNavBar!='tagValues' && input.plotNavBar!='dragTag' ",
       absolutePanel( top=130, left=0, right=0,  draggable=FALSE,
                      style=cstyle$svg, htmlOutput("svghtml")
       )
@@ -87,7 +92,6 @@ shinyUI(fluidPage(
     uiOutput("PointsPanel"),
     uiOutput("TagDragPanel"),
     uiOutput("TagValuesPanel"),
-    
     #-------CONDITIONAL----plotNavBar:BUTTONS---------------------------------
       conditionalPanel( "input.plotNavBar=='Points'",
         absolutePanel( bottom=0, left=0, width=650, draggable=FALSE,

@@ -29,6 +29,7 @@ js.scripts<-list(
 
 #---begin external---------
 #these functions should be ultimately place in another file
+getSVGWH<-function(){ c(650,620)}
 
 pts2Source<-function(txt,ptRList){
   replacement<-formatPtDefs(defTag=defTag, ptRList=ptRList)
@@ -135,8 +136,9 @@ shinyServer(function(input, output,session) {
     ptMode="Normal"
   )
   
-  #---just added this group
-  #getCode<-reactive({ user$code })
+  #---
+  getCode<-reactive({ user$code })
+  getCodeBackup<-reactive({ backup$code })
   
   getPtName<-reactive({selectedPoint$name})
   getPtIndex<-reactive({selectedPoint$point.index})
@@ -146,6 +148,7 @@ shinyServer(function(input, output,session) {
   mssg<-reactiveValues(error="") 
   
 # Reactive expressions------------- 
+  getErrorMssg<-reactive({ mssg$error })
   getPtDefs<-        reactive({ ex.getPtDefs(user$code) })  #extract points from user code
   getTagNameChoices<-reactive({
   intersect(names(getPtDefs()$pts), names(getPtDefs()$df))
@@ -238,133 +241,12 @@ observeEvent(
 )
  
   
-# --------------input$plotNavBar=="Points"---------------- 
-output$PointsPanel<-renderUI({
-  conditionalPanel( "input.plotNavBar=='Points'", modulePointsBarUI("pointsBar"))
-})
-
-pointInfoList<-callModule( 
-  module=modulePointsBar, 
-  id="pointsBar", 
-  barName=reactive(input$plotNavBar),
-  getSelectInfo=getSelectInfo, #not the best way, but ...
-  getPtDefs=getPtDefs, 
-  name=getPtName, 
-  index=getPtIndex
-)
-
-observe({
-  name<-pointInfoList$name()
-#  isolate({
-    if(!is.null(name)){
-      selectedPoint$name<-pointInfoList$name()
-    }
-#  })
-})
-
-observe({
-  value<-pointInfoList$tagFreq()
-  isolate({
-    name<-getPtName()
-    if(is.null(getPtDefs()$pts) || is.null( name )) { return() }
-    ptNames<-names(getPtDefs()$pts)
-    freq<-reactiveTag$freq
-    freq<-lapply( ptNames, function(n)freq[[n]] )
-    if( !is.null(value) && value=="Off"){
-      value<-NULL
-    } else {
-      selection<-getPtName()
-      tagList<-getPtDefs()$df
-      if(!is.null(tagList) && !is.null(tagList[[selection]])){
-        #get the last tagged element and iterate the tagging
-        dn<-as.integer(value)
-        df<-tagList[[selection]]
-        df1<-tail(df,1)
-        n1<-df1$tag
-        ptList<-getPtDefs()$pts
-        n2<-length(ptList[[selection]])/2
-        if(n2>n1){
-          s<-seq(from=n1,to=n2,by=dn)
-          s<-s[-1]
-          if(length(s)>0){
-            df2List<-lapply(s, function(tn){ df2<-df1; df2$tag<-tn; df2})
-            df3<-do.call(rbind, df2List )
-            df4<-rbind(df,df3)
-            tagList[[selection]]<-df4
-            src<-user$code
-            src<-df2Source(src,dfList = tagList)
-            user$code<-src 
-          }
-        }
-      }
-    }
-    freq[[name]]<-value
-    reactiveTag$freq<-freq
-  })  
-})
-
-
-showGrid<-reactive({pointInfoList$showGrid()})
-displayMode<-reactive({pointInfoList$displayMode()})
-# --------------input$plotNavBar=="tagValues"---------------- 
- output$TagValuesPanel<-renderUI({
-  conditionalPanel( "input.plotNavBar=='tagValues'", moduleTagValUI("tagValBar"))
- })
-
-tagValInfoList<-callModule(
-  module=moduleTagVal,
-  id="tagValBar",
-  barName=reactive(input$plotNavBar),
-  getTagNameChoices=getTagNameChoices,
-  getTagName=getTagName,
-  getTagIndexChoices=getTagIndexChoices,
-  getTagIndex=getTagIndex,
-  getTagColChoices=getTagColChoices,
-  getTagCol=getTagCol,
-  getTagValueChoices=getTagValueChoices,
-  getTagValue=getTagValue
-)
-
-observe({
-  name<-tagValInfoList$name()
-  index<-tagValInfoList$index()
-#  isolate({
-    if(!is.null(name)){
-      selectedPoint$name<-name
-      selectedPoint$point.index<-as.numeric(index)
-    }
-#  })
-})
 
 
 
 
-# --------------input$plotNavBar=="dragTag"---------------- 
 
- output$TagDragPanel<-renderUI({
-  conditionalPanel( "input.plotNavBar=='dragTag'", moduleTagDragUI("tagDragBar"))
- })
 
-tagDragInfoList<-callModule(
-  module=moduleTagDrag,
-  id="tagDragBar",
-  barName=reactive(input$plotNavBar),
-  getTagNameChoices=getTagNameChoices,
-  getTagName=getTagName,
-  getTagIndexChoices=getTagIndexChoices,
-  getTagIndex=getTagIndex
-)
-
-observe({
-  name<-tagDragInfoList$name()
-  index<-tagDragInfoList$index()
-#  isolate({
-    if(!is.null(name)){
-      selectedPoint$name<-name
-      selectedPoint$point.index<-as.numeric(index)
-    }
-#  })
-})
 
 
 #--------------------------------------------------
