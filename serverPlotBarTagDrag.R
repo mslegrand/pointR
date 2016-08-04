@@ -79,7 +79,7 @@
 # --------------input$plotNavBar=="dragTag"---------------- 
 
  output$TagDragPanel<-renderUI({
-  conditionalPanel( "input.plotNavBar=='dragTag'", moduleTagDragUI("tagDragBar"))
+  conditionalPanel( "input.plotNavBar=='tagDrag'", moduleTagDragUI("tagDragBar"))
  })
 
 tagDragInfoList<-callModule(

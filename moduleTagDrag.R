@@ -41,7 +41,7 @@ moduleTagDrag<-function(input, output, session,
   }
   
   observe({ #update the name 
-    if(identical( barName(), 'dragTag')){
+    if(identical( barName(), 'tagDrag')){
       tagNameChoices<-getTagNameChoices() 
       tagName<-getTagName()
       updateSelectInput(session, "name", 
@@ -51,7 +51,7 @@ moduleTagDrag<-function(input, output, session,
   })  
   
   observe({ #update index
-     if(identical( barName(), 'dragTag')){
+     if(identical( barName(), 'tagDrag')){
       tagIndxChoices<-getTagIndexChoices()
       tagIndx<-getTagIndex()
       updateSelectInput(session, "index", 

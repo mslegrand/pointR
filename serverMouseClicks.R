@@ -4,8 +4,8 @@ observe({
     if(length(input$mouseMssg)>0){
       #get cmd
       cmd<-input$mouseMssg[1]
-      tmp<-paste(input$mouseMssg,collapse="\n** ")
-      cat( file=stderr(), paste("mouseMssg: cmd=",tmp,"\n>\n\n")  ) 
+      #tmp<-paste(input$mouseMssg,collapse="\n** ")
+      #cat( file=stderr(), paste("mouseMssg: cmd=",tmp,"\n>\n\n")  ) 
       pt<- input$mouseMssg[2]
       src<-user$code
       #todo: error check???
@@ -72,13 +72,15 @@ observe({
         tmp<-input$mouseMssg[2]
         dxy<-eval(parse(text=tmp))
         # get the tag name, 
-        ptName<-selectedPoint$name
+        #ptName<-selectedPoint$name
+        ptName<-getPtName()
         #ptName<-input$ptRSelect
         # get points
-        pts<-ptRList[[ptName]]
+        pts<-getPtDefs()$pts[[ptName]] #ptRList[[ptName]]
         tagRList<-getPtDefs()$df
         #as.numeric(input$tagIndx2)
-        tag.indx<-as.numeric(tagDragInfoList$index() ) #!!! tagIndx2 should be replaced with a safer alternative
+        tag.indx<-getPtIndex() #as.numeric(tagDragInfoList$index() ) #!!! tagIndx2 should be replaced with a safer alternative
+        
         ptTags<-tagRList[[ptName]]
         if(!is.null(tagList)){
           ptTags<-tagRList[[ptName]]
