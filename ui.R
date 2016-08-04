@@ -55,7 +55,8 @@ shinyUI(fluidPage(
       #---------------plotNavBar:TAGS  ------------------------------------
       navbarMenu("Tags", 
         tabPanel("Value", value="tagValues"),
-        tabPanel("Drag",  value="dragTag")  # tabPanel("Wag"), # tabPanel("Mag")
+        #tabPanel("Drag",  value="dragTag")  # tabPanel("Wag"), # tabPanel("Mag")
+        tabPanel("Drag",  value="tagDrag")  # tabPanel("Wag"), # tabPanel("Mag")
         #tabPanel("CPDX")
       ),
       #---------------plotNavBar:Transform  ------------------------------------
@@ -82,7 +83,7 @@ shinyUI(fluidPage(
     uiOutput("svgTagValuesPanel"),
     uiOutput("svgTagDragPanel"),
     
-    conditionalPanel( "input.plotNavBar!='Log' && input.plotNavBar!='Points' && input.plotNavBar!='tagValues' && input.plotNavBar!='dragTag' ",
+    conditionalPanel( "input.plotNavBar!='Log' && input.plotNavBar!='Points' && input.plotNavBar!='tagValues' && input.plotNavBar!='tagDrag' ",
       absolutePanel( top=130, left=0, right=0,  draggable=FALSE,
                      style=cstyle$svg, htmlOutput("svghtml")
       )

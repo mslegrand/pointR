@@ -302,30 +302,11 @@ insertMode<-reactive({pointInfoList$insertMode() })
 #    Transforms = js.scripts[[ input$transformOption ]]
 #  )
 
-#this is tagDisplay Mode
-displayModeTag<-reactive({
-  if(ptDisplayMode()=="hidden"){
-  } else {
-    ptDisplayMode()
-  }
-})
 
 showPts.transform %<c-% function(){ NULL }
 
 displayModeTransform<-reactive({ "Hidden"}) #or NULL???
 
-getTags<-reactive({
-  ptName<-getPtName()
-  if(is.null(  getPtName() )){
-    return(NULL)
-  }
-  tagRList<-getPtDefs()$df 
-  if(!is.null(tagRList)){
-    tagRList[[ptName]]$tag
-  } else {
-    NULL
-  }
-})
 
 #use for pts, ow NULL
 getPtLayer<-reactive({
@@ -376,20 +357,10 @@ getPtLayer<-reactive({
 
 
 #===============
+
 output$PointsPanelPlot<-renderUI({
   conditionalPanel( "input.plotNavBar=='Points'", modulePlotSVGrUI("svgPointsMod"))
 })
-
-#points
-showsvgRPoints.pts<-reactive({
-  showPts.PtCmd2(
-    ptName=getPtName(), pts=getPtDefs()$pts,
-    selectedPointIndx=as.numeric( getPtIndex() ),
-    ptDisplayMode=displayMode()
-  )
-})
-
-
 
 newPtLayer2 %<c-% function(insert, wh=c(1200,800)){
   if(insert==TRUE){
@@ -399,21 +370,10 @@ newPtLayer2 %<c-% function(insert, wh=c(1200,800)){
   } 
 }
   
-# show.svgRpoints.compound<-reactive({
-#   pts=getPtDefs()$pts
-#   list(
-#     newPtLayer2( insertMode(), getSVGWH() ),
-#     showPts.PtCmd(
-#       ptName=getPtName(), pts=pts,
-#       selectedPointIndx=as.numeric( getPtIndex() ),
-#       ptDisplayMode=displayMode(), insert=insertMode()
-#     )
-#   )
-# })
-
 pointSVGList<-callModule(
   module=modulePlotSVGr,
   id="svgPointsMod",
+  svgID='ptR_SVG_Point',
   showPts.compound=reactive({
     list(
       newPtLayer2( insertMode(), getSVGWH() ),

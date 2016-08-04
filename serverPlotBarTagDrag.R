@@ -107,7 +107,8 @@ observe({
 #-------------------------------------------
 
 
-  showPts.dragTag %<c-% function(ptName, pts, selectedPointIndx, ptDisplayMode,  tags=NULL){
+  showPts.dragTag %<c-% function(ptName, pts, selectedPointIndx, 
+  ptDisplayMode,  tags=NULL){
     #cat(file=stderr(),"entering drag.Tag\n")
     #print("entering drag.Tag")
     if( is.null(pts) ) {return(NULL) } 
@@ -158,85 +159,112 @@ observe({
 
 
 ####################
+#
+#output$svgTagDragPanel<-renderUI({
+#  conditionalPanel( "input.plotNavBar=='tagDrag'", 
+#    absolutePanel( top=130, left=0, right=0,  draggable=FALSE,
+#                     style=cstyle$svg, htmlOutput("svgDragTagPlot")
+#      )
+#  )
+#})
+#  
+#
+#output$svgDragTagPlot <- renderUI({
+#  WH<-getSVGWH()
+#  showGrid<-showGrid()
+#  if(is.null(showGrid)){return(NULL)}
+# 
+#  ptName<-getPtName()
+#  ptRList<-getPtDefs()$pts
+#  ptDisplayMode<-displayMode()
+#  src<-getCode()  
+#  src<-usingDraggable(src)
+#  
+#  
+#  ptrDisplayScript<-js.scripts[[ "transTag"]]
+#  
+#  
+#  showPts<-function(ptName, ptRList, ptDisplayMode){
+#    if(!is.null(ptName) && !is.null(ptRList)){
+#      pts<- ptRList[[ptName]]
+#      selectedPointIndx<-as.numeric( getPtIndex() )
+#    } else {
+#      pts<-NULL
+#      selectedPointIndx<-0
+#    }
+#    
+#    tagRList<-getPtDefs()$df 
+#    if(!is.null(tagRList)){
+#      tags<-tagRList[[ptName]]$tag
+#    } else {
+#      tags<-NULL
+#    }
+#    ptDisplayMode<-"normal"
+#    showPts.dragTag(ptName, pts=pts, 
+#      selectedPointIndx=selectedPointIndx, 
+#      ptDisplayMode=ptDisplayMode,  tags=tags
+#    )
+#  }
+#  
+#  #defining the prolog 
+#    insert.beg<-c( 
+#      'style(".draggable {','cursor: move;','}"),', 
+#      gsub('ptrDisplayScript', ptrDisplayScript, "script('ptrDisplayScript'),"),      
+#      "use(filter=filter(filterUnits=\"userSpaceOnUse\", feFlood(flood.color='white') )),",
+#      if(showGrid()==TRUE){"graphPaper( wh=c(2000,2000), dxy=c(50, 50), labels=TRUE ),"} 
+#      else { NULL }
+#    )
+#  
+#  #defining the epilog
+#  insert.end<-c(
+#    ',showPts(ptName, ptRList,  ptDisplayMode)'
+#  )    
+#  
+#  #put it together
+#  src<-subSVGX2(src, insert.beg, insert.end)
+#  res<-""
+#    tryCatch({
+#        parsedCode<-parse(text=src)
+#        svg<-eval(parsedCode)
+#        as.character(svg)->svgOut 
+#        res<-HTML(svgOut)
+#        backup$code<-getCode()  
+#        backup$res<-res
+#      },
+#      error=function(e){
+#        # session$sendCustomMessage(type='testmessage', message=e)
+#        mssg$error<-paste(mssg$error, e, collapse="\n", sep="\n")
+#        # cat(mssg$error)
+#        user$code<-getCodeBackUp()
+#        updateNavbarPage(session, "plotNavBar", selected ="Log")
+#      } 
+#    )
+#  res
+#})
+#
+
 
 output$svgTagDragPanel<-renderUI({
-  conditionalPanel( "input.plotNavBar=='dragTag'", 
-    absolutePanel( top=130, left=0, right=0,  draggable=FALSE,
-                     style=cstyle$svg, htmlOutput("svgDragTagPlot")
-      )
-  )
+  conditionalPanel( "input.plotNavBar=='tagDrag'", modulePlotSVGrUI("svgTagDragMod"))
 })
-  
 
-output$svgDragTagPlot <- renderUI({
-  WH<-getSVGWH()
-  showGrid<-showGrid()
-  if(is.null(showGrid)){return(NULL)}
- 
-  ptName<-getPtName()
-  ptRList<-getPtDefs()$pts
-  ptDisplayMode<-displayMode()
-  src<-getCode()  
-  src<-usingDraggable(src)
-  
-  
-  ptrDisplayScript<-js.scripts[[ "transTag"]]
-  
-  
-  showPts<-function(ptName, ptRList, ptDisplayMode){
-    if(!is.null(ptName) && !is.null(ptRList)){
-      pts<- ptRList[[ptName]]
-      selectedPointIndx<-as.numeric( getPtIndex() )
-    } else {
-      pts<-NULL
-      selectedPointIndx<-0
-    }
-    
-    tagRList<-getPtDefs()$df 
-    if(!is.null(tagRList)){
-      tags<-tagRList[[ptName]]$tag
-    } else {
-      tags<-NULL
-    }
-    ptDisplayMode<-"normal"
-    showPts.dragTag(ptName, pts=pts, 
-      selectedPointIndx=selectedPointIndx, 
-      ptDisplayMode=ptDisplayMode,  tags=tags
+tagValSVGList<-callModule(
+  module=modulePlotSVGr,
+  id="svgTagDragMod",
+  svgID='ptR_SVG_TagDrag',
+  showPts.compound=reactive({
+    showPts.dragTag(
+      ptName=getTagName(), pts=getPtDefs()$pts[[getTagName()]],
+      selectedPointIndx=as.numeric( getTagIndex() ),
+      ptDisplayMode=getDisplayModeTag(), tags=getTagDF()$tag 
     )
-  }
-  
-  #defining the prolog 
-    insert.beg<-c( 
-      'style(".draggable {','cursor: move;','}"),', 
-      gsub('ptrDisplayScript', ptrDisplayScript, "script('ptrDisplayScript'),"),      
-      "use(filter=filter(filterUnits=\"userSpaceOnUse\", feFlood(flood.color='white') )),",
-      if(showGrid()==TRUE){"graphPaper( wh=c(2000,2000), dxy=c(50, 50), labels=TRUE ),"} 
-      else { NULL }
-    )
-  
-  #defining the epilog
-  insert.end<-c(
-    ',showPts(ptName, ptRList,  ptDisplayMode)'
-  )    
-  
-  #put it together
-  src<-subSVGX2(src, insert.beg, insert.end)
-  res<-""
-    tryCatch({
-        parsedCode<-parse(text=src)
-        svg<-eval(parsedCode)
-        as.character(svg)->svgOut 
-        res<-HTML(svgOut)
-        backup$code<-getCode()  
-        backup$res<-res
-      },
-      error=function(e){
-        # session$sendCustomMessage(type='testmessage', message=e)
-        mssg$error<-paste(mssg$error, e, collapse="\n", sep="\n")
-        # cat(mssg$error)
-        user$code<-getCodeBackUp()
-        updateNavbarPage(session, "plotNavBar", selected ="Log")
-      } 
-    )
-  res
-})
+  }),
+  ptrDisplayScript =js.scripts[[ "TagDrag"]],
+  getSVGWH,
+  showGrid,
+  getCode,
+  getCode2 =getCode,  # (or getCodeTransform)
+  getCodeBackup,
+  getErrorMssg,
+  insert.end=",showPts.compound()"
+)

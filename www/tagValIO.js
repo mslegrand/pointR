@@ -7,7 +7,7 @@ var ptR_selectedElement = 0;
 var ptR_currentX = 0;
 var ptR_currentY = 0;
 
-var ptR_svg = document.querySelector("#ptR_SVG_Point");
+var ptR_svg = document.querySelector("#ptR_SVG_TagVal");
 var pt  = ptR_svg.createSVGPoint();
 
 //called to create a new point

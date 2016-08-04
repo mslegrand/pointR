@@ -21,10 +21,11 @@ defTag<-"ptR"
 
 js.scripts<-list(
   Points=readFile("www/pointsIO.js"),
+  TagVal=readFile("www/tagValIO.js"),
   Translate=readFile("www/transIO.js"),
   Rotate=readFile("www/rotIO.js"),
   Scale=readFile("www/scaleIO.js"),
-  transTag=readFile("www/transTag.js")
+  TagDrag=readFile("www/transTag.js")
 )
 
 #---begin external---------
@@ -209,6 +210,29 @@ shinyServer(function(input, output,session) {
       }
       tagValue
   })
+  
+  #this is tagDisplay Mode
+  getDisplayModeTag<-reactive({
+    if(displayMode()=="hidden"){
+    } else {
+      displayMode()
+    }
+  })
+  
+  getTagDF<-reactive({
+    ptName<-getPtName()
+    if(is.null(  getPtName() )){
+      ptTags<NULL
+    }
+    tagRList<-getPtDefs()$df 
+    if(!is.null(tagRList)){
+      ptTags<-tagRList[[ptName]]
+    } else {
+      ptTags<-NULL
+    }
+    ptTags
+  })
+  
   
   #call with ptsDefs$df as 
 

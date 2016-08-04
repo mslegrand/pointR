@@ -8,6 +8,7 @@
   
   modulePlotSVGr<-function(
     input, output, session,
+    svgID, #='ptR_SVG_Point'
     showPts.compound, # =showsvgRPoints.pts2
     ptrDisplayScript, # =js.scripts[[ "Points"]]
     getSVGWH, 
@@ -35,9 +36,9 @@
     
     # why can't I force this???
     showPts.compound=showPts.compound #should be able to force this
-
+    svgid<-paste0('id="', svgID, '",')
     #defining the prolog 
-    insert.beg<-c( 
+    insert.beg<-c( svgid,
       'style(".draggable {','cursor: move;','}"),', 
       gsub('ptrDisplayScript', ptrDisplayScript, "script('ptrDisplayScript'),"),      
       "use(filter=filter(filterUnits=\"userSpaceOnUse\", feFlood(flood.color='white') )),",
