@@ -4,7 +4,7 @@
 var ptR_selectedElement = 0;
 var ptR_currentMatrix   = 0;
 
-var ptR_svg = document.querySelector("svg");
+var ptR_svg = document.querySelector("#ptR_SVG_TRANSFORM");
 var ptR_cxy = ptR_svg.createSVGPoint();  //center of shape
 var ptR_ut  = ptR_svg.createSVGPoint();
 var ptR_originalCTM=ptR_svg.createSVGMatrix();

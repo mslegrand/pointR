@@ -358,7 +358,7 @@ getPtLayer<-reactive({
 
 #===============
 
-output$PointsPanelPlot<-renderUI({
+output$svgPointsPanel<-renderUI({
   conditionalPanel( "input.plotNavBar=='Points'", modulePlotSVGrUI("svgPointsMod"))
 })
 
@@ -384,7 +384,7 @@ pointSVGList<-callModule(
       )
     )
   }),
-  ptrDisplayScript =js.scripts[[ "Points"]],
+  ptrDisplayScript =reactive({ js.scripts[[ "Points"]] }),
   getSVGWH,
   showGrid,
   getCode,

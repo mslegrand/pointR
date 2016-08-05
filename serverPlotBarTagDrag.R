@@ -259,7 +259,7 @@ tagValSVGList<-callModule(
       ptDisplayMode=getDisplayModeTag(), tags=getTagDF()$tag 
     )
   }),
-  ptrDisplayScript =js.scripts[[ "TagDrag"]],
+  ptrDisplayScript = reactive({ js.scripts[[ "TagDrag"]] }),
   getSVGWH,
   showGrid,
   getCode,

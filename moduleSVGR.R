@@ -20,14 +20,14 @@
     insert.end #='showPts.compound()'
   ){
     
-  user<-reactiveValues( code="" )
+  user<-  reactiveValues( code="" )
   backup<-reactiveValues(code="")
-  mssg<-reactiveValues( error=NULL )
+  mssg<-  reactiveValues( error=NULL )
   
   
   
   output$svghtml <- renderUI({
-    
+    print("renderUI")
     WH<-getSVGWH()
     #src<-getCode()
     src<-getCode2()
@@ -38,17 +38,21 @@
     showPts.compound=showPts.compound #should be able to force this
     svgid<-paste0('id="', svgID, '",')
     #defining the prolog 
+    
+    ptrDisplyScriptTxt<-ptrDisplayScript()
     insert.beg<-c( svgid,
       'style(".draggable {','cursor: move;','}"),', 
-      gsub('ptrDisplayScript', ptrDisplayScript, "script('ptrDisplayScript'),"),      
+      gsub('ptrDisplayScript', ptrDisplyScriptTxt, "script('ptrDisplayScript'),"),      
       "use(filter=filter(filterUnits=\"userSpaceOnUse\", feFlood(flood.color='white') )),",
       if(showGrid()==TRUE){"graphPaper( wh=c(2000,2000), dxy=c(50, 50), labels=TRUE ),"} 
       else { NULL }
     )
   
+    #print(insert.beg)
     #defining the epilog
     #put it together
     src<-subSVGX2(src, insert.beg, insert.end)
+    
     
     # transform: modifies src, but omits insert.end
    

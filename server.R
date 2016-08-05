@@ -281,7 +281,8 @@ source("serverPlotBarPoints.R", local=TRUE)
 # --------------input$plotNavBar=="Tags"----------------  
 source("serverPlotBarTagValues.R", local=TRUE)  
 source("serverPlotBarTagDrag.R", local=TRUE)  
-  
+source("serverPlotBarTransform.R", local=TRUE)  
+
 #---------------Button handlers--------------------------
 source("serverButtons.R",local = TRUE)
 

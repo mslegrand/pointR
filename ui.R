@@ -31,8 +31,10 @@ shinyUI(fluidPage(
         tabPanel("Open"),
         tabPanel("Save")
       ),
-      navbarMenu("Code", 
-        tabPanel("Edit svgR" , value="Source")
+      navbarMenu("Edit", 
+        tabPanel("svgR Code " , value="Source"),
+        tabPanel("Config (not implemented)" ),
+        tabPanel("Prepoc (not implemented)" )
       ),
       tabPanel(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/User_Guide.html\"  target=\"_blank\" >User Guide </a></li>")),
       tabPanel(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/\"  target=\"_blank\" >io.svgR</a></li>"))
@@ -79,20 +81,23 @@ shinyUI(fluidPage(
     #--------CONDITIONALS-----------------------------------------------------
     #-------CONDITIONAL----plotNavBar:SVGHTML---------------------------------
     
-    uiOutput("PointsPanelPlot"),
+    uiOutput("svgPointsPanel"),
     uiOutput("svgTagValuesPanel"),
     uiOutput("svgTagDragPanel"),
-    
-    conditionalPanel( "input.plotNavBar!='Log' && input.plotNavBar!='Points' && input.plotNavBar!='tagValues' && input.plotNavBar!='tagDrag' ",
-      absolutePanel( top=130, left=0, right=0,  draggable=FALSE,
-                     style=cstyle$svg, htmlOutput("svghtml")
-      )
-    ),
+    #todo add 
+    uiOutput("svgTransformPanel"),
+#    conditionalPanel( "input.plotNavBar!='Log' && input.plotNavBar!='Points' && input.plotNavBar!='tagValues' && input.plotNavBar!='tagDrag' ",
+#      absolutePanel( top=130, left=0, right=0,  draggable=FALSE,
+#                     style=cstyle$svg, htmlOutput("svghtml")
+#      )
+#    ),
     br(),
     #-------CONDITIONAL----plotNavBar:POINTS---------------------------------
     uiOutput("PointsPanel"),
     uiOutput("TagDragPanel"),
     uiOutput("TagValuesPanel"),
+    #todo add uiOutput("TransformPanel"),
+    
     #-------CONDITIONAL----plotNavBar:BUTTONS---------------------------------
       conditionalPanel( "input.plotNavBar=='Points'",
         absolutePanel( bottom=0, left=0, width=650, draggable=FALSE,
