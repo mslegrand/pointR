@@ -1,20 +1,29 @@
 moduleTagDragUI<-function(id, input, output) { 
-  ns <- NS(id)
-  absolutePanel( top=50, left=0, width=650, draggable=TRUE, 
-      style=cstyle$wellPoint,
-      fluidRow(
-        column(2, 
-          selectInput( ns("name"), "Point Matrix",
-          multiple=FALSE, size=3, selectize = FALSE,
-          list(),  selected=NULL, width="100px"  )
-        ),
-        column(2, 
-          selectInput(ns("index"), "Tag-No",
-          multiple=FALSE, size=3, selectize = FALSE, 
-          list(), selected=NULL, width="60px"  )
-        )
-      ) #fluidRow  end
-  ) #absolute panel end
+  ns <- NS(id)  
+  tagList(
+    absolutePanel( bottom=0, left=0, width=650, draggable=FALSE,
+                    style="margin:0px; padding:0px;",
+      actionButton(ns("tagClone"),   label = "Clone",   style=cstyle$button),
+      actionButton(ns("tagDelete"),  label = "Delete",  style=cstyle$button),
+      actionButton(ns("tagMoveUp"), label = "Send Forwards", style=cstyle$button),
+      actionButton(ns("tagMoveDown"), label = "Send  Backwads", style=cstyle$button)
+    ),
+    absolutePanel( top=50, left=0, width=650, draggable=TRUE, 
+        style=cstyle$wellPoint,
+        fluidRow(
+          column(2, 
+            selectInput( ns("name"), "Point Matrix",
+            multiple=FALSE, size=3, selectize = FALSE,
+            list(),  selected=NULL, width="100px"  )
+          ),
+          column(2, 
+            selectInput(ns("index"), "Tag-No",
+            multiple=FALSE, size=3, selectize = FALSE, 
+            list(), selected=NULL, width="60px"  )
+          )
+        ) #fluidRow  end
+    ) #absolute panel end
+  )
 }
 
 moduleTagDrag<-function(input, output, session, 
@@ -61,6 +70,10 @@ moduleTagDrag<-function(input, output, session,
   
   list(
     name        =reactive({input$name}),
-    index       =reactive({input$index})
+    index       =reactive({as.numeric( input$index )}),
+    tagClone    =reactive({input$tagClone}),
+    tagDelete   =reactive({input$tagDelete}),
+    tagMoveUp   =reactive({input$tagMoveUp}),
+    tagMoveDown   =reactive({input$tagMoveDown})
   )
 }

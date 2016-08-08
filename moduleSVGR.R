@@ -27,7 +27,7 @@
   
   
   output$svghtml <- renderUI({
-    print("renderUI")
+    #print("renderUI")
     WH<-getSVGWH()
     #src<-getCode()
     src<-getCode2()
