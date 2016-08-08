@@ -1,81 +1,4 @@
 
-
-#output$TagDragPanel<-renderUI({
-#  conditionalPanel( "input.plotNavBar=='dragTag'",   
-#    absolutePanel( top=60, left=0, width=650, draggable=TRUE,
-#      style=cstyle$wellPoint,
-#      fluidRow(
-#        column(8, 
-#          selectInput( "tagName2", "Tagged Points", list(), 
-#          selected=NULL,  multiple=FALSE,  selectize = FALSE,  
-#          width="140px" , size=1 )
-#        ),
-#        column(4, 
-#        selectInput("tagIndx2", "Tag Index", list(),
-#        selected=NULL,  multiple=FALSE,  selectize = FALSE,  
-#        width="60px" , size=1 )
-#        )
-#      ) #fluid
-#    )
-#  ) #dragtag
-#})
-#
-#
-#observe({
-#  user$code
-#  #input$plotNavBar
-#  tagName<-selectedPoint$name
-#  tagIndx<-selectedPoint$point.index
-#  if(input$plotNavBar=="dragTag"){
-#    isolate({
-#      #print("plotBar or user$code change")
-#      
-#      tagNameChoices<-getTagNameChoices() #uses getPtDefs()
-#      
-#      tagName<-exGetTagName( tagNameChoices, tagName)
-#      if(length(tagName)>0){
-#        selectedPoint$name<-tagName #here is where the potential issue arrises
-#      }
-#      updateSelectInput(session, "tagName2", choices=tagNameChoices, selected=tagName)
-#      
-#      df<-getPtDefs()$df[[tagName]]
-#      tagIndxChoices<-df$tag
-#      #print(tagIndx)
-#      tagIndx<-exGetTagIndx(tagIndxChoices, tagIndx)
-#      #print(tagIndx)
-#      if( length(tagName)>0 && length(tagIndx>0)){
-#        selectedPoint$point.index<-tagIndx 
-#      }
-#      updateSelectInput(session, "tagIndx2", choices=tagIndxChoices, selected=tagIndx)
-#    })
-#  }
-# })
-# 
-# observe({
-#  if(input$plotNavBar=="dragTag"){
-#    input$tagName2
-#    isolate({
-#      #print("dragTag input$tagName change")
-#      if(!is.null(input$tagName2)){
-#        selectedPoint$name<-input$tagName2
-#      }
-#    })  
-#  }
-#})
-#
-#observe({
-#  if(input$plotNavBar=="dragTag"){
-#    input$tagIndx2
-#    isolate({
-#    #print("dragTag input$tagIndx2 change")
-#      if(!is.null(input$tagIndx2)){
-#        selectedPoint$point.index<-input$tagIndx2
-#      }
-#    })
-#  }
-#})
-#
-
 # --------------input$plotNavBar=="dragTag"---------------- 
 
  output$TagDragPanel<-renderUI({
@@ -103,6 +26,153 @@ observe({
 #  })
 })
 
+observeEvent( 
+  tagDragInfoList$tagClone(),
+  {
+    
+    name<-tagDragInfoList$name()
+    index<-tagDragInfoList$index()
+    ptRList<-getPtDefs()$pts
+    tagRList<-getPtDefs()$df
+    pts<-getPtDefs()$pts[[name]] 
+    df<-tagRList[[name]]
+    tags<-df$tag
+    ti<-which(index==tags) 
+    id.nos<-sequence(ncol(pts))
+    tagInterval<-findInterval(id.nos,tags)
+    ptsA<-pts[,tagInterval<=ti]
+    ptsB<-pts[,tagInterval>=ti]
+    
+    tiSize<-ncol(pts[,tagInterval==ti])
+    
+    ptsNew<-matrix(c(ptsA,ptsB),2)
+    t2<-tags[tags>=index]+tiSize
+    t1<-tags[tags<=index]
+    tagsNew<-c(t1,t2)
+    
+    df1<-subset(df,df$tag<=index)
+    df2<-subset(df,df$tag>=index)
+    dfNew<-as.data.frame(rbind(df1,df2))
+    dfNew$tag<-tagsNew
+    ptRList[[name]]<-ptsNew
+    tagRList[[name]]<-dfNew
+    scr<-getCode()
+    src<-user$code
+    src<-pts2Source(src,ptRList)
+    src<-df2Source( src, tagRList)
+    
+    #update
+    user$code<-src
+    selectedPoint$point.index<-as.numeric(index)+tiSize
+  }
+)
+
+#delete tag set
+observeEvent( 
+  tagDragInfoList$tagDelete(),
+  {
+    name<-    tagDragInfoList$name()
+    index<-   tagDragInfoList$index()
+    ptRList<- getPtDefs()$pts
+    tagRList<-getPtDefs()$df
+    pts<-     getPtDefs()$pts[[name]] 
+    df<-      tagRList[[name]]
+    tags<-    df$tag
+    ti<-which(index==tags) 
+    id.nos<-sequence(ncol(pts))
+    tagInterval<-findInterval(id.nos,tags)
+    ptsA<-pts[,tagInterval<ti]
+    ptsB<-pts[,tagInterval>ti]
+    
+    tiSize<-ncol(pts[,tagInterval==ti])
+    
+    ptsNew<-matrix(c(ptsA,ptsB),2)
+    t2<-tags[tags>index]-tiSize
+    t1<-tags[tags<index]
+    tagsNew<-c(t1,t2)
+    
+    df1<-subset(df,df$tag<index)
+    df2<-subset(df,df$tag>index)
+    dfNew<-as.data.frame(rbind(df1,df2))
+    dfNew$tag<-tagsNew
+    ptRList[[name]]<-ptsNew
+    tagRList[[name]]<-dfNew
+    scr<-getCode()
+    src<-user$code
+    src<-pts2Source(src,ptRList)
+    src<-df2Source( src, tagRList)
+    
+    #will need to handle case when no more tagged points!!!
+    #update
+    user$code<-src
+    selectedPoint$point.index<-as.numeric(index)-tiSize
+  }
+)
+
+#swapTagPoints<-function(pts, df, t0,t1){
+#
+#    tags<-    df$tag
+#    t0<-which(index==tags) 
+#    t1<-t0+1
+#    
+#    id.nos<-sequence(ncol(pts))
+#    tagInterval<-findInterval(id.nos,tags)
+#    ptsA   <-pts[,tagInterval<t0]
+#    ptsB   <-pts[,tagInterval>t1]
+#    ptsT0  <-pts[,tagInterval==t0]
+#    ptsT1  <-pts[,tagInterval==t1]
+#    pts <-matrix(c(ptsA,ptsT1, ptsT0, ptsB),2)
+#    
+#    df[c(t0,t1)]<-df[c(t1,t0)]
+#    t1Size      <-ncol(ptsT1)
+#    tags[t1]    <-tags[t0]+t1Size
+#    df$tag      <-tags
+#
+#}
+
+observeEvent( 
+  tagDragInfoList$tagMoveUp(),
+  {
+    name<-    tagDragInfoList$name()
+    index<-   tagDragInfoList$index()
+    ptRList<- getPtDefs()$pts
+    tagRList<-getPtDefs()$df
+    
+    pts<-     ptRList[[name]] 
+    df<-      tagRList[[name]]
+    
+    tags<-    df$tag
+    t0<-which(index==tags) 
+    t1<-t0+1
+    
+    
+    id.nos<-sequence(ncol(pts))
+    tagInterval<-findInterval(id.nos,tags)
+    ptsA   <-pts[,tagInterval<t0]
+    ptsB   <-pts[,tagInterval>t1]
+    ptsT0  <-pts[,tagInterval==t0]
+    ptsT1  <-pts[,tagInterval==t1]
+    pts <-matrix(c(ptsA,ptsT1, ptsT0, ptsB),2)
+    
+    df[c(t0,t1),]<-df[c(t1,t0),]
+    t1Size      <-ncol(ptsT1)
+    tags[t1]    <-tags[t0]+t1Size
+    df$tag      <-tags
+    
+    ptRList[[name]]  <-pts
+    tagRList[[name]] <-df
+    
+    scr<-getCode()
+    src<-user$code
+    src<-pts2Source(src,ptRList)
+    src<-df2Source( src, tagRList)
+    
+    #will need to handle case when no more tagged points!!!
+    #update
+    user$code<-src
+    selectedPoint$point.index<-tags[t1]
+  }
+)
 
 #-------------------------------------------
 
@@ -129,18 +199,8 @@ observe({
       # iterate over tagIntList
       indx<-unique(tagInterval)
       indx<-indx[-ti]
-      list(
-        g( opacity=opacity[ti], 
-           fill='purple',
-           transform="matrix(1 0 0 1 0 0)", 
-           onmousedown="selectElement(evt)",
-           tid=paste0("ptR_Tag_",ti),
-           lapply(tagIntList[[ti]], function(j){
-             circle(   cxy=m[,j], r=8)
-           })
-        ),
+      list( 
         lapply(indx, function(i){
-          #browser()
           g( opacity=opacity[i], 
              fill='purple',
              transform="matrix(1 0 0 1 0 0)", 
@@ -150,7 +210,16 @@ observe({
                circle(   cxy=m[,j], r=8)
              })
           )
-        })
+        }),
+        g( opacity=opacity[ti], 
+           fill='purple',
+           transform="matrix(1 0 0 1 0 0)", 
+           onmousedown="selectElement(evt)",
+           tid=paste0("ptR_Tag_",ti),
+           lapply(tagIntList[[ti]], function(j){
+             circle(   cxy=m[,j], r=8)
+           })
+        )
       )
       } #end if
   } #end showPts
@@ -253,6 +322,9 @@ tagValSVGList<-callModule(
   id="svgTagDragMod",
   svgID='ptR_SVG_TagDrag',
   showPts.compound=reactive({
+    print(getTagName())
+    print(getPtDefs()$pts[[getTagName()]])
+    print(getTagIndex() )
     showPts.dragTag(
       ptName=getTagName(), pts=getPtDefs()$pts[[getTagName()]],
       selectedPointIndx=as.numeric( getTagIndex() ),
