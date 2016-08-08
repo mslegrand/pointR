@@ -95,19 +95,11 @@ shinyUI(fluidPage(
     #-------CONDITIONAL----plotNavBar:POINTS---------------------------------
     uiOutput("PointsPanel"),
     uiOutput("TagDragPanel"),
-    uiOutput("TagValuesPanel"),
+    uiOutput("TagValuesPanel")
     #todo add uiOutput("TransformPanel"),
     
     #-------CONDITIONAL----plotNavBar:BUTTONS---------------------------------
-      conditionalPanel( "input.plotNavBar=='Points'",
-        absolutePanel( bottom=0, left=0, width=650, draggable=FALSE,
-                        style="margin:0px; padding:0px;",
-          actionButton("forwardPt", label = "Forward Pt", style=cstyle$button),
-          actionButton("backwardPt", label = "Backward Pt", style=cstyle$button),
-          actionButton("removePt", label = "Delete Pt", style=cstyle$button),
-          actionButton("tagPt", label = "Tag Pt", style=cstyle$button)
-        )
-      )#, #BUTTONS PANEL END
+      
       
     #   conditionalPanel( "input.plotNavBar=='Tags'",
     #                   absolutePanel( bottom=0, left=0, width=650, draggable=FALSE,
