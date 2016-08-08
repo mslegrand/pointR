@@ -135,6 +135,7 @@ observeEvent(
   {
     name<-    tagDragInfoList$name()
     index<-   tagDragInfoList$index()
+    if(is.null(index)||index==0){ return(NULL) }
     ptRList<- getPtDefs()$pts
     tagRList<-getPtDefs()$df
     
@@ -144,7 +145,10 @@ observeEvent(
     tags<-    df$tag
     t0<-which(index==tags) 
     t1<-t0+1
-    
+#    print(t1)
+#    print(class(t1))
+#    print(length(tags))
+    if(t1>length(tags)){return(NULL)}
     
     id.nos<-sequence(ncol(pts))
     tagInterval<-findInterval(id.nos,tags)
@@ -179,6 +183,7 @@ observeEvent(
   {
     name<-    tagDragInfoList$name()
     index<-   tagDragInfoList$index()
+    if(is.null(index)||index==0){ return(NULL) }
     ptRList<- getPtDefs()$pts
     tagRList<-getPtDefs()$df
     
@@ -188,6 +193,7 @@ observeEvent(
     tags<-    df$tag
     t1<-which(index==tags) 
     t0<-t1-1
+    if(t0==0){ return(NULL) }
     
     
     id.nos<-sequence(ncol(pts))
