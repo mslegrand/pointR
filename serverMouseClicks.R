@@ -82,7 +82,7 @@ observe({
         tag.indx<-getPtIndex() #as.numeric(tagDragInfoList$index() ) #!!! tagIndx2 should be replaced with a safer alternative
         
         ptTags<-tagRList[[ptName]]
-        if(!is.null(tagList)){
+        if(!is.null(tagRList)){
           ptTags<-tagRList[[ptName]]
         } else {
           ptTags<-NULL
