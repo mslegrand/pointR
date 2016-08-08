@@ -174,6 +174,50 @@ observeEvent(
   }
 )
 
+observeEvent( 
+  tagDragInfoList$tagMoveDown(),
+  {
+    name<-    tagDragInfoList$name()
+    index<-   tagDragInfoList$index()
+    ptRList<- getPtDefs()$pts
+    tagRList<-getPtDefs()$df
+    
+    pts<-     ptRList[[name]] 
+    df<-      tagRList[[name]]
+    
+    tags<-    df$tag
+    t1<-which(index==tags) 
+    t0<-t1-1
+    
+    
+    id.nos<-sequence(ncol(pts))
+    tagInterval<-findInterval(id.nos,tags)
+    ptsA   <-pts[,tagInterval<t0]
+    ptsB   <-pts[,tagInterval>t1]
+    ptsT0  <-pts[,tagInterval==t0]
+    ptsT1  <-pts[,tagInterval==t1]
+    pts <-matrix(c(ptsA,ptsT1, ptsT0, ptsB),2)
+    
+    df[c(t0,t1),]<-df[c(t1,t0),]
+    t1Size      <-ncol(ptsT1)
+    tags[t1]    <-tags[t0]+t1Size
+    df$tag      <-tags
+    
+    ptRList[[name]]  <-pts
+    tagRList[[name]] <-df
+    
+    scr<-getCode()
+    src<-user$code
+    src<-pts2Source(src,ptRList)
+    src<-df2Source( src, tagRList)
+    
+    #will need to handle case when no more tagged points!!!
+    #update
+    user$code<-src
+    selectedPoint$point.index<-tags[t0]
+  }
+)
+
 #-------------------------------------------
 
 

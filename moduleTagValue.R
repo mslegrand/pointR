@@ -94,7 +94,6 @@ moduleTagVal<-function(input, output, session,
     }    
   })
   
-
   list(
     name        =reactive({input$name}),
     index       =reactive({input$index}),    

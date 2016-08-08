@@ -12,10 +12,10 @@ output$svgTransformPanel<-renderUI({
 #src<-usingDraggable(src)
 showPts.transform %<c-% function(){ NULL }
 
-  getCodeTransform<-reactive({
-    src<-getCode()
-    src<-usingDraggable(src)
-  })
+getCodeTransform<-reactive({
+  src<-getCode()
+  src<-usingDraggable(src)
+})
 
 pointSVGList<-callModule(
   module=modulePlotSVGr,

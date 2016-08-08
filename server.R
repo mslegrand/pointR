@@ -109,15 +109,20 @@ shinyServer(function(input, output,session) {
   # tagIndxCƒhoices<-getTagIndexChoices()
   # point.index<-selected$point.indx
   exGetTagIndx<-function(tagIndxChoices, point.indx){
-    if(length(tagIndxChoices)<1 || length(point.indx)<1){
+    if(length(tagIndxChoices)<1 ){
      return(NULL)
     }
-    #point.indx<-as.numeric(point.indx)
-    if( point.indx>0 ){
-        t.point.indx<-max(tagIndxChoices[ tagIndxChoices<= point.indx] )
+    if(  length(point.indx)<1){
+     point.index<-max(tagIndxChoices)
     } else {
-        0
-    }
+     #point.indx<-as.numeric(point.indx)
+      if( point.indx>0 ){
+          t.point.indx<-max(tagIndxChoices[ tagIndxChoices<= point.indx] )
+      } else {
+          0
+      }    
+      }
+ 
   }  
   
 # Reactive values----------
@@ -161,11 +166,20 @@ shinyServer(function(input, output,session) {
     ex.getSelectInfo(pts, name, indx)
     #ex.getSelectInfo(getPtDefs()$pts, getPtName(), getPtIndex())
   })
+  
+  getPts<-reactive({
+    ptdef<-getPtDefs()
+    ptdef[[getPtName()]]
+  })
+  
   getTagName<-reactive({exGetTagName( getTagNameChoices(), getPtName() )})
   getTagIndexChoices<-reactive({getPtDefs()$df[[getTagName()]]$tag})
   getTagIndex<-reactive({ 
     choices<-getTagIndexChoices()
+    print("getTagIndex")
+    print(choices)
     indx<-getPtIndex()
+    print(indx)
     exGetTagIndx(choices, indx )
   })
   getTagColChoices<-reactive({
@@ -263,19 +277,9 @@ observeEvent(
     }
   }
 )
- 
-  
-
-
-
-
-
-
-
 
 #--------------------------------------------------
 # !!!TO DO: ADD HANDLER FOR POINT AND INDEX
-
 
 source("serverPlotBarPoints.R", local=TRUE) 
 # --------------input$plotNavBar=="Tags"----------------  
