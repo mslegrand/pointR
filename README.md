@@ -2,8 +2,8 @@
 
 **pointR** is a *shiny-based* minimalist ide for R scripting using svgR
 - ***Videos on pointR*** can be found at http://mslegrand.github.io/pointRmedia/.
-- Related information can be found at http://mslegrand.github.io/svgR/.
-- Rambling thoughts can be found on the wiki at https://github.com/mslegrand/pointR/wiki
+- ***Related information*** can be found at http://mslegrand.github.io/svgR/.
+- ***Rambling thoughts*** can be found on the wiki at https://github.com/mslegrand/pointR/wiki
 
 ## Some Points on PointR
 -  pointR is a shiny server application
