@@ -1,49 +1,55 @@
 
+
 moduleTagValUI<-function(id, input, output) { 
   ns <- NS(id)
   absolutePanel( top=50, left=0, width=650, draggable=TRUE, 
       style=cstyle$wellPoint,
-      fluidRow(
-        column(2, 
+      #fluidRow(
+        div(style="display:inline-block",
           selectInput( ns("name"), "Point Matrix",
-          multiple=FALSE, size=3, selectize = FALSE,
-          list(),  selected=NULL, width="100px"  )
+          multiple=FALSE, size=1, selectize = FALSE,
+          choices=list(),  selected=NULL, width="100px"  )
         ),
-        column(2, 
+        div(style="display:inline-block",
+          selectInput(ns("colName"), "Attribute",
+          multiple=FALSE, size=1, selectize = FALSE, 
+          choices=list(),  selected=NULL, width="100px"  )
+        ),
+        div(style="display:inline-block",
           selectInput(ns("index"), "Tag-No",
-          multiple=FALSE, size=3, selectize = FALSE, 
-          list(), selected=NULL, width="60px"  )
+          multiple=FALSE, size=1, selectize = FALSE, 
+          choices=list(), selected=NULL, width="60px"  )
+        ), 
+        div(style="display:inline-block", 
+          selectInput(ns("colVal"), "Value Chooser", 
+          multiple=FALSE, size=1, selectize = FALSE,  
+          choices=list(),  selected=NULL, width="100px"  )
         ),
-        column(2, 
-          selectInput(ns("colName"), "Col-Name",
-          multiple=FALSE, size=3, selectize = FALSE, 
-          list(),  selected=NULL, width="100px"  )
+        div(style="display:inline-block",
+          textInput(ns("colValEd"), "Value Choice", value="",width="100px")
         ),
-        column(3, 
-          selectInput(ns("colVal"), "Col-Value", 
-          multiple=FALSE, size=3, selectize = FALSE,  
-          list(),  selected=NULL, width="100px"  )
-        ),
-        column(3, 
-          textInput(ns("colValEd"), "Alt-Value", value=""),
-          actionButton("insertVal2Col", label = "Apply Alternate Val", style=cstyle$buttonSmall)
+        div(style="display:inline-block",
+          actionButton(ns( "insertVal2ColButton" ), label = "Update", style=cstyle$buttonSmall)
         )
-      ) #fluidRow  end
+        
+      #) #fluidRow  end
   ) #absolute panel end
 }
 
 moduleTagVal<-function(input, output, session, 
   barName, 
+  getPtDefs,
   getTagNameChoices,
   getTagName, 
   getTagIndexChoices,
-  getTagIndex,
-  getTagColChoices,
-  getTagCol,
-  getTagValueChoices,
-  getTagValue
+  getTagIndex
 ){
 
+  local<-reactiveValues( tagRList = NULL)
+  # this should be updated whenever we change to this page
+  # or we change the code/ptDefs
+  observe( local$tagRList<-getPtDefs()$df )
+  
   # non-reactive function
   exGetTagColChoice<-function(tagColChoices, currentChoice){
     if(length(tagColChoices)>0){
@@ -58,6 +64,90 @@ moduleTagVal<-function(input, output, session,
     }
     tagColChoice
   }
+  
+#  getAllNames<-reactive({
+#    names( getPtDefs()$df )
+#  })
+#  
+#  getTagName<-reactive({
+#    name<-getPtName()
+#    if(length(getAllNames())==0){ return(NULL)}
+#    if(length(name)>0 && name %in% getAllNames(){
+#      name} else {
+#      getAllNames()[1]
+#    })
+#  })
+#  
+#  getPts<-reactive({ 
+#    if(length(getTagName()==0)){ return(NULL)}
+#    getPtDefs$pts[[getTagName()]]
+#  })
+#  
+#  getTagIndex<-reactive({
+#  })
+#  
+  getName<-reactive({input$name})
+  getIndex<-reactive({input$index})
+  getDF<-reactive({ 
+    if(
+    !is.null(getName()) && 
+    !is.null( getPtDefs()$df ) && 
+    getName() %in% names(getPtDefs()$df)  ){
+      getPtDefs()$df[[getName()]] 
+    } else {
+      NULL
+    }
+  })
+  
+  
+  getTagColChoices<-reactive({
+    df<-getDF()
+    print("getTagColChoices")
+    print(df)
+    if(!is.null(df)){
+      tagColChoices<-setdiff(names(df),"tag")
+    } else {
+      NULL
+    }
+  })
+  
+  getTagCol<-reactive({ 
+  tmp<-getTagColChoices()
+    if( length(tmp)>0 &&
+        length(input$colName)>0 &&
+        input$colName %in% tmp){
+      input$colName
+    } else {
+      tmp[1]
+    }
+  })
+  
+  getTagValueVector<-reactive({
+    if(length(getTagCol())>0  &&
+      length(getDF)>0){
+      getDF()[[getTagCol()]]
+    } else {
+      NULL
+    }
+  })
+  
+  getTagValueChoices<-reactive({
+    if(length(getTagCol())>0  &&
+      length(getDF)>0){
+      getDF()[[getTagCol()]]
+    } else {
+      NULL
+    }
+  })
+  
+  getTagValue<-reactive({
+    if(length(getTagValueChoices())>0){
+      ptIndx<-getIndex()
+      tags<-getDF()$tag
+      indx<-which(ptIndx==tags)
+      getTagValueChoices()[[indx]]
+    }
+  })
   
   observe({ #update the name 
     if(identical( barName(), 'tagValues')){
@@ -86,18 +176,50 @@ moduleTagVal<-function(input, output, session,
     }
   })
   
+  # want if value selection changes, or insertVal2ColButton pressed
+  # to return an updated DF.
+  
   observe({ #tag val selection
     if(identical( barName(), 'tagValues')){
       tagValueChoices<-getTagValueChoices()
-      tagValChoice<-getTagValue()
-      updateSelectInput(session, "colVal", choices=tagValueChoices, selected=tagValChoice)
+      tagValue<-getTagValue()
+      updateSelectInput(session, "colVal", choices=tagValueChoices, selected=tagValue)
     }    
   })
   
-  list(
-    name        =reactive({input$name}),
-    index       =reactive({input$index}),    
-    colName     =reactive({input$colName}),
-    colVal      =reactive({input$colVal})
+  observe({
+    if(identical( barName(), 'tagValues')){
+      tagValue<-input$colVal
+      updateTextInput(session, "colValEd", value=tagValue)
+    }  
+  })
+  
+  observeEvent(
+    input$insertVal2ColButton,
+    {
+      if(identical( barName(), 'tagValues')){
+        if(
+          !is.null(local$tagRList) && length(input$name)>0 && 
+          length(input$colName)>0 && length(input$index)>0 &&
+          length(input$colValEd)>0
+        )
+        {
+          tagValueVec<-  local$tagRList[[input$name]][[input$colName]]
+          tags<-local$tagRList[[input$name]]$tag
+          tmp<-as.integer(input$index)
+          indx<-which(tmp==tags)
+          tagValueVec[indx]<-input$colValEd
+          local$tagRList[[input$name]][[input$colName]]<-tagValueVec
+        }
+      }
+    }
   )
+  
+  
+  #when name, index, colName valid, and colVal changes, update the ptDefs and code
+  list( 
+    name      =reactive({input$name}),
+    index     =reactive({input$index}),
+    tagRList  =reactive({local$tagRList}) 
+    )
 }
