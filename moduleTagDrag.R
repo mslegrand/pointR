@@ -10,18 +10,18 @@ moduleTagDragUI<-function(id, input, output) {
     ),
     absolutePanel( top=50, left=0, width=650, draggable=TRUE, 
         style=cstyle$wellPoint,
-        fluidRow(
-          column(2, 
+        #fluidRow(
+          div(style="display:inline-block",
             selectInput( ns("name"), "Point Matrix",
-            multiple=FALSE, size=3, selectize = FALSE,
-            list(),  selected=NULL, width="100px"  )
+            multiple=FALSE, size=1, selectize = FALSE,
+            choice=list(),  selected=NULL, width="100px"  )
           ),
-          column(2, 
+          div(style="display:inline-block",
             selectInput(ns("index"), "Tag-No",
-            multiple=FALSE, size=3, selectize = FALSE, 
-            list(), selected=NULL, width="60px"  )
+            multiple=FALSE, size=1, selectize = FALSE, 
+            choice=list(), selected=NULL, width="60px"  )
           )
-        ) #fluidRow  end
+        #) #fluidRow  end
     ) #absolute panel end
   )
 }
