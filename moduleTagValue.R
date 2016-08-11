@@ -48,7 +48,10 @@ moduleTagVal<-function(input, output, session,
   local<-reactiveValues( tagRList = NULL)
   # this should be updated whenever we change to this page
   # or we change the code/ptDefs
-  observe( local$tagRList<-getPtDefs()$df )
+  observeEvent( getPtDefs(),{
+    local$tagRList<-getPtDefs()$df
+  } 
+  )
   
   # non-reactive function
   exGetTagColChoice<-function(tagColChoices, currentChoice){
