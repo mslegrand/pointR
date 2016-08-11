@@ -232,7 +232,7 @@ observeEvent(
     if(length(pts)<2)  {return(NULL) }
     if(length(tags)<1){return(NULL)}
     if(length(selectedPointIndx)<1 || selectedPointIndx==0){return(NULL)}
-
+#print(ptDisplayMode)
     tag.indx<-selectedPointIndx #this is the position of the first point of the tagged set 
     semitransparent<-0.3
     colorScheme<-c(default="purple", ending="red", selected="blue")
@@ -257,7 +257,14 @@ observeEvent(
              #onmousedown="selectElement(evt)",
              tid=paste0("ptR_Tag_",i),
              lapply(tagIntList[[i]], function(j){
-               circle(   cxy=m[,j], r=8)
+               list(
+                  circle(   cxy=m[,j], r=8),
+                  if(ptDisplayMode=="Labeled"){
+                    text(paste(j), cxy=m[,j]+10*c(1,-1),  stroke='black', font.size=12) #opac)
+                  } else {
+                    NULL
+                  }
+               )
              })
           )
         }),
@@ -267,7 +274,14 @@ observeEvent(
            onmousedown="selectElement(evt)",
            tid=paste0("ptR_Tag_",ti),
            lapply(tagIntList[[ti]], function(j){
-             circle(   cxy=m[,j], r=8)
+            list(
+             circle(   cxy=m[,j], r=8),
+             if(ptDisplayMode=="Labeled"){
+                  text(paste(j), cxy=m[,j]+10*c(1,-1),  stroke='black', font.size=12) #opac)
+                } else {
+                  NULL
+                }
+            )
            })
         )
       )
