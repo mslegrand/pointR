@@ -319,7 +319,7 @@ source("serverMouseClicks.R", local=TRUE)
   })
   
 #------Graphical output-------------------  
-source("serverSVGHTML.R", local=TRUE)
+#source("serverSVGHTML.R", local=TRUE)
   
 #-----log panel---------------------------
   output$out_log <- renderText({
