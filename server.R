@@ -176,54 +176,65 @@ shinyServer(function(input, output,session) {
   getTagIndexChoices<-reactive({getPtDefs()$df[[getTagName()]]$tag})
   getTagIndex<-reactive({ 
     choices<-getTagIndexChoices()
-    print("getTagIndex")
-    print(choices)
     indx<-getPtIndex()
-    print(indx)
     exGetTagIndx(choices, indx )
   })
-  getTagColChoices<-reactive({
-    df<-getPtDefs()$df[[getTagName()]]
-    tagColChoices<-setdiff(names(df),"tag")
-    tagColChoices
-  })
-  getTagCol<-reactive({ 
-    if(length(getTagColChoices()==0)){
-      rtv<-NULL
-    }else{
-      if(length(tagValInfoList)>0 && 
-        !(is.null(tagValInfoList$colName )) &&
-        length(tagValInfoList$colName())>0){
-        if(tagValInfoList$colName() %in% getTagColChoices()){
-          rtv<-tagValInfoList$colName()
-        } else {
-          rtv<-getTagColChoices()[1]
-        }
-      }
-      rtv<-NULL
-    }
-    rtv
-  })
-  getTagValueChoices<-reactive({
-    df<-getPtDefs()$df[[getTagName()]]
-    tagColChoice<-getTagCol()
-    if(!is.null(tagColChoice)){
-        tagValueChoices<-df[[tagColChoice]]
-      } else {
-        tagValueChoices<-NULL
-      }
-      tagValueChoices
-  }) 
-  getTagValue<-reactive({
-    tagIndx<-getTagIndex()
-    tagVals<-getTagValueChoices()
-    if(length(tagVals)>0 && length(tagIndx)>0 ){
-        tagValue<-subset(df,df$tag==tagIndx)[[getTagCol()]]
-      } else {
-        tagValue<-NULL
-      }
-      tagValue
-  })
+#  getTagColChoices<-reactive({
+#  print("getTagColChoices")
+#    df<-getPtDefs()$df[[getTagName()]]
+#    print(df)
+#    tagColChoices<-setdiff(names(df),"tag")
+#    print(tagColChoices)
+#    tagColChoices
+#  })
+#  getTagCol<-reactive({ 
+#  print("getTqagCol")
+#  print(getTagColChoices())
+#    if(length(getTagColChoices())==0){
+#      rtv<-NULL
+#    }else{
+#      if(
+#        length(tagValInfoList)>0            && 
+#        !(is.null(tagValInfoList$colName )) &&
+#        length(tagValInfoList$colName())>0){
+#        if(tagValInfoList$colName() %in% getTagColChoices()){
+#          rtv<-tagValInfoList$colName()
+#        } else {
+#          rtv<-getTagColChoices()[1]
+#        }
+#      } else{
+#        rtv<-NULL
+#      }
+#    }
+#    rtv
+#  })
+#  getTagValueChoices<-reactive({
+#    df<-getPtDefs()$df[[getTagName()]]
+#    tagColChoice<-getTagCol()
+#print("Inside getTagValueChoices")
+#print(tagColChoice)
+#print( df[[tagColChoice]] )
+#    if(!is.null(tagColChoice)){
+#        tagValueChoices<-df[[tagColChoice]]
+#      } else {
+#        tagValueChoices<-NULL
+#      }
+#      tagValueChoices
+#  }) 
+#  getTagValue<-reactive({
+#print("Inside getTagValue")
+#    tagIndx<-getTagIndex()
+#    tagVals<-getTagValueChoices()
+#print(tagIndx)
+#print(tagVals)
+#    if(length(tagVals)>0 && length(tagIndx)>0 ){
+#        df<-getPtDefs()$df[[getTagName()]]
+#        tagValue<-subset(df,df$tag==tagIndx)[[getTagCol()]]
+#      } else {
+#        tagValue<-NULL
+#      }
+#      tagValue
+#  })
   
   #this is tagDisplay Mode
   getDisplayModeTag<-reactive({

@@ -3,14 +3,10 @@
 
 
 output$svgTransformPanel<-renderUI({
-  #conditionalPanel( "input.plotNavBar %in% c('Translate', 'Rotate', 'Scale')",
   conditionalPanel( "input.plotNavBar =='Transforms'", modulePlotSVGrUI("svgTransformMod"))
 })
 
 
-#ptrDisplayScript<- js.scripts[[ input$transformOption ]]
-#src<-usingDraggable(src)
-showPts.transform %<c-% function(){ NULL }
 
 getCodeTransform<-reactive({
   src<-getCode()

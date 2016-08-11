@@ -65,27 +65,6 @@ moduleTagVal<-function(input, output, session,
     tagColChoice
   }
   
-#  getAllNames<-reactive({
-#    names( getPtDefs()$df )
-#  })
-#  
-#  getTagName<-reactive({
-#    name<-getPtName()
-#    if(length(getAllNames())==0){ return(NULL)}
-#    if(length(name)>0 && name %in% getAllNames(){
-#      name} else {
-#      getAllNames()[1]
-#    })
-#  })
-#  
-#  getPts<-reactive({ 
-#    if(length(getTagName()==0)){ return(NULL)}
-#    getPtDefs$pts[[getTagName()]]
-#  })
-#  
-#  getTagIndex<-reactive({
-#  })
-#  
   getName<-reactive({input$name})
   getIndex<-reactive({input$index})
   getDF<-reactive({ 
@@ -102,8 +81,6 @@ moduleTagVal<-function(input, output, session,
   
   getTagColChoices<-reactive({
     df<-getDF()
-    print("getTagColChoices")
-    print(df)
     if(!is.null(df)){
       tagColChoices<-setdiff(names(df),"tag")
     } else {
