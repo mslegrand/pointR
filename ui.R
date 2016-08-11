@@ -10,16 +10,16 @@ library(svgR)
 library(shinyAce)
 source("utilStyle.R")
 
-version="ptR (v.0.3.1)"
+version="ptR (v.0.3.2)"
 
 shinyUI(fluidPage(
   singleton(tags$head(
     tags$script(src = "message-handler.js"),
-    tags$style("#tagPts{margin: 0px; font-size: 12px;}"),
-    tags$style("#tagIndx{margin: 0px; font-size: 12px;}"),
-    tags$style("#tagCol{margin: 0px; font-size: 12px;}"),
-    tags$style("#tagColVal{margin: 0px; font-size: 12px;}"),
-    tags$style("#tagValEd{margin: 0px; font-size: 12px;}"),
+    tags$style("#tagPts{    margin: 0px; font-size: 12px;}"),
+    tags$style("#tagIndx{   margin: 0px; font-size: 12px;}"),
+    tags$style("#tagCol{    margin: 0px; font-size: 12px;}"),
+    tags$style("#tagColVal{ margin: 0px; font-size: 12px;}"),
+    tags$style("#tagValEd{  margin: 0px; font-size: 12px;}"),
     #tags$style(type='text/css', "select {font-size: 10px;} "),
     tags$style(HTML(styleSpec))
   )),
@@ -36,7 +36,7 @@ shinyUI(fluidPage(
         tabPanel("Config (not implemented)" ),
         tabPanel("Prepoc (not implemented)" )
       ),
-      tabPanel(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/User_Guide.html\"  target=\"_blank\" >User Guide </a></li>")),
+      tabPanel(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/User_Guide.html\"  target=\"_blank\" >svgR User Guide </a></li>")),
       tabPanel(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/\"  target=\"_blank\" >io.svgR</a></li>"))
     ),
     style=cstyle$sidePanel, 
@@ -96,20 +96,8 @@ shinyUI(fluidPage(
     uiOutput("PointsPanel"),
     uiOutput("TagDragPanel"),
     uiOutput("TagValuesPanel")
-    #todo add uiOutput("TransformPanel"),
+    #not need to add uiOutput("TransformPanel"),
     
-    #-------CONDITIONAL----plotNavBar:BUTTONS---------------------------------
-      
-      
-    #   conditionalPanel( "input.plotNavBar=='Tags'",
-    #                   absolutePanel( bottom=0, left=0, width=650, draggable=FALSE,
-    #                                  style="margin:0px; padding:0px;",
-    #                                  actionButton("copyTag", label = "Copy", style=cstyle$button),
-    #                                  actionButton("pasteTag", label = "Paste", style=cstyle$button),
-    #                                  actionButton("deleteTag", label = "Delete", style=cstyle$button),
-    #                                  actionButton("moveTag", label = "Move", style=cstyle$button)
-    #                   )
-    # ) #BUTTONS PANEL END
     
     ) # end of absolute panel containing navbar
   ) # end of fluidpage
