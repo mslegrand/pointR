@@ -4,10 +4,10 @@ modulePointsBarUI <- function(id, input, output) {
   tagList(
     absolutePanel( bottom=0, left=0, width=650, draggable=FALSE,
                         style="margin:0px; padding:0px;",
-          actionButton(ns("forwardPt" ), label = "Forward Pt",  style=cstyle$button),
-          actionButton(ns("backwardPt"), label = "Backward Pt", style=cstyle$button),
-          actionButton(ns("removePt"), label = "Delete Pt",     style=cstyle$button),
-          actionButton(ns("tagPt"), label = "Tag Pt",           style=cstyle$button) 
+          actionButton(ns("forwardPt" ), label = "Forward Pt"),
+          actionButton(ns("backwardPt"), label = "Backward Pt"),
+          actionButton(ns("removePt"), label = "Delete Pt"),
+          actionButton(ns("tagPt"), label = "Tag Pt") 
           
     ),
     absolutePanel( top=50, left=0, width=650, draggable=TRUE,

@@ -29,7 +29,7 @@ moduleTagValUI<-function(id, input, output) {
           textInput(ns("colValEd"), "Value Choice", value="",width="100px")
         ),
         div(style="display:inline-block",
-          actionButton(ns( "insertVal2ColButton" ), label = "Update", style=cstyle$buttonSmall)
+          actionButton(ns( "insertVal2ColButton" ), label = "Update") #buttonSmall
         )
         
       #) #fluidRow  end
