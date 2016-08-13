@@ -39,7 +39,10 @@ observe({
 
 
 #----------------------------------------------------------------
-  showPts.valTag%<c-% function(ptName, pts, selectedPointIndx, ptDisplayMode,  ptTags){
+#------------SVG DISPLAY--------------------------------------------
+#----------------------------------------------------------------
+
+showPts.valTag%<c-% function(ptName, pts, selectedPointIndx, ptDisplayMode,  ptTags){
     #cat(file=stderr(),"entering drag.Tag\n")
     #if( is.null(pts) ){return(NULL)}
     if(length(ptName)<1){return(NULL)}
@@ -88,7 +91,7 @@ observe({
   
 output$svgTagValuesPanel<-renderUI({
   conditionalPanel( "input.plotNavBar=='tagValues'", 
-    absolutePanel( top=130, left=0, right=0,  draggable=FALSE,
+    absolutePanel( top=130, left=0, right=0,  draggable=FALSE, 
                      style=cstyle$svg, htmlOutput("svgTagValPlot")
       )
   )
