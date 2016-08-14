@@ -14,10 +14,12 @@ version="ptR (v.0.3.2)"
 
 shinyUI(fluidPage(
   singleton(tags$head(
-    tags$link(rel = "stylesheet", type = "text/css", href = "customStyle.css"),
-    tags$script(src = "message-handler.js")
+    tags$link(rel = "stylesheet", type = "text/css", href = "customStyle.css")#,
+    #tags$script(src = "message-handler.js"),
+    #,tags$script(src = "split.js")
   )),
   absolutePanel( left=0, top=0, width=650,  #editor panel
+  #div(id="left", class="split-horizontal",
     navbarPage(version, fluid=TRUE, 
       id="editNavBar",
       navbarMenu("File", 
@@ -45,18 +47,16 @@ shinyUI(fluidPage(
 #---------------------------------------------------------------
 #---------------plotNavBar  ------------------------------------
 # svgR plot panel
-  absolutePanel( top=0, left=670, width=650, height=660, 
-                 class='backPanel',
-                 #style=cstyle$wellPanel, 
+   absolutePanel( top=0, left=670, width=650, height=660, 
+                  class='backPanel',
+  # div( id='right', class="split split-horizontal",
     navbarPage(version,  id="plotNavBar", fluid=TRUE, selected="Points",
     #---------------plotNavBar:points  ------------------------------------
       tabPanel("Points" ), #end of tab panel "Points"
       #---------------plotNavBar:TAGS  ------------------------------------
       navbarMenu("Tags", 
         tabPanel("Value", value="tagValues"),
-        #tabPanel("Drag",  value="dragTag")  # tabPanel("Wag"), # tabPanel("Mag")
         tabPanel("Drag",  value="tagDrag")  # tabPanel("Wag"), # tabPanel("Mag")
-        #tabPanel("CPDX")
       ),
       #---------------plotNavBar:Transform  ------------------------------------
       tabPanel("Transforms", 
@@ -83,19 +83,13 @@ shinyUI(fluidPage(
     uiOutput("svgTagDragPanel"),
     #todo add 
     uiOutput("svgTransformPanel"),
-#    conditionalPanel( "input.plotNavBar!='Log' && input.plotNavBar!='Points' && input.plotNavBar!='tagValues' && input.plotNavBar!='tagDrag' ",
-#      absolutePanel( top=130, left=0, right=0,  draggable=FALSE,
-#                     style=cstyle$svg, htmlOutput("svghtml")
-#      )
-#    ),
+
     br(),
     #-------CONDITIONAL----plotNavBar:POINTS---------------------------------
     uiOutput("PointsPanel"),
     uiOutput("TagDragPanel"),
     uiOutput("TagValuesPanel")
-    #not need to add uiOutput("TransformPanel"),
-    
-    
+    #not needed to add uiOutput("TransformPanel"),
     ) # end of absolute panel containing navbar
   ) # end of fluidpage
 )
