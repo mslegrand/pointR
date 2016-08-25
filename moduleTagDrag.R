@@ -1,16 +1,14 @@
 moduleTagDragUI<-function(id, input, output) { 
   ns <- NS(id)  
   tagList(
-    absolutePanel( bottom=0, left=0, width=650, draggable=FALSE,
+    absolutePanel( bottom=25, left=0, width=650, draggable=FALSE,
                     style="margin:0px; padding:0px;",
-      actionButton(ns("tagClone"),   label = "Clone",   style=cstyle$button),
-      actionButton(ns("tagDelete"),  label = "Delete",  style=cstyle$button),
-      actionButton(ns("tagMoveUp"), label = "Send Forwards", style=cstyle$button),
-      actionButton(ns("tagMoveDown"), label = "Send  Backwads", style=cstyle$button)
+      actionButton(ns("tagClone"),   label = "Clone"   ),
+      actionButton(ns("tagDelete"),  label = "Delete"),
+      actionButton(ns("tagMoveUp"), label = "Send Up"),
+      actionButton(ns("tagMoveDown"), label = "Send  Down")
     ),
-    absolutePanel( top=50, left=0, width=650, draggable=TRUE, 
-        style=cstyle$wellPoint,
-        #fluidRow(
+    absolutePanel( top=50, left=0, width="100%", draggable=TRUE, 
           div(style="display:inline-block",
             selectInput( ns("name"), "Point Matrix",
             multiple=FALSE, size=1, selectize = FALSE,
@@ -21,7 +19,6 @@ moduleTagDragUI<-function(id, input, output) {
             multiple=FALSE, size=1, selectize = FALSE, 
             choice=list(), selected=NULL, width="60px"  )
           )
-        #) #fluidRow  end
     ) #absolute panel end
   )
 }

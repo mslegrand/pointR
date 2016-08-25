@@ -2,7 +2,7 @@
 modulePointsBarUI <- function(id, input, output) { 
   ns <- NS(id)
   tagList(
-    absolutePanel( bottom=0, left=0, width=650, draggable=FALSE,
+    absolutePanel( bottom=25, left=0, width="100%", draggable=FALSE,
                         style="margin:0px; padding:0px;",
           actionButton(ns("forwardPt" ), label = "Forward Pt"),
           actionButton(ns("backwardPt"), label = "Backward Pt"),
@@ -10,9 +10,7 @@ modulePointsBarUI <- function(id, input, output) {
           actionButton(ns("tagPt"), label = "Tag Pt") 
           
     ),
-    absolutePanel( top=50, left=0, width=650, draggable=TRUE,
-      style=cstyle$wellPoint,
-      #fluidRow(
+    absolutePanel( top=50, left=0, width="100%", draggable=TRUE, 
         div(style="display:inline-block",
               selectInput( ns("name"), "Point Matrix", list("x"), 
                            selected="x", multiple=FALSE,  selectize = FALSE,
@@ -36,8 +34,7 @@ modulePointsBarUI <- function(id, input, output) {
         div(style="display:inline-block",
               checkboxInput(ns("showGrid"), "Grid",   value = TRUE, width = "50px")
         )
-      ) #end fluidRow 
-    #)  #end absolutePanel
+      ) 
   ) #end taglist
 } 
 

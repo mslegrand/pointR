@@ -8,7 +8,7 @@ panelHeights<-c(
 )
 
 cstyle<-list(
-  svg=paste0("width:650px ;height: ",
+  svg=paste0("width:95% ;height: ",
              panelHeights["svg"] ,
              "; border: 1px solid darkblue; overflow: auto; background-color: white;"
   ),

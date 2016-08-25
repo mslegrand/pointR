@@ -2,9 +2,7 @@
 
 moduleTagValUI<-function(id, input, output) { 
   ns <- NS(id)
-  absolutePanel( top=50, left=0, width=650, draggable=TRUE, 
-      style=cstyle$wellPoint,
-      #fluidRow(
+  absolutePanel( top=50, left=0, width="100%", draggable=TRUE, 
         div(style="display:inline-block",
           selectInput( ns("name"), "Point Matrix",
           multiple=FALSE, size=1, selectize = FALSE,
@@ -25,14 +23,12 @@ moduleTagValUI<-function(id, input, output) {
           multiple=FALSE, size=1, selectize = FALSE,  
           choices=list(),  selected=NULL, width="100px"  )
         ),
-        div(style="display:inline-block",
+        div(style="display:inline-block;", 
           textInput(ns("colValEd"), "Value Choice", value="",width="100px")
         ),
         div(style="display:inline-block",
           actionButton(ns( "insertVal2ColButton" ), label = "Update") #buttonSmall
         )
-        
-      #) #fluidRow  end
   ) #absolute panel end
 }
 
