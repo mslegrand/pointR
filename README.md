@@ -12,6 +12,8 @@
 -  pointR is an attempt to bridge the gap between coding and point&click.
 -  svgR bridges the gap between R and SVG
 
+## Try Out
+- runGitHub("pointR", "mslegrand)
   
 # Installation
 - install.packages("devtools")
