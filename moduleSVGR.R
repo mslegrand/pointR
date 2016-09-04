@@ -25,6 +25,27 @@
   backup<-reactiveValues(code="")
   mssg<-  reactiveValues( error=NULL )
   
+  # add the mouseMssg handler
+  
+  # observe({ 
+  #   input$mouseMssg #note: assumes js using NS( namespace, "mouseMssg") to register
+  #   isolate({
+  #     if(length(input$mouseMssg)>0){
+  #       #get cmd
+  #       cmd<-input$mouseMssg[1]
+  #       #tmp<-paste(input$mouseMssg,collapse="\n** ")
+  #       #cat( file=stderr(), paste("mouseMssg: cmd=",tmp,"\n>\n\n")  ) 
+  #       pt<- input$mouseMssg[2]
+  #       src<-user$code
+  #       #todo: error check???
+  #       pt<-eval(parse(text=pt)) 
+  #       ptRList<-getPtDefs()$pts
+  #       # some custom code here .....
+  #       src<-pts2Source(src,ptRList)
+  #       user$code<-src
+  #     }
+  #   })
+  # }) 
   
   
   output$svghtml <- renderUI({
