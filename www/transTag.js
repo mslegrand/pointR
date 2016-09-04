@@ -15,7 +15,7 @@ var ptR_currentMatrix = 0;
 
 // selectElement 
 function selectElement(evt) {
-  //alert("hello");
+  
   ptR_selectedElement = evt.currentTarget;
   ptR_currentX = evt.clientX;
   ptR_currentY = evt.clientY;
