@@ -72,13 +72,11 @@ observe({
         tmp<-input$mouseMssg[2]
         dxy<-eval(parse(text=tmp))
         # get the tag name, 
-        #ptName<-selectedPoint$name
         ptName<-getPtName()
         #ptName<-input$ptRSelect
         # get points
         pts<-getPtDefs()$pts[[ptName]] #ptRList[[ptName]]
         tagRList<-getPtDefs()$df
-        #as.numeric(input$tagIndx2)
         tag.indx<-getPtIndex() #as.numeric(tagDragInfoList$index() ) #!!! tagIndx2 should be replaced with a safer alternative
         
         ptTags<-tagRList[[ptName]]
