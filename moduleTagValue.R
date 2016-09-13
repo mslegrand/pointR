@@ -6,12 +6,12 @@ moduleTagValUI<-function(id, input, output) {
         div(style="display:inline-block",
           selectInput( ns("name"), "Point Matrix",
           multiple=FALSE, size=1, selectize = FALSE,
-          choices=list(),  selected=NULL, width="100px"  )
+          choices=list(),  selected=NULL, width="80px"  )
         ),
         div(style="display:inline-block",
           selectInput(ns("colName"), "Attribute",
           multiple=FALSE, size=1, selectize = FALSE, 
-          choices=list(),  selected=NULL, width="100px"  )
+          choices=list(),  selected=NULL, width="80px"  )
         ),
         div(style="display:inline-block",
           selectInput(ns("index"), "Tag-No",
