@@ -47,3 +47,21 @@ observeEvent( input$editNavBar, {
   }
 })
 
+#------fileName-------------
+output$fileName <- renderText({ 
+  fileName<-file$name
+  if(is.null(fileName) ){
+    fileName==""
+  }
+  paste("Editing", basename(fileName))
+})
+
+# -----------ACE EDITOR------------------------
+observeEvent(
+  user$code, {
+    if(mssg$error==""){
+      updateAceEditor( session,"source", value=user$code)
+    }
+  }
+)
+

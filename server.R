@@ -7,6 +7,7 @@
 
 #---begin server--------------
 shinyServer(function(input, output,session) {
+  
   js$disableMenu('#plotNavBar li:nth-child(2)')
   js$disableTab("Transforms")
   
@@ -59,19 +60,17 @@ shinyServer(function(input, output,session) {
     showGrid=TRUE,
     ptMode="Normal"
   )
+  mssg<-reactiveValues(error="") 
   
-  #---
+  # Reactive expressions------------- 
+   #---
   getCode<-reactive({ user$code })
   getCodeBackup<-reactive({ backup$code })
   
   getPtName<-reactive({selectedPoint$name})
   getPtIndex<-reactive({selectedPoint$point.index})
-    
   #-----------------------
   barName<-reactive({input$plotNavBar})
-  mssg<-reactiveValues(error="") 
-  
-# Reactive expressions------------- 
   getErrorMssg<-reactive({ mssg$error })
   getPtDefs<-        reactive({ ex.getPtDefs(user$code) })  #extract points from user code
   getTagNameChoices<-reactive({
@@ -97,62 +96,7 @@ shinyServer(function(input, output,session) {
     indx<-getPtIndex()
     exGetTagIndx(choices, indx )
   })
-#  getTagColChoices<-reactive({
-#  print("getTagColChoices")
-#    df<-getPtDefs()$df[[getTagName()]]
-#    print(df)
-#    tagColChoices<-setdiff(names(df),"tag")
-#    print(tagColChoices)
-#    tagColChoices
-#  })
-#  getTagCol<-reactive({ 
-#  print("getTqagCol")
-#  print(getTagColChoices())
-#    if(length(getTagColChoices())==0){
-#      rtv<-NULL
-#    }else{
-#      if(
-#        length(tagValInfoList)>0            && 
-#        !(is.null(tagValInfoList$colName )) &&
-#        length(tagValInfoList$colName())>0){
-#        if(tagValInfoList$colName() %in% getTagColChoices()){
-#          rtv<-tagValInfoList$colName()
-#        } else {
-#          rtv<-getTagColChoices()[1]
-#        }
-#      } else{
-#        rtv<-NULL
-#      }
-#    }
-#    rtv
-#  })
-#  getTagValueChoices<-reactive({
-#    df<-getPtDefs()$df[[getTagName()]]
-#    tagColChoice<-getTagCol()
-#print("Inside getTagValueChoices")
-#print(tagColChoice)
-#print( df[[tagColChoice]] )
-#    if(!is.null(tagColChoice)){
-#        tagValueChoices<-df[[tagColChoice]]
-#      } else {
-#        tagValueChoices<-NULL
-#      }
-#      tagValueChoices
-#  }) 
-#  getTagValue<-reactive({
-#print("Inside getTagValue")
-#    tagIndx<-getTagIndex()
-#    tagVals<-getTagValueChoices()
-#print(tagIndx)
-#print(tagVals)
-#    if(length(tagVals)>0 && length(tagIndx)>0 ){
-#        df<-getPtDefs()$df[[getTagName()]]
-#        tagValue<-subset(df,df$tag==tagIndx)[[getTagCol()]]
-#      } else {
-#        tagValue<-NULL
-#      }
-#      tagValue
-#  })
+  
   
   #this is tagDisplay Mode
   getDisplayModeTag<-reactive({
@@ -176,9 +120,6 @@ shinyServer(function(input, output,session) {
     ptTags
   })
   
-  
-  #call with ptsDefs$df as 
-
 
   
 # If the user adds a point, use reactivTag$freq  
@@ -200,7 +141,7 @@ shinyServer(function(input, output,session) {
   }) 
 
 # Event Observers--------------------------------  
-
+#---navbar disable /enabler controls
   observe({
     tagsMissing<-is.null(getPtDefs()$df)
     isolate({
@@ -212,8 +153,6 @@ shinyServer(function(input, output,session) {
       }
     })  
   })
-  
-  
   
   observe({
         using<-usingTransformDraggable()
@@ -227,20 +166,9 @@ shinyServer(function(input, output,session) {
   )
   
   
-  
-  
-  
-# -----------ACE EDITOR------------------------
-observeEvent(
-  user$code, {
-    if(mssg$error==""){
-      updateAceEditor( session,"source", value=user$code)
-    }
-  }
-)
 
 #--------------------------------------------------
-# !!!TO DO: ADD HANDLER FOR POINT AND INDEX
+# !!!TO DO: ADD HANDLER FOR POINT AND INDEX???
 
 source("serverPlotBarPoints.R", local=TRUE) 
 # --------------input$plotNavBar=="Tags"----------------  
@@ -259,17 +187,7 @@ source("serverEditBar.R",local=TRUE)
 source("serverMouseClicks.R", local=TRUE)
   
 #---------BEGIN OUTPUT PANELS------------------------------------
-#------fileName-------------
-  output$fileName <- renderText({ 
-    fileName<-file$name
-    if(is.null(fileName) ){
-      fileName==""
-    }
-    paste("Editing", basename(fileName))
-  })
-  
-#------Graphical output-------------------  
-#source("serverSVGHTML.R", local=TRUE)
+
   
 #-----log panel---------------------------
   output$out_log <- renderText({
