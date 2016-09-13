@@ -7,8 +7,7 @@
 
 #---begin server--------------
 shinyServer(function(input, output,session) {
-  js$disableMenu("plotNavBar",2)
-  #js$disableTab("tagDrag")
+  js$disableMenu('#plotNavBar li:nth-child(2)')
   js$disableTab("Transforms")
   
   #ordinary fns
@@ -205,10 +204,11 @@ shinyServer(function(input, output,session) {
   observe({
     tagsMissing<-is.null(getPtDefs()$df)
     isolate({
+      name<-'#plotNavBar li:nth-child(2)'
       if(tagsMissing){
-        js$disableMenu("plotNavBar",2)
+        js$disableMenu(name)
       } else {
-        js$enableMenu("plotNavBar",2)
+        js$enableMenu(name)
       }
     })  
   })
@@ -224,8 +224,9 @@ shinyServer(function(input, output,session) {
       js$disableTab("Transforms")
     }
   }
-
   )
+  
+  
   
   
   
