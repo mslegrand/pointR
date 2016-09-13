@@ -7,8 +7,10 @@
 
 #---begin server--------------
 shinyServer(function(input, output,session) {
-
-
+  js$disableMenu("plotNavBar",2)
+  #js$disableTab("tagDrag")
+  js$disableTab("Transforms")
+  
   #ordinary fns
   exGetTagName<-function(tagNameChoices, ptChosen){
     if(length(tagNameChoices)>0){
@@ -193,10 +195,40 @@ shinyServer(function(input, output,session) {
 #   })
 # )
   
-  
+  usingTransformDraggable<-reactive({ 
+    grepl("class='draggable'",user$code) ||
+    grepl('class="draggable"',user$code)
+  }) 
 
 # Event Observers--------------------------------  
 
+  observe({
+    tagsMissing<-is.null(getPtDefs()$df)
+    isolate({
+      if(tagsMissing){
+        js$disableMenu("plotNavBar",2)
+      } else {
+        js$enableMenu("plotNavBar",2)
+      }
+    })  
+  })
+  
+  
+  
+  observe({
+        using<-usingTransformDraggable()
+    if(using){
+      js$enableTab("Transforms")
+      
+    } else {
+      js$disableTab("Transforms")
+    }
+  }
+
+  )
+  
+  
+  
 # -----------ACE EDITOR------------------------
 observeEvent(
   user$code, {

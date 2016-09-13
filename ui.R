@@ -6,6 +6,7 @@
 #
 
 library(shiny)
+library(shinyjs)
 library(svgR)
 library(shinyAce)
 source("utilStyle.R")
@@ -17,7 +18,6 @@ shinyUI(
     singleton(
       tags$head(
       tags$link(rel = "stylesheet", type = "text/css", href = "customStyle.css"),
-      #tags$link(rel = "stylesheet", type = "text/css", href = "mySplitStyle.css"),
       #tags$script(src = "message-handler.js"),
       tags$script(src="splitter.js" ), 
       tags$script(src="customSplit.js" )
@@ -53,6 +53,8 @@ shinyUI(
   
       #-------------right panel begin--------------------------------------------------
       div(  class='backPanel', #right panel
+            useShinyjs(),
+            extendShinyjs(script="www/menuHelper.js"),
         navbarPage(version,  id="plotNavBar", selected="Points", version, fluid=FALSE, 
                  position="static-top", 
           #---------------plotNavBar:points  ------------------------------------

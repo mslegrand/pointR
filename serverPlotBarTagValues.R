@@ -1,4 +1,5 @@
 
+
 # --------------input$plotNavBar=="tagValues"---------------- 
  output$TagValuesPanel<-renderUI({
   conditionalPanel( "input.plotNavBar=='tagValues'", moduleTagValUI("tagValBar"))
