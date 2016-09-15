@@ -20,6 +20,7 @@
 - library(devtools)
 - install_github("shiny", "rstudio")
 - install_github("shinyAce", "trestletech")
+- install_github("shinyjs", "daattali")
 - install_github("svgR", "mslegrand")
 
 # Reporting issues
