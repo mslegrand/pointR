@@ -14,61 +14,64 @@ pointInfoList<-callModule(
   getSelectInfo=getSelectInfo, #not the best way, but ...
   getPtDefs=getPtDefs, 
   name=getPtName, 
-  index=getPtIndex
+  index=getPtIndex, 
+  isTaggable=isTaggable
 )
 
+# selected pts name
 observe({
   name<-pointInfoList$name()
     if(!is.null(name)){
       selectedPoint$name<-pointInfoList$name()
     }
 })
-
+# selected pts index
 observe({ selectedPoint$point.index<-pointInfoList$index() })
 
-observe({
-  value<-pointInfoList$tagFreq()
-  isolate({
-    name<-getPtName()
-    if(is.null(getPtDefs()$pts) || is.null( name )) { return() }
-    ptNames<-names(getPtDefs()$pts)
-    freq<-reactiveTag$freq
-    freq<-lapply( ptNames, function(n)freq[[n]] )
-    if( !is.null(value) && value=="Off"){
-      value<-NULL
-    } else {
-      selection<-getPtName()
-      tagList<-getPtDefs()$df
-      if(!is.null(tagList) && !is.null(tagList[[selection]])){
-        #get the last tagged element and iterate the tagging
-        dn<-as.integer(value)
-        df<-tagList[[selection]]
-        df1<-tail(df,1)
-        n1<-df1$tag
-        ptList<-getPtDefs()$pts
-        n2<-length(ptList[[selection]])/2
-        if(n2>n1){
-          s<-seq(from=n1,to=n2,by=dn)
-          s<-s[-1]
-          if(length(s)>0){
-            df2List<-lapply(s, function(tn){ df2<-df1; df2$tag<-tn; df2})
-            df3<-do.call(rbind, df2List )
-            df4<-rbind(df,df3)
-            tagList[[selection]]<-df4
-            src<-user$code
-            src<-df2Source(src,dfList = tagList)
-            user$code<-src 
-          }
-        }
-      }
-    }
-    freq[[name]]<-value
-    reactiveTag$freq<-freq
-  })  
-})
+# sets tag frequency
+# observe({
+#   value<-pointInfoList$tagFreq()
+#   isolate({
+#     name<-getPtName()
+#     if(is.null(getPtDefs()$pts) || is.null( name )) { return() }
+#     ptNames<-names(getPtDefs()$pts)
+#     freq<-reactiveTag$freq
+#     freq<-lapply( ptNames, function(n)freq[[n]] )
+#     if( !is.null(value) && value=="Off"){
+#       value<-NULL
+#     } else {
+#       selection<-getPtName()
+#       tagList<-getPtDefs()$df
+#       if(!is.null(tagList) && !is.null(tagList[[selection]])){
+#         #get the last tagged element and iterate the tagging
+#         dn<-as.integer(value)
+#         df<-tagList[[selection]]
+#         df1<-tail(df,1)
+#         n1<-df1$tag
+#         ptList<-getPtDefs()$pts
+#         n2<-length(ptList[[selection]])/2
+#         if(n2>n1){
+#           s<-seq(from=n1,to=n2,by=dn)
+#           s<-s[-1]
+#           if(length(s)>0){
+#             df2List<-lapply(s, function(tn){ df2<-df1; df2$tag<-tn; df2})
+#             df3<-do.call(rbind, df2List )
+#             df4<-rbind(df,df3)
+#             tagList[[selection]]<-df4
+#             src<-user$code
+#             src<-df2Source(src,dfList = tagList)
+#             user$code<-src 
+#           }
+#         }
+#       }
+#     }
+#     freq[[name]]<-value
+#     reactiveTag$freq<-freq
+#   })  
+# })
+# 
 
-
-#-----
+#-----reactive fns
 
 showGrid<-reactive({pointInfoList$showGrid()})
 displayMode<-reactive({pointInfoList$displayMode()})
@@ -201,7 +204,6 @@ observeEvent( pointInfoList$removePt(), {
     src<-user$code
     
     #delete the point from the ptR list
-    
     if(indx>=1){
       pts<-pts[-c(2*indx,2*indx-1)]
       selectedPoint$point.index<-max(1,selectedPoint$point.index-1)
@@ -223,96 +225,129 @@ observeEvent( pointInfoList$removePt(), {
       if(!is.null(df)){ #df==tagR$x exists
         if(length(ptRList[[selection]])==0){ #no points 
           tagList[selection]<-NULL #remove tagR$x
-         # browser()
         } else { # has points
           tags<-df$tag
-          if(indx==1 && !(2 %in% tags)){ #do nothing
-            
-          } else {
-            if(indx %in% tags){ #remove the tag row
-              df<-subset(df,tags!=indx)
-              tags<-df$tag
+          freq<-reactiveTag$freq[[selection]]
+          # (this is the manual case)
+          if(is.null(freq)){
+            if(indx==1 && !(2 %in% tags)){ #do nothing
+            } else {
+              if(indx %in% tags){ #remove the tag row
+                df<-subset(df,tags!=indx)
+                tags<-df$tag
+              }
             }
-          }
-          #slide tags nos. down
-          tags2move<-tags>indx
-          if(length(tags2move)>0){
-            tags[tags>indx]<-tags[tags>indx]-1
-            df$tag<-tags
-            tagList[[selection]]<-df
+            #slide tags nos. down 
+            tags2move<-tags>indx
+            if(length(tags2move)>0){
+              tags[tags>indx]<-tags[tags>indx]-1
+              df$tag<-tags
+              tagList[[selection]]<-df
+            }
+          } else { # freq is not null, 
+            pts<-ptRList[[selection]]
+            if( length(pts)/2<tail(tags,1) ){
+              # if no of pts == last tag, then remove the last row from df
+              n<-length(tags)-1
+              df<-head(df, n)
+              tagList[[selection]]<-df
+            }
           }
         }
         src<-df2Source(src,tagList)
       }
     }
     user$code<-src
-    #updateAceEditor( session,"source", value=src)
   }
 })
 
+#----begin for button tag-------------------------------------
+
+# Return the UI for a modal dialog with data selection input. If 'failed' is
+# TRUE, then display a message that the previous value was invalid.
+dataModal <- function(failed = FALSE) {
+  modalDialog(
+    selectInput("tagFreq", "Auto Tag",
+                c(list("Off"),1:20), selected="Off", 
+                multiple=FALSE, selectize = FALSE,
+                width="80px", size=1  ), 
+    span('Start taggin current point matrix'), 
+    footer = tagList(
+      modalButton("Cancel"),
+      actionButton("okTag", "OK")
+    )
+  ) 
+}
 
 
+
+# When OK button is pressed, 
+
+observeEvent(input$okTag, { #move into module???
+  #covers the two cases
+  # 1. tagR list not there, add tagR list, selection and insert 
+  # 2. tagR list there, but selection is not: add selection and insert
+  
+  # Check that data object exists and is data frame.
+  selection<-selectedPoint$name
+  if(input$tagFreq=="Off"){
+    reactiveTag$freq[[selection]] <- NULL
+  } else{
+    reactiveTag$freq[[selection]] <- as.numeric(input$tagFreq)
+  }
+    # set the value here
+  removeModal()
+  # and complete the processing
+  ptDefs<-getPtDefs()
+  ptsList<-ptDefs$pts
+  dfList<-ptDefs$df
+  point.index<-max(1,selectedPoint$point.index) #can change later
+  
+  if(!is.null(reactiveTag$freq[[selection]])){ #pad tags to the end and exit
+    freq<-as.integer(reactiveTag$freq[[selection]])
+    tags<-seq.int(from=1,to=ncol(ptsList[[selection]]), by=freq)
+  } else { #manual # add the last pt and be cool
+    if(point.index>1){
+      tags<-c(1,point.index)
+    }
+  }
+  df<-data.frame(tag=tags) 
+  if(is.null(dfList) ){ # 1 if dfList is NULL, create new
+    dfList= structure( list( df) , names=selection )
+    replacement<-paste0("\n\n", formatDFDefs(dfList),"\n\n")
+    src<-user$code
+    pos<-getDefPos(src, "ptR")     
+    src<-paste0( substr(src, 1, pos[2]), replacement,  
+                 substr(src, pos[2]+1, nchar(src))) 
+    user$code<-src 
+  } else {
+    dfList[[selection]]<-df
+    user$code<-df2Source(user$code,dfList)
+  }
+})
 
 #---TAG THIS POINT button-----
-observeEvent(pointInfoList$tagPt(), {
+
+observeEvent( pointInfoList$tagPt(), {
+  #There are 3 distinct cases: 
+  # 1. tagR list not there, add tagR list, selection and insert 
+  # 2. tagR list there, but selection is not: add selection and insert 
+  # 3  Both tagR list and tagR[[selection]] are there, just add tag no.
+  
   #selection<-input$ptRSelect
   selection<-selectedPoint$name
   ptDefs<-getPtDefs()
   ptsList<-ptDefs$pts
   dfList<-ptDefs$df
   point.index<-max(1,selectedPoint$point.index) #can change later
-  ok=TRUE
-  #There are 3 distinct cases: 
-  # 1. tagR list not there, add tagR list, selection and insert 
-  # 2. tagR list there, but selection is not: add selection and insert
-  # 3  Both tagR list and tagR[[selection]] are there, just add tag no.
-  if(ok && is.null(dfList) ){ # 1 Adds a new tagR list
-    if(!is.null(selection)){
-      if(point.index>1){
-        tags<-c(1,point.index)
-      }else {
-        tags<-1
-      }
-      
-      reactiveTag$freq[[selection]]<-NULL
-      updateSelectInput(session, "tagFreq", selected="Off" )
-      
-      df<-data.frame(tag=tags)
-      dfList= structure( list( df) , names=selection )
-      replacement<-paste0("\n\n", formatDFDefs(dfList),"\n\n")
-      src<-user$code
-      pos<-getDefPos(src, "ptR")     
-      src<-paste0( substr(src, 1, pos[2]), replacement,  
-                   substr(src, pos[2]+1, nchar(src))) 
-      user$code<-src        
-    } 
-    
-    ok=FALSE
-  } 
-  if(ok && is.null(dfList[[selection]]) ){ #2. Adds new TagR entry
-    if(point.index>1){
-      tags<-c(1,point.index)
-    }else {
-      tags<-1
-    }
-    # freq<-reactiveTag$freq
-    # reactiveTag$freq[[tagName]]<-NULL
-    # updateSelectInput(session, "tagFreq", selected="Off" )
-    
-    df<-data.frame(tag=tags)
-    dfList[[selection]]<-df
-    user$code<-df2Source(user$code,dfList)
-    #message=paste0("Need to add ", selection," to tagR list") 
-    #session$sendCustomMessage(type='error', message=message )
-    ok=FALSE
-  }
-  if(ok ){ # 3. add tag
-    len<-length(ptsList[[selection]])/2 #number of points in selection
-    if(len>0){
+  #PROPOSED REWRITE:
+  ok= !(is.null(dfList)) && !(is.null(dfList[[selection]]) )
+  if(!ok) { #this is a first tag
+    showModal( dataModal() ) #observer for showModal must complete the work
+  } else { # this is a second tag (and hence manual)
+    #if(reactiveTag$freq[[selection]]==0){ #manual case
+      #add this tag
       df<-dfList[[selection]]
-      if(length(df)==0){ # selection is not listed in tags
-        df<-data.frame(tag=1)
-      }
       if("tag" %in% names(df)){ # if not, then do nothing
         tags<-df$tag
         if(!(point.index %in% tags)){
@@ -327,9 +362,171 @@ observeEvent(pointInfoList$tagPt(), {
           user$code<-df2Source(user$code,dfList)
           #user$code<-src
         }
-      }
+      #}    
     }
+    #delete the rest (I hope this works!)  
+    
     
   }
-  
+
+      #     perform 1 and 2 
+    
 })
+    # 3  Both tagR list and tagR[[selection]] are there, just add tag no.
+  
+ # if(ok && is.null(dfList) ){ # 1 Adds a new tagR list
+ #    if(!is.null(selection)){
+ #      if(point.index>1){
+ #        tags<-c(1,point.index)
+ #      }else {
+ #        tags<-1
+ #      }
+ #      
+ #      reactiveTag$freq[[selection]]<-NULL
+ #      updateSelectInput(session, "tagFreq", selected="Off" )
+ #      
+ #      df<-data.frame(tag=tags)
+ #      dfList= structure( list( df) , names=selection )
+ #      replacement<-paste0("\n\n", formatDFDefs(dfList),"\n\n")
+ #      src<-user$code
+ #      pos<-getDefPos(src, "ptR")     
+ #      src<-paste0( substr(src, 1, pos[2]), replacement,  
+ #                   substr(src, pos[2]+1, nchar(src))) 
+ #      user$code<-src        
+ #    } 
+ #    ok=FALSE
+ #  } 
+ #  if(ok && is.null(dfList[[selection]]) ){ #2. Adds new TagR entry
+ #    if(point.index>1){
+ #      tags<-c(1,point.index)
+ #    }else {
+ #      tags<-1
+ #    }
+ #    # freq<-reactiveTag$freq
+ #    # reactiveTag$freq[[tagName]]<-NULL
+ #    # updateSelectInput(session, "tagFreq", selected="Off" )
+ #    
+ #    df<-data.frame(tag=tags)
+ #    dfList[[selection]]<-df
+ #    user$code<-df2Source(user$code,dfList)
+ #    #message=paste0("Need to add ", selection," to tagR list") 
+ #    #session$sendCustomMessage(type='error', message=message )
+ #    ok=FALSE
+ #  }
+ #  if(ok ){ # 3. add tag
+ #    len<-length(ptsList[[selection]])/2 #number of points in selection
+ #    if(len>0){
+ #      df<-dfList[[selection]]
+ #      if(length(df)==0){ # selection is not listed in tags
+ #        df<-data.frame(tag=1)
+ #      }
+ #      if("tag" %in% names(df)){ # if not, then do nothing
+ #        tags<-df$tag
+ #        if(!(point.index %in% tags)){
+ #          row<-max(tags[tags<point.index])
+ #          tmp.df<-subset(df,tag==row)
+ #          tmp.df$tag<-point.index
+ #          df<-rbind(df, tmp.df)
+ #          ordrows<-order(df$tag)
+ #          df<-df[ordrows,,drop=FALSE]
+ #          dfList[[selection]]<-df
+ #          #src<-user$code
+ #          user$code<-df2Source(user$code,dfList)
+ #          #user$code<-src
+ #        }
+ #      }
+ #    }
+ #  }
+#})
+
+# observeEvent(pointInfoList$tagPt(), {
+#   #selection<-input$ptRSelect
+#   selection<-selectedPoint$name
+#   ptDefs<-getPtDefs()
+#   ptsList<-ptDefs$pts
+#   dfList<-ptDefs$df
+#   point.index<-max(1,selectedPoint$point.index) #can change later
+#   ok=TRUE
+#   #PROPOSED REWRITE:
+#   ok= !(is.null(dfList) && !(is.null(dfList[[selection]]) ))
+#   ok=FALSE
+#   #  IF currently tagged, tagit
+#   if(!ok) {
+#     print("hello")
+#     showModal( dataModal() )
+#     #     dialog and then
+#     #     perform 1 and 2 
+#   }
+#   ok=TRUE
+#   #  if(ok){ 3 }
+#   # 
+#   #There are 3 distinct cases: 
+#   # 1. tagR list not there, add tagR list, selection and insert 
+#   # 2. tagR list there, but selection is not: add selection and insert
+#   # 3  Both tagR list and tagR[[selection]] are there, just add tag no.
+#   if(ok && is.null(dfList) ){ # 1 Adds a new tagR list
+#     if(!is.null(selection)){
+#       if(point.index>1){
+#         tags<-c(1,point.index)
+#       }else {
+#         tags<-1
+#       }
+#       
+#       reactiveTag$freq[[selection]]<-NULL
+#       updateSelectInput(session, "tagFreq", selected="Off" )
+#       
+#       df<-data.frame(tag=tags)
+#       dfList= structure( list( df) , names=selection )
+#       replacement<-paste0("\n\n", formatDFDefs(dfList),"\n\n")
+#       src<-user$code
+#       pos<-getDefPos(src, "ptR")     
+#       src<-paste0( substr(src, 1, pos[2]), replacement,  
+#                    substr(src, pos[2]+1, nchar(src))) 
+#       user$code<-src        
+#     } 
+#     
+#     ok=FALSE
+#   } 
+#   if(ok && is.null(dfList[[selection]]) ){ #2. Adds new TagR entry
+#     if(point.index>1){
+#       tags<-c(1,point.index)
+#     }else {
+#       tags<-1
+#     }
+#     # freq<-reactiveTag$freq
+#     # reactiveTag$freq[[tagName]]<-NULL
+#     # updateSelectInput(session, "tagFreq", selected="Off" )
+#     
+#     df<-data.frame(tag=tags)
+#     dfList[[selection]]<-df
+#     user$code<-df2Source(user$code,dfList)
+#     #message=paste0("Need to add ", selection," to tagR list") 
+#     #session$sendCustomMessage(type='error', message=message )
+#     ok=FALSE
+#   }
+#   if(ok ){ # 3. add tag
+#     len<-length(ptsList[[selection]])/2 #number of points in selection
+#     if(len>0){
+#       df<-dfList[[selection]]
+#       if(length(df)==0){ # selection is not listed in tags
+#         df<-data.frame(tag=1)
+#       }
+#       if("tag" %in% names(df)){ # if not, then do nothing
+#         tags<-df$tag
+#         if(!(point.index %in% tags)){
+#           row<-max(tags[tags<point.index])
+#           tmp.df<-subset(df,tag==row)
+#           tmp.df$tag<-point.index
+#           df<-rbind(df, tmp.df)
+#           ordrows<-order(df$tag)
+#           df<-df[ordrows,,drop=FALSE]
+#           dfList[[selection]]<-df
+#           #src<-user$code
+#           user$code<-df2Source(user$code,dfList)
+#           #user$code<-src
+#         }
+#       }
+#     }
+#   }
+# })
+# 
