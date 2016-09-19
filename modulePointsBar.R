@@ -22,12 +22,12 @@ modulePointsBarUI <- function(id, input, output) {
                           multiple=FALSE, selectize = FALSE,
                           width="150px", size=1 )
         ),
-        div(style="display:inline-block",
-              selectInput(ns("tagFreq"), "Auto Tag",
-                          c(list("Off"),1:20), selected="Off", 
-                          multiple=FALSE, selectize = FALSE,
-                          width="80px", size=1  )
-        ),
+        # div(style="display:inline-block",
+        #       textOutput(ns("tagFreq"), "Auto Tag",
+        #                   c(list("Off"),1:20), selected="Off", 
+        #                   multiple=FALSE, selectize = FALSE,
+        #                   width="80px", size=1  )
+        #),
         div(style="display:inline-block",
               checkboxInput(ns("insertMode" ),"Insert",value = TRUE, width = "50px")
         ),
@@ -45,7 +45,8 @@ modulePointsBar<-function(
         getSelectInfo,
         getPtDefs, 
         name, 
-        index ){
+        index,
+        isTaggable){
   
   result<-reactiveValues( #
     point.index=0
@@ -65,6 +66,39 @@ modulePointsBar<-function(
     } 
   })
   
+  observe({
+    ptRList<-getPtDefs()$pts #trigger is name or index
+    #res<-getSelectInfo()
+    if(result$point.index<=1){
+      disable("backwardPt")
+    } else {
+      enable("backwardPt")
+    }
+  })
+  
+  observe({
+    selection<-getSelectInfo()$selected
+    ptRList<-getPtDefs()$pts
+    len<-length(ptRList[[selection ]])/2
+    if(result$point.index>=len){
+        disable("forwardPt")
+      } else {
+        enable("forwardPt")
+      }
+  })
+  
+  observe(
+    if(isTaggable()){
+      enable("tagPt")
+    } else {
+      disable("tagPt")
+    }
+  )
+  
+  
+  
+  
+  
   #---selected point forward button-----
   observeEvent(input$forwardPt,{
     selection<-input$name
@@ -73,6 +107,7 @@ modulePointsBar<-function(
     len<-length(ptRList[[selection ]])/2
     result$point.index<-min(len, result$point.index+1)
   })
+  
 
   #---selected point backward button-----
   observeEvent(input$backwardPt,{
@@ -92,7 +127,7 @@ modulePointsBar<-function(
     name         =reactive({input$name}),
     index        =reactive({result$point.index}),    
     displayMode  =reactive({input$displayMode}),
-    tagFreq      =reactive({input$tagFreq}),
+    #tagFreq      =reactive({input$tagFreq}),
     insertMode   =reactive({input$insertMode}),
     showGrid     =reactive({input$showGrid}),
     removePt     =reactive({input$removePt}),

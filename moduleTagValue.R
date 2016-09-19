@@ -1,5 +1,6 @@
 
-
+#currently update triggers value from choice to ace
+# propose
 moduleTagValUI<-function(id, input, output) { 
   ns <- NS(id)
   absolutePanel( top=50, left=0, width="100%", draggable=TRUE, 
@@ -23,7 +24,7 @@ moduleTagValUI<-function(id, input, output) {
           multiple=FALSE, size=1, selectize = FALSE,  
           choices=list(),  selected=NULL, width="100px"  )
         ),
-        div(style="display:inline-block;", 
+        div(style="display:inline-block; margin=0;", 
           textInput(ns("colValEd"), "Value Choice", value="",width="100px")
         ),
         div(style="display:inline-block",
