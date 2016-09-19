@@ -64,6 +64,10 @@ shinyServer(function(input, output,session) {
   
   # Reactive expressions------------- 
    #---
+  isTaggable<-reactive({ 
+    name<-getPtName()
+    !is.null(name) &&  is.null(reactiveTag$freq[[name]])
+  })
   getCode<-reactive({ user$code })
   getCodeBackup<-reactive({ backup$code })
   
