@@ -26,26 +26,25 @@ observe({
           df<-tagList[[selection]]
           if(!is.null(df)){
             tags<-df$tag
-            # locate the position of the new point
-            #wrt the tags
-            tags2move<-which(tags>indx)
-            if(length(tags2move)>0){
-              tags[tags2move]<-1+ tags[tags2move]
-              df$tag<-tags
-              tagList[[selection]]<-df
-              src<-df2Source(src,tagList)
-            } else { #we are at the end
-              freq<-reactiveTag$freq[[selection]]
-              if(!is.null(freq)) {
-                freq<-as.integer(freq)
-                offset<-1+indx-tail(tags,1)
-                if(offset==freq){ # at the end and needs to be tagged
-                  df2append<-tail(df,1)
-                  df2append$tag<-1+indx
-                  df<-rbind(df,df2append)
-                  tagList[[selection]]<-df
-                  src<-df2Source(src,tagList)
-                }
+            freq<-reactiveTag$freq[[selection]]
+            if(is.null(freq)){
+              tags2move<-which(tags>indx)
+              if(length(tags2move)>0){
+                tags[tags2move]<-1+ tags[tags2move]
+                df$tag<-tags
+                tagList[[selection]]<-df
+                src<-df2Source(src,tagList)
+              } else { #we are at the end, no need to do anything
+              }  
+              } else { # freq assigned case: ADD TAG AT END IF NEEDED.
+              freq<-as.integer(freq)
+              len<-length(ptRList[[selection]])/2
+              if( 1==(len %% freq)){
+                df2append<-tail(df,1)
+                df2append$tag<-len
+                df<-rbind(df,df2append)
+                tagList[[selection]]<-df
+                src<-df2Source(src,tagList)
               }
             }
           }
