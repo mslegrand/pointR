@@ -11,7 +11,7 @@ library(svgR)
 library(shinyAce)
 source("utilStyle.R")
 
-version="ptR (v.0.3.4)"
+version="ptR (v.0.3.5)"
 
 shinyUI(  
   fixedPage( id="Outer", 
