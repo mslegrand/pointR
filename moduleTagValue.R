@@ -10,30 +10,37 @@ moduleTagValUI<-function(id, input, output) {
           choices=list(),  selected=NULL, width="80px"  )
         ),
         div(style="display:inline-block",
+            selectInput(ns("index"), "Tag-No",
+                        multiple=FALSE, size=1, selectize = FALSE, 
+                        choices=list(), selected=NULL, width="60px"  )
+        ), 
+        div(style="display:inline-block",
           selectInput(ns("colName"), "Attribute",
           multiple=FALSE, size=1, selectize = FALSE, 
           choices=list(),  selected=NULL, width="80px"  )
         ),
-        div(style="display:inline-block",
-          selectInput(ns("index"), "Tag-No",
-          multiple=FALSE, size=1, selectize = FALSE, 
-          choices=list(), selected=NULL, width="60px"  )
-        ), 
         div(style="display:inline-block", 
-          selectInput(ns("colVal"), "Value Chooser", 
+          selectInput(ns("colVal"), "Value", 
           multiple=FALSE, size=1, selectize = FALSE,  
           choices=list(),  selected=NULL, width="100px"  )
         ),
-        div(style="display:inline-block; margin=0;", 
-          textInput(ns("colValEd"), "Value Choice", value="",width="100px")
-        ),
+        # div(style="display:inline-block; margin=0;", 
+        #   textInput(ns("colValEd"), "Value Choice", value="",width="100px")
+        # ),
         div(style="display:inline-block",
-          actionButton(ns( "insertVal2ColButton" ), label = "Update") #buttonSmall
+            actionButton(ns( "insertVal2ColButton" ), label = "Update") #buttonSmall
+        ),
+        # div(style="display:inline-block",
+        #     actionButton(ns( "insertVal2ColButton" ), label = "New") #buttonSmall
+        # ),        
+        div(style="display:inline-block",
+          actionButton(ns( "insertNewValButton" ), label = "New") #buttonSmall
         )
   ) #absolute panel end
 }
 
 moduleTagVal<-function(input, output, session, 
+  id2,
   barName, 
   getPtDefs,
   getTagNameChoices,
@@ -41,14 +48,13 @@ moduleTagVal<-function(input, output, session,
   getTagIndexChoices,
   getTagIndex
 ){
-
+  ns<-NS(id2)
   local<-reactiveValues( tagRList = NULL)
   # this should be updated whenever we change to this page
   # or we change the code/ptDefs
   observeEvent( getPtDefs(),{
     local$tagRList<-getPtDefs()$df
-  } 
-  )
+  })
   
   # non-reactive function
   exGetTagColChoice<-function(tagColChoices, currentChoice){
@@ -191,6 +197,49 @@ moduleTagVal<-function(input, output, session,
       }
     }
   )
+  
+  
+  
+  # Return the UI for a modal dialog with data selection input. If 'failed' is
+  # TRUE, then display a message that the previous value was invalid.
+  dataModal <- function(failed = FALSE) {
+    modalDialog(
+      textInput(ns("attrValueInput"), "New Attribute Value",
+                  width="80px"  ), 
+      span('Enter new attribute value choice'), 
+      footer = tagList(
+        modalButton("Cancel"),
+        actionButton(ns("ok"), "OK")
+      )
+    ) 
+  }
+  
+  observeEvent(input$insertNewValButton,{
+    showModal( dataModal() ) 
+  })
+  
+  observeEvent(input$ok, {
+    print("hello")
+    if(identical( barName(), 'tagValues')){
+      if(
+        !is.null(local$tagRList) && length(input$name)>0 && 
+        length(input$colName)>0 && length(input$index)>0 &&
+        length(input$attrValueInput)>0
+      )
+      {
+        tagValueVec<-  local$tagRList[[input$name]][[input$colName]]
+        tags<-local$tagRList[[input$name]]$tag
+        tmp<-as.integer(input$index)
+        indx<-which(tmp==tags)
+        tagValueVec[indx]<-input$attrValueInput
+        local$tagRList[[input$name]][[input$colName]]<-tagValueVec
+      }
+    }
+    removeModal()
+  })
+  
+  
+  
   
   
   #when name, index, colName valid, and colVal changes, update the ptDefs and code

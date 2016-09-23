@@ -8,6 +8,7 @@
 tagValInfoList<-callModule(
   module=moduleTagVal,
   id="tagValBar",
+  id2="tagValBar",
   barName=reactive(input$plotNavBar),
   getPtDefs=getPtDefs,
   getTagNameChoices=getTagNameChoices,
