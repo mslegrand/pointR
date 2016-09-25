@@ -29,7 +29,7 @@ moduleTagValUI<-function(id, input, output) {
             actionButton(ns( "updateVal" ), label = "Update") #buttonSmall
         ),
         div(style="display:inline-block",
-          actionButton(ns( "insertNewValButton" ), label = "New") #buttonSmall
+          actionButton(ns( "New" ), label = "New") #buttonSmall
         )
   ) # panel end
 }
@@ -188,8 +188,7 @@ moduleTagVal<-function(input, output, session,
   
   
   
-  # Return the UI for a modal dialog with data selection input. If 'failed' is
-  # TRUE, then display a message that the previous value was invalid.
+  # Return the UI for a modal dialog with data selection input. I
   dataModal <- function(attrName) {
     modalDialog(
       textInput(ns("modalAttrName"), "Attribute Name", value=attrName),
@@ -202,7 +201,7 @@ moduleTagVal<-function(input, output, session,
     ) 
   }
   
-  observeEvent(input$insertNewValButton,{
+  observeEvent(input$New,{
     attrName<-input$colName
     showModal( dataModal(attrName ) ) 
   })

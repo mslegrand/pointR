@@ -66,7 +66,7 @@ shinyServer(function(input, output,session) {
    #---
   isTaggable<-reactive({ 
     name<-getPtName()
-    !is.null(name) &&  is.null(reactiveTag$freq[[name]])
+    !is.null(name) && getPtIndex()>0 &&  is.null(reactiveTag$freq[[name]])
   })
   getCode<-reactive({ user$code })
   getCodeBackup<-reactive({ backup$code })
