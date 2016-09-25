@@ -8,7 +8,7 @@
 #---begin server--------------
 shinyServer(function(input, output,session) {
   
-  js$disableMenu('#plotNavBar li:nth-child(2)')
+  js$disableMenu('#plotNavBar li:nth-child(2)') #this disable Tags Menu
   js$disableTab("Transforms")
   
   #ordinary fns
@@ -149,7 +149,7 @@ shinyServer(function(input, output,session) {
   observe({
     tagsMissing<-is.null(getPtDefs()$df)
     isolate({
-      name<-'#plotNavBar li:nth-child(2)'
+      name<-'plotNavBar li:nth-child(2)'
       if(tagsMissing){
         js$disableMenu(name)
       } else {
@@ -157,6 +157,8 @@ shinyServer(function(input, output,session) {
       }
     })  
   })
+  
+  
   
   observe({
         using<-usingTransformDraggable()

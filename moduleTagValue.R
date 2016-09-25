@@ -3,6 +3,7 @@
 # propose
 moduleTagValUI<-function(id, input, output) { 
   ns <- NS(id)
+  useShinyjs()
   absolutePanel( top=50, left=0, width="100%", draggable=TRUE, 
         div(style="display:inline-block",
           selectInput( ns("name"), "Point Matrix",
@@ -24,19 +25,13 @@ moduleTagValUI<-function(id, input, output) {
           multiple=FALSE, size=1, selectize = FALSE,  
           choices=list(),  selected=NULL, width="100px"  )
         ),
-        # div(style="display:inline-block; margin=0;", 
-        #   textInput(ns("colValEd"), "Value Choice", value="",width="100px")
-        # ),
         div(style="display:inline-block",
-            actionButton(ns( "insertVal2ColButton" ), label = "Update") #buttonSmall
+            actionButton(ns( "updateVal" ), label = "Update") #buttonSmall
         ),
-        # div(style="display:inline-block",
-        #     actionButton(ns( "insertVal2ColButton" ), label = "New") #buttonSmall
-        # ),        
         div(style="display:inline-block",
           actionButton(ns( "insertNewValButton" ), label = "New") #buttonSmall
         )
-  ) #absolute panel end
+  ) # panel end
 }
 
 moduleTagVal<-function(input, output, session, 
@@ -75,16 +70,17 @@ moduleTagVal<-function(input, output, session,
   getIndex<-reactive({input$index})
   getDF<-reactive({ 
     if(
-    !is.null(getName()) && 
-    !is.null( getPtDefs()$df ) && 
-    getName() %in% names(getPtDefs()$df)  ){
+      !is.null(getName()) && 
+      !is.null( getPtDefs()$df ) && 
+      getName() %in% names(getPtDefs()$df)  
+    ){
       getPtDefs()$df[[getName()]] 
     } else {
       NULL
     }
   })
   
-  
+
   getTagColChoices<-reactive({
     df<-getDF()
     if(!is.null(df)){
@@ -159,8 +155,6 @@ moduleTagVal<-function(input, output, session,
     }
   })
   
-  # want if value selection changes, or insertVal2ColButton pressed
-  # to return an updated DF.
   
   observe({ #tag val selection
     if(identical( barName(), 'tagValues')){
@@ -170,28 +164,22 @@ moduleTagVal<-function(input, output, session,
     }    
   })
   
-  observe({
-    if(identical( barName(), 'tagValues')){
-      tagValue<-input$colVal
-      updateTextInput(session, "colValEd", value=tagValue)
-    }  
-  })
   
   observeEvent(
-    input$insertVal2ColButton,
+    input$updateVal,
     {
       if(identical( barName(), 'tagValues')){
         if(
-          !is.null(local$tagRList) && length(input$name)>0 && 
+          !is.null(local$tagRList) && nchar(input$name)>0 && 
           length(input$colName)>0 && length(input$index)>0 &&
-          length(input$colValEd)>0
+          length(input$colVal)>0
         )
         {
           tagValueVec<-  local$tagRList[[input$name]][[input$colName]]
           tags<-local$tagRList[[input$name]]$tag
           tmp<-as.integer(input$index)
           indx<-which(tmp==tags)
-          tagValueVec[indx]<-input$colValEd
+          tagValueVec[indx]<-input$colVal
           local$tagRList[[input$name]][[input$colName]]<-tagValueVec
         }
       }
@@ -202,11 +190,11 @@ moduleTagVal<-function(input, output, session,
   
   # Return the UI for a modal dialog with data selection input. If 'failed' is
   # TRUE, then display a message that the previous value was invalid.
-  dataModal <- function(failed = FALSE) {
+  dataModal <- function(attrName) {
     modalDialog(
-      textInput(ns("attrValueInput"), "New Attribute Value",
-                  width="80px"  ), 
-      span('Enter new attribute value choice'), 
+      textInput(ns("modalAttrName"), "Attribute Name", value=attrName),
+      textInput(ns("modalAttrValue"), "New Attribute Value"), 
+      span('Enter new choide for the given named attribute'), 
       footer = tagList(
         modalButton("Cancel"),
         actionButton(ns("ok"), "OK")
@@ -215,27 +203,36 @@ moduleTagVal<-function(input, output, session,
   }
   
   observeEvent(input$insertNewValButton,{
-    showModal( dataModal() ) 
+    attrName<-input$colName
+    showModal( dataModal(attrName ) ) 
   })
   
   observeEvent(input$ok, {
-    print("hello")
+    #print("hello")
     if(identical( barName(), 'tagValues')){
-      if(
-        !is.null(local$tagRList) && length(input$name)>0 && 
-        length(input$colName)>0 && length(input$index)>0 &&
-        length(input$attrValueInput)>0
-      )
+      if( length(input$name)>0 && 
+          length(input$index)>0 &&
+        !is.null(local$tagRList)  
+      ) 
       {
-        tagValueVec<-  local$tagRList[[input$name]][[input$colName]]
+        if(nchar(input$modalAttrName)>0 && 
+          nchar (input$modalAttrValue)>0 && 
+          input$modalAttrName!="tag"){
+        }
+        tagAttrNames<-  names(local$tagRList[[input$name]])
         tags<-local$tagRList[[input$name]]$tag
-        tmp<-as.integer(input$index)
-        indx<-which(tmp==tags)
-        tagValueVec[indx]<-input$attrValueInput
-        local$tagRList[[input$name]][[input$colName]]<-tagValueVec
+        if(input$modalAttrName %in% tagAttrNames){
+          tagValueVec<-  local$tagRList[[input$name]][[input$modalAttrName]]
+          tmp<-as.integer(input$index)
+          indx<-which(tmp==tags)
+          tagValueVec[indx]<-input$modalAttrValue   
+        } else {
+          tagValueVec<-rep( input$modalAttrValue, length(tags) )  
+        }
+        local$tagRList[[input$name]][[input$modalAttrName]]<-tagValueVec
+        removeModal()
       }
     }
-    removeModal()
   })
   
   
