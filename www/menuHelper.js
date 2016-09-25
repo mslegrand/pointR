@@ -14,22 +14,37 @@ tab.unbind('click.tab');
 tab.removeClass('disabled');
 };
 
-shinyjs.disableMenu = function(name) {
-var men =$(name );
-men.addClass('disabled');
-var tmp = name+' a';
-$(tmp ).css('color','grey');
-men.bind('click.dropdown-menu', function(e) {
-e.preventDefault();
-return false;
-});
+//shinyjs.disableMenu = function(name) {
+//var men =$(name );
+//men.addClass('disabled');
+//var tmp = name+' a';
+//$(tmp ).css('color','grey');
+//men.bind('click.dropdown-toggle', function(e) {
+//e.preventDefault();
+//return false;
+//});
+//};
+
+//shinyjs.enableMenu = function(name) {
+//var men =$(name);
+//var tmp = name+' a';
+//$(tmp ).css('color','#333388');
+//men.unbind('click.dropdown-menu');
+//men.removeClass('disabled');
+//};
+
+shinyjs.ignoreClick=function(e) {
+  e.preventDefault();
+  return false;
 };
 
-shinyjs.enableMenu = function(name) {
-var men =$(name);
-var tmp = name+' a';
-$(tmp ).css('color','#333388');
-men.unbind('click.dropdown-menu');
-men.removeClass('disabled');
-};
+shinyjs.disableMenu = function(navBarId) {
+$('#'+navBarId).addClass('disabled');
+$('#'+navBarId).bind('click', shinyjs.ignoreClick)
+}
+
+shinyjs.enableMenu = function(navBarId) {
+  $('#'+navBarId).removeClass('disabled');
+  $('#'+navBarId).unbind('click', shinyjs.ignoreClick );
+}
 
