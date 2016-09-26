@@ -307,8 +307,8 @@ observeEvent(input$okTag, { #move into module???
     freq<-as.integer(reactiveTag$freq[[selection]])
     tags<-seq.int(from=1,to=ncol(ptsList[[selection]]), by=freq)
   } else { #manual # add the last pt and be cool
-    if(point.index>1){
-      tags<-c(1,point.index)
+    if(point.index>=1){
+      tags<-unique(c(1,point.index))
     }
   }
   df<-data.frame(tag=tags) 
