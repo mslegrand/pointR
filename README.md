@@ -13,7 +13,7 @@
 -  svgR bridges the gap between R and SVG
 
 ## Try Out
-- runGitHub("pointR", "mslegrand)
+- runGitHub("pointR", "mslegrand")
   
 # Installation
 - install.packages("devtools")
