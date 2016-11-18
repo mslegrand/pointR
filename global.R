@@ -1,12 +1,30 @@
 
+pkgsCRAN<-c("stringr", "svDialogs", "devtools")
+for(pkgName in pkgsCRAN){  
+  if(!require(pkgName, character.only=TRUE)){
+    install.packages(pkgName)
+    library(pkgName, character.only = TRUE)
+  }  
+}            
 
-library(shiny)
-library(stringr)
-library(svDialogs) #!!!todo: replace this
+pkgs<-list(#"shiny"="rstudio",
+           "shinyjs"="daattali", 
+           "svgR"="mlegrand","shinyAce"="trestletech")
+for(pkgName in names(pkgs)){  
+  if(!require(pkgName, character.only=TRUE)){
+    install_github(pkgName, pkg[[pkgName]])
+    library(pkgName, character.only=TRUE)
+  }  
+}
+
+# library(shiny)
+# library(stringr)
+# library(svDialogs) #!!!todo: replace this
 
 #options(shiny.error = recover)
 
 #----begin external rc------------
+source("utilStyle.R")
 source("utilFormat.R")
 source("utilParser.R")
 source("utilptR.R")

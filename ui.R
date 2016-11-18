@@ -6,12 +6,9 @@
 #
 
 library(shiny)
-library(shinyjs)
-library(svgR)
-library(shinyAce)
-source("utilStyle.R")
 
-version="ptR (v.0.3.5)"
+
+version="ptR (v.0.3.5.1)"
 
 shinyUI(  
   fixedPage( id="Outer", 
