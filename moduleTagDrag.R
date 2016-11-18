@@ -31,7 +31,7 @@ moduleTagDrag<-function(input, output, session,
   getTagIndex
 ){
 
-  # non-reactive function
+  # non-reactive function (not used???)
   exGetTagColChoice<-function(tagColChoices, currentChoice){
     if(length(tagColChoices)>0){
       tagColChoice<-currentChoice
