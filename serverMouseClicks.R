@@ -39,7 +39,7 @@ observe({
               } else { # freq assigned case: ADD TAG AT END IF NEEDED.
               freq<-as.integer(freq)
               len<-length(ptRList[[selection]])/2
-              if( 1==(len %% freq)){
+              if( freq==1|| 1==(len %% freq)){
                 df2append<-tail(df,1)
                 df2append$tag<-len
                 df<-rbind(df,df2append)
@@ -90,9 +90,11 @@ observe({
           id.nos<-sequence(ncol(pts))
         # the tag point range
           tagInterval<-findInterval(id.nos,tags)
-          tmp1<-pts[,tagInterval==ti][1,]+dxy[1]
-          tmp2<-pts[,tagInterval==ti][2,]+dxy[2]
-          pts[,tagInterval==ti]<-rbind(tmp1,tmp2)
+          # tmp1<-pts[,tagInterval==ti][1,]+dxy[1]
+          # tmp2<-pts[,tagInterval==ti][2,]+dxy[2]
+          # pts[,tagInterval==ti]<-rbind(tmp1,tmp2)
+          tmp<-pts[,tagInterval==ti]
+          pts[,tagInterval==ti]<-matrix(tmp+dxy,2)
           ptRList[[ptName]]<-pts
           src<-pts2Source(src,ptRList)
         # add to the corresponding points cxy
