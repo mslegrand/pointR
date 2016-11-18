@@ -7,7 +7,7 @@ output$PointsPanel<-renderUI({
   conditionalPanel( "input.plotNavBar=='Points'", modulePointsBarUI("pointsBar"))
 })
 
-pointInfoList<-callModule( 
+pointInfoList<-callModule( #auto  input, output, session 
   module=modulePointsBar, 
   id="pointsBar", 
   barName=reactive(input$plotNavBar),
@@ -28,48 +28,6 @@ observe({
 # selected pts index
 observe({ selectedPoint$point.index<-pointInfoList$index() })
 
-# sets tag frequency
-# observe({
-#   value<-pointInfoList$tagFreq()
-#   isolate({
-#     name<-getPtName()
-#     if(is.null(getPtDefs()$pts) || is.null( name )) { return() }
-#     ptNames<-names(getPtDefs()$pts)
-#     freq<-reactiveTag$freq
-#     freq<-lapply( ptNames, function(n)freq[[n]] )
-#     if( !is.null(value) && value=="Off"){
-#       value<-NULL
-#     } else {
-#       selection<-getPtName()
-#       tagList<-getPtDefs()$df
-#       if(!is.null(tagList) && !is.null(tagList[[selection]])){
-#         #get the last tagged element and iterate the tagging
-#         dn<-as.integer(value)
-#         df<-tagList[[selection]]
-#         df1<-tail(df,1)
-#         n1<-df1$tag
-#         ptList<-getPtDefs()$pts
-#         n2<-length(ptList[[selection]])/2
-#         if(n2>n1){
-#           s<-seq(from=n1,to=n2,by=dn)
-#           s<-s[-1]
-#           if(length(s)>0){
-#             df2List<-lapply(s, function(tn){ df2<-df1; df2$tag<-tn; df2})
-#             df3<-do.call(rbind, df2List )
-#             df4<-rbind(df,df3)
-#             tagList[[selection]]<-df4
-#             src<-user$code
-#             src<-df2Source(src,dfList = tagList)
-#             user$code<-src 
-#           }
-#         }
-#       }
-#     }
-#     freq[[name]]<-value
-#     reactiveTag$freq<-freq
-#   })  
-# })
-# 
 
 #-----reactive fns
 
