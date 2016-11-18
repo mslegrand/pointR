@@ -49,6 +49,9 @@ getDefPos<-function(txt, defTag){
 
 replaceDef<-function(txt, replacement, defTag){
   pos<-getDefPos(txt, defTag)
+  if(is.null(pos)){
+    return(txt)
+  }
   if(length(replacement)==0){
     replacement=" "
   }
