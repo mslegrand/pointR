@@ -76,9 +76,9 @@ shinyServer(function(input, output,session) {
   #-----------------------
   barName<-reactive({input$plotNavBar})
   getErrorMssg<-reactive({ mssg$error })
-  getPtDefs<-        reactive({ ex.getPtDefs(user$code) })  #extract points from user code
+  getPtDefs<- reactive({ ex.getPtDefs(user$code) })  #extract points from user code
   getTagNameChoices<-reactive({
-  intersect(names(getPtDefs()$pts), names(getPtDefs()$df))
+    intersect(names(getPtDefs()$pts), names(getPtDefs()$df))
   })
   getSelectInfo<-reactive({ #used by pointsBar only??
     name<-getPtName()
@@ -124,21 +124,6 @@ shinyServer(function(input, output,session) {
     ptTags
   })
   
-
-  
-# If the user adds a point, use reactivTag$freq  
-# observe(addingPt,
-#   isolate({
-#     if(pointName %in% namesreactiveTag$freq){
-#       indxLast<-getIndx of last tag with pointName
-#       indxPt<-getIndx of Pt with pointName
-#       if(indxPt==(indxLast + reactiveTag$freq[[pointName]]){
-#           tag this point
-#       }
-#     }
-#   })
-# )
-  
   usingTransformDraggable<-reactive({ 
     grepl("class='draggable'",user$code) ||
     grepl('class="draggable"',user$code)
@@ -174,7 +159,6 @@ shinyServer(function(input, output,session) {
   
 
 #--------------------------------------------------
-# !!!TO DO: ADD HANDLER FOR POINT AND INDEX???
 
 source("serverPlotBarPoints.R", local=TRUE) 
 # --------------input$plotNavBar=="Tags"----------------  
