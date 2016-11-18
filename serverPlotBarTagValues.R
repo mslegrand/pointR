@@ -10,18 +10,22 @@ tagValInfoList<-callModule(
   id="tagValBar",
   id2="tagValBar",
   barName=reactive(input$plotNavBar),
-  getPtDefs=getPtDefs,
-  getTagNameChoices=getTagNameChoices,
-  getTagName=getTagName,
-  getTagIndexChoices=getTagIndexChoices,
-  getTagIndex=getTagIndex
+  getCode=reactive(user$code), 
+  getPtDefs=reactive({x<-getPtDefs(); x}),
+  getTagNameChoices=reactive({getTagNameChoices()}) ,
+  getTagName=reactive({getTagName()}),
+  getTagIndexChoices=reactive({getTagIndexChoices()}),
+  getTagIndex=reactive({getTagIndex()})
 )
 
-observe({
+#observes tagValInfoList$name, tagValInfoList$index
+observeEvent(c(tagValInfoList$name(),tagValInfoList$index()),{
   if(input$plotNavBar=='tagValues'){
     name<-tagValInfoList$name()
     index<-tagValInfoList$index()
     if(!is.null(name)){
+      #print("tagVal updating selectPoint")
+      #print(paste(name, index))
       selectedPoint$name<-name
       selectedPoint$point.index<-as.numeric(index)
     }
@@ -29,8 +33,15 @@ observe({
 })
 
 
-observe({
-  if(input$plotNavBar=='tagValues'){
+observeEvent(tagValInfoList$updateTagsNow(),{
+  if(tagValInfoList$updateTagsNow()>0 
+     && input$plotNavBar=='tagValues'){
+    name<-tagValInfoList$name()
+    index<-tagValInfoList$index()
+    if(!is.null(name)){
+      selectedPoint$name<-name
+      selectedPoint$point.index<-as.numeric(index)
+    }
     tagRList<-tagValInfoList$tagRList()
     if( !is.null(tagRList) ){
       src<-df2Source(getCode(),tagRList)
