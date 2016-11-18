@@ -18,12 +18,12 @@ tagDragInfoList<-callModule(
 observe({
   name<-tagDragInfoList$name()
   index<-tagDragInfoList$index()
-#  isolate({
+  isolate({
     if(!is.null(name)){
       selectedPoint$name<-name
       selectedPoint$point.index<-as.numeric(index)
     }
-#  })
+  })
 })
 
 observeEvent( 
