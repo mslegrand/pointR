@@ -29,7 +29,6 @@ observe({
 observeEvent( 
   tagDragInfoList$tagClone(),
   {
-    
     name<-tagDragInfoList$name()
     index<-tagDragInfoList$index()
     ptRList<-getPtDefs()$pts
@@ -43,7 +42,7 @@ observeEvent(
     ptsA<-pts[,tagInterval<=ti]
     ptsB<-pts[,tagInterval>=ti]
     
-    tiSize<-ncol(pts[,tagInterval==ti])
+    tiSize<-ncol(matrix(pts[,tagInterval==ti],2))
     
     ptsNew<-matrix(c(ptsA,ptsB),2)
     t2<-tags[tags>=index]+tiSize
@@ -156,7 +155,7 @@ observeEvent(
     pts <-matrix(c(ptsA,ptsT1, ptsT0, ptsB),2)
     
     df[c(t0,t1),]<-df[c(t1,t0),]
-    t1Size      <-ncol(ptsT1)
+    t1Size      <-ncol(matrix(ptsT1,2))
     tags[t1]    <-tags[t0]+t1Size
     df$tag      <-tags
     
@@ -202,7 +201,7 @@ observeEvent(
     pts <-matrix(c(ptsA,ptsT1, ptsT0, ptsB),2)
     
     df[c(t0,t1),]<-df[c(t1,t0),]
-    t1Size      <-ncol(ptsT1)
+    t1Size      <-ncol(matrix(ptsT1,2))
     tags[t1]    <-tags[t0]+t1Size
     df$tag      <-tags
     

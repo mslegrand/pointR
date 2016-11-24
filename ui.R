@@ -11,7 +11,7 @@ library(shiny)
 version="ptR (v.0.3.5.1)"
 
 shinyUI(  
-  fixedPage( id="Outer", 
+  fluidPage( id="Outer",
     singleton(
       tags$head(
       tags$link(rel = "stylesheet", type = "text/css", href = "customStyle.css"),
