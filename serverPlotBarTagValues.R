@@ -104,8 +104,9 @@ showPts.valTag%<c-% function(ptName, pts, selectedPointIndx, ptDisplayMode,  ptT
   
 output$svgTagValuesPanel<-renderUI({
   conditionalPanel( "input.plotNavBar=='tagValues'", 
-    absolutePanel( top=130, left=0, right=0,  draggable=FALSE, 
-                     style=cstyle$svg, htmlOutput("svgTagValPlot")
+    absolutePanel( "class"="cSvgHtml", 
+                   draggable=FALSE,
+                   htmlOutput("svgTagValPlot")
       )
   )
 })
