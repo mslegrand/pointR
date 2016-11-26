@@ -73,7 +73,6 @@ shinyUI(
           tabPanel("Log",br(),br(),
             absolutePanel(  draggable=FALSE, 
                            "class"="cLogText",
-                           #"style=cstyle$svg,
                 verbatimTextOutput("out_log")
             )
           )
