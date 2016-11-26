@@ -2,8 +2,7 @@
 modulePointsBarUI <- function(id, input, output) { 
   ns <- NS(id)
   tagList(
-    absolutePanel( bottom=25, left=0, width="100%", draggable=FALSE,
-                        style="margin:0px; padding:0px;",
+    absolutePanel( "class"="footerPanel", draggable=FALSE,
           actionButton(ns("forwardPt" ), label = "Forward Pt"),
           actionButton(ns("backwardPt"), label = "Backward Pt"),
           actionButton(ns("removePt"), label = "Delete Pt"),

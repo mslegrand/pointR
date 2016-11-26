@@ -22,7 +22,7 @@ border-radius: 24px;
 font-size: 12px;
 }
 .backPanel{
-background-color: #88B0CA; 
+background-color: #B8D8FF; 
 padding-top: 0;
 padding-bottom: 0;
 margin-top: 0; 
@@ -37,12 +37,12 @@ overflow: hidden;
 }
 .cSvgHtml{
   top:130px; 
-  left:40px; 
-  right:40px;  
+  left:20px; 
+  right:20px;  
   bottom:60px;
   margin-top:0;
-  margin-left:20px;
-  margin-right:20px;
+  margin-left:0;
+  margin-right:0;
   margin-bottom:0;
   border: 1px solid darkblue;
   background-color: white;
@@ -60,6 +60,13 @@ overflow: hidden;
   border: 1px solid darkblue;
   overflow: auto;
   background-color: white;
+}
+.footerPanel{
+  bottom:25px;
+  left:20px; 
+  width:100%;
+  margin:0px; 
+  padding:0px;
 }
 .draggable{
 background-color: #8888AA; 

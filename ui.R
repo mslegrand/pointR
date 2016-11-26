@@ -38,12 +38,21 @@ shinyUI(
         ), #end  navBarPage (edit)
   
         h3(textOutput( "fileName"), style="white-space:nowrap;"),
-        aceEditor( outputId = "source", value="", mode="r", theme="katzenmilch",
-          height = panelHeights["aceHeight" ], #"490px", 
-          fontSize=16, autoComplete="live", 
-          autoCompleteList =list(svgR=names(svgR:::eleDefs))
+        absolutePanel( 
+          "class"="cSvgHtml", 
+          overflow= "hidden",
+          draggable=FALSE,
+          aceEditor( outputId = "source", value="", mode="r", theme="katzenmilch",
+                     height = "990px", 
+                     fontSize=16, autoComplete="live", 
+                     autoCompleteList =list(svgR=names(svgR:::eleDefs))
+          ), 
+          inline=FALSE
         ),
-        actionButton("commit", label = "COMMIT EDIT")
+        absolutePanel( "class"="footerPanel", 
+                       draggable=FALSE,
+                actionButton("commit", label = "COMMIT EDIT")
+        )
       ), #end left div
       #-------------left panel end--------------------------------------------------
   

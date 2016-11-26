@@ -1,8 +1,7 @@
 moduleTagDragUI<-function(id, input, output) { 
   ns <- NS(id)  
   tagList(
-    absolutePanel( bottom=25, left=0, width=650, draggable=FALSE,
-                    style="margin:0px; padding:0px;",
+    absolutePanel( "class"="footerPanel", draggable=FALSE,
       actionButton(ns("tagClone"),   label = "Clone"   ),
       actionButton(ns("tagDelete"),  label = "Delete"),
       actionButton(ns("tagMoveUp"), label = "Send Up"),
