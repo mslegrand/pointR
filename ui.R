@@ -11,7 +11,7 @@ library(shiny)
 version="ptR (v.0.3.5.1)"
 
 shinyUI(  
-  fluidPage( id="Outer",
+  div( id="mySplitter", 
     singleton(
       tags$head(
       tags$link(rel = "stylesheet", type = "text/css", href = "customStyle.css"),
@@ -19,9 +19,8 @@ shinyUI(
       tags$script(src="splitter.js" ), 
       tags$script(src="customSplit.js" )
     )),
-    div( id="MySplitter", 
       #-------------left panel begin--------------------------------------------------
-      div( class='backPanel', #left panel 
+      div( id='leftPanel', class='backPanel', #left panel 
         navbarPage(version, fluid=FALSE, position="static-top", 
           id="editNavBar",
           navbarMenu("File", 
@@ -49,10 +48,10 @@ shinyUI(
       #-------------left panel end--------------------------------------------------
   
       #-------------right panel begin--------------------------------------------------
-      div(  class='backPanel', #right panel
+      div( id='rightPanel', class='backPanel', #right panel
             useShinyjs(),
             extendShinyjs(script="www/menuHelper.js"),
-        navbarPage(version,  id="plotNavBar", selected="Points", version, fluid=FALSE, 
+        navbarPage(version,  id="plotNavBar", selected="Points", version, fluid=TRUE, 
                  position="static-top", 
           #---------------plotNavBar:points  ------------------------------------
           tabPanel("Points" ), #end of tab panel "Points"
@@ -72,7 +71,9 @@ shinyUI(
           ),
           #---------------plotNavBar:Log  ------------------------------------
           tabPanel("Log",br(),br(),
-            absolutePanel( top=130, left=0, right=0, draggable=FALSE, style=cstyle$svg,
+            absolutePanel(  draggable=FALSE, 
+                           "class"="cLogText",
+                           #"style=cstyle$svg,
                 verbatimTextOutput("out_log")
             )
           )
@@ -91,7 +92,7 @@ shinyUI(
       ) # end of right panel
       #-------------right panel end--------------------------------------------------
     ) # splitter end
-  ) # end of fixedPage
+  #) # end of fixedPage
 )
 #  ------------------END OF SHINY UI------------------------------------------------------
 
