@@ -8,7 +8,7 @@
 #---begin server--------------
 shinyServer(function(input, output,session) {
   
-  js$disableMenu('#plotNavBar li:nth-child(2)') #this disable Tags Menu
+  js$disableMenu('plotNavBar li:nth-child(2)') #this disable Tags Menu
   js$disableTab("Transforms")
   
   #ordinary fns

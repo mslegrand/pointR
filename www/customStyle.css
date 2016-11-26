@@ -23,19 +23,53 @@ font-size: 12px;
 }
 .backPanel{
 background-color: #88B0CA; 
-padding-top: 0px;
+padding-top: 0;
+padding-bottom: 0;
+margin-top: 0; 
+margin-bottom: 0;
+margin-left:10;
+margin-right:10;
+top:0;
+bottom:0;
+right:10px;
+left:10px;
+overflow: hidden;
+}
+.cSvgHtml{
+  top:130px; 
+  left:40px; 
+  right:40px;  
+  bottom:60px;
+  margin-top:0;
+  margin-left:20px;
+  margin-right:20px;
+  margin-bottom:0;
+  border: 1px solid darkblue;
+  background-color: white;
+  overflow: auto;
+}
+.cLogText{
+  top:130px; 
+  left:20; 
+  right:40;  
+  bottom:30;
+  margin-top:0;
+  margin-left:20px;
+  margin-right:20px;
+  margin-bottom:0;
+  border: 1px solid darkblue;
+  overflow: auto;
+  background-color: white;
 }
 .draggable{
 background-color: #8888AA; 
 border-color: #88AAAA; 
-margin-top: 0; 
-margin-bottom: 0; 
 padding-top: 0; 
 padding-bottom: 0; 
 font-size:12px; 
-padding-left: 2px;
-padding-right: 2px;
 width:100%;
+overflow: hidden;
+display: inline-block;
 }
 .controlBackPanel{
 background-color: #8888AA; 
@@ -47,8 +81,26 @@ padding-bottom: 0;
 font-size:12px; 
 padding-left: 2px;
 padding-right: 2px;
-width: 100%;
+display: inline-block;
+overflow: hidden;
 }
+
+#mySplitter {
+	height: 180px;
+	min-width: 500px;
+	max-width:4600px;
+	left:0;
+	right:0;
+	margin-left: 0; 
+	margin-right: 0; 
+	border: 5px solid #aaa;
+	overflow: hidden;
+}
+.vsplitbar {
+	width: 5px;
+	background: #aaa;
+}
+
 .navbar-default .navbar-brand:hover,
 .navbar-default .navbar-brand:focus {
 color: #5E5E5E;
@@ -111,19 +163,3 @@ border-color: #888 !important;
 	border: 0 solid #aaa;
 }
 
-#MySplitter {
-	height: 680px;
-	min-width: 500px;
-	max-width:1600px;
-	margin-left: 10px; 
-	margin-right: 10px; 
-	border: 5px solid #aaa;
-	resizeToWidth: true;
-}
-#MySplitter{
-	overflow: auto;
-}
-.vsplitbar {
-	width: 5px;
-	background: #aaa;
-}
