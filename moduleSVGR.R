@@ -1,9 +1,12 @@
 
   modulePlotSVGrUI <- function(id, input, output) { 
     ns <- NS(id)
-    absolutePanel( top=130, left=0, right=0,  draggable=FALSE,
-                    style=cstyle$svg, 
-                    htmlOutput(ns( "svghtml" ))
+    absolutePanel( 
+                   "class"="cSvgHtml", 
+                    overflow= "auto",
+                    draggable=FALSE,
+                    #style=cstyle$svg, 
+                    htmlOutput(ns( "svghtml" ), inline=FALSE, overflow="auto" )
     )
   }
   
