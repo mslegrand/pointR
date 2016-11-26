@@ -24,7 +24,7 @@ for(pkgName in names(pkgs)){
 #options(shiny.error = recover)
 
 #----begin external rc------------
-//source("utilStyle.R")
+#source("utilStyle.R")
 source("utilFormat.R")
 source("utilParser.R")
 source("utilptR.R")
