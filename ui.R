@@ -15,9 +15,11 @@ shinyUI(
     singleton(
       tags$head(
       tags$link(rel = "stylesheet", type = "text/css", href = "customStyle.css"),
+      tags$link(rel = 'stylesheet', type = 'text/css', href = 'shinyAce.css'),
       #tags$script(src = "message-handler.js"),
       tags$script(src="splitter.js" ), 
-      tags$script(src="customSplit.js" )
+      tags$script(src="customSplit.js" ),
+      tags$script(src="aceExt.js")
     )),
       #-------------left panel begin--------------------------------------------------
       div( id='leftPanel', class='backPanel', #left panel 
@@ -42,7 +44,7 @@ shinyUI(
           "class"="cSvgHtml", 
           overflow= "hidden",
           draggable=FALSE,
-          aceEditor( outputId = "source", value="", mode="r", theme="katzenmilch",
+          ptRAceEditor( outputId = "source", value="", mode="ptr", theme="katzenmilch",
                      height = "990px", 
                      fontSize=16, autoComplete="live", 
                      autoCompleteList =list(svgR=names(svgR:::eleDefs))

@@ -17,11 +17,13 @@ observeEvent( input$editNavBar, {
     updateNavbarPage(session, "editNavBar", selected ="Source") 
     
     updateNavbarPage(session, "tagFreq", selected ="Off") 
+    #session$sendCustomMessage(type = "shinyAceExt", list(id= "source", ptRMode=TRUE))
     updateAceEditor( session,"source", value=user$code)
   }
   
   if(fileCmd=="Open"){ #-----open 
     #mssg$error<-""
+    #session$sendCustomMessage(type = "shinyAceExt", list(id= "source", ptRMode=TRUE))
     fileName=""
     try(fileName<-dlgOpen(title = "Select one R file", 
                           filters = dlgFilters[c("R", "All"), ])$res

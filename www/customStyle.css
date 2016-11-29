@@ -45,7 +45,7 @@ overflow: hidden;
   margin-right:0;
   margin-bottom:0;
   border: 1px solid darkblue;
-  background-color: white;
+  background-color: #FFBBBB;
   overflow: auto;
 }
 .cLogText{
