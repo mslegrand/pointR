@@ -176,7 +176,7 @@ ptRAceEditor <- function(outputId, value, mode, theme, vimKeyBinding = FALSE,
     #js <- paste(js, "", editorVar, ".setOption('enableBehaviours', true);", sep="")
   }
   
-  if(T){
+  if(F){
     js<-paste(js, "", editorVar,'.commands.addCommand({
               name: "showKeyboardShortcuts",
               bindKey: {win: "Ctrl-Alt-h", mac: "Command-Alt-h"},
@@ -186,11 +186,36 @@ ptRAceEditor <- function(outputId, value, mode, theme, vimKeyBinding = FALSE,
               editor.showKeyboardShortcuts()
               })
               }
-  })
-              editor.execCommand("showKeyboardShortcuts")')
+  });
+')
 }
 
+  if(T){
+    
+jjs<-gsub("editorVar",  editorVar,
+"
+editorVar.commands.addCommand({
+              name: 'showKeyboardShortcuts',
+              bindKey: {win: 'Ctrl-Alt-h', mac: 'Command-Alt-h'},
+              exec: function(editor) {
+              ace.config.loadModule('ace/ext/keybinding_menu', function(module) {
+              module.init(editor);
+              editor.showKeyboardShortcuts()
+              })
+              }
+  });
+editorVar.commands.addCommand({
+    name: 'commitSource',
+    bindKey: {win: 'Ctrl-Shift-Enter', mac: 'Alt-Shift-Enter'},
+    exec: function(editor) {
+        console.log('Hi!');
+    }
+});
 
+")
+js<-paste(js, "",jjs)
+}
+ 
   
   
   tagList(
