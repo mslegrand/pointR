@@ -106,21 +106,21 @@ observe({
         tid<-input$mouseMssg[3]
         tmp<-input$mouseMssg[2]
         trDefDelta<-formatC(eval(parse(text=tmp)))
-        trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2,)" ) 
+        trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2)" ) 
         src<-tr2src( src, tid, trDefDelta2 )
       }
       if(cmd=='rotate'){ # ----rotate
         tid<-input$mouseMssg[3]
         tmp<-input$mouseMssg[2]
         trDefDelta<-formatC(eval(parse(text=tmp)))
-        trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2,)" ) 
+        trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2)" ) 
         src<-tr2src( src, tid, trDefDelta2 )
       } 
       if(cmd=='scale'){ # ----scale
         tid<-input$mouseMssg[3]
         tmp<-input$mouseMssg[2]
         trDefDelta<-formatC(eval(parse(text=tmp)))
-        trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2,)" ) 
+        trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2)" ) 
         src<-tr2src( src, tid, trDefDelta2 )
       } 
       # update internal user source
