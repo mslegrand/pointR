@@ -29,7 +29,7 @@ observeEvent(
 #(updates user$code with editor contents)
 # alternatively can use observeEvent( input$commit, { ... })
 observe({ 
-  input$commit
+  c(input$commit, input$commitMssg)
   #get text from editor
   isolate({ 
     src<-input$source #------ace editor

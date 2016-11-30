@@ -208,7 +208,15 @@ editorVar.commands.addCommand({
     name: 'commitSource',
     bindKey: {win: 'Ctrl-Shift-Enter', mac: 'Alt-Shift-Enter'},
     exec: function(editor) {
-        console.log('Hi!');
+        var randomString = function(length) {
+            var text = '';
+            var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            for(var i = 0; i < length; i++) {
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+          }
+          return text;
+        }
+        Shiny.onInputChange('commitMssg', randomString(5) );
     }
 });
 editorVar.commands.addCommand({
