@@ -211,8 +211,17 @@ editorVar.commands.addCommand({
         console.log('Hi!');
     }
 });
+editorVar.commands.addCommand({
+    name: 'helpR',
+    bindKey: {win: 'Ctrl-Shift-/', mac: 'Alt-Shift-/'},
+    exec: function(editor) {
+        alert('helpR!');
+    }
+});
 
 ")
+#for short cuts, perhaps Ctrl-Shift-U, Ctrl-U (uppercase)
+# Ctrl-Shift-I, Ctrl-I
 js<-paste(js, "",jjs)
 }
  
