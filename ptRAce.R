@@ -215,7 +215,7 @@ editorVar.commands.addCommand({
     name: 'helpR',
     bindKey: {win: 'Ctrl-Shift-/', mac: 'Alt-Shift-/'},
     exec: function(editor) {
-        alert('helpR!');
+        console.log('helpR!');
     }
 });
 
