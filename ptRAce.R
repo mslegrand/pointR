@@ -221,9 +221,12 @@ editorVar.commands.addCommand({
 });
 editorVar.commands.addCommand({
     name: 'helpR',
-    bindKey: {win: 'Ctrl-Shift-/', mac: 'Alt-Shift-/'},
+    bindKey: {win: 'F1', mac: 'F1'},
     exec: function(editor) {
         console.log('helpR!');
+        var text = editor.getSession().getTextRange(editor.getSelectionRange());
+        Shiny.onInputChange('helpMssg', text );
+        console.log(text);
     }
 });
 
