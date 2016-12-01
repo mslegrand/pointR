@@ -223,7 +223,7 @@ observeEvent( pointInfoList$removePt(), {
 
 # Return the UI for a modal dialog with data selection input. If 'failed' is
 # TRUE, then display a message that the previous value was invalid.
-dataModal <- function(failed = FALSE) {
+modalFreq <- function(failed = FALSE) {
   modalDialog(
     selectInput("tagFreq", "Auto Tag",
                 c(list("Off"),1:20), selected="Off", 
@@ -301,7 +301,7 @@ observeEvent( pointInfoList$tagPt(), {
   #PROPOSED REWRITE:
   ok= !(is.null(dfList)) && !(is.null(dfList[[selection]]) )
   if(!ok) { #this is a first tag
-    showModal( dataModal() ) #observer for showModal must complete the work
+    showModal( modalFreq() ) #observer for showModal must complete the work
   } else { # this is a second tag (and hence manual)
     #if(reactiveTag$freq[[selection]]==0){ #manual case
       #add this tag
@@ -320,171 +320,13 @@ observeEvent( pointInfoList$tagPt(), {
           user$code<-df2Source(user$code,dfList)
           #user$code<-src
         }
-      #}    
+      
     }
-    #delete the rest (I hope this works!)  
     
     
   }
 
-      #     perform 1 and 2 
+     
     
 })
-    # 3  Both tagR list and tagR[[selection]] are there, just add tag no.
-  
- # if(ok && is.null(dfList) ){ # 1 Adds a new tagR list
- #    if(!is.null(selection)){
- #      if(point.index>1){
- #        tags<-c(1,point.index)
- #      }else {
- #        tags<-1
- #      }
- #      
- #      reactiveTag$freq[[selection]]<-NULL
- #      updateSelectInput(session, "tagFreq", selected="Off" )
- #      
- #      df<-data.frame(tag=tags)
- #      dfList= structure( list( df) , names=selection )
- #      replacement<-paste0("\n\n", formatDFDefs(dfList),"\n\n")
- #      src<-user$code
- #      pos<-getDefPos(src, "ptR")     
- #      src<-paste0( substr(src, 1, pos[2]), replacement,  
- #                   substr(src, pos[2]+1, nchar(src))) 
- #      user$code<-src        
- #    } 
- #    ok=FALSE
- #  } 
- #  if(ok && is.null(dfList[[selection]]) ){ #2. Adds new TagR entry
- #    if(point.index>1){
- #      tags<-c(1,point.index)
- #    }else {
- #      tags<-1
- #    }
- #    # freq<-reactiveTag$freq
- #    # reactiveTag$freq[[tagName]]<-NULL
- #    # updateSelectInput(session, "tagFreq", selected="Off" )
- #    
- #    df<-data.frame(tag=tags)
- #    dfList[[selection]]<-df
- #    user$code<-df2Source(user$code,dfList)
- #    #message=paste0("Need to add ", selection," to tagR list") 
- #    #session$sendCustomMessage(type='error', message=message )
- #    ok=FALSE
- #  }
- #  if(ok ){ # 3. add tag
- #    len<-length(ptsList[[selection]])/2 #number of points in selection
- #    if(len>0){
- #      df<-dfList[[selection]]
- #      if(length(df)==0){ # selection is not listed in tags
- #        df<-data.frame(tag=1)
- #      }
- #      if("tag" %in% names(df)){ # if not, then do nothing
- #        tags<-df$tag
- #        if(!(point.index %in% tags)){
- #          row<-max(tags[tags<point.index])
- #          tmp.df<-subset(df,tag==row)
- #          tmp.df$tag<-point.index
- #          df<-rbind(df, tmp.df)
- #          ordrows<-order(df$tag)
- #          df<-df[ordrows,,drop=FALSE]
- #          dfList[[selection]]<-df
- #          #src<-user$code
- #          user$code<-df2Source(user$code,dfList)
- #          #user$code<-src
- #        }
- #      }
- #    }
- #  }
-#})
-
-# observeEvent(pointInfoList$tagPt(), {
-#   #selection<-input$ptRSelect
-#   selection<-selectedPoint$name
-#   ptDefs<-getPtDefs()
-#   ptsList<-ptDefs$pts
-#   dfList<-ptDefs$df
-#   point.index<-max(1,selectedPoint$point.index) #can change later
-#   ok=TRUE
-#   #PROPOSED REWRITE:
-#   ok= !(is.null(dfList) && !(is.null(dfList[[selection]]) ))
-#   ok=FALSE
-#   #  IF currently tagged, tagit
-#   if(!ok) {
-#     print("hello")
-#     showModal( dataModal() )
-#     #     dialog and then
-#     #     perform 1 and 2 
-#   }
-#   ok=TRUE
-#   #  if(ok){ 3 }
-#   # 
-#   #There are 3 distinct cases: 
-#   # 1. tagR list not there, add tagR list, selection and insert 
-#   # 2. tagR list there, but selection is not: add selection and insert
-#   # 3  Both tagR list and tagR[[selection]] are there, just add tag no.
-#   if(ok && is.null(dfList) ){ # 1 Adds a new tagR list
-#     if(!is.null(selection)){
-#       if(point.index>1){
-#         tags<-c(1,point.index)
-#       }else {
-#         tags<-1
-#       }
-#       
-#       reactiveTag$freq[[selection]]<-NULL
-#       updateSelectInput(session, "tagFreq", selected="Off" )
-#       
-#       df<-data.frame(tag=tags)
-#       dfList= structure( list( df) , names=selection )
-#       replacement<-paste0("\n\n", formatDFDefs(dfList),"\n\n")
-#       src<-user$code
-#       pos<-getDefPos(src, "ptR")     
-#       src<-paste0( substr(src, 1, pos[2]), replacement,  
-#                    substr(src, pos[2]+1, nchar(src))) 
-#       user$code<-src        
-#     } 
-#     
-#     ok=FALSE
-#   } 
-#   if(ok && is.null(dfList[[selection]]) ){ #2. Adds new TagR entry
-#     if(point.index>1){
-#       tags<-c(1,point.index)
-#     }else {
-#       tags<-1
-#     }
-#     # freq<-reactiveTag$freq
-#     # reactiveTag$freq[[tagName]]<-NULL
-#     # updateSelectInput(session, "tagFreq", selected="Off" )
-#     
-#     df<-data.frame(tag=tags)
-#     dfList[[selection]]<-df
-#     user$code<-df2Source(user$code,dfList)
-#     #message=paste0("Need to add ", selection," to tagR list") 
-#     #session$sendCustomMessage(type='error', message=message )
-#     ok=FALSE
-#   }
-#   if(ok ){ # 3. add tag
-#     len<-length(ptsList[[selection]])/2 #number of points in selection
-#     if(len>0){
-#       df<-dfList[[selection]]
-#       if(length(df)==0){ # selection is not listed in tags
-#         df<-data.frame(tag=1)
-#       }
-#       if("tag" %in% names(df)){ # if not, then do nothing
-#         tags<-df$tag
-#         if(!(point.index %in% tags)){
-#           row<-max(tags[tags<point.index])
-#           tmp.df<-subset(df,tag==row)
-#           tmp.df$tag<-point.index
-#           df<-rbind(df, tmp.df)
-#           ordrows<-order(df$tag)
-#           df<-df[ordrows,,drop=FALSE]
-#           dfList[[selection]]<-df
-#           #src<-user$code
-#           user$code<-df2Source(user$code,dfList)
-#           #user$code<-src
-#         }
-#       }
-#     }
-#   }
-# })
-# 
+    
