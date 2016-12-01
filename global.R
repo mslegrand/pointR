@@ -7,7 +7,7 @@ for(pkgName in pkgsCRAN){
   }  
 }            
 
-pkgs<-list(#"shiny"="rstudio",
+pkgs<-list(
            "shinyjs"="daattali", 
            "svgR"="mlegrand","shinyAce"="trestletech")
 for(pkgName in names(pkgs)){  
