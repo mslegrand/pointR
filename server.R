@@ -25,8 +25,7 @@ shinyServer(function(input, output,session) {
     tagChosen
   }
   
-  # tagIndxCƒhoices<-getTagIndexChoices()
-  # point.index<-selected$point.indx
+  
   exGetTagIndx<-function(tagIndxChoices, point.indx){
     if(length(tagIndxChoices)<1 ){
      return(NULL)
@@ -34,7 +33,6 @@ shinyServer(function(input, output,session) {
     if(  length(point.indx)<1){
      point.index<-max(tagIndxChoices)
     } else {
-     #point.indx<-as.numeric(point.indx)
       if( point.indx>0 ){
           t.point.indx<-max(tagIndxChoices[ tagIndxChoices<= point.indx] )
       } else {
@@ -129,7 +127,46 @@ shinyServer(function(input, output,session) {
     grepl('class="draggable"',user$code)
   }) 
 
-# Event Observers--------------------------------  
+# Event Observers-------------------------------- 
+  
+  
+  #---- help popup  
+  modalHelp <- function( htmlHelp) {
+    modalDialog(
+      div( 
+        HTML(htmlHelp)
+      ),
+      size = "m",
+      title="Help",
+      easyClose = TRUE
+    ) 
+  }
+  #----observer that triggers help popup  
+  observe({
+    query<-input$helpMssg
+    if(length(query)>0 && nchar(query)>0){
+      queryHelp2Html<-function(query){
+        pkg<-"svgR"
+        pkgRdDB = tools:::fetchRdDB(file.path(find.package(pkg), 'help', pkg))
+        topics = names(pkgRdDB)
+        if(!query %in% topics){
+          query<-'svgR'
+        }
+        txtConnection<-textConnection("html","w")
+        tools::Rd2HTML(pkgRdDB[[query]],out=txtConnection)
+        close(txtConnection)
+        html<-paste(html,collapse="\n") 
+        html
+      } 
+      htmlFile<-queryHelp2Html(query)
+      showModal( modalHelp(htmlFile) )
+      #tmp<-help(helpMssg, package = "svgR", help_type = "html")
+      #eval(tmp) #should bring help in browser, but fails
+    }    
+  })
+  
+  
+  
 #---navbar disable /enabler controls
   observe({
     tagsMissing<-is.null(getPtDefs()$df)
