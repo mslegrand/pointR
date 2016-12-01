@@ -89,8 +89,8 @@ shinyUI(
             )
           )
         ), #navbarPage end
-        
         #--------CONDITIONALS-----------------------------------------------------
+        # TODO: need to invoke insertUI/removeUI instead of conditional paneling.
         uiOutput("svgPointsPanel"),
         uiOutput("svgTagValuesPanel"),
         uiOutput("svgTagDragPanel"),
