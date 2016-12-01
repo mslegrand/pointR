@@ -7,11 +7,11 @@ Shiny.addCustomMessageHandler(
         var $el = $('#' + id);
         var editor = $el.data('aceEditor');
         
-        alert(el);
+        //alert(el);
         if(data.ptRMode){ 
-          editor.session.setMode({path: "ace/mode/ptr", v: Date.now()});
+          editor.getSession().setMode({path: "ace/mode/ptr", v: Date.now()});
           editor.setBehavioursEnabled(true);
-          
         }
+        //todo: add more messaging capablilities
       }
   );
