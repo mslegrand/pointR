@@ -1,12 +1,19 @@
 
-
 # --------------input$plotNavBar=="Points"----------------
-#modulePointsBarUI
+# =============== UI =======================
 
 output$PointsPanel<-renderUI({
   conditionalPanel( "input.plotNavBar=='Points'", modulePointsBarUI("pointsBar"))
 })
 
+output$svgPointsPanel<-renderUI({
+  conditionalPanel( "input.plotNavBar=='Points'", modulePlotSVGrUI("svgPointsMod"))
+})
+
+
+# ===============        SERVER       =======================
+# ===============Begin Module PointsBar=======================
+#CALL modulePointsBarUI
 pointInfoList<-callModule( #auto  input, output, session 
   module=modulePointsBar, 
   id="pointsBar", 
@@ -18,7 +25,15 @@ pointInfoList<-callModule( #auto  input, output, session
   isTaggable=isTaggable
 )
 
-# selected pts name
+#-----REACTIVES   based on modulePointsBar::pointInfoList
+
+showGrid<-reactive({pointInfoList$showGrid()})
+displayMode<-reactive({pointInfoList$displayMode()})
+insertMode<-reactive({pointInfoList$insertMode() })
+
+#-----OBSERVERS  using  modulePointsBar::pointInfoList
+
+# --SELECTION EVENTS-------------------------------
 observe({
   name<-pointInfoList$name()
     if(!is.null(name)){
@@ -28,126 +43,7 @@ observe({
 # selected pts index
 observe({ selectedPoint$point.index<-pointInfoList$index() })
 
-
-#-----reactive fns
-
-showGrid<-reactive({pointInfoList$showGrid()})
-displayMode<-reactive({pointInfoList$displayMode()})
-insertMode<-reactive({pointInfoList$insertMode() })
-
-
-#---------ShowPts----------------------------------
-
-  # called when we need to show points (in epilog)
-  # to do: rewrite to make this work with call for tags
-  # where each tag is a group, so that we can edit a tag set 
-  # to provide ability for translate, rotate, scale of points
-  showPts.PtCmd %<c-% function(ptName, pts=NULL,  selectedPointIndx=NULL, ptDisplayMode="Normal"){
-    if(is.null(pts) ){ return(NULL) } 
-    if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
-    if(length(pts)<2 ){ return(NULL)}
-    #print("entering showPts.PtCmd Proper")
-    selectedPointIndx<-as.numeric(selectedPointIndx)
-    
-    colorScheme<-c(default="green", ending="red", selected="blue")
-    m<-matrix(pts,2) # is this really necessary????
-     
-    #form list of  all point renderings
-    lapply(1:ncol(m), function(i){
-      id<-paste("pd",ptName,i,sep="-")
-      pt<-m[,i]
-      color=colorScheme['default']
-      if(i==length(pts)/2) { #ncol(m)){
-          color=colorScheme['ending']   
-      }
-      list(
-        if(identical(selectedPointIndx, as.numeric(i) )){
-          circle(class="draggable", 
-                 id=id,  
-                 cxy=pt, r=9, fill="yellow", 
-                 opacity=1,
-                 stroke=colorScheme['selected'], stroke.width=3,
-                 transform="matrix(1 0 0 1 0 0)", 
-                 onmousedown="selectPoint(evt)" )
-        } else { #a non-selected point
-          circle(class="draggable", 
-                 id=id,  
-                 cxy=pt, r=8, fill=color, opacity=1,
-                 transform="matrix(1 0 0 1 0 0)", 
-                 onmousedown="selectPoint(evt)" )
-        },
-        if(ptDisplayMode=="Labeled"){
-            text(paste(i), cxy=pt+10*c(1,-1),  
-               stroke='black', font.size=12, opacity=1) 
-        } else {
-          NULL
-        }
-      )
-    }) #end lapply
-  } #end showPts.PtCmd
-
-
-
-
-
-#===============
-
-#all the options for implementation
-
-
-#use for pts, ow NULL
-getPtLayer<-reactive({
-  newPtLayer %<c-% function( wh=getWH() ){
-    if( insertMode()==TRUE){
-      rect(xy=c(0,0), wh=wh, fill="#ADADFF", stroke='black', opacity=.0, onmousedown="newPoint(evt)")
-    } else {
-      NULL
-    } 
-  } 
-})
-
-#===============
-
-output$svgPointsPanel<-renderUI({
-  conditionalPanel( "input.plotNavBar=='Points'", modulePlotSVGrUI("svgPointsMod"))
-})
-
-newPtLayer2 %<c-% function(insert, wh=c(1200,800)){
-  if(insert==TRUE){
-    rect(xy=c(0,0), wh=wh, fill="#ADADFF", stroke='black', opacity=.0, onmousedown="newPoint(evt)")
-  } else {
-    NULL
-  } 
-}
-  
-pointSVGList<-callModule(
-  module=modulePlotSVGr,
-  id="svgPointsMod",
-  svgID='ptR_SVG_Point',
-  showPts.compound=reactive({
-    list(
-      newPtLayer2( insertMode(), getSVGWH() ),
-      showPts.PtCmd(
-        ptName=getPtName(), pts=getPtDefs()$pts[[getPtName()]],
-        selectedPointIndx=as.numeric( getPtIndex() ),
-        ptDisplayMode=displayMode()
-      )
-    )
-  }),
-  ptrDisplayScript =reactive({ js.scripts[[ "Points"]] }),
-  getSVGWH,
-  showGrid,
-  getCode,
-  getCode2 =getCode,  # (or getCodeTransform)
-  getCodeBackup,
-  getErrorMssg,
-  insert.end=",showPts.compound()"
-)
-
-
 #-----------BUTTON EVENTS--------------------
-
-
 #---BUTTON: remove selected point  -----
 observeEvent( pointInfoList$removePt(), {
   selection<-selectedPoint$name
@@ -219,7 +115,7 @@ observeEvent( pointInfoList$removePt(), {
   }
 })
 
-#----begin for button tag-------------------------------------
+#----begin for Tagging-------------------------------------
 
 # Return the UI for a modal dialog with data selection input. If 'failed' is
 # TRUE, then display a message that the previous value was invalid.
@@ -329,4 +225,105 @@ observeEvent( pointInfoList$tagPt(), {
      
     
 })
+# ===============END SERVER Module PointsBar=======================
+
+
+
+# ===============BEGIN SERVER Module svgPointsMod=======================
+
+#---------ShowPts----------------------------------
+
+  showPts.PtCmd %<c-% function(
+      ptName, pts=NULL,  
+      selectedPointIndx=NULL, ptDisplayMode="Normal"
+  ){
+    if(is.null(pts) ){ return(NULL) } 
+    if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
+    if(length(pts)<2 ){ return(NULL)}
+    #print("entering showPts.PtCmd Proper")
+    selectedPointIndx<-as.numeric(selectedPointIndx)
     
+    colorScheme<-c(default="green", ending="red", selected="blue")
+    m<-matrix(pts,2) # is this really necessary????
+     
+    #form list of  all point renderings
+    lapply(1:ncol(m), function(i){
+      id<-paste("pd",ptName,i,sep="-")
+      pt<-m[,i]
+      color=colorScheme['default']
+      if(i==length(pts)/2) { #ncol(m)){
+          color=colorScheme['ending']   
+      }
+      list(
+        if(identical(selectedPointIndx, as.numeric(i) )){
+          circle(class="draggable", 
+                 id=id,  
+                 cxy=pt, r=9, fill="yellow", 
+                 opacity=1,
+                 stroke=colorScheme['selected'], stroke.width=3,
+                 #transform="matrix(1 0 0 1 0 0)", 
+                 onmousedown="selectPoint(evt)" )
+        } else { #a non-selected point
+          circle(class="draggable", 
+                 id=id,  
+                 cxy=pt, r=8, fill=color, opacity=1,
+                 #transform="matrix(1 0 0 1 0 0)", 
+                 onmousedown="selectPoint(evt)" )
+        },
+        if(ptDisplayMode=="Labeled"){
+            text(paste(i), cxy=pt+10*c(1,-1),  
+               stroke='black', font.size=12, opacity=1) 
+        } else {
+          NULL
+        }
+      )
+    }) #end lapply
+  } #end showPts.PtCmd
+
+
+
+
+
+#===============
+
+
+
+newPtLayer %<c-% function(insert, wh=c(1200,800)){
+  if(insert==TRUE){
+    rect(xy=c(0,0), wh=wh, fill="#ADADFF", stroke='black', 
+         opacity=.0, onmousedown="newPoint(evt)")
+  } else {
+    NULL
+  } 
+}
+  
+#===============
+  
+pointSVGList<-callModule(
+  module=modulePlotSVGr,
+  id="svgPointsMod",
+  svgID='ptR_SVG_Point',
+  showPts.compound=reactive({
+    list(
+      newPtLayer( insertMode(), getSVGWH() ),
+      showPts.PtCmd(
+        ptName=getPtName(), pts=getPtDefs()$pts[[getPtName()]],
+        selectedPointIndx=as.numeric( getPtIndex() ),
+        ptDisplayMode=displayMode()
+      )
+    )
+  }),
+  ptrDisplayScript =reactive({ js.scripts[[ "Points"]] }),
+  getSVGWH,
+  showGrid,
+  getCode,
+  getCode2 =getCode,  # (or getCodeTransform)
+  getCodeBackup,
+  getErrorMssg,
+  insert.end=",showPts.compound()"
+)
+
+
+
+
+   
