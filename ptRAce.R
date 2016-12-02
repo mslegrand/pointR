@@ -226,7 +226,6 @@ editorVar.commands.addCommand({
         console.log('helpR!');
         var text = editor.getSession().getTextRange(editor.getSelectionRange());
         Shiny.onInputChange('helpMssg', text );
-        console.log(text);
     }
 });
 
