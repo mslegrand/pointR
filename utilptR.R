@@ -20,6 +20,26 @@ NULL
 
 )
 ")->codeTemplate
+
+# "library(svgR)
+# WH<-c(1500,1500)
+# 
+# #Defined by mouse: edit with care!
+# ptR<-list(
+#   x=c()
+# )
+# 
+# svgR(wh=WH, 
+# #your custom code goes here
+# 
+# NULL
+# 
+# 
+# )
+# "->codeTemplates2
+#codeTemplates2 fails in utilTransform, I need to
+# rewrite utilTransform before we can use this.
+
 #------------------------
 
 #---external fns----

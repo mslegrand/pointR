@@ -10,6 +10,7 @@ library(shiny)
 
 version="ptR (v.0.3.5.1)"
 
+
 shinyUI(  
   div( id="mySplitter", 
     singleton(
