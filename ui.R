@@ -8,7 +8,7 @@
 library(shiny)
 
 
-version="ptR (v.0.3.5.1)"
+version="ptR (v.0.3.5.2)"
 
 
 shinyUI(  

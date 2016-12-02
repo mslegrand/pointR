@@ -5,7 +5,7 @@ formatPts<-function(pts){
   if(length(pts)==0 ){
     return("c()")
   } else{
-    tmp<-unlist(pts)
+    tmp<-as.integer(unlist(pts)) #force to have only integers numbers as points
     tmp<-matrix(tmp,2)
     tmp<-apply(tmp, 2, function(x)paste(x,collapse=","))
     tmp<-paste("c(",tmp,")")
