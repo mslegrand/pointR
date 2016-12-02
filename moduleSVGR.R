@@ -28,7 +28,6 @@
   
   # Todo: add the mouseMssg handler
   
-  
   output$svghtml <- renderUI({
     WH<-getSVGWH()
     #src<-getCode()

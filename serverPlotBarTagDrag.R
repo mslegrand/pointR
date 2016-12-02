@@ -223,15 +223,13 @@ observeEvent(
 #-------------------------------------------
 
 
-  showPts.dragTag %<c-% function(ptName, pts, selectedPointIndx, 
-  ptDisplayMode,  tags=NULL){
-    #cat(file=stderr(),"entering drag.Tag\n")
-    #print("entering drag.Tag")
+  showPts.dragTag %<c-% function(ptName, pts, 
+  selectedPointIndx, ptDisplayMode,  tags=NULL){
     if(length(ptName)<1){return(NULL)}
     if(length(pts)<2)  {return(NULL) }
     if(length(tags)<1){return(NULL)}
     if(length(selectedPointIndx)<1 || selectedPointIndx==0){return(NULL)}
-#print(ptDisplayMode)
+
     tag.indx<-selectedPointIndx #this is the position of the first point of the tagged set 
     semitransparent<-0.3
     colorScheme<-c(default="purple", ending="red", selected="blue")
