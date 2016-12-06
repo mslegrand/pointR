@@ -243,7 +243,7 @@ js<-paste(js, "",jjs)
       tags$script(src = 'shinyAce/ace/ace.js'),
       tags$script(src = 'shinyAce/ace/ext-language_tools.js'),
       tags$script(src = 'shinyAce/shinyAce.js'),
-      tags$script(src = "mode-ptr.js"),
+      tags$script(src = "mode-ptr3.js"),
       tags$script(src = 'aceExt.js'),
       tags$link(rel = 'stylesheet',
                 type = 'text/css',
