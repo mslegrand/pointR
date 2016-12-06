@@ -32,6 +32,7 @@ arrows%<c-%function(x=c(),   ...){
   })
 } 
 
+txt<-c("box")
 boxes%<c-%function(x=c(), txt=NULL, ...){
   
   n<-length(x)-length(x)%%4
@@ -60,7 +61,7 @@ boxes%<c-%function(x=c(), txt=NULL, ...){
   })
 } 
 
-txt<-c("box")
+
 svgR(wh=WH, 
      #your custom code goes here
      arrows(x=ptR$arrows, stroke.width=2, stroke.dash_array=4),
