@@ -14,7 +14,7 @@ observeEvent( input$editNavBar, {
     displayOptions$ptMode="Normal"
     mssg$error<-""
     updateSelectInput(session, "ptRSelect",  choices=c("x"), selected="x" ) 
-    updateNavbarPage(session, "editNavBar", selected ="Source") 
+    updateNavbarPage(session, "editNavBar", selected ="tab1") 
     
     updateNavbarPage(session, "tagFreq", selected ="Off") 
     #session$sendCustomMessage(type = "shinyAceExt", list(id= "source", ptRMode=TRUE))
@@ -41,7 +41,7 @@ observeEvent( input$editNavBar, {
         mssg$error<-""
       }
     }
-    updateNavbarPage(session, "editNavBar", selected ="Source")
+    updateNavbarPage(session, "editNavBar", selected ="tab1")
     updateNavbarPage(session, "plotNavBar", selected ="Points") 
     updateNavbarPage(session, "tagFreq", selected ="Off") 
   }
@@ -51,12 +51,12 @@ observeEvent( input$editNavBar, {
     try(fileName<-dlgSave(title = "Save R script to", 
                           filters = dlgFilters[c("R", "All"), ])$res
     )
-    if(fileName!=""){ 
+    if(length(fileName)>0 && fileName!=""){ 
       file$name<-fileName
       txt<-user$code
       writeLines(txt, fileName)
     }
-    updateNavbarPage(session, "editNavBar", selected ="Source")
+    updateNavbarPage(session, "editNavBar", selected ="tab1")
   }
   if(fileCmd=="Export as SVG"){ #-----save
     fileName=""
@@ -71,7 +71,7 @@ observeEvent( input$editNavBar, {
       txt<-as.character(eval(parsedCode))
       writeLines(txt, fileName)
     }
-    updateNavbarPage(session, "editNavBar", selected ="Source")
+    updateNavbarPage(session, "editNavBar", selected ="tab1")
   }
   
 })

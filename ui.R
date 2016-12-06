@@ -27,6 +27,7 @@ shinyUI(
         navbarPage(version, fluid=FALSE, position="static-top", 
           id="editNavBar",
           navbarMenu("File", 
+            tabPanel("",value="tab1"),
             tabPanel("New"),
             tabPanel("Open"),
             tabPanel("Save"),
