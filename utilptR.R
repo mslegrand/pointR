@@ -4,7 +4,8 @@
 paste(names(svgR:::eleDefs), collapse=" ")->element.names
 
 paste0("#svgR elements: ", element.names, "\n",
-"WH<-c(1500,1500)
+"library(svgR)
+WH<-c(1500,1500)
 
 #Defined by mouse: edit with care!
 ptR<-list(

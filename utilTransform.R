@@ -218,7 +218,7 @@ subSVGX2<-function(txt, insert.beg, insert.end){
   ep<-parse(text=txt)
   df<-getParseData(ep)
   #svgR.df<-subset(df,text=='svgR' & token=='SYMBOL_FUNCTION_CALL')
-  svgR.df<-df[df$text=="svgR",] #svgr
+  svgR.df<-df[df$text=="svgR" & df$token=='SYMBOL_FUNCTION_CALL',] #svgr
   stop.unless(nrow(svgR.df)==1, "Trouble finding the svgR")
   svgR2.df<-df[df$id==svgR.df$parent,] #
   stop.unless(nrow(svgR2.df)==1, "Trouble finding the svgR")
