@@ -29,7 +29,8 @@ shinyUI(
           navbarMenu("File", 
             tabPanel("New"),
             tabPanel("Open"),
-            tabPanel("Save")
+            tabPanel("Save"),
+            tabPanel("Export as SVG")
           ),
           navbarMenu("Edit", 
             tabPanel("svgR Code " , value="Source"),

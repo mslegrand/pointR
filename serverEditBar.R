@@ -58,6 +58,22 @@ observeEvent( input$editNavBar, {
     }
     updateNavbarPage(session, "editNavBar", selected ="Source")
   }
+  if(fileCmd=="Export as SVG"){ #-----save
+    fileName=""
+    default="newfile.svg"
+    try(fileName<-dlgSave(title = "Save R script to", 
+                          filters = dlgFilters[c("R", "All"), ])$res
+    )
+    if(fileName!=""){ 
+      file$name<-fileName
+      src<-user$code
+      parsedCode<-parse(text=src)
+      txt<-as.character(eval(parsedCode))
+      writeLines(txt, fileName)
+    }
+    updateNavbarPage(session, "editNavBar", selected ="Source")
+  }
+  
 })
 
 #------fileName-------------
