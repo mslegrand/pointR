@@ -27,16 +27,16 @@ shinyUI(
         navbarPage(version, fluid=FALSE, position="static-top", 
           id="editNavBar",
           navbarMenu("File", 
-            tabPanel("",value="tab1"),
+            tabPanel("",value="tab1"), #fake way to mimic button
             tabPanel("New"),
             tabPanel("Open"),
             tabPanel("Save"),
             tabPanel("Export as SVG")
           ),
-          navbarMenu("Edit", 
-            tabPanel("svgR Code " , value="Source"),
-            tabPanel("Config (not implemented)" ),
-            tabPanel("Prepoc (not implemented)" )
+          navbarMenu("Editor Options", 
+            tabPanel("Theme" ),
+            tabPanel("Font Size"), 
+            tabPanel("Indentation") #,tabPanel("Prepoc (not implemented)" )
           ),
           tabPanel(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/User_Guide.html\"  target=\"_blank\" >svgR User Guide </a></li>")),
           tabPanel(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/\"  target=\"_blank\" >io.svgR</a></li>"))
