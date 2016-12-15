@@ -125,7 +125,7 @@ modalFreq <- function(failed = FALSE) {
                 c(list("Off"),1:20), selected="Off", 
                 multiple=FALSE, selectize = FALSE,
                 width="80px", size=1  ), 
-    span('Start taggin current point matrix'), 
+    span('Start tagging current point matrix'), 
     footer = tagList(
       modalButton("Cancel"),
       actionButton("okTag", "OK")
