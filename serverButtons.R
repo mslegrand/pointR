@@ -86,7 +86,7 @@ observe({
         if(str_detect(err,' not found')){
           m<-str_match(err, "object '([^']+)' not found")
           if(length(m)==2){ #find the first line where this occurs
-            notFound<-m[2]
+            notFound<-paste0("\\b",m[2],"\\b")
             srcs<-str_split(src,"\n")[[1]]
             row<-min(which(str_detect(srcs,notFound)))-1
             col<-1
