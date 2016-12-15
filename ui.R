@@ -8,16 +8,15 @@
 library(shiny)
 
 
-version="ptR (v.0.3.5.2)"
+version="ptR (v.0.3.5.3)"
 
 
 shinyUI(  
   div( id="mySplitter", 
     singleton(
       tags$head(
-      tags$link(rel = "stylesheet", type = "text/css", href = "customStyle.css"),
-      tags$link(rel = 'stylesheet', type = 'text/css', href = 'shinyAce.css'),
-      #tags$script(src = "message-handler.js"),
+      tags$link(rel = "stylesheet", type = "text/css", title="customStyle", href = "customStyle.css"),
+      tags$link(id='shinyAceStyle', rel = 'stylesheet', type = 'text/css', href = 'shinyAce.css'),
       tags$script(src="splitter.js" ), 
       tags$script(src="customSplit.js" ),
       tags$script(src="aceExt.js")
@@ -33,13 +32,18 @@ shinyUI(
             tabPanel("Save"),
             tabPanel("Export as SVG")
           ),
-          navbarMenu("Editor Options", 
+          navbarMenu("Options", 
             tabPanel("Theme" ),
             tabPanel("Font Size"), 
             tabPanel("Indentation") #,tabPanel("Prepoc (not implemented)" )
           ),
-          tabPanel(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/User_Guide.html\"  target=\"_blank\" >svgR User Guide </a></li>")),
-          tabPanel(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/\"  target=\"_blank\" >io.svgR</a></li>"))
+          navbarMenu("Tools", 
+                     tabPanel("Preprocessor (Not implemented)" )
+          ),
+          navbarMenu("Links", 
+            tabPanel(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/User_Guide.html\"  target=\"_blank\" >svgR User Guide </a></li>")),
+            tabPanel(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/\"  target=\"_blank\" >io.svgR</a></li>"))
+          )
         ), #end  navBarPage (edit)
   
         h3(textOutput( "fileName"), style="white-space:nowrap;"),

@@ -1,6 +1,21 @@
 // ace customizations
 var ptr_HighlightedLines=[];
 
+
+//Used exclusively for swapping colors of svgR keywords
+function getStyleRule(name) {
+    var ix, 
+    sheet= $('#shinyAceStyle')[0]['sheet'];
+    for (ix=0; ix<sheet.cssRules.length; ix++) {
+      if (sheet.cssRules[ix].selectorText === name){
+        return sheet.cssRules[ix].style;
+      }        
+    }
+  return null;
+}
+
+
+
 Shiny.addCustomMessageHandler(
   "shinyAceExt",
       function(data) { 
@@ -9,13 +24,11 @@ Shiny.addCustomMessageHandler(
         var editor = $el.data('aceEditor');
         var HighlightedLines;
         
-        //alert(el);
         if(data.ptRMode){ 
           editor.getSession().setMode({path: "ace/mode/ptr", v: Date.now()});
           editor.setBehavioursEnabled(true);
         }
         if ( data.addMarker ){
-          //alert("hello");
           var pos = data.addMarker;
           var row1 = pos[0]; 
           var col1 = pos[1]; 
@@ -35,7 +48,18 @@ Shiny.addCustomMessageHandler(
             editor.getSession().removeMarker(highlightedLine);
           }      
         }
-        
+        if(data.tabSize){
+          editor.getSession().setTabSize( data.tabSize[0] );
+        }
+        if(data.resetElementColor){
+          
+          $.each(data.resetElementColor, function(key,element){
+            //alert('key: ' + key + '\n' + 'value: ' + element);
+            var rule=getStyleRule(key);
+            rule.color=element;
+           });
+        }
+        // want to set json options
         //todo: add more messaging capablilities
       }
   );
