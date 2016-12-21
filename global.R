@@ -1,5 +1,5 @@
 
-pkgsCRAN<-c("stringr", "svDialogs", "devtools")
+pkgsCRAN<-c("stringr", "svDialogs", "devtools",  "lintr")
 for(pkgName in pkgsCRAN){  
   if(!require(pkgName, character.only=TRUE)){
     install.packages(pkgName)
