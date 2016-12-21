@@ -51,7 +51,7 @@ observeEvent( input$editNavBar, {
     try(fileName<-dlgSave(title = "Save R script to", 
                           filters = dlgFilters[c("R", "All"), ])$res
     )
-    if(length(fileName)>0 && fileName!=""){ 
+    if(length(fileName)>0 && nchar(fileName)>0){
       file$name<-fileName
       txt<-user$code
       writeLines(txt, fileName)
@@ -64,7 +64,7 @@ observeEvent( input$editNavBar, {
     try(fileName<-dlgSave(title = "Save R script to", 
                           filters = dlgFilters[c("R", "All"), ])$res
     )
-    if(fileName!=""){ 
+    if(length(fileName)>0 && nchar(fileName)>0){ 
       file$name<-fileName
       src<-user$code
       parsedCode<-parse(text=src)
