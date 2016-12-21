@@ -194,6 +194,7 @@ ptRAceEditor <- function(outputId, value, mode, theme, vimKeyBinding = FALSE,
     
 jjs<-gsub("editorVar",  editorVar,
 "
+editorVar.getSession().setOption('useWorker', false);
 editorVar.commands.addCommand({
               name: 'showKeyboardShortcuts',
               bindKey: {win: 'Ctrl-Alt-h', mac: 'Command-Alt-h'},
@@ -206,7 +207,7 @@ editorVar.commands.addCommand({
   });
 editorVar.commands.addCommand({
     name: 'commitSource',
-    bindKey: {win: 'Ctrl-Shift-Enter', mac: 'Alt-Shift-Enter'},
+    bindKey: {win: 'Ctrl-Shift-Enter', mac: 'Command-Shift-Enter'},
     exec: function(editor) {
         var randomString = function(length) {
             var text = '';
@@ -243,11 +244,9 @@ js<-paste(js, "",jjs)
       tags$script(src = 'shinyAce/ace/ace.js'),
       tags$script(src = 'shinyAce/ace/ext-language_tools.js'),
       tags$script(src = 'shinyAce/shinyAce.js'),
-      tags$script(src = "mode-ptr3.js"),
-      tags$script(src = 'aceExt.js'),
-      tags$link(rel = 'stylesheet',
-                type = 'text/css',
-                href = 'shinyAce/shinyAce.css')
+      tags$script(src= "worker-ptr.js"),
+      tags$script(src = "mode-ptr.js"),
+      tags$script(src = 'aceExt.js') 
     )),
     pre(id=outputId, class="shiny-ace", 
         style=paste("height:", 
