@@ -76,7 +76,19 @@ ptRAceEditor <- function(outputId, value, mode, theme, vimKeyBinding = FALSE,
     js <- paste(js, "", editorVar,".setKeyboardHandler('ace/keyboard/vim');",sep="")
   }
   if (!missing(mode)){
-    js <- paste(js, "", editorVar,".getSession().setMode('ace/mode/",mode,"');", sep="")
+  js<-paste0(js,  
+    "ace.config.set('modePath', './Acejs');
+    ace.config.set('workerPath', './Acejs');"
+  ) 
+#     js<-paste(js, "
+# ", "ace",".config.set('modePath', 'file:///home/sup/R/svgRHabitat/pointR_Dev/pointR/www/Acejs');
+#               ", sep="")
+#     js<-paste(js, "
+# ", "ace",".config.set('workerPath', 'file:///home/sup/R/svgRHabitat/pointR_Dev/pointR/www/Acejs');
+#               ", sep="")
+    js<-paste(js, "", editorVar,".getSession().setMode('ace/mode/",mode,"');", sep="")
+    js<-paste(js, "", editorVar, ".getSession().setOption('useWorker', true);", sep="")
+    
   }
   if (!missing(value)){
     js <- paste(js, "", editorVar,".setValue(", shinyAce:::jsQuote(value), ", -1);", sep="")
@@ -194,7 +206,9 @@ ptRAceEditor <- function(outputId, value, mode, theme, vimKeyBinding = FALSE,
     
 jjs<-gsub("editorVar",  editorVar,
 "
-editorVar.getSession().setOption('useWorker', false);
+
+editorVar.getSession().setOption('useWorker', true);
+
 editorVar.commands.addCommand({
               name: 'showKeyboardShortcuts',
               bindKey: {win: 'Ctrl-Alt-h', mac: 'Command-Alt-h'},
@@ -242,10 +256,12 @@ js<-paste(js, "",jjs)
     singleton(tags$head(
       shinyAce:::initResourcePaths(),
       tags$script(src = 'shinyAce/ace/ace.js'),
+      # tags$script(type="text/javascript", 
+      #   HTML("ace.config.set('workerPath','./Acejs');")),
       tags$script(src = 'shinyAce/ace/ext-language_tools.js'),
       tags$script(src = 'shinyAce/shinyAce.js'),
-      tags$script(src= "worker-ptr.js"),
-      tags$script(src = "mode-ptr.js"),
+      #tags$script(src= "Acejs/worker-ptr.js"),
+      #tags$script(src = "Acejs/mode-ptr.js"),
       tags$script(src = 'aceExt.js') 
     )),
     pre(id=outputId, class="shiny-ace", 
