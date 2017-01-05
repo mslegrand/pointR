@@ -19,6 +19,7 @@ shinyUI(
       tags$link(id='shinyAceStyle', rel = 'stylesheet', type = 'text/css', href = 'shinyAce.css'),
       tags$script(src="splitter.js" ), 
       tags$script(src="customSplit.js" ),
+      tags$script(src="api.js"),
       tags$script(src="aceExt.js")
     )),
       #-------------left panel begin--------------------------------------------------
