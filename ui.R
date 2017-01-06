@@ -19,6 +19,7 @@ shinyUI(
       tags$link(id='shinyAceStyle', rel = 'stylesheet', type = 'text/css', href = 'shinyAce.css'),
       tags$script(src="splitter.js" ), 
       tags$script(src="customSplit.js" ),
+      tags$script(src="api.js"),
       tags$script(src="aceExt.js")
     )),
       #-------------left panel begin--------------------------------------------------
@@ -51,11 +52,12 @@ shinyUI(
           "class"="cSvgHtml", 
           overflow= "hidden",
           draggable=FALSE,
-          ptRAceEditor( outputId = "source", value="",  
-                        mode="ptr", theme="katzenmilch",
-                     height = "990px", 
-                     fontSize=16, autoComplete="live", 
-                     autoCompleteList =list(svgR=names(svgR:::eleDefs))
+          shinyAce4Ptr( 
+            outputId = "source", value="",  
+            mode="ptr", theme="katzenmilch",
+            height = "990px", 
+            fontSize=16, autoComplete="live", 
+            autoCompleteList =list(svgR=names(svgR:::eleDefs))
           ), 
           inline=FALSE
         ),

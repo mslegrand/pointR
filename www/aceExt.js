@@ -33,6 +33,7 @@ Shiny.addCustomMessageHandler(
           var row1 = pos[0]; 
           var col1 = pos[1]; 
           var row2 = row1+1; 
+          
           var Range = ace.require("ace/range").Range;
           var mid= editor.getSession().addMarker(
               new Range(row1, 0, row2, 1), 
@@ -52,7 +53,6 @@ Shiny.addCustomMessageHandler(
           editor.getSession().setTabSize( data.tabSize[0] );
         }
         if(data.resetElementColor){
-          
           $.each(data.resetElementColor, function(key,element){
             //alert('key: ' + key + '\n' + 'value: ' + element);
             var rule=getStyleRule(key);

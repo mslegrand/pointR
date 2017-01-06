@@ -70,6 +70,7 @@ observe({
         )
       }, #end of try
       error=function(e){ 
+        e<-c(e,traceback())
         mssg$error<-paste(e, collapse="\n", sep="\n")
         err<-mssg$error
         if(str_detect(err, 'parse')){

@@ -29,6 +29,7 @@ source("utilFormat.R")
 source("utilParser.R")
 source("utilptR.R")
 source("utilTransform.R")
+source("shinyAce4Ptr.R")
 
 defTag<-"ptR"
 
