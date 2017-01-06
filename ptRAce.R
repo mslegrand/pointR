@@ -80,12 +80,6 @@ ptRAceEditor <- function(outputId, value, mode, theme, vimKeyBinding = FALSE,
     "ace.config.set('modePath', './Acejs');
     ace.config.set('workerPath', './Acejs');"
   ) 
-#     js<-paste(js, "
-# ", "ace",".config.set('modePath', 'file:///home/sup/R/svgRHabitat/pointR_Dev/pointR/www/Acejs');
-#               ", sep="")
-#     js<-paste(js, "
-# ", "ace",".config.set('workerPath', 'file:///home/sup/R/svgRHabitat/pointR_Dev/pointR/www/Acejs');
-#               ", sep="")
     js<-paste(js, "", editorVar,".getSession().setMode('ace/mode/",mode,"');", sep="")
     js<-paste(js, "", editorVar, ".getSession().setOption('useWorker', true);", sep="")
     

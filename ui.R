@@ -52,11 +52,12 @@ shinyUI(
           "class"="cSvgHtml", 
           overflow= "hidden",
           draggable=FALSE,
-          ptRAceEditor( outputId = "source", value="",  
-                        mode="ptr", theme="katzenmilch",
-                     height = "990px", 
-                     fontSize=16, autoComplete="live", 
-                     autoCompleteList =list(svgR=names(svgR:::eleDefs))
+          shinyAce4Ptr( 
+            outputId = "source", value="",  
+            mode="ptr", theme="katzenmilch",
+            height = "990px", 
+            fontSize=16, autoComplete="live", 
+            autoCompleteList =list(svgR=names(svgR:::eleDefs))
           ), 
           inline=FALSE
         ),
