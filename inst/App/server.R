@@ -197,23 +197,22 @@ shinyServer(function(input, output,session) {
 
 #--------------------------------------------------
 
-source("serverPlotBarPoints.R", local=TRUE) 
+source("rightPanel/serverPlotBarPoints.R", local=TRUE) 
 # --------------input$plotNavBar=="Tags"----------------  
-source("serverPlotBarTagValues.R", local=TRUE)  
-source("serverPlotBarTagDrag.R", local=TRUE)  
-source("serverPlotBarTransform.R", local=TRUE)  
+source("rightPanel/serverPlotBarTagValues.R", local=TRUE)  
+source("rightPanel/serverPlotBarTagDrag.R", local=TRUE)  
+source("rightPanel/serverPlotBarTransform.R", local=TRUE)  
 
 #---------------Button handlers--------------------------
-source("serverButtons.R",local = TRUE)
+source("leftPanel/serverButtons.R",local = TRUE)
 
   
 #--------------------------------navbarMenuBar--------
-source("serverEditBar.R",local=TRUE)
+source("leftPanel/serverEditBar.R",local=TRUE)
   
 #-----------------------MOUSE CLICKS---------------------------------
-source("serverMouseClicks.R", local=TRUE)
+source("rightPanel/serverMouseClicks.R", local=TRUE)
   
-#---------BEGIN OUTPUT PANELS------------------------------------
 
   
 #-----log panel---------------------------
@@ -221,7 +220,6 @@ source("serverMouseClicks.R", local=TRUE)
     mssg$error
   })
 
-#---------END OUTPUT PANELS------------------------------------
 
  
 })

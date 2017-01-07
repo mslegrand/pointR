@@ -1,3 +1,13 @@
+editOption<-reactiveValues(
+  fontSize=16,
+  theme="katzenmilch",
+  tabSize=2,
+  currentFile='none',
+  currentDirectory=".",
+  notSaved=FALSE
+)
+
+
 observeEvent( input$editNavBar, { 
   fileCmd<-input$editNavBar
   if(fileCmd=="New"){ #-----new
@@ -58,6 +68,22 @@ observeEvent( input$editNavBar, {
     }
     updateNavbarPage(session, "editNavBar", selected ="tab1")
   }
+  if(fileCmd=="quit"){
+    writeOptions<-function(optionFile){
+      
+      df<-data.frame(
+        option=c("fontSize","theme","tabSize","currentFile", "currentDirectory"),
+        value =c(editOption$fontSize, editOption$theme, editOption$tabSize, editOption$currentFile, editOption$currentDirectory)
+      )
+      #directoryPath = system.file('www', package='pointR')
+      write.table(df,file=optionFile, row.names=FALSE)
+    }
+    optionFile<-paste(path.expand("~"),".ptRProfile.csv",sep="/")
+    writeOptions(optionFile)
+    js$closeWindow()
+    stopApp()
+    #q("no")
+  }
   if(fileCmd=="Export as SVG"){ #-----save
     fileName=""
     default="newfile.svg"
@@ -78,6 +104,7 @@ observeEvent( input$editNavBar, {
     modalTheme <- function() {
       modalDialog(
         selectInput("selectTheme", "Theme", themes, multiple=FALSE, 
+                    selected=editOption$theme,
                     selectize = FALSE, width="300px", size=1  ), 
         footer = tagList(actionButton("modalThemeCancel", "Cancel"),actionButton("modalThemeOk", "OK") )
       ) 
@@ -88,7 +115,8 @@ observeEvent( input$editNavBar, {
     fontsSizes<-6:36
     modalFontSize <- function() {
       modalDialog(
-        selectInput("selectFontSize", "Select Font Size", fontsSizes, multiple=FALSE, 
+        selectInput("selectFontSize", "Select Font Size", fontsSizes, 
+                    multiple=FALSE, selected=editOption$fontSize,
                     selectize = FALSE, width="90px", size=1  ), 
         footer = tagList(actionButton("modalFontSizeCancel", "Cancel"),actionButton("modalFontSizeOk", "OK") )
       ) 
@@ -97,10 +125,11 @@ observeEvent( input$editNavBar, {
   }
   if(fileCmd=="Indentation"){
     indentSizes<-1:12
+    size<-as.character(editOption$tabSize)
     modalIndentSize <- function() {
       modalDialog(
-        selectInput("IndentSize", "Select Indent", indentSizes, multiple=FALSE, 
-                    selectize = FALSE, width="90px", size=1  ), 
+        selectInput("selectIndentSize", "Select Indent Spaces", indentSizes, multiple=FALSE, 
+                    selectize = FALSE, width="90px", selected=size  ), 
         footer = tagList(actionButton("modalIndentSizeCancel", "Cancel"),actionButton("modalIndentSizeOk", "OK") )
       ) 
     }
@@ -117,9 +146,9 @@ observeEvent(input$modalIndentSizeCancel, {
 }) 
 
 observeEvent(input$modalIndentSizeOk, {
-  nextSize<-input$selectIndentSize
+  editOption$tabSize<-input$selectIndentSize
   session$sendCustomMessage(type = "shinyAceExt",  
-        list(id= "source", tabSize=as.numeric(nextSize))) 
+        list(id= "source", tabSize=as.numeric(editOption$tabSize))) 
   updateNavbarPage(session, "editNavBar", selected ="tab1")  
   removeModal()
 })
@@ -131,8 +160,8 @@ observeEvent(input$modalFontSizeCancel, {
 
 observeEvent(input$modalFontSizeOk, {
   #nextSize<-select.list(choices = 6:24, graphics=TRUE)
-  nextSize<-input$selectFontSize
-  updateAceEditor(session, "source", fontSize=as.numeric(nextSize) )
+  editOption$fontSize<-input$selectFontSize
+  updateAceEditor(session, "source", fontSize=as.numeric(editOption$fontSize) )
   updateNavbarPage(session, "editNavBar", selected ="tab1")  
   removeModal()
 })
@@ -145,36 +174,38 @@ observeEvent(input$modalThemeCancel, {
 observeEvent(input$modalThemeOk, {
   nextTheme<-input$selectTheme
   if(nextTheme!=""){
+    editOption$theme=nextTheme
     updateAceEditor(session, "source", theme=nextTheme) 
-  } 
-  updateNavbarPage(session, "editNavBar", selected ="tab1")
+   
+    updateNavbarPage(session, "editNavBar", selected ="tab1")
   
-  isDark<-function(nt){
-    nt %in% c(
-      "ambiance","chaos","clouds_midnight","cobalt","idle_fingers",
-      "kr_theme","merbivore","merbivore_soft","mono_industrial","monokai",
-      "pastel_on_dark","solarized_dark","terminal","tomorrow_night","tomorrow_night_blue",
-      "tomorrow_night_bright","tomorrow_night_eighties","twilight","vibrant_ink"
-    )
-  }
-  colorSet<-list(
-    ".ace_svgRAN"=c(255,140,0), ".ace_svgRME"=c(112,128,144),
-    ".ace_svgRFE" =c(0,255,255), ".ace_svgRGR" =c(255,0,255),
-    ".ace_svgRSH" =c(0,0,205), ".ace_svgRCO" =c(172,61,239),
-    ".ace_svgRTX" =c(178,34,34), ".ace_svgRFI" =c(0,128,0),
-    ".ace_svgRMM" =c(240,82,45) )
-  
-  colorSet<-lapply(colorSet, function(col){
-    if(isDark(nextTheme)){
-      col<-pmin(255,col+160)
+    isDark<-function(nt){
+      nt %in% c(
+        "ambiance","chaos","clouds_midnight","cobalt","idle_fingers",
+        "kr_theme","merbivore","merbivore_soft","mono_industrial","monokai",
+        "pastel_on_dark","solarized_dark","terminal","tomorrow_night","tomorrow_night_blue",
+        "tomorrow_night_bright","tomorrow_night_eighties","twilight","vibrant_ink"
+      )
     }
-    paste0("rgb(", paste0(col,collapse=","), ")")
-  })
-
-  session$sendCustomMessage(
-    type = "shinyAceExt",    
-    list(id= "source", resetElementColor=colorSet)
-  ) 
+    colorSet<-list(
+      ".ace_svgRAN"=c(255,140,0), ".ace_svgRME"=c(112,128,144),
+      ".ace_svgRFE" =c(0,255,255), ".ace_svgRGR" =c(255,0,255),
+      ".ace_svgRSH" =c(0,0,205), ".ace_svgRCO" =c(172,61,239),
+      ".ace_svgRTX" =c(178,34,34), ".ace_svgRFI" =c(0,128,0),
+      ".ace_svgRMM" =c(240,82,45) )
+    
+    colorSet<-lapply(colorSet, function(col){
+      if(isDark(nextTheme)){
+        col<-pmin(255,col+160)
+      }
+      paste0("rgb(", paste0(col,collapse=","), ")")
+    })
+  
+    session$sendCustomMessage(
+      type = "shinyAceExt",    
+      list(id= "source", resetElementColor=colorSet)
+    ) 
+  }
   removeModal()
 })
 
@@ -196,4 +227,5 @@ observeEvent(
     }
   }
 )
+#----------------------------------------------
 

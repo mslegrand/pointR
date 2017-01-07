@@ -31,7 +31,8 @@ shinyUI(
             tabPanel("New"),
             tabPanel("Open"),
             tabPanel("Save"),
-            tabPanel("Export as SVG")
+            tabPanel("Export as SVG"),
+            tabPanel("Quit", value="quit")
           ),
           navbarMenu("Options", 
             tabPanel("Theme" ),

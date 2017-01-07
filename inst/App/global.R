@@ -25,11 +25,11 @@ for(pkgName in names(pkgs)){
 
 #----begin external rc------------
 #source("utilStyle.R")
-source("utilFormat.R")
-source("utilParser.R")
-source("utilptR.R")
-source("utilTransform.R")
-source("shinyAce4Ptr.R")
+source("util/utilFormat.R")
+source("util/utilParser.R")
+source("util/utilptR.R")
+source("util/utilTransform.R")
+source("leftPanel/shinyAce4Ptr.R")
 
 defTag<-"ptR"
 
@@ -102,8 +102,8 @@ ex.getSelectInfo<-function(ptRList, selected, point.index){
 #
 #----end external ------------
 
-source("modulePointsBar.R")
-source("moduleTagValue.R")
-source("moduleTagDrag.R")
-source("moduleSVGR.R")
-source("ptRAce.R")
+source("rightPanel/modulePointsBar.R")
+source("rightPanel/moduleTagValue.R")
+source("rightPanel/moduleTagDrag.R")
+source("rightPanel/moduleSVGR.R")
+

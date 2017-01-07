@@ -1,3 +1,4 @@
+shinyjs.closeWindow = function() { window.close(); };
 
 shinyjs.disableTab = function(name) {
 var tab = $('.nav li a[data-value=' + name + ']');
