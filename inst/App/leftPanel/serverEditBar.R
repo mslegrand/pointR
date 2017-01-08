@@ -1,21 +1,28 @@
-editOption<-reactiveValues(
-  fontSize=16,
-  theme="katzenmilch",
-  tabSize=2,
-  currentFile='none',
-  currentDirectory=".",
-  notSaved=FALSE
-)
 
+
+editOption<-reactiveValues(
+  fontSize=defaultOpts ['fontSize'],
+  theme=defaultOpts ['theme'],
+  tabSize=defaultOpts ['tabSize'],
+  currentFile=defaultOpts ['currentFile'],
+  currentDirectory=defaultOpts ['currentDirectory'],
+  .notSaved=FALSE,
+  .unNamed=TRUE
+)
 
 observeEvent( input$editNavBar, { 
   fileCmd<-input$editNavBar
   if(fileCmd=="New"){ #-----new
+    # TODO check if need to save.
     updateNavbarPage(session, "plotNavBar", selected ="Points")
     src<-codeTemplate
     # the next  line update the ptRList; probably should redo with observer
     file$name<-"newSVG.R"
     user$code<-src
+    isolate({
+      editOption$unNamed<-TRUE
+      editOption$.notSaved<-FALSE
+    })
     selectedPoint$point.index<-0
     selectedPoint$name<-"x"
     reactiveTag$freq<-list()
@@ -44,6 +51,10 @@ observeEvent( input$editNavBar, {
       if(nchar(src)>0){
         src<-preProcCode(src)
         user$code<-src
+        isolate({
+          editOption$.unNamed<-FALSE
+          editOption$.notSaved<-FALSE
+        })
         reactiveTag$freq<-list()
         displayOptions$insertMode=TRUE
         displayOptions$showGrid=TRUE
@@ -58,28 +69,26 @@ observeEvent( input$editNavBar, {
   if(fileCmd=="Save"){ #-----save
     fileName=""
     default="newfile.R"
+    #TODO alert if editOption$.unNamed==TRUE
     try(fileName<-dlgSave(title = "Save R script to", 
                           filters = dlgFilters[c("R", "All"), ])$res
     )
     if(length(fileName)>0 && nchar(fileName)>0){
       file$name<-fileName
+      isolate({
+        editOption$.unNamed<-FALSE
+        editOption$.notSaved<-FALSE
+      })
       txt<-user$code
       writeLines(txt, fileName)
     }
     updateNavbarPage(session, "editNavBar", selected ="tab1")
   }
   if(fileCmd=="quit"){
-    writeOptions<-function(optionFile){
-      
-      df<-data.frame(
-        option=c("fontSize","theme","tabSize","currentFile", "currentDirectory"),
-        value =c(editOption$fontSize, editOption$theme, editOption$tabSize, editOption$currentFile, editOption$currentDirectory)
-      )
-      #directoryPath = system.file('www', package='pointR')
-      write.table(df,file=optionFile, row.names=FALSE)
-    }
-    optionFile<-paste(path.expand("~"),".ptRProfile.csv",sep="/")
-    writeOptions(optionFile)
+    # alert if need to save, ie. editOption$.notSaved==TRUE
+    opts<-isolate(reactiveValuesToList((editOption)))
+    opts<-unlist(opts)
+    writeOptions(optionFile, opts)
     js$closeWindow()
     stopApp()
     #q("no")
@@ -147,8 +156,8 @@ observeEvent(input$modalIndentSizeCancel, {
 
 observeEvent(input$modalIndentSizeOk, {
   editOption$tabSize<-input$selectIndentSize
-  session$sendCustomMessage(type = "shinyAceExt",  
-        list(id= "source", tabSize=as.numeric(editOption$tabSize))) 
+  #session$sendCustomMessage(type = "shinyAceExt",  
+  #      list(id= "source", tabSize=as.numeric(editOption$tabSize))) 
   updateNavbarPage(session, "editNavBar", selected ="tab1")  
   removeModal()
 })
@@ -161,7 +170,7 @@ observeEvent(input$modalFontSizeCancel, {
 observeEvent(input$modalFontSizeOk, {
   #nextSize<-select.list(choices = 6:24, graphics=TRUE)
   editOption$fontSize<-input$selectFontSize
-  updateAceEditor(session, "source", fontSize=as.numeric(editOption$fontSize) )
+  #updateAceEditor(session, "source", fontSize=as.numeric(editOption$fontSize) )
   updateNavbarPage(session, "editNavBar", selected ="tab1")  
   removeModal()
 })
@@ -175,7 +184,7 @@ observeEvent(input$modalThemeOk, {
   nextTheme<-input$selectTheme
   if(nextTheme!=""){
     editOption$theme=nextTheme
-    updateAceEditor(session, "source", theme=nextTheme) 
+    #updateAceEditor(session, "source", theme=editOption$theme) 
    
     updateNavbarPage(session, "editNavBar", selected ="tab1")
   
@@ -227,5 +236,19 @@ observeEvent(
     }
   }
 )
+
+observe({
+  updateAceEditor(session, "source", fontSize=as.numeric(editOption$fontSize) )
+})
+observe({
+  updateAceEditor(session, "source", theme=editOption$theme)
+})
+observe({
+  session$sendCustomMessage(type = "shinyAceExt",  
+                            list(id= "source", tabSize=as.numeric(editOption$tabSize)))
+})
+
+
+
 #----------------------------------------------
 

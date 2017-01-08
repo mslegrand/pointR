@@ -17,14 +17,16 @@ for(pkgName in names(pkgs)){
   }  
 }
 
+
 # library(shiny)
 # library(stringr)
 # library(svDialogs) #!!!todo: replace this
 
 #options(shiny.error = recover)
 
-#----begin external rc------------
+#----begin external resources loaded prior to server------------
 #source("utilStyle.R")
+source("leftPanel/configIO.R")
 source("util/utilFormat.R")
 source("util/utilParser.R")
 source("util/utilptR.R")
