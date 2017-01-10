@@ -11,7 +11,6 @@ ptR<-list(
   2,)
 )
 
-
 arrows%<c-%function(x=c(),   ...){
   n<-length(x)-length(x)%%4
   if(n==0){

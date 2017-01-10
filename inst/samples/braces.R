@@ -4,8 +4,8 @@ WH<-c(600,620)
 #Defined by mouse: edit with care!
 ptR<-list(
   x=matrix(
-    c(c( 139,249 ),c( 207,113 ),c( 199,346 )),
-  2,)
+    c(c( 139,249 ),c( 207,113 ),c( 199,346 )), 2
+  )
 )
 
 #' render braces
