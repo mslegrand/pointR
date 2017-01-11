@@ -46,7 +46,7 @@ shinyServer(function(input, output,session) {
   #Eventually we want a stack of code changes so we can do an undo
   user <- reactiveValues( code=codeTemplate) #  internal copy of user code
   backup<-reactiveValues( code=codeTemplate) # last good copy of user code
-  file <-reactiveValues( name="newFile.R")       #  file path
+  #file <-reactiveValues( name="newFile.R")       #  file path
   selectedPoint <- reactiveValues(
     name="x", #NULL,       # name of current point array
     point.index=0    #  selected pt.indx (column) in current point array
@@ -197,23 +197,46 @@ shinyServer(function(input, output,session) {
 
 #--------------------------------------------------
 
-source("serverPlotBarPoints.R", local=TRUE) 
+source("rightPanel/serverPlotBarPoints.R", local=TRUE) 
 # --------------input$plotNavBar=="Tags"----------------  
-source("serverPlotBarTagValues.R", local=TRUE)  
-source("serverPlotBarTagDrag.R", local=TRUE)  
-source("serverPlotBarTransform.R", local=TRUE)  
+source("rightPanel/serverPlotBarTagValues.R", local=TRUE)  
+source("rightPanel/serverPlotBarTagDrag.R", local=TRUE)  
+source("rightPanel/serverPlotBarTransform.R", local=TRUE)  
 
 #---------------Button handlers--------------------------
-source("serverButtons.R",local = TRUE)
+source("leftPanel/serverButtons.R",local = TRUE)
 
   
 #--------------------------------navbarMenuBar--------
-source("serverEditBar.R",local=TRUE)
+
+
+editOption<-reactiveValues(
+  fontSize=defaultOpts ['fontSize'],
+  theme=defaultOpts ['theme'],
+  tabSize=defaultOpts ['tabSize'],
+  currentFile=defaultOpts ['currentFile'],
+  currentDirectory=defaultOpts ['currentDirectory'],
+  .saved=TRUE
+)
+  
+  getCurrentDir<-reactive({editOption$currentDirectory})
+  getCurrentFile<-reactive({editOption$currentFile})
+  getFileNameStatus<-reactive({editOption$currentFile!=""})
+  getFileSavedStatus<-reactive({editOption$.saved})
+  
+source("leftPanel/cmdFileSaveAs.R", local=TRUE)  
+source("leftPanel/cmdFileSave.R", local=TRUE)  
+source("leftPanel/cmdFileNew.R", local=TRUE)  
+source("leftPanel/cmdFileOpen.R", local=TRUE)  
+source("leftPanel/cmdFileQuit.R", local=TRUE)  
+source("leftPanel/cmdFileExportSvg.R", local=TRUE) 
+source("leftPanel/cmdOptionsTheme.R",local=TRUE)
+source("leftPanel/cmdOptionsFontSize.R", local=TRUE)  
+source("leftPanel/serverEditBar.R",local=TRUE)
   
 #-----------------------MOUSE CLICKS---------------------------------
-source("serverMouseClicks.R", local=TRUE)
+source("rightPanel/serverMouseClicks.R", local=TRUE)
   
-#---------BEGIN OUTPUT PANELS------------------------------------
 
   
 #-----log panel---------------------------
@@ -221,7 +244,6 @@ source("serverMouseClicks.R", local=TRUE)
     mssg$error
   })
 
-#---------END OUTPUT PANELS------------------------------------
 
  
 })

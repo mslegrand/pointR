@@ -31,7 +31,9 @@ shinyUI(
             tabPanel("New"),
             tabPanel("Open"),
             tabPanel("Save"),
-            tabPanel("Export as SVG")
+            tabPanel("Save As...", value="saveAs"),
+            tabPanel("Export as SVG"),
+            tabPanel("Quit", value="quit")
           ),
           navbarMenu("Options", 
             tabPanel("Theme" ),
@@ -54,7 +56,7 @@ shinyUI(
           draggable=FALSE,
           shinyAce4Ptr( 
             outputId = "source", value="",  
-            mode="ptr", theme="katzenmilch",
+            mode="ptr", theme=defaultOpts["theme"],
             height = "990px", 
             fontSize=16, autoComplete="live", 
             autoCompleteList =list(svgR=names(svgR:::eleDefs))

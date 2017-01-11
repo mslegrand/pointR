@@ -27,7 +27,9 @@ observeEvent(
 })
 #---commit  button----- 
 
-
+# observeEvent(input$commit, {
+#   editOption$.saved<-FALSE
+# })
 
 #(updates user$code with editor contents)
 # alternatively can use observeEvent( input$commit, { ... })
@@ -68,6 +70,7 @@ observe({
           type = "shinyAceExt", 
           list(id= "source", removeAllMarkers='removeAllMarkers')
         )
+        #editOption$.saved<-FALSE
       }, #end of try
       error=function(e){ 
         e<-c(e,traceback())

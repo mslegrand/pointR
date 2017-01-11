@@ -4,8 +4,8 @@ WH<-c(600,620)
 #Defined by mouse: edit with care!
 ptR<-list(
   x=matrix(
-    c(c( 79.5,195 ),c( 218.5,87 ),c( 229.5,350 )),
-  2,)
+    c(c( 79,195 ),c( 218,87 ),c( 229,350 )), 2
+  )
 )
 
 svgR(wh=WH, 

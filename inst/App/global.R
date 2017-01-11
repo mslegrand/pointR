@@ -17,19 +17,21 @@ for(pkgName in names(pkgs)){
   }  
 }
 
+
 # library(shiny)
 # library(stringr)
 # library(svDialogs) #!!!todo: replace this
 
 #options(shiny.error = recover)
 
-#----begin external rc------------
+#----begin external resources loaded prior to server------------
 #source("utilStyle.R")
-source("utilFormat.R")
-source("utilParser.R")
-source("utilptR.R")
-source("utilTransform.R")
-source("shinyAce4Ptr.R")
+source("leftPanel/configIO.R")
+source("util/utilFormat.R")
+source("util/utilParser.R")
+source("util/utilptR.R")
+source("util/utilTransform.R")
+source("leftPanel/shinyAce4Ptr.R")
 
 defTag<-"ptR"
 
@@ -102,8 +104,8 @@ ex.getSelectInfo<-function(ptRList, selected, point.index){
 #
 #----end external ------------
 
-source("modulePointsBar.R")
-source("moduleTagValue.R")
-source("moduleTagDrag.R")
-source("moduleSVGR.R")
-source("ptRAce.R")
+source("rightPanel/modulePointsBar.R")
+source("rightPanel/moduleTagValue.R")
+source("rightPanel/moduleTagDrag.R")
+source("rightPanel/moduleSVGR.R")
+
