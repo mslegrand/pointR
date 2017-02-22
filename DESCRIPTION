@@ -6,13 +6,14 @@ Version: 0.3.5.3
 Author: M.S.Legrand
 Maintainer: M.S.Legrand <slegrand3.14@gmail.com>
 Description: An IDE for svgR
-License: 
+License: MIT + file LICENSE
 Depends:
-    R
+    R (>= 3.3.2),
 Imports:
     shiny,
     shinyAce,
-    svgR
+    svgR,
+    shinyDMDMenu
 Suggests:
     testthat
 RoxygenNote: 5.0.1
