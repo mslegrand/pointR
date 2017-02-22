@@ -1,26 +1,49 @@
+library(svgR)
+library(shiny)
+library(shinyAce)
+library(shinyDMDMenu)
 
-pkgsCRAN<-c("stringr", "svDialogs", "devtools",  "lintr")
-for(pkgName in pkgsCRAN){  
-  if(!require(pkgName, character.only=TRUE)){
-    install.packages(pkgName)
-    library(pkgName, character.only = TRUE)
-  }  
-}            
+.global <- new.env()
 
-pkgs<-list(
-           "shinyjs"="daattali", 
-           "svgR"="mlegrand","shinyAce"="trestletech")
-for(pkgName in names(pkgs)){  
-  if(!require(pkgName, character.only=TRUE)){
-    install_github(pkgName, pkg[[pkgName]])
-    library(pkgName, character.only=TRUE)
-  }  
+initResourcePaths <- function() {
+  if (is.null(.global$loaded)) {
+    shiny::addResourcePath(
+      prefix = 'pointR',
+      directoryPath = system.file('App', package='pointR'))
+    .global$loaded <- TRUE
+  }
+  HTML("")
 }
 
 
-# library(shiny)
-# library(stringr)
-# library(svDialogs) #!!!todo: replace this
+
+# pkgsCRAN<-c("stringr", "svDialogs", "devtools",  "lintr")
+# for(pkgName in pkgsCRAN){  
+#   if(!require(pkgName, character.only=TRUE)){
+#     #install.packages(pkgName)
+#     library(pkgName, character.only = TRUE)
+#   }  
+# }            
+
+# pkgs<-list(
+#            "shinyjs"="daattali", 
+#            "svgR"="mlegrand",
+#            "shinyDMDMenu"="mlegrand",
+#            "shinyAce"="trestletech")
+# for(pkgName in names(pkgs)){  
+#   if(!require(pkgName, character.only=TRUE)){
+#     #install_github(pkgName, pkg[[pkgName]])
+#     library(pkgName, character.only=TRUE)
+#   }  
+# }
+
+
+library(shiny)
+library(shinyjs)
+library(svgR)
+library(shinyAce)
+library(stringr)
+library(svDialogs) #!!!todo: replace this
 
 #options(shiny.error = recover)
 
@@ -36,12 +59,12 @@ source("leftPanel/shinyAce4Ptr.R")
 defTag<-"ptR"
 
 js.scripts<-list(
-  Points=readFile("www/pointsIO.js"),
-  TagVal=readFile("www/tagValIO.js"),
-  Translate=readFile("www/transIO.js"),
-  Rotate=readFile("www/rotIO.js"),
-  Scale=readFile("www/scaleIO.js"),
-  TagDrag=readFile("www/transTag.js")
+  Points=readFile("www/IOjs/pointsIO.js"),
+  TagVal=readFile("www/IOjs/tagValIO.js"),
+  Translate=readFile("www/IOjs/transIO.js"),
+  Rotate=readFile("www/IOjs/rotIO.js"),
+  Scale=readFile("www/IOjs/scaleIO.js"),
+  TagDrag=readFile("www/IOjs/tagDragIO.js")
 )
 
 #---begin external---------
