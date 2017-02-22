@@ -1,4 +1,4 @@
-cmdFileFontSize<-reactive({
+cmdFileFontSize<-function(){
   fontsSizes<-6:36
   modalFontSize <- function() {
     modalDialog(
@@ -9,7 +9,7 @@ cmdFileFontSize<-reactive({
     ) 
   }
   showModal( modalFontSize() )
-})
+}
 
 observeEvent(input$modalFontSizeCancel, {
   removeModal()
