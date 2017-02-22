@@ -2,9 +2,9 @@
 
 
 
-output$svgTransformPanel<-renderUI({
-  conditionalPanel( "input.plotNavBar =='Transforms'", modulePlotSVGrUI("svgTransformMod"))
-})
+# output$svgTransformPanel<-renderUI({
+#   conditionalPanel( "input.plotNavBar =='Transforms'", modulePlotSVGrUI("svgTransformMod"))
+# })
 
 
 

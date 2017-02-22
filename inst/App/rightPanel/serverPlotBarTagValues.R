@@ -1,15 +1,15 @@
 
 
 # --------------input$plotNavBar=="tagValues"---------------- 
- output$TagValuesPanel<-renderUI({
-  conditionalPanel( "input.plotNavBar=='tagValues'", moduleTagValUI("tagValBar"))
- })
+ # output$TagValuesPanel<-renderUI({
+ #  conditionalPanel( "input.plotNavBar=='tagValues'", moduleTagValUI("tagValBar"))
+ # })
 
 tagValInfoList<-callModule(
   module=moduleTagVal,
   id="tagValBar",
   id2="tagValBar",
-  barName=reactive(input$plotNavBar),
+  barName=reactive(input$plotNavBar$item),
   getCode=reactive(user$code), 
   getPtDefs=reactive({x<-getPtDefs(); x}),
   getTagNameChoices=reactive({getTagNameChoices()}) ,
@@ -20,7 +20,7 @@ tagValInfoList<-callModule(
 
 #observes tagValInfoList$name, tagValInfoList$index
 observeEvent(c(tagValInfoList$name(),tagValInfoList$index()),{
-  if(input$plotNavBar=='tagValues'){
+  if(input$plotNavBar$item=='tagValues'){
     name<-tagValInfoList$name()
     index<-tagValInfoList$index()
     if(!is.null(name)){
@@ -35,7 +35,7 @@ observeEvent(c(tagValInfoList$name(),tagValInfoList$index()),{
 
 observeEvent(tagValInfoList$updateTagsNow(),{
   if(tagValInfoList$updateTagsNow()>0 
-     && input$plotNavBar=='tagValues'){
+     && input$plotNavBar$item=='tagValues'){
     name<-tagValInfoList$name()
     index<-tagValInfoList$index()
     if(!is.null(name)){
@@ -102,20 +102,20 @@ showPts.valTag%<c-% function(ptName, pts, selectedPointIndx, ptDisplayMode,  ptT
   } #end showPts
 
   
-output$svgTagValuesPanel<-renderUI({
-  conditionalPanel( "input.plotNavBar=='tagValues'", 
-    absolutePanel( "class"="cSvgHtml", 
-                   draggable=FALSE,
-                   htmlOutput("svgTagValPlot")
-      )
-  )
-})
-  
+# output$svgTagValuesPanel<-renderUI({
+#   conditionalPanel( "input.plotNavBar=='tagValues'", 
+#     absolutePanel( "class"="cSvgHtml", 
+#                    draggable=FALSE,
+#                    htmlOutput("svgTagValPlot")
+#       )
+#   )
+# })
+#   
 
 
-output$svgTagValuesPanel<-renderUI({
-  conditionalPanel( "input.plotNavBar=='tagValues'", modulePlotSVGrUI("svgTagValsMod"))
-})
+# output$svgTagValuesPanel<-renderUI({
+#   conditionalPanel( "input.plotNavBar=='tagValues'", modulePlotSVGrUI("svgTagValsMod"))
+# })
 
 tagValSVGList<-callModule(
   module=modulePlotSVGr,

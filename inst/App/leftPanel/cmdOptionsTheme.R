@@ -1,5 +1,4 @@
-cmdOptionsTheme<-reactive({
-  fileCmd<-input$editNavBar #This is necessary to trigger reactive expression
+cmdOptionsTheme<-function(){
   
   themes<-getAceThemes()
   modalTheme <- function() {
@@ -11,10 +10,9 @@ cmdOptionsTheme<-reactive({
     ) 
   }
   showModal( modalTheme() )
-})
+}
 
 observeEvent(input$modalThemeCancel, {
-  updateNavbarPage(session, "editNavBar", selected ="tab1")
   removeModal()
 }) 
 
@@ -22,9 +20,6 @@ observeEvent(input$modalThemeOk, {
   nextTheme<-input$selectTheme
   if(nextTheme!=""){
     editOption$theme=nextTheme
-    #updateAceEditor(session, "source", theme=editOption$theme) 
-    
-    updateNavbarPage(session, "editNavBar", selected ="tab1")
   }  
   removeModal()
 }) 

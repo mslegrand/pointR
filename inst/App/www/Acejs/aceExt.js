@@ -1,6 +1,13 @@
 // ace customizations
 var ptr_HighlightedLines=[];
 
+/*
+$(document).ready(function(){ // not working
+    $("#aceContainer").on("resize", function(evt){
+      console.log("resizing");
+      $("#source").resize() });
+})
+*/
 
 //Used exclusively for swapping colors of svgR keywords
 function getStyleRule(name) {
@@ -13,6 +20,7 @@ function getStyleRule(name) {
     }
   return null;
 }
+
 
 
 
@@ -50,7 +58,8 @@ Shiny.addCustomMessageHandler(
           }      
         }
         if(data.tabSize){
-          editor.getSession().setTabSize( data.tabSize[0] );
+          editor.getSession().setUseSoftTabs(true);
+          editor.getSession().setTabSize( data.tabSize );
         }
         if(data.resetElementColor){
           $.each(data.resetElementColor, function(key,element){

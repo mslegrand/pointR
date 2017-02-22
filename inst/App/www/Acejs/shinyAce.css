@@ -20,12 +20,14 @@
   50% { border-color: #F88;}
   100% { border-color: #CCC;}
 }
-  
+
+/*  
 @-ms-keyframes aceflash {
   0% { border-color: #CCC;}
   50% { border-color: #F88;}
   100% { border-color: #CCC;}
 }
+*/
 
 .acealert{
   border: 1px solid rgba(255, 50, 50, 0.60);
@@ -34,6 +36,12 @@
 .ace_highlight-marker {
    position: absolute; 
    background: #FF0000; 
+   z-index: 1000; 
+}
+
+.ace_error-marker{
+   position: absolute; 
+   background-color: #F00; 
    z-index: 1000; 
 }
 
@@ -47,3 +55,10 @@
 .ace_svgRFI {color:  rgb(0,128,0); }
 .ace_svgRMM {color:  rgb(240,82,45); }
 
+#source { /* kludge: should use class  */
+  position: absolute; /* Added */
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}

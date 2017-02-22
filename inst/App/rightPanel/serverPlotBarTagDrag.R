@@ -1,14 +1,14 @@
 
 # --------------input$plotNavBar=="dragTag"---------------- 
 
- output$TagDragPanel<-renderUI({
-  conditionalPanel( "input.plotNavBar=='tagDrag'", moduleTagDragUI("tagDragBar"))
- })
+ # output$TagDragPanel<-renderUI({
+ #  conditionalPanel( "input.plotNavBar=='tagDrag'", moduleTagDragUI("tagDragBar"))
+ # })
 
 tagDragInfoList<-callModule(
   module=moduleTagDrag,
   id="tagDragBar",
-  barName=reactive(input$plotNavBar),
+  barName=reactive(input$plotNavBar$item),
   getTagNameChoices=getTagNameChoices,
   getTagName=getTagName,
   getTagIndexChoices=getTagIndexChoices,
@@ -287,10 +287,10 @@ observeEvent(
 
 
 #-------------SVG-------------------------------------
-
-output$svgTagDragPanel<-renderUI({
-  conditionalPanel( "input.plotNavBar=='tagDrag'", modulePlotSVGrUI("svgTagDragMod"))
-})
+# 
+# output$svgTagDragPanel<-renderUI({
+#   conditionalPanel( "input.plotNavBar=='tagDrag'", modulePlotSVGrUI("svgTagDragMod"))
+# })
 
 tagValSVGList<-callModule(
   module=modulePlotSVGr,

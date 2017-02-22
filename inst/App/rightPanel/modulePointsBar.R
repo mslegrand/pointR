@@ -65,34 +65,34 @@ modulePointsBar<-function(
     } 
   })
   
-  observe({
-    ptRList<-getPtDefs()$pts #trigger is name or index
-    #res<-getSelectInfo()
-    if(result$point.index<=1){
-      disable("backwardPt")
-    } else {
-      enable("backwardPt")
-    }
-  })
+  # observe({
+  #   ptRList<-getPtDefs()$pts #trigger is name or index
+  #   #res<-getSelectInfo()
+  #   if(result$point.index<=1){
+  #     disable("backwardPt")
+  #   } else {
+  #     enable("backwardPt")
+  #   }
+  # })
   
   observe({
     selection<-getSelectInfo()$selected
     ptRList<-getPtDefs()$pts
     len<-length(ptRList[[selection ]])/2
-    if(result$point.index>=len){
-        disable("forwardPt")
-      } else {
-        enable("forwardPt")
-      }
+    # if(result$point.index>=len){
+    #     disable("forwardPt")
+    #   } else {
+    #     enable("forwardPt")
+    #   }
   })
   
-  observe(
-    if(isTaggable()){
-      enable("tagPt")
-    } else {
-      disable("tagPt")
-    }
-  )
+  # observe(
+  #   if(isTaggable()){
+  #     enable("tagPt")
+  #   } else {
+  #     disable("tagPt")
+  #   }
+  # )
   
   
   

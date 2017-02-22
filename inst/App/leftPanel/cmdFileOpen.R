@@ -10,19 +10,14 @@ modalSaveOrContinue <- function() {
   ) 
 }
 
-cmdFileOpen<-reactive({
-  fileCmd<-input$editNavBar #This is necessary to trigger reactive expression
-  
-  
-  
-  #print("before showModal modalSaveOrContinue")
+cmdFileOpen<-function(){
   if(getFileSavedStatus()==FALSE){
     showModal( modalSaveOrContinue() )
   } else {
     openFileNow()
   }
   
-})
+}
 
 observeEvent(input$saveFirst, {
   removeModal()
@@ -69,7 +64,6 @@ openFileNow<-reactive({
       mssg$error<-""
     }
   }
-  updateNavbarPage(session, "editNavBar", selected ="tab1")
   updateNavbarPage(session, "plotNavBar", selected ="Points") 
   updateNavbarPage(session, "tagFreq", selected ="Off") 
 })

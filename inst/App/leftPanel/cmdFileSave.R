@@ -1,6 +1,4 @@
-
-cmdFileSave<-reactive({
-  fileCmd<-input$editNavBar #This is necessary to trigger reactive expression
+cmdFileSave<-function(){
   curDir<-getCurrentDir()
   curFile<-getCurrentFile()
   if(nchar(curDir)>0 && 
@@ -13,5 +11,4 @@ cmdFileSave<-reactive({
     txt<-user$code
     writeLines(txt, fullFilePath)
   }
-  updateNavbarPage(session, "editNavBar", selected ="tab1")
-})
+}

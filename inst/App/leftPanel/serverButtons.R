@@ -63,7 +63,7 @@ observe({
         eval(parsedCode)
         mssg$error<-""
         user$code<-src
-        if(input$plotNavBar=="Log"){
+        if(input$plotNavBar$item=="Log"){
           updateNavbarPage(session, "plotNavBar", selected ="Points")
         } 
         session$sendCustomMessage(

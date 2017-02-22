@@ -1,0 +1,23 @@
+html, body {
+  height: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#left-component {
+right: 50%;
+margin-right: 5px;
+background-color: #B8D8FF;
+}
+
+#my-divider {
+right: 50%;
+width: 5px;
+}
+
+#right-component {
+width: 50%;
+margin-left: 5px;
+background-color: #B8D8FF;
+}

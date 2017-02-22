@@ -3,7 +3,7 @@
 # propose
 moduleTagValUI<-function(id, input, output) { 
   ns <- NS(id)
-  useShinyjs()
+  #useShinyjs()
   absolutePanel( top=50, left=0, width="100%", draggable=TRUE, 
         div(style="display:inline-block",
           selectInput( ns("name"), "Point Matrix",
@@ -51,6 +51,7 @@ moduleTagVal<-function(input, output, session,
     attribute=NULL
   )
   
+   
   #===
   # this should be updated whenever 
   # 1) we change to this page

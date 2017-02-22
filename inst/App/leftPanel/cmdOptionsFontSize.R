@@ -1,8 +1,4 @@
-
-
 cmdFileFontSize<-reactive({
-  fileCmd<-input$editNavBar #This is necessary to trigger reactive expression
-  
   fontsSizes<-6:36
   modalFontSize <- function() {
     modalDialog(
@@ -16,15 +12,11 @@ cmdFileFontSize<-reactive({
 })
 
 observeEvent(input$modalFontSizeCancel, {
-  updateNavbarPage(session, "editNavBar", selected ="tab1")
   removeModal()
 }) 
 
 observeEvent(input$modalFontSizeOk, {
-  #nextSize<-select.list(choices = 6:24, graphics=TRUE)
   editOption$fontSize<-input$selectFontSize
-  #updateAceEditor(session, "source", fontSize=as.numeric(editOption$fontSize) )
-  updateNavbarPage(session, "editNavBar", selected ="tab1")  
   removeModal()
 })
 

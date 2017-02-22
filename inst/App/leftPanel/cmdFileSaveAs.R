@@ -1,7 +1,5 @@
 
-cmdFileSaveAs<-reactive({
-  fileCmd<-input$editNavBar #This is necessary to trigger reactive expression
-  
+cmdFileSaveAs<-function(){
   if(getFileNameStatus()==TRUE){
     default<-getCurrentFile()
   } else {
@@ -28,5 +26,4 @@ cmdFileSaveAs<-reactive({
       editOption$currentDirectory<-dirname(fileName) 
     }
   })
-  updateNavbarPage(session, "editNavBar", selected ="tab1")
-})
+}

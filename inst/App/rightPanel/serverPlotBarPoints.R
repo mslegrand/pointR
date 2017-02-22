@@ -2,13 +2,13 @@
 # --------------input$plotNavBar=="Points"----------------
 # =============== UI =======================
 
-output$PointsPanel<-renderUI({
-  conditionalPanel( "input.plotNavBar=='Points'", modulePointsBarUI("pointsBar"))
-})
-
-output$svgPointsPanel<-renderUI({
-  conditionalPanel( "input.plotNavBar=='Points'", modulePlotSVGrUI("svgPointsMod"))
-})
+# output$PointsPanel<-renderUI({
+#   conditionalPanel( "input.plotNavBar=='Points'", modulePointsBarUI("pointsBar"))
+# })
+# 
+# output$svgPointsPanel<-renderUI({
+#   conditionalPanel( "input.plotNavBar=='Points'", modulePlotSVGrUI("svgPointsMod"))
+# })
 
 
 # ===============        SERVER       =======================

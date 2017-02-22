@@ -152,18 +152,18 @@ shinyAce4Ptr <- function(
         autoComplete=autoComplete, autoCompleteList=autoCompleteList,
         debounce=debounce, selectionId=selectionId, cursorId=cursorId, hotkeys=hotkeys
     )
-    
+    #style=paste("height:", validateCssUnit(height)),
     tagList(
       singleton(tags$head(
         shinyAce:::initResourcePaths(),
         tags$script(src = 'shinyAce/ace/ace.js'),
         tags$script(src = 'shinyAce/ace/ext-language_tools.js'),
         tags$script(src = 'shinyAce/shinyAce.js'),
-        tags$script(src = 'aceExt.js') 
+        tags$script(src = 'Acejs/aceExt.js') 
       )),
       pre(id=outputId, 
          class="shiny-ace", 
-         style=paste("height:", validateCssUnit(height)),
+         
         `data-autoCompleteList` = autoCompleteList
       ),
       tags$script(type="text/javascript", HTML(js))

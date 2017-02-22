@@ -8,9 +8,7 @@
 #---begin server--------------
 shinyServer(function(input, output,session) {
   
-  js$disableMenu('plotNavBar li:nth-child(2)') #this disable Tags Menu
-  js$disableTab("Transforms")
-  
+
   #ordinary fns
   exGetTagName<-function(tagNameChoices, ptChosen){
     if(length(tagNameChoices)>0){
@@ -51,6 +49,8 @@ shinyServer(function(input, output,session) {
     name="x", #NULL,       # name of current point array
     point.index=0    #  selected pt.indx (column) in current point array
   ) 
+  panels<-reactiveValues(right="Points")
+  rightPanel<-reactive({panels$right})
   #tagVal<-reactiveValues(hasTag=FALSE)
   reactiveTag<-reactiveValues(freq=list())
   displayOptions<-reactiveValues(
@@ -59,6 +59,7 @@ shinyServer(function(input, output,session) {
     ptMode="Normal"
   )
   mssg<-reactiveValues(error="") 
+  
   
   # Reactive expressions------------- 
    #---
@@ -72,7 +73,7 @@ shinyServer(function(input, output,session) {
   getPtName<-reactive({selectedPoint$name})
   getPtIndex<-reactive({selectedPoint$point.index})
   #-----------------------
-  barName<-reactive({input$plotNavBar})
+  barName<-reactive({input$plotNavBar$item})
   getErrorMssg<-reactive({ mssg$error })
   getPtDefs<- reactive({ ex.getPtDefs(user$code) })  #extract points from user code
   getTagNameChoices<-reactive({
@@ -111,7 +112,7 @@ shinyServer(function(input, output,session) {
   getTagDF<-reactive({
     ptName<-getPtName()
     if(is.null(  getPtName() )){
-      ptTags<NULL
+      ptTags<-NULL
     }
     tagRList<-getPtDefs()$df 
     if(!is.null(tagRList)){
@@ -171,25 +172,26 @@ shinyServer(function(input, output,session) {
   observe({
     tagsMissing<-is.null(getPtDefs()$df)
     isolate({
-      name<-'plotNavBar li:nth-child(2)'
       if(tagsMissing){
-        js$disableMenu(name)
+        disableDMDM(session, "plotNavBar", "Tags")
       } else {
-        js$enableMenu(name)
+        enableDMDM(session, "plotNavBar", "Tags")
       }
-    })  
+    })
   })
   
   
   
   observe({
-        using<-usingTransformDraggable()
-    if(using){
-      js$enableTab("Transforms")
-      
-    } else {
-      js$disableTab("Transforms")
-    }
+    using<-usingTransformDraggable()
+    isolate({
+      if(using){
+        enableDMDM(session, "plotNavBar", "Transforms")
+      } else {
+        disableDMDM(session, "plotNavBar", "Transforms")
+      }
+    })
+    
   }
   )
   
@@ -201,8 +203,12 @@ source("rightPanel/serverPlotBarPoints.R", local=TRUE)
 # --------------input$plotNavBar=="Tags"----------------  
 source("rightPanel/serverPlotBarTagValues.R", local=TRUE)  
 source("rightPanel/serverPlotBarTagDrag.R", local=TRUE)  
-source("rightPanel/serverPlotBarTransform.R", local=TRUE)  
-
+source("rightPanel/serverPlotBarTransform.R", local=TRUE) 
+   
+  
+source("rightPanel/serverLog.R", local=TRUE) 
+source("rightPanel/serverPlotBar.R", local=TRUE)
+  
 #---------------Button handlers--------------------------
 source("leftPanel/serverButtons.R",local = TRUE)
 
@@ -236,7 +242,7 @@ source("leftPanel/serverEditBar.R",local=TRUE)
   
 #-----------------------MOUSE CLICKS---------------------------------
 source("rightPanel/serverMouseClicks.R", local=TRUE)
-  
+source("rightPanel/serverPlotBar.R", local=TRUE)  
 
   
 #-----log panel---------------------------
