@@ -17,3 +17,6 @@ Imports:
 Suggests:
     testthat
 RoxygenNote: 5.0.1
+Remotes: 
+  mslegrand/shinyDMDMenu,
+  mslegrand/svgR
