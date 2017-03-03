@@ -1,6 +1,34 @@
 // ace customizations
 var ptr_HighlightedLines=[];
 
+var helpSvgRTopic = function(query){
+        var mssg="\"" + query + "\"";
+        Shiny.onInputChange("helpSvgRMssg", query );
+}
+        
+/*
+var loadPtrSnippetFile = function(id) {
+    if (!id || snippetManager.files[id])
+        return;
+    var snippetFilePath = id.replace("mode", "snippets");
+    snippetManager.files[id] = {};
+    config.loadModule(snippetFilePath, function(m) {
+        if (m) {
+            snippetManager.files[id] = m;
+            if (!m.snippets && m.snippetText)
+                m.snippets = snippetManager.parseSnippetFile(m.snippetText);
+            snippetManager.register(m.snippets || [], m.scope);
+            if (m.includeScopes) {
+                snippetManager.snippetMap[m.scope].includeScopes = m.includeScopes;
+                m.includeScopes.forEach(function(x) {
+                    loadSnippetFile("ace/mode/" + x);
+                });
+            }
+        }
+    });
+};
+*/
+
 /*
 $(document).ready(function(){ // not working
     $("#aceContainer").on("resize", function(evt){
@@ -12,7 +40,7 @@ $(document).ready(function(){ // not working
 //Used exclusively for swapping colors of svgR keywords
 function getStyleRule(name) {
     var ix, 
-    sheet= $('#shinyAceStyle')[0]['sheet'];
+    sheet= $('#shinyAceStyle')[0]['sheet']; //revisit this
     for (ix=0; ix<sheet.cssRules.length; ix++) {
       if (sheet.cssRules[ix].selectorText === name){
         return sheet.cssRules[ix].style;
@@ -29,7 +57,7 @@ Shiny.addCustomMessageHandler(
       function(data) { 
         var id = data.id;
         var $el = $('#' + id);
-        var editor = $el.data('aceEditor');
+        var editor = $el.data('aceEditor'); 
         var HighlightedLines;
         
         if(data.ptRMode){ 
@@ -49,7 +77,6 @@ Shiny.addCustomMessageHandler(
               'line', true
           );
           ptr_HighlightedLines.push(mid); 
-          console.log("marker added-> " + mid);
         }
         if(data.removeAllMarkers){
           while(ptr_HighlightedLines.length>0){
@@ -58,16 +85,64 @@ Shiny.addCustomMessageHandler(
           }      
         }
         if(data.tabSize){
-          editor.getSession().setUseSoftTabs(true);
+          //editor.getSession().setUseSoftTabs(true);
           editor.getSession().setTabSize( data.tabSize );
         }
         if(data.resetElementColor){
           $.each(data.resetElementColor, function(key,element){
-            //alert('key: ' + key + '\n' + 'value: ' + element);
             var rule=getStyleRule(key);
             rule.color=element;
            });
         }
+        if(data.snippets){
+          var snippetManager = ace.require("ace/snippets").snippetManager;
+          var m = snippetManager.files[editor.session.$mode.$id];
+          m.snippetText = data.snippets;
+          if (m.snippets){
+            snippetManager.unregister(m.snippets);
+          }
+          m.snippets = snippetManager.parseSnippetFile(m.snippetText, m.scope);
+          snippetManager.register(m.snippets);
+        }
+        if(data.toggleWhiteSpace){
+          //console.log(JSON.stringify(data))
+          editor.setShowInvisibles(!editor.getShowInvisibles());
+        }
+        if(data.toggleTabType){
+          editor.session.setUseSoftTabs(!editor.session.getUseSoftTabs());
+        }
+        
+        if(data.showKeyboardShortCuts){
+          ace.config.loadModule(
+            'ace/ext/keybinding_menu', function(module) {
+                module.init(editor);
+                editor.showKeyboardShortcuts();
+          });
+        }
+        
+        if(data.getKeyboardShortcuts){
+          //var kb=ace.ext.get_editor_keyboard_shortcuts.getEditorKeybordShortcuts(editor);
+          //Shiny.onInputChange("keyBoardHelp",kb);
+          ace.config.loadModule('ace/ext/keybinding_menu', function(module) {
+            var require
+            var kb=module.getEditorKeybordShortcuts.getEditorKeybordShortcuts(editor);
+          });
+            
+          }
+            //'ace/ext/menu_tools/get_editor_keyboard_shortcuts', function(module) {
+             //var kb=require("ace.ext.menu_tools.get_editor_keyboard_shortcuts").getEditorKeybordShortcuts(editor); 
+              
+              //sendCustomMessage to open window and display kb
+              //Shiny.onInputChange("keyBoardHelp",kb);
+          //});
+          
+            //'ace/ext/menu_tools/get_editor_keyboard_shortcuts', function(module) 
+          //var kb=editor.getEditorKeybordShortcuts();
+          //sendCustomMessage to open window and display kb
+          //Shiny.onInputChange("keyBoardHelp",kb);
+          //});
+        //}
+        
         // want to set json options
         //todo: add more messaging capablilities
       }
