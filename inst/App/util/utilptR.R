@@ -44,6 +44,22 @@ svgR(wh=WH,
 #------------------------
 
 #---external fns----
+pts2Source<-function(txt,ptRList){
+  replacement<-formatPtDefs(defTag=defTag, ptRList=ptRList)
+  txt<-replaceDef(txt, replacement, defTag=defTag) 
+}
+
+df2Source<-function(txt, dfList){
+  if(length(dfList)>0){
+    replacement<-formatDFDefs(dfList)
+  } else {
+    replacement<-""
+  }
+  txt<-replaceDef(txt, replacement, defTag="tagR") 
+}
+
+
+
 as.text<-function(q){
   paste(deparse(q), collapse="\n")
 }
@@ -139,6 +155,18 @@ ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
   }
   return(ptDefs)
 }
+
+#used by open and commit
+preProcCode<-function(src){
+  ptDefs<-ex.getPtDefs(src)
+  ptRList<-ptDefs$pts
+  dfList<-ptDefs$df
+  src<-pts2Source(src,ptRList)
+  if(!is.null(dfList)){
+    src<-df2Source(src, dfList)
+  }
+  return(src)
+} 
 
 
 
