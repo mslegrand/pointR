@@ -9,7 +9,7 @@ modulePointsBarUI <- function(id, input, output) {
           actionButton(ns("tagPt"), label = "Tag Pt") 
           
     ),
-    absolutePanel( top=50, left=0, width="100%", draggable=TRUE, 
+    absolutePanel( top=50, left=0, width="100%", "class"="headerPanel", draggable=FALSE,
         div(style="display:inline-block",
               selectInput( ns("name"), "Point Matrix", list("x"), 
                            selected="x", multiple=FALSE,  selectize = FALSE,
