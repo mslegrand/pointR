@@ -130,43 +130,8 @@ shinyServer(function(input, output,session) {
 
 # Event Observers-------------------------------- 
   
-  
-  #---- help popup  
-  modalHelp <- function( htmlHelp) {
-    modalDialog(
-      div( 
-        HTML(htmlHelp)
-      ),
-      size = "m",
-      title="Help",
-      easyClose = TRUE
-    ) 
-  }
-  #----observer that triggers help popup  
-  observe({
-    query<-input$helpMssg
-    if(length(query)>0 && nchar(query)>0){
-      queryHelp2Html<-function(query){
-        pkg<-"svgR"
-        pkgRdDB = tools:::fetchRdDB(file.path(find.package(pkg), 'help', pkg))
-        topics = names(pkgRdDB)
-        if(!query %in% topics){
-          query<-'svgR'
-        }
-        txtConnection<-textConnection("html","w")
-        tools::Rd2HTML(pkgRdDB[[query]],out=txtConnection)
-        close(txtConnection)
-        html<-paste(html,collapse="\n") 
-        html
-      } 
-      htmlFile<-queryHelp2Html(query)
-      showModal( modalHelp(htmlFile) )
-      #tmp<-help(helpMssg, package = "svgR", help_type = "html")
-      #eval(tmp) #should bring help in browser, but fails
-    }    
-  })
-  
-  
+#help
+  source("help/helpSVG.R", local=TRUE) 
   
 #---navbar disable /enabler controls
   observe({
@@ -208,28 +173,13 @@ source("rightPanel/serverPlotBarTransform.R", local=TRUE)
   
 source("rightPanel/serverLog.R", local=TRUE) 
 source("rightPanel/serverPlotBar.R", local=TRUE)
-  
+source("rightPanel/serverOptions.R", local=TRUE)  
 #---------------Button handlers--------------------------
 source("leftPanel/serverButtons.R",local = TRUE)
 
   
 #--------------------------------navbarMenuBar--------
 
-
-editOption<-reactiveValues(
-  fontSize=defaultOpts ['fontSize'],
-  theme=defaultOpts ['theme'],
-  tabSize=defaultOpts ['tabSize'],
-  currentFile=defaultOpts ['currentFile'],
-  currentDirectory=defaultOpts ['currentDirectory'],
-  .saved=TRUE
-)
-  
-  getCurrentDir<-reactive({editOption$currentDirectory})
-  getCurrentFile<-reactive({editOption$currentFile})
-  getFileNameStatus<-reactive({editOption$currentFile!=""})
-  getFileSavedStatus<-reactive({editOption$.saved})
-  
 source("leftPanel/cmdFileSaveAs.R", local=TRUE)  
 source("leftPanel/cmdFileSave.R", local=TRUE)  
 source("leftPanel/cmdFileNew.R", local=TRUE)  
@@ -238,7 +188,10 @@ source("leftPanel/cmdFileQuit.R", local=TRUE)
 source("leftPanel/cmdFileExportSvg.R", local=TRUE) 
 source("leftPanel/cmdOptionsTheme.R",local=TRUE)
 source("leftPanel/cmdOptionsFontSize.R", local=TRUE)  
+source("leftPanel/cmdFileSnippet.R",local=TRUE)
 source("leftPanel/serverEditBar.R",local=TRUE)
+  
+  
   
 #-----------------------MOUSE CLICKS---------------------------------
 source("rightPanel/serverMouseClicks.R", local=TRUE)
