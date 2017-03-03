@@ -1,18 +1,47 @@
 
 # --------------input$plotNavBar=="Points"----------------
-# =============== UI =======================
-
-# output$PointsPanel<-renderUI({
-#   conditionalPanel( "input.plotNavBar=='Points'", modulePointsBarUI("pointsBar"))
-# })
-# 
-# output$svgPointsPanel<-renderUI({
-#   conditionalPanel( "input.plotNavBar=='Points'", modulePlotSVGrUI("svgPointsMod"))
-# })
 
 
-# ===============        SERVER       =======================
-# ===============Begin Module PointsBar=======================
+# ===============Begin Server PointsBar=======================
+
+# called indirectly by either a new/load source or upon a commit???
+# called directly by getSelectInfo, which is called by pointsBar module initialization
+ex.getSelectInfo<-function(ptRList, selected, point.index){
+  choices<-names(ptRList)
+  if(length(choices)==0 ){
+    rtv<-list(selected=NULL, point.index =0 )  
+    return(rtv)
+  }
+  
+  if(length(selected)<1 || !(selected %in% choices) ){ # a new choice
+    #pick the first choice candidate
+    selected=choices[1]
+    pts<-ptRList[[selected]]
+    point.index<-length(pts)/2
+    rtv<-list(
+      selected=selected,
+      point.index=point.index
+    )
+    return(rtv)
+  }
+  #default: an existing choice
+  point.index<-min(point.index, length( ptRList[[selected]])/2 ) #cannot be longer than the number of points
+  rtv<-list(
+    selected=selected, 
+    point.index=point.index
+  )
+  return(rtv)  
+}
+
+getSelectInfo<-reactive({ #used by pointsBar only??
+  name<-getPtName()
+  indx<-getPtIndex()
+  pts<-getPtDefs()$pts
+  ex.getSelectInfo(pts, name, indx)
+  #ex.getSelectInfo(getPtDefs()$pts, getPtName(), getPtIndex())
+})
+
+
 #CALL modulePointsBarUI
 pointInfoList<-callModule( #auto  input, output, session 
   module=modulePointsBar, 
