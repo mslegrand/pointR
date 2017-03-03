@@ -36,10 +36,10 @@ left:10px;
 overflow: hidden;
 }
 .cSvgHtml{
-  top:130px; 
+  top:125px; 
   left:20px; 
   right:20px;  
-  bottom:60px;
+  bottom:40px;
   margin-top:0;
   margin-left:0;
   margin-right:0;
@@ -62,15 +62,17 @@ overflow: hidden;
   background-color: white;
 }
 .footerPanel{
-  bottom:25px;
+  bottom:5px;
   left:20px; 
   width:100%;
   margin:0px; 
   padding:0px;
 }
-.draggable{
+.headerPanel{
 background-color: #8888AA; 
 border-color: #88AAAA; 
+top:50; 
+left:0; 
 padding-top: 0; 
 padding-bottom: 0; 
 padding-left: 20px; 
@@ -79,6 +81,7 @@ width:100%;
 overflow: hidden;
 display: inline-block;
 }
+
 .controlBackPanel{
 background-color: #8888AA; 
 border-color: #88AAAA; 
