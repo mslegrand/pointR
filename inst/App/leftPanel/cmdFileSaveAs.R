@@ -22,8 +22,10 @@ cmdFileSaveAs<-function(){
       })
       txt<-user$code
       writeLines(txt, fileName)
-      editOption$currentFile<-basename(fileName)
-      editOption$currentDirectory<-dirname(fileName) 
+      #editOption$currentFilePath<-fileName
+      setCurrentFilePath(fileName)
+      #editOption$currentFile<-basename(fileName)
+      #editOption$currentDirectory<-dirname(fileName) 
     }
   })
 }

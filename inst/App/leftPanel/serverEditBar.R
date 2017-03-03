@@ -42,7 +42,7 @@ observeEvent( input$editNavBar, {
       cmdFileFontSize()
       dirtyDMDM(session, "editNavBar")
     }
-    if(fileCmd=="Indentation"){
+    if(fileCmd=="adjustTabs"){
       indentSizes<-1:12
       size<-as.character(editOption$tabSize)
       modalIndentSize <- function() {
@@ -53,6 +53,94 @@ observeEvent( input$editNavBar, {
         ) 
       }
       showModal( modalIndentSize() )
+      dirtyDMDM(session, "editNavBar")
+    }
+    whiteSpace<-c("Show White Space", "Hide White Space")
+    
+    if(fileCmd %in% whiteSpace){
+      indx<-which(fileCmd==whiteSpace)
+      newLabel<-ifelse(indx==2,"Show White Space", "Hide White Space" )
+      session$sendCustomMessage(
+        type = "shinyAceExt",    
+        list(id= "source", toggleWhiteSpace=TRUE)
+      )
+      renameDMDM(
+        session, menuBarId="editNavBar", 
+        entry=fileCmd, 
+        newLabel = newLabel, 
+        type = "menuItem")
+      dirtyDMDM(session, "editNavBar")
+    }
+    
+    tabType<-c("Use Soft Tabs", "Use Hard Tabs")
+    
+    if(fileCmd %in% tabType){
+      indx<-which(fileCmd==tabType)
+      editOption$tabType<-fileCmd
+      newLabel<-ifelse(indx==2,"Use Soft Tabs", "Use Hard Tabs" )
+      session$sendCustomMessage(
+        type = "shinyAceExt",    
+        list(id= "source", toggleTabType=TRUE)
+      )
+      renameDMDM(
+        session, menuBarId="editNavBar", 
+        entry=fileCmd, 
+        newLabel = newLabel, 
+        type = "menuItem")
+      dirtyDMDM(session, "editNavBar")
+    }
+    
+    if(fileCmd=="Editor ShortCuts"){
+      session$sendCustomMessage(
+        type = "shinyAceExt",    
+        list(id= "source", showKeyboardShortCuts=TRUE)
+      )
+      dirtyDMDM(session, "editNavBar")
+    }
+
+    if(fileCmd=="Editor ShortCuts2"){
+      session$sendCustomMessage(
+        type = "shinyAceExt",    
+        list(id= "source", getKeyboardShortcuts=TRUE)
+      )
+      dirtyDMDM(session, "editNavBar")
+    }
+    
+    if(fileCmd=="Element Reference"){
+      query<-"Elememt-Index"
+      htmlHelpR$elements<-getSvgRHelpTopic(query)
+      showModal( modalHelp() )
+      dirtyDMDM(session, "editNavBar")
+    }
+    
+    # if(fileCmd=="svgR User Guide"){
+    #   userGuide<-scan(file="www/User_Guide.html", what="character")
+    #   htmlHelpR$elements<-userGuide
+    #   showModal( modalHelp(size = "l") )
+    #   dirtyDMDM(session, "editNavBar")
+    # }
+    
+    
+    
+    if(fileCmd=="importSnippetFile"){
+      cmdSnippetFileOpen()
+    }
+    if(grepl("recent-",fileCmd)){
+
+      #get the filename
+      fileName<-sub("recent-","",fileCmd)
+      
+      #if file fails to exist remove
+      if(!file.exists(fileName)){
+        # remove from recentFiles
+        #send alert message 
+        showNotification("File Not Found.")
+        rf<-editOption$recentFiles
+        rf<-rf[-which(rf==fileName)]
+        editOption$recentFiles<-rf
+      } else {
+        openFileNow(fileName)
+      }
       dirtyDMDM(session, "editNavBar")
     }
     

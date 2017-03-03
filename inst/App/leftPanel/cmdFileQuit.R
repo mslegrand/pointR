@@ -2,7 +2,12 @@
 
 cmdFileQuit<-reactive({
   opts<-isolate(reactiveValuesToList((editOption)))
+  # if('recentFiles' %in% names(opts)){
+  #   paste(opts[['recentFiles']],collapse=';')
+  # }
+  #browser()
   opts<-unlist(opts)
+  #print(opts)
   modalSaveOrQuit <- function(){
     modalDialog(
       span("File not saved, quit anyway?"), 
@@ -20,6 +25,7 @@ cmdFileQuit<-reactive({
   } else {
     writeOptions(optionFile, opts)
     js$closeWindow()
+    Sys.sleep(1)
     stopApp()
   }
 })
@@ -30,6 +36,7 @@ observeEvent(input$modalSaveOrQuitCancel, {
 
 observeEvent(input$QuitWithoutSaving, {
   js$closeWindow()
+  Sys.sleep(1)
   stopApp()  
 }) 
 

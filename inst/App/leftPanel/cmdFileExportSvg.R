@@ -23,8 +23,9 @@ cmdFileExportSvg<-function(){
       txt<-as.character(eval(parsedCode))
       writeLines(txt, fileName)
       if(getFileNameStatus()==FALSE){
-        editOption$currentFile<-basename(fileName)
-        editOption$currentDirectory<-dirname(fileName) 
+        fileName<-sub("\\.svg$", ".R", fileName)
+        setCurrentFilePath(fileName)
+        
       }
     }
   })
