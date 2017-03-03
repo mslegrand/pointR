@@ -4,8 +4,8 @@ WH<-c(600,620)
 #Defined by mouse: edit with care!
 ptR<-list(
   x=matrix(
-    c(c( 424,147 ),c( 532,220 )),
-  2,)
+    c(c( 424,147 ),c( 532,220 )), 2
+  )
 )
 
 ce<-ptR$x[,1]
@@ -19,7 +19,7 @@ svgR(wh=WH,
                                  colors=c('red','black')
             ),
             class='draggable',
-            transform=matrix(c(0.683, -0.7303, 0.7303, 0.683, -270.3, 204.3),2,)
+            transform=matrix(c(0.683, -0.7303, 0.7303, 0.683, -270.3, 204.3),2)
      ),
      g(
        class='draggable',

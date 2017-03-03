@@ -15,7 +15,7 @@ svgR(wh=WH,
     points=ptR$x,
     fill='red',
     opacity=.5,
-    transform=matrix(c(0.4211, -0.907, 0.907, 0.4211, 85.26, 277.6),2,),
+    transform=matrix(c(0.4211, -0.907, 0.907, 0.4211, 85.26, 277.6),2),
     class='draggable'
   )
   
