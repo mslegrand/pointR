@@ -7,17 +7,18 @@ moduleTagDragUI<-function(id, input, output) {
       actionButton(ns("tagMoveUp"), label = "Send Up"),
       actionButton(ns("tagMoveDown"), label = "Send  Down")
     ),
-    absolutePanel( top=50, left=0, width="100%", draggable=TRUE, 
-          div(style="display:inline-block",
-            selectInput( ns("name"), "Point Matrix",
-            multiple=FALSE, size=1, selectize = FALSE,
-            choice=list(),  selected=NULL, width="100px"  )
-          ),
-          div(style="display:inline-block",
-            selectInput(ns("index"), "Tag-No",
-            multiple=FALSE, size=1, selectize = FALSE, 
-            choice=list(), selected=NULL, width="60px"  )
-          )
+    absolutePanel( 
+      top=50, left=0, width="100%", "class"="headerPanel", draggable=FALSE,
+      div(style="display:inline-block",
+        selectInput( ns("name"), "Point Matrix",
+        multiple=FALSE, size=1, selectize = FALSE,
+        choice=list(),  selected=NULL, width="100px"  )
+      ),
+      div(style="display:inline-block",
+        selectInput(ns("index"), "Tag-No",
+        multiple=FALSE, size=1, selectize = FALSE, 
+        choice=list(), selected=NULL, width="60px"  )
+      )
     ) #absolute panel end
   )
 }

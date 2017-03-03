@@ -4,33 +4,34 @@
 moduleTagValUI<-function(id, input, output) { 
   ns <- NS(id)
   #useShinyjs()
-  absolutePanel( top=50, left=0, width="100%", draggable=TRUE, 
-        div(style="display:inline-block",
-          selectInput( ns("name"), "Point Matrix",
-          multiple=FALSE, size=1, selectize = FALSE,
-          choices=list(),  selected=NULL, width="80px"  )
-        ),
-        div(style="display:inline-block",
-            selectInput(ns("index"), "Tag-No",
-                        multiple=FALSE, size=1, selectize = FALSE, 
-                        choices=list(), selected=NULL, width="60px"  )
-        ), 
-        div(style="display:inline-block",
-          selectInput(ns("attrName"), label="Attribute",
-          multiple=FALSE, size=1, selectize = FALSE, 
-          choices=list(),  selected=NULL, width="120px"  )
-        ),
-        div(style="display:inline-block", 
-          selectInput(ns("attrVal"), "Value", 
-          multiple=FALSE, size=1, selectize = FALSE,  
-          choices=list(),  selected=NULL, width="100px"  )
-        ),
-        div(style="display:inline-block",
-          actionButton(ns( "New" ), label = "New") #buttonSmall
-        ),
-        div(style="display:inline-block",
-            actionButton(ns( "updateVal" ), label = "Update") #buttonSmall
-        )
+  absolutePanel( 
+    top=50, left=0, width="100%", "class"="headerPanel", draggable=FALSE,
+    div(style="display:inline-block",
+      selectInput( ns("name"), "Point Matrix",
+      multiple=FALSE, size=1, selectize = FALSE,
+      choices=list(),  selected=NULL, width="80px"  )
+    ),
+    div(style="display:inline-block",
+        selectInput(ns("index"), "Tag-No",
+                    multiple=FALSE, size=1, selectize = FALSE, 
+                    choices=list(), selected=NULL, width="60px"  )
+    ), 
+    div(style="display:inline-block",
+      selectInput(ns("attrName"), label="Attribute",
+      multiple=FALSE, size=1, selectize = FALSE, 
+      choices=list(),  selected=NULL, width="120px"  )
+    ),
+    div(style="display:inline-block", 
+      selectInput(ns("attrVal"), "Value", 
+      multiple=FALSE, size=1, selectize = FALSE,  
+      choices=list(),  selected=NULL, width="100px"  )
+    ),
+    div(style="display:inline-block",
+      actionButton(ns( "New" ), label = "New") #buttonSmall
+    ),
+    div(style="display:inline-block",
+        actionButton(ns( "updateVal" ), label = "Update") #buttonSmall
+    )
   ) # panel end
 }
 

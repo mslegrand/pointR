@@ -23,7 +23,8 @@ output$TopRightPanel<-renderUI({
   } else if (rightPanel()=='Transforms'){
     
     absolutePanel( 
-      top=50, left=0, width="100%", draggable=TRUE,
+      top=50, left=0, width="100%", 
+      "class"="headerPanel", draggable=FALSE,
         tabsetPanel( id="transformOption", 
           tabPanel("Translate"), 
           tabPanel("Rotate"), 
