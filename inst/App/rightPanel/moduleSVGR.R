@@ -72,7 +72,7 @@
         
         user$code<-getCodeBackup()
         mssg$error<-paste(getErrorMssg(), e, collapse="\n", sep="\n")
-        print(e)
+        #print(e)
         #updateNavbarPage(session, "plotNavBar", selected ="Log")
       } 
     )

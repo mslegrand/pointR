@@ -33,47 +33,71 @@ shinyUI(
     ),
     div(
       class="split-pane vertical-percent",
-      useShinyjs(debug = FALSE, showLog = TRUE),
+      useShinyjs(debug = FALSE, showLog = FALSE),
       extendShinyjs(script="www/menuHelper.js"),
       #-------------left panel begin--------------------------------------------------
-      div( #left component
-        id='left-component', #class='backPanel', 
-        class="split-pane-component", #left panel,
+      #------- left component begin-----------
+      div( 
+        id='left-component', 
+        class="split-pane-component", 
+        #-------left bootstrapPage begin ---------
         bootstrapPage(
+          #-----left menu begin---------------
           dmdMenuBarPage( 
-            title=version, #fluid=FALSE, position="static-top",
-            #theme=shinytheme("cerulean"),
+            title=version, 
+            # theme=shinytheme("cerulean"),
             menuBarId="editNavBar",
-            #theme="custom.css",
-            menuDropdown("File", 
-                         #tabPanel("",value="tab1"), #fake way to mimic button
-                         menuItem("New"),
-                         menuItem("Open"),
-                         menuItem("Save"),
-                         menuItem("Save As...", value="saveAs"),
-                         menuItem("Export as SVG"),
-                         menuItem("Quit", value="quit")
+            menuDropdown(
+              "File", 
+              menuItem("New"),
+              menuItem("Open"),
+              menuDropdown("Recent Files"),
+              menuDivider(),
+              menuItem("Save"),
+              menuItem("Save As...", value="saveAs"),
+              menuItem("Export as SVG"),
+              menuDivider(),
+              menuItem("Quit", value="quit")
             ),
-            menuDropdown('Edit',
+            menuDropdown(
+              'Configure',
               menuDropdown(
-                "Options", 
+                "Editor Options", 
                 menuItem("Theme" ),
                 menuItem("Font Size"), 
-                menuItem("Indentation") #,tabPanel("Prepoc (not implemented)" )
+                menuItem("Adjust Tabs",       value="adjustTabs"),
+                menuItem("Show White Space"),
+                menuItem(defaultOpts$tabType)
+              ),
+              menuDropdown(
+                "Snippets",
+                menuItem("Import", value="importSnippetFile"),
+                menuItem("Disable")
               )
             ),
             menuDropdown(
               "Tools", 
-              menuItem("Preprocessor (Not implemented)" )
+              menuItem("PointFiltering (Not implemented)" )
             ),
             menuDropdown(
-              "Links", 
-              menuItem(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/User_Guide.html\"  target=\"_blank\" >svgR User Guide </a></li>")),
-              menuItem(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/\"  target=\"_blank\" >io.svgR</a></li>"))
+              "Help",
+              menuItem("Editor ShortCuts"),
+              #menuItem("Editor ShortCuts2"),
+              menuItem("Element Reference"),
+              #menuItem("svgR User Guide"),
+              menuDropdown(
+                "Useful Links", 
+                menuItem(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/User_Guide.html\"  target=\"_blank\" >svgR User Guide </a></li>")),
+                menuItem(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/\"  target=\"_blank\" >io.svgR</a></li>"))
+              )
             )
-          ), #end menu
-          # begin content
-          h3(textOutput( "fileName"), style="white-space:nowrap;"),
+          ), 
+          #-------left menu end------------
+          #-------left content begin--------
+          h3(
+            textOutput( "fileName"), 
+            style="white-space:nowrap;"
+          ),
           absolutePanel( 
             id='aceContainer',
             "class"="cSvgHtml", 
@@ -89,23 +113,26 @@ shinyUI(
             ), 
             inline=FALSE
           ),
-          absolutePanel( "class"="footerPanel", 
-                         draggable=FALSE,
-                         actionButton("commit", label = "COMMIT EDIT")
+          absolutePanel( 
+            "class"="footerPanel", 
+            draggable=FALSE,
+            actionButton("commit", label = "COMMIT EDIT")
           )
-        ) #end of basicPage
-      ), #end of left-component
+          #-------left content end--------
+        ) #----end of bootstrapPage
+      ), #---end of left-component
       #-------------left panel end--------------------------------------------------
+      #-------------divider begin--------------------------------------------------
       div( class="split-pane-divider", id="my-divider"),
+      #-------------divider   end--------------------------------------------------
       #-------------right panel begin--------------------------------------------------
-      div( #right component
+      div( #-----right component begin
         id='right-component', 
         class="split-pane-component",  #right panel
+        #---right bootstrap page begin--------------
         bootstrapPage(
           dmdMenuBarPage(
-            #version,
             menuBarId="plotNavBar",
-            #selected="Points", version, fluid=TRUE, position="static-top",
             #---------------plotNavBar:points  ------------------------------------
             menuItem("Points" ), #end of tab panel "Points"
             #---------------plotNavBar:TAGS  ------------------------------------
@@ -116,32 +143,19 @@ shinyUI(
             ),
             menuItem("Transforms"),
             menuItem("Log")
-          ), #end right menu
-          #begin right content
-          
+          ), 
+          #----------end right menu
+          #--------begin right content
           uiOutput("TopRightPanel"),
           br(),
           uiOutput("MidRightPanel")
-          
-        )
-      ) # end right component
+        ) #-----right bootstrap page end----------
+      ) #----------right component end---------
       #-------------right panel end--------------------------------------------------
     )
-    
-    
-        
-      
+  )
+)
   
-      #-------------right panel begin--------------------------------------------------
-    #div( id='rightPanel', class='backPanel',  #right panel
-      #basicPage(
-      #       #useShinyjs(), 
-      #       #extendShinyjs(script="www/menuHelper.js"),
-      ) # end of right panel
-      #-------------right panel end--------------------------------------------------
-    ) # splitter end
-  #) # end of fixedPage
-#)
 #  ------------------END OF SHINY UI------------------------------------------------------
 
 
