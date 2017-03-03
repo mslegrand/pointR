@@ -9,6 +9,8 @@ html, body {
 right: 50%;
 margin-right: 5px;
 background-color: #B8D8FF;
+overflow-y: hidden; 
+overflow-x: hidden; 
 }
 
 #my-divider {
@@ -20,4 +22,6 @@ width: 5px;
 width: 50%;
 margin-left: 5px;
 background-color: #B8D8FF;
+overflow-y: hidden; 
+overflow-x: hidden; 
 }
