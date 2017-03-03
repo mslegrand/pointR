@@ -1,5 +1,6 @@
 #Reimplemntation of the shinyAce ctor customized for ptr
 
+
 versionCheck<-function(){
 # versions with an extra field in them...
     re <- regexpr("^\\d+\\.\\d+(\\.\\d+)?", utils::packageVersion("shiny"))
@@ -18,7 +19,7 @@ sanitizeId <- function(id){
 }
 
 initialAceOptions<-function(
-     outputId="source", #editor 
+    outputId="source", #editor 
     value="",
     theme="katzenmilch",
     fontSize=16,
@@ -27,18 +28,27 @@ initialAceOptions<-function(
     autoCompleteList=NULL,
     debounce=1000, 
     selectionId=NULL, 
+    useTabs="Use Soft Tabs",
     cursorId=NULL, 
-    hotkeys=NULL)
+    hotkeys=NULL
+    )
 {
   editorVar = paste0("editor__",sanitizeId(outputId))
   escapedId <- gsub("\\.", "\\\\\\\\.", outputId)
   escapedId <- gsub("\\:", "\\\\\\\\:", escapedId)
   autoComplete <- match.arg(autoComplete)
- 
+  
+  useTabsTF<-function(x){
+    ifelse(x=="Use Soft Tabs", "true","false")
+  }
+  useTabs<-useTabsTF(useTabs)
+  
+  mode='ptr'
   js<-c(
     paste0("var ", editorVar," = ace.edit('",outputId,"')"),
     paste0(editorVar,".setTheme('ace/theme/", theme, "')" ),
     #paste0(editorVar,".setKeyboardHandler('ace/keyboard/vim')"),
+    
     "ace.config.set('modePath', './Acejs')",
     "ace.config.set('workerPath', './Acejs')",
     paste0(editorVar, ".getSession().setMode('ace/mode/",mode,"')"),
@@ -46,6 +56,7 @@ initialAceOptions<-function(
     paste0(editorVar, ".setValue(", shinyAce:::jsQuote(value), ",-1)"),
     paste0(editorVar, ".renderer.setShowGutter(true);"),
     paste0(editorVar, ".setHighlightActiveLine(true);"),
+    paste0(editorVar, ".getSession().setUseSoftTabs(",useTabs,");"),
     #paste0(editorVar, ".setReadOnly(", shinyAce:::jsQuote(readOnly), ")"),
     paste0("document.getElementById('",outputId,"').style.fontSize='", as.numeric(fontSize), "px'"),
     if (!is.null(debounce) && !is.na(as.numeric(debounce))){
@@ -61,11 +72,14 @@ initialAceOptions<-function(
     },
     paste0(editorVar, ".getSession().setUseWrapMode(false)"),
     paste0("$('#",escapedId,"').data('aceEditor',", editorVar,")"),
+    
+    paste0(editorVar, ".setOption('enableSnippets', true)"),
     if(autoComplete != "disabled") {
       paste0(editorVar, ".setOption('enableBasicAutocompletion', true)")
     },
     if(autoComplete != "live") {
       paste0(editorVar, ".setOption('enableLiveAutocompletion', true)")
+
     },
     paste0(editorVar, ".commands.addCommand({
                 name: 'showKeyboardShortcuts',
@@ -159,7 +173,8 @@ shinyAce4Ptr <- function(
         tags$script(src = 'shinyAce/ace/ace.js'),
         tags$script(src = 'shinyAce/ace/ext-language_tools.js'),
         tags$script(src = 'shinyAce/shinyAce.js'),
-        tags$script(src = 'Acejs/aceExt.js') 
+        tags$script(src = 'Acejs/aceExt.js'),
+        tags$script(src = 'Acejs/snippets/ptr.js')
       )),
       pre(id=outputId, 
          class="shiny-ace", 
