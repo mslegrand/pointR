@@ -8,7 +8,7 @@
 tagDragInfoList<-callModule(
   module=moduleTagDrag,
   id="tagDragBar",
-  barName=reactive(input$plotNavBar$item),
+  barName=rightPanel,
   getTagNameChoices=getTagNameChoices,
   getTagName=getTagName,
   getTagIndexChoices=getTagIndexChoices,
@@ -18,51 +18,56 @@ tagDragInfoList<-callModule(
 observe({
   name<-tagDragInfoList$name()
   index<-tagDragInfoList$index()
-  isolate({
-    if(!is.null(name)){
-      selectedPoint$name<-name
-      selectedPoint$point.index<-as.numeric(index)
-    }
-  })
+  if(rightPanel()=="tagDrag"){
+    isolate({
+      if(!is.null(name)){
+        selectedPoint$name<-name
+        selectedPoint$point.index<-as.numeric(index)
+      }
+    })  
+  }
 })
 
 observeEvent( 
   tagDragInfoList$tagClone(),
   {
-    name<-tagDragInfoList$name()
-    index<-tagDragInfoList$index()
-    ptRList<-getPtDefs()$pts
-    tagRList<-getPtDefs()$df
-    pts<-getPtDefs()$pts[[name]] 
-    df<-tagRList[[name]]
-    tags<-df$tag
-    ti<-which(index==tags) 
-    id.nos<-sequence(ncol(pts))
-    tagInterval<-findInterval(id.nos,tags)
-    ptsA<-pts[,tagInterval<=ti]
-    ptsB<-pts[,tagInterval>=ti]
-    
-    tiSize<-ncol(matrix(pts[,tagInterval==ti],2))
-    
-    ptsNew<-matrix(c(ptsA,ptsB),2)
-    t2<-tags[tags>=index]+tiSize
-    t1<-tags[tags<=index]
-    tagsNew<-c(t1,t2)
-    
-    df1<-subset(df,df$tag<=index)
-    df2<-subset(df,df$tag>=index)
-    dfNew<-as.data.frame(rbind(df1,df2))
-    dfNew$tag<-tagsNew
-    ptRList[[name]]<-ptsNew
-    tagRList[[name]]<-dfNew
-    scr<-getCode()
-    src<-user$code
-    src<-pts2Source(src,ptRList)
-    src<-df2Source( src, tagRList)
-    
-    #update
-    user$code<-src
-    selectedPoint$point.index<-as.numeric(index)+tiSize
+    if(rightPanel()=="tagDrag"){
+      name<-tagDragInfoList$name()
+      index<-tagDragInfoList$index()
+      ptRList<-getPtDefs()$pts
+      tagRList<-getPtDefs()$df
+      pts<-getPtDefs()$pts[[name]] 
+      df<-tagRList[[name]]
+      tags<-df$tag
+      ti<-which(index==tags) 
+      id.nos<-sequence(ncol(pts))
+      tagInterval<-findInterval(id.nos,tags)
+      ptsA<-pts[,tagInterval<=ti]
+      ptsB<-pts[,tagInterval>=ti]
+      
+      tiSize<-ncol(matrix(pts[,tagInterval==ti],2))
+      
+      ptsNew<-matrix(c(ptsA,ptsB),2)
+      t2<-tags[tags>=index]+tiSize
+      t1<-tags[tags<=index]
+      tagsNew<-c(t1,t2)
+      
+      df1<-subset(df,df$tag<=index)
+      df2<-subset(df,df$tag>=index)
+      dfNew<-as.data.frame(rbind(df1,df2))
+      dfNew$tag<-tagsNew
+      ptRList[[name]]<-ptsNew
+      tagRList[[name]]<-dfNew
+      scr<-getCode()
+      src<-user$code
+      src<-pts2Source(src,ptRList)
+      src<-df2Source( src, tagRList)
+      
+      #update
+      user$code<-src
+      selectedPoint$point.index<-as.numeric(index)+tiSize
+      
+    }
   }
 )
 
@@ -70,41 +75,43 @@ observeEvent(
 observeEvent( 
   tagDragInfoList$tagDelete(),
   {
-    name<-    tagDragInfoList$name()
-    index<-   tagDragInfoList$index()
-    ptRList<- getPtDefs()$pts
-    tagRList<-getPtDefs()$df
-    pts<-     getPtDefs()$pts[[name]] 
-    df<-      tagRList[[name]]
-    tags<-    df$tag
-    ti<-which(index==tags) 
-    id.nos<-sequence(ncol(pts))
-    tagInterval<-findInterval(id.nos,tags)
-    ptsA<-pts[,tagInterval<ti]
-    ptsB<-pts[,tagInterval>ti]
-    
-    tiSize<-ncol(pts[,tagInterval==ti])
-    
-    ptsNew<-matrix(c(ptsA,ptsB),2)
-    t2<-tags[tags>index]-tiSize
-    t1<-tags[tags<index]
-    tagsNew<-c(t1,t2)
-    
-    df1<-subset(df,df$tag<index)
-    df2<-subset(df,df$tag>index)
-    dfNew<-as.data.frame(rbind(df1,df2))
-    dfNew$tag<-tagsNew
-    ptRList[[name]]<-ptsNew
-    tagRList[[name]]<-dfNew
-    scr<-getCode()
-    src<-user$code
-    src<-pts2Source(src,ptRList)
-    src<-df2Source( src, tagRList)
-    
-    #will need to handle case when no more tagged points!!!
-    #update
-    user$code<-src
-    selectedPoint$point.index<-as.numeric(index)-tiSize
+    if(rightPanel()=="tagDrag"){
+      name<-    tagDragInfoList$name()
+      index<-   tagDragInfoList$index()
+      ptRList<- getPtDefs()$pts
+      tagRList<-getPtDefs()$df
+      pts<-     getPtDefs()$pts[[name]] 
+      df<-      tagRList[[name]]
+      tags<-    df$tag
+      ti<-which(index==tags) 
+      id.nos<-sequence(ncol(pts))
+      tagInterval<-findInterval(id.nos,tags)
+      ptsA<-pts[,tagInterval<ti]
+      ptsB<-pts[,tagInterval>ti]
+      
+      tiSize<-ncol(pts[,tagInterval==ti])
+      
+      ptsNew<-matrix(c(ptsA,ptsB),2)
+      t2<-tags[tags>index]-tiSize
+      t1<-tags[tags<index]
+      tagsNew<-c(t1,t2)
+      
+      df1<-subset(df,df$tag<index)
+      df2<-subset(df,df$tag>index)
+      dfNew<-as.data.frame(rbind(df1,df2))
+      dfNew$tag<-tagsNew
+      ptRList[[name]]<-ptsNew
+      tagRList[[name]]<-dfNew
+      scr<-getCode()
+      src<-user$code
+      src<-pts2Source(src,ptRList)
+      src<-df2Source( src, tagRList)
+      
+      #will need to handle case when no more tagged points!!!
+      #update
+      user$code<-src
+      selectedPoint$point.index<-as.numeric(index)-tiSize
+    }
   }
 )
 
@@ -132,91 +139,95 @@ observeEvent(
 observeEvent( 
   tagDragInfoList$tagMoveUp(),
   {
-    name<-    tagDragInfoList$name()
-    index<-   tagDragInfoList$index()
-    if(is.null(index)||index==0){ return(NULL) }
-    ptRList<- getPtDefs()$pts
-    tagRList<-getPtDefs()$df
-    
-    pts<-     ptRList[[name]] 
-    df<-      tagRList[[name]]
-    
-    tags<-    df$tag
-    t0<-which(index==tags) 
-    t1<-t0+1
-    if(t1>length(tags)){return(NULL)}
-    
-    id.nos<-sequence(ncol(pts))
-    tagInterval<-findInterval(id.nos,tags)
-    ptsA   <-pts[,tagInterval<t0]
-    ptsB   <-pts[,tagInterval>t1]
-    ptsT0  <-pts[,tagInterval==t0]
-    ptsT1  <-pts[,tagInterval==t1]
-    pts <-matrix(c(ptsA,ptsT1, ptsT0, ptsB),2)
-    
-    df[c(t0,t1),]<-df[c(t1,t0),]
-    t1Size      <-ncol(matrix(ptsT1,2))
-    tags[t1]    <-tags[t0]+t1Size
-    df$tag      <-tags
-    
-    ptRList[[name]]  <-pts
-    tagRList[[name]] <-df
-    
-    scr<-getCode()
-    src<-user$code
-    src<-pts2Source(src,ptRList)
-    src<-df2Source( src, tagRList)
-    
-    #will need to handle case when no more tagged points!!!
-    #update
-    user$code<-src
-    selectedPoint$point.index<-tags[t1]
+    if(rightPanel()=="tagDrag"){
+      name<-    tagDragInfoList$name()
+      index<-   tagDragInfoList$index()
+      if(is.null(index)||index==0){ return(NULL) }
+      ptRList<- getPtDefs()$pts
+      tagRList<-getPtDefs()$df
+      
+      pts<-     ptRList[[name]] 
+      df<-      tagRList[[name]]
+      
+      tags<-    df$tag
+      t0<-which(index==tags) 
+      t1<-t0+1
+      if(t1>length(tags)){return(NULL)}
+      
+      id.nos<-sequence(ncol(pts))
+      tagInterval<-findInterval(id.nos,tags)
+      ptsA   <-pts[,tagInterval<t0]
+      ptsB   <-pts[,tagInterval>t1]
+      ptsT0  <-pts[,tagInterval==t0]
+      ptsT1  <-pts[,tagInterval==t1]
+      pts <-matrix(c(ptsA,ptsT1, ptsT0, ptsB),2)
+      
+      df[c(t0,t1),]<-df[c(t1,t0),]
+      t1Size      <-ncol(matrix(ptsT1,2))
+      tags[t1]    <-tags[t0]+t1Size
+      df$tag      <-tags
+      
+      ptRList[[name]]  <-pts
+      tagRList[[name]] <-df
+      
+      scr<-getCode()
+      src<-user$code
+      src<-pts2Source(src,ptRList)
+      src<-df2Source( src, tagRList)
+      
+      #will need to handle case when no more tagged points!!!
+      #update
+      user$code<-src
+      selectedPoint$point.index<-tags[t1]
+    }
   }
 )
 
 observeEvent( 
   tagDragInfoList$tagMoveDown(),
   {
-    name<-    tagDragInfoList$name()
-    index<-   tagDragInfoList$index()
-    if(is.null(index)||index==0){ return(NULL) }
-    ptRList<- getPtDefs()$pts
-    tagRList<-getPtDefs()$df
-    
-    pts<-     ptRList[[name]] 
-    df<-      tagRList[[name]]
-    
-    tags<-    df$tag
-    t1<-which(index==tags) 
-    t0<-t1-1
-    if(t0==0){ return(NULL) }
-    
-    
-    id.nos<-sequence(ncol(pts))
-    tagInterval<-findInterval(id.nos,tags)
-    ptsA   <-pts[,tagInterval<t0]
-    ptsB   <-pts[,tagInterval>t1]
-    ptsT0  <-pts[,tagInterval==t0]
-    ptsT1  <-pts[,tagInterval==t1]
-    pts <-matrix(c(ptsA,ptsT1, ptsT0, ptsB),2)
-    
-    df[c(t0,t1),]<-df[c(t1,t0),]
-    t1Size      <-ncol(matrix(ptsT1,2))
-    tags[t1]    <-tags[t0]+t1Size
-    df$tag      <-tags
-    
-    ptRList[[name]]  <-pts
-    tagRList[[name]] <-df
-    
-    scr<-getCode()
-    src<-user$code
-    src<-pts2Source(src,ptRList)
-    src<-df2Source( src, tagRList)
-    
-    #will need to handle case when no more tagged points!!!
-    #update
-    user$code<-src
-    selectedPoint$point.index<-tags[t0]
+    if(rightPanel()=="tagDrag"){
+      name<-    tagDragInfoList$name()
+      index<-   tagDragInfoList$index()
+      if(is.null(index)||index==0){ return(NULL) }
+      ptRList<- getPtDefs()$pts
+      tagRList<-getPtDefs()$df
+      
+      pts<-     ptRList[[name]] 
+      df<-      tagRList[[name]]
+      
+      tags<-    df$tag
+      t1<-which(index==tags) 
+      t0<-t1-1
+      if(t0==0){ return(NULL) }
+      
+      
+      id.nos<-sequence(ncol(pts))
+      tagInterval<-findInterval(id.nos,tags)
+      ptsA   <-pts[,tagInterval<t0]
+      ptsB   <-pts[,tagInterval>t1]
+      ptsT0  <-pts[,tagInterval==t0]
+      ptsT1  <-pts[,tagInterval==t1]
+      pts <-matrix(c(ptsA,ptsT1, ptsT0, ptsB),2)
+      
+      df[c(t0,t1),]<-df[c(t1,t0),]
+      t1Size      <-ncol(matrix(ptsT1,2))
+      tags[t1]    <-tags[t0]+t1Size
+      df$tag      <-tags
+      
+      ptRList[[name]]  <-pts
+      tagRList[[name]] <-df
+      
+      scr<-getCode()
+      src<-user$code
+      src<-pts2Source(src,ptRList)
+      src<-df2Source( src, tagRList)
+      
+      #will need to handle case when no more tagged points!!!
+      #update
+      user$code<-src
+      selectedPoint$point.index<-tags[t0]
+    }
   }
 )
 
