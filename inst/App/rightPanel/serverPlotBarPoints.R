@@ -46,7 +46,7 @@ getSelectInfo<-reactive({ #used by pointsBar only??
 pointInfoList<-callModule( #auto  input, output, session 
   module=modulePointsBar, 
   id="pointsBar", 
-  barName=reactive(input$plotNavBar),
+  barName=rightPanel,
   getSelectInfo=getSelectInfo, #not the best way, but ...
   getPtDefs=getPtDefs, 
   name=getPtName, 
@@ -69,6 +69,7 @@ observe({
       selectedPoint$name<-pointInfoList$name()
     }
 })
+
 # selected pts index
 observe({ selectedPoint$point.index<-pointInfoList$index() })
 
@@ -216,19 +217,19 @@ observeEvent( pointInfoList$tagPt(), {
   # 1. tagR list not there, add tagR list, selection and insert 
   # 2. tagR list there, but selection is not: add selection and insert 
   # 3  Both tagR list and tagR[[selection]] are there, just add tag no.
-  
-  #selection<-input$ptRSelect
-  selection<-selectedPoint$name
-  ptDefs<-getPtDefs()
-  ptsList<-ptDefs$pts
-  dfList<-ptDefs$df
-  point.index<-max(1,selectedPoint$point.index) #can change later
-  #PROPOSED REWRITE:
-  ok= !(is.null(dfList)) && !(is.null(dfList[[selection]]) )
-  if(!ok) { #this is a first tag
-    showModal( modalFreq() ) #observer for showModal must complete the work
-  } else { # this is a second tag (and hence manual)
-    #if(reactiveTag$freq[[selection]]==0){ #manual case
+  if(rightPanel()=="Points"){
+    #selection<-input$ptRSelect
+    selection<-selectedPoint$name
+    ptDefs<-getPtDefs()
+    ptsList<-ptDefs$pts
+    dfList<-ptDefs$df
+    point.index<-max(1,selectedPoint$point.index) #can change later
+    #PROPOSED REWRITE:
+    ok= !(is.null(dfList)) && !(is.null(dfList[[selection]]) )
+    if(!ok) { #this is a first tag
+      showModal( modalFreq() ) #observer for showModal must complete the work
+    } else { # this is a second tag (and hence manual)
+      #if(reactiveTag$freq[[selection]]==0){ #manual case
       #add this tag
       df<-dfList[[selection]]
       if("tag" %in% names(df)){ # if not, then do nothing
@@ -245,14 +246,10 @@ observeEvent( pointInfoList$tagPt(), {
           user$code<-df2Source(user$code,dfList)
           #user$code<-src
         }
-      
+        
+      }
     }
-    
-    
-  }
-
-     
-    
+  } #end of if
 })
 # ===============END SERVER Module PointsBar=======================
 
