@@ -13,7 +13,8 @@ getCodeTransform<-reactive({
   src<-usingDraggable(src)
 })
 
-pointSVGList<-callModule(
+
+transformInfoList<-callModule(
   module=modulePlotSVGr,
   id="svgTransformMod",
   svgID='ptR_SVG_TRANSFORM',
@@ -27,3 +28,4 @@ pointSVGList<-callModule(
   getErrorMssg,
   insert.end=",NULL"
 )
+
