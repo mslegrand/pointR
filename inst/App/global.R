@@ -46,6 +46,7 @@ library(stringr)
 library(svDialogs) #!!!todo: replace this
 
 #options(shiny.error = recover)
+# options(shiny.trace=TRUE)
 
 #----begin external resources loaded prior to server------------
 #source("utilStyle.R")
