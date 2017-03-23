@@ -8,42 +8,13 @@
 #---begin server--------------
 shinyServer(function(input, output,session) {
   
-
-  #ordinary fns
-  exGetTagName<-function(tagNameChoices, ptChosen){
-    if(length(tagNameChoices)>0){
-      if(length(ptChosen)>0 && (ptChosen %in% tagNameChoices)){
-        tagChosen<-ptChosen
-      } else {
-        tagChosen<-tail(tagNameChoices,1)
-      }
-    } else {
-      tagChosen<-NULL
-    }
-    tagChosen
-  }
-  
-  
-  exGetTagIndx<-function(tagIndxChoices, point.indx){
-    if(length(tagIndxChoices)<1 ){
-     return(NULL)
-    }
-    if(  length(point.indx)<1){
-     point.index<-max(tagIndxChoices)
-    } else {
-      if( point.indx>0 ){
-          t.point.indx<-max(tagIndxChoices[ tagIndxChoices<= point.indx] )
-      } else {
-          0
-      }    
-      }
- 
-  }  
+source("./util/exGetTag.R", local=TRUE) # some ordinary functions :)
   
 # Reactive values----------
   #Eventually we want a stack of code changes so we can do an undo
-  user <- reactiveValues( code=codeTemplate) #  internal copy of user code
+  user <- reactiveValues( code=codeTemplate) # internal copy of user code
   backup<-reactiveValues( code=codeTemplate) # last good copy of user code
+  
   #file <-reactiveValues( name="newFile.R")       #  file path
   selectedPoint <- reactiveValues(
     name="x", #NULL,       # name of current point array
@@ -51,7 +22,9 @@ shinyServer(function(input, output,session) {
   ) 
   panels<-reactiveValues(right="Points")
   rightPanel<-reactive({panels$right})
+
   #tagVal<-reactiveValues(hasTag=FALSE)
+  
   reactiveTag<-reactiveValues(freq=list())
   displayOptions<-reactiveValues(
     insertMode=TRUE,
@@ -67,18 +40,23 @@ shinyServer(function(input, output,session) {
     name<-getPtName()
     !is.null(name) && getPtIndex()>0 &&  is.null(reactiveTag$freq[[name]])
   })
+  
   getCode<-reactive({ user$code })
   getCodeBackup<-reactive({ backup$code })
   
   getPtName<-reactive({selectedPoint$name})
   getPtIndex<-reactive({selectedPoint$point.index})
   #-----------------------
-  barName<-reactive({input$plotNavBar$item})
+ 
+  
   getErrorMssg<-reactive({ mssg$error })
-  getPtDefs<- reactive({ ex.getPtDefs(user$code) })  #extract points from user code
+  getPtDefs<- reactive({ 
+    ex.getPtDefs(user$code) 
+  })  #extract points from user code
   getTagNameChoices<-reactive({
     intersect(names(getPtDefs()$pts), names(getPtDefs()$df))
   })
+  
   getSelectInfo<-reactive({ #used by pointsBar only??
     name<-getPtName()
     indx<-getPtIndex()
