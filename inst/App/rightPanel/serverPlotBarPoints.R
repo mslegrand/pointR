@@ -8,6 +8,7 @@
 # called directly by getSelectInfo, which is called by pointsBar module initialization
 ex.getSelectInfo<-function(ptRList, selected, point.index){
   choices<-names(ptRList)
+  print(paste('ex.getSelectInfo',choices, collapse=", "))
   if(length(choices)==0 ){
     rtv<-list(selected=NULL, point.index =0 )  
     return(rtv)
@@ -66,6 +67,7 @@ insertMode<-reactive({pointInfoList$insertMode() })
 observe({
   name<-pointInfoList$name()
     if(!is.null(name)){
+      print(paste("name returned:",name))
       selectedPoint$name<-pointInfoList$name()
     }
 })
