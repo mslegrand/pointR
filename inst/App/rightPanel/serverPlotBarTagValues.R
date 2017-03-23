@@ -9,7 +9,7 @@ tagValInfoList<-callModule(
   module=moduleTagVal,
   id="tagValBar",
   id2="tagValBar",
-  barName=reactive(input$plotNavBar$item),
+  barName=rightPanel ,
   getCode=reactive(user$code), 
   getPtDefs=reactive({x<-getPtDefs(); x}),
   getTagNameChoices=reactive({getTagNameChoices()}) ,
@@ -20,7 +20,7 @@ tagValInfoList<-callModule(
 
 #observes tagValInfoList$name, tagValInfoList$index
 observeEvent(c(tagValInfoList$name(),tagValInfoList$index()),{
-  if(input$plotNavBar$item=='tagValues'){
+  if(rightPanel()=='tagValues'){
     name<-tagValInfoList$name()
     index<-tagValInfoList$index()
     if(!is.null(name)){
@@ -35,7 +35,7 @@ observeEvent(c(tagValInfoList$name(),tagValInfoList$index()),{
 
 observeEvent(tagValInfoList$updateTagsNow(),{
   if(tagValInfoList$updateTagsNow()>0 
-     && input$plotNavBar$item=='tagValues'){
+     && rightPanel()=='tagValues'){
     name<-tagValInfoList$name()
     index<-tagValInfoList$index()
     if(!is.null(name)){
