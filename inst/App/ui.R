@@ -33,7 +33,7 @@ shinyUI(
     ),
     div(
       class="split-pane vertical-percent",
-      useShinyjs(debug = FALSE, showLog = FALSE),
+      #useShinyjs(debug = FALSE, showLog = FALSE),
       extendShinyjs(script="www/menuHelper.js"),
       #-------------left panel begin--------------------------------------------------
       #------- left component begin-----------
@@ -89,7 +89,8 @@ shinyUI(
                 "Useful Links", 
                 menuItem(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/User_Guide.html\"  target=\"_blank\" >svgR User Guide </a></li>")),
                 menuItem(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/\"  target=\"_blank\" >io.svgR</a></li>"))
-              )
+              ),
+              menuItem("About")
             )
           ), 
           #-------left menu end------------
