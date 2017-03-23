@@ -61,11 +61,14 @@ observe({
         src<-preProcCode(src) 
         parsedCode<-parse(text=src)
         eval(parsedCode)
+        # no error so all systems go!!!!
         mssg$error<-""
-        user$code<-src
-        if(input$plotNavBar$item=="Log"){
+        user$code<-src #push code onto stack
+        #if in log page move to points
+        if(rightPanel()=="Log"){
           updateNavbarPage(session, "plotNavBar", selected ="Points")
         } 
+        #remove all removeAllMarkers from ace since all sys go.
         session$sendCustomMessage(
           type = "shinyAceExt", 
           list(id= "source", removeAllMarkers='removeAllMarkers')
