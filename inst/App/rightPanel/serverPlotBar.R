@@ -5,22 +5,21 @@ observeEvent(input$plotNavBar, {
   if(is.null(cmd)){
     cmd<-"Points"
   }
+  panels$right<-cmd #Point, tagValues, tagDrag, transfo
   if(!is.null(cmd)){
-    panels$right<-cmd
     dirtyDMDM(session, "plotNavBar")
   }
 })
 
 output$TopRightPanel<-renderUI({
-  tmp<-rightPanel()
-  
-  if(rightPanel()=="Points"){
+  chosenRightPanel<-rightPanel()
+  if(chosenRightPanel=="Points"){
     modulePointsBarUI("pointsBar")
-  } else if (rightPanel()=='tagValues'){
+  } else if (chosenRightPanel=='tagValues'){
     moduleTagValUI("tagValBar", input, output)
-  } else if (rightPanel()=='tagDrag'){
+  } else if (chosenRightPanel=='tagDrag'){
     moduleTagDragUI("tagDragBar")
-  } else if (rightPanel()=='Transforms'){
+  } else if (chosenRightPanel=='Transforms'){
     
     absolutePanel( 
       top=50, left=0, width="100%", 
@@ -32,7 +31,7 @@ output$TopRightPanel<-renderUI({
           type="pills"
         ) 
     )
-  } else if (rightPanel()=="log"){
+  } else if (barName()=="log"){
     absolutePanel(  draggable=FALSE,
                     "class"="cLogText",
                     verbatimTextOutput("out_log"))
@@ -42,15 +41,16 @@ output$TopRightPanel<-renderUI({
 
 
 output$MidRightPanel<-renderUI({
-  if(rightPanel()=="Points"){
+  chosenRightPanel<-rightPanel()
+  if(chosenRightPanel=="Points"){
     modulePlotSVGrUI("svgPointsMod")
-  } else if (rightPanel()=='tagValues'){
+  } else if (chosenRightPanel=='tagValues'){
     modulePlotSVGrUI("svgTagValsMod")
-  } else if (rightPanel()=='tagDrag'){
+  } else if (chosenRightPanel=='tagDrag'){
     modulePlotSVGrUI("svgTagDragMod")
-  } else if (rightPanel()=='Transforms'){
+  } else if (chosenRightPanel=='Transforms'){
     modulePlotSVGrUI("svgTransformMod")
-  } else if (rightPanel()=="log"){
+  } else if (chosenRightPanel=="log"){
     taglist(absolutePanel(  draggable=FALSE,
                             "class"="cLogText",
                             verbatimTextOutput("out_log")))
