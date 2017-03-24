@@ -33,8 +33,8 @@ shinyUI(
     ),
     div(
       class="split-pane vertical-percent",
-      #useShinyjs(debug = FALSE, showLog = FALSE),
-      extendShinyjs(script="www/menuHelper.js"),
+      useShinyjs(debug = FALSE, showLog = FALSE),
+      extendShinyjs(script="www/menuHelper.js"), #appears that only close window is used!
       #-------------left panel begin--------------------------------------------------
       #------- left component begin-----------
       div( 
