@@ -1,10 +1,18 @@
 // ace customizations
 var ptr_HighlightedLines=[];
 
-var helpSvgRTopic = function(query){
-        var mssg="\"" + query + "\"";
-        Shiny.onInputChange("helpSvgRMssg", query );
-}
+var helpSvgRQuery = function(topic, address){
+//var helpSvgRTopic = function(query){
+    // alert("help mssg");
+        //var mssg="\"" + query + "\"";
+        //Shiny.onInputChange("helpSvgRMssg", query );
+  console.log("helpSvgRQuery");      
+  var mssg= {queryTopic:topic, queryAddress:address }
+  Shiny.onInputChange("helpSvgRMssg", mssg );
+  return false;
+};
+
+
         
 /*
 var loadPtrSnippetFile = function(id) {

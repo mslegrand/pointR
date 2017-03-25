@@ -107,8 +107,10 @@ observeEvent( input$editNavBar, {
     }
     
     if(fileCmd=="Element Reference"){
-      query<-"Elememt-Index"
-      htmlHelpR$elements<-getSvgRHelpTopic(query)
+      query<-"Element-Index"
+      #query<-"animate"
+      #query<-"FilterPrimitiveWHAttribute"
+      htmlHelpR$elements<-svgQueryTopic2Help(query)
       showModal( modalHelp() )
       dirtyDMDM(session, "editNavBar")
     }
