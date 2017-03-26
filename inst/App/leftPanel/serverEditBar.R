@@ -110,17 +110,12 @@ observeEvent( input$editNavBar, {
       query<-"Element-Index"
       #query<-"animate"
       #query<-"FilterPrimitiveWHAttribute"
-      htmlHelpR$elements<-svgQueryTopic2Help(query)
+      helpsvgR$html<-svgQueryTopic2Help(query)
       showModal( modalHelp() )
       dirtyDMDM(session, "editNavBar")
     }
     
-    # if(fileCmd=="svgR User Guide"){
-    #   userGuide<-scan(file="www/User_Guide.html", what="character")
-    #   htmlHelpR$elements<-userGuide
-    #   showModal( modalHelp(size = "l") )
-    #   dirtyDMDM(session, "editNavBar")
-    # }
+    
     
     
     

@@ -24,9 +24,7 @@ shinyServer(function(input, output,session) {
   rightPanel<-reactive({panels$right})
 
   
-  history<-reactiveValues(
-    help=c()
-  )
+  
   #tagVal<-reactiveValues(hasTag=FALSE)
   
   reactiveTag<-reactiveValues(freq=list())
