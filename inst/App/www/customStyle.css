@@ -49,15 +49,15 @@ overflow: hidden;
   overflow: auto;
 }
 .cLogText{
-  top:130px; 
-  left:20; 
-  right:40;  
-  bottom:30;
+  top:125px; 
+  left:20px; 
+  right:20px;  
+  bottom:40px;
   margin-top:0;
-  margin-left:20px;
-  margin-right:20px;
+  margin-left:0;
+  margin-right:0;
   margin-bottom:0;
-  border: 1px solid darkblue;
+  border: 3px solid darkblue;
   overflow: auto;
   background-color: white;
 }
