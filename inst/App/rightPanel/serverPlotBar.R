@@ -1,7 +1,8 @@
 #serverPlotBar
 
 observeEvent(input$plotNavBar, {
-  cmd<-input$plotNavBar$item
+  #cmd<-input$plotNavBar$item
+  cmd<-getRightMenuCmd()
   if(is.null(cmd)){
     cmd<-"Points"
   }
@@ -20,7 +21,6 @@ output$TopRightPanel<-renderUI({
   } else if (chosenRightPanel=='tagDrag'){
     moduleTagDragUI("tagDragBar")
   } else if (chosenRightPanel=='Transforms'){
-    
     absolutePanel( 
       top=50, left=0, width="100%", 
       "class"="headerPanel", draggable=FALSE,
@@ -31,7 +31,7 @@ output$TopRightPanel<-renderUI({
           type="pills"
         ) 
     )
-  } else if (barName()=="log"){
+  } else if (chosenRightPanel=="log"){
     absolutePanel(  draggable=FALSE,
                     "class"="cLogText",
                     verbatimTextOutput("out_log"))
@@ -50,10 +50,8 @@ output$MidRightPanel<-renderUI({
     modulePlotSVGrUI("svgTagDragMod")
   } else if (chosenRightPanel=='Transforms'){
     modulePlotSVGrUI("svgTransformMod")
-  } else if (chosenRightPanel=="log"){
-    taglist(absolutePanel(  draggable=FALSE,
-                            "class"="cLogText",
-                            verbatimTextOutput("out_log")))
+  } else if (chosenRightPanel=="logPanel"){
+    moduleLogUI("errLogMod")
   } 
 })
 
