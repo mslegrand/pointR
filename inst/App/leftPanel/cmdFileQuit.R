@@ -2,12 +2,7 @@
 
 cmdFileQuit<-reactive({
   opts<-isolate(reactiveValuesToList((editOption)))
-  # if('recentFiles' %in% names(opts)){
-  #   paste(opts[['recentFiles']],collapse=';')
-  # }
-  #browser()
   opts<-unlist(opts)
-  #print(opts)
   modalSaveOrQuit <- function(){
     modalDialog(
       span("File not saved, quit anyway?"), 

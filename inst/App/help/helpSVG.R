@@ -67,8 +67,6 @@ svgQueryAddr2Help<-function(queryAddr){
 
  
 svgQueryTopic2Help<-function(query){
-  print("entering svgQueryTopic2Help")
-  print(query)
   query<-trimws(query)
   if(query=="[[.svgDoc"){
     query<-"sub-sub-.svgDoc"
@@ -135,7 +133,6 @@ observeEvent(input$helpMssg, {
 
 observeEvent( input$keyBoardHelp,{
   kb<-input$keyBoardHelp
-  print(kb)
 }) 
 
 #handle back button for help

@@ -48,15 +48,12 @@
       if(showGrid()==TRUE){"graphPaper( wh=c(2000,2000), dxy=c(50, 50), labels=TRUE ),"} 
       else { NULL }
     )
-  
-    #print(insert.beg)
     #defining the epilog
     #put it together
     src<-subSVGX2(src, insert.beg, insert.end)
     
     
     # transform: modifies src, but omits insert.end
-   
     res<-""
     tryCatch({
         parsedCode<-parse(text=src)
@@ -72,8 +69,6 @@
         
         user$code<-getCodeBackup()
         mssg$error<-paste(getErrorMssg(), e, collapse="\n", sep="\n")
-        #print(e)
-        #updateNavbarPage(session, "plotNavBar", selected ="Log")
       } 
     )
     res

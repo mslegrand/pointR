@@ -60,34 +60,16 @@ moduleTagVal<-function(input, output, session,
   # 2) we change the code/ptDefs, 
   # ???should not use getPtDefs???
   observeEvent( getPtDefs(),{
-    #isolate({print("assigning local tagRList")})
     localReactive$tagRList<-getPtDefs()$df
-    #isolate({print(localReactive$tagRList)})
-    
   })
   
-  # a non-reactive function (not used???)
-  # exGetTagColChoice<-function(tagColChoices, currentChoice){
-  #   if(length(tagColChoices)>0){
-  #     tagColChoice<-currentChoice
-  #     tagColChoices<-sort(tagColChoices)
-  #     if( length(tagColChoice)==0 || 
-  #         !(tagColChoice %in% tagColChoices ) ){
-  #       tagColChoice<-tail(tagColChoices,1)
-  #     }
-  #   } else { #hide it
-  #     tagColChoice<-NULL
-  #   }
-  #   tagColChoice
-  # }
   
   #===
   getName<-reactive({input$name})
   getIndex<-reactive({input$index})
   
   #===
-  getDF<-reactive({ 
-    # isolate({print("getDF")})
+  getDF<-reactive({
     # should use localReactive$tagRList instead of getPtDefs()$df ???
     if(
       !is.null(getName()) && 
@@ -104,7 +86,6 @@ moduleTagVal<-function(input, output, session,
   #get attribute choices, uses DF from localReactive$tagRList
   # and name from input$name
   getTagColChoices<-reactive({
-    #isolate({print("getTagColChoices")})
     df<-getDF()
     if(!is.null(df)){
       tagColChoices<-setdiff(names(df),"tag")
@@ -138,17 +119,6 @@ moduleTagVal<-function(input, output, session,
   })  
   
   #!!! getTagValueVector and getTagValueChoices are identical !!!
-  # getTagValueVector<-reactive({ 
-  #   # isolate({print("getTagValueVector")}) 
-  #   if(length(getTagCol())>0  &&
-  #     length(getDF)>0){
-  #     getDF()[[getTagCol()]]
-  #   } else {
-  #     NULL
-  #   }
-  # })
-  
-  #!!! getTagValueVector and getTagValueChoices are identical !!!
   getTagValueChoices<-reactive({
     #isolate({print("getTagValuesChoices")})
     if(length(getTagCol())>0  &&
@@ -160,7 +130,6 @@ moduleTagVal<-function(input, output, session,
   })
   
   getTagValue<-reactive({
-    #isolate({print("getTagValue")})
     if(length(getTagValueChoices())>0){
       ptIndx<-getIndex()
       tags<-getDF()$tag
@@ -200,16 +169,10 @@ moduleTagVal<-function(input, output, session,
   # note triggering occurs after new attribute
   observe({ #tab col selection
     if(identical( barName(), 'tagValues')){
-      #isolate({print("update attrName 1")})
-      #isolate({print(input$attrName)})
       tagColChoices<-getTagColChoices()
       tagCol<-getTagCol()
-      #print(tagCol)
-      #print(tagColChoices)
-      #updateSelectInput(session, "attrName", choices=tagColChoices, selected=tagCol)
       updateSelectInput(session, "attrName", choices=tagColChoices)
       updateSelectInput(session, "attrName",  selected=tagCol)
-      #isolate({print("end update attrName 1")})
     }
   })
   
@@ -281,10 +244,7 @@ moduleTagVal<-function(input, output, session,
   
   observe( {
     localReactive$attribute
-    # print("inside observeEvent( localReactive$attribute,")
     if(!is.null(localReactive$attribute)){
-      # print("inside !is.null(localReactive$attribute)")
-      #choices =localReactive$attribute$attrNames
       choices = getTagColChoices()
       selected=localReactive$attribute
       updateSelectInput(session, "attrName", #fails for some reason
@@ -297,7 +257,6 @@ moduleTagVal<-function(input, output, session,
   
   #dialog box ok handler
   observeEvent(input$ok, {
-    #print("ok button observed")
     if(identical( barName(), 'tagValues')){
       if( length(input$name)>0 &&  
           length(input$index)>0 &&
@@ -307,7 +266,6 @@ moduleTagVal<-function(input, output, session,
         valueOK<-grepl(pattern = "^[[:graph:]]", input$modalAttrValue)
         if( nameOK && valueOK){
             tagAttrNames<-  names(localReactive$tagRList[[input$name]])
-            # attrName<-input$modalAttrName
             modalAttrName<-input$modalAttrName
             
             tags<-localReactive$tagRList[[input$name]]$tag
@@ -320,21 +278,14 @@ moduleTagVal<-function(input, output, session,
               updateSelectInput(session, 
                                 inputId="attrName", #fails to update
                                 selected=modalAttrName)
-              #print(modalAttrName)
-              #print(input$attrName)
-              #isolate({print("end update attrName 2")})
+
             } else { #this is a new attributeName
               tagValueVec<-rep( input$modalAttrValue, length(tags) ) 
               tagAttrNames<-c(tagAttrNames,modalAttrName)
-              #localReactive$attributeName<-attrName
-              #isolate({print("update attrName 3")})
               updateSelectInput(session, 
                                 inputId="attrName",  #fails to update
                                 choices=tagAttrNames, 
                                 selected=modalAttrName) 
-              #print(modalAttrName) 
-              #print(input$attrName) 
-              #isolate({print("end update attrName 3")})
             }
             localReactive$attribute<-modalAttrName
             localReactive$tagRList[[input$name]][[modalAttrName]]<-tagValueVec
