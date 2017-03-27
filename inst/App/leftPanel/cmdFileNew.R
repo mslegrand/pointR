@@ -1,5 +1,6 @@
 cmdFileNew<-function(){
-  updateNavbarPage(session, "plotNavBar", selected ="Points")
+  #updateNavbarPage(session, "plotNavBar", selected ="Points")
+  updateRightPanel("Points")
   src<-codeTemplate
   # the next  line update the ptRList; probably should redo with observer
   #file$name<-"newSVG.R" #this will need to change

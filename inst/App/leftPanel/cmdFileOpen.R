@@ -71,7 +71,8 @@ openFileNow<-function(fileName){
       mssg$error<-""
     }
   }
-  updateNavbarPage(session, "plotNavBar", selected ="Points") 
+  #updateNavbarPage(session, "plotNavBar", selected ="Points")
+  updateRightPanel("Points")
   updateNavbarPage(session, "tagFreq", selected ="Off") 
   
 }

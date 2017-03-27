@@ -22,8 +22,10 @@ shinyServer(function(input, output,session) {
   ) 
   panels<-reactiveValues(right="Points")
   rightPanel<-reactive({panels$right})
+  updateRightPanel<-function(panel){ panels$right<-panel}
 
-  
+  getLeftMenuCmd<-reactive({input$editNavBar$item})
+  getRightMenuCmd<-reactive({input$plotNavBar$item})
   
   #tagVal<-reactiveValues(hasTag=FALSE)
   
@@ -178,10 +180,6 @@ source("rightPanel/serverMouseClicks.R", local=TRUE)
 source("rightPanel/serverPlotBar.R", local=TRUE)  
 
   
-#-----log panel---------------------------
-  output$out_log <- renderText({
-    mssg$error
-  })
 
 
  
