@@ -3,7 +3,6 @@
 # #---Insert Value-------------------
 
 
-
 #------TAG BUTTONS
 # if moveTag 
 # load tagmove script and reload svgR, wait for movement
@@ -21,15 +20,9 @@ observeEvent(
       df[df$tag==tagIndx,tagCol]<-value
       tagRList[[tagPtName]]<-df
       user$code<-df2Source(user$code, tagRList)
-      # updateSelectInput(session, "tagColVal",
-      #                   choices=choices, selected=value )
     }
 })
 #---commit  button----- 
-
-# observeEvent(input$commit, {
-#   editOption$.saved<-FALSE
-# })
 
 #(updates user$code with editor contents)
 # alternatively can use observeEvent( input$commit, { ... })
@@ -41,7 +34,6 @@ observe({
   )
   #get text from editor
   isolate({ 
-    
     src<-input$source #------ace editor
     if(nchar(src)>0){
       tryCatch({
@@ -61,12 +53,12 @@ observe({
         src<-preProcCode(src) 
         parsedCode<-parse(text=src)
         eval(parsedCode)
-        # no error so all systems go!!!!
+        # no error occured so all systems go!!!!
         mssg$error<-""
         user$code<-src #push code onto stack
         #if in log page move to points
-        if(rightPanel()=="Log"){
-          updateNavbarPage(session, "plotNavBar", selected ="Points")
+        if(rightPanel()=="logPanel"){
+          updateRightPanel("Points")
         } 
         #remove all removeAllMarkers from ace since all sys go.
         session$sendCustomMessage(
@@ -76,9 +68,10 @@ observe({
         #editOption$.saved<-FALSE
       }, #end of try
       error=function(e){ 
+        #Error handler for commit
         e<-c(e,traceback())
-        mssg$error<-paste(e, collapse="\n", sep="\n")
-        err<-mssg$error
+        err<-paste(unlist(e), collapse="\n", sep="\n")
+        #try to locate where the error occured
         if(str_detect(err, 'parse')){
           m<-str_match(err, ":([0-9]+):([0-9]+):")
           if(length(m)==3){
@@ -88,7 +81,7 @@ observe({
               type = "shinyAceExt", 
               list(id= "source", addMarker=c(row,col))
             )
-          } 
+          }
         }
         if(str_detect(err,' not found')){
           m<-str_match(err, "object '([^']+)' not found")
@@ -103,7 +96,8 @@ observe({
             )
           }
         }
-        updateNavbarPage(session, "plotNavBar", selected ="Log")
+        mssg$error<-err
+        updateRightPanel("logPanel")
       }) 
      }
   })

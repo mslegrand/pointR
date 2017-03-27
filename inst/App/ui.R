@@ -143,7 +143,7 @@ shinyUI(
               menuItem("Drag",  value="tagDrag")  # tabPanel("Wag"), # tabPanel("Mag")
             ),
             menuItem("Transforms"),
-            menuItem("Log")
+            menuItem("Log", value="logPanel")
           ), 
           #----------end right menu
           #--------begin right content
