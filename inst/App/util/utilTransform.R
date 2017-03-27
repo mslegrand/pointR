@@ -156,8 +156,6 @@ tr2src<-function( src, tid, trDefDelta ){
 getDefPos2<-function(lines, df, defTag){  
   df.def<-subset(df, text==defTag)
   parent(parent(df.def))[1,]->info
-  #print(info)
-  #assert info$parent==0 as check
   cnt<-cumsum(1+nchar(lines))
   c(cnt[max(1,info$line1-1)]+info$col1, cnt[max(1,info$line2-1)]+info$col2)
 }
@@ -166,7 +164,6 @@ txt2def<-function(txt, df, defTag){
   lines<-strsplit(txt,"\n")[[1]]
   pos<-getDefPos2(lines, df, defTag)
   str<-substr(txt, pos[1], pos[2])
-  #eval(parse(text=txt))
   str
 }
 

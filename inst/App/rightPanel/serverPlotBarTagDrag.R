@@ -308,9 +308,6 @@ tagValSVGList<-callModule(
   id="svgTagDragMod",
   svgID='ptR_SVG_TagDrag',
   showPts.compound=reactive({
-    # print(getTagName())
-    # print(getPtDefs()$pts[[getTagName()]])
-    # print(getTagIndex() )
     showPts.dragTag(
       ptName=getTagName(), pts=getPtDefs()$pts[[getTagName()]],
       selectedPointIndx=as.numeric( getTagIndex() ),

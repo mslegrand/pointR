@@ -24,8 +24,6 @@ observeEvent(c(tagValInfoList$name(),tagValInfoList$index()),{
     name<-tagValInfoList$name()
     index<-tagValInfoList$index()
     if(!is.null(name)){
-      #print("tagVal updating selectPoint")
-      #print(paste(name, index))
       selectedPoint$name<-name
       selectedPoint$point.index<-as.numeric(index)
     }
@@ -56,13 +54,12 @@ observeEvent(tagValInfoList$updateTagsNow(),{
 #----------------------------------------------------------------
 
 showPts.valTag%<c-% function(ptName, pts, selectedPointIndx, ptDisplayMode,  ptTags){
-    #cat(file=stderr(),"entering drag.Tag\n")
-    #if( is.null(pts) ){return(NULL)}
+    
     if(length(ptName)<1){return(NULL)}
     if(length(pts)<2){return(NULL)}
     if(length(ptTags)<1){return(NULL)}
     if(selectedPointIndx==0){return(NULL)}
-    #print("entering val.Tag\n")
+    
     tag.indx<-selectedPointIndx
     semitransparent<-0.3
     colorScheme<-c(default="green", ending="red", selected="blue")
@@ -101,21 +98,6 @@ showPts.valTag%<c-% function(ptName, pts, selectedPointIndx, ptDisplayMode,  ptT
     }) #end lapply
   } #end showPts
 
-  
-# output$svgTagValuesPanel<-renderUI({
-#   conditionalPanel( "input.plotNavBar=='tagValues'", 
-#     absolutePanel( "class"="cSvgHtml", 
-#                    draggable=FALSE,
-#                    htmlOutput("svgTagValPlot")
-#       )
-#   )
-# })
-#   
-
-
-# output$svgTagValuesPanel<-renderUI({
-#   conditionalPanel( "input.plotNavBar=='tagValues'", modulePlotSVGrUI("svgTagValsMod"))
-# })
 
 tagValSVGList<-callModule(
   module=modulePlotSVGr,

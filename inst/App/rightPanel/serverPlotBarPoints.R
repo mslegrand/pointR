@@ -266,9 +266,8 @@ observeEvent( pointInfoList$tagPt(), {
     if(is.null(pts) ){ return(NULL) } 
     if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
     if(length(pts)<2 ){ return(NULL)}
-    #print("entering showPts.PtCmd Proper")
-    selectedPointIndx<-as.numeric(selectedPointIndx)
     
+    selectedPointIndx<-as.numeric(selectedPointIndx)
     colorScheme<-c(default="green", ending="red", selected="blue")
     m<-matrix(pts,2) # is this really necessary????
      
