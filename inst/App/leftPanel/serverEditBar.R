@@ -109,20 +109,19 @@ observeEvent( input$editNavBar, {
     
     if(fileCmd=="Element Reference"){
       query<-"Element-Index"
-      #query<-"animate"
-      #query<-"FilterPrimitiveWHAttribute"
-      helpsvgR$html<-svgQueryTopic2Help(query)
-      showModal( modalHelp() )
+      cmdSVGHelp(query)
       dirtyDMDM(session, "editNavBar")
     }
-    
-    
-    
-    
-    
+ 
     if(fileCmd=="importSnippetFile"){
       cmdSnippetFileOpen()
     }
+    
+    if(fileCmd=="aboutCmd"){
+      cmdAbout()
+      dirtyDMDM(session, "editNavBar")
+    }
+    
     if(grepl("recent-",fileCmd)){
 
       #get the filename
@@ -141,6 +140,8 @@ observeEvent( input$editNavBar, {
       }
       dirtyDMDM(session, "editNavBar")
     }
+    
+    
     
   }
   

@@ -1,3 +1,20 @@
+#trigger help from menu
+cmdSVGHelp<-function(query){
+  helpsvgR$html<-svgQueryTopic2Help(query)
+  showModal( modalHelp() )
+}
+
+#----trigger help popup from F1
+observeEvent(input$helpMssg, {
+  query<-input$helpMssg
+  if(length(query)>0 && nchar(query)>0){
+    helpsvgR$html<-svgQueryTopic2Help(query)
+    showModal( modalHelp() )
+  }    
+}) 
+
+#----------------------
+
 output$htmlHelpSvg_Out<-renderText(
   htmlHelpSvgOut()
 )
@@ -7,7 +24,7 @@ htmlHelpSvgOut<-reactive({
 })
 
 helpsvgR<-reactiveValues(
-  html="hi there",
+  html="",
   history=NULL
 )
 
@@ -122,14 +139,7 @@ svgQueryTopic2Help<-function(query){
 }
 
 
-#----trigger help popup  
-observeEvent(input$helpMssg, {
-  query<-input$helpMssg
-  if(length(query)>0 && nchar(query)>0){
-    helpsvgR$html<-svgQueryTopic2Help(query)
-    showModal( modalHelp() )
-  }    
-}) 
+# trigger help for short cut keys
 
 observeEvent( input$keyBoardHelp,{
   kb<-input$keyBoardHelp

@@ -113,7 +113,7 @@ shinyServer(function(input, output,session) {
 # Event Observers-------------------------------- 
   
 #help
-  source("help/helpSVG.R", local=TRUE) 
+  source("leftPanel/helpSVG.R", local=TRUE) 
   
 #---navbar disable /enabler controls
   observe({
@@ -171,6 +171,7 @@ source("leftPanel/cmdFileExportSvg.R", local=TRUE)
 source("leftPanel/cmdOptionsTheme.R",local=TRUE)
 source("leftPanel/cmdOptionsFontSize.R", local=TRUE)  
 source("leftPanel/cmdFileSnippet.R",local=TRUE)
+source("leftPanel/cmdAbout.R",local=TRUE)
 source("leftPanel/serverEditBar.R",local=TRUE)
   
   
