@@ -24,10 +24,10 @@ shinyjs.ignoreClick=function(e) {
 shinyjs.disableMenu = function(navBarId) {
 $('#'+navBarId).addClass('disabled');
 $('#'+navBarId).bind('click', shinyjs.ignoreClick)
-}
+};
 
 shinyjs.enableMenu = function(navBarId) {
   $('#'+navBarId).removeClass('disabled');
   $('#'+navBarId).unbind('click', shinyjs.ignoreClick );
-}
+};
 
