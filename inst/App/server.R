@@ -20,6 +20,7 @@ shinyServer(function(input, output,session) {
     name="x", #NULL,       # name of current point array
     point.index=0    #  selected pt.indx (column) in current point array
   ) 
+  
   panels<-reactiveValues(right="Points")
   rightPanel<-reactive({panels$right})
   updateRightPanel<-function(panel){ panels$right<-panel}
@@ -57,6 +58,8 @@ shinyServer(function(input, output,session) {
   getPtDefs<- reactive({ 
     ex.getPtDefs(user$code) 
   })  #extract points from user code
+  
+  #gets the tagged names
   getTagNameChoices<-reactive({
     intersect(names(getPtDefs()$pts), names(getPtDefs()$df))
   })
@@ -66,7 +69,6 @@ shinyServer(function(input, output,session) {
     indx<-getPtIndex()
     pts<-getPtDefs()$pts
     ex.getSelectInfo(pts, name, indx)
-    #ex.getSelectInfo(getPtDefs()$pts, getPtName(), getPtIndex())
   })
   
   getPts<-reactive({
@@ -74,7 +76,10 @@ shinyServer(function(input, output,session) {
     ptdef[[getPtName()]]
   })
   
-  getTagName<-reactive({exGetTagName( getTagNameChoices(), getPtName() )})
+  #gets a tagged name (=ptName unless ptName is not tagged)
+  getTagName<-reactive({
+    exGetTagName( getTagNameChoices(), getPtName() )
+  })
   getTagIndexChoices<-reactive({getPtDefs()$df[[getTagName()]]$tag})
   getTagIndex<-reactive({ 
     choices<-getTagIndexChoices()

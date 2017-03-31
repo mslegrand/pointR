@@ -50,7 +50,10 @@ modalHelp <- function(..., size = "m" ) {
       htmlOutput(outputId = "htmlHelpSvg_Out", width="100%")
     ),
     title="Help",
-    footer=tagList(actionButton("backHelp", "Back"),modalButton("Dismiss")),
+    footer=tagList(
+      actionButton("backHelp", "Back"),
+      modalButton("Dismiss")
+    ),
     easyClose = TRUE,
     ...
   ) 
