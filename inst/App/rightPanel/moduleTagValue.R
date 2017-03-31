@@ -221,7 +221,12 @@ moduleTagVal<-function(input, output, session,
   
   # Return the UI for a modal dialog with data selection input. I
   attrValueModal <- function(attrName, failedName=FALSE, failedValue=FALSE) {
+    doOk<-paste0(
+      'shinyjs.triggerButtonOnEnter(event,"',
+      ns("ok"), 
+      '")')
     modalDialog(
+      onkeypress=doOk,
       textInput(ns("modalAttrName"), "Attribute Name", value=attrName),
       textInput(ns("modalAttrValue"), "New Attribute Value"), 
       span('Enter new choice for the given named attribute'), 
@@ -231,7 +236,7 @@ moduleTagVal<-function(input, output, session,
         div(tags$b("Invalid Attribute Value: must begin with printable character other than space", style = "color: red;")),
       footer = tagList(
         modalButton("Cancel"),
-        actionButton(ns("ok"), "OK")
+        actionButton(ns("ok"), "Commit")
       )
     ) 
   }

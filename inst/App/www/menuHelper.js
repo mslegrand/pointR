@@ -21,6 +21,13 @@ shinyjs.ignoreClick=function(e) {
   return false;
 };
 
+
+shinyjs.triggerButtonOnEnter=function(event,buttonId){
+  if(event.keyCode==13){
+    $('#' + buttonId).trigger("click");
+  }
+};
+
 shinyjs.disableMenu = function(navBarId) {
 $('#'+navBarId).addClass('disabled');
 $('#'+navBarId).bind('click', shinyjs.ignoreClick);
