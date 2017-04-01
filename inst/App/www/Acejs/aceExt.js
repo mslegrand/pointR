@@ -119,6 +119,10 @@ Shiny.addCustomMessageHandler(
         if(data.toggleTabType){
           editor.session.setUseSoftTabs(!editor.session.getUseSoftTabs());
         }
+        if(data.setfocus){
+          editor.focus();
+        }
+        
         
         if(data.showKeyboardShortCuts){
           ace.config.loadModule(
@@ -132,7 +136,7 @@ Shiny.addCustomMessageHandler(
           //var kb=ace.ext.get_editor_keyboard_shortcuts.getEditorKeybordShortcuts(editor);
           //Shiny.onInputChange("keyBoardHelp",kb);
           ace.config.loadModule('ace/ext/keybinding_menu', function(module) {
-            var require
+            //var require
             var kb=module.getEditorKeybordShortcuts.getEditorKeybordShortcuts(editor);
           });
             

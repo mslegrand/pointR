@@ -6,7 +6,8 @@ cmdSVGHelp<-function(query){
 
 #----trigger help popup from F1
 observeEvent(input$helpMssg, {
-  query<-input$helpMssg
+  query<-input$helpMssg$query
+  editorId<-input$editorId
   if(length(query)>0 && nchar(query)>0){
     helpsvgR$html<-svgQueryTopic2Help(query)
     showModal( modalHelp() )
@@ -45,6 +46,7 @@ observeEvent(input$helpSvgRMssg,{
 
 #---- help popup  
 modalHelp <- function(..., size = "m" ) {
+
   modalDialog(
     div( width="100%",
       htmlOutput(outputId = "htmlHelpSvg_Out", width="100%")
@@ -52,12 +54,19 @@ modalHelp <- function(..., size = "m" ) {
     title="Help",
     footer=tagList(
       actionButton("backHelp", "Back"),
-      modalButton("Dismiss")
-    ),
-    easyClose = TRUE,
-    ...
+      actionButton("dismiss", "Dismiss")
+    )
   ) 
 }
+
+observeEvent(input$dismiss,{
+  removeModal()
+  session = getDefaultReactiveDomain()
+  session$sendCustomMessage(
+    type = "shinyAceExt", 
+    list(id="source", setfocus='focus') 
+  )
+})
 
 svgQueryAddr2Help<-function(queryAddr){
   # 1. trim off the front
