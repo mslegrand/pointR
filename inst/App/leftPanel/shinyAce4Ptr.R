@@ -106,13 +106,16 @@ initialAceOptions<-function(
           Shiny.onInputChange('commitMssg', randomString(5) );
       }
   })"),
-  paste0(editorVar, ".commands.addCommand({
+  gsub( "editorVar", editorVar,
+  "editorVar.commands.addCommand({
       name: 'helpR',
       bindKey: {win: 'F1', mac: 'F1'},
       exec: function(editor) {
           console.log('helpR!');
+          editor.getSession().selection.moveCursorLongWordLeft();
+          editor.getSession().selection.selectWordRight();
           var text = editor.getSession().getTextRange(editor.getSelectionRange());
-          Shiny.onInputChange('helpMssg', text );
+          Shiny.onInputChange('helpMssg', {query:text, num:Math.random(), editorId:'editorVar'} );
       }
   })")
 )
