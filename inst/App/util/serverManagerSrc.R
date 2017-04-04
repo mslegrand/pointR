@@ -3,7 +3,7 @@
 
 # The last entry in the editorNames will be the editor in focus (if there multiple instances)
 # The last entry of the stack will be the most recent commit for that editor
-src<-reactiveValues(
+serverManagerSrc<-reactiveValues(
   limit=2, #this probably should be a constant, but needed somewhere safe to put this
   editorNames='history', # last is current editor
   history=list(
@@ -15,37 +15,39 @@ src<-reactiveValues(
 
 #-------- editor list management ------
 srcGetEditorNames<-reactive({
-  src$editorNames
+  serverManagerSrc$editorNames
 })
 
 srcSetCurrentEditor<-function(edName){
-  if(edName %in% src$editorNames){
-    pos<-which(edName==src$editorNames)
-    src$editorNames<-c(src$editorNames[-pos],edName)
+  if(edName %in% serverManagerSrc$editorNames){
+    pos<-which(edName==serverManagerSrc$editorNames)
+    serverManagerSrc$editorNames<-
+      c(serverManagerSrc$editorNames[-pos],edName)
   }
 }
 
 srcGetCurrentEditor<-reactive({
-  tail(src$editorNames,1)
+  names<-serverManagerSrc$editorNames
+  tail(names,1)
 })
 
 srcAddEditor<-function(editor, value="default src", type="svgRSource"){
   if(!(editor %in% srcGetEditorNames() )){
-    src[[editor]]<-list(
+    serverManagerSrc[[editor]]<-list(
       type="svgRCode",
       stack=value,
       index=1
     )
-    src$editorNames<-c(src$editorNames, editor)
+    serverManagerSrc$editorNames<-c(serverManagerSrc$editorNames, editor)
     srcSetCurrentEditor(editor)
   }
 }
 
 srcRemoveEditor<-function(editor){
-  if(editor %in% src$editorNames){
-    pos<-which(editor==src$editorNames)
-    src$editorNames<-src$editorNames[-pos]
-    src[[editor]]<-NULL
+  if(editor %in% serverManagerSrc$editorNames){
+    pos<-which(editor==serverManagerSrc$editorNames)
+    serverManagerSrc$editorNames<-serverManagerSrc$editorNames[-pos]
+    serverManagerSrc[[editor]]<-NULL
   }
 }
 
@@ -53,41 +55,43 @@ srcRemoveEditor<-function(editor){
 #---------
 
 srcPushTxt<-function(what, edName="history"){
-  length(src[[edName]]$stack)<-src[[edName]]$index
-  src[[edName]]$stack<-c(src[[edName]]$stack,what)
-  if(length(src[[edName]]$stack)>src$limit){
-    src[[edName]]$stack<-tail(src[[edName]]$stack, src$limit)
+  length(serverManagerSrc[[edName]]$stack)<-serverManagerSrc[[edName]]$index
+  serverManagerSrc[[edName]]$stack<-c(serverManagerSrc[[edName]]$stack,what)
+  if(length(serverManagerSrc[[edName]]$stack)>serverManagerSrc$limit){
+    serverManagerSrc[[edName]]$stack<-tail(serverManagerSrc[[edName]]$stack, serverManagerSrc$limit)
   }
-  src[[edName]]$index<-length(src[[edName]]$stack)
+  serverManagerSrc[[edName]]$index<-length(serverManagerSrc[[edName]]$stack)
 }
 
 srcBackup<-function(edName="history"){
-  src[[edName]]$index<-max(1, src[[edName]]$index-1)
+  serverManagerSrc[[edName]]$index<-max(1, serverManagerSrc[[edName]]$index-1)
 }
 
 srcGet<-reactive({ #return code on top of stack
   edName<-srcGetCurrentEditor()
-  tail(src[[edName]]$stack,1)
+  stack<-serverManagerSrc[[edName]]$stack
+  #serverManagerSrc[[edName]]$stack[[length(serverManagerSrc[[edName]]$stack)]]
+  stack[length(stack)]
 })
 
 
 srcGoForward<-function(edName="history"){
-  src[[edName]]$index<-min(
-    length(src[[edName]]$stack), 
-    src[[edName]]$index+1
+  serverManagerSrc[[edName]]$index<-min(
+    length(serverManagerSrc[[edName]]$stack), 
+    serverManagerSrc[[edName]]$index+1
   )
 }
 
 srcGo2End<-function(edName="history"){
-  src[[edName]]$index<-length(src[[edName]]$stack)
+  serverManagerSrc[[edName]]$index<-length(serverManagerSrc[[edName]]$stack)
 }
 
 srcGo2Beginning<-function(edName="history"){
-  src[[edName]]$index<-1
+  serverManagerSrc[[edName]]$index<-1
 }
 
 srcRevert<-function(edName="history" ){
-  src[[edName]]$index<-max(1, src[[edName]]$index-1)
-  length(src[[edName]]$stack)<-src[[edName]]$index
+  serverManagerSrc[[edName]]$index<-max(1, serverManagerSrc[[edName]]$index-1)
+  length(serverManagerSrc[[edName]]$stack)<-serverManagerSrc[[edName]]$index
 }
 

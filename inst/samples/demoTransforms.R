@@ -7,7 +7,7 @@ WH<-c(600,620)
 #points defined by mouse clicks, edit with care!
 ptR<-list(
   x=matrix(
-    c(c( 137,339 ),c( 111.5,153 ),c( 329.5,157 ),c( 357.5,329 ),c( 281.5,461 )), 2
+    c(c( 137,339 ),c( 111,153 ),c( 383,133 ),c( 357,329 ),c( 281,461 )), 2
   )
 )
 
@@ -17,10 +17,10 @@ svgR(wh=WH,
      polygon(points=ptR$x, fill="blue",opacity=.5),
      rect( class="draggable", opacity=.5,
            xy=c(0,30), wh=c(80,80), fill="blue", 
-           transform=matrix(c(0.4396, 0.8982, -0.8982, 0.4396, 321, -214.2),2)
+           transform=matrix(c(1.284, 0.8677, -1.756, 0.6346, 244.5, 6.869),2)
      ),
      circle( class="draggable", 
              cxy=c(100,230), r=50, fill="red", opacity=.5,
-             transform=matrix(c(0.5713, -1.476, 1.365, 0.6176, 39.9, 317.6),2)
+             transform=matrix(c(0.5713, -1.476, 1.365, 0.6176, 93.9, 144.6),2)
      )
 )

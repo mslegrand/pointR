@@ -14,7 +14,7 @@ getCodeTransform<-reactive({
 })
 
 
-transformInfoList<-callModule(
+statusPlotTransform<-callModule(
   module=modulePlotSVGr,
   id="svgTransformMod",
   svgID='ptR_SVG_TRANSFORM',
@@ -24,8 +24,16 @@ transformInfoList<-callModule(
   showGrid,
   getCode,
   getCode2 = getCodeTransform,  # (or getCodeTransform)
-  getCodeBackup,
   getErrorMssg,
   insert.end=",NULL"
 )
+
+observeEvent(statusPlotTransform$status(), { 
+  status<-statusPlotTransform$status()
+  if(status$state!="PASS"){
+     srcRevert()
+    # send mssg to log
+    # switch to log 
+  }
+})
 

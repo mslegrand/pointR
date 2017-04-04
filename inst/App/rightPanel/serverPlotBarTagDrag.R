@@ -58,13 +58,13 @@ observeEvent(
       dfNew$tag<-tagsNew
       ptRList[[name]]<-ptsNew
       tagRList[[name]]<-dfNew
-      scr<-getCode()
-      src<-user$code
-      src<-pts2Source(src,ptRList)
-      src<-df2Source( src, tagRList)
+      
+      code<-srcGet()
+      code<-pts2Source(code,  ptRList)
+      code<-df2Source( code, tagRList)
       
       #update
-      user$code<-src
+      setCode(code)
       selectedPoint$point.index<-as.numeric(index)+tiSize
       
     }
@@ -102,14 +102,14 @@ observeEvent(
       dfNew$tag<-tagsNew
       ptRList[[name]]<-ptsNew
       tagRList[[name]]<-dfNew
-      scr<-getCode()
-      src<-user$code
-      src<-pts2Source(src,ptRList)
-      src<-df2Source( src, tagRList)
+      scrCode<-getCode()
+      
+      scrCode<-pts2Source(scrCode,ptRList)
+      scrCode<-df2Source( scrCode, tagRList)
       
       #will need to handle case when no more tagged points!!!
       #update
-      user$code<-src
+      setCode(scrCode)
       selectedPoint$point.index<-as.numeric(index)-tiSize
     }
   }
@@ -170,14 +170,14 @@ observeEvent(
       ptRList[[name]]  <-pts
       tagRList[[name]] <-df
       
-      scr<-getCode()
-      src<-user$code
-      src<-pts2Source(src,ptRList)
-      src<-df2Source( src, tagRList)
+      code<-srcGet()
+      code<-pts2Source(code,ptRList)
+      code<-df2Source( code, tagRList)
       
       #will need to handle case when no more tagged points!!!
       #update
-      user$code<-src
+      setCode(code)
+      
       selectedPoint$point.index<-tags[t1]
     }
   }
@@ -218,14 +218,14 @@ observeEvent(
       ptRList[[name]]  <-pts
       tagRList[[name]] <-df
       
-      scr<-getCode()
-      src<-user$code
-      src<-pts2Source(src,ptRList)
-      src<-df2Source( src, tagRList)
+      #scr<-getCode()
+      scrCode<-srcGet()
+      scrCode<-pts2Source(scrCode,ptRList)
+      scrCode<-df2Source( scrCode, tagRList)
       
       #will need to handle case when no more tagged points!!!
       #update
-      user$code<-src
+      setCode(scrCode)
       selectedPoint$point.index<-tags[t0]
     }
   }
@@ -303,7 +303,7 @@ observeEvent(
 #   conditionalPanel( "input.plotNavBar=='tagDrag'", modulePlotSVGrUI("svgTagDragMod"))
 # })
 
-tagValSVGList<-callModule(
+statusPlotTagDrag<-callModule(
   module=modulePlotSVGr,
   id="svgTagDragMod",
   svgID='ptR_SVG_TagDrag',
@@ -315,11 +315,21 @@ tagValSVGList<-callModule(
     )
   }),
   ptrDisplayScript = reactive({ js.scripts[[ "TagDrag"]] }),
-  getSVGWH,
-  showGrid,
-  getCode,
-  getCode2 =getCode,  # (or getCodeTransform)
-  getCodeBackup,
-  getErrorMssg,
+  getSVGWH=getSVGWH,
+  showGrid=showGrid,
+  getCode=srcGet,
+  getCode2 =srcGet,  # (or getCodeTransform)
+  getErrorMssg=getErrorMssg,
   insert.end=",showPts.compound()"
 )
+
+observeEvent(statusPlotTagDrag$status(), {
+  status<-statusPlotTagDrag$status()
+  if(status$state!="PASS"){
+    srcRevert()
+    # send mssg to log
+    # switch to log 
+  }
+})
+
+

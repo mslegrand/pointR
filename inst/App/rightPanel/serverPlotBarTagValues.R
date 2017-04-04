@@ -10,7 +10,7 @@ tagValInfoList<-callModule(
   id="tagValBar",
   id2="tagValBar",
   barName=rightPanel ,
-  getCode=reactive(user$code), 
+  getCode=getCode, # or wrap
   getPtDefs=reactive({x<-getPtDefs(); x}),
   getTagNameChoices=reactive({getTagNameChoices()}) ,
   getTagName=reactive({getTagName()}),
@@ -43,7 +43,7 @@ observeEvent(tagValInfoList$updateTagsNow(),{
     tagRList<-tagValInfoList$tagRList()
     if( !is.null(tagRList) ){
       src<-df2Source(getCode(),tagRList)
-      user$code<-src
+      setCode(src)
     }
   }
 })
@@ -99,7 +99,7 @@ showPts.valTag%<c-% function(ptName, pts, selectedPointIndx, ptDisplayMode,  ptT
   } #end showPts
 
 
-tagValSVGList<-callModule(
+statusPlotTagVal<-callModule(
   module=modulePlotSVGr,
   id="svgTagValsMod",
   svgID='ptR_SVG_TagVal',
@@ -115,9 +115,19 @@ tagValSVGList<-callModule(
   showGrid,
   getCode,
   getCode2 =getCode,  # (or getCodeTransform)
-  getCodeBackup,
   getErrorMssg,
   insert.end=",showPts.compound()"
 )
+
+observeEvent(statusPlotTagVal$status(), {
+  status<-statusPlotTagVal$status()
+  if(status$state!="PASS"){
+    srcRevert()
+    # send mssg to log
+    # switch to log 
+  }
+})
+
+
 
 

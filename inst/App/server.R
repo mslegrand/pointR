@@ -11,14 +11,8 @@ shinyServer(function(input, output,session) {
   source("util/exGetTag.R", local=TRUE) # some ordinary functions :)
   
 # Reactive values----------
-  #Eventually we want a stack of code changes so we can do an undo
-  
-  #user <- reactiveValues(code=codeTemplate) # internal copy of user code
-  #backup<-reactiveValues( code=codeTemplate) # last good copy of user code
-  
+
   source("util/serverManagerSrc.R", local=TRUE)
-  
-  #file <-reactiveValues( name="newFile.R")       #  file path
   selectedPoint <- reactiveValues(
     name="x", #NULL,       # name of current point array
     point.index=0    #  selected pt.indx (column) in current point array
@@ -31,8 +25,6 @@ shinyServer(function(input, output,session) {
   getLeftMenuCmd<-reactive({input$editNavBar$item})
   getRightMenuCmd<-reactive({input$plotNavBar$item})
   
-  #tagVal<-reactiveValues(hasTag=FALSE)
-  
   reactiveTag<-reactiveValues(freq=list())
   displayOptions<-reactiveValues(
     insertMode=TRUE,
@@ -41,7 +33,6 @@ shinyServer(function(input, output,session) {
   )
   mssg<-reactiveValues(error="") 
   
-  
   # Reactive expressions------------- 
    #---
   isTaggable<-reactive({ 
@@ -49,7 +40,8 @@ shinyServer(function(input, output,session) {
     !is.null(name) && getPtIndex()>0 &&  is.null(reactiveTag$freq[[name]])
   })
   
-  getCode<-reactive({ srcGet() })
+  getCode<-reactive({srcGet()})
+  
   setCode<-function(txt, what="history"){
     srcPushTxt(txt,what)
   }
@@ -85,7 +77,10 @@ shinyServer(function(input, output,session) {
   getTagName<-reactive({
     exGetTagName( getTagNameChoices(), getPtName() )
   })
-  getTagIndexChoices<-reactive({getPtDefs()$df[[getTagName()]]$tag})
+  getTagIndexChoices<-
+    reactive(
+      {getPtDefs()$df[[getTagName()]]$tag}
+  )
   getTagIndex<-reactive({ 
     choices<-getTagIndexChoices()
     indx<-getPtIndex()
@@ -115,9 +110,9 @@ shinyServer(function(input, output,session) {
     ptTags
   })
   
-  usingTransformDraggable<-reactive({ 
-    grepl("class='draggable'",getCode() ) ||
-    grepl('class="draggable"',getCode() )
+  usingTransformDraggable<-reactive({
+    grepl("class='draggable'",srcGet() ) || 
+    grepl('class="draggable"',srcGet() )
   }) 
 
 # Event Observers-------------------------------- 
@@ -137,8 +132,6 @@ shinyServer(function(input, output,session) {
     })
   })
   
-  
-  
   observe({
     using<-usingTransformDraggable()
     isolate({
@@ -151,27 +144,26 @@ shinyServer(function(input, output,session) {
     
   }
   )
-  
-  
 
-#--------------------------------------------------
+#------------------rightPanel--------------------------------
 
 source("rightPanel/serverPlotBarPoints.R", local=TRUE) 
-# --------------input$plotNavBar=="Tags"----------------  
 source("rightPanel/serverPlotBarTagValues.R", local=TRUE)  
 source("rightPanel/serverPlotBarTagDrag.R", local=TRUE)  
 source("rightPanel/serverPlotBarTransform.R", local=TRUE) 
-   
-  
+
 source("rightPanel/serverLog.R", local=TRUE) 
 source("rightPanel/serverPlotBar.R", local=TRUE)
-source("rightPanel/serverOptions.R", local=TRUE)  
-#---------------Button handlers--------------------------
-source("leftPanel/serverButtons.R",local = TRUE)
-
+source("rightPanel/serverOptions.R", local=TRUE) 
+#-----MOUSE CLICKS---------------------------------
+source("rightPanel/serverMouseClicks.R", local=TRUE)
+source("rightPanel/serverPlotBar.R", local=TRUE)  
   
-#--------------------------------navbarMenuBar--------
-
+  
+#---------------leftPanel--------------------------
+#------buttons
+source("leftPanel/serverButtons.R",local = TRUE)
+#------menu
 source("leftPanel/cmdFileSaveAs.R", local=TRUE)  
 source("leftPanel/cmdFileSave.R", local=TRUE)  
 source("leftPanel/cmdFileNew.R", local=TRUE)  
@@ -184,11 +176,6 @@ source("leftPanel/cmdFileSnippet.R",local=TRUE)
 source("leftPanel/cmdAbout.R",local=TRUE)
 source("leftPanel/serverEditBar.R",local=TRUE)
   
-  
-  
-#-----------------------MOUSE CLICKS---------------------------------
-source("rightPanel/serverMouseClicks.R", local=TRUE)
-source("rightPanel/serverPlotBar.R", local=TRUE)  
 
   
 

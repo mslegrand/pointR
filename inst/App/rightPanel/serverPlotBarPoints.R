@@ -85,7 +85,7 @@ observeEvent( pointInfoList$removePt(), {
       return(NULL)
     }
     indx=selectedPoint$point.index 
-    src<-user$code
+    src<-getCode() 
     
     #delete the point from the ptR list
     if(indx>=1){
@@ -141,7 +141,7 @@ observeEvent( pointInfoList$removePt(), {
         src<-df2Source(src,tagList)
       }
     }
-    user$code<-src
+    setCode(src)
   }
 })
 
@@ -199,14 +199,16 @@ observeEvent(input$okTag, { #move into module???
   if(is.null(dfList) ){ # 1 if dfList is NULL, create new
     dfList= structure( list( df) , names=selection )
     replacement<-paste0("\n\n", formatDFDefs(dfList),"\n\n")
-    src<-user$code
+    src<-getCode() 
     pos<-getDefPos(src, "ptR")     
     src<-paste0( substr(src, 1, pos[2]), replacement,  
                  substr(src, pos[2]+1, nchar(src))) 
-    user$code<-src 
+    setCode(src)
   } else {
     dfList[[selection]]<-df
-    user$code<-df2Source(user$code,dfList)
+    src<-getCode()
+    src<-df2Source(src,dfList) #insert points into src
+    setCode(src)
   }
 })
 
@@ -242,11 +244,10 @@ observeEvent( pointInfoList$tagPt(), {
           ordrows<-order(df$tag)
           df<-df[ordrows,,drop=FALSE]
           dfList[[selection]]<-df
-          #src<-user$code
-          user$code<-df2Source(user$code,dfList)
-          #user$code<-src
+          src<-getCode() 
+          src<-df2Source(src,dfList)
+          setCode(src)
         }
-        
       }
     }
   } #end of if
@@ -324,7 +325,7 @@ newPtLayer %<c-% function(insert, wh=c(1200,800)){
   
 #===============
   
-pointSVGList<-callModule(
+statusPlotPoint<-callModule(
   module=modulePlotSVGr,
   id="svgPointsMod",
   svgID='ptR_SVG_Point',
@@ -343,11 +344,19 @@ pointSVGList<-callModule(
   showGrid,
   getCode,
   getCode2 =getCode,  # (or getCodeTransform)
-  getCodeBackup,
   getErrorMssg,
   insert.end=",showPts.compound()"
 )
 
+observeEvent(statusPlotPoint$status(), {
+  #status<-statusPlotPoint()
+  status<-statusPlotPoint$status()
+  if( status$state!="PASS"){
+    srcRevert()
+    # send mssg to log
+    # switch to log 
+  }
+})
 
 
 

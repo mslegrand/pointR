@@ -60,8 +60,12 @@ moduleTagDrag<-function(input, output, session,
      if(identical( barName(), 'tagDrag')){
       tagIndxChoices<-getTagIndexChoices()
       tagIndx<-getTagIndex()
-      updateSelectInput(session, "index", 
-      choices=tagIndxChoices, selected=tagIndx)
+      updateSelectInput(
+        session, 
+        "index", 
+        choices=tagIndxChoices, 
+        selected=tagIndx
+      )
     } 
   }) 
   

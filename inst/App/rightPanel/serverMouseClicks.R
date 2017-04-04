@@ -7,7 +7,7 @@ observe({
       #tmp<-paste(input$mouseMssg,collapse="\n** ")
       #cat( file=stderr(), paste("mouseMssg: cmd=",tmp,"\n>\n\n")  ) 
       pt<- input$mouseMssg[2]
-      src<-user$code
+      src<-getCode()
       #todo: error check???
       
       pt<-eval(parse(text=pt)) 
@@ -124,9 +124,7 @@ observe({
         src<-tr2src( src, tid, trDefDelta2 )
       } 
       # update internal user source
-      user$code<-src
-      
-      
+      setCode(src)
     }
   })
 })
