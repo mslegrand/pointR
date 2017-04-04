@@ -17,22 +17,26 @@
     showGrid,
     getCode,
     getCode2,  # =getCode (or getCodeTransform)
-    getCodeBackup,
     getErrorMssg, 
     insert.end #='showPts.compound()'
   ){
     
-  user<-  reactiveValues( code="" )
-  backup<-reactiveValues(code="")
-  mssg<-  reactiveValues( error=NULL )
+  user<-  reactiveValues( code="")
+  
+  rtv<-  reactiveValues(
+    status=list(
+      state="PASS", 
+      message=""
+    )
+  )
+ 
   
   # Todo: add the mouseMssg handler
   
   output$svghtml <- renderUI({
     WH<-getSVGWH()
     #src<-getCode()
-    src<-getCode2()
-    backup$code<-getCodeBackup()
+    codeTxt<-getCode2()
     if(is.null(showGrid())){return(NULL)}
     
     # why can't I force this???
@@ -50,34 +54,39 @@
     )
     #defining the epilog
     #put it together
-    src<-subSVGX2(src, insert.beg, insert.end)
+    if( !is.null(codeTxt) ){
+      if(class(codeTxt)!="character" || length(codeTxt)!=1){
+        browser()
+      }
+    }
+      
+    codeTxt<-subSVGX2(codeTxt, insert.beg, insert.end)
     
     
     # transform: modifies src, but omits insert.end
     res<-""
     tryCatch({
-        parsedCode<-parse(text=src)
+        parsedCode<-parse(text=codeTxt)
         svg<-eval(parsedCode)
         as.character(svg)->svgOut 
         res<-HTML(svgOut)
-        backup$code<-getCode()
-        mssg$error<-NULL
+        rtv$status<-list(
+          state="PASS",
+          message=""
+        )
       },
       error=function(e){
-        # session$sendCustomMessage(type='testmessage', message=e)
-        #mssg$error<-paste(mssg$error, e, collapse="\n", sep="\n")
-        
-        user$code<-getCodeBackup()
-        mssg$error<-paste(getErrorMssg(), e, collapse="\n", sep="\n")
+        rtv$status<-list(
+          state="FAIL", 
+          message=paste(getErrorMssg(), e, collapse="\n", sep="\n")
+        )
       } 
     )
     res
   }) #end of renderUI
   
   list(
-    code=reactive({user$code}),
-    backup=reactive({backup$code}),
-    mssg=reactive({mssg$error})
+    status=reactive({rtv$status}) 
   )
   
 }
