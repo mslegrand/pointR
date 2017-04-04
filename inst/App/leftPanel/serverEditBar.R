@@ -126,7 +126,6 @@ observeEvent( input$editNavBar, {
 
       #get the filename
       fileName<-sub("recent-","",fileCmd)
-      
       #if file fails to exist remove
       if(!file.exists(fileName)){
         # remove from recentFiles
@@ -171,9 +170,9 @@ output$fileName <- renderText({
 
 # -----------ACE EDITOR------------------------
 observeEvent(
-  user$code, {
+  getCode(), {
     if(mssg$error==""){
-      updateAceEditor( session,"source", value=user$code)
+      updateAceEditor( session,"source", value=getCode() ) 
     }
   }
 )

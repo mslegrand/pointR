@@ -10,7 +10,7 @@ cmdFileSave<-function(){
     isolate({
       editOption$.saved<-TRUE
     })
-    txt<-user$code
+    txt<-getCode() 
     writeLines(txt, fullFilePath)
   }
 }

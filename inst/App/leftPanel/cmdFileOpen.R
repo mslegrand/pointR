@@ -59,8 +59,8 @@ openFileNow<-function(fileName){
     setwd(dirname(fileName))
     #file$name<-fileName #TODO: reactive expr using editOption$currentFile
     if(nchar(src)>0){
-      src<-preProcCode(src)
-      user$code<-src
+      src<-preProcCode(src) #insert points into src
+      setCode(src)
       isolate({
         editOption$.saved<-TRUE
       })

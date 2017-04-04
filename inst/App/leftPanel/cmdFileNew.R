@@ -4,7 +4,8 @@ cmdFileNew<-function(){
   src<-codeTemplate
   # the next  line update the ptRList; probably should redo with observer
   #file$name<-"newSVG.R" #this will need to change
-  user$code<-src
+
+  setCode(src)
   isolate({
     editOption$.saved<-TRUE
   })
@@ -18,5 +19,5 @@ cmdFileNew<-function(){
   updateSelectInput(session, "ptRSelect",  choices=c("x"), selected="x" ) 
 
   updateNavbarPage(session, "tagFreq", selected ="Off") 
-  updateAceEditor( session,"source", value=user$code) 
+  updateAceEditor( session,"source", value=getCode() ) 
 }

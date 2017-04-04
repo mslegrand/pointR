@@ -12,7 +12,7 @@ colLine2charPositions<-function(csnCharLines, lineNums, colNums){
 #source2data
 #source2sourceExtension
 
-#todo make reactive expr: parseDataFrame<-reactive({getParseDataFrame(user$code)})
+#todo?? make reactive expr: parseDataFrame<-reactive({getParseDataFrame(user$code)})
 getParseDataFrame<-function(txt){
   ep<-parse(text=txt)
   p.df<-getParseData(ep)
@@ -35,7 +35,7 @@ getNCharLines<-function(txt){
   nCharLines
 }
 
-#todo make reactive expr: codeLineCnt<-reactive({getNCharLines(user$code)})
+#todo?? make reactive expr: codeLineCnt<-reactive({getNCharLines(user$code)})
 getcumCharLines<-function(txt){
   nCharLines<-getNCharLines(txt)
   csnCharLines<-cumsum(c(0,nCharLines))

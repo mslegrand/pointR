@@ -19,12 +19,14 @@ observeEvent(
       df<-tagRList[[tagPtName]]
       df[df$tag==tagIndx,tagCol]<-value
       tagRList[[tagPtName]]<-df
-      user$code<-df2Source(user$code, tagRList)
+      src<-getCode()
+      src<-df2Source(src, tagRList)
+      setCode(src)
     }
 })
 #---commit  button----- 
 
-#(updates user$code with editor contents)
+#(updates src with editor contents)
 # alternatively can use observeEvent( input$commit, { ... })
 observe({ 
   c(input$commit, input$commitMssg)
@@ -41,6 +43,7 @@ observe({
         lines<-lines[[1]]
         ptRPos<-grep("^\\s*ptR<-",lines)
         svgRPos<-grep("^\\s*svgR\\(",lines)
+        # 
         if(length(ptRPos)!=1){
           stop("Bad File: Missing ptR list or multiple  ptR lists")
         }
@@ -50,12 +53,35 @@ observe({
         if(!(ptRPos[1]<svgRPos[1])){
           stop("Bad File: ptR list must come prior to svgR call")
         }
+        # alternative to the above 3 might be
+        # if(lengths ok){
+        #   process as before
+        # } else {
+        #   eval wo. preproc and
+        #   src<-preProcCode(src) 
+        #   parsedCode<-parse(text=src)
+        #   tmp<-as.character(eval(parsedCode))
+        #   mssg$error<-tmp # pass result to mssg$error,
+        #   stop(tmp)    #(or put in stop??)
+        #   and do not update code
+        #   since that is where we update the graphics
+        #   
+        # }
         src<-preProcCode(src) 
-        parsedCode<-parse(text=src)
+        parsedCode<-parse(text=src) #insert points into src
         eval(parsedCode)
+        # need to check that this returns an svg
+        # tmp<-as.character(eval(parsedCode))
+        # if(!str_detect('^svg',txt)){
+        #  mssg$error<-tmp
+        #  stop(tmp)
+        #}
+        
         # no error occured so all systems go!!!!
         mssg$error<-""
-        user$code<-src #push code onto stack
+        setCode(src) #push code onto stack
+        
+        
         #if in log page move to points
         if(rightPanel()=="logPanel"){
           updateRightPanel("Points")
@@ -65,7 +91,7 @@ observe({
           type = "shinyAceExt", 
           list(id= "source", removeAllMarkers='removeAllMarkers')
         )
-        #editOption$.saved<-FALSE
+        editOption$.saved<-FALSE
       }, #end of try
       error=function(e){ 
         #Error handler for commit

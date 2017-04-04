@@ -18,7 +18,7 @@ cmdFileExportSvg<-function(){
     )$res
     
     if(length(fileName)>0 && nchar(fileName)>0){
-      src<-user$code
+      src<- getCode()
       parsedCode<-parse(text=src)
       txt<-as.character(eval(parsedCode))
       writeLines(txt, fileName)

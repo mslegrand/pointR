@@ -8,12 +8,15 @@
 #---begin server--------------
 shinyServer(function(input, output,session) {
   
-  source("./util/exGetTag.R", local=TRUE) # some ordinary functions :)
+  source("util/exGetTag.R", local=TRUE) # some ordinary functions :)
   
 # Reactive values----------
   #Eventually we want a stack of code changes so we can do an undo
-  user <- reactiveValues( code=codeTemplate) # internal copy of user code
-  backup<-reactiveValues( code=codeTemplate) # last good copy of user code
+  
+  #user <- reactiveValues(code=codeTemplate) # internal copy of user code
+  #backup<-reactiveValues( code=codeTemplate) # last good copy of user code
+  
+  source("util/serverManagerSrc.R", local=TRUE)
   
   #file <-reactiveValues( name="newFile.R")       #  file path
   selectedPoint <- reactiveValues(
@@ -46,8 +49,10 @@ shinyServer(function(input, output,session) {
     !is.null(name) && getPtIndex()>0 &&  is.null(reactiveTag$freq[[name]])
   })
   
-  getCode<-reactive({ user$code })
-  getCodeBackup<-reactive({ backup$code })
+  getCode<-reactive({ srcGet() })
+  setCode<-function(txt, what="history"){
+    srcPushTxt(txt,what)
+  }
   
   getPtName<-reactive({selectedPoint$name})
   getPtIndex<-reactive({selectedPoint$point.index})
@@ -56,7 +61,7 @@ shinyServer(function(input, output,session) {
   
   getErrorMssg<-reactive({ mssg$error })
   getPtDefs<- reactive({ 
-    ex.getPtDefs(user$code) 
+    ex.getPtDefs(getCode() ) 
   })  #extract points from user code
   
   #gets the tagged names
@@ -111,8 +116,8 @@ shinyServer(function(input, output,session) {
   })
   
   usingTransformDraggable<-reactive({ 
-    grepl("class='draggable'",user$code) ||
-    grepl('class="draggable"',user$code)
+    grepl("class='draggable'",getCode() ) ||
+    grepl('class="draggable"',getCode() )
   }) 
 
 # Event Observers-------------------------------- 
