@@ -150,7 +150,9 @@ observeEvent( pointInfoList$removePt(), {
 # Return the UI for a modal dialog with data selection input. If 'failed' is
 # TRUE, then display a message that the previous value was invalid.
 modalFreq <- function(failed = FALSE) {
+  doOk<-'shinyjs.triggerButtonOnEnter(event,"okTag")'
   modalDialog(
+    onkeydown=doOk,
     selectInput("tagFreq", "Auto Tag",
                 c(list("Off"),1:20), selected="Off", 
                 multiple=FALSE, selectize = FALSE,
