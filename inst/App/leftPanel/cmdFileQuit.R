@@ -12,7 +12,6 @@ cmdFileQuit<-reactive({
     ) 
   }
   
-  status<-editOption$.saved
   if(getFileSavedStatus()==FALSE){
     showModal( modalSaveOrQuit() )
   } else {
