@@ -146,7 +146,26 @@ observeEvent( input$editNavBar, {
   
 }) 
 
-#- editor options handlers
+# keep file menu save uptodate
+observeEvent(getFileSavedStatus(),{
+  if(getFileSavedStatus()==FALSE){
+    # set dmdm file save active
+    enableDMDM(
+      session, 
+      menuBarId="editNavBar", 
+      entry="Save"
+    )
+  } else {
+    # set dmdm file save inactive
+    disableDMDM(
+      session, 
+      menuBarId="editNavBar", 
+      entry="Save"
+    )
+  }
+})
+
+#------- editor options handlers
 
 observeEvent(input$modalIndentSizeCancel, {
   removeModal()
