@@ -1,15 +1,40 @@
 
-optionFile<-paste(path.expand("~"),".ptRProfile.csv",sep="/")
+# this option file is being pushed to "~", maybe not such a 
+#good idea
 
-#opts is a named vector of options
-#optionFile is where to write the opts
-writeOptions<-function(optionFile, opts){
-  write.table(opts,file=optionFile, row.names=TRUE, col.names=FALSE)
+
+optionDirPath<-function(){
+  dirPath<-switch(Sys.info()[['sysname']],
+         Windows= '%localappdata%/ptR',
+         Linux  = '~/.ptR',
+         Darwin = '~/.ptR'
+  )
+  if(!file.exists(dirPath)){
+    dir.create(dirPath)
+  }
+  dirPath
 }
 
-# optionFile is where to read the opts
-# return vector of options
-readOptions<-function(optionFile){ 
+
+
+
+
+
+
+optionFile<-paste(path.expand("~"),".ptRProfile.csv",sep="/")
+
+
+writeOptionsJSON<-function(opts){
+  file<-paste(optionDirPath(),"ptRProfile.json", sep="/")
+  write_json(opts,file, pretty=4)
+}
+
+
+# Load initial options to the global defaultOpts 
+# prior to the the running the session
+# Subsequently the reactive editOption will be 
+# initialize using the value of defaultOpts
+readOptionsJSON<-function(){
   defaultOpts<-list(
     fontSize=16,
     theme="katzenmilch",
@@ -20,31 +45,17 @@ readOptions<-function(optionFile){
     tabType="Use Soft Tabs",
     recentFiles=NULL
   )
+  
   try({
-    tmp<-read.table(optionFile, header=FALSE, stringsAsFactors=FALSE, row.names=1)
-    readOpts<-structure(tmp[,1], names= row.names(tmp))
-    indx<-intersect(names(defaultOpts), names(readOpts))
-    defaultOpts[indx]<-readOpts[indx]
-    #browser()
-    indx<-grep("^recentFiles", names(readOpts))
-    if(length(indx)>0){
-      rf<-readOpts[indx]
-      #names(rf)
-      rf<-rf[sort(names(rf))]
-      defaultOpts[["recentFiles"]]<-rf
-    }
+    file<-paste(optionDirPath(),"ptRProfile.json", sep="/")
+    tmp<-read_json(file)  
+    defaultOpts[names(tmp)]<-tmp
     defaultOpts[["currentFilePath"]]<-""
-    # defaultOpts["recentFiles"]<-
-    #   unlist(str_split(defaultOpts["recentFiles"],";"))
   })
   defaultOpts
-  #browser()
-  defaultOpts
-} 
+} #execute now!
 
-defaultOpts<-readOptions(optionFile)
-
-
+defaultOpts<-readOptionsJSON()
 
 toggleTabType<-function(type){
   tabType<-c("Use Soft Tabs", "Use Hard Tabs")

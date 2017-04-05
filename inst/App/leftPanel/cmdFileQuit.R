@@ -2,7 +2,6 @@
 
 cmdFileQuit<-reactive({
   opts<-isolate(reactiveValuesToList((editOption)))
-  opts<-unlist(opts)
   modalSaveOrQuit <- function(){
     modalDialog(
       span("File not saved, quit anyway?"), 
@@ -13,12 +12,11 @@ cmdFileQuit<-reactive({
     ) 
   }
   
-  # TODO!!! ALERT if need to save, ie. editOption$.notSaved==TRUE
   status<-editOption$.saved
   if(getFileSavedStatus()==FALSE){
     showModal( modalSaveOrQuit() )
   } else {
-    writeOptions(optionFile, opts)
+    writeOptionsJSON(opts)
     js$closeWindow()
     Sys.sleep(1)
     stopApp()

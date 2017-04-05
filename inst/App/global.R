@@ -43,6 +43,7 @@ library(shinyjs)
 library(svgR)
 library(shinyAce)
 library(stringr)
+library(jsonlite)
 library(svDialogs) #!!!todo: replace this
 
 # options(shiny.error = recover)
