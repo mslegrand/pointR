@@ -48,9 +48,9 @@ setCurrentFilePath<-function(filePath){
 observeEvent( editOption$recentFiles ,{
   # One strategy: remove all recentFiles and then reinsert
   # 1 remove menuDropdown("Recent Files")
-  files<-editOption$recentFiles
+  files<-unlist(editOption$recentFiles)
   N<-length(files)
-  
+  #browser()
   removeDMDM(
     session=session, menuBarId="editNavBar", entry="Recent Files")
   if(N>0){
@@ -80,6 +80,7 @@ observeEvent( editOption$recentFiles ,{
     items<-lapply(1:N, function(i){
       menuItem( label=menuLabels[i], value=menuValues[i])
     } )
+    #browser()
     submenu=
       do.call(
         function(...){ menuDropdown(label,...) }, 
