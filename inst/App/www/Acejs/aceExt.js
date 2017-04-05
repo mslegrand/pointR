@@ -7,7 +7,7 @@ var helpSvgRQuery = function(topic, address){
         //var mssg="\"" + query + "\"";
         //Shiny.onInputChange("helpSvgRMssg", query );
   console.log("helpSvgRQuery");      
-  var mssg= {queryTopic:topic, queryAddress:address }
+  var mssg= {queryTopic:topic, queryAddress:address };
   Shiny.onInputChange("helpSvgRMssg", mssg );
   return false;
 };
