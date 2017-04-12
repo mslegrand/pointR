@@ -55,7 +55,9 @@ modalHelp <- function(..., size = "m" ) {
     footer=tagList(
       actionButton("backHelp", "Back"),
       actionButton("dismiss", "Dismiss")
-    )
+    ),
+    easyClose = TRUE,
+    ...
   ) 
 }
 
