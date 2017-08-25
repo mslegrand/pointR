@@ -83,11 +83,11 @@ svgQueryAddr2Help<-function(queryAddr){
     tools::findHTMLlinks(pkgDir=path,level=0)->links
     linksBase<-basename(links)
     pos<-which(addr==linksBase)
-    if(length(pos)>1){
-      browser()
-    }
+    # if(length(pos)>1){
+    #   browser()
+    # }
     if(length(pos)>0){
-      queryTopic<-names(links)[pos]
+      queryTopic<-names(links)[pos[length(pos)]]
       
     } else {
       queryTopic<-"00Index.html"
@@ -139,6 +139,7 @@ svgQueryTopic2Help<-function(query){
     close(txtConnection)
   }
   html<-paste(html,collapse="\n")
+  html
   
   # Now we want to send a request back to the
   # server in the user clicks a  hyperlink to another page
