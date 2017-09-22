@@ -141,6 +141,9 @@ Shiny.addCustomMessageHandler(
           });
             
           }
+          // update a given Range
+          
+          
             //'ace/ext/menu_tools/get_editor_keyboard_shortcuts', function(module) {
              //var kb=require("ace.ext.menu_tools.get_editor_keyboard_shortcuts").getEditorKeybordShortcuts(editor); 
               
