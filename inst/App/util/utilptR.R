@@ -1,11 +1,9 @@
 
 # defines
 #-------------------------------
-paste(names(svgR:::eleDefs), collapse=" ")->element.names
 
-paste0("#svgR elements: ", element.names, "\n",
 "library(svgR)
-WH<-c(1500,1500)
+WH<-c(600,400)
 
 #Defined by mouse: edit with care!
 ptR<-list(
@@ -20,7 +18,7 @@ svgR(wh=WH,
 
 
 )
-")->codeTemplate
+"->codeTemplate
 
 # "library(svgR)
 # WH<-c(1500,1500)
