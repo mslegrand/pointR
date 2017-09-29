@@ -48,7 +48,6 @@ initialAceOptions<-function(
     paste0("var ", editorVar," = ace.edit('",outputId,"')"),
     paste0(editorVar,".setTheme('ace/theme/", theme, "')" ),
     #paste0(editorVar,".setKeyboardHandler('ace/keyboard/vim')"),
-    
     "ace.config.set('modePath', './Acejs')",
     "ace.config.set('workerPath', './Acejs')",
     paste0(editorVar, ".getSession().setMode('ace/mode/",mode,"')"),
@@ -72,6 +71,8 @@ initialAceOptions<-function(
     },
     paste0(editorVar, ".getSession().setUseWrapMode(false)"),
     paste0("$('#",escapedId,"').data('aceEditor',", editorVar,")"),
+    
+   
     
     paste0(editorVar, ".setOption('enableSnippets', true)"),
     if(autoComplete != "disabled") {
