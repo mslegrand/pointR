@@ -14,7 +14,8 @@ colLine2charPositions<-function(csnCharLines, lineNums, colNums){
 
 #todo?? make reactive expr: parseDataFrame<-reactive({getParseDataFrame(user$code)})
 getParseDataFrame<-function(txt){
-  ep<-parse(text=txt)
+
+  ep<-parse(text=txt, keep.source = T)
   p.df<-getParseData(ep)
   id<-p.df$id
   pid<-p.df$parent
@@ -44,8 +45,9 @@ getcumCharLines<-function(txt){
 
 
 extractTagDF<-function(p.df, tag="ptR"){
-  #df1<-p.df[p.df$token=="SYMBOL" & p.df$text==tag & ggid==0,  ]
+  
   df1<-subset(p.df, token=='SYMBOL' & text ==tag & ggid==0)
+  
   if(nrow(df1)==0){ #use this as a check
     return(NULL)
   }

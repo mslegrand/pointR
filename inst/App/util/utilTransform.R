@@ -45,25 +45,7 @@ stop.unless<-function(expr, mssg){
 #   rid
 # }
 
-# insertAt<-function(lines, replacements){
-#   N<-length(replacements)
-#   if(N>0){
-#     
-#     for(i in N:1){
-#       repl<-replacements[[i]]
-#       row<-repl$row
-#       line<-lines[ row ]
-#       start<-repl$start
-#       end<-repl$end
-#       pre<-substr(line, 1, start)
-#       post<-substr(line, end, nchar(line))
-#       line<-paste0(pre, repl$replace, post)
-#       lines[[row]]<-line
-#     }
-#   }
-#   paste(lines, collapse="\n")
-# }
-  
+
 
 # used by server.R:output$svghtml
 # detects transforms with draggable and 
@@ -94,7 +76,6 @@ usingDraggable<-function(txt){
   lapply(tmp, function(x)paste("tid",x$line1,x$col1,x$col2,sep="-"))->tr.id
   
   #form tid from sib node values
-  #lapply(split(sibNodes, 1:nrow(sibNodes)), function(x)paste("tid",x$line1,x$col1,x$col2,sep="-"))->tr.id
   names(tr.id)<-tr$id
   
   #get end pos of parent Nodes of tr ( or sib nodes) for insertion of tid and mousedown
@@ -167,16 +148,6 @@ txt2def<-function(txt, df, defTag){
   str
 }
 
-# #appears not used
-# def2txt<-function(defVal, txt, df, defTag){
-#   lines<-strsplit(txt,"\n")[[1]]
-#   rpl<-paste0(defTag,"=", formatValue(defTag, defVal))
-#   pos<-getDefPos2(lines, df, defTag)
-#   substr(txt,pos[1],pos[2])<-rpl
-# } 
-
-
-
 #used by extractWH
 rng2txt<-function(lines, ssdf){ 
   l2<-lines[[ssdf$line2]]
@@ -212,11 +183,11 @@ extractWH<-function(src){
 
 #used in showPts::serverSVGHTML.R
 subSVGX2<-function(txt, insert.beg, insert.end){
-  ep<-parse(text=txt)
+
+  ep<-parse(text=txt, keep.source=TRUE)
   df<-getParseData(ep)
-  #svgR.df<-subset(df,text=='svgR' & token=='SYMBOL_FUNCTION_CALL')
   svgR.df<-df[df$text=="svgR" & df$token=='SYMBOL_FUNCTION_CALL',] #svgr
-  stop.unless(nrow(svgR.df)==1, "Trouble finding the svgR")
+  stop.unless(length(svgR.df)>0 && nrow(svgR.df)==1, "Trouble finding the svgR")
   svgR2.df<-df[df$id==svgR.df$parent,] #
   stop.unless(nrow(svgR2.df)==1, "Trouble finding the svgR")
   gpid<-svgR2.df$parent

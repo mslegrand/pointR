@@ -109,7 +109,7 @@ replaceTxt<-function(txt, replacements, positions){
 
 replaceDefs<-function(txt, replacements, defTags){
   positions<-sapply(defTags, function(defTag)
-    getDefsPos(txt, defTag)
+    getDefPos(txt, defTag)
   )
   replaceTxt(txt, replacements, defTags)
 }
@@ -125,7 +125,6 @@ getDef<-function(txt, defTag ){
 
 ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
   ptDefs<-list(pts=NULL, df=NULL)
-  #defTag<-"Pts" #ptDefs"
   if( any(grepl(ptTag,src) ) ){
     try({
       ptDefTxt1<-getDef(src, defTag=ptTag)
@@ -134,14 +133,13 @@ ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
       ptDefs$pts<-get(ptTag)
       
       ptDefTxt2<-getDef(src, defTag=dfTag)
-      
-      if(!is.null(ptDefTxt2)){ # ptR.df is optional!
+      if(length(ptDefTxt2)>0){ # ptR.df is optional!
         #1. replace data.frame with list
         dfListText<-sub("data.frame","list",ptDefTxt2)
         eval(parse(text=dfListText))
         #2 dfList<-get(dfTag)
         dfList<-get(dfTag)
-        3 #pad list back as data.frame
+        #3 pad list back as data.frame
         df<-sapply(dfList, list2DF,
           simplify = FALSE
         )
