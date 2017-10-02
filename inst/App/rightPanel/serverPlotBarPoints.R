@@ -51,7 +51,8 @@ pointInfoList<-callModule( #auto  input, output, session
   getPtDefs=getPtDefs, 
   name=getPtName, 
   index=getPtIndex, 
-  isTaggable=isTaggable
+  isTaggable=isTaggable,
+  headerId=NS("pointsBar", 'header')
 )
 
 #-----REACTIVES   based on modulePointsBar::pointInfoList

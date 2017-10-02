@@ -43,14 +43,13 @@ observe({
         lines<-lines[[1]]
         ptRPos<-grep("^\\s*ptR<-",lines)
         svgRPos<-grep("^\\s*svgR\\(",lines)
-        # 
-        if(length(ptRPos)!=1){
+        if(length(ptRPos)>1){
           stop("Bad File: Missing ptR list or multiple  ptR lists")
         }
         if(length(svgRPos)!=1){
           stop("Bad File: Missing svgR call or multiple svgR calls")
         }
-        if(!(ptRPos[1]<svgRPos[1])){
+        if(length(ptRPos)==1 && !(ptRPos[1]<svgRPos[1])){
           stop("Bad File: ptR list must come prior to svgR call")
         }
         # alternative to the above 3 might be

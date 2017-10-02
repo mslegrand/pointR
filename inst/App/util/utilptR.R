@@ -43,8 +43,12 @@ svgR(wh=WH,
 
 #---external fns----
 pts2Source<-function(txt,ptRList){
-  replacement<-formatPtDefs(defTag=defTag, ptRList=ptRList)
-  txt<-replaceDef(txt, replacement, defTag=defTag) 
+  if(length(ptRList)>0){
+    replacement<-formatPtDefs(defTag=defTag, ptRList=ptRList)
+    txt<-replaceDef(txt, replacement, defTag=defTag) 
+  } else {
+    txt
+  }
 }
 
 df2Source<-function(txt, dfList){
@@ -128,10 +132,18 @@ ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
   if( any(grepl(ptTag,src) ) ){
     try({
       ptDefTxt1<-getDef(src, defTag=ptTag)
-      stopifnot(!is.null(ptDefTxt1))
-      eval(parse(text=ptDefTxt1))
-      ptDefs$pts<-get(ptTag)
+      if( is.null(ptDefTxt1)){
+        #stop("failed to fint ptR")
+        # WITH DISABLE GRAPH BAR PTR CONTROLS
+        # PTR SELECTION, GROUPS, EDITS, ...
+        # KEEP TRANSFORMATIONS FOR THE TIME BEING
+        ptDefs$pts<-list()
+      } else {
+        eval(parse(text=ptDefTxt1))
+        ptDefs$pts<-get(ptTag)
+      }
       
+            
       ptDefTxt2<-getDef(src, defTag=dfTag)
       if(length(ptDefTxt2)>0){ # ptR.df is optional!
         #1. replace data.frame with list

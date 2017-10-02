@@ -9,7 +9,7 @@ modulePointsBarUI <- function(id, input, output) {
           actionButton(ns("tagPt"), label = "Tag Pt") 
           
     ),
-    absolutePanel( top=50, left=0, width="100%", "class"="headerPanel", draggable=FALSE,
+    absolutePanel( id='header', top=50, left=0, width="100%", "class"="headerPanel", draggable=FALSE,
         div(style="display:inline-block",
               selectInput( ns("name"), "Point Matrix", list("x"), 
                            selected="x", multiple=FALSE,  selectize = FALSE,
@@ -45,7 +45,8 @@ modulePointsBar<-function(
         getPtDefs, 
         name, 
         index,
-        isTaggable){
+        isTaggable,
+        headerId){
   
   result<-reactiveValues( #
     point.index=0
@@ -57,6 +58,11 @@ modulePointsBar<-function(
   observe({ # updates name when changing points using mouse
     if(identical( barName(), 'Points')){
       ptRList<-getPtDefs()$pts #trigger is name or index
+      if(length(names(ptRList))==0){
+        hideElement( headerId )
+      } else {
+        showElement( headerId)
+      }
       res<-getSelectInfo()
       result$point.index<-res$point.index
       updateSelectInput(session, "name",
