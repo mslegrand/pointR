@@ -52,6 +52,10 @@ observe({
         if(length(ptRPos)==1 && !(ptRPos[1]<svgRPos[1])){
           stop("Bad File: ptR list must come prior to svgR call")
         }
+        if(length(ptRPos)==0 && svgRPos >0){
+          # switch to Points
+          updateRightPanel("Points")
+        }
         # alternative to the above 3 might be
         # if(lengths ok){
         #   process as before
