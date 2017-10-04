@@ -59,7 +59,8 @@
         browser()
       }
     }
-      
+     
+     
     codeTxt<-subSVGX2(codeTxt, insert.beg, insert.end)
     
     

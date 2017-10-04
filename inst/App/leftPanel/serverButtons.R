@@ -43,19 +43,37 @@ observe({
         lines<-lines[[1]]
         ptRPos<-grep("^\\s*ptR<-",lines)
         svgRPos<-grep("^\\s*svgR\\(",lines)
-        if(length(ptRPos)>1){
-          stop("Bad File: Missing ptR list or multiple  ptR lists")
+        
+        if(length(ptRPos)>1 || length(svgRPos)>1){
+          stop("Bad File: Multiple  ptR lists or svgR calls")
         }
-        if(length(svgRPos)!=1){
-          stop("Bad File: Missing svgR call or multiple svgR calls")
-        }
-        if(length(ptRPos)==1 && !(ptRPos[1]<svgRPos[1])){
+        
+        if(length(ptRPos)>=1 && length(svgRPos)>=1 && !(ptRPos[1]<svgRPos[1])){
           stop("Bad File: ptR list must come prior to svgR call")
         }
-        if(length(ptRPos)==0 && svgRPos >0){
-          # switch to Points
-          updateRightPanel("Points")
+        
+        if(length(svgRPos)==1)
+          if(length(ptRPos)==0){
+            # switch to Points
+            updateRightPanel("Points")
+         # else{
+            # if(length(ptR)==0){ # Points was invisible
+            #   updateRightPanel("Points")
+            # }
+          }
         }
+        
+        if(length(svgRPos==0)){
+          stop("Cannot find svgR")
+          # 1 set html graphics out to null (how?)
+          # 2 capture capture output as mssg
+          #   output<-capture.output(eval(parse(text=src)))
+          # mssg<-capture.output(..., file = NULL, append = FALSE, type = "output", split = FALSE)
+          # 3 mssg$error<-mssg
+          # 4 updateRightPanel("logPanel")
+          # 5 return
+        }
+        
         # alternative to the above 3 might be
         # if(lengths ok){
         #   process as before
@@ -70,6 +88,7 @@ observe({
         #   since that is where we update the graphics
         #   
         # }
+        
         src<-preProcCode(src) 
         parsedCode<-parse(text=src) #insert points into src
         eval(parsedCode)
