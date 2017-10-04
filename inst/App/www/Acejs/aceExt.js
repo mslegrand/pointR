@@ -2,11 +2,6 @@
 var ptr_HighlightedLines=[];
 
 var helpSvgRQuery = function(topic, address){
-//var helpSvgRTopic = function(query){
-    // alert("help mssg");
-        //var mssg="\"" + query + "\"";
-        //Shiny.onInputChange("helpSvgRMssg", query );
-  console.log("helpSvgRQuery");      
   var mssg= {queryTopic:topic, queryAddress:address };
   Shiny.onInputChange("helpSvgRMssg", mssg );
   return false;
@@ -37,13 +32,7 @@ var loadPtrSnippetFile = function(id) {
 };
 */
 
-/*
-$(document).ready(function(){ // not working
-    $("#aceContainer").on("resize", function(evt){
-      console.log("resizing");
-      $("#source").resize() });
-})
-*/
+
 
 //Used exclusively for swapping colors of svgR keywords
 function getStyleRule(name) {
