@@ -40,6 +40,7 @@ initResourcePaths <- function() {
 
 library(shiny)
 library(shinyjs)
+library(R.utils)
 library(svgR)
 library(shinyAce)
 library(stringr)
