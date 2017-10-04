@@ -56,54 +56,24 @@ observe({
           if(length(ptRPos)==0){
             # switch to Points
             updateRightPanel("Points")
-         # else{
-            # if(length(ptR)==0){ # Points was invisible
-            #   updateRightPanel("Points")
-            # }
           }
         }
         
         if(length(svgRPos)==0){
-          #stop("Cannot find svgR")
-          # 1 set html graphics out to null (how?)
-          # 2 capture capture output as mssg
+          
+          # capture capture output as mssg
              
             output<-captureOutput(eval(parse(text=src)))
-          # mssg<-capture.output(..., file = NULL, append = FALSE, type = "output", split = FALSE)
-          # 3 mssg$error<-mssg
-          
-             output<-paste( output, collapse="\n" )
-             output<-paste("Output:",output,sep="\n")
-             
-             updateRightPanel("logPanel")
-          # 5 return
-             stop(output , call.=FALSE);
+            output<-paste( output, collapse="\n" )
+            output<-paste("Output:",output,sep="\n")
+
+            updateRightPanel("logPanel")
+            stop(output , call.=FALSE);
         }
-        
-        # alternative to the above 3 might be
-        # if(lengths ok){
-        #   process as before
-        # } else {
-        #   eval wo. preproc and
-        #   src<-preProcCode(src) 
-        #   parsedCode<-parse(text=src)
-        #   tmp<-as.character(eval(parsedCode))
-        #   mssg$error<-tmp # pass result to mssg$error,
-        #   stop(tmp)    #(or put in stop??)
-        #   and do not update code
-        #   since that is where we update the graphics
-        #   
-        # }
         
         src<-preProcCode(src) 
         parsedCode<-parse(text=src) #insert points into src
         eval(parsedCode)
-        # need to check that this returns an svg
-        # tmp<-as.character(eval(parsedCode))
-        # if(!str_detect('^svg',txt)){
-        #  mssg$error<-tmp
-        #  stop(tmp)
-        #}
         
         # no error occured so all systems go!!!!
         mssg$error<-""
