@@ -52,7 +52,7 @@ observe({
           stop("Bad File: ptR list must come prior to svgR call")
         }
         
-        if(length(svgRPos)==1)
+        if(length(svgRPos)==1){
           if(length(ptRPos)==0){
             # switch to Points
             updateRightPanel("Points")
@@ -63,15 +63,21 @@ observe({
           }
         }
         
-        if(length(svgRPos==0)){
-          stop("Cannot find svgR")
+        if(length(svgRPos)==0){
+          #stop("Cannot find svgR")
           # 1 set html graphics out to null (how?)
           # 2 capture capture output as mssg
-          #   output<-capture.output(eval(parse(text=src)))
+             
+            output<-captureOutput(eval(parse(text=src)))
           # mssg<-capture.output(..., file = NULL, append = FALSE, type = "output", split = FALSE)
           # 3 mssg$error<-mssg
-          # 4 updateRightPanel("logPanel")
+          
+             output<-paste( output, collapse="\n" )
+             output<-paste("Output:",output,sep="\n")
+             
+             updateRightPanel("logPanel")
           # 5 return
+             stop(output , call.=FALSE);
         }
         
         # alternative to the above 3 might be

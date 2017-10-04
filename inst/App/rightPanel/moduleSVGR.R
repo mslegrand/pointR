@@ -54,11 +54,8 @@
     )
     #defining the epilog
     #put it together
-    if( !is.null(codeTxt) ){
-      if(class(codeTxt)!="character" || length(codeTxt)!=1){
-        browser()
-      }
-    }
+   
+    
      
      
     codeTxt<-subSVGX2(codeTxt, insert.beg, insert.end)
@@ -66,23 +63,25 @@
     
     # transform: modifies src, but omits insert.end
     res<-""
-    tryCatch({
-        parsedCode<-parse(text=codeTxt)
-        svg<-eval(parsedCode)
-        as.character(svg)->svgOut 
-        res<-HTML(svgOut)
-        rtv$status<-list(
-          state="PASS",
-          message=""
-        )
-      },
-      error=function(e){
-        rtv$status<-list(
-          state="FAIL", 
-          message=paste(getErrorMssg(), e, collapse="\n", sep="\n")
-        )
-      } 
-    )
+    if(!is.null(codeTxt)){
+      tryCatch({
+          parsedCode<-parse(text=codeTxt)
+          svg<-eval(parsedCode)
+          as.character(svg)->svgOut 
+          res<-HTML(svgOut)
+          rtv$status<-list(
+            state="PASS",
+            message=""
+          )
+        },
+        error=function(e){
+          rtv$status<-list(
+            state="FAIL", 
+            message=paste(getErrorMssg(), e, collapse="\n", sep="\n")
+          )
+        } 
+      )
+    }
     res
   }) #end of renderUI
   
