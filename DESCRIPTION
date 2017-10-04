@@ -2,7 +2,7 @@ Package: pointR
 Type: Package
 Date: 2017-09-22
 Title: pointR
-Version: 0.3.5.6.6
+Version: 0.3.5.6.7
 Author: M.S.Legrand
 Maintainer: M.S.Legrand <slegrand3.14@gmail.com>
 Description: An IDE for svgR
