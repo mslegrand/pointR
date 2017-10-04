@@ -45,11 +45,11 @@ observe({
         svgRPos<-grep("^\\s*svgR\\(",lines)
         
         if(length(ptRPos)>1 || length(svgRPos)>1){
-          stop("Bad File: Multiple  ptR lists or svgR calls")
+          base::stop("Bad File: Multiple  ptR lists or svgR calls")
         }
         
         if(length(ptRPos)>=1 && length(svgRPos)>=1 && !(ptRPos[1]<svgRPos[1])){
-          stop("Bad File: ptR list must come prior to svgR call")
+          base::stop("Bad File: ptR list must come prior to svgR call")
         }
         
         if(length(svgRPos)==1){
@@ -68,7 +68,7 @@ observe({
             output<-paste("Output:",output,sep="\n")
 
             updateRightPanel("logPanel")
-            stop(output , call.=FALSE, domain=NA);
+            base::stop(output , call.=FALSE, domain=NA);
         }
         
         src<-preProcCode(src) 
