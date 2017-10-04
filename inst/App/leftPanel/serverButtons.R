@@ -68,7 +68,7 @@ observe({
             output<-paste("Output:",output,sep="\n")
 
             updateRightPanel("logPanel")
-            stop(output , call.=FALSE);
+            stop(output , call.=FALSE, domain=NA);
         }
         
         src<-preProcCode(src) 
@@ -93,7 +93,9 @@ observe({
       }, #end of try
       error=function(e){ 
         #Error handler for commit
-        e<-c(e,traceback())
+        if(all(!str_detect(e,'Output:'))){
+          e<-c(e,traceback())
+        }
         err<-paste(unlist(e), collapse="\n", sep="\n")
         #try to locate where the error occured
         if(str_detect(err, 'parse')){
