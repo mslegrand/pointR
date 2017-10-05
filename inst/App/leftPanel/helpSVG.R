@@ -7,7 +7,7 @@ cmdSVGHelp<-function(query){
 #----trigger help popup from F1
 observeEvent(input$helpMssg, {
   query<-input$helpMssg$query
-  editorId<-input$editorId
+  editorId<-input$editorId # !!! NOT USED
   if(length(query)>0 && nchar(query)>0){
     helpsvgR$html<-svgQueryTopic2Help(query)
     showModal( modalHelp() )
