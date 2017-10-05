@@ -57,11 +57,11 @@ Shiny.addCustomMessageHandler(
         var editor = $el.data('aceEditor'); 
         var HighlightedLines;
         
-        if(data.ptRMode){ 
+        if(!!data.ptRMode){ 
           editor.getSession().setMode({path: "ace/mode/ptr", v: Date.now()});
           editor.setBehavioursEnabled(true);
         }
-        if ( data.addMarker ){
+        if (!!data.addMarker ){
           var pos = data.addMarker;
           var row1 = pos[0]; 
           var col1 = pos[1]; 
@@ -75,23 +75,23 @@ Shiny.addCustomMessageHandler(
           );
           ptr_HighlightedLines.push(mid); 
         }
-        if(data.removeAllMarkers){
+        if(!!data.removeAllMarkers){
           while(ptr_HighlightedLines.length>0){
             var highlightedLine = ptr_HighlightedLines.pop();
             editor.getSession().removeMarker(highlightedLine);
           }      
         }
-        if(data.tabSize){
+        if(!!data.tabSize){
           //editor.getSession().setUseSoftTabs(true);
           editor.getSession().setTabSize( data.tabSize );
         }
-        if(data.resetElementColor){
+        if(!!data.resetElementColor){
           $.each(data.resetElementColor, function(key,element){
             var rule=getStyleRule(key);
             rule.color=element;
            });
         }
-        if(data.snippets){
+        if(!!data.snippets){
           var snippetManager = ace.require("ace/snippets").snippetManager;
           var m = snippetManager.files[editor.session.$mode.$id];
           m.snippetText = data.snippets;
@@ -101,19 +101,19 @@ Shiny.addCustomMessageHandler(
           m.snippets = snippetManager.parseSnippetFile(m.snippetText, m.scope);
           snippetManager.register(m.snippets);
         }
-        if(data.toggleWhiteSpace){
+        if(!!data.toggleWhiteSpace){
           //console.log(JSON.stringify(data))
           editor.setShowInvisibles(!editor.getShowInvisibles());
         }
-        if(data.toggleTabType){
+        if(!!data.toggleTabType){
           editor.session.setUseSoftTabs(!editor.session.getUseSoftTabs());
         }
-        if(data.setfocus){
+        if(!!data.setfocus){
           editor.focus();
         }
         
         
-        if(data.showKeyboardShortCuts){
+        if(!!data.showKeyboardShortCuts){
           ace.config.loadModule(
             'ace/ext/keybinding_menu', function(module) {
                 module.init(editor);
@@ -121,7 +121,7 @@ Shiny.addCustomMessageHandler(
           });
         }
         
-        if(data.getKeyboardShortcuts){
+        if(!!data.getKeyboardShortcuts){
           //var kb=ace.ext.get_editor_keyboard_shortcuts.getEditorKeybordShortcuts(editor);
           //Shiny.onInputChange("keyBoardHelp",kb);
           ace.config.loadModule('ace/ext/keybinding_menu', function(module) {
