@@ -65,7 +65,7 @@ shinyAce4Ptr <- function(
     saceList<-aceEditor(
       outputId,
       value,
-      'ptR',
+      'text',
       theme=theme
     )
     
@@ -75,10 +75,19 @@ shinyAce4Ptr <- function(
       debounce=debounce, selectionId=selectionId, cursorId=cursorId, hotkeys=hotkeys
     )
     
+    
+    ptRAce<-tagList(
+     tags$script(src="Acejs/aceExt.js"),
+     tags$script(src='Acejs/snippets/ptr.js'), 
+     tags$script(src="Acejs/ptRaceInit.js")
+    )
+    
     ptrList<-list(
       tags$script(type="text/javascript", HTML(js2))
     )
-    
+    #browser()
+    saceList[[1]][[3]]<-c(saceList[[1]][[3]], ptRAce)
+    #browser()
     rList<-list(saceList, ptrList)
     class(rList)<-c("shiny.tag.list", "list")
     rList
