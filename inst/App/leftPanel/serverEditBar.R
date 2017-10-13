@@ -188,13 +188,13 @@ output$fileName <- renderText({
 })
 
 # -----------ACE EDITOR------------------------
-observeEvent(
-  getCode(), {
-    if(mssg$error==""){
-      updateAceEditor( session,"source", value=getCode() ) 
-    }
-  }
-)
+# observeEvent(
+#   getCode(), {
+#     if(mssg$error==""){
+#       updateAceEditor( session,"source", value=getCode() ) 
+#     }
+#   }
+# )
 
 observe({
   updateAceEditor(session, "source", fontSize=as.numeric(editOption$fontSize) )
