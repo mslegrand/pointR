@@ -57,6 +57,10 @@ modulePointsBar<-function(
   
   observe({ # updates name when changing points using mouse
     if(identical( barName(), 'Points')){
+      session$sendCustomMessage(
+        type = "shinyAceExt",
+        list(id= "source", sender='cmd.commit', getValue=TRUE)
+      )
       ptRList<-getPtDefs()$pts #trigger is name or index
       if(length(names(ptRList))==0){
         hideElement( headerId )
