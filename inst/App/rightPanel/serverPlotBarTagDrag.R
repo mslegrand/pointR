@@ -56,15 +56,19 @@ observeEvent(
       df2<-subset(df,df$tag>=index)
       dfNew<-as.data.frame(rbind(df1,df2))
       dfNew$tag<-tagsNew
+      
       ptRList[[name]]<-ptsNew
       tagRList[[name]]<-dfNew
       
-      code<-srcGet()
-      code<-pts2Source(code,  ptRList)
-      code<-df2Source( code, tagRList)
+      newPtDefs<-list(pts=ptRList, df= tagRList ) 
+      updateAceExtDef(newPtDefs, sender)
       
+      # code<-srcGet()
+      # code<-pts2Source(code,  ptRList)
+      # code<-df2Source( code, tagRList)
+      # 
       #update
-      setCode(code)
+      #setCode(code) #!!!
       selectedPoint$point.index<-as.numeric(index)+tiSize
       
     }
@@ -102,14 +106,18 @@ observeEvent(
       dfNew$tag<-tagsNew
       ptRList[[name]]<-ptsNew
       tagRList[[name]]<-dfNew
-      scrCode<-getCode()
+      #scrCode<-getCode()
       
-      scrCode<-pts2Source(scrCode,ptRList)
-      scrCode<-df2Source( scrCode, tagRList)
+      # scrCode<-pts2Source(scrCode,ptRList)
+      # scrCode<-df2Source( scrCode, tagRList)
+      
+      
+      newPtDefs<-list(pts=ptRList, df= tagRList ) 
+      updateAceExtDef(newPtDefs, "tagDrag.drag")
       
       #will need to handle case when no more tagged points!!!
       #update
-      setCode(scrCode)
+      #setCode(scrCode) #!!!
       selectedPoint$point.index<-as.numeric(index)-tiSize
     }
   }
@@ -170,13 +178,16 @@ observeEvent(
       ptRList[[name]]  <-pts
       tagRList[[name]] <-df
       
-      code<-srcGet()
-      code<-pts2Source(code,ptRList)
-      code<-df2Source( code, tagRList)
+      # code<-srcGet()
+      # code<-pts2Source(code,ptRList)
+      # code<-df2Source( code, tagRList)
+
+      newPtDefs<-list(pts=ptRList, df= tagRList ) 
+      updateAceExtDef(newPtDefs, "tagDrag.MoveUp")
       
       #will need to handle case when no more tagged points!!!
       #update
-      setCode(code)
+      #setCode(code) #!!!
       
       selectedPoint$point.index<-tags[t1]
     }
@@ -218,14 +229,18 @@ observeEvent(
       ptRList[[name]]  <-pts
       tagRList[[name]] <-df
       
-      #scr<-getCode()
-      scrCode<-srcGet()
-      scrCode<-pts2Source(scrCode,ptRList)
-      scrCode<-df2Source( scrCode, tagRList)
+      newPtDefs<-list(pts=ptRList, df= tagRList ) 
+      updateAceExtDef(newPtDefs, "tagDrag.MoveDown")
       
+      
+      #scr<-getCode()
+      # scrCode<-srcGet()
+      # scrCode<-pts2Source(scrCode,ptRList)
+      # scrCode<-df2Source( scrCode, tagRList)
+      # 
       #will need to handle case when no more tagged points!!!
       #update
-      setCode(scrCode)
+      #setCode(scrCode)
       selectedPoint$point.index<-tags[t0]
     }
   }
@@ -317,8 +332,8 @@ statusPlotTagDrag<-callModule(
   ptrDisplayScript = reactive({ js.scripts[[ "TagDrag"]] }),
   getSVGWH=getSVGWH,
   showGrid=showGrid,
-  getCode=srcGet,
-  getCode2 =srcGet,  # (or getCodeTransform)
+  getCode= getCode, #srcGet,
+  getCode2 =getCode, #srcGet,  # (or getCodeTransform)
   getErrorMssg=getErrorMssg,
   insert.end=",showPts.compound()"
 )
