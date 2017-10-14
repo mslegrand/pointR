@@ -33,13 +33,9 @@ observeEvent(input$continueOpen, {
 
 
 openFileDlgSelector<-reactive({
-  #mssg$error<-""
-  #session$sendCustomMessage(type = "shinyAceExt", list(id= "source", ptRMode=TRUE))
   fullPath<-paste0(
     getCurrentDir(), getCurrentFile(), sep="/"
   )
-  
-  #fileName=""
   try(fileName<-dlgOpen(
     default=fullPath,
     title = "Select which R file to Open", 
@@ -51,27 +47,21 @@ openFileDlgSelector<-reactive({
 openFileNow<-function(fileName){
   if(length(fileName)>0 && nchar(fileName)>0){ 
     src<-paste(readLines(fileName), collapse = "\n")
-    # editOption$currentFile<-basename(fileName)
-    # editOption$currentDirectory<-dirname(fileName) 
-    #editOption$currentFilePath<-filePath
     setCurrentFilePath(fileName)
-    #setwd(editOption$currentDirectory) #TODO make this reactive
     setwd(dirname(fileName))
-    #file$name<-fileName #TODO: reactive expr using editOption$currentFile
     if(nchar(src)>0){
-      src<-preProcCode(src) #insert points into src
-      setCode(src)
-      isolate({
-        editOption$.saved<-TRUE
-      })
       reactiveTag$freq<-list()
       displayOptions$insertMode=TRUE
       displayOptions$showGrid=TRUE
       displayOptions$ptMode="Normal"
       mssg$error<-""
+      session$sendCustomMessage(
+        type = "shinyAceExt", 
+        list(id= "source", setValue=src, sender='openFileNow' )
+      )
+      
     }
   }
-  #updateNavbarPage(session, "plotNavBar", selected ="Points")
   updateRightPanel("Points")
   updateNavbarPage(session, "tagFreq", selected ="Off") 
   
