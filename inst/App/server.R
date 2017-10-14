@@ -12,7 +12,19 @@ shinyServer(function(input, output,session) {
   
 # Reactive values----------
 
-  source("util/serverManagerSrc.R", local=TRUE)
+  #source("util/serverManagerSrc.R", local=TRUE)
+  
+  request<-reactiveValues(
+    code=NULL,
+    sender='startup',
+    refresh=NULL
+  )
+  
+  triggerRefresh<-function(sender, n=1){
+    request$sender=sender
+    request$refresh= runif(1, n, n+1)
+  }
+  
   selectedPoint <- reactiveValues(
     name="x", #NULL,       # name of current point array
     point.index=0    #  selected pt.indx (column) in current point array
@@ -20,18 +32,22 @@ shinyServer(function(input, output,session) {
   
   panels<-reactiveValues(right="Points")
   rightPanel<-reactive({panels$right})
+  
   updateRightPanel<-function(panel){ panels$right<-panel}
 
   getLeftMenuCmd<-reactive({input$editNavBar$item})
   getRightMenuCmd<-reactive({input$plotNavBar$item})
   
   reactiveTag<-reactiveValues(freq=list())
+  
   displayOptions<-reactiveValues(
     insertMode=TRUE,
     showGrid=TRUE,
     ptMode="Normal"
   )
+  
   mssg<-reactiveValues(error="") 
+  
   
   # Reactive expressions------------- 
    #---
@@ -40,11 +56,19 @@ shinyServer(function(input, output,session) {
     !is.null(name) && getPtIndex()>0 &&  is.null(reactiveTag$freq[[name]])
   })
   
-  getCode<-reactive({srcGet()})
+  getCode<-reactive({
+    request$code
+  })
   
-  setCode<-function(txt, what="history"){
-    srcPushTxt(txt,what)
-  }
+  # setCode<-function(txt, what="history"){
+  #   #srcPushTxt(txt,what)
+  # }
+  
+  # setSrcCode<-function(txt, what="history"){
+  #   srcPushTxt(txt,what)
+  # }
+  # 
+  # 
   
   getPtName<-reactive({selectedPoint$name})
   getPtIndex<-reactive({selectedPoint$point.index})
@@ -58,6 +82,7 @@ shinyServer(function(input, output,session) {
   
   #gets the tagged names
   getTagNameChoices<-reactive({
+    cat("Inside getTagNameChoices:: getPtDefs$df=", str(getPtDefs()$df),"\n")
     intersect(names(getPtDefs()$pts), names(getPtDefs()$df))
   })
   
@@ -75,12 +100,15 @@ shinyServer(function(input, output,session) {
   
   #gets a tagged name (=ptName unless ptName is not tagged)
   getTagName<-reactive({
+    
+    cat("getPtName()=",getPtName(),"\n")
     exGetTagName( getTagNameChoices(), getPtName() )
   })
-  getTagIndexChoices<-
-    reactive(
-      {getPtDefs()$df[[getTagName()]]$tag}
-  )
+  getTagIndexChoices<-reactive({
+    cat("getTagName()=",getTagName(),"\n")
+    cat(str(getPtDefs()))
+    getPtDefs()$df[[getTagName()]]$tag
+  })
   getTagIndex<-reactive({ 
     choices<-getTagIndexChoices()
     indx<-getPtIndex()
@@ -111,11 +139,81 @@ shinyServer(function(input, output,session) {
   })
   
   usingTransformDraggable<-reactive({
-    grepl("class='draggable'",srcGet() ) || 
-    grepl('class="draggable"',srcGet() )
+    length(getCode()) >0 &&
+    nchar(getCode())>0 &&
+    ( 
+      grepl("class\\s*=\\s*'draggable'",getCode() ) || 
+      grepl('class\\s*=\\s*"draggable"',getCode() )
+    )
   }) 
 
 # Event Observers-------------------------------- 
+  observe({input$messageFromAce
+    isolate({
+      cat("observe input$messageFromAce")
+      if(
+        length(input$messageFromAce$code)>0 &&
+        length(input$messageFromAce$sender)>0
+      ){
+        request$code<-input$messageFromAce$code
+        request$sender<-input$messageFromAce$sender
+        if(length(input$messageFromAce$dirty)>0){
+          editOption$.saved <- !(as.numeric(input$messageFromAce$dirty) > 0)
+        }
+        
+        cat("request$sender=",request$sender,"\n")
+        cat('dirty= ', input$messageFromAce$dirty )
+        processCommit()
+        # if(request$sender=='cmd.commit'){
+        #   processCommit()
+        # } e
+      }
+    })
+  })
+  
+  updateAceExtDef<-function(newPtDef, sender ){
+    
+    replacementList<-ptDef2ReplacementList(newPtDef, getCode() )
+    #src<-df2Source(src,dfList) #insert points into src
+    
+    if( length(replacementList)>0 ){
+      session$sendCustomMessage(
+        type = "shinyAceExt",
+        list(id= "source", replacement=replacementList, sender='tag.pt.button', ok=1)
+      )
+    }
+  }
+  
+  observe({
+    request$sender
+    isolate({
+      if(request$sender=='startup'){
+        cat("observe:request$sender")
+        cmdFileNew()
+      }
+        
+    })
+  })
+  
+  observe({
+    request$sender
+    isolate({
+      if(request$sender=='startup')
+        cmdFileNew()
+    })
+  })
+  
+  # observe({request$refresh
+  #         isolate({
+  #           if(length(request$code==0){
+  #             session$sendCustomMessage(
+  #               type = "shinyAceExt",
+  #               list(id= "source",  getValue= TRUE)
+  #             )
+  #           }
+  #         })
+  # })
+  # 
   
 #help
   source("leftPanel/helpSVG.R", local=TRUE) 
