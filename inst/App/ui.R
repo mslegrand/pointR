@@ -114,7 +114,7 @@ shinyUI(
             overflow= "hidden",
             draggable=FALSE,
             shinyAce4Ptr( 
-              outputId = "source", value="",  
+              outputId = "source",  value="",  
               mode="ptr", theme=defaultOpts["theme"],
               height = "990px", 
               fontSize=16, autoComplete="live", 
