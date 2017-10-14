@@ -45,7 +45,7 @@ observe({
   c(input$commit,input$commitMssg )
   isolate(
     {
-    cat("cmd.commit")
+    #cat("cmd.commit")
     session$sendCustomMessage(
       type = "shinyAceExt",
       list(id= "source", sender='cmd.commit', getValue=TRUE)
@@ -66,7 +66,7 @@ checkPtrSyntax<-function(src){
 }
 
 processCommit<-reactive({
-  cat("inside processCommit\n")
+  #cat("inside processCommit\n")
     src<-getCode() #input$source #------ace editor
     if(length(src)==1 && nchar(src)>0){
       ptRList<-getPtDefs()$pts
