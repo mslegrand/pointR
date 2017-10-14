@@ -82,7 +82,7 @@ shinyServer(function(input, output,session) {
   
   #gets the tagged names
   getTagNameChoices<-reactive({
-    cat("Inside getTagNameChoices:: getPtDefs$df=", str(getPtDefs()$df),"\n")
+    #cat("Inside getTagNameChoices:: getPtDefs$df=", str(getPtDefs()$df),"\n")
     intersect(names(getPtDefs()$pts), names(getPtDefs()$df))
   })
   
@@ -101,12 +101,12 @@ shinyServer(function(input, output,session) {
   #gets a tagged name (=ptName unless ptName is not tagged)
   getTagName<-reactive({
     
-    cat("getPtName()=",getPtName(),"\n")
+    #cat("getPtName()=",getPtName(),"\n")
     exGetTagName( getTagNameChoices(), getPtName() )
   })
   getTagIndexChoices<-reactive({
-    cat("getTagName()=",getTagName(),"\n")
-    cat(str(getPtDefs()))
+    #cat("getTagName()=",getTagName(),"\n")
+    #cat(str(getPtDefs()))
     getPtDefs()$df[[getTagName()]]$tag
   })
   getTagIndex<-reactive({ 
@@ -150,7 +150,7 @@ shinyServer(function(input, output,session) {
 # Event Observers-------------------------------- 
   observe({input$messageFromAce
     isolate({
-      cat("observe input$messageFromAce")
+      #cat("observe input$messageFromAce")
       if(
         length(input$messageFromAce$code)>0 &&
         length(input$messageFromAce$sender)>0
@@ -161,8 +161,8 @@ shinyServer(function(input, output,session) {
           editOption$.saved <- !(as.numeric(input$messageFromAce$dirty) > 0)
         }
         
-        cat("request$sender=",request$sender,"\n")
-        cat('dirty= ', input$messageFromAce$dirty )
+        #cat("request$sender=",request$sender,"\n")
+        #cat('dirty= ', input$messageFromAce$dirty )
         processCommit()
         # if(request$sender=='cmd.commit'){
         #   processCommit()
@@ -188,20 +188,20 @@ shinyServer(function(input, output,session) {
     request$sender
     isolate({
       if(request$sender=='startup'){
-        cat("observe:request$sender")
+        #cat("observe:request$sender")
         cmdFileNew()
       }
         
     })
   })
   
-  observe({
-    request$sender
-    isolate({
-      if(request$sender=='startup')
-        cmdFileNew()
-    })
-  })
+  # observe({
+  #   request$sender
+  #   isolate({
+  #     if(request$sender=='startup')
+  #       cmdFileNew()
+  #   })
+  # })
   
   # observe({request$refresh
   #         isolate({
