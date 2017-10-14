@@ -106,12 +106,17 @@ function moveElement(evt) {
 // deselect that element
 function deselectElement(evt) {
   if(ptR_selectedElement !== 0){
-    var tid = ptR_selectedElement.getAttribute("tid");    
-    var currentMatrixAsString="c(" + ptR_currentMatrix.join(",") + ")";    
+    //var tid = ptR_selectedElement.getAttribute("tid");    
+    //var currentMatrixAsString="c(" + ptR_currentMatrix.join(",") + ")";    
     //var cxyStr="c("+  ptR_cxy.x+","+  ptR_cxy.y+")"; //to use for display?
     //chosen=["rotate", ptR_currentMatrixAsString, tid, cxyStr];
-    var chosen=["rotate", currentMatrixAsString, tid];
-    Shiny.onInputChange("mouseMssg",chosen);    
+    //var chosen=["rotate", currentMatrixAsString, tid];
+    //Shiny.onInputChange("mouseMssg",chosen); 
+    Shiny.onInputChange("mouseMssg",{
+      cmd: "rotate",
+      vec: ptR_currentMatrix, // !!! Todo replace with ptR_currentMatrix
+      id :  ptR_selectedElement.getAttribute("tid")
+    });
     ptR_selectedElement.removeAttributeNS(null, "onmousemove");
     ptR_selectedElement.removeAttributeNS(null, "onmouseout");
     ptR_selectedElement.removeAttributeNS(null, "onmouseup");

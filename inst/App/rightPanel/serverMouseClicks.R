@@ -48,17 +48,17 @@ observe({
   isolate({
     if(length(input$mouseMssg)>0){
       #get cmd
-      cmd<-input$mouseMssg[1]
-      pt<- input$mouseMssg[2]
+      cmd<-input$mouseMssg$cmd
+      vec<- input$mouseMssg$vec
       src<-getCode()
       replacementList<-list()
       #todo: error check???
-      pt<-eval(parse(text=pt)) 
+      #pt<-eval(parse(text=pt)) 
       #ptRList<-getPtDefs()$pts
       ptDefs<-getPtDefs()
       
       if(cmd=='add'){ #---------add point
-        newPt<-pt
+        newPt<-vec
         #get selection
         selection<-selectedPoint$name
         #update local ptRList
@@ -70,7 +70,7 @@ observe({
       }
       
       if(cmd=='move'){ # --------move point
-        id<-input$mouseMssg[3]
+        id<-input$mouseMssg$id
         vid<-strsplit(id,"-")[[1]] 
         #get selection
         selection<-vid[2]
@@ -78,15 +78,15 @@ observe({
         indx<-2*as.numeric(vid[3])-1
         #reassign point
         newPtDefs<-ptDefs
-        newPtDefs$pts[[selection]][indx:(indx+1)]<-pt
+        newPtDefs$pts[[selection]][indx:(indx+1)]<-vec
         selectedPoint$point.index<-(indx+1)/2
         updateAceExtDef(newPtDefs, sender)
       }
       
       if(cmd=='transGrp'){ # -- move tagged group (from tagDrag)
-        tid<-input$mouseMssg[3]
-        tmp<-input$mouseMssg[2]
-        dxy<-eval(parse(text=tmp))
+        tid<-input$mouseMssg$id
+        #pt<-input$mouseMssg$pt
+        dxy<-vec #eval(parse(text=tmp))
         # get the tag name, 
         ptName<-getPtName() 
         # get points
@@ -113,10 +113,11 @@ observe({
       
       #-------transformations of nodes marked as class 'movable'
       if(cmd=='trans'){ # -- translate the object by id
-        tid<-input$mouseMssg[3]
-        tmp<-input$mouseMssg[2]
-        trDefDelta<-formatC(eval(parse(text=tmp)))
-        trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2)" ) 
+        tid<-input$mouseMssg$id
+        #vec<-input$mouseMssg$vec
+        #trDefDelta<-formatC(eval(parse(text=tmp)))
+        #trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2)" ) 
+        trDefDelta2<-paste0("matrix(c(",paste0(vec,collapse=", "), "),2)" ) 
         #src<-tr2src( src, tid, trDefDelta2 ) # !!! REPLACE
         pos<-tid2replacementCoord(tid)
         replacementList<-list(list(rng=pos, txt= trDefDelta2))
@@ -128,11 +129,11 @@ observe({
       
       #-------transformations of nodes marked as class 'movable'
       if(cmd=='rotate'){ # ----rotate
-        tid<-input$mouseMssg[3]
-        tmp<-input$mouseMssg[2]
-        trDefDelta<-formatC(eval(parse(text=tmp)))
-        trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2)" ) 
-        #src<-tr2src( src, tid, trDefDelta2 ) # !!! REPLACE
+        tid<-input$mouseMssg$id
+        #vec<-input$mouseMssg$vec
+        #trDefDelta<-formatC(eval(parse(text=tmp)))
+        #trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2)" ) 
+        trDefDelta2<-paste0("matrix(c(",paste0(vec,collapse=", "), "),2)" ) 
         pos<-tid2replacementCoord(tid)
         replacementList<-list(list(rng=pos, txt= trDefDelta2))
         session$sendCustomMessage(
@@ -143,11 +144,11 @@ observe({
       
       #-------transformations of nodes marked as class 'movable'
       if(cmd=='scale'){ # ----scale
-        tid<-input$mouseMssg[3]
-        tmp<-input$mouseMssg[2]
-        trDefDelta<-formatC(eval(parse(text=tmp)))
-        trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2)" ) 
-        #src<-tr2src( src, tid, trDefDelta2 ) # !!! REPLACE
+        tid<-input$mouseMssg$id
+        #vec<-input$mouseMssg$vec
+        #trDefDelta<-formatC(eval(parse(text=tmp)))
+        #trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2)" ) 
+        trDefDelta2<-paste0("matrix(c(",paste0(vec,collapse=", "), "),2)" ) 
         pos<-tid2replacementCoord(tid)
         replacementList<-list(list(rng=pos, txt= trDefDelta2))
         session$sendCustomMessage(

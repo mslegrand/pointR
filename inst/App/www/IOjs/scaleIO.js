@@ -106,7 +106,15 @@ function deselectElement(evt) {
     var tid = ptR_selectedElement.getAttribute("tid");    
     var currentMatrixAsString="c(" + ptR_currentMatrix.join(",") + ")";    
     var chosen=["scale", currentMatrixAsString, tid];
-    Shiny.onInputChange("mouseMssg",chosen);    
+    //Shiny.onInputChange("mouseMssg",chosen);   
+    
+    Shiny.onInputChange("mouseMssg",
+    {
+      cmd: "scale",
+      vec: ptR_currentMatrix,
+      id: tid
+    });
+    
     ptR_selectedElement.removeAttributeNS(null, "onmousemove");
     ptR_selectedElement.removeAttributeNS(null, "onmouseout");
     ptR_selectedElement.removeAttributeNS(null, "onmouseup");

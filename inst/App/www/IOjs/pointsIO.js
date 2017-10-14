@@ -17,9 +17,16 @@ function newPoint(evt) {
   
   // The cursor point, translated into svg coordinates
   var cursorpt =  pt.matrixTransform(ptR_svg.getScreenCTM().inverse());
-  var ptTxt="c(" + cursorpt.x + ", " + cursorpt.y + ")";
-  var chosen=["add", ptTxt];
-  Shiny.onInputChange("mouseMssg",chosen);
+  //var ptTxt="c(" + cursorpt.x + ", " + cursorpt.y + ")";
+  //var chosen=["add", ptTxt];
+  //Shiny.onInputChange("mouseMssg",chosen);
+  Shiny.onInputChange("mouseMssg",
+    {
+      cmd: "add",
+      vec: [cursorpt.x, cursorpt.y],
+      id: "dummyId"
+    }
+  );
 }
 
 function selectPoint(evt){
@@ -58,12 +65,17 @@ function deselectPoint(evt){
   
     // The cursor point, translated into svg coordinates
     var cursorpt =  pt.matrixTransform(ptR_svg.getScreenCTM().inverse());
-    var ptTxt="c(" + cursorpt.x + ", " + cursorpt.y + ")";
-    var id = ptR_selectedElement.getAttribute("id");
+    //var ptTxt="c(" + cursorpt.x + ", " + cursorpt.y + ")";
+    //var id = ptR_selectedElement.getAttribute("id");
 
-    chosen=["move", ptTxt, id];
-    Shiny.onInputChange("mouseMssg",chosen);
-    
+    //chosen=["move", ptTxt, id];
+    //Shiny.onInputChange("mouseMssg",chosen);
+    Shiny.onInputChange("mouseMssg",
+    {
+      cmd: "move",
+      vec: [cursorpt.x, cursorpt.y],
+      id: ptR_selectedElement.getAttribute("id")
+    });
     ptR_selectedElement.removeAttributeNS(null, "onmousemove");
     ptR_selectedElement.removeAttributeNS(null, "onmouseout");
     ptR_selectedElement.removeAttributeNS(null, "onmouseup");

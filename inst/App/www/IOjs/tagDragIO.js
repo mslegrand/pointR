@@ -57,12 +57,18 @@ function deselectElement(evt) {
   
   //var currentMatrixAsString="c(" + ptR_currentMatrix.join(",") + ")";
   //var trans=[movedByX,movedBy]; // return the translation
-  var tid = ptR_selectedElement.getAttribute("tid");
+  //var tid = ptR_selectedElement.getAttribute("tid");
   
-  var dxy="c(" + movedByX + "," + movedByY + ")";
-  var chosen=["transGrp", dxy, tid];
-  Shiny.onInputChange("mouseMssg",chosen);
-  
+  //var dxy="c(" + movedByX + "," + movedByY + ")";
+  //var chosen=["transGrp", dxy, tid];
+  //Shiny.onInputChange("mouseMssg",chosen);
+  Shiny.onInputChange("mouseMssg",
+    {
+      cmd: "transGrp",
+      pt: [movedByX, movedByY],
+      id : ptR_selectedElement.getAttribute("tid")
+    }
+  );
   ptR_selectedElement.removeAttributeNS(null, "onmousemove");
   ptR_selectedElement.removeAttributeNS(null, "onmouseout");
   ptR_selectedElement.removeAttributeNS(null, "onmouseup");
