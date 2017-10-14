@@ -100,16 +100,14 @@ observeEvent( pointInfoList$removePt(), {
     } else {
       ptRList[[selection]]<-pts
     }
+     #src<-pts2Source(src,ptRList)
     
-    
-    src<-pts2Source(src,ptRList)
-    
-    tagList<-getPtDefs()$df
-    if(!is.null(tagList)){ #tagR exists
-      df<-tagList[[selection]] 
+    tagRList<-getPtDefs()$df
+    if(!is.null(tagRList)){ #tagR exists
+      df<-tagRList[[selection]] 
       if(!is.null(df)){ #df==tagR$x exists
         if(length(ptRList[[selection]])==0){ #no points 
-          tagList[selection]<-NULL #remove tagR$x
+          tagRList[selection]<-NULL #remove tagR$x
         } else { # has points
           tags<-df$tag
           freq<-reactiveTag$freq[[selection]]
@@ -127,7 +125,7 @@ observeEvent( pointInfoList$removePt(), {
             if(length(tags2move)>0){
               tags[tags>indx]<-tags[tags>indx]-1
               df$tag<-tags
-              tagList[[selection]]<-df
+              tagRList[[selection]]<-df
             }
           } else { # freq is not null, 
             pts<-ptRList[[selection]]
@@ -135,14 +133,18 @@ observeEvent( pointInfoList$removePt(), {
               # if no of pts == last tag, then remove the last row from df
               n<-length(tags)-1
               df<-head(df, n)
-              tagList[[selection]]<-df
+              tagRList[[selection]]<-df
             }
           }
         }
-        src<-df2Source(src,tagList)
+        
+        # ptRList
+        # src<-df2Source(src,tagList)
       }
     }
-    setCode(src)
+    newPtDefs<-list(pts=ptRList, df= tagRList )  
+    updateAceExtDef(newPtDefs, sender)
+    # setCode(src) #!!!
   }
 })
 
@@ -185,6 +187,7 @@ observeEvent(input$okTag, { #move into module???
     # set the value here
   removeModal()
   # and complete the processing
+  src<-getCode()
   ptDefs<-getPtDefs()
   ptsList<-ptDefs$pts
   dfList<-ptDefs$df
@@ -198,25 +201,36 @@ observeEvent(input$okTag, { #move into module???
       tags<-unique(c(1,point.index))
     }
   }
-  df<-data.frame(tag=tags) 
+  df<-data.frame(tag=tags) #creates a data frme with tags entry
   if(is.null(dfList) ){ # 1 if dfList is NULL, create new
     dfList= structure( list( df) , names=selection )
-    replacement<-paste0("\n\n", formatDFDefs(dfList),"\n\n")
-    src<-getCode() 
-    pos<-getDefPos(src, "ptR")     
-    src<-paste0( substr(src, 1, pos[2]), replacement,  
-                 substr(src, pos[2]+1, nchar(src))) 
-    setCode(src)
+    # replacement<-paste0("\n\n", formatDFDefs(dfList),"\n\n")
+    # src<-getCode() 
+    # pos<-getDefPos(src, "ptR")     
+    # src<-paste0( substr(src, 1, pos[2]), replacement,  
+    #              substr(src, pos[2]+1, nchar(src))) 
+    # setCode(src) #!!!
   } else {
     dfList[[selection]]<-df
-    src<-getCode()
-    src<-df2Source(src,dfList) #insert points into src
-    setCode(src)
+        
+    # setCode(src) #!!!
   }
+  #src<-getCode()
+  newPtDef<-list(pts=ptsList, df= dfList )
+  replacementList<-ptDef2ReplacementList(newPtDef, src)
+  #src<-df2Source(src,dfList) #insert points into src
+  
+  if( length(replacementList)>0 ){
+    session$sendCustomMessage(
+      type = "shinyAceExt",
+      list(id= "source", replacement=replacementList, sender='tag.pt.button', ok=1)
+    )
+  }
+  
+  
 })
 
 #---TAG THIS POINT button-----
-
 observeEvent( pointInfoList$tagPt(), {
   #There are 3 distinct cases: 
   # 1. tagR list not there, add tagR list, selection and insert 
@@ -248,8 +262,20 @@ observeEvent( pointInfoList$tagPt(), {
           df<-df[ordrows,,drop=FALSE]
           dfList[[selection]]<-df
           src<-getCode() 
-          src<-df2Source(src,dfList)
-          setCode(src)
+          #src<-df2Source(src,dfList)
+          # setCode(src) #!!!
+          
+          newPtDef<-list(pts=ptsList, df= dfList )
+          updateAceExtDef(newPtDef, 'tag.pt')
+          # replacementList<-ptDef2ReplacementList(newPtDef, src)
+          # #src<-df2Source(src,dfList) #insert points into src
+          # 
+          # if( length(replacementList)>0 ){
+          #   session$sendCustomMessage(
+          #     type = "shinyAceExt",
+          #     list(id= "source", replacement=replacementList, sender='tag.pt.button', ok=1)
+          #   )
+          # }
         }
       }
     }
