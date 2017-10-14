@@ -17,15 +17,17 @@ cmdFileSaveAs<-function(){
     )$res
     
     if(length(fileName)>0 && nchar(fileName)>0){
-      isolate({
-        editOption$.saved<-TRUE
-      })
+      
       txt<-getCode() 
       writeLines(txt, fileName)
       #editOption$currentFilePath<-fileName
       setCurrentFilePath(fileName)
-      #editOption$currentFile<-basename(fileName)
-      #editOption$currentDirectory<-dirname(fileName) 
+      session$sendCustomMessage(
+        type = "shinyAceExt", 
+        list(id= "source", setClean=TRUE, sender='save', setOk=TRUE)
+      )
+      editOption$currentFile<-basename(fileName)
+      editOption$currentDirectory<-dirname(fileName) 
     }
   })
 }
