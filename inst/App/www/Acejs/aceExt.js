@@ -161,7 +161,19 @@ Shiny.addCustomMessageHandler(
           Shiny.onInputChange('messageFromAce', 
           {
              code :  editor.getSession().getValue(),
+             dirty: editor.getSession().getUndoManager().dirtyCounter,
              sender : data.sender
+          });
+       }
+       
+       if(!!data.setClean){
+         editor.getSession().getUndoManager().dirtyCounter=0;
+         Shiny.onInputChange('messageFromAce', 
+          {
+             code :  editor.getSession().getValue(),
+             sender : data.sender,
+             dirty: editor.getSession().getUndoManager().dirtyCounter,
+             rnd : randomString(5)
           });
        }
        
@@ -215,6 +227,7 @@ Shiny.addCustomMessageHandler(
           {
              code : editor.getSession().getValue(),
              sender : data.sender,
+             dirty: editor.getSession().getUndoManager().dirtyCounter,
              rnd : randomString(5)
           } );   
           
@@ -254,6 +267,7 @@ Shiny.addCustomMessageHandler(
           {
              code : editor.getSession().getValue(),
              sender : data.sender,
+             dirty: editor.getSession().getUndoManager().dirtyCounter,
              rnd : randomString(5)
           });
         }
@@ -277,29 +291,12 @@ Shiny.addCustomMessageHandler(
           {
              code :  editor.getSession().getValue(),
              sender : data.sender,
+             dirty: editor.getSession().getUndoManager().dirtyCounter,
              rnd : randomString(5)
           });
         }
         //----------------------
         
-        
-      
-          
-            //'ace/ext/menu_tools/get_editor_keyboard_shortcuts', function(module) {
-             //var kb=require("ace.ext.menu_tools.get_editor_keyboard_shortcuts").getEditorKeybordShortcuts(editor); 
-              
-              //sendCustomMessage to open window and display kb
-              //Shiny.onInputChange("keyBoardHelp",kb);
-          //});
-          
-            //'ace/ext/menu_tools/get_editor_keyboard_shortcuts', function(module) 
-          //var kb=editor.getEditorKeybordShortcuts();
-          //sendCustomMessage to open window and display kb
-          //Shiny.onInputChange("keyBoardHelp",kb);
-          //});
-        //}
-        
-        // want to set json options
         //todo: add more messaging capablilities
       }
   );
