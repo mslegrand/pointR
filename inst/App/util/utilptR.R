@@ -7,7 +7,9 @@ WH<-c(600,400)
 
 #Defined by mouse: edit with care!
 ptR<-list(
+
   x=c()
+
 )
 
 svgR(wh=WH, 
@@ -129,6 +131,9 @@ getDef<-function(txt, defTag ){
 
 ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
   ptDefs<-list(pts=NULL, df=NULL)
+  if(length(ptDefs)==0){
+    return(list(pts=c(), df=c()))
+  }
   if( any(grepl(ptTag,src) ) ){
     try({
       ptDefTxt1<-getDef(src, defTag=ptTag)
@@ -165,6 +170,8 @@ ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
 }
 
 #used by open and commit
+# inserts ptDefs into src code 
+# !!! to be obsolete soon
 preProcCode<-function(src){
   ptDefs<-ex.getPtDefs(src)
   ptRList<-ptDefs$pts
@@ -183,3 +190,132 @@ formatTrs<-function(tr){ #not used
 }
 
 
+## proposed replacement for point2src
+defTag2replace<-function(defTag, defList, txt){
+  if(defTag=='ptR'){
+    replacement<-formatPtDefs(defTag=defTag, ptRList=defList)
+  } else {
+    replacement<-formatDFDefs(defTag=defTag, dfDefsTag=defList)
+  }
+  p.df<-getParseDataFrame(txt)
+  tag.df<-extractTagDF(p.df, tag=defTag)
+  if( !is.null(tag.df) ){
+    pos<- list(
+      startRow= tag.df$line1 -1,
+      startColumn=tag.df$col1 -1 ,
+      endRow= tag.df$line2 -1,
+      endColumn=tag.df$col2 
+    )
+  } else {
+    pos<-NULL # !!! To rewrite, if defTag=='tagR' and tagR not in txt, place after ptR and add some empty lines
+  }
+  if(!is.null(pos)){
+    replacementList<-list(
+      list(
+        rng=pos,
+        txt= replacement
+      )
+    )
+  } else {
+    replacementList<-NULL
+  }
+  #print(replacementList)
+  replacementList
+}
+
+ptDef2ReplacementList<-function(newPtDef, txt){
+  replacementList<-list()
+  pt.repl<-formatPtDefs(defTag='ptR', ptRList=newPtDef$pts)
+  p.df<-getParseDataFrame(txt)
+  ptR.df<-extractTagDF(p.df, tag='ptR')
+  pt.Pos<-list(
+    startRow= ptR.df$line1 -1,
+    startColumn=ptR.df$col1 -1 ,
+    endRow= ptR.df$line2 -1,
+    endColumn=ptR.df$col2 
+  )
+  
+  if(length(newPtDef$df)>0){
+    tag.repl<-formatDFDefs(newPtDef$df)
+    tagR.df<-extractTagDF(p.df, tag='tagR')
+    if( !is.null(tagR.df) ){
+      tag.Pos<-list(
+        startRow= tagR.df$line1 -1,
+        startColumn=tagR.df$col1 -1 ,
+        endRow= tagR.df$line2 -1,
+        endColumn=tagR.df$col2 
+      )
+      }else{
+        tag.Pos<-list(
+          startRow= ptR.df$line2,
+          startColumn=ptR.df$col2+1 ,
+          endRow= ptR.df$line2,
+          endColumn=ptR.df$col2+1 
+        )
+        tag.repl<-paste0("\n",tag.repl,"\n")
+      }
+    replacementList<-c(replacementList, list(list(rng=tag.Pos, txt= tag.repl)))
+  }
+  replacementList<-c(replacementList, list(list(rng=pt.Pos, txt= pt.repl)))
+  replacementList
+}
+
+# Testing code
+
+# txt<-codeTemplate
+# 
+# newPtDef<-list(
+#   pts=list(x=matrix(1:8,2))
+# )
+# 
+# t1<-ptDef2ReplacementList(newPtDef, txt )
+# t1
+# 
+# newPtDef<-list(
+#   pts=list(x=matrix(1:8,2)),
+#   df=list(x=data.frame(tag=c(1,3), stringsAsFactors = FALSE))
+# )
+# 
+# t2<-ptDef2ReplacementList(newPtDef, txt )
+# t2
+# 
+
+# "library(svgR)
+# WH<-c(600,400)
+# 
+# #Defined by mouse: edit with care!
+# ptR<-list(
+#   x=matrix(c(1,2,3,4),2)
+# )
+# 
+# tagR<-list(
+#   x=data.frame(
+#     tag=c(1),
+#     stringsAsFactors = FALSE
+#   )
+# )
+# 
+# svgR(wh=WH,
+# #your custom code goes here
+# 
+#   NULL
+# 
+# 
+# 
+# )
+# "->txt3
+# 
+# newPtDef<-list(
+#   pts=list(
+#     x=matrix(c(1,2,3,4,5,6),2)
+#   ),
+#   tagR=list(
+#     x=data.frame(
+#       tag=c(1),
+#       stringAsFactors=FALSE
+#     )
+#   )
+# )
+# 
+# t3<-ptDef2ReplacementList(newPtDef, txt3 )
+# t3
