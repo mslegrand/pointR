@@ -381,7 +381,8 @@ observeEvent(statusPlotPoint$status(), {
   #status<-statusPlotPoint()
   status<-statusPlotPoint$status()
   if( status$state!="PASS"){
-    srcRevert()
+    updateRightPanel('logPanel')
+    mssg$err<-status$message
     # send mssg to log
     # switch to log 
   }

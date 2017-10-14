@@ -125,8 +125,8 @@ statusPlotTagVal<-callModule(
 observeEvent(statusPlotTagVal$status(), {
   status<-statusPlotTagVal$status()
   if(status$state!="PASS"){
-    srcRevert()
-    # send mssg to log
+    updateRightPanel('logPanel')
+    mssg$err<-status$message    # send mssg to log
     # switch to log 
   }
 })

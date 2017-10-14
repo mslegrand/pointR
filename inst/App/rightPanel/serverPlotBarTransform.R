@@ -31,7 +31,8 @@ statusPlotTransform<-callModule(
 observeEvent(statusPlotTransform$status(), { 
   status<-statusPlotTransform$status()
   if(status$state!="PASS"){
-     srcRevert()
+    updateRightPanel('logPanel')
+    mssg$err<-status$messages
     # send mssg to log
     # switch to log 
   }
