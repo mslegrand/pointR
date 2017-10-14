@@ -1,58 +1,74 @@
+#// called when adding a new point
+addPt2ptDefs<-function(newPt, indx, ptDefs, selection){
+  #selection<-input$ptRSelect
+  #selection<-selectedPoint$name
+  #update local ptRList
+  #indx<-selectedPoint$point.index
+
+  ptRList<-ptDefs$pts
+  ptRList[[selection]]<-append(ptRList[[selection]],newPt,2*indx)
+
+  #df<-NULL
+  tagList<-ptDefs$df
+  if(!is.null(tagList)){
+    df<-tagList[[selection]]
+    #if selection has been tagged, and we have a frequency
+    # the also update the tags
+    if(!is.null(df)){ 
+      tags<-df$tag
+      freq<-reactiveTag$freq[[selection]]
+      if(is.null(freq)){
+        tags2move<-which(tags>indx)
+        if(length(tags2move)>0){
+          tags[tags2move]<-1+ tags[tags2move]
+          df$tag<-tags
+          tagList[[selection]]<-df
+        }
+      } else { # freq assigned case: ADD TAG AT END IF NEEDED.
+        freq<-as.integer(freq)
+        len<-length(ptRList[[selection]])/2
+        if( freq==1|| 1==(len %% freq)){
+          df2append<-tail(df,1)
+          df2append$tag<-len
+          df<-rbind(df,df2append)
+          tagList[[selection]]<-df
+        }
+      }
+    } 
+    # otherwise there is nothing to do for tags
+  } # end of tagR handling
+  #update point values
+  #selectedPoint$point.index<-selectedPoint$point.index+1
+  newPtDefs<-list(pts=ptRList, df= tagList )
+  #replacementList<-ptDef2ReplacementList(newPtDef, src)
+}
+
 observe({ 
   input$mouseMssg #may want to rename this
   isolate({
     if(length(input$mouseMssg)>0){
       #get cmd
       cmd<-input$mouseMssg[1]
-      #tmp<-paste(input$mouseMssg,collapse="\n** ")
-      #cat( file=stderr(), paste("mouseMssg: cmd=",tmp,"\n>\n\n")  ) 
       pt<- input$mouseMssg[2]
       src<-getCode()
+      replacementList<-list()
       #todo: error check???
-      
       pt<-eval(parse(text=pt)) 
-      ptRList<-getPtDefs()$pts
+      #ptRList<-getPtDefs()$pts
+      ptDefs<-getPtDefs()
+      
       if(cmd=='add'){ #---------add point
         newPt<-pt
         #get selection
-        #selection<-input$ptRSelect
         selection<-selectedPoint$name
         #update local ptRList
         indx<-selectedPoint$point.index
-        ptRList[[selection]]<-append(ptRList[[selection]],newPt,2*indx)
-        df<-NULL
-        tagList<-getPtDefs()$df
-        if(!is.null(tagList)){
-          df<-tagList[[selection]]
-          if(!is.null(df)){
-            tags<-df$tag
-            freq<-reactiveTag$freq[[selection]]
-            if(is.null(freq)){
-              tags2move<-which(tags>indx)
-              if(length(tags2move)>0){
-                tags[tags2move]<-1+ tags[tags2move]
-                df$tag<-tags
-                tagList[[selection]]<-df
-                src<-df2Source(src,tagList)
-              } else { #we are at the end, no need to do anything
-              }  
-              } else { # freq assigned case: ADD TAG AT END IF NEEDED.
-              freq<-as.integer(freq)
-              len<-length(ptRList[[selection]])/2
-              if( freq==1|| 1==(len %% freq)){
-                df2append<-tail(df,1)
-                df2append$tag<-len
-                df<-rbind(df,df2append)
-                tagList[[selection]]<-df
-                src<-df2Source(src,tagList)
-              }
-            }
-          }
-        }
-        #update point values
+        ptDefs<-getPtDefs()
+        newPtDefs<-addPt2ptDefs(newPt, indx, ptDefs, selection)
         selectedPoint$point.index<-selectedPoint$point.index+1
-        src<-pts2Source(src,ptRList)
-      } 
+        updateAceExtDef(newPtDefs, sender)
+      }
+      
       if(cmd=='move'){ # --------move point
         id<-input$mouseMssg[3]
         vid<-strsplit(id,"-")[[1]] 
@@ -61,70 +77,99 @@ observe({
         #get point index
         indx<-2*as.numeric(vid[3])-1
         #reassign point
-        ptRList[[selection]][indx:(indx+1)]<-pt
-        #update point values
-        src<-pts2Source(src,ptRList)
+        newPtDefs<-ptDefs
+        newPtDefs$pts[[selection]][indx:(indx+1)]<-pt
         selectedPoint$point.index<-(indx+1)/2
+        updateAceExtDef(newPtDefs, sender)
       }
-      if(cmd=='transGrp'){
+      
+      if(cmd=='transGrp'){ # -- move tagged group (from tagDrag)
         tid<-input$mouseMssg[3]
         tmp<-input$mouseMssg[2]
         dxy<-eval(parse(text=tmp))
         # get the tag name, 
-        ptName<-getPtName()
-        #ptName<-input$ptRSelect
+        ptName<-getPtName() 
         # get points
+        ptRList<-getPtDefs()$pts
         pts<-getPtDefs()$pts[[ptName]] #ptRList[[ptName]]
         tagRList<-getPtDefs()$df
         tag.indx<-getPtIndex() #as.numeric(tagDragInfoList$index() ) #!!! tagIndx2 should be replaced with a safer alternative
-        
-        ptTags<-tagRList[[ptName]]
-        if(!is.null(tagRList)){
-          ptTags<-tagRList[[ptName]]
-        } else {
-          ptTags<-NULL
-        }
+        ptTags<-getPtDefs()$df[[ptName]]
         if( !is.null(tag.indx) && !is.null(ptTags)){
           tags<-ptTags$tag
           ti<-which(tag.indx==tags) 
           id.nos<-sequence(ncol(pts))
         # the tag point range
           tagInterval<-findInterval(id.nos,tags)
-          # tmp1<-pts[,tagInterval==ti][1,]+dxy[1]
-          # tmp2<-pts[,tagInterval==ti][2,]+dxy[2]
-          # pts[,tagInterval==ti]<-rbind(tmp1,tmp2)
           tmp<-pts[,tagInterval==ti]
           pts[,tagInterval==ti]<-matrix(tmp+dxy,2)
           ptRList[[ptName]]<-pts
-          src<-pts2Source(src,ptRList)
-        # add to the corresponding points cxy
-        # update the source
+          
+          newPtDefs<-list(pts=ptRList, df= tagRList )  
+          updateAceExtDef(newPtDefs, sender)
         }
       }
-      #-------transformations 
-      if(cmd=='trans'){ # -- translate
+      
+      
+      #-------transformations of nodes marked as class 'movable'
+      if(cmd=='trans'){ # -- translate the object by id
         tid<-input$mouseMssg[3]
         tmp<-input$mouseMssg[2]
         trDefDelta<-formatC(eval(parse(text=tmp)))
         trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2)" ) 
-        src<-tr2src( src, tid, trDefDelta2 )
+        #src<-tr2src( src, tid, trDefDelta2 ) # !!! REPLACE
+        pos<-tid2replacementCoord(tid)
+        replacementList<-list(list(rng=pos, txt= trDefDelta2))
+        session$sendCustomMessage(
+          type = "shinyAceExt",
+          list(id= "source", replacement=replacementList, sender='mouse.trans', ok=1)
+        )
       }
+      
+      #-------transformations of nodes marked as class 'movable'
       if(cmd=='rotate'){ # ----rotate
         tid<-input$mouseMssg[3]
         tmp<-input$mouseMssg[2]
         trDefDelta<-formatC(eval(parse(text=tmp)))
         trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2)" ) 
-        src<-tr2src( src, tid, trDefDelta2 )
+        #src<-tr2src( src, tid, trDefDelta2 ) # !!! REPLACE
+        pos<-tid2replacementCoord(tid)
+        replacementList<-list(list(rng=pos, txt= trDefDelta2))
+        session$sendCustomMessage(
+          type = "shinyAceExt",
+          list(id= "source", replacement=replacementList, sender='mouse.trans', ok=1)
+        )
       } 
+      
+      #-------transformations of nodes marked as class 'movable'
       if(cmd=='scale'){ # ----scale
         tid<-input$mouseMssg[3]
         tmp<-input$mouseMssg[2]
         trDefDelta<-formatC(eval(parse(text=tmp)))
         trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2)" ) 
-        src<-tr2src( src, tid, trDefDelta2 )
+        #src<-tr2src( src, tid, trDefDelta2 ) # !!! REPLACE
+        pos<-tid2replacementCoord(tid)
+        replacementList<-list(list(rng=pos, txt= trDefDelta2))
+        session$sendCustomMessage(
+          type = "shinyAceExt",
+          list(id= "source", replacement=replacementList, sender='mouse.trans', ok=1)
+        )
       } 
+      
       # update internal user source
-      setCode(src)
+      #setCode(src) # !!! REPLACE with the below
+      #print(str(replacementList))
+      
+      # if( length(replacementList)>0 ){
+      #   session$sendCustomMessage(
+      #     type = "shinyAceExt",
+      #     list(id= "source", replacement=replacementList, sender='mouse.ptr', ok=1)
+      #   )
+      # }
+      #triggerRefresh('ptr.mouse',1)
+      #request$refresh=runif(1, min = 1, max = 2) # trigger refresh
+      # update current editor
+      
     }
   })
 })
