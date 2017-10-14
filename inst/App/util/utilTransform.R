@@ -134,6 +134,20 @@ tr2src<-function( src, tid, trDefDelta ){
   paste(lines, collapse="\n")
 }
 
+tid2replacementCoord<-function(tid, trDefDelta){
+  strsplit(tid,'-')[[1]]->coords
+  as.numeric(coords[2])->row
+  as.numeric(coords[3])->start
+  as.numeric(coords[4])->end
+  pos<- list(
+    startRow= row -1,
+    startColumn=start -1 ,
+    endRow= row -1,
+    endColumn=end
+  )
+  pos  
+}
+
 getDefPos2<-function(lines, df, defTag){  
   df.def<-subset(df, text==defTag)
   parent(parent(df.def))[1,]->info
