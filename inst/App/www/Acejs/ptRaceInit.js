@@ -20,14 +20,10 @@
       
       UMD.prototype.pop2Ok = function(){
         var udlen= this.$undoStack.length;
-        //console.log('udlen=' + JSON.stringify(udlen) );
-        console.log("popstart: this.$ok=" + JSON.stringify(this.$ok));
-        console.log("popstart: this.dirtyCounter.length=" + this.dirtyCounter);
-        console.log("popstart: this.$undoStack.length=" + this.$undoStack.length);
+        //console.log("popstart: this.$ok=" + JSON.stringify(this.$ok));
+        //console.log("popstart: this.dirtyCounter.length=" + this.dirtyCounter);
+        //console.log("popstart: this.$undoStack.length=" + this.$undoStack.length);
         if(udlen>0){
-          //if(this.$ok.length===0){
-          //  this.$ok=[0];
-          //}
           if(this.$ok.length>0){
             this.$ok = this.$ok.filter(function(i){ return i<= udlen; });
             var lastOkLen = 0;
@@ -36,22 +32,19 @@
             } 
             // need to invoke the undo until 
             // this.$undoStack.length==-lastOkLen;
-            console.log("lastOkLen" + lastOkLen);
-            console.log("Prior to pop loop: this.$undoStack.length=" + this.$undoStack.length);
+            //console.log("lastOkLen" + lastOkLen);
+            //console.log("Prior to pop loop: this.$undoStack.length=" + this.$undoStack.length);
             while( this.$undoStack.length>lastOkLen ){
-              console.log("POPPING");
+              //console.log("POPPING");
               this.undo(true);
             }
-            console.log("this.$undoStack.length=" + this.$undoStack.length);
+            //console.log("this.$undoStack.length=" + this.$undoStack.length);
             this.$redoStack = [];
           }
         }
-        //if(this.$undoStack.length===0 && this.$redoStack.length===0){
-        //  this.$ok=[];
-        //}
-        console.log("popfin: this.$ok=" + JSON.stringify(this.$ok));
-        console.log("popfin: this.$undoStack.length=" + this.$undoStack.length);
-        console.log("popfin: this.dirtyCounter.length=" + JSON.stringify(this.dirtyCounter));
+        //console.log("popfin: this.$ok=" + JSON.stringify(this.$ok));
+        //console.log("popfin: this.$undoStack.length=" + this.$undoStack.length);
+        //console.log("popfin: this.dirtyCounter.length=" + JSON.stringify(this.dirtyCounter));
         return(this);
       };
       
@@ -99,9 +92,9 @@ function ptRaceInit(data){
         //console.log(JSON.stringify(theEditor.completers));
       }
       //Next a custom history manager
-      //var ud =  theEditor.getSession().getUndoManager();
       
-      ud = new UMD(); 
+      
+      var ud = new UMD(); 
       
       //console.log('initial undo :' + JSON.stringify(ud));
       theEditor.getSession().setUndoManager(ud);
@@ -130,7 +123,7 @@ function ptRaceInit(data){
         name: 'helpR',
         bindKey: {win: 'F1', mac: 'F1'},
         exec: function(editor) {
-          console.log('helpR!');
+          //console.log('helpR!');
           editor.getSession().selection.moveCursorLongWordLeft();
           editor.getSession().selection.selectWordRight();
           var text = editor.getSession().getTextRange(editor.getSelectionRange());
