@@ -85,8 +85,13 @@ observe({
       
       if(cmd=='transGrp'){ # -- move tagged group (from tagDrag)
         tid<-input$mouseMssg$id
+        cat('transGrp\n')
+        print(tid)
         #pt<-input$mouseMssg$pt
-        dxy<-vec #eval(parse(text=tmp))
+        vec<- input$mouseMssg$vec
+        dxy<-unlist(vec) #eval(parse(text=tmp))
+        print(dxy)
+        print(class(dxy))
         # get the tag name, 
         ptName<-getPtName() 
         # get points
