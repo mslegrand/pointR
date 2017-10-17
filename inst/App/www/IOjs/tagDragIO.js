@@ -53,6 +53,8 @@ function deselectElement(evt) {
   var movedByX = evt.clientX - ptR_origX;
   var movedByY = evt.clientY - ptR_origY;
   
+  var dxy=[ movedByX, movedByY];
+  console.log(JSON.stringify(dxy ));
   //var tid = ptR_selectedElement.getAttribute("tid");
   
   //var currentMatrixAsString="c(" + ptR_currentMatrix.join(",") + ")";
@@ -62,13 +64,11 @@ function deselectElement(evt) {
   //var dxy="c(" + movedByX + "," + movedByY + ")";
   //var chosen=["transGrp", dxy, tid];
   //Shiny.onInputChange("mouseMssg",chosen);
-  Shiny.onInputChange("mouseMssg",
-    {
+  Shiny.onInputChange("mouseMssg",{
       cmd: "transGrp",
-      pt: [movedByX, movedByY],
+      vec: dxy,
       id : ptR_selectedElement.getAttribute("tid")
-    }
-  );
+  });
   ptR_selectedElement.removeAttributeNS(null, "onmousemove");
   ptR_selectedElement.removeAttributeNS(null, "onmouseout");
   ptR_selectedElement.removeAttributeNS(null, "onmouseup");
