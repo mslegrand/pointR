@@ -317,13 +317,13 @@ observeEvent( pointInfoList$tagPt(), {
                  opacity=1,
                  stroke=colorScheme['selected'], stroke.width=3,
                  #transform="matrix(1 0 0 1 0 0)", 
-                 onmousedown="selectPoint(evt)" )
+                 onmousedown="ptRPlotter_ptR_SVG_Point.selectPoint(evt)" )
         } else { #a non-selected point
           circle(class="draggable", 
                  id=id,  
                  cxy=pt, r=8, fill=color, opacity=1,
                  #transform="matrix(1 0 0 1 0 0)", 
-                 onmousedown="selectPoint(evt)" )
+                 onmousedown="ptRPlotter_ptR_SVG_Point.selectPoint(evt)" )
         },
         if(ptDisplayMode=="Labeled"){
             text(paste(i), cxy=pt+10*c(1,-1),  
@@ -346,7 +346,7 @@ observeEvent( pointInfoList$tagPt(), {
 newPtLayer %<c-% function(insert, wh=c(1200,800)){
   if(insert==TRUE){
     rect(xy=c(0,0), wh=wh, fill="#ADADFF", stroke='black', 
-         opacity=.0, onmousedown="newPoint(evt)")
+         opacity=.0, onmousedown="ptRPlotter_ptR_SVG_Point.newPoint(evt)")
   } else {
     NULL
   } 
@@ -377,14 +377,12 @@ statusPlotPoint<-callModule(
   insert.end=",showPts.compound()"
 )
 
+#error handler
 observeEvent(statusPlotPoint$status(), {
-  #status<-statusPlotPoint()
   status<-statusPlotPoint$status()
-  if( status$state!="PASS"){
+  if( status$state!="PASS"){ 
     updateRightPanel('logPanel')
     mssg$err<-status$message
-    # send mssg to log
-    # switch to log 
   }
 })
 

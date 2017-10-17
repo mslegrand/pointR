@@ -1,85 +1,79 @@
-// implements moving a single point
 
-// var chosen =[];
-// var movedTo=[];
-
-var ptR_selectedElement = 0;
-var ptR_currentX = 0;
-var ptR_currentY = 0;
-
-var ptR_svg = document.querySelector("#ptR_SVG_Point");
-var pt  = ptR_svg.createSVGPoint();
+function PtRPanelPoints(svgId){
+  this.selectedElement = 0;
+  this.currentX = 0;
+  this.currentY=0;
+  this.svgId=svgId;
+  this.svg=document.querySelector("#" + svgId); 
+  this.pt= this.svg.createSVGPoint();
+}
 
 //called to create a new point
-function newPoint(evt) {
-  pt.x = evt.clientX;
-  pt.y = evt.clientY;
+PtRPanelPoints.prototype.newPoint = function (evt) {
+  this.pt.x = evt.clientX;
+  this.pt.y = evt.clientY;
   
   // The cursor point, translated into svg coordinates
-  var cursorpt =  pt.matrixTransform(ptR_svg.getScreenCTM().inverse());
-  //var ptTxt="c(" + cursorpt.x + ", " + cursorpt.y + ")";
-  //var chosen=["add", ptTxt];
-  //Shiny.onInputChange("mouseMssg",chosen);
+  var cursorpt =  this.pt.matrixTransform(this.svg.getScreenCTM().inverse());
   Shiny.onInputChange("mouseMssg",
-    {
-      cmd: "add",
-      vec: [cursorpt.x, cursorpt.y],
-      id: "dummyId"
-    }
+                      {
+                        cmd: "add",
+                        vec: [cursorpt.x, cursorpt.y],
+                        id: "dummyId"
+                      }
   );
-}
+};
 
-function selectPoint(evt){
-  ptR_selectedElement = evt.target;
-  ptR_currentX = evt.clientX;
-  ptR_currentY = evt.clientY;
-  ptR_selectedElement.setAttributeNS(null, "onmousemove", "movePoint(evt)");
-  ptR_selectedElement.setAttributeNS(null, "onmouseout", "deselectPoint(evt)");
-  ptR_selectedElement.setAttributeNS(null, "onmouseup",  "deselectPoint(evt)");
-}
+// implements moving a single point
+PtRPanelPoints.prototype.selectPoint = function (evt){
+  this.selectedElement = evt.target;
+  this.currentX = evt.clientX;
+  this.currentY = evt.clientY;
+  var pth = "ptRPlotter_"+this.svgId;
+  this.selectedElement.setAttributeNS(null, "onmousemove",  pth + ".movePoint(evt)");
+  this.selectedElement.setAttributeNS(null, "onmouseout", pth + ".deselectPoint(evt)");
+  this.selectedElement.setAttributeNS(null, "onmouseup",  pth + ".deselectPoint(evt)");
+};
 
-function movePoint(evt){
-  if(ptR_selectedElement !== 0){
-    ptR_selectedElement = evt.target;
-    var dx = evt.clientX - ptR_currentX;
-    var dy = evt.clientY - ptR_currentY; 
-  
+PtRPanelPoints.prototype.movePoint = function (evt){
+  if(this.selectedElement !== 0){
+    this.selectedElement = evt.target;
+    var dx = evt.clientX - this.currentX;
+    var dy = evt.clientY - this.currentY; 
+    
     //get the element attribute values x,y 
-    var cx = Number(ptR_selectedElement.getAttribute("cx"));
-    var cy = Number(ptR_selectedElement.getAttribute("cy"));
+    var cx = Number(this.selectedElement.getAttribute("cx"));
+    var cy = Number(this.selectedElement.getAttribute("cy"));
     // update each attribute by x=x+dx, y=y+dy
     cx=cx+dx;
     cy=cy+dy;
-    ptR_selectedElement.setAttributeNS(null, "cx", cx.toString());
-    ptR_selectedElement.setAttributeNS(null, "cy", cy.toString());
+    this.selectedElement.setAttributeNS(null, "cx", cx.toString());
+    this.selectedElement.setAttributeNS(null, "cy", cy.toString());
     //update the current position
-    ptR_currentX = evt.clientX;
-    ptR_currentY = evt.clientY;
+    this.currentX = evt.clientX;
+    this.currentY = evt.clientY;
   }
-}
+};
 
-function deselectPoint(evt){
-  if(ptR_selectedElement !== 0){
-    pt.x = evt.clientX;
-    pt.y = evt.clientY;
-  
+PtRPanelPoints.prototype.deselectPoint = function (evt){
+  if(this.selectedElement !== 0){
+    this.pt.x = evt.clientX;
+    this.pt.y = evt.clientY;
+    
     // The cursor point, translated into svg coordinates
-    var cursorpt =  pt.matrixTransform(ptR_svg.getScreenCTM().inverse());
-    //var ptTxt="c(" + cursorpt.x + ", " + cursorpt.y + ")";
-    //var id = ptR_selectedElement.getAttribute("id");
-
-    //chosen=["move", ptTxt, id];
-    //Shiny.onInputChange("mouseMssg",chosen);
-    Shiny.onInputChange("mouseMssg",
-    {
+    var cursorpt =  this.pt.matrixTransform(this.svg.getScreenCTM().inverse());
+    
+    Shiny.onInputChange("mouseMssg",{
       cmd: "move",
       vec: [cursorpt.x, cursorpt.y],
-      id: ptR_selectedElement.getAttribute("id")
+      id: this.selectedElement.getAttribute("id")
     });
-    ptR_selectedElement.removeAttributeNS(null, "onmousemove");
-    ptR_selectedElement.removeAttributeNS(null, "onmouseout");
-    ptR_selectedElement.removeAttributeNS(null, "onmouseup");
-    ptR_selectedElement = 0;
+    this.selectedElement.removeAttributeNS(null, "onmousemove");
+    this.selectedElement.removeAttributeNS(null, "onmouseout");
+    this.selectedElement.removeAttributeNS(null, "onmouseup");
+    this.selectedElement = 0;
   }              
-}
+};
+
+var ptRPlotter_ptR_SVG_Point = new PtRPanelPoints("ptR_SVG_Point");
 
