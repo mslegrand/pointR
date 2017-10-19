@@ -19,6 +19,7 @@ output$TopRightPanel<-renderUI({
   } else if (chosenRightPanel=='tagValues'){
     moduleTagValUI("tagValBar", input, output)
   } else if (chosenRightPanel=='tagDrag'){
+    cat('panel is tagDrag')
     moduleTagDragUI("tagDragBar")
   } else if (chosenRightPanel=='Transforms'){
     absolutePanel( 

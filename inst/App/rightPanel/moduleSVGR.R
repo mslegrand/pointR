@@ -37,6 +37,8 @@
     WH<-getSVGWH()
     #src<-getCode()
     codeTxt<-getCode2()
+    cat("svgID=",svgID,"\n")
+    #browser(expr=(svgID=="ptR_SVG_TagDrag") )
     if(is.null(showGrid())){return(NULL)}
     
     # why can't I force this???

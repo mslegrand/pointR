@@ -44,7 +44,7 @@ observeEvent(tagValInfoList$updateTagsNow(),{
     if( !is.null(tagRList) ){
       newPtDefs<-getPtDefs()
       newPtDefs$df<-tagRList
-      updateAceExtDef(newPtDefs, "tagVal.UpdateTagsNow")
+      updateAceExtDef(newPtDefs, sender="tagVal.UpdateTagsNow")
       #src<-df2Source(getCode(),tagRList)
       # setCode(src) #!!!
     }

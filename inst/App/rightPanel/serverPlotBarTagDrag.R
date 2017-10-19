@@ -8,8 +8,8 @@
 tagDragInfoList<-callModule(
   module=moduleTagDrag,
   id="tagDragBar",
-  barName=rightPanel,
-  getTagNameChoices=getTagNameChoices,
+  barName=reactive({rightPanel()}),
+  getTagNameChoices=reactive({getTagNameChoices()}) ,
   getTagName=getTagName,
   getTagIndexChoices=getTagIndexChoices,
   getTagIndex=getTagIndex
@@ -18,11 +18,16 @@ tagDragInfoList<-callModule(
 observe({
   name<-tagDragInfoList$name()
   index<-tagDragInfoList$index()
+  cat("\n TagDrag: rightPanel()=", rightPanel(),"\n")
   if(rightPanel()=="tagDrag"){
     isolate({
-      if(!is.null(name)){
+      cat(' \ntagDragInfoList$name()  tagDragInfoList$index()\n')
+      cat('length of name = ', length(name),"\n")
+      if(!is.null(name) && !is.null(index)){
         selectedPoint$name<-name
         selectedPoint$point.index<-as.numeric(index)
+        cat('name=',name,"\n")
+        cat('index=', index,"\n")
       }
     })  
   }
@@ -32,6 +37,7 @@ observeEvent(
   tagDragInfoList$tagClone(),
   {
     if(rightPanel()=="tagDrag"){
+      cat(' tagDragInfoList$tagClone() \n')
       name<-tagDragInfoList$name()
       index<-tagDragInfoList$index()
       ptRList<-getPtDefs()$pts
@@ -61,14 +67,9 @@ observeEvent(
       tagRList[[name]]<-dfNew
       
       newPtDefs<-list(pts=ptRList, df= tagRList ) 
+      sender='tagDrag.Clone'
       updateAceExtDef(newPtDefs, sender)
       
-      # code<-srcGet()
-      # code<-pts2Source(code,  ptRList)
-      # code<-df2Source( code, tagRList)
-      # 
-      #update
-      #setCode(code) #!!!
       selectedPoint$point.index<-as.numeric(index)+tiSize
       
     }
@@ -80,6 +81,7 @@ observeEvent(
   tagDragInfoList$tagDelete(),
   {
     if(rightPanel()=="tagDrag"){
+      cat(' tagDragInfoList$tagDelete() \n')
       name<-    tagDragInfoList$name()
       index<-   tagDragInfoList$index()
       ptRList<- getPtDefs()$pts
@@ -251,17 +253,20 @@ observeEvent(
 
   showPts.dragTag %<c-% function(ptName, pts, 
   selectedPointIndx, ptDisplayMode,  tags=NULL){
+    cat('hello 0\n')  
     if(length(ptName)<1){return(NULL)}
     if(length(pts)<2)  {return(NULL) }
     if(length(tags)<1){return(NULL)}
     if(length(selectedPointIndx)<1 || selectedPointIndx==0){return(NULL)}
-
+cat('hello 1\n')
     tag.indx<-selectedPointIndx #this is the position of the first point of the tagged set 
     semitransparent<-0.3
     colorScheme<-c(default="purple", ending="red", selected="blue")
     color<-colorScheme[1]
     m<-matrix(pts,2)
-    if( !is.null(tag.indx) && !is.null(tags)){
+    cat('hello 2\n')
+  if( !is.null(tag.indx) && !is.null(tags)){
+    cat('hello 3\n')
       ti<-which(max(tags[tags<=tag.indx])==tags )
       id.nos<-sequence(ncol(m))
       ids<-paste("pd",ptName,id.nos,sep="-")
@@ -277,7 +282,7 @@ observeEvent(
           g( opacity=opacity[i], 
              fill='purple',
              transform="matrix(1 0 0 1 0 0)", 
-             #onmousedown="selectElement(evt)",
+             onmousedown="ptRPlotter_ptR_SVG_TagDrag.selectElement(evt)",
              tid=paste0("ptR_Tag_",i),
              lapply(tagIntList[[i]], function(j){
                list(
@@ -294,7 +299,7 @@ observeEvent(
         g( opacity=opacity[ti], 
            fill='purple',
            transform="matrix(1 0 0 1 0 0)", 
-           onmousedown="selectElement(evt)",
+           onmousedown="ptRPlotter_ptR_SVG_TagDrag.selectElement(evt)",
            tid=paste0("ptR_Tag_",ti),
            lapply(tagIntList[[ti]], function(j){
             list(
