@@ -56,50 +56,73 @@ observeEvent(tagValInfoList$updateTagsNow(),{
 #------------SVG DISPLAY--------------------------------------------
 #----------------------------------------------------------------
 
-showPts.valTag%<c-% function(ptName, pts, selectedPointIndx, ptDisplayMode,  ptTags){
+
+showPts.valTag %<c-% function(ptName, pts, 
+                              selectedPointIndx, ptDisplayMode,  tags=NULL){
+  
+  if(length(ptName)<1){return(NULL)}
+  if(length(pts)<2)  {return(NULL) }
+  if(length(tags)<1){return(NULL)}
+  if(length(selectedPointIndx)<1 || selectedPointIndx==0){return(NULL)}
+  
+  tag.indx<-selectedPointIndx #this is the position of the first point of the tagged set 
+  semitransparent<-0.3
+  colorScheme<-c(default="green", ending="red", selected="blue")
+  color<-colorScheme[1]
+  m<-matrix(pts,2)
+  onmousedown<-"ptRPlotter_ptR_SVG_TagVal.selectElement(evt)"
+  tidPrefix<-"ptR_TagV_"
+  
+  if( !is.null(tag.indx) && !is.null(tags)){
     
-    if(length(ptName)<1){return(NULL)}
-    if(length(pts)<2){return(NULL)}
-    if(length(ptTags)<1){return(NULL)}
-    if(selectedPointIndx==0){return(NULL)}
-    
-    tag.indx<-selectedPointIndx
-    semitransparent<-0.3
-    colorScheme<-c(default="green", ending="red", selected="blue")
-    
-    m<-matrix(pts,2)
-    if( is.null(tag.indx) ){ stop("unexpected null for tag.indx") }
-    if( is.null(ptTags)   ){ stop("ptTags is null") }
-    tags<-ptTags$tag
-    ti<-which(tag.indx==tags) 
-    tagInterval<-findInterval(sequence(ncol(m)),tags)
-    tagInterval<-tagInterval==ti
-    tagInterval[tagInterval==0]<-semitransparent
-    opac<-tagInterval
-    
-    
+    ti<-which(max(tags[tags<=tag.indx])==tags )
+    id.nos<-sequence(ncol(m))
+    ids<-paste("pd",ptName,id.nos,sep="-")
+    tagInterval<-findInterval(id.nos,tags)
+    tagIntList<-tapply(id.nos, findInterval(id.nos,tags), list )
+    opacity<-rep(semitransparent, length(tags))
+    opacity[ti]<-1
     # iterate over tagIntList
-    lapply(1:ncol(m), function(i){
-      id<-paste("pd",ptName,i,sep="-")
-      pt<-m[,i]
-      color=colorScheme['default']
-      if(i==length(pts)/2) { #ncol(m)){
-        color=colorScheme['ending']   
-      }
-      list(
-        circle(class="draggable", 
-          id=id,  
-          cxy=pt, r=8, fill=color, opacity=opac[i],
-          transform="matrix(1 0 0 1 0 0)", onmousedown="selectPoint(evt)" 
-        ),
-        if(ptDisplayMode=="Labeled"){
-          text(paste(i), cxy=pt+10*c(1,-1),  stroke='black', font.size=12, opacity=opac[i]) #opac)
-        } else {
-          NULL
-        }
+    indx<-unique(tagInterval)
+    indx<-indx[-ti]
+    list( 
+      lapply(indx, function(i){
+        g( opacity=opacity[i], 
+           fill='purple',
+           transform="matrix(1 0 0 1 0 0)", 
+           onmousedown=onmousedown,
+           tid=paste0(tidPrefix,i),
+           lapply(tagIntList[[i]], function(j){
+             list(
+               circle(   cxy=m[,j], r=8),
+               if(ptDisplayMode=="Labeled"){
+                 text(paste(j), cxy=m[,j]+10*c(1,-1),  stroke='black', font.size=12) #opac)
+               } else {
+                 NULL
+               }
+             )
+           })
+        )
+      }),
+      g( opacity=opacity[ti], 
+         fill='purple',
+         transform="matrix(1 0 0 1 0 0)", 
+         onmousedown=onmousedown,
+         tid=paste0(tidPrefix,ti),
+         lapply(tagIntList[[ti]], function(j){
+           list(
+             circle(   cxy=m[,j], r=8),
+             if(ptDisplayMode=="Labeled"){
+               text(paste(j), cxy=m[,j]+10*c(1,-1),  stroke='black', font.size=12) #opac)
+             } else {
+               NULL
+             }
+           )
+         })
       )
-    }) #end lapply
-  } #end showPts
+    )
+  } #end if
+} #end showPts
 
 
 statusPlotTagVal<-callModule(
@@ -110,7 +133,7 @@ statusPlotTagVal<-callModule(
     showPts.valTag(
       ptName=getTagName(), pts=getPtDefs()$pts[[getTagName()]],
       selectedPointIndx=as.numeric( getTagIndex() ),
-      ptDisplayMode=getDisplayModeTag(), ptTags=getTagDF() 
+      ptDisplayMode=getDisplayModeTag(), tags=getTagDF()$tag
     )
   }),
   ptrDisplayScript = reactive({ js.scripts[[ "TagVal"]]}),
@@ -130,6 +153,16 @@ observeEvent(statusPlotTagVal$status(), {
     # switch to log 
   }
 })
+
+observeEvent(statusPlotTagVal$status(), {
+  status<-statusPlotTagVal$status()
+  if(status$state!="PASS"){
+    updateRightPanel('logPanel')
+    mssg$err<-status$message    # send mssg to log
+    # switch to log 
+  }
+})
+
 
 
 

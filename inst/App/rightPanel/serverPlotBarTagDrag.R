@@ -253,20 +253,20 @@ observeEvent(
 
   showPts.dragTag %<c-% function(ptName, pts, 
   selectedPointIndx, ptDisplayMode,  tags=NULL){
-    cat('hello 0\n')  
+     
     if(length(ptName)<1){return(NULL)}
     if(length(pts)<2)  {return(NULL) }
     if(length(tags)<1){return(NULL)}
     if(length(selectedPointIndx)<1 || selectedPointIndx==0){return(NULL)}
-cat('hello 1\n')
+
     tag.indx<-selectedPointIndx #this is the position of the first point of the tagged set 
     semitransparent<-0.3
     colorScheme<-c(default="purple", ending="red", selected="blue")
     color<-colorScheme[1]
     m<-matrix(pts,2)
-    cat('hello 2\n')
+    
   if( !is.null(tag.indx) && !is.null(tags)){
-    cat('hello 3\n')
+   
       ti<-which(max(tags[tags<=tag.indx])==tags )
       id.nos<-sequence(ncol(m))
       ids<-paste("pd",ptName,id.nos,sep="-")

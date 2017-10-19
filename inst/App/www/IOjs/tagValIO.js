@@ -3,79 +3,82 @@
 // var chosen =[];
 // var movedTo=[];
 
+/*
 var ptR_selectedElement = 0;
 var ptR_currentX = 0;
 var ptR_currentY = 0;
 
 var ptR_svg = document.querySelector("#ptR_SVG_TagVal");
 var pt  = ptR_svg.createSVGPoint();
+*/
 
-//called to create a new point
-function newPoint(evt) {
-  pt.x = evt.clientX;
-  pt.y = evt.clientY;
-  
-  // The cursor point, translated into svg coordinates
-  var cursorpt =  pt.matrixTransform(ptR_svg.getScreenCTM().inverse());
-  var ptTxt="c(" + cursorpt.x + ", " + cursorpt.y + ")";
-  var chosen=["add", ptTxt];
-  Shiny.onInputChange("mouseMssg",chosen);
+
+// moves an element 
+
+// var chosen =[];
+// var movedTo=[];
+/*
+var ptR_selectedElement = 0;
+var ptR_currentX = 0;
+var ptR_currentY = 0;
+var ptR_origX = 0;
+var ptR_origY = 0;
+var ptR_currentMatrix = 0;
+*/
+
+function PtRPanelTagVal(svgId){ //currently svgId is not used here
+  this.selectedElement = 0;
+  this.svgId=svgId;
 }
 
-function selectPoint(evt){
-  ptR_selectedElement = evt.target;
-  ptR_currentX = evt.clientX;
-  ptR_currentY = evt.clientY;
-  ptR_selectedElement.setAttributeNS(null, "onmousemove", "movePoint(evt)");
-  ptR_selectedElement.setAttributeNS(null, "onmouseout", "deselectPoint(evt)");
-  ptR_selectedElement.setAttributeNS(null, "onmouseup",  "deselectPoint(evt)");
-}
+//TRANSFORM
 
-function movePoint(evt){
-  if(ptR_selectedElement !== 0){
-    ptR_selectedElement = evt.target;
-    var dx = evt.clientX - ptR_currentX;
-    var dy = evt.clientY - ptR_currentY; 
+// selectElement 
+PtRPanelTagVal.prototype.selectElement = function (evt) {
   
-    //get the element attribute values x,y 
-    var cx = Number(ptR_selectedElement.getAttribute("cx"));
-    var cy = Number(ptR_selectedElement.getAttribute("cy"));
-    // update each attribute by x=x+dx, y=y+dy
-    cx=cx+dx;
-    cy=cy+dy;
-    ptR_selectedElement.setAttributeNS(null, "cx", cx.toString());
-    ptR_selectedElement.setAttributeNS(null, "cy", cy.toString());
-    //update the current position
-    ptR_currentX = evt.clientX;
-    ptR_currentY = evt.clientY;
-  }
-}
-
-function deselectPoint(evt){
-  if(ptR_selectedElement !== 0){
-    pt.x = evt.clientX;
-    pt.y = evt.clientY;
+  this.selectedElement = evt.currentTarget;
   
-    // The cursor point, translated into svg coordinates
-    var cursorpt =  pt.matrixTransform(ptR_svg.getScreenCTM().inverse());
-    //var ptTxt="c(" + cursorpt.x + ", " + cursorpt.y + ")";
-    //var id = ptR_selectedElement.getAttribute("id");
+  //add eventattrs to element
+  //this.selectedElement.parentNode.appendChild( this.selectedElement ); //brings to top
+  var pth = "ptRPlotter_" + this.svgId;
+  this.selectedElement.setAttributeNS(null, "onmouseout", pth + ".deselectElement(evt)");
+  this.selectedElement.setAttributeNS(null, "onmouseup",  pth + ".deselectElement(evt)");
+};
 
-    chosen=["move", ptTxt, id];
-    Shiny.onInputChange("mouseMssg",chosen);
+
+  // deselect that element
+PtRPanelTagVal.prototype.deselectElement =  function (evt) {
+  if(this.selectedElement !== 0){
+    //  alert("selectedElement");
     
+    
+    //var tid = ptR_selectedElement.getAttribute("tid");
+      
+    //var currentMatrixAsString="c(" + ptR_currentMatrix.join(",") + ")";
+    //var trans=[movedByX,movedBy]; // return the translation
+    //var tid = ptR_selectedElement.getAttribute("tid");
+    
+    //var dxy="c(" + movedByX + "," + movedByY + ")";
+    //var chosen=["transGrp", dxy, tid];
+    //Shiny.onInputChange("mouseMssg",chosen);
     Shiny.onInputChange("mouseMssg",
-    {
-      cmd: "move",
-      pt: [cursorpt.x, cursorpt.y],
-      id : ptR_selectedElement.getAttribute("id")
-    }
-  );
+      {
+        cmd: "tagValSelect",
+        vec: [0, 0],
+        id : this.selectedElement.getAttribute("tid")
+      }
+    );
+    this.selectedElement.removeAttributeNS(null, "onmouseout");
+    this.selectedElement.removeAttributeNS(null, "onmouseup");
+    this.selectedElement = 0;
     
-    ptR_selectedElement.removeAttributeNS(null, "onmousemove");
-    ptR_selectedElement.removeAttributeNS(null, "onmouseout");
-    ptR_selectedElement.removeAttributeNS(null, "onmouseup");
-    ptR_selectedElement = 0;
-  }              
-}
+  }
+};
+
+
+
+var ptRPlotter_ptR_SVG_TagVal = new PtRPanelTagVal("ptR_SVG_TagVal");
+
+
+
 

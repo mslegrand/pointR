@@ -129,6 +129,19 @@ observe({
       
             
       if(barName=='tagValues'){
+        sender='tagVal.mouse'
+        if(cmd=='tagValSelect'){ # -- move tagged group (from tagDrag)
+          tid<-input$mouseMssg$id
+          cat(paste0("tid=", tid, "\n"))
+          tag.index<-tail(str_split(tid, "_")[[1]],1)
+          cat("tag.index=",tag.index,"\n")
+          tag.index<-as.integer(tag.index)
+          tagIndices<-getTagIndexChoices()
+         
+          point.index<-tagIndices[tag.index]
+          cat(paste0("point.index=", point.index, "\n"))
+          selectedPoint$point.index<-point.index
+        }
       }
       
       if(barName=='Transforms'){

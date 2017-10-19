@@ -28,13 +28,12 @@ statusPlotTransform<-callModule(
   insert.end=",NULL"
 )
 
+#error handler
 observeEvent(statusPlotTransform$status(), { 
   status<-statusPlotTransform$status()
   if(status$state!="PASS"){
     updateRightPanel('logPanel')
     mssg$err<-status$messages
-    # send mssg to log
-    # switch to log 
   }
 })
 
