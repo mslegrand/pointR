@@ -12,27 +12,31 @@ shinyServer(function(input, output,session) {
   
 # Reactive values----------
 
-  #source("util/serverManagerSrc.R", local=TRUE)
+  #source("util/serverManagerSrc.R", local=TRUE) no longer used
   
   request<-reactiveValues(
     code=NULL,
     sender='startup',
-    refresh=NULL
+    refresh=NULL # to be used to force a code refresh???
   )
   
-  triggerRefresh<-function(sender, n=1){
-    request$sender=sender
-    request$refresh= runif(1, n, n+1)
+  triggerRefresh<-function(sender, rollBack=TRUE){ # to be used to force a code refresh???
+    session$sendCustomMessage(
+      type = "shinyAceExt",
+      list(id= "source", sender=sender, getValue=TRUE, rollBack=rollBack)
+    )
   }
   
   selectedPoint <- reactiveValues(
     name="x", #NULL,       # name of current point array
-    point.index=0    #  selected pt.indx (column) in current point array
+    point.index=0          #  selected pt.indx (column) in current point array
   ) 
   
-  panels<-reactiveValues(right="Points")
+  panels<-reactiveValues(
+    left='source',   #to be used as editor name later, for connecting to right graphics
+    right="Points"
+  )
   rightPanel<-reactive({panels$right})
-  
   updateRightPanel<-function(panel){ panels$right<-panel}
 
   getLeftMenuCmd<-reactive({input$editNavBar$item})
@@ -50,31 +54,19 @@ shinyServer(function(input, output,session) {
   
   
   # Reactive expressions------------- 
-   #---
+  showGrid<-reactive({displayOptions$showGrid})
+  
+  #--- yes unless tagged with freq or no points to tag 
   isTaggable<-reactive({ 
     name<-getPtName()
     !is.null(name) && getPtIndex()>0 &&  is.null(reactiveTag$freq[[name]])
   })
   
-  getCode<-reactive({
-    request$code
-  })
-  
-  # setCode<-function(txt, what="history"){
-  #   #srcPushTxt(txt,what)
-  # }
-  
-  # setSrcCode<-function(txt, what="history"){
-  #   srcPushTxt(txt,what)
-  # }
-  # 
-  # 
-  
+  getCode<-reactive({request$code})
   getPtName<-reactive({selectedPoint$name})
   getPtIndex<-reactive({selectedPoint$point.index})
-  #-----------------------
- 
   
+  #-----------------------
   getErrorMssg<-reactive({ mssg$error })
   getPtDefs<- reactive({ 
     ex.getPtDefs(getCode() ) 
@@ -82,7 +74,7 @@ shinyServer(function(input, output,session) {
   
   #gets the tagged names
   getTagNameChoices<-reactive({
-    #cat("Inside getTagNameChoices:: getPtDefs$df=", str(getPtDefs()$df),"\n")
+    cat("Inside getTagNameChoices:: getPtDefs$df=", str(getPtDefs()$df),"\n")
     intersect(names(getPtDefs()$pts), names(getPtDefs()$df))
   })
   
@@ -150,7 +142,7 @@ shinyServer(function(input, output,session) {
 # Event Observers-------------------------------- 
   observe({input$messageFromAce
     isolate({
-      #cat("observe input$messageFromAce")
+      cat("\nobserve input$messageFromAce\n")
       if(
         length(input$messageFromAce$code)>0 &&
         length(input$messageFromAce$sender)>0
@@ -161,25 +153,34 @@ shinyServer(function(input, output,session) {
           editOption$.saved <- !(as.numeric(input$messageFromAce$dirty) > 0)
         }
         
-        #cat("request$sender=",request$sender,"\n")
-        #cat('dirty= ', input$messageFromAce$dirty )
-        processCommit()
-        # if(request$sender=='cmd.commit'){
-        #   processCommit()
-        # } e
+        cat("request$sender=",request$sender,"\n")
+        cat('dirty= ', input$messageFromAce$dirty,"\n" )
+        #processCommit()
+         if(request$sender=='cmd.commit'){
+           processCommit()
+         } 
       }
     })
   })
   
   updateAceExtDef<-function(newPtDef, sender ){
-    
-    replacementList<-ptDef2ReplacementList(newPtDef, getCode() )
     #src<-df2Source(src,dfList) #insert points into src
-    
+    replacementList<-ptDef2ReplacementList(newPtDef,getCode() )
     if( length(replacementList)>0 ){
       session$sendCustomMessage(
         type = "shinyAceExt",
-        list(id= "source", replacement=replacementList, sender='tag.pt.button', ok=1)
+        list(id= "source", replacement=replacementList, sender=sender, ok=1)
+      )
+    }
+  }
+  
+  updateAceExt<-function(sender, ...){
+    data<-as.list(...)
+    if(length(data)>0){
+      data<-c(list(id=='source', sender=sender), data )
+      session$sendCustomMessage(
+        type = "shinyAceExt",
+        data
       )
     }
   }
