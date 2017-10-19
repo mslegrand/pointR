@@ -32,24 +32,26 @@ moduleTagDrag<-function(input, output, session,
 ){
 
   # non-reactive function (not used???)
-  exGetTagColChoice<-function(tagColChoices, currentChoice){
-    if(length(tagColChoices)>0){
-      tagColChoice<-currentChoice
-      tagColChoices<-sort(tagColChoices)
-      if( length(tagColChoice)==0 || 
-          !(tagColChoice %in% tagColChoices ) ){
-        tagColChoice<-tagColChoices[length(tagColChoices)]
-      }
-    } else { #hide it
-      tagColChoice<-NULL
-    }
-    tagColChoice
-  }
+  # exGetTagColChoice<-function(tagColChoices, currentChoice){
+  #   if(length(tagColChoices)>0){
+  #     tagColChoice<-currentChoice
+  #     tagColChoices<-sort(tagColChoices)
+  #     if( length(tagColChoice)==0 || 
+  #         !(tagColChoice %in% tagColChoices ) ){
+  #       tagColChoice<-tagColChoices[length(tagColChoices)]
+  #     }
+  #   } else { #hide it
+  #     tagColChoice<-NULL
+  #   }
+  #   tagColChoice
+  # }
   
   observe({ #update the name 
     if(identical( barName(), 'tagDrag')){
       tagNameChoices<-getTagNameChoices() 
+      cat("length(tagNameChoices)=", length(tagNameChoices), "\n")
       tagName<-getTagName()
+      cat("tagName=", tagName, "\n")
       updateSelectInput(session, "name", 
         choices=tagNameChoices, 
         selected=tagName)
@@ -60,6 +62,7 @@ moduleTagDrag<-function(input, output, session,
      if(identical( barName(), 'tagDrag')){
       tagIndxChoices<-getTagIndexChoices()
       tagIndx<-getTagIndex()
+      cat("tagIndx=",tagIndx,"\n")
       updateSelectInput(
         session, 
         "index", 
