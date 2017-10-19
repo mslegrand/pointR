@@ -172,16 +172,16 @@ ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
 #used by open and commit
 # inserts ptDefs into src code 
 # !!! to be obsolete soon
-preProcCode<-function(src){
-  ptDefs<-ex.getPtDefs(src)
-  ptRList<-ptDefs$pts
-  dfList<-ptDefs$df
-  src<-pts2Source(src,ptRList)
-  if(!is.null(dfList)){
-    src<-df2Source(src, dfList)
-  }
-  return(src)
-} 
+# preProcCode<-function(src){
+#   ptDefs<-ex.getPtDefs(src)
+#   ptRList<-ptDefs$pts
+#   dfList<-ptDefs$df
+#   src<-pts2Source(src,ptRList)
+#   if(!is.null(dfList)){
+#     src<-df2Source(src, dfList)
+#   }
+#   return(src)
+# } 
 
 
 
