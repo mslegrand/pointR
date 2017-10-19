@@ -2,78 +2,100 @@
 
 // var chosen =[];
 // var movedTo=[];
-
+/*
 var ptR_selectedElement = 0;
 var ptR_currentX = 0;
 var ptR_currentY = 0;
 var ptR_origX = 0;
 var ptR_origY = 0;
 var ptR_currentMatrix = 0;
+*/
 
+function PtRPanelTagDrag(svgId){ //currently svgId is not used here
+  this.selectedElement = 0;
+  this.currentX = 0;
+  this.currentY = 0;
+  this.origX = 0;
+  this.origY = 0;
+  this.svgId=svgId;
+  this.currentMatrix = 0;
+}
 
 //TRANSFORM
 
 // selectElement 
-function selectElement(evt) {
+PtRPanelTagDrag.prototype.selectElement = function (evt) {
   
-  ptR_selectedElement = evt.currentTarget;
-  ptR_currentX = evt.clientX;
-  ptR_currentY = evt.clientY;
-  ptR_origX    = evt.clientX;
-  ptR_origY    = evt.clientY;
-  ptR_currentMatrix = ptR_selectedElement.getAttributeNS(null, "transform").slice(7,-1).split(" ");
-  for(var i=0; i<ptR_currentMatrix.length; i++) {
-    ptR_currentMatrix[i] = parseFloat(ptR_currentMatrix[i]);
+  this.selectedElement = evt.currentTarget;
+  this.currentX = evt.clientX;
+  this.currentY = evt.clientY;
+  this.origX    = evt.clientX;
+  this.origY    = evt.clientY;
+  this.currentMatrix = this.selectedElement.getAttributeNS(null, "transform").slice(7,-1).split(" ");
+  for(var i=0; i<this.currentMatrix.length; i++) {
+    this.currentMatrix[i] = parseFloat(this.currentMatrix[i]);
   }
   //add eventattrs to element
-  //ptR_selectedElement.parentNode.appendChild( ptR_selectedElement ); //brings to top
-  ptR_selectedElement.setAttributeNS(null, "onmousemove", "moveElement(evt)");
-  ptR_selectedElement.setAttributeNS(null, "onmouseout", "deselectElement(evt)");
-  ptR_selectedElement.setAttributeNS(null, "onmouseup",  "deselectElement(evt)");
-}
+  //this.selectedElement.parentNode.appendChild( this.selectedElement ); //brings to top
+  var pth = "ptRPlotter_"+this.svgId;
+  
+  this.selectedElement.setAttributeNS(null, "onmousemove", pth + ".moveElement(evt)");
+  this.selectedElement.setAttributeNS(null, "onmouseout", pth + ".deselectElement(evt)");
+  this.selectedElement.setAttributeNS(null, "onmouseup",  pth + ".deselectElement(evt)");
+};
 
 // translation of an element
-function moveElement(evt) {
-  if(ptR_selectedElement!==0){ // this shouldn"t be necessary
-    var dx = evt.clientX - ptR_currentX;
-    var dy = evt.clientY - ptR_currentY;
-    ptR_currentMatrix[4] += dx;
-    ptR_currentMatrix[5] += dy;
+PtRPanelTagDrag.prototype.moveElement = function (evt) {
+  if(this.selectedElement!==0){ // this should not be necessary
+    var dx = evt.clientX - this.currentX;
+    var dy = evt.clientY - this.currentY;
+    this.currentMatrix[4] += dx;
+    this.currentMatrix[5] += dy;
     
-    ptR_selectedElement.setAttributeNS(null, "transform", "matrix(" + ptR_currentMatrix.join(" ") + ")");
-    ptR_currentX = evt.clientX;
-    ptR_currentY = evt.clientY;
+    this.selectedElement.setAttributeNS(null, "transform", "matrix(" + this.currentMatrix.join(" ") + ")");
+    this.currentX = evt.clientX;
+    this.currentY = evt.clientY;
   }
-}
+};
   
   // deselect that element
-function deselectElement(evt) {
-  if(ptR_selectedElement !== 0){
-//  alert("selectedElement");
-  var movedByX = evt.clientX - ptR_origX;
-  var movedByY = evt.clientY - ptR_origY;
+PtRPanelTagDrag.prototype.deselectElement =  function (evt) {
+  if(this.selectedElement !== 0){
+    //  alert("selectedElement");
+    
+    var movedByX = evt.clientX - this.origX;
+    var movedByY = evt.clientY - this.origY;
   
-  var dxy=[ movedByX, movedByY];
-  console.log(JSON.stringify(dxy ));
-  //var tid = ptR_selectedElement.getAttribute("tid");
-  
-  //var currentMatrixAsString="c(" + ptR_currentMatrix.join(",") + ")";
-  //var trans=[movedByX,movedBy]; // return the translation
-  //var tid = ptR_selectedElement.getAttribute("tid");
-  
-  //var dxy="c(" + movedByX + "," + movedByY + ")";
-  //var chosen=["transGrp", dxy, tid];
-  //Shiny.onInputChange("mouseMssg",chosen);
-  Shiny.onInputChange("mouseMssg",{
-      cmd: "transGrp",
-      vec: dxy,
-      id : ptR_selectedElement.getAttribute("tid")
-  });
-  ptR_selectedElement.removeAttributeNS(null, "onmousemove");
-  ptR_selectedElement.removeAttributeNS(null, "onmouseout");
-  ptR_selectedElement.removeAttributeNS(null, "onmouseup");
-  ptR_selectedElement = 0;
-  
+      var dxy=[ movedByX, movedByY];
+      console.log(JSON.stringify(dxy ));
+      //var tid = ptR_selectedElement.getAttribute("tid");
+      
+    //var currentMatrixAsString="c(" + ptR_currentMatrix.join(",") + ")";
+    //var trans=[movedByX,movedBy]; // return the translation
+    //var tid = ptR_selectedElement.getAttribute("tid");
+    
+    //var dxy="c(" + movedByX + "," + movedByY + ")";
+    //var chosen=["transGrp", dxy, tid];
+    //Shiny.onInputChange("mouseMssg",chosen);
+    Shiny.onInputChange("mouseMssg",
+      {
+        cmd: "transGrp",
+        vec: [movedByX, movedByY],
+        id : this.selectedElement.getAttribute("tid")
+      }
+    );
+    this.selectedElement.removeAttributeNS(null, "onmousemove");
+    this.selectedElement.removeAttributeNS(null, "onmouseout");
+    this.selectedElement.removeAttributeNS(null, "onmouseup");
+    this.selectedElement = 0;
+    
   }
-}
+};
+
+
+
+var ptRPlotter_ptR_SVG_TagDrag = new PtRPanelTagDrag("ptR_SVG_TagDrag");
+
+
+
 
