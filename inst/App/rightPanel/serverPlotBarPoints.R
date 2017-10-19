@@ -57,7 +57,14 @@ pointInfoList<-callModule( #auto  input, output, session
 
 #-----REACTIVES   based on modulePointsBar::pointInfoList
 
-showGrid<-reactive({pointInfoList$showGrid()})
+observeEvent(pointInfoList$showGrid() ,{
+  if(rightPanel()=="Points"){
+    displayOptions$showGrid<-pointInfoList$showGrid() 
+  }
+})
+
+
+
 displayMode<-reactive({pointInfoList$displayMode()})
 insertMode<-reactive({pointInfoList$insertMode() })
 
@@ -142,11 +149,12 @@ observeEvent( pointInfoList$removePt(), {
         # src<-df2Source(src,tagList)
       }
     }
-    newPtDefs<-list(pts=ptRList, df= tagRList )  
-    updateAceExtDef(newPtDefs, sender)
+    newPtDefs<-list(pts=ptRList, df= tagRList )
+    sender='points.deletePoint'
+    updateAceExtDef(newPtDefs, sender=sender)
     # setCode(src) #!!!
   }
-})
+}) #end remove point observer
 
 #----begin for Tagging-------------------------------------
 
@@ -168,10 +176,7 @@ modalFreq <- function(failed = FALSE) {
   ) 
 }
 
-
-
-# When OK button is pressed, 
-
+# When okTag button of modalFreq isis pressed, 
 observeEvent(input$okTag, { #move into module???
   #covers the two cases
   # 1. tagR list not there, add tagR list, selection and insert 
@@ -201,24 +206,15 @@ observeEvent(input$okTag, { #move into module???
       tags<-unique(c(1,point.index))
     }
   }
-  df<-data.frame(tag=tags) #creates a data frme with tags entry
+  df<-data.frame(tag=tags) #creates a data frame with tags entry
   if(is.null(dfList) ){ # 1 if dfList is NULL, create new
     dfList= structure( list( df) , names=selection )
-    # replacement<-paste0("\n\n", formatDFDefs(dfList),"\n\n")
-    # src<-getCode() 
-    # pos<-getDefPos(src, "ptR")     
-    # src<-paste0( substr(src, 1, pos[2]), replacement,  
-    #              substr(src, pos[2]+1, nchar(src))) 
-    # setCode(src) #!!!
   } else {
     dfList[[selection]]<-df
-        
-    # setCode(src) #!!!
   }
   #src<-getCode()
   newPtDef<-list(pts=ptsList, df= dfList )
   replacementList<-ptDef2ReplacementList(newPtDef, src)
-  #src<-df2Source(src,dfList) #insert points into src
   
   if( length(replacementList)>0 ){
     session$sendCustomMessage(
@@ -226,11 +222,12 @@ observeEvent(input$okTag, { #move into module???
       list(id= "source", replacement=replacementList, sender='tag.pt.button', ok=1)
     )
   }
-  
-  
-})
+}) #end of okTag button press
+
+
 
 #---TAG THIS POINT button-----
+# note: in 1st tag, calls freqModal to complete the work, which exits in the okTag above
 observeEvent( pointInfoList$tagPt(), {
   #There are 3 distinct cases: 
   # 1. tagR list not there, add tagR list, selection and insert 
@@ -280,7 +277,10 @@ observeEvent( pointInfoList$tagPt(), {
       }
     }
   } #end of if
-})
+}) #end of point InfoList Tag Point, 
+
+
+
 # ===============END SERVER Module PointsBar=======================
 
 
