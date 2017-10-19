@@ -213,23 +213,24 @@ Shiny.addCustomMessageHandler(
            //console.log("After replacement ud.$undoStack.length=" + 
            //  editor.getSession().getUndoManager().$undoStack.length);
            
-          
+          setTimeout( function(){
+             editor.getSession().getUndoManager().setOk();
+              console.log("replacement: After setOk, ok=" + JSON.stringify(editor.getSession().getUndoManager().$ok));
+              console.log('replacement fin: editor.getSession().getUndoManager()$undoStack.length=' + 
+                    editor.getSession().getUndoManager().$undoStack.length);
+              console.log('replacement fin: editor.getUndoManager()getSession().$ok=' + 
+                    JSON.stringify(editor.getSession().getUndoManager().$ok));
+              console.log('replacement fin: sender=' + data.sender);     
+              Shiny.onInputChange('messageFromAce', 
+              {
+                 code : editor.getSession().getValue(),
+                 sender : data.sender,
+                 dirty: editor.getSession().getUndoManager().dirtyCounter,
+                 rnd : randomString(5)
+              } );   
+          }, 5 );
           //var lang = ace.require("ace/lib/lang");
           //lang.delayedCall(editor.getSession().getUndoManager().setOk());
-          editor.getSession().getUndoManager().setOk();
-          console.log("After setOk, ok=" + JSON.stringify(editor.getSession().getUndoManager().$ok));
-          console.log('replacement fin: editor.getSession().getUndoManager()$undoStack.length=' + 
-                editor.getSession().getUndoManager().$undoStack.length);
-          console.log('replacement fin: editor.getUndoManager()getSession().$ok=' + 
-                JSON.stringify(editor.getSession().getUndoManager().$ok));
-          console.log('replacement fin: sender=' + data.sender);     
-          Shiny.onInputChange('messageFromAce', 
-          {
-             code : editor.getSession().getValue(),
-             sender : data.sender,
-             dirty: editor.getSession().getUndoManager().dirtyCounter,
-             rnd : randomString(5)
-          } );   
           
           
           }        

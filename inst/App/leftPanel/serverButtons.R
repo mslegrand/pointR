@@ -46,10 +46,12 @@ observe({
   isolate(
     {
     #cat("cmd.commit")
-    session$sendCustomMessage(
-      type = "shinyAceExt",
-      list(id= "source", sender='cmd.commit', getValue=TRUE)
-    )
+    sender='cmd.commit'
+    triggerRefresh(sender, rollBack=FALSE)
+    # session$sendCustomMessage(
+    #   type = "shinyAceExt",
+    #   list(id= "source", sender='cmd.commit', getValue=TRUE)
+    # )
   })
 })
 
@@ -108,9 +110,10 @@ processCommit<-reactive({
           updateRightPanel("Points")
         } 
         #remove all removeAllMarkers from ace since all sys go.
+        cat('\nShould be updating here\n')
         session$sendCustomMessage(
-          type = "shinyAceExt", 
-          list(id= "source", removeAllMarkers='removeAllMarkers', setOk=TRUE)
+          type = "shinyAceExt",
+          list(id= "source", removeAllMarkers='removeAllMarkers', sender='commit.removeMarkers', setOk=TRUE)
         )
         #editOption$.saved<-FALSE # !!! soon to be obsolete!!!
       }, #end of try
@@ -128,7 +131,7 @@ processCommit<-reactive({
             col=as.numeric(m[3])-1
             session$sendCustomMessage(
               type = "shinyAceExt", 
-              list(id= "source", addMarker=c(row,col))
+              list(id= "source", addMarker=c(row,col), sender='commit.addmarker')
             )
           }
         }
@@ -141,7 +144,7 @@ processCommit<-reactive({
             col<-1
             session$sendCustomMessage(
               type = "shinyAceExt", 
-              list(id= "source", addMarker=c(row,col))
+              list(id= "source", addMarker=c(row,col), sender='commit.addmarker')
             )
           }
         }

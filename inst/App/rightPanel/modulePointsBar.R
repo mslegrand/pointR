@@ -55,19 +55,29 @@ modulePointsBar<-function(
   getIndx<-reactive({point.indx})
   output$indx<-renderText({ getIndx() })
   
+  triggerRefresh<-function(sender, rollBack=TRUE){ # to be used to force a code refresh???
+    session$sendCustomMessage(
+      type = "shinyAceExt",
+      list(id= "source", sender=sender, getValue=TRUE, rollBack=rollBack)
+    )
+  }
+  
+  # !!! Unclear what this observer is ablout
   observe({ # updates name when changing points using mouse
     if(identical( barName(), 'Points')){
-      session$sendCustomMessage(
-        type = "shinyAceExt",
-        list(id= "source", sender='cmd.commit', getValue=TRUE)
-      )
-      ptRList<-getPtDefs()$pts #trigger is name or index
+      sender=paste0(barName(),'.point')
+      triggerRefresh(sender, rollBack=TRUE)
+      # session$sendCustomMessage(
+      #   type = "shinyAceExt",
+      #   list(id= "source", sender=sender, getValue=TRUE)
+      # )
+      ptRList<-getPtDefs()$pts #
       if(length(names(ptRList))==0){
         hideElement( headerId )
       } else {
         showElement( headerId)
       }
-      res<-getSelectInfo()
+      res<-getSelectInfo() # triggerd by changes for getPtName, getPtIndex. getPtDefs
       result$point.index<-res$point.index
       updateSelectInput(session, "name",
                         choices=names(ptRList),
@@ -104,10 +114,7 @@ modulePointsBar<-function(
   #   }
   # )
   
-  
-  
-  
-  
+ 
   #---selected point forward button-----
   observeEvent(input$forwardPt,{
     selection<-input$name
