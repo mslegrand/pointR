@@ -10,7 +10,8 @@
 
 getCodeTransform<-reactive({
   src<-getCode()
-  src<-usingDraggable(src)
+  cat("input$transformOption=",input$transformOption,"\n")
+  src<-usingDraggable(src, input$transformOption)
 })
 
 

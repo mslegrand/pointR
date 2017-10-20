@@ -51,11 +51,18 @@ stop.unless<-function(expr, mssg){
 # detects transforms with draggable and 
 # returns a modified copy of txt with
 # tid for the Draggable
-usingDraggable<-function(txt){
-
+usingDraggable<-function(txt, transformOption){
+  if(transformOption=='Scale'){
+    onMouseDownTxt = "', onmousedown='ptRPlotter_ptR_SVG_TRANSFORM_SCALE.selectElement(evt)'"
+  } else if(transformOption=='Rotate'){
+    onMouseDownTxt = "', onmousedown='ptRPlotter_ptR_SVG_TRANSFORM_ROTATE.selectElement(evt)'"
+  }else{
+    onMouseDownTxt= "', onmousedown='selectElement(evt)'"
+  }
+  cat(onMouseDownTxt,"\n")
   ep<-parse(text=txt)
   df<-getParseData(ep)
-   
+  
   drag<-subset(df, text %in% c('"draggable"', "'draggable'"))
   pDrag<-subset(df, id %in% drag$parent) 
   gpDrag<-pDrag$parent
@@ -87,7 +94,7 @@ usingDraggable<-function(txt){
     list(id=i, 
          row=as.numeric(x$line2), 
          pos=as.numeric(x$col2), 
-         txt=paste0(", tid='",tr.id[[as.character(i)]], "', onmousedown='selectElement(evt)'")) 
+         txt=paste0(", tid='",tr.id[[as.character(i)]], onMouseDownTxt )) 
   })
   
   

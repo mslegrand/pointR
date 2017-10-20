@@ -164,8 +164,10 @@ observe({
         
         #-------transformations of nodes marked as class 'movable'
         if(cmd=='rotate'){ # ----rotate
+          cat("cmd=rotate\n")
           tid<-input$mouseMssg$id
-          #vec<-input$mouseMssg$vec
+          vec<-input$mouseMssg$vec
+          cat("\nvec=c(",paste(vec,collapse=", "),")\n")
           #trDefDelta<-formatC(eval(parse(text=tmp)))
           #trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2)" ) 
           trDefDelta2<-paste0("matrix(c(",paste0(vec,collapse=", "), "),2)" ) 
@@ -179,8 +181,11 @@ observe({
         
         #-------transformations of nodes marked as class 'movable'
         if(cmd=='scale'){ # ----scale
+          cat("cmd=scale\n")
           tid<-input$mouseMssg$id
-          #vec<-input$mouseMssg$vec
+          vec<-input$mouseMssg$vec
+          cat("\nvec=c(",paste(vec,collapse=", "),")\n")
+          #browser()
           #trDefDelta<-formatC(eval(parse(text=tmp)))
           #trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2)" ) 
           trDefDelta2<-paste0("matrix(c(",paste0(vec,collapse=", "), "),2)" ) 

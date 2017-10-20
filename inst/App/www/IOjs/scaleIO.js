@@ -1,123 +1,146 @@
 // scales an element
-// var chosen =[];
-// var movedTo=[];
 
-var ptR_selectedElement = 0;
-var ptR_currentMatrix   = 0;
+function PtRPanelScale(svgId){ //currently svgId is not used here
+  this.svg=document.querySelector("#" + svgId); 
+  this.svgId=svgId +"_SCALE";
+  this.selectedElement = 0;
+  this.currentX = 0;
+  this.currentY = 0;
+  this.origX = 0;
+  this.origY = 0;
+  
+  this.cxy = this.svg.createSVGPoint(); 
+  this.WH = this.svg.createSVGPoint(); 
+  this.ptQ = this.svg.createSVGPoint(); 
+  this.originalCTM = this.svg.createSVGMatrix();
+  this.currentMatrix = 0;
+}
 
-var ptR_svg = document.querySelector("#ptR_SVG_TRANSFORM");
-var ptR_cxy = ptR_svg.createSVGPoint();  //center of shape
-var ptR_WH = ptR_svg.createSVGPoint();  //center of shape
-var ptR_ptQ  = ptR_svg.createSVGPoint(); //original pt
-var ptR_originalCTM=ptR_svg.createSVGMatrix();
 
-function cursorPoint(evt){
-  var tmp=ptR_svg.createSVGPoint();
+//var ptR_svg = document.querySelector("#ptR_SVG_TRANSFORM");
+//var ptR_cxy = ptR_svg.createSVGPoint();  //center of shape
+//var ptR_WH = ptR_svg.createSVGPoint();  //center of shape
+//var ptR_ptQ  = ptR_svg.createSVGPoint(); //original pt
+//var ptR_originalCTM=ptR_svg.createSVGMatrix();
+
+
+PtRPanelScale.prototype.cursorPoint =  function(evt){
+  var tmp=this.svg.createSVGPoint();
   tmp.x = evt.clientX; tmp.y = evt.clientY;
-  return tmp.matrixTransform(ptR_svg.getScreenCTM().inverse());
-}
+  return tmp.matrixTransform(this.svg.getScreenCTM().inverse());
+};
 
-function dot(v1,v2){
+PtRPanelScale.prototype.dot =  function(v1,v2){
         return v1.x * v2.x + v1.y * v2.y;
-}
+};
 
-function length(v){
-  return Math.sqrt(dot(v,v));
-}
+PtRPanelScale.prototype.length =  function(v){
+  return Math.sqrt(this.dot(v,v));
+};
 
-function diff(u,v){
-  var tmp=ptR_svg.createSVGPoint();
+PtRPanelScale.prototype.diff =  function(u,v){
+  var tmp=this.svg.createSVGPoint();
   tmp.x = u.x - v.x; 
   tmp.y = u.y - v.y;
   return tmp;
-}
+};
 
-function scaleM( cxy, q, p){
-  var m=ptR_svg.createSVGMatrix();
+PtRPanelScale.prototype.scaleM =  function( cxy, q, p){
+  var m=this.svg.createSVGMatrix();
   //first set to identity
   m.a=1; m.b=0; m.c=0; m.d=1; m.e=0; m.f=0; 
   
-  var delta=diff(p,q); 
+  var delta=this.diff(p,q); 
   
-  m.a= 1 + 2*delta.x/ptR_WH.x;
+  m.a= 1 + 2*delta.x/this.WH.x;
   m.e= cxy.x * (1-m.a);
-  m.d= 1 + 2*delta.y/ptR_WH.y;
+  m.d= 1 + 2*delta.y/this.WH.y;
   m.f= cxy.y * (1-m.d);
   
   return m;
-}
-
+};
 
 // selectElement 
-function selectElement(evt) {
-  ptR_selectedElement = evt.currentTarget;
-    
-  ptR_originalCTM=ptR_selectedElement.getCTM();
+PtRPanelScale.prototype.selectElement = function(evt) {
+  var pth = "ptRPlotter_"+this.svgId;
+  console.log("pth = " + JSON.stringify(pth));
+  console.log("evt = " + JSON.stringify(evt));
+  
+  
+  this.selectedElement = evt.currentTarget;
+  console.log("this.selectedElement = " + JSON.stringify(this.selectedElement)); 
+  
+  this.originalCTM=this.selectedElement.getCTM();
   
   // extract cxy
-  var bbBox = ptR_selectedElement.getBBox();
-  ptR_WH.x=bbBox.width;
-  ptR_WH.y=bbBox.height;
-  ptR_cxy.x= bbBox.x+bbBox.width/2;
-  ptR_cxy.y= bbBox.y+bbBox.height/2;
-  ptR_cxy=ptR_cxy.matrixTransform(ptR_originalCTM);
+  var bbBox = this.selectedElement.getBBox();
+  this.WH.x=bbBox.width;
+  this.WH.y=bbBox.height;
+  this.cxy.x= bbBox.x+bbBox.width/2;
+  this.cxy.y= bbBox.y+bbBox.height/2;
+  this.cxy=this.cxy.matrixTransform(this.originalCTM);
   // check
-  ptR_ptQ=cursorPoint(evt);
-  ptR_ptQ=diff(ptR_ptQ,ptR_cxy);
-  ptR_ptQ.x=Math.abs(ptR_ptQ.x);
-  ptR_ptQ.y=Math.abs(ptR_ptQ.y);
-  var lenut = length(ptR_ptQ);
+  this.ptQ=this.cursorPoint(evt);
+  this.ptQ=this.diff(this.ptQ,this.cxy);
+  this.ptQ.x=Math.abs(this.ptQ.x);
+  this.ptQ.y=Math.abs(this.ptQ.y);
+  var lenut = this.length(this.ptQ);
   if( lenut < 0.001 ){ //not too close
-    ptR_selectedElement=0;
+    this.selectedElement=0;
     return;
   }
   
   
   
   //add eventattrs to element
-  ptR_selectedElement.parentNode.appendChild( ptR_selectedElement ); //brings to top
-  ptR_selectedElement.setAttributeNS(null, "onmousemove", "moveElement(evt)");
-  ptR_selectedElement.setAttributeNS(null, "onmouseout", "deselectElement(evt)");
-  ptR_selectedElement.setAttributeNS(null, "onmouseup",  "deselectElement(evt)");
-}
+  this.selectedElement.parentNode.appendChild( this.selectedElement ); //brings to top
+  this.selectedElement.setAttributeNS(null, "onmousemove", pth + ".moveElement(evt)");
+  this.selectedElement.setAttributeNS(null, "onmouseout", pth + ".deselectElement(evt)");
+  this.selectedElement.setAttributeNS(null, "onmouseup",  pth + ".deselectElement(evt)");
+};
+
 
 // translation of an element
-function moveElement(evt) {
-  if(ptR_selectedElement!==0){ // this shouldn"t be necessary 
-    var ptP = cursorPoint(evt);
-    ptP =  diff(ptP, ptR_cxy);
+PtRPanelScale.prototype.moveElement = function(evt) {
+  if(this.selectedElement!==0){ // this shouldn"t be necessary 
+    var ptP = this.cursorPoint(evt);
+    ptP =  this.diff(ptP, this.cxy);
     ptP.x= Math.abs(ptP.x);
     ptP.y= Math.abs(ptP.y);
-    var lenvt = length(ptP);
+    var lenvt = this.length(ptP);
     if( lenvt < 0.001 ){ //not too close
       return;
     }
-    var scaleMatrix=scaleM( ptR_cxy, ptR_ptQ, ptP );
-    var ctm=scaleMatrix.multiply(ptR_originalCTM );
-    ptR_currentMatrix=[ctm.a, ctm.b, ctm.c, ctm.d, ctm.e, ctm.f];
-    ptR_selectedElement.setAttributeNS(null, "transform", "matrix(" + ptR_currentMatrix.join(" ") + ")");   
+    var scaleMatrix=this.scaleM( this.cxy, this.ptQ, ptP );
+    var ctm=scaleMatrix.multiply(this.originalCTM );
+    this.currentMatrix=[ctm.a, ctm.b, ctm.c, ctm.d, ctm.e, ctm.f];
+    this.selectedElement.setAttributeNS(null, "transform", "matrix(" + this.currentMatrix.join(" ") + ")");   
   }
   
-}
+};
 
 // deselect that element
-function deselectElement(evt) {
-  if(ptR_selectedElement !== 0){
-    var tid = ptR_selectedElement.getAttribute("tid");    
-    var currentMatrixAsString="c(" + ptR_currentMatrix.join(",") + ")";    
-    var chosen=["scale", currentMatrixAsString, tid];
-    //Shiny.onInputChange("mouseMssg",chosen);   
+PtRPanelScale.prototype.deselectElement = function(evt) {
+  if(this.selectedElement !== 0){
+    var tid = this.selectedElement.getAttribute("tid"); 
+    
+    // var currentMatrixAsString="c(" + this.currentMatrix.join(",") + ")";    
+    // var chosen=["scale", currentMatrixAsString, tid];
+    // Shiny.onInputChange("mouseMssg",chosen);   
     
     Shiny.onInputChange("mouseMssg",
     {
       cmd: "scale",
-      vec: ptR_currentMatrix,
+      vec: this.currentMatrix,
       id: tid
     });
     
-    ptR_selectedElement.removeAttributeNS(null, "onmousemove");
-    ptR_selectedElement.removeAttributeNS(null, "onmouseout");
-    ptR_selectedElement.removeAttributeNS(null, "onmouseup");
-    ptR_selectedElement = 0;
+    this.selectedElement.removeAttributeNS(null, "onmousemove");
+    this.selectedElement.removeAttributeNS(null, "onmouseout");
+    this.selectedElement.removeAttributeNS(null, "onmouseup");
+    this.selectedElement = 0;
   }
-}
+};
+
+var ptRPlotter_ptR_SVG_TRANSFORM_SCALE = new PtRPanelScale("ptR_SVG_TRANSFORM");
+
