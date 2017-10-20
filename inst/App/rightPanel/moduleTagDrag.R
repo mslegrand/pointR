@@ -49,9 +49,7 @@ moduleTagDrag<-function(input, output, session,
   observe({ #update the name 
     if(identical( barName(), 'tagDrag')){
       tagNameChoices<-getTagNameChoices() 
-      cat("length(tagNameChoices)=", length(tagNameChoices), "\n")
       tagName<-getTagName()
-      cat("tagName=", tagName, "\n")
       updateSelectInput(session, "name", 
         choices=tagNameChoices, 
         selected=tagName)

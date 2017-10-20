@@ -51,7 +51,6 @@ observe({
       cmd<-input$mouseMssg$cmd
       if(length(input$mouseMssg$vec)>0){
         vec<- unlist(input$mouseMssg$vec)
-        cat('cmd=',cmd,"\nvec=c(", paste(vec, collapse=","), ")\n")
       }
       src<-getCode()
       
@@ -94,10 +93,6 @@ observe({
         sender='tagDrag.mouse'
         if(cmd=='transGrp'){ # -- move tagged group (from tagDrag)
           tid<-input$mouseMssg$id
-          #selectedPoint$point.index<-tid
-          cat('transGrp\n')
-          print(tid)
-          #pt<-input$mouseMssg$pt
           vec<- input$mouseMssg$vec
           dxy<-unlist(vec) #eval(parse(text=tmp))
           print(dxy)
@@ -109,7 +104,6 @@ observe({
           pts<-getPtDefs()$pts[[ptName]] #ptRList[[ptName]]
           tagRList<-getPtDefs()$df
           tag.indx<-getPtIndex() #as.numeric(tagDragInfoList$index() ) #!!! tagIndx2 should be replaced with a safer alternative
-          #browser()
           ptTags<-getPtDefs()$df[[ptName]]
           if( !is.null(tag.indx) && !is.null(ptTags)){
             tags<-ptTags$tag
@@ -132,14 +126,11 @@ observe({
         sender='tagVal.mouse'
         if(cmd=='tagValSelect'){ # -- move tagged group (from tagDrag)
           tid<-input$mouseMssg$id
-          cat(paste0("tid=", tid, "\n"))
           tag.index<-tail(str_split(tid, "_")[[1]],1)
-          cat("tag.index=",tag.index,"\n")
           tag.index<-as.integer(tag.index)
           tagIndices<-getTagIndexChoices()
          
           point.index<-tagIndices[tag.index]
-          cat(paste0("point.index=", point.index, "\n"))
           selectedPoint$point.index<-point.index
         }
       }
@@ -149,11 +140,7 @@ observe({
         sender=paste0(barName, '.mouse')
         if(cmd=='trans'){ # -- translate the object by id
           tid<-input$mouseMssg$id
-          #vec<-input$mouseMssg$vec
-          #trDefDelta<-formatC(eval(parse(text=tmp)))
-          #trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2)" ) 
           trDefDelta2<-paste0("matrix(c(",paste0(vec,collapse=", "), "),2)" ) 
-          #src<-tr2src( src, tid, trDefDelta2 ) # !!! REPLACE
           pos<-tid2replacementCoord(tid)
           replacementList<-list(list(rng=pos, txt= trDefDelta2))
           session$sendCustomMessage(
@@ -164,12 +151,8 @@ observe({
         
         #-------transformations of nodes marked as class 'movable'
         if(cmd=='rotate'){ # ----rotate
-          cat("cmd=rotate\n")
           tid<-input$mouseMssg$id
           vec<-input$mouseMssg$vec
-          cat("\nvec=c(",paste(vec,collapse=", "),")\n")
-          #trDefDelta<-formatC(eval(parse(text=tmp)))
-          #trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2)" ) 
           trDefDelta2<-paste0("matrix(c(",paste0(vec,collapse=", "), "),2)" ) 
           pos<-tid2replacementCoord(tid)
           replacementList<-list(list(rng=pos, txt= trDefDelta2))
@@ -181,13 +164,8 @@ observe({
         
         #-------transformations of nodes marked as class 'movable'
         if(cmd=='scale'){ # ----scale
-          cat("cmd=scale\n")
           tid<-input$mouseMssg$id
           vec<-input$mouseMssg$vec
-          cat("\nvec=c(",paste(vec,collapse=", "),")\n")
-          #browser()
-          #trDefDelta<-formatC(eval(parse(text=tmp)))
-          #trDefDelta2<-paste0("matrix(c(",paste0(trDefDelta,collapse=", "), "),2)" ) 
           trDefDelta2<-paste0("matrix(c(",paste0(vec,collapse=", "), "),2)" ) 
           pos<-tid2replacementCoord(tid)
           replacementList<-list(list(rng=pos, txt= trDefDelta2))
@@ -197,20 +175,6 @@ observe({
           )
         }
       }
-      
-      # update internal user source
-      #setCode(src) # !!! REPLACE with the below
-      #print(str(replacementList))
-      
-      # if( length(replacementList)>0 ){
-      #   session$sendCustomMessage(
-      #     type = "shinyAceExt",
-      #     list(id= "source", replacement=replacementList, sender='mouse.ptr', ok=1)
-      #   )
-      # }
-      #triggerRefresh('ptr.mouse',1)
-      #request$refresh=runif(1, min = 1, max = 2) # trigger refresh
-      # update current editor
       
     }
   })

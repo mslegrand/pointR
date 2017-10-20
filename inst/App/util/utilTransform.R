@@ -59,7 +59,7 @@ usingDraggable<-function(txt, transformOption){
   }else{
     onMouseDownTxt = "', onmousedown='ptRPlotter_ptR_SVG_TRANSFORM_TRANSLATE.selectElement(evt)'"
   }
-  cat(onMouseDownTxt,"\n")
+  
   ep<-parse(text=txt)
   df<-getParseData(ep)
   
