@@ -1,15 +1,3 @@
-// moves an element 
-
-// var chosen =[];
-// var movedTo=[];
-/*
-var ptR_selectedElement = 0;
-var ptR_currentX = 0;
-var ptR_currentY = 0;
-var ptR_origX = 0;
-var ptR_origY = 0;
-var ptR_currentMatrix = 0;
-*/
 
 function PtRPanelTagDrag(svgId){ //currently svgId is not used here
   this.selectedElement = 0;

@@ -57,7 +57,7 @@ usingDraggable<-function(txt, transformOption){
   } else if(transformOption=='Rotate'){
     onMouseDownTxt = "', onmousedown='ptRPlotter_ptR_SVG_TRANSFORM_ROTATE.selectElement(evt)'"
   }else{
-    onMouseDownTxt= "', onmousedown='selectElement(evt)'"
+    onMouseDownTxt = "', onmousedown='ptRPlotter_ptR_SVG_TRANSFORM_TRANSLATE.selectElement(evt)'"
   }
   cat(onMouseDownTxt,"\n")
   ep<-parse(text=txt)

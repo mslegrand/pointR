@@ -17,11 +17,6 @@ function PtRPanelScale(svgId){ //currently svgId is not used here
 }
 
 
-//var ptR_svg = document.querySelector("#ptR_SVG_TRANSFORM");
-//var ptR_cxy = ptR_svg.createSVGPoint();  //center of shape
-//var ptR_WH = ptR_svg.createSVGPoint();  //center of shape
-//var ptR_ptQ  = ptR_svg.createSVGPoint(); //original pt
-//var ptR_originalCTM=ptR_svg.createSVGMatrix();
 
 
 PtRPanelScale.prototype.cursorPoint =  function(evt){
@@ -63,12 +58,9 @@ PtRPanelScale.prototype.scaleM =  function( cxy, q, p){
 // selectElement 
 PtRPanelScale.prototype.selectElement = function(evt) {
   var pth = "ptRPlotter_"+this.svgId;
-  console.log("pth = " + JSON.stringify(pth));
-  console.log("evt = " + JSON.stringify(evt));
-  
-  
+   
   this.selectedElement = evt.currentTarget;
-  console.log("this.selectedElement = " + JSON.stringify(this.selectedElement)); 
+  
   
   this.originalCTM=this.selectedElement.getCTM();
   
