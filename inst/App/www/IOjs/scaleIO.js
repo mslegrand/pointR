@@ -115,11 +115,7 @@ PtRPanelScale.prototype.moveElement = function(evt) {
 PtRPanelScale.prototype.deselectElement = function(evt) {
   if(this.selectedElement !== 0){
     var tid = this.selectedElement.getAttribute("tid"); 
-    
-    // var currentMatrixAsString="c(" + this.currentMatrix.join(",") + ")";    
-    // var chosen=["scale", currentMatrixAsString, tid];
-    // Shiny.onInputChange("mouseMssg",chosen);   
-    
+
     Shiny.onInputChange("mouseMssg",
     {
       cmd: "scale",

@@ -1,5 +1,3 @@
-// var chosen =[];
-// var movedTo=[];
 
 function PtRPanelRotate(svgId){ //currently svgId is not used here
   this.svg=document.querySelector("#" + svgId); 

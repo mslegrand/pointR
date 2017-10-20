@@ -1,7 +1,4 @@
-// moves an element 
 
-// var chosen =[];
-// var movedTo=[];
 function PtRPanelTranslate(svgId){ //currently svgId is not used here
   this.svg=document.querySelector("#" + svgId); 
   this.svgId=svgId +"_TRANSLATE";
@@ -10,20 +7,10 @@ function PtRPanelTranslate(svgId){ //currently svgId is not used here
   this.currentY = 0;
   this.origX = 0;
   this.origY = 0;
-  
-  //this.cxy = this.svg.createSVGPoint(); 
-  //this.WH = this.svg.createSVGPoint(); 
-  //this.ptQ = this.svg.createSVGPoint(); 
-  //this.originalCTM = this.svg.createSVGMatrix();
+
   this.currentMatrix = 0;
 }
 
-
-
-// var ptR_svg = document.querySelector("svg"); // make this into 1 line???
-// var pt  = ptR_svg.createSVGPoint();
-
-//TRANSFORM
 
 // selectElement 
 PtRPanelTranslate.prototype.selectElement = function(evt) {
@@ -65,11 +52,6 @@ PtRPanelTranslate.prototype.deselectElement = function(evt) {
     var movedByX = evt.clientX - this.origX;
     var movedByY = evt.clientY - this.origY;
     
-    //var tid = this.selectedElement.getAttribute("tid");
-    
-    //var currentMatrixAsString="c(" + this.currentMatrix.join(",") + ")";
-    //var chosen=["trans", currentMatrixAsString, tid];
-    //Shiny.onInputChange("mouseMssg",chosen);
     Shiny.onInputChange("mouseMssg",{
       cmd: "trans",
       vec: this.currentMatrix, 
