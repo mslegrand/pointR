@@ -22,18 +22,6 @@ PtRPanelTagVal.prototype.selectElement = function (evt) {
   // deselect that element
 PtRPanelTagVal.prototype.deselectElement =  function (evt) {
   if(this.selectedElement !== 0){
-    //  alert("selectedElement");
-    
-    
-    //var tid = ptR_selectedElement.getAttribute("tid");
-      
-    //var currentMatrixAsString="c(" + ptR_currentMatrix.join(",") + ")";
-    //var trans=[movedByX,movedBy]; // return the translation
-    //var tid = ptR_selectedElement.getAttribute("tid");
-    
-    //var dxy="c(" + movedByX + "," + movedByY + ")";
-    //var chosen=["transGrp", dxy, tid];
-    //Shiny.onInputChange("mouseMssg",chosen);
     Shiny.onInputChange("mouseMssg",
       {
         cmd: "tagValSelect",

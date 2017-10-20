@@ -18,16 +18,11 @@ tagDragInfoList<-callModule(
 observe({
   name<-tagDragInfoList$name()
   index<-tagDragInfoList$index()
-  cat("\n TagDrag: rightPanel()=", rightPanel(),"\n")
   if(rightPanel()=="tagDrag"){
     isolate({
-      cat(' \ntagDragInfoList$name()  tagDragInfoList$index()\n')
-      cat('length of name = ', length(name),"\n")
       if(!is.null(name) && !is.null(index)){
         selectedPoint$name<-name
         selectedPoint$point.index<-as.numeric(index)
-        cat('name=',name,"\n")
-        cat('index=', index,"\n")
       }
     })  
   }
@@ -37,7 +32,6 @@ observeEvent(
   tagDragInfoList$tagClone(),
   {
     if(rightPanel()=="tagDrag"){
-      cat(' tagDragInfoList$tagClone() \n')
       name<-tagDragInfoList$name()
       index<-tagDragInfoList$index()
       ptRList<-getPtDefs()$pts
@@ -81,7 +75,6 @@ observeEvent(
   tagDragInfoList$tagDelete(),
   {
     if(rightPanel()=="tagDrag"){
-      cat(' tagDragInfoList$tagDelete() \n')
       name<-    tagDragInfoList$name()
       index<-   tagDragInfoList$index()
       ptRList<- getPtDefs()$pts

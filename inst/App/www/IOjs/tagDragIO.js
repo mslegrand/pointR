@@ -49,22 +49,14 @@ PtRPanelTagDrag.prototype.moveElement = function (evt) {
   // deselect that element
 PtRPanelTagDrag.prototype.deselectElement =  function (evt) {
   if(this.selectedElement !== 0){
-    //  alert("selectedElement");
+    
     
     var movedByX = evt.clientX - this.origX;
     var movedByY = evt.clientY - this.origY;
   
-      var dxy=[ movedByX, movedByY];
-      console.log(JSON.stringify(dxy ));
-      //var tid = ptR_selectedElement.getAttribute("tid");
+    var dxy=[ movedByX, movedByY];
       
-    //var currentMatrixAsString="c(" + ptR_currentMatrix.join(",") + ")";
-    //var trans=[movedByX,movedBy]; // return the translation
-    //var tid = ptR_selectedElement.getAttribute("tid");
-    
-    //var dxy="c(" + movedByX + "," + movedByY + ")";
-    //var chosen=["transGrp", dxy, tid];
-    //Shiny.onInputChange("mouseMssg",chosen);
+      
     Shiny.onInputChange("mouseMssg",
       {
         cmd: "transGrp",
