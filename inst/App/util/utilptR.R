@@ -219,7 +219,6 @@ defTag2replace<-function(defTag, defList, txt){
   } else {
     replacementList<-NULL
   }
-  #print(replacementList)
   replacementList
 }
 

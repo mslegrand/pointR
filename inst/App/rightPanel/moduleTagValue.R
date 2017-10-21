@@ -101,7 +101,6 @@ moduleTagVal<-function(input, output, session,
   # 1) input$attrName
   # 2) getTagColChoices() 
   getTagCol<-reactive({  
-    #isolate({print("getTagCol")})
     choices<-getTagColChoices() #grabs from local df
     if(!is.null(localReactive$attribute)){
         tmp<-localReactive$attribute
@@ -120,7 +119,6 @@ moduleTagVal<-function(input, output, session,
   
   #!!! getTagValueVector and getTagValueChoices are identical !!!
   getTagValueChoices<-reactive({
-    #isolate({print("getTagValuesChoices")})
     if(length(getTagCol())>0  &&
       length(getDF)>0){
       getDF()[[getTagCol()]]
@@ -183,7 +181,6 @@ moduleTagVal<-function(input, output, session,
   observe(
     { #tag val selection
     if(identical( barName(), 'tagValues')){
-      #print("inside observe barName")
       tagValueChoices<-getTagValueChoices()
       tagValue<-getTagValue()
       updateSelectInput(session, "attrVal", 
@@ -279,7 +276,6 @@ moduleTagVal<-function(input, output, session,
               tmp<-as.integer(input$index)
               indx<-which(tmp==tags)
               tagValueVec[indx]<-input$modalAttrValue 
-              #isolate({print("update attrName 2")})
               updateSelectInput(session, 
                                 inputId="attrName", #fails to update
                                 selected=modalAttrName)
