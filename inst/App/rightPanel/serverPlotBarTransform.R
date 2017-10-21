@@ -13,13 +13,13 @@ getCodeTransform<-reactive({
   src<-usingDraggable(src, input$transformOption)
 })
 
-
+svgToolsScript
 statusPlotTransform<-callModule(
   module=modulePlotSVGr,
   id="svgTransformMod",
   svgID='ptR_SVG_TRANSFORM',
   showPts.compound=NULL,
-  ptrDisplayScript =reactive({ js.scripts[[ input$transformOption ]] }),
+  ptrDisplayScript =reactive({ svgToolsScript(input$transformOption ) }), #reactive({ js.scripts[[ input$transformOption ]] }),
   getSVGWH,
   showGrid,
   getCode,

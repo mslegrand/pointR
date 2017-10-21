@@ -62,14 +62,14 @@ source("leftPanel/shinyAce4Ptr.R")
 
 defTag<-"ptR"
 
-js.scripts<-list(
-  Points=readFile("www/IOjs/pointsIO.js"),
-  TagVal=readFile("www/IOjs/tagValIO.js"),
-  Translate=readFile("www/IOjs/transIO.js"),
-  Rotate=readFile("www/IOjs/rotIO.js"),
-  Scale=readFile("www/IOjs/scaleIO.js"),
-  TagDrag=readFile("www/IOjs/tagDragIO.js")
-)
+# js.scripts<-list(
+#   Points=readFile("www/IOjs/pointsIO.js"),
+#   TagVal=readFile("www/IOjs/tagValIO.js"),
+#   Translate=readFile("www/IOjs/transIO.js"),
+#   Rotate=readFile("www/IOjs/rotIO.js"),
+#   Scale=readFile("www/IOjs/scaleIO.js"),
+#   TagDrag=readFile("www/IOjs/tagDragIO.js")
+# )
 
 
 #this should be ultimately place in another file

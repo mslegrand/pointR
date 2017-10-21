@@ -74,7 +74,7 @@ PtRPanelTagDrag.prototype.deselectElement =  function (evt) {
 
 
 
-var ptRPlotter_ptR_SVG_TagDrag = new PtRPanelTagDrag("ptR_SVG_TagDrag");
+
 
 
 

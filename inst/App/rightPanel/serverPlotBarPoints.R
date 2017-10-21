@@ -368,7 +368,7 @@ statusPlotPoint<-callModule(
       )
     )
   }),
-  ptrDisplayScript =reactive({ js.scripts[[ "Points"]] }),
+  ptrDisplayScript = reactive({ svgToolsScript( "Points") }), #ptrDisplayScript =reactive({ js.scripts[[ "Points"]] }),
   getSVGWH,
   showGrid,
   getCode,

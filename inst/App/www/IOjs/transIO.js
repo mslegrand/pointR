@@ -65,4 +65,4 @@ PtRPanelTranslate.prototype.deselectElement = function(evt) {
   }
 };
 
-var ptRPlotter_ptR_SVG_TRANSFORM_TRANSLATE = new PtRPanelTranslate("ptR_SVG_TRANSFORM");
+

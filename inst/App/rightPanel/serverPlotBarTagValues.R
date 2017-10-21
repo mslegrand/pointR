@@ -136,7 +136,7 @@ statusPlotTagVal<-callModule(
       ptDisplayMode=getDisplayModeTag(), tags=getTagDF()$tag
     )
   }),
-  ptrDisplayScript = reactive({ js.scripts[[ "TagVal"]]}),
+  ptrDisplayScript = reactive({ svgToolsScript( "TagVal") }), #ptrDisplayScript = reactive({ js.scripts[[ "TagVal"]]}),
   getSVGWH,
   showGrid,
   getCode,

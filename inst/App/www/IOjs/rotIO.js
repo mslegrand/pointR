@@ -133,5 +133,5 @@ PtRPanelRotate.prototype.deselectElement = function(evt) {
   }
 };
 
-var ptRPlotter_ptR_SVG_TRANSFORM_ROTATE = new PtRPanelRotate("ptR_SVG_TRANSFORM");
+
     

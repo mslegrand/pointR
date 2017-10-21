@@ -130,5 +130,5 @@ PtRPanelScale.prototype.deselectElement = function(evt) {
   }
 };
 
-var ptRPlotter_ptR_SVG_TRANSFORM_SCALE = new PtRPanelScale("ptR_SVG_TRANSFORM");
+
 

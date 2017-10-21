@@ -75,5 +75,5 @@ PtRPanelPoints.prototype.deselectPoint = function (evt){
   }              
 };
 
-var ptRPlotter_ptR_SVG_Point = new PtRPanelPoints("ptR_SVG_Point");
+
 

@@ -33,9 +33,13 @@ shinyUI(
         tags$link(rel = "stylesheet", type = "text/css", href ="splitjs/split-pane.css" ),
         tags$link(rel = "stylesheet", type = "text/css", href ="splitjs/split-pane-ptr.css" ),
         tags$link(rel = "stylesheet", type = "text/css", href ="splitjs/split-pane-pretty-frame.css" ),
-        tags$link(rel = 'stylesheet', type = 'text/css', href ="customDMDM.css")
-        
-        
+        tags$link(rel = 'stylesheet', type = 'text/css', href ="customDMDM.css"),
+        tags$script(src = 'IOjs/pointsIO.js' ),
+        tags$script(src = 'IOjs/tagValIO.js' ),
+        tags$script(src = 'IOjs/transIO.js' ),
+        tags$script(src = 'IOjs/rotIO.js' ),
+        tags$script(src = 'IOjs/scaleIO.js' ),
+        tags$script(src = 'IOjs/tagDragIO.js' )
       )
     ),
     div(

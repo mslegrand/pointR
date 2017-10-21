@@ -38,7 +38,7 @@ PtRPanelTagVal.prototype.deselectElement =  function (evt) {
 
 
 
-var ptRPlotter_ptR_SVG_TagVal = new PtRPanelTagVal("ptR_SVG_TagVal");
+
 
 
 
