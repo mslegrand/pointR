@@ -70,7 +70,7 @@ showPts.valTag %<c-% function(ptName, pts,
   colorScheme<-c(default="green", ending="red", selected="blue")
   color<-colorScheme[1]
   m<-matrix(pts,2)
-  onmousedown<-"ptRPlotter_ptR_SVG_TagVal.selectElement(evt)"
+  onMouseDownTxt<-"ptRPlotter_ptR_SVG_TagVal.selectElement(evt)"
   tidPrefix<-"ptR_TagV_"
   
   if( !is.null(tag.indx) && !is.null(tags)){
@@ -90,7 +90,7 @@ showPts.valTag %<c-% function(ptName, pts,
         g( opacity=opacity[i], 
            fill='purple',
            transform="matrix(1 0 0 1 0 0)", 
-           onmousedown=onmousedown,
+           onmousedown=onMouseDownTxt,
            tid=paste0(tidPrefix,i),
            lapply(tagIntList[[i]], function(j){
              list(
@@ -107,7 +107,7 @@ showPts.valTag %<c-% function(ptName, pts,
       g( opacity=opacity[ti], 
          fill='purple',
          transform="matrix(1 0 0 1 0 0)", 
-         onmousedown=onmousedown,
+         onmousedown=onMouseDownTxt,
          tid=paste0(tidPrefix,ti),
          lapply(tagIntList[[ti]], function(j){
            list(

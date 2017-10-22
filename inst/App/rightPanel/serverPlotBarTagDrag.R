@@ -244,9 +244,9 @@ observeEvent(
 #-------------------------------------------
 
 
-  showPts.dragTag %<c-% function(ptName, pts, 
-  selectedPointIndx, ptDisplayMode,  tags=NULL){
-     
+  showPts.dragTag %<c-% function(ptName, pts, selectedPointIndx, ptDisplayMode,  tags=NULL){
+    onMouseDownTxt="ptRPlotter_ptR_SVG_TagDrag.selectElement(evt)" 
+    
     if(length(ptName)<1){return(NULL)}
     if(length(pts)<2)  {return(NULL) }
     if(length(tags)<1){return(NULL)}
@@ -275,7 +275,7 @@ observeEvent(
           g( opacity=opacity[i], 
              fill='purple',
              transform="matrix(1 0 0 1 0 0)", 
-             onmousedown="ptRPlotter_ptR_SVG_TagDrag.selectElement(evt)",
+             onmousedown=onMouseDownTxt,
              tid=paste0("ptR_Tag_",i),
              lapply(tagIntList[[i]], function(j){
                list(
@@ -292,7 +292,7 @@ observeEvent(
         g( opacity=opacity[ti], 
            fill='purple',
            transform="matrix(1 0 0 1 0 0)", 
-           onmousedown="ptRPlotter_ptR_SVG_TagDrag.selectElement(evt)",
+           onmousedown=onMouseDownTxt,
            tid=paste0("ptR_Tag_",ti),
            lapply(tagIntList[[ti]], function(j){
             list(

@@ -293,6 +293,8 @@ observeEvent( pointInfoList$tagPt(), {
       ptName, pts=NULL,  
       selectedPointIndx=NULL, ptDisplayMode="Normal"
   ){
+    onMouseDownTxt='ptRPlotter_ptR_SVG_Point.selectPoint(evt)'
+    
     if(is.null(pts) ){ return(NULL) } 
     if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
     if(length(pts)<2 ){ return(NULL)}
@@ -317,13 +319,17 @@ observeEvent( pointInfoList$tagPt(), {
                  opacity=1,
                  stroke=colorScheme['selected'], stroke.width=3,
                  #transform="matrix(1 0 0 1 0 0)", 
-                 onmousedown="ptRPlotter_ptR_SVG_Point.selectPoint(evt)" )
+                 onmousedown=onMouseDownTxt
+                   #'ptRPlotter_ptR_SVG_Point.selectPoint' #onmousedown 
+                 )
         } else { #a non-selected point
           circle(class="draggable", 
                  id=id,  
                  cxy=pt, r=8, fill=color, opacity=1,
                  #transform="matrix(1 0 0 1 0 0)", 
-                 onmousedown="ptRPlotter_ptR_SVG_Point.selectPoint(evt)" )
+                 onmousedown=onMouseDownTxt
+                   #'ptRPlotter_ptR_SVG_Point.selectPoint' #onemousedown 
+                 )
         },
         if(ptDisplayMode=="Labeled"){
             text(paste(i), cxy=pt+10*c(1,-1),  
@@ -342,11 +348,13 @@ observeEvent( pointInfoList$tagPt(), {
 #===============
 
 
-
+# !!! todo: recode onmousedown.newPt
 newPtLayer %<c-% function(insert, wh=c(1200,800)){
   if(insert==TRUE){
+    onmousedownNewPt="ptRPlotter_ptR_SVG_Point.newPoint(evt)"
     rect(xy=c(0,0), wh=wh, fill="#ADADFF", stroke='black', 
-         opacity=.0, onmousedown="ptRPlotter_ptR_SVG_Point.newPoint(evt)")
+         opacity=.0, onmousedown=onmousedownNewPt)
+           #"ptRPlotter_ptR_SVG_Point.newPoint(evt)")
   } else {
     NULL
   } 

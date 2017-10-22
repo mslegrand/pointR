@@ -259,6 +259,37 @@ ptDef2ReplacementList<-function(newPtDef, txt){
   replacementList
 }
 
+
+panel2svgid<-function(panelName){
+  prefix2<-'ptR_SVG_'
+  paste0(prefix2, "_", toupper(paneName))
+}
+
+panel2onmousedown<-function(panelName, transformOption=NULL){
+  prefix1<-'ptRPlotter_'
+  mid=''
+  if(!is.null(transformOption)){
+    mid=paste('_',toupper(transformOption))
+  }
+  paste0(prefix1,panel2svgid,mid,".selectElement(evt)")
+}
+
+panel2var<-function(panelName, transformOption=NULL){
+  prefix1<-'ptRPlotter_'
+  mid=''
+  if(!is.null(transformOption)){
+    mid=paste('_',toupper(transformOption))
+  }
+  paste0(prefix1,panel2svgid,mid)
+}
+
+panel2script<-function(panelName, transformOption=NULL){
+  #'var ptRPlotter_ptR_SVG_TRANSFORM_TRANSLATE = new PtRPanelTranslate("ptR_SVG_TRANSFORM");'
+  paste0( 'var ', panel2var(panelName, transformOption), ' = new ', jsConstr, "(\"", panel2svgid, "\");" )
+}
+
+
+
 # Testing code
 
 # txt<-codeTemplate
