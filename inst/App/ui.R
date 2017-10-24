@@ -11,7 +11,7 @@ library(svgR)
 library(shinyDMDMenu)
 library(shinythemes)
 
-version="ptR:v.0.3.5.6.8"
+version="ptR:v.0.3.5.6.9"
 
 
 shinyUI(  
