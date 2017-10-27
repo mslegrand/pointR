@@ -147,7 +147,7 @@ shinyServer(function(input, output,session) {
           editOption$.saved <- !(as.numeric(input$messageFromAce$dirty) > 0)
         }
         #processCommit()
-         if(request$sender=='cmd.commit'){
+         if(request$sender %in% c('cmd.commit','cmd.openFileNow')){
            processCommit()
          } 
       }
