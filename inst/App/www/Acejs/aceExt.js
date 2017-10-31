@@ -75,6 +75,7 @@ Shiny.addCustomMessageHandler(
         var Range = ace.require("ace/range").Range;
         var ud =  editor.getSession().getUndoManager();
         var sender=data.sender;
+        var auxValue="";
         
         
         if(!!data.ptRMode){ 
@@ -304,11 +305,18 @@ Shiny.addCustomMessageHandler(
                 JSON.stringify(editor.getSession().getUndoManager().$ok));
           console.log('getValue fin: sender=' + data.sender);
           */
+          
+          auxValue='';
+          if(!!data.auxValue){
+            auxValue=data.auxValue;
+          }
+          
           Shiny.onInputChange('messageFromAce', 
           {
              code :  editor.getSession().getValue(),
              sender : data.sender,
              dirty: editor.getSession().getUndoManager().dirtyCounter,
+             auxValue: auxValue,
              rnd : randomString(5)
           });
         }

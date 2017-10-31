@@ -3,9 +3,9 @@
 observeEvent( input$editNavBar, { 
   #fileCmd<-input$editNavBar$item
   fileCmd<-getLeftMenuCmd()
-  if(is.null(fileCmd)){
-    fileCmd<-"New"
-  }
+  # if(is.null(fileCmd)){
+  #   fileCmd<-"New"
+  # }
   if(length(fileCmd)>0){
     if( fileCmd=="New"){ #-----new
       cmdFileNew()

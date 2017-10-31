@@ -31,7 +31,7 @@ modulePointsBarUI <- function(id, input, output) {
               checkboxInput(ns("insertMode" ),"Insert",value = TRUE, width = "50px")
         ),
         div(style="display:inline-block",
-              checkboxInput(ns("showGrid"), "Grid",   value = TRUE, width = "50px")
+              checkboxInput(ns("showGrid"), "Grid",   value = FALSE, width = "50px")
         )
       ) 
   ) #end taglist
@@ -55,10 +55,10 @@ modulePointsBar<-function(
   getIndx<-reactive({point.indx})
   output$indx<-renderText({ getIndx() })
   
-  triggerRefresh<-function(sender, rollBack=TRUE){ # to be used to force a code refresh???
+  triggerRefresh<-function(sender, rollBack=TRUE, auxValue=FALSE){ # to be used to force a code refresh???
     session$sendCustomMessage(
       type = "shinyAceExt",
-      list(id= "source", sender=sender, getValue=TRUE, rollBack=rollBack)
+      list(id= "source", sender=sender, getValue=TRUE, rollBack=rollBack, auxValue=auxValue)
     )
   }
   

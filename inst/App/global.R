@@ -2,6 +2,7 @@ library(svgR)
 library(shiny)
 library(shinyAce)
 library(shinyDMDMenu)
+library(shinyFiles)
 
 .global <- new.env()
 

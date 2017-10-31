@@ -20,10 +20,10 @@ shinyServer(function(input, output,session) {
     refresh=NULL # to be used to force a code refresh???
   )
   
-  triggerRefresh<-function(sender, rollBack=TRUE){ # to be used to force a code refresh???
+  triggerRefresh<-function(sender, rollBack=TRUE, auxValue=FALSE){ # to be used to force a code refresh???
     session$sendCustomMessage(
       type = "shinyAceExt",
-      list(id= "source", sender=sender, getValue=TRUE, rollBack=rollBack)
+      list(id= "source", sender=sender, getValue=TRUE, rollBack=rollBack, auxValue=auxValue)
     )
   }
   
@@ -36,6 +36,7 @@ shinyServer(function(input, output,session) {
     left='source',   #to be used as editor name later, for connecting to right graphics
     right="Points"
   )
+  
   rightPanel<-reactive({panels$right})
   updateRightPanel<-function(panel){ panels$right<-panel}
 
@@ -46,11 +47,16 @@ shinyServer(function(input, output,session) {
   
   displayOptions<-reactiveValues(
     insertMode=TRUE,
-    showGrid=TRUE,
+    showGrid=FALSE,
     ptMode="Normal"
   )
   
   mssg<-reactiveValues(error="") 
+  
+  
+  shinyFileChoose(input, "buttonFileOpenHidden", session=session, roots=c(wd="~") ) #hidden
+  
+  shinyFileSave(input, "buttonFileSaveHidden", session=session, roots=c(wd="~") ) #hidden
   
   
   # Reactive expressions------------- 
@@ -141,15 +147,36 @@ shinyServer(function(input, output,session) {
         length(input$messageFromAce$code)>0 &&
         length(input$messageFromAce$sender)>0
       ){
+        #cat('observe input$messageFromAce:: entering\n')
         request$code<-input$messageFromAce$code
         request$sender<-input$messageFromAce$sender
+        #cat('sender=',request$sender,"\n")
+        #cat('code=',nchar(request$code),"\n")
         if(length(input$messageFromAce$dirty)>0){
           editOption$.saved <- !(as.numeric(input$messageFromAce$dirty) > 0)
         }
         #processCommit()
-         if(request$sender %in% c('cmd.commit','cmd.openFileNow')){
+        if(request$sender %in% c('cmd.commit','cmd.openFileNow', 'cmd.saveFileNow' )){
            processCommit()
-         } 
+        } 
+        if( request$sender %in% 'cmd.openFileNow'){
+          #set point.index to end of points (if points)
+        }
+        if(request$sender %in% 'cmd.saveFileNow'){
+          cat('observe {input$messageFromAce:: cmd.saveFileNow\n')
+          datapath<-input$messageFromAce$auxValue
+          txt<-input$messageFromAce$code
+          #browser()
+          writeLines(txt, datapath)
+          setCurrentFilePath(datapath)
+          editOption$currentFile<-basename(datapath)
+          editOption$currentDirectory<-dirname(datapath)
+          session$sendCustomMessage(
+            type = "shinyAceExt",
+            list(id= "source", setClean=TRUE, sender='cleanPlease')
+          )
+          
+        }
       }
     })
   })
@@ -180,8 +207,23 @@ shinyServer(function(input, output,session) {
     request$sender
     isolate({
       if(request$sender=='startup'){
+        # displayOptions$insertMode=TRUE
+        # displayOptions$showGrid=FALSE
+        # displayOptions$ptMode="Normal"
+        
         cmdFileNew()
       }
+      if(request$sender %in% c( "cmd.openFileNow", "cmd.newFile")){ #!!! check these names
+        # get valid point name, then set index to last valid index. (length of points?)
+        pd<-getPtDefs()
+        if(length(pd)>0){
+          pts<-pd$pts
+          name<-tail(names(pts),1)
+          l<-length(pts[[name]])
+          selectedPoint$name<-name
+          selectedPoint$point.index<-l/2
+        }
+      } 
         
     })
   })
