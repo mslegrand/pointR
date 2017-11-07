@@ -1,8 +1,3 @@
-library(svgR)
-library(shiny)
-library(shinyAce)
-library(shinyDMDMenu)
-library(shinyFiles)
 
 .global <- new.env()
 
@@ -39,14 +34,9 @@ initResourcePaths <- function() {
 # }
 
 
-library(shiny)
-library(shinyjs)
-library(R.utils)
-library(svgR)
-library(shinyAce)
-library(stringr)
-library(jsonlite)
-library(svDialogs) #!!!todo: replace this
+r_pkgs<-c('shiny','shinyjs', 'R.utils', 'svgR', 'shinyAce', 'stringr', 'jsonlite', 'shinyDMDMenu', 'shinyFiles')
+sapply(r_pkgs, library, character.only=TRUE)
+
 
 # options(shiny.error = recover)
 # options(shiny.trace=TRUE)
@@ -54,25 +44,14 @@ library(svDialogs) #!!!todo: replace this
 #----begin external resources loaded prior to server------------
 #source("utilStyle.R")
 source("util/configIO.R") # must be loaded prior
-
 source("util/utilFormat.R") 
 source("util/utilParser.R")
 source("util/utilptR.R")
 source("util/utilTransform.R")
 source("leftPanel/shinyAce4Ptr.R")
 
+#some consts
 defTag<-"ptR"
-
-# js.scripts<-list(
-#   Points=readFile("www/IOjs/pointsIO.js"),
-#   TagVal=readFile("www/IOjs/tagValIO.js"),
-#   Translate=readFile("www/IOjs/transIO.js"),
-#   Rotate=readFile("www/IOjs/rotIO.js"),
-#   Scale=readFile("www/IOjs/scaleIO.js"),
-#   TagDrag=readFile("www/IOjs/tagDragIO.js")
-# )
-
-
 #this should be ultimately place in another file
 getSVGWH<-function(){ c(650,620)}
 
