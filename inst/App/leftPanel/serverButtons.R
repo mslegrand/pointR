@@ -50,7 +50,7 @@ observe({
   })
 })
 
-
+#!!!  unused?
 checkPtrSyntax<-function(src){
   lines<-strsplit(src,"\n") 
   lines<-lines[[1]]

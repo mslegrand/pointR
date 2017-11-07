@@ -90,7 +90,7 @@ childExpr<-function(p.df,sid, eid=rep(0,length(sid))){
   id<-p.df$id
   pid<-p.df$parent
   rid<-sid
-  #browser()
+  
   idx0<-match(rid, id)
   idx<-pid[idx0]!=eid
   count<-0

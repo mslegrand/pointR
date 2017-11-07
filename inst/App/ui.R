@@ -6,14 +6,11 @@
 #
 
 library(shiny)
-library(svgR)
-
-library(shinyDMDMenu)
-library(shinythemes)
-
-version="ptR:v.0.3.5.6.9"
 
 
+version="ptR:v.0.3.5.6.10"
+
+# style="position: fixed; top: -100em" to keep hidden
 shinyUI(  
   div( class="pretty-split-pane-frame", id="mySplitter",
     singleton(
@@ -39,13 +36,17 @@ shinyUI(
         tags$script(src = 'IOjs/transIO.js' ),
         tags$script(src = 'IOjs/rotIO.js' ),
         tags$script(src = 'IOjs/scaleIO.js' ),
-        tags$script(src = 'IOjs/tagDragIO.js' )
+        tags$script(src = 'IOjs/tagDragIO.js' ),
+        tags$script(src = 'ptR/ptRManager.js' )
       )
     ),
+    
     div(
+      
       class="split-pane vertical-percent",
       useShinyjs(debug = FALSE),
       extendShinyjs(script="www/menuHelper.js"), #appears that only close window is used!
+      
       #-------------left panel begin--------------------------------------------------
       #------- left component begin-----------
       div( 
@@ -54,6 +55,7 @@ shinyUI(
         #-------left bootstrapPage begin ---------
         bootstrapPage(
           #-----left menu begin---------------
+          
           dmdMenuBarPage( 
             title=version, 
             # theme=shinytheme("cerulean"),
@@ -107,6 +109,29 @@ shinyUI(
           ), 
           #-------left menu end------------
           #-------left content begin--------
+          # tagList(
+          #   tags$button(
+          #     id='buttonFileOpenHidden', type='button', class='shinyFiles btn btn-default',
+          #     `data-title`='Open svgR file', `data-selecttype`='single', 'Open',
+          #     #style= "position: fixed; top: -200em" #style="display: none"
+          #     style="display: none"
+          #     #style="height: 1px; width: 1px;"
+          #   ),
+          #   tags$button(
+          #     id='buttonFileSaveHidden', type='button', class='shinySave btn btn-default',
+          #     `data-title`='Save As ...',
+          #     #`data-filetype`=shinyFiles:::formatFiletype(list(R='R', javascript='js')),
+          #     #`data-filetype`=shinyFiles:::formatFiletype(NA),
+          #     `data-filetype`=shinyFiles:::formatFiletype(list(R='R', svgR='svgR')),
+          #     'Save This File', style= "display: none;"
+          #   ) 
+          # ),
+          shinyFilesButton("buttonFileOpenHidden", label="", 
+                           title="Open File", multiple=FALSE, 
+                           class='hiddenButton'),
+          shinySaveButton("buttonFileSaveHidden", label="", 
+                           title="Save as ...",  list('hidden_mime_type'=c("")) , 
+                           class='hiddenButton'),
           h3(
             textOutput( "fileName"), 
             style="white-space:nowrap;"
@@ -129,7 +154,7 @@ shinyUI(
           absolutePanel( 
             "class"="footerPanel", 
             draggable=FALSE,
-            actionButton("commit", label = "COMMIT EDIT")
+            actionButton("commit", label = "COMMIT EDIT") #,
           )
           #-------left content end--------
         ) #----end of bootstrapPage

@@ -50,7 +50,7 @@ observeEvent( editOption$recentFiles ,{
   # 1 remove menuDropdown("Recent Files")
   files<-unlist(editOption$recentFiles)
   N<-length(files)
-  #browser()
+  
   removeDMDM(
     session=session, menuBarId="editNavBar", entry="Recent Files")
   if(N>0){
@@ -80,7 +80,7 @@ observeEvent( editOption$recentFiles ,{
     items<-lapply(1:N, function(i){
       menuItem( label=menuLabels[i], value=menuValues[i])
     } )
-    #browser()
+    
     submenu=
       do.call(
         function(...){ menuDropdown(label,...) }, 
