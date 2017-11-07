@@ -34,7 +34,7 @@ initResourcePaths <- function() {
 # }
 
 
-r_pkgs<-c('shiny','shinyjs', 'R.utils', 'svgR', 'shinyAce', 'stringr', 'jsonlite', 'shinyDMDMenu', 'shinyFiles')
+r_pkgs<-c('shiny','shinyjs', 'R.utils', 'svgR', 'shinyAce', 'stringr', 'jsonlite', 'shinyDMDMenu', 'shinyFiles', 'shinythemes')
 sapply(r_pkgs, library, character.only=TRUE)
 
 
