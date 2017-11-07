@@ -6,13 +6,9 @@
 #
 
 library(shiny)
-library(svgR)
 
-library(shinyDMDMenu)
-library(shinythemes)
-#library(shinyFiles)
 
-version="ptR:v.0.3.5.6.9"
+version="ptR:v.0.3.5.6.10"
 
 # style="position: fixed; top: -100em" to keep hidden
 shinyUI(  

@@ -85,9 +85,9 @@ shinyAce4Ptr <- function(
     ptrList<-list(
       tags$script(type="text/javascript", HTML(js2))
     )
-    #browser()
+
     saceList[[1]][[3]]<-c(saceList[[1]][[3]], ptRAce)
-    #browser()
+    
     rList<-list(saceList, ptrList)
     class(rList)<-c("shiny.tag.list", "list")
     rList

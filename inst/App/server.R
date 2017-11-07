@@ -163,10 +163,9 @@ shinyServer(function(input, output,session) {
           #set point.index to end of points (if points)
         }
         if(request$sender %in% 'cmd.saveFileNow'){
-          cat('observe {input$messageFromAce:: cmd.saveFileNow\n')
+          #cat('observe {input$messageFromAce:: cmd.saveFileNow\n')
           datapath<-input$messageFromAce$auxValue
           txt<-input$messageFromAce$code
-          #browser()
           writeLines(txt, datapath)
           setCurrentFilePath(datapath)
           editOption$currentFile<-basename(datapath)
