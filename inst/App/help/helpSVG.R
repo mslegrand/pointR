@@ -53,7 +53,7 @@ svgQueryAddr2Help<-function(queryAddr){
     linksBase<-basename(links)
     pos<-which(addr==linksBase)
     if(length(pos)>1){
-      browser()
+      stop('something bad happend with help')
     }
     if(length(pos)>0){
       queryTopic<-names(links)[pos]

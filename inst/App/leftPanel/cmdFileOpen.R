@@ -1,6 +1,7 @@
 
 
 modalSaveOrContinue <- function() {
+  #cat("modalSaveOrContinue:: Enter\n")
   modalDialog(
     span("File has unsaved changes. Continue or Save?"), 
     footer = tagList(
@@ -11,9 +12,12 @@ modalSaveOrContinue <- function() {
 }
 
 cmdFileOpen<-function(){
+  #cat("cmdFileOpen:: Enter\n")
   if(getFileSavedStatus()==FALSE){
+    #cat("getFileSavedStatus()==FALSE")
     showModal( modalSaveOrContinue() )
   } else {
+    #cat("getFileSavedStatus()==TRUE\n")
     openFileDlgSelector()
   }
   
@@ -31,33 +35,58 @@ observeEvent(input$continueOpen, {
   openFileDlgSelector()
 }) 
 
+#  openFileDlgSelector changes  
+# 1. send click message to openFile
+# 2. create reactive to monitor any name/path change of the input$hiddenFileOpen button
+#   2.1. if change, 
+#          a. load file 
+#          b. update framework
+#          c. update Ace via openFileNow (or maybe like a request$sender=startup (or new), but with a different src)
+openFileDlgSelector<-function(){
+  # fullPath<-paste0(
+  #   getCurrentDir(), getCurrentFile(), sep="/"
+  # )
+  #cat("reactive openFileDlgSelector:: sendCustomMessage\n")
+  session$sendCustomMessage(
+    type = "ptRManager", 
+    list(id= "source", openFile=TRUE, sender='cmd.openFileNow' )
+  )
+  # try(fileName<-dlgOpen(
+  #   default=fullPath,
+  #   title = "Select which R file to Open", 
+  #   filters = dlgFilters[c("R", "All"), ])$res
+  # )
+  # openFileNow(fileName)
+}
 
-openFileDlgSelector<-reactive({
-  fullPath<-paste0(
-    getCurrentDir(), getCurrentFile(), sep="/"
-  )
-  try(fileName<-dlgOpen(
-    default=fullPath,
-    title = "Select which R file to Open", 
-    filters = dlgFilters[c("R", "All"), ])$res
-  )
-  openFileNow(fileName)
+
+observeEvent(input$buttonFileOpenHidden,{
+  #cat("observe input$buttonFileOpenHidden:: enter\n")
+  fp.dt<-parseFilePaths(c(wd='~'), input$buttonFileOpenHidden)
+  if(length(fp.dt)>0 && nrow(fp.dt)){
+    datapath<-as.character(fp.dt$datapath[1])
+    openFileNow(datapath)
+  }
 })
 
 openFileNow<-function(fileName){
+  #cat("openFileNow:: enter\n")
   if(length(fileName)>0 && nchar(fileName)>0){ 
     src<-paste(readLines(fileName), collapse = "\n")
-    setCurrentFilePath(fileName)
-    setwd(dirname(fileName))
+    setCurrentFilePath(fileName) # should this be replaced by shinyFiles???
+    setwd(dirname(fileName))  # should this be replaced by shinyFiles???
     if(nchar(src)>0){
       reactiveTag$freq<-list()
-      displayOptions$insertMode=TRUE
-      displayOptions$showGrid=TRUE
-      displayOptions$ptMode="Normal"
+      # may want to just leave  displayOptions unchanged???
+      # displayOptions$insertMode=TRUE
+      # displayOptions$showGrid=FALSE
+      # displayOptions$ptMode="Normal"
+      
       mssg$error<-""
+      #here we set the value, 
       session$sendCustomMessage(
         type = "shinyAceExt", 
-        list(id= "source", setValue=src, sender='openFileNow' )
+        list(id= "source", setValue=src, sender='cmd.openFileNow' )
       )
       
     }
