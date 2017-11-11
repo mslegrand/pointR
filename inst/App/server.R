@@ -55,7 +55,7 @@ shinyServer(function(input, output,session) {
   
   
   shinyFileChoose(input, "buttonFileOpenHidden", session=session, roots=c(wd="~") ) #hidden
-  
+  shinyFileChoose(input, "buttonSnippetOpen", session=session, roots=c(wd="~"),  filetypes=c('', 'snp') ) #hidden
   shinyFileSave(input, "buttonFileSaveHidden", session=session, roots=c(wd="~") ) #hidden
   
   
