@@ -26,11 +26,18 @@ shinyServer(function(input, output,session) {
       list(id= "source", sender=sender, getValue=TRUE, rollBack=rollBack, auxValue=auxValue)
     )
   }
-  
+
   selectedPoint <- reactiveValues(
     name="x", #NULL,       # name of current point array
     point.index=0          #  selected pt.indx (column) in current point array
-  ) 
+  )
+  
+  # selectedPoint <- reactiveValues(
+  #   tibble.name="x", #NULL,       # name of current point array
+  #   point.index=0,          #  selected pt.indx (column) in current point array
+  #   point.col.name='pts',
+  #   row.num=1
+  # )
   
   panels<-reactiveValues(
     left='source',   #to be used as editor name later, for connecting to right graphics
