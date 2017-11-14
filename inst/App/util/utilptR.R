@@ -3,6 +3,7 @@
 #-------------------------------
 
 "library(svgR)
+library(tidyverse)
 WH<-c(600,400)
 
 #Defined by mouse: edit with care!
@@ -127,6 +128,8 @@ getDef<-function(txt, defTag ){
   }
   return(substr(txt, pos[1], pos[2]))
 }
+
+
 
 
 ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){

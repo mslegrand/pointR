@@ -28,6 +28,7 @@ output$TopRightPanel<-renderUI({
           tabPanel("Translate"), 
           tabPanel("Rotate"), 
           tabPanel("Scale"),
+          
           type="pills"
         ) 
     )

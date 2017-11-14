@@ -1,0 +1,191 @@
+library(tidyverse)
+
+ptR<-list(
+  
+  x=tibble(
+    pts=list(matrix(1:6,2), matrix(11:14,2)),
+    fill=c('red','white')
+  )
+  
+)
+
+# getPtRTibble<-function(ptDef, tibble.name){
+#   ptDef[[tibble.name]]
+# }
+# 
+# getPtRColumn<-function(ptDef, tibble.name, col.name){
+#   ptDef[[tibble.name]][[col.name]]
+# }
+# 
+# #setPtrColumn
+# setPtRColumn<-function(ptDef, tibble.name, col.name, colVal){
+#   ptDef[[tibble.name]][[col.name]]<-colVal
+# }
+# 
+# getPtREntry<-function(ptDef, tibble.name, col.name, row.index ){
+#   ptDef[[tibble.name]][[col.name]][[row.index]]
+# }
+# 
+# setPtREntry<-function(ptDef, tibble.name, col.name, row.index, value ){
+#   ptDef[[tibble.name]][[col.name]][[row.index]]<-value
+# }
+# 
+# getPtRRow<-function(ptDef, tibble.name, row.index){
+#   ptDef[[tibble.name]][row.index,]
+# }
+# 
+# # appendRow
+# # clone last row and add 
+# appendRow<-function(ptDef, tibble.name ){
+#   indx<-nrow(ptDef[[tibble.name]])
+#   if( indx>0 ){
+#     # get last row
+#     temp<-getPtRRow(ptDef,tibble.name, indx)
+#     # empty any matrix (ie. points)
+#     tempM<-sapply(ptR$y, function(x) class(x[[1]])=='matrix')
+#     temp[1,tempM]<-c()
+#     temp2<-rbind(ptDef[[tibble.name]], temp)
+#     temp2
+#   } else {
+#     ptDef[[tibble.name]]
+#   }
+# }
+# 
+# 
+# insertRow
+# 
+# removeRpw
+# 
+# swapRows
+# 
+# cloneRow
+# 
+
+tib<- ptR$x
+
+cloneTib<-function(tib, rowIndex=nrow(tib)){
+  bind_rows(tib, tib[rowIndx,])
+}
+
+cloneTibAtRow<-function(tib, rowIndex=nrow(tib)){
+  bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
+}
+
+tagTib<-function(tib, ptCol,  rowIndex=nrow(tib), ptIndx){
+  tmp<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
+  pts<-tmp[[rowIndex, ptCol]]
+  tmp[[rowIndx,ptCol]]<-pts[,1:(ptIndx-1)]
+  tmp[[(rowIndx+1),ptCol]]<-pts[,-(1:(ptIndx-1))]
+  tmp
+}
+
+extendTib<-function(tib){
+  rowIndx<-nrow(tib)
+  if(rowIndx>0){
+    tib<-bind_rows(tib, tib[rowIndx,])
+    sapply(tib, function(x)class(x[[1]])=='matrix')->indx
+    tib[rowIndx+1,indx]<-c()
+  }
+  tib
+}
+
+ptColTib<-function(tib){
+  rowIndx<-nrow(tib)
+  colIndx<-c()
+  if(rowIndx>0){
+    sapply(tib, function(x)class(x[[1]])=='matrix')->indx
+    colIndx<-which(indx)
+  }
+  colIndx
+}
+
+getColTib<-function(tib, indx){
+  tib[[indx]]
+}
+
+setColTib<-function(tib, indx, value){
+  tib[[indx]]<-value
+}
+
+removeRowTib<-function(tib, rowIndx){
+  tib[-rowIndx,]
+}
+
+swapRowsTib<-function(tib, i, j){
+  tib[c(i,j),]<-tib[c(j,i),]
+  tib
+}
+
+
+
+stepPtForward<-function(tib, row, ptCol, ptNo){
+  if(ptNo<dim(tib[[row,ptCol]])[2]){
+      ptNo=ptNo+1
+  } else {
+    if(row<nrow(tib)){
+          row=row+1
+          ptNo=1
+    }
+  }
+  return(
+    list( row=row, ptNo= ptNo)
+  )
+}
+
+
+
+stepPtBackward<-function(tib, row, ptCol, ptNo){
+  if(ptNo>1){
+    ptNo=ptNo-1
+  } else {
+    if(row>1){
+      row=row+1
+      ptNo=dim(tib[[row,ptCol]])[2]
+    }
+  }
+  return(
+    list( row=row, ptNo= ptNo)
+  )
+}
+
+# Should we require that pt col is always a matrix?
+# empty matrix is produced by 
+#           matrix(list(), 2)
+#
+# !!! Todo, set ptIndx after adding, deleting, or changing.
+# add should increment
+# delete, replace should keep same
+addPoint<-function(tib, row, ptCol, ptIndx, pt){
+  ptMat<-tib[[row,ptCol]]
+  if(length(ptMat)>0){
+    ptMat<-cbind( ptMat[,1:(ptIndx)], pt, ptMat[,(ptIndx+1):dim(ptMat)[2]] )
+  } else {
+    ptMat<-matrix(pt,2)
+  }
+  tib[[row,ptCol]]<-ptMat
+  tib
+}
+
+# must rethink!
+# if row is empty, should we 
+# 1) remove row?
+# 2) and if go to previous row?
+# 3) if after removing row is empty ptIndx=0, ow ptIndx=oldptIndx?
+# 4) if remove row, should reset pointIndex to length of row?
+removePoint<-function(tib, row, ptCol, ptIndx){
+  ptMat<-tib[[row,ptCol]]
+  if(length(ptMat)>1){
+    ptMat<- ptMat[,- ptIndx ]
+  } else {
+    ptMat<- matrix[list(),2]
+  }
+  tib[[row,ptCol]]<-ptMat
+  tib
+}
+
+replacePoint<-function(tib, row, ptCol, ptIndx, pt){
+  ptMat<-tib[[row,ptCol]]
+  ptMat[,ptIndx ]<-pt
+  tib[[row,ptCol]]<-ptMat
+  tib
+}
