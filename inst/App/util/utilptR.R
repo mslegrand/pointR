@@ -23,6 +23,51 @@ svgR(wh=WH,
 )
 "->codeTemplate
 
+
+# # defines
+# #-------------------------------
+# 
+# "library(svgR)
+# library(tidyverse)
+# WH<-c(600,400)
+# 
+# #Defined by mouse: edit with care!
+# ptR<-list(
+#   x=tribble(
+#    ~pts,
+#    matrix(NA,2,0)
+#   )
+# )
+# svgR(wh=WH,
+# #your custom code goes here
+# 
+# NULL
+# 
+# )
+# "->codeTemplate
+
+
+
+# defines
+#-------------------------------
+
+"library(svgR)
+library(tidyverse)
+WH<-c(600,400)
+
+#Defined by mouse: edit with care!
+ptR<-list(
+  x=list( matrix(NA,2,0) )
+)
+svgR(wh=WH,
+#your custom code goes here
+
+NULL
+
+)
+"->codeTemplate
+
+
 # "library(svgR)
 # WH<-c(1500,1500)
 # 
@@ -291,7 +336,19 @@ panel2script<-function(panelName, transformOption=NULL){
   paste0( 'var ', panel2var(panelName, transformOption), ' = new ', jsConstr, "(\"", panel2svgid, "\");" )
 }
 
+tags2listmatrices<-function( matrixPts, tags){
+  # assume tags start with 1
+  # add end 
+  tags<-c(tags, (ncol(matrixPts)+1))
+  indx<-lapply(1:(length(tags)-1), function(x){tags[x]:(tags[x+1]-1) })
+  tmp<-lapply(indx, function(i) matrixPts[,i])
+  tmp<-lapply(tmp, function(x)as.matrix(x,2))
+}
 
+matrices2tags<-function(matrixList){
+  tmp<-cumsum(sapply(mats,ncol))+1
+  c(1,tmp[-length(tmp)])
+}
 
 # Testing code
 
