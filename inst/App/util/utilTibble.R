@@ -6,6 +6,7 @@ ptR<-list(
     pts=list(matrix(1:6,2), matrix(11:14,2)),
     fill=c('red','white')
   )
+
 )
 
 # getPtRTibble<-function(ptDef, tibble.name){
@@ -62,15 +63,18 @@ ptR<-list(
 
 tib<- ptR$x
 
+
 #returns TRUE if all numeric
 isNumericString<-function(x){
   all(grepl("[-]?[0-9]+[.]?[0-9]*|[-]?[0-9]+[L]?|[-]?[0-9]+[.]?[0-9]*[eE][0-9]+",x))
 }
 
 #clones rowIndex and places new row at end
+
 cloneTib<-function(tib, rowIndex=nrow(tib)){
   bind_rows(tib, tib[rowIndx,])
 }
+
 
 #clones rowIndex and places new row at immediately after rowIndex
 # todo: inc rowIndex
@@ -246,3 +250,4 @@ replacePoint<-function(tib, row, ptCol, ptIndx, pt){
 # Should we have the same for matrix??? (but ignore row unless tagged?)
 #  add point
 #  delete point
+#  replace point
