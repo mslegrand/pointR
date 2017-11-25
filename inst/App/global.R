@@ -45,6 +45,7 @@ sapply(r_pkgs, library, character.only=TRUE)
 #source("utilStyle.R")
 source("util/configIO.R") # must be loaded prior
 source("util/utilFormat.R") 
+source("util/format.R") 
 source("util/utilParser.R")
 source("util/utilptR.R")
 source("util/utilTransform.R")

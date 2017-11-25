@@ -188,8 +188,11 @@ shinyServer(function(input, output,session) {
   })
   
   updateAceExtDef<-function(newPtDef, sender ){
-    #src<-df2Source(src,dfList) #insert points into src
-    replacementList<-ptDef2ReplacementList(newPtDef,getCode() )
+    
+    newPtDef<-olde2newFmtPtDef2ListOfLists(newPtDef)
+    
+    
+    replacementList<-ptDef2ReplacementList(name, newPtDef,getCode() )
     if( length(replacementList)>0 ){
       session$sendCustomMessage(
         type = "shinyAceExt",

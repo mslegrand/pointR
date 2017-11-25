@@ -84,10 +84,14 @@ pfmt.default<-function(x, ...){
   paste("c(", toStrPtR(x, ...), ")" )
 }
 
-pfmt.list<-function(x, ...){
-  temp<-sapply(x, function(y) pfmt(y, ...))
+pfmt.list<-function(x, digits=0, ...){
+  temp<-sapply(x, function(y) pfmt(y,  ...))
   temp<-paste0(temp, collapse=", ")
   paste0("list(", temp, ")")
+}
+
+pfmt.matrix<-function(x, digits=0, ...){
+  toStrPtR0.matrix(x,digits, ...)
 }
 
 fmtTibble<-function(tib, indent=" ", ...){
@@ -103,6 +107,16 @@ getTibColClass<-function(tib){
   sapply(1:ncol(tib), function(j)class(tib[[1,j]]))
 }
 
+
+fmtPtR<-function( pts,  indent="  ", digits=0, ...){
+  n<-names(pts)
+  tmp<-sapply(n, function(x){
+    paste0(indent, x , '=', pfmt( pts[[x]] ) )
+  })
+  tmp<-paste0(tmp, collapse=",\n")
+  tmp<-paste("ptR<-list(",tmp,")", sep="\n")
+  tmp
+}
 
 #to do detect the points and place at the end
 # get colclasses
@@ -145,38 +159,47 @@ fmtTribble<-function(tib, tibName, movePtsBack=TRUE, indent="  ", ...){
 
 
 
+# 
+# x=tribble(
+#   ~fill,      ~pts,
+#   #------|---------
+#   'red',  list( matrix(c(1,2,3,4,5,6), 2) ) ,
+#   'blue', list( matrix(c(11,12,13,14,15,16), 2) )
+# )
+# 
+# 
+# 
+# xx=tribble(
+#   ~fill,      ~pts,
+#   #------|---------
+#   'red',   matrix(c(1,2,3,4,5,6), 2) ,
+#   'blue',  matrix(c(11,12,13,14,15,16), 2) 
+# )
+# 
+# tib<-xx
+# 
+# #vapply(tib, pfmt, character(1))
+# #vapply(tib, toStrPtR0, character(1)) 
+# 
+# 
+# tt<-fmtTribble(tib, 'tib')
+# 
+# yy<-tribble(
+#   ~ptss,      ~stroke,
+#   #------|---------
+#      matrix(c(1,2,3,4,5,6), 2) ,'red',
+#    matrix(c(11,12,13,14,15,16), 2), 'blue'
+# )
+# 
+# cat(fmtTribble(yy, 'yy'))
+# 
+# pts<-yy$ptss
+# cat(pfmt(pts))
+# #todo tree manupiplation with svgR
 
-x=tribble(
-  ~fill,      ~pts,
-  #------|---------
-  'red',  list( matrix(c(1,2,3,4,5,6), 2) ) ,
-  'blue', list( matrix(c(11,12,13,14,15,16), 2) )
-)
-
-
-
-xx=tribble(
-  ~fill,      ~pts,
-  #------|---------
-  'red',   matrix(c(1,2,3,4,5,6), 2) ,
-  'blue',  matrix(c(11,12,13,14,15,16), 2) 
-)
-
-tib<-xx
-
-#vapply(tib, pfmt, character(1))
-#vapply(tib, toStrPtR0, character(1)) 
-
-
-tt<-fmtTribble(tib, 'tib')
-
-yy<-tribble(
-  ~ptss,      ~stroke,
-  #------|---------
-     matrix(c(1,2,3,4,5,6), 2) ,'red',
-   matrix(c(11,12,13,14,15,16), 2), 'blue'
-)
-
-cat(fmtTribble(yy, 'yy'))
-
-#todo tree manupiplation with svgR
+# ptR<-list(
+#   x=list(matrix(1:6,2),matrix(11:18,2)),
+#   y=list(matrix(100:105,2))
+# )
+# 
+# cat(fmtPtR(ptR))

@@ -177,6 +177,7 @@ modalFreq <- function(failed = FALSE) {
 }
 
 # When okTag button of modalFreq isis pressed, 
+# Corresponds to initial point tag
 observeEvent(input$okTag, { #move into module???
   #covers the two cases
   # 1. tagR list not there, add tagR list, selection and insert 
@@ -214,13 +215,24 @@ observeEvent(input$okTag, { #move into module???
   }
   #src<-getCode()
   newPtDef<-list(pts=ptsList, df= dfList )
-  replacementList<-ptDef2ReplacementList(newPtDef, src)
+  
+  # !!!TODO Iterate thru columns of newPtDef$pts and convert to list of lists
+  pts<-newPtDef$pts
+  
+ 
+  newPtDef<-olde2newFmtPtDef2ListOfLists(newPtDef)
+  
+  
+  replacementList<-ptDef2ReplacementList(selection, newPtDef, src)
+  
   
   if( length(replacementList)>0 ){
-    session$sendCustomMessage(
-      type = "shinyAceExt",
-      list(id= "source", replacement=replacementList, sender='tag.pt.button', ok=1)
-    )
+    #!!! TODO can we replace the following with an updateAceExtDef???
+    # session$sendCustomMessage(
+    #   type = "shinyAceExt",
+    #   list(id= "source", replacement=replacementList, sender='tag.pt.button', ok=1) # wtf ok (data.ok in aceExt.js) only revelant when setValue is attr
+    # )
+    updateAceExtDef( newPtDef, 'tag.pt')
   }
 }) #end of okTag button press
 

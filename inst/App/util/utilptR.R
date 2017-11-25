@@ -56,9 +56,11 @@ library(tidyverse)
 WH<-c(600,400)
 
 #Defined by mouse: edit with care!
+#Defined by mouse: edit with care!
 ptR<-list(
-  x=list( matrix(NA,2,0) )
+  x=list( matrix(0,2,0) )
 )
+
 svgR(wh=WH,
 #your custom code goes here
 
@@ -176,6 +178,47 @@ getDef<-function(txt, defTag ){
 
 
 
+# 
+# ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
+#   ptDefs<-list(pts=NULL, df=NULL)
+#   if(length(ptDefs)==0){
+#     return(list(pts=c(), df=c()))
+#   }
+#   if( any(grepl(ptTag,src) ) ){
+#     try({
+#       ptDefTxt1<-getDef(src, defTag=ptTag)
+#       if( is.null(ptDefTxt1)){
+#         #stop("failed to fint ptR")
+#         # WITH DISABLE GRAPH BAR PTR CONTROLS
+#         # PTR SELECTION, GROUPS, EDITS, ...
+#         # KEEP TRANSFORMATIONS FOR THE TIME BEING
+#         ptDefs$pts<-list()
+#       } else {
+#         eval(parse(text=ptDefTxt1))
+#         ptDefs$pts<-get(ptTag)
+#       }
+#       
+#             
+#       ptDefTxt2<-getDef(src, defTag=dfTag)
+#       if(length(ptDefTxt2)>0){ # ptR.df is optional!
+#         #1. replace data.frame with list
+#         dfListText<-sub("data.frame","list",ptDefTxt2)
+#         eval(parse(text=dfListText))
+#         #2 dfList<-get(dfTag)
+#         dfList<-get(dfTag)
+#         #3 pad list back as data.frame
+#         df<-sapply(dfList, list2DF,
+#           simplify = FALSE
+#         )
+#         # 4 set ptDefs to tmp.df
+#         ptDefs$df<-df
+#         
+#       }
+#     })
+#   }
+#   return(ptDefs)
+# }
+# 
 
 ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
   ptDefs<-list(pts=NULL, df=NULL)
@@ -192,11 +235,14 @@ ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
         # KEEP TRANSFORMATIONS FOR THE TIME BEING
         ptDefs$pts<-list()
       } else {
-        eval(parse(text=ptDefTxt1))
-        ptDefs$pts<-get(ptTag)
+        eval(parse(text=ptDefTxt1)) #stupid eval to obtain the points
+        
+        #!!!KLUDGE first kludge (undo later)
+        ptDefs$ptsOrig<-get(ptTag) #at this stage we have ptR (ptTag) list defined
+        ptDefs$pts<-lapply(ptR, function(x)do.call(cbind, x)) 
       }
       
-            
+      
       ptDefTxt2<-getDef(src, defTag=dfTag)
       if(length(ptDefTxt2)>0){ # ptR.df is optional!
         #1. replace data.frame with list
@@ -206,7 +252,7 @@ ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
         dfList<-get(dfTag)
         #3 pad list back as data.frame
         df<-sapply(dfList, list2DF,
-          simplify = FALSE
+                   simplify = FALSE
         )
         # 4 set ptDefs to tmp.df
         ptDefs$df<-df
@@ -270,9 +316,12 @@ defTag2replace<-function(defTag, defList, txt){
   replacementList
 }
 
-ptDef2ReplacementList<-function(newPtDef, txt){
+ptDef2ReplacementList<-function(name, newPtDef, txt){
   replacementList<-list()
-  pt.repl<-formatPtDefs(defTag='ptR', ptRList=newPtDef$pts)
+  # get the text for the point replacement  
+  pt.repl<-fmtPtR(newPtDef$pts)
+  
+  
   p.df<-getParseDataFrame(txt)
   ptR.df<-extractTagDF(p.df, tag='ptR')
   pt.Pos<-list(
@@ -338,12 +387,36 @@ panel2script<-function(panelName, transformOption=NULL){
 
 tags2listmatrices<-function( matrixPts, tags){
   # assume tags start with 1
-  # add end 
-  tags<-c(tags, (ncol(matrixPts)+1))
-  indx<-lapply(1:(length(tags)-1), function(x){tags[x]:(tags[x+1]-1) })
-  tmp<-lapply(indx, function(i) matrixPts[,i])
-  tmp<-lapply(tmp, function(x)as.matrix(x,2))
+  
+  if(length(matrixPts)==0){
+    matrixPts=matrix(0,2,0)
+  } else {
+    matrixPts<-matrix(matrixPts,2)
+  }
+  if(length(tags)>0){
+    tags<-c(tags, (ncol(matrixPts)+1))
+    indx<-lapply(1:(length(tags)-1), function(x){tags[x]:(tags[x+1]-1) })
+    tmp<-lapply(indx, function(i) matrixPts[,i])
+    tmp<-lapply(tmp, function(x)as.matrix(x,2))
+  } else {
+    tmp<-list(matrixPts)
+  }
+  tmp
 }
+
+#!!! TODO this is temp: refactor or remove
+olde2newFmtPtDef2ListOfLists<-function(newPtDef){
+  pts<-newPtDef$pts # should be a list of list of matrices!!!
+  
+  newPtDef$pts=sapply(names(pts), function(nm){
+
+    pts<-as.integer(unlist(newPtDef$pts[[nm]]))
+    tags<-newPtDef$df[[nm]]$tag
+    ptsL<-tags2listmatrices(pts,tags)
+  }, simplify=FALSE)
+  newPtDef
+}
+
 
 matrices2tags<-function(matrixList){
   tmp<-cumsum(sapply(mats,ncol))+1
