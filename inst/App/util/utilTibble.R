@@ -89,6 +89,24 @@ tagTib<-function(tib, ptCol,  rowIndex=nrow(tib), ptIndx){
 }
 
 # y=util to discover which colunns might be points
+tagTib<-function(tib, ptCol,  rowIndex=nrow(tib), ptIndx){
+  tmp<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
+  pts<-tmp[[rowIndex, ptCol]]
+  tmp[[rowIndx,ptCol]]<-pts[,1:(ptIndx-1)]
+  tmp[[(rowIndx+1),ptCol]]<-pts[,-(1:(ptIndx-1))]
+  tmp
+}
+
+extendTib<-function(tib){
+  rowIndx<-nrow(tib)
+  if(rowIndx>0){
+    tib<-bind_rows(tib, tib[rowIndx,])
+    sapply(tib, function(x)class(x[[1]])=='matrix')->indx
+    tib[rowIndx+1,indx]<-c()
+  }
+  tib
+}
+
 ptColTib<-function(tib){
   rowIndx<-nrow(tib)
   colIndx<-c()
@@ -99,20 +117,27 @@ ptColTib<-function(tib){
   colIndx
 }
 
+
 # extract the given tib column
+=
 getColTib<-function(tib, indx){
   tib[[indx]]
 }
 
+
 # set the given tib column with the given value
+
 setColTib<-function(tib, indx, value){
   tib[[indx]]<-value
 }
 
+
 # remove a row from the tib
+
 removeRowTib<-function(tib, rowIndx){
   tib[-rowIndx,]
 }
+
 
 # swap rows of a tib
 swapRowsTib<-function(tib, i, j){
@@ -121,7 +146,9 @@ swapRowsTib<-function(tib, i, j){
 }
 
 
+
 # step selected point forward
+
 stepPtForward<-function(tib, row, ptCol, ptNo){
   if(ptNo<dim(tib[[row,ptCol]])[2]){
       ptNo=ptNo+1
@@ -137,7 +164,11 @@ stepPtForward<-function(tib, row, ptCol, ptNo){
 }
 
 
+
 # step selected point backward
+
+
+
 stepPtBackward<-function(tib, row, ptCol, ptNo){
   if(ptNo>1){
     ptNo=ptNo-1
@@ -160,7 +191,9 @@ stepPtBackward<-function(tib, row, ptCol, ptNo){
 # add should increment
 # delete, replace should keep same
 
+
 # add pt immediately after selected point
+
 addPoint<-function(tib, row, ptCol, ptIndx, pt){
   ptMat<-tib[[row,ptCol]]
   if(length(ptMat)>0){
@@ -173,6 +206,7 @@ addPoint<-function(tib, row, ptCol, ptIndx, pt){
 }
 
 # must rethink!
+
 # 1)if row is empty, should we 
 #   A) remove row?
 #   B) and if go to previous row?
@@ -180,6 +214,13 @@ addPoint<-function(tib, row, ptCol, ptIndx, pt){
 # 2) if after removing, a row is empty ptIndx=0, ow ptIndx=oldptIndx?
 
 # remove selected point
+
+# if row is empty, should we 
+# 1) remove row?
+# 2) and if go to previous row?
+# 3) if after removing row is empty ptIndx=0, ow ptIndx=oldptIndx?
+# 4) if remove row, should reset pointIndex to length of row?
+
 removePoint<-function(tib, row, ptCol, ptIndx){
   ptMat<-tib[[row,ptCol]]
   if(length(ptMat)>1){
@@ -191,7 +232,7 @@ removePoint<-function(tib, row, ptCol, ptIndx){
   tib
 }
 
-# replace selected point with given pt
+
 replacePoint<-function(tib, row, ptCol, ptIndx, pt){
   ptMat<-tib[[row,ptCol]]
   ptMat[,ptIndx ]<-pt
@@ -205,4 +246,3 @@ replacePoint<-function(tib, row, ptCol, ptIndx, pt){
 # Should we have the same for matrix??? (but ignore row unless tagged?)
 #  add point
 #  delete point
-#  replace point

@@ -178,47 +178,6 @@ getDef<-function(txt, defTag ){
 
 
 
-# 
-# ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
-#   ptDefs<-list(pts=NULL, df=NULL)
-#   if(length(ptDefs)==0){
-#     return(list(pts=c(), df=c()))
-#   }
-#   if( any(grepl(ptTag,src) ) ){
-#     try({
-#       ptDefTxt1<-getDef(src, defTag=ptTag)
-#       if( is.null(ptDefTxt1)){
-#         #stop("failed to fint ptR")
-#         # WITH DISABLE GRAPH BAR PTR CONTROLS
-#         # PTR SELECTION, GROUPS, EDITS, ...
-#         # KEEP TRANSFORMATIONS FOR THE TIME BEING
-#         ptDefs$pts<-list()
-#       } else {
-#         eval(parse(text=ptDefTxt1))
-#         ptDefs$pts<-get(ptTag)
-#       }
-#       
-#             
-#       ptDefTxt2<-getDef(src, defTag=dfTag)
-#       if(length(ptDefTxt2)>0){ # ptR.df is optional!
-#         #1. replace data.frame with list
-#         dfListText<-sub("data.frame","list",ptDefTxt2)
-#         eval(parse(text=dfListText))
-#         #2 dfList<-get(dfTag)
-#         dfList<-get(dfTag)
-#         #3 pad list back as data.frame
-#         df<-sapply(dfList, list2DF,
-#           simplify = FALSE
-#         )
-#         # 4 set ptDefs to tmp.df
-#         ptDefs$df<-df
-#         
-#       }
-#     })
-#   }
-#   return(ptDefs)
-# }
-# 
 
 ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
   ptDefs<-list(pts=NULL, df=NULL)

@@ -32,12 +32,21 @@ shinyServer(function(input, output,session) {
     point.index=0          #  selected pt.indx (column) in current point array
   )
   
+<<<<<<< HEAD
   selectedTibble <- reactiveValues(
     tib.name="x", #NULL,       # name of current point array
     tib.row=1,
     tib.column='pts', # default to last col?
     point.index=0          #  selected pt.indx (column) in current point array
   )
+=======
+  # selectedPoint <- reactiveValues(
+  #   tibble.name="x", #NULL,       # name of current point array
+  #   point.index=0,          #  selected pt.indx (column) in current point array
+  #   point.col.name='pts',
+  #   row.num=1
+  # )
+>>>>>>> f40629874b6cda05bc17b73c9ff30eec21f5ef0f
   
   panels<-reactiveValues(
     left='source',   #to be used as editor name later, for connecting to right graphics
