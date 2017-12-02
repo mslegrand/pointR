@@ -34,12 +34,39 @@ shinyServer(function(input, output,session) {
   
 
   selectedTibble <- reactiveValues(
-    tib.name="x", #NULL,       # name of current point array
-    tib.row=1,
-    tib.column='pts', # default to last col?
-    point.index=0          #  selected pt.indx (column) in current point array
+    name="x", #NULL,       # name of current point array
+    row=1,
+    column=1, # default to last col?
+    ptColName='pts',
+    index=0          #  selected pt.indx (column) in current point array
   )
 
+  
+  updateSelected<-function( name, row, column, point.index, ptColName ){
+    if(!missing(name)){
+      selectedPoint$name=name
+      selectedTibble$name=name
+    }
+    if(!missing(point.index)){
+      selectedPoint$point.index=as.numeric(point.index)
+    }
+    if(!missing(ptColName)){
+      selectedTibble$ptColName=ptColName
+    }
+    if(!missing(row)){ # !!! may want to provide a check here
+      selectedTibble$row=row
+      point.index<-selectedPoint$point.index
+      if( row>0 ){
+        endPos<-getTibPtsColEndIndex()
+        begPos<-c(0,endPos)+1
+        selectedPoint$point.index<-point.index<-min(max(point.index,begPos[row]),endPos[row])
+      } 
+    }
+    if(!missing(column)){
+      selectedTibble$column=column
+    }
+  }
+  
   # selectedPoint <- reactiveValues(
   #   tibble.name="x", #NULL,       # name of current point array
   #   point.index=0,          #  selected pt.indx (column) in current point array
@@ -79,14 +106,127 @@ shinyServer(function(input, output,session) {
   showGrid<-reactive({displayOptions$showGrid})
   
   #--- yes unless tagged with freq or no points to tag 
-  isTaggable<-reactive({ 
-    name<-getPtName()
-    !is.null(name) && getPtIndex()>0 &&  is.null(reactiveTag$freq[[name]])
-  })
+  # isTaggable<-reactive({ 
+  #   name<-getPtName()
+  #   !is.null(name) && getPtIndex()>0 &&  is.null(reactiveTag$freq[[name]])
+  # })
   
   getCode<-reactive({request$code})
   getPtName<-reactive({selectedPoint$name})
-  getPtIndex<-reactive({selectedPoint$point.index})
+  getTibName<-reactive({selectedTibble$name}) #allw to be null only if tib is null
+  getPtIndex<-reactive({as.numeric(selectedPoint$point.index)})
+  
+  getTib<-reactive({ getPtDefs()$tib[[ getTibName() ]] })
+  getTibPtColPos<-reactive({ which(names(getTib())==selectedTibble$ptColName )})
+  getTibPts<-reactive({ 
+    if( !is.null(selectedTibble$ptColName)){
+      getTib()[[ selectedTibble$ptColName ]]
+    } else {
+      NULL
+    }
+  })
+      
+    
+  
+  getTibPtsNCol<-reactive({ sapply(getTibPts(),ncol)}  )
+  
+  getTibPtsColEndIndex<-reactive({
+    cs<-getTibPtsNCol()
+    if(length(cs)>0){
+      cs<-cumsum(cs)
+    }
+    cs
+  })
+  
+  
+  #!!!TODO THIS WILL FAIL IF WE HAVE MUTLIPLE EMPTY MATRICES, FIX ALGORITHM !!!
+  absPtIndx2TibPtPos<-function(indx){
+    # cat("Enter: absPtIndx2TibPtPos\n")
+    # cat("(point.index) indx=",indx,"\n")
+    # cat("length(indx)=",length(indx),"\n")
+    rtv<-list(row=1,matCol=0)
+    if(length(indx)>0 && indx>0){
+      #tib<-ptDefs()$tib
+      mlen<-sapply(getTibPts(),ncol)
+      if(sum(mlen)<indx){
+        #cat("mlen array: c(", paste0(mlen, collapse=", "), ")\n")
+        return(NULL)
+      }
+      #cat("mlen array: c(", paste0(mlen, collapse=", "), ")\n")
+      if(length(mlen)>0){
+        endpts<-cumsum(mlen)
+        #cat("endpts=c(",paste(endpts,collapse=","),")\n")
+        begpts<-c(1, (endpts+1)[-length(endpts)])
+        #cat("begpts=c(",paste(begpts,collapse=","),")\n")
+        r<-sum(indx>=begpts)
+        #cat("r=",r,"\n")
+        if(r>0){
+          matCol<-indx-(begpts[r]-1)
+          rtv<-list(row=r,matCol=matCol)
+        }
+      }
+    }
+    #cat("rtv=list( row=",rtv$row,", matCol=",rtv$matCol,")\n")
+    #cat("Exit: absPtIndx2TibPtPos\n\n")
+    rtv
+  }
+  
+  # getTibPtPos<-reactive({ # alternatively use observers and set row, index
+  #   #pts<-getTibPts()
+  #   cs<-getTibPtsColEndIndex()
+  #   
+  #   indx<-getPtIndex()
+  #   sum(indx<=cs)->r
+  #   cs<-c(0,cs)
+  #   rindx<-indx-cs[r]
+  #   list(row=r,matColPos=rindx)
+  # })
+  
+  # observe({ #An alternative to getTibPtPos, updates tibble index, row whenever point.index changes
+  #   cs<-getTibPtsColEndIndex()
+  #   indx<-getPtIndex()
+  #   isolate({
+  #     #browser()
+  #     if(length(indx)==0 || indx==0){
+  #       selectedTibble$index<-0
+  #       selectedTibble$row<-0
+  #     } else {
+  #       sum(indx<=cs)->r
+  #       if(r>0){
+  #         cs<-c(0,cs)
+  #         selectedTibble$index<-indx-cs[r]
+  #         selectedTibble$row<-r
+  #       }
+  #     }
+  # 
+  #   })
+  # })
+  
+  # tibptPos can change if 
+  #  1. index changes
+  #  2. name changes
+  #  3. tagging occurs
+  #     note: 2 or 3 implies have changed 
+  
+  getTibRow<-reactive({selectedTibble$row})
+  getTibIndex<-reactive({selectedTibble$index})
+  
+  #inverse function : not used
+  tibPtPos2AbsPtIndx<-reactive({
+    cs<-getTibPtsNCol()
+    if(length(nCols)>0){
+      cs<-cumsum(cs)
+    }
+    function(row, matCol){
+      if( row>0 && matCol>0 && length(cs)>0 ){
+        sum(cs[1:row])+matCol
+      } else {
+        0
+      }
+    }
+  })
+  
+  
   
   #-----------------------
   getErrorMssg<-reactive({ mssg$error })
@@ -96,32 +236,50 @@ shinyServer(function(input, output,session) {
   
   #gets the tagged names
   getTagNameChoices<-reactive({
-    intersect(names(getPtDefs()$pts), names(getPtDefs()$df))
+    names(getPtDefs()$tib)
+    #intersect(names(getPtDefs()$pts), names(getPtDefs()$df))
   })
   
-  getSelectInfo<-reactive({ #used by pointsBar only??
-    name<-getPtName()
-    indx<-getPtIndex()
-    pts<-getPtDefs()$pts
-    ex.getSelectInfo(pts, name, indx)
-  })
+  # getSelectInfo<-reactive({ #used by pointsBar only??
+  #   name<-getPtName()
+  #   indx<-getPtIndex()
+  #   pts<-getPtDefs()$pts
+  #   ex.getSelectInfo(pts, name, indx)
+  # })
   
-  getPts<-reactive({
-    ptdef<-getPtDefs()
-    ptdef[[getPtName()]]
-  })
+  # getPts<-reactive({
+  #   ptdef<-getPtDefs()
+  #   ptdef[[getPtName()]]
+  # })
   
   #gets a tagged name (=ptName unless ptName is not tagged)
   getTagName<-reactive({
-    exGetTagName( getTagNameChoices(), getPtName() )
+    #exGetTagName( getTagNameChoices(), getPtName() )
+    getTibName()
   })
+  
   getTagIndexChoices<-reactive({
-    getPtDefs()$df[[getTagName()]]$tag
+    #getPtDefs()$df[[getTagName()]]$tag
+    nCols<-sapply(getTibPts(),ncol)
+    if(length(nCols)>0){
+      endPos<-cumsum(nCols)
+      begPos<-c(1,1+endPos[-length(endPos)])
+    } else {
+      begPos<-0
+    }
+    begPos
   })
+  
   getTagIndex<-reactive({ 
-    choices<-getTagIndexChoices()
+    #choices<-getTagIndexChoices()
     indx<-getPtIndex()
-    exGetTagIndx(choices, indx )
+    if(length(indx)>0){
+      ch<-getTagIndexChoices()
+      max(ch[indx>=ch])
+    } else
+      0
+
+    
   })
   
   
@@ -157,94 +315,9 @@ shinyServer(function(input, output,session) {
   }) 
 
 # Event Observers-------------------------------- 
-  observe({input$messageFromAce
-    isolate({
-      if(
-        length(input$messageFromAce$code)>0 &&
-        length(input$messageFromAce$sender)>0
-      ){
-        #cat('observe input$messageFromAce:: entering\n')
-        request$code<-input$messageFromAce$code
-        request$sender<-input$messageFromAce$sender
-        #cat('sender=',request$sender,"\n")
-        #cat('code=',nchar(request$code),"\n")
-        if(length(input$messageFromAce$dirty)>0){
-          editOption$.saved <- !(as.numeric(input$messageFromAce$dirty) > 0)
-        }
-        #processCommit()
-        if(request$sender %in% c('cmd.commit','cmd.openFileNow', 'cmd.saveFileNow' )){
-           processCommit()
-        } 
-        if( request$sender %in% 'cmd.openFileNow'){
-          #set point.index to end of points (if points)
-        }
-        if(request$sender %in% 'cmd.saveFileNow'){
-          #cat('observe {input$messageFromAce:: cmd.saveFileNow\n')
-          datapath<-input$messageFromAce$auxValue
-          txt<-input$messageFromAce$code
-          writeLines(txt, datapath)
-          setCurrentFilePath(datapath)
-          editOption$currentFile<-basename(datapath)
-          editOption$currentDirectory<-dirname(datapath)
-          session$sendCustomMessage(
-            type = "shinyAceExt",
-            list(id= "source", setClean=TRUE, sender='cleanPlease')
-          )
-          
-        }
-      }
-    })
-  })
+  source("leftPanel/serverAce.R", local=TRUE) 
   
-  updateAceExtDef<-function(newPtDef, sender ){
-    
-    newPtDef<-olde2newFmtPtDef2ListOfLists(newPtDef)
-    
-    
-    replacementList<-ptDef2ReplacementList(name, newPtDef,getCode() )
-    if( length(replacementList)>0 ){
-      session$sendCustomMessage(
-        type = "shinyAceExt",
-        list(id= "source", replacement=replacementList, sender=sender, ok=1)
-      )
-    }
-  }
-  
-  updateAceExt<-function(sender, ...){
-    data<-as.list(...)
-    if(length(data)>0){
-      data<-c(list(id=='source', sender=sender), data )
-      session$sendCustomMessage(
-        type = "shinyAceExt",
-        data
-      )
-    }
-  }
-  
-  observe({
-    request$sender
-    isolate({
-      if(request$sender=='startup'){
-        # displayOptions$insertMode=TRUE
-        # displayOptions$showGrid=FALSE
-        # displayOptions$ptMode="Normal"
-        
-        cmdFileNew()
-      }
-      if(request$sender %in% c( "cmd.openFileNow", "cmd.newFile")){ #!!! check these names
-        # get valid point name, then set index to last valid index. (length of points?)
-        pd<-getPtDefs()
-        if(length(pd)>0){
-          pts<-pd$pts
-          name<-tail(names(pts),1)
-          l<-length(pts[[name]])
-          selectedPoint$name<-name
-          selectedPoint$point.index<-l/2
-        }
-      } 
-        
-    })
-  })
+
   
 #help
   source("leftPanel/helpSVG.R", local=TRUE) 

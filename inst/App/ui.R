@@ -103,23 +103,6 @@ shinyUI(
           ), 
           #-------left menu end------------
           #-------left content begin--------
-          # tagList(
-          #   tags$button(
-          #     id='buttonFileOpenHidden', type='button', class='shinyFiles btn btn-default',
-          #     `data-title`='Open svgR file', `data-selecttype`='single', 'Open',
-          #     #style= "position: fixed; top: -200em" #style="display: none"
-          #     style="display: none"
-          #     #style="height: 1px; width: 1px;"
-          #   ),
-          #   tags$button(
-          #     id='buttonFileSaveHidden', type='button', class='shinySave btn btn-default',
-          #     `data-title`='Save As ...',
-          #     #`data-filetype`=shinyFiles:::formatFiletype(list(R='R', javascript='js')),
-          #     #`data-filetype`=shinyFiles:::formatFiletype(NA),
-          #     `data-filetype`=shinyFiles:::formatFiletype(list(R='R', svgR='svgR')),
-          #     'Save This File', style= "display: none;"
-          #   ) 
-          # ),
           shinyFilesButton("buttonFileOpenHidden", label="", 
                            title="Open File", multiple=FALSE, 
                            class='hiddenButton'),

@@ -125,7 +125,8 @@ fmtPtR<-function( pts,  indent="  ", digits=0, ...){
 # to do: tibble name 
 fmtTribble<-function(tib, tibName, movePtsBack=TRUE, indent="  ", ...){
   #this moves the points to the rear
-  n=2
+  n=2 # indent factor of 2 tabs
+ 
   indentName<-paste0(rep(indent, n=n),collapse="")
   if(movePtsBack){
     cl<-getTibColClass(tib)
@@ -158,7 +159,6 @@ fmtTribble<-function(tib, tibName, movePtsBack=TRUE, indent="  ", ...){
 
 
 
-
 # 
 # x=tribble(
 #   ~fill,      ~pts,
@@ -173,17 +173,17 @@ fmtTribble<-function(tib, tibName, movePtsBack=TRUE, indent="  ", ...){
 #   ~fill,      ~pts,
 #   #------|---------
 #   'red',   matrix(c(1,2,3,4,5,6), 2) ,
-#   'blue',  matrix(c(11,12,13,14,15,16), 2) 
+#   'blue',  matrix(c(11,12,13,14,15,16), 2)
 # )
 # 
 # tib<-xx
-# 
-# #vapply(tib, pfmt, character(1))
-# #vapply(tib, toStrPtR0, character(1)) 
-# 
-# 
+
+#vapply(tib, pfmt, character(1))
+#vapply(tib, toStrPtR0, character(1))
+
+
 # tt<-fmtTribble(tib, 'tib')
-# 
+# # 
 # yy<-tribble(
 #   ~ptss,      ~stroke,
 #   #------|---------
@@ -203,3 +203,23 @@ fmtTribble<-function(tib, tibName, movePtsBack=TRUE, indent="  ", ...){
 # )
 # 
 # cat(fmtPtR(ptR))
+
+  # tibList=list(
+  #   x=tribble(
+  #   ~fill, ~pts,
+  #   'red', matrix((1:6+.01),2)
+  #   ),
+  #   y=tribble(
+  #      ~pts, ~stroke,
+  #      matrix(1:4,2), 'blue'
+  #   )
+  # )
+
+  fmtTribbleList<-function(tibList){
+    tmp<-sapply(names(tibList), function(nm){
+      fmtTribble(tibList[[nm]],nm)
+    })
+    tmp<-paste0(tmp, collapse=",\n")
+    paste('ptR<-list(',tmp,')',sep="\n")
+  }
+  

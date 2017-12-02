@@ -24,30 +24,6 @@ svgR(wh=WH,
 "->codeTemplate
 
 
-# # defines
-# #-------------------------------
-# 
-# "library(svgR)
-# library(tidyverse)
-# WH<-c(600,400)
-# 
-# #Defined by mouse: edit with care!
-# ptR<-list(
-#   x=tribble(
-#    ~pts,
-#    matrix(NA,2,0)
-#   )
-# )
-# svgR(wh=WH,
-# #your custom code goes here
-# 
-# NULL
-# 
-# )
-# "->codeTemplate
-
-
-
 # defines
 #-------------------------------
 
@@ -55,19 +31,22 @@ svgR(wh=WH,
 library(tidyverse)
 WH<-c(600,400)
 
-#Defined by mouse: edit with care!
-#Defined by mouse: edit with care!
+# Defined by mouse: edit with care!
 ptR<-list(
-  x=list( matrix(0,2,0) )
+  x=tribble(
+   ~pts,
+   matrix(NA,2,0)
+  )
 )
 
 svgR(wh=WH,
 #your custom code goes here
-
 NULL
-
 )
 "->codeTemplate
+
+
+
 
 
 # "library(svgR)
@@ -177,6 +156,10 @@ getDef<-function(txt, defTag ){
 }
 
 
+matrices2tags<-function(mats){
+  tmp<-cumsum(sapply(mats,ncol))+1
+  c(1,tmp[-length(tmp)])
+}
 
 
 ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
@@ -193,29 +176,29 @@ ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
         # PTR SELECTION, GROUPS, EDITS, ...
         # KEEP TRANSFORMATIONS FOR THE TIME BEING
         ptDefs$pts<-list()
+        ptDefs$tib<-list()
       } else {
         eval(parse(text=ptDefTxt1)) #stupid eval to obtain the points
         
         #!!!KLUDGE first kludge (undo later)
-        ptDefs$ptsOrig<-get(ptTag) #at this stage we have ptR (ptTag) list defined
-        ptDefs$pts<-lapply(ptR, function(x)do.call(cbind, x)) 
-      }
-      
-      
-      ptDefTxt2<-getDef(src, defTag=dfTag)
-      if(length(ptDefTxt2)>0){ # ptR.df is optional!
-        #1. replace data.frame with list
-        dfListText<-sub("data.frame","list",ptDefTxt2)
-        eval(parse(text=dfListText))
-        #2 dfList<-get(dfTag)
-        dfList<-get(dfTag)
-        #3 pad list back as data.frame
-        df<-sapply(dfList, list2DF,
-                   simplify = FALSE
-        )
-        # 4 set ptDefs to tmp.df
-        ptDefs$df<-df
-        
+        ptDefs$tib<-get(ptTag) #at this stage we have ptR as a list of tibbles, each tibble containings points tib$p
+        ptDefs$pts<-lapply(names(ptDefs$tib), function(nm){
+          pts<-unlist(ptDefs$tib[[nm]]$pts) #!!!temporary change this to be more general later
+          #pts<-lapply(ptR, function(x)do.call(cbind, x)) 
+          if(length(pts)>0)
+            matrix(unlist(pts),2)
+          else
+            matrix(NA,2,0)
+        })
+        names(ptDefs$pts)<-names(ptDefs$tib) #!!! or put in structure
+        ptDefs$df<-lapply(names(ptDefs$tib), function(nm){
+          df<-ptDefs$tib[[nm]]
+          pts<-df$pts #!!!temporary change this to be more general later
+          tdf<-tibble(tag=matrices2tags(pts))
+          df<-cbind(tdf,df)
+          df[,-which(names(df)=='pts')] #!!!temporary change this to be more general later
+        })
+        names(ptDefs$df)<-names(ptDefs$tib)
       }
     })
   }
@@ -243,7 +226,7 @@ formatTrs<-function(tr){ #not used
 }
 
 
-## proposed replacement for point2src
+## proposed replacement for point2src !!!NEVER USED !!!DELETE THIS FUNCTION
 defTag2replace<-function(defTag, defList, txt){
   if(defTag=='ptR'){
     replacement<-formatPtDefs(defTag=defTag, ptRList=defList)
@@ -278,8 +261,8 @@ defTag2replace<-function(defTag, defList, txt){
 ptDef2ReplacementList<-function(name, newPtDef, txt){
   replacementList<-list()
   # get the text for the point replacement  
-  pt.repl<-fmtPtR(newPtDef$pts)
-  
+  #pt.repl<-fmtPtR(newPtDef$pts)
+  pt.repl<-fmtTribbleList(newPtDef$tib)
   
   p.df<-getParseDataFrame(txt)
   ptR.df<-extractTagDF(p.df, tag='ptR')
@@ -290,27 +273,27 @@ ptDef2ReplacementList<-function(name, newPtDef, txt){
     endColumn=ptR.df$col2 
   )
   
-  if(length(newPtDef$df)>0){
-    tag.repl<-formatDFDefs(newPtDef$df)
-    tagR.df<-extractTagDF(p.df, tag='tagR')
-    if( !is.null(tagR.df) ){
-      tag.Pos<-list(
-        startRow= tagR.df$line1 -1,
-        startColumn=tagR.df$col1 -1 ,
-        endRow= tagR.df$line2 -1,
-        endColumn=tagR.df$col2 
-      )
-      }else{
-        tag.Pos<-list(
-          startRow= ptR.df$line2,
-          startColumn=ptR.df$col2+1 ,
-          endRow= ptR.df$line2,
-          endColumn=ptR.df$col2+1 
-        )
-        tag.repl<-paste0("\n",tag.repl,"\n")
-      }
-    replacementList<-c(replacementList, list(list(rng=tag.Pos, txt= tag.repl)))
-  }
+  # if(length(newPtDef$df)>0){
+  #   tag.repl<-formatDFDefs(newPtDef$df)
+  #   tagR.df<-extractTagDF(p.df, tag='tagR')
+  #   if( !is.null(tagR.df) ){
+  #     tag.Pos<-list(
+  #       startRow= tagR.df$line1 -1,
+  #       startColumn=tagR.df$col1 -1 ,
+  #       endRow= tagR.df$line2 -1,
+  #       endColumn=tagR.df$col2 
+  #     )
+  #     }else{
+  #       tag.Pos<-list(
+  #         startRow= ptR.df$line2,
+  #         startColumn=ptR.df$col2+1 ,
+  #         endRow= ptR.df$line2,
+  #         endColumn=ptR.df$col2+1 
+  #       )
+  #       tag.repl<-paste0("\n",tag.repl,"\n")
+  #     }
+  #   replacementList<-c(replacementList, list(list(rng=tag.Pos, txt= tag.repl)))
+  # }
   replacementList<-c(replacementList, list(list(rng=pt.Pos, txt= pt.repl)))
   replacementList
 }
@@ -364,10 +347,11 @@ tags2listmatrices<-function( matrixPts, tags){
 }
 
 #!!! TODO this is temp: refactor or remove
+# Replaces pts by indexed set
 olde2newFmtPtDef2ListOfLists<-function(newPtDef){
   pts<-newPtDef$pts # should be a list of list of matrices!!!
   
-  newPtDef$pts=sapply(names(pts), function(nm){
+  newPtDef$pts<-sapply(names(pts), function(nm){
 
     pts<-as.integer(unlist(newPtDef$pts[[nm]]))
     tags<-newPtDef$df[[nm]]$tag
@@ -376,68 +360,73 @@ olde2newFmtPtDef2ListOfLists<-function(newPtDef){
   newPtDef
 }
 
-
-matrices2tags<-function(matrixList){
-  tmp<-cumsum(sapply(mats,ncol))+1
-  c(1,tmp[-length(tmp)])
+#!!! kludge to convert output to ints
+pts2Integers<-function(newtib){
+  ptsCol<-'pts' #!!!kludge: must change shortly
+  
+  for(nm in names(newtib)){
+    ptsll<-newtib[[nm]][[ptsCol]] #ptsll is a list of matrices
+    newtib[[nm]][[ptsCol]]<-sapply(ptsll, function(mm){
+      matrix(as.integer(mm),2)
+    }, 
+    simplify=FALSE)
+  }
+  newtib
 }
 
-# Testing code
 
-# txt<-codeTemplate
+# #to test
+# ptDef2PtTibList<-function(newPtDef){
+#   ptTibList<-sapply( names(newPtDef$tib), function(nm){
+#     pts<-as.integer(unlist(newPtDef$pts[[nm]]))
+#     tags<-newPtDef$df[[nm]]$tag
+#     tibble(pts=list(tags2listmatrices(pts,tags)))
+#   }, simplify=FALSE)
+#   ptTibList
+# }
 # 
-# newPtDef<-list(
-#   pts=list(x=matrix(1:8,2))
-# )
-# 
-# t1<-ptDef2ReplacementList(newPtDef, txt )
-# t1
-# 
-# newPtDef<-list(
-#   pts=list(x=matrix(1:8,2)),
-#   df=list(x=data.frame(tag=c(1,3), stringsAsFactors = FALSE))
-# )
-# 
-# t2<-ptDef2ReplacementList(newPtDef, txt )
-# t2
-# 
+# #to test
+# ptDefs2DfTibList<-function(newPtDef){
+#   dfTibList<-sapply(names(newPtDef$df),function(nm){
+#       df<-newPtDef[[nm]]$df
+#       df[-which(names(df=='tag'))]
+#   },simplify=FALSE)
+#   newPtDef
+# }
 
-# "library(svgR)
-# WH<-c(600,400)
-# 
-# #Defined by mouse: edit with care!
-# ptR<-list(
-#   x=matrix(c(1,2,3,4),2)
-# )
-# 
-# tagR<-list(
-#   x=data.frame(
-#     tag=c(1),
-#     stringsAsFactors = FALSE
-#   )
-# )
-# 
-# svgR(wh=WH,
-# #your custom code goes here
-# 
-#   NULL
-# 
-# 
-# 
-# )
-# "->txt3
-# 
 # newPtDef<-list(
-#   pts=list(
-#     x=matrix(c(1,2,3,4,5,6),2)
+#   tib=list(
+#     x=tribble(
+#     ~fill, ~pts,
+#     'red', matrix((1:6+.01),2)
+#     ),
+#     y=tribble(
+#       ~stroke, ~pts,
+#       'blue', matrix(1:4,2)
+#     )
 #   ),
-#   tagR=list(
-#     x=data.frame(
-#       tag=c(1),
-#       stringAsFactors=FALSE
+#   pts=list(
+#     x=matrix(1:6,2),
+#     y=matrix(1:4,2)
+#   ),
+#   df=list(
+#     x=tribble(
+#       ~fill, ~tag,
+#       'red',   1,
+#       'green', 2
+#     ),
+#     y=tribble(
+#         ~stroke, ~tag,
+#         'blue', 1
 #     )
 #   )
+#   
 # )
 # 
-# t3<-ptDef2ReplacementList(newPtDef, txt3 )
-# t3
+# 
+# ptDefs_pts2tib(newPtDef)->temp
+# 
+# 
+# tibb<-newPtDef$tib
+# 
+# tibb2<-pts2Integers(tibb)

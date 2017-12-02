@@ -131,9 +131,11 @@ statusPlotTagVal<-callModule(
   svgID='ptR_SVG_TagVal',
   showPts.compound=reactive({
     showPts.valTag(
-      ptName=getTagName(), pts=getPtDefs()$pts[[getTagName()]],
+      ptName=getTagName(), 
+      pts=matrix(unlist(getPtDefs()$tib[[getTagName()]]),2) ,
       selectedPointIndx=as.numeric( getTagIndex() ),
-      ptDisplayMode=getDisplayModeTag(), tags=getTagDF()$tag
+      ptDisplayMode=getDisplayModeTag(), 
+      tags=getTagIndexChoices()
     )
   }),
   ptrDisplayScript = reactive({ svgToolsScript( "TagVal") }), #ptrDisplayScript = reactive({ js.scripts[[ "TagVal"]]}),

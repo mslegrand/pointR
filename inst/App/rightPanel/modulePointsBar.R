@@ -11,9 +11,18 @@ modulePointsBarUI <- function(id, input, output) {
     ),
     absolutePanel( id='header', top=50, left=0, width="100%", "class"="headerPanel", draggable=FALSE,
         div(style="display:inline-block",
-              selectInput( ns("name"), "Point Matrix", list("x"), 
+              selectInput( ns("name"), "Name", list("x"), 
                            selected="x", multiple=FALSE,  selectize = FALSE,
-                           width="150px",size=1  )
+                           width="150px",size=1  )#,
+               
+              # numericInput( ns("col"), "matrix col", 1, min=1, step=1,
+              #               width="50px" )
+        ),
+        div(style="display:inline-block",
+            numericInput( ns("row"), "Row", 1, min=1, max=10, step=1, width="80px" )
+        ),
+        div(style="display:inline-block",
+            numericInput( ns("col"), "Index", 1, min=1, max=10, step=1, width="80px" )
         ),
         div(style="display:inline-block",
               selectInput(ns("displayMode"), "Display Mode",
@@ -37,15 +46,16 @@ modulePointsBarUI <- function(id, input, output) {
   ) #end taglist
 } 
 
-
+#TODO name,  row, rowRange, matRange, matIndex
 modulePointsBar<-function(
         input, output, session,
-        barName, 
-        getSelectInfo,
+        barName,
+        getTibPtsColEndIndex,
+        #getSelectInfo, 
         getPtDefs, 
         name, 
         index,
-        isTaggable,
+        #isTaggable,
         headerId){
   
   result<-reactiveValues( #
@@ -65,23 +75,33 @@ modulePointsBar<-function(
   # !!! Unclear what this observer is ablout
   observe({ # updates name when changing points using mouse
     if(identical( barName(), 'Points')){
-      sender=paste0(barName(),'.point')
-      triggerRefresh(sender, rollBack=TRUE)
+      #sender=paste0(barName(),'.point')
+      #triggerRefresh(sender, rollBack=TRUE)
       # session$sendCustomMessage(
       #   type = "shinyAceExt",
       #   list(id= "source", sender=sender, getValue=TRUE)
       # )
-      ptRList<-getPtDefs()$pts #
-      if(length(names(ptRList))==0){
+      
+### !!!!
+# !!! TODO ------REPLACE length(names(ptRList)) with tib names------------
+      tibList<-getPtDefs()$tibs # Turn on/off header depending on whether we have pt data.
+      if(length(names(tibList))==0){
         hideElement( headerId )
       } else {
         showElement( headerId)
       }
-      res<-getSelectInfo() # triggerd by changes for getPtName, getPtIndex. getPtDefs
-      result$point.index<-res$point.index
+      
+      #selection<-name()
+      
+      #res<-getSelectInfo() # triggered by changes for getPtName, getPtIndex. getPtDefs
+     
+      
+      #result$point.index<-res$point.index
+      
+      result$point.index<-index()
       updateSelectInput(session, "name",
-                        choices=names(ptRList),
-                        selected= res$selected ) #res$selected is name
+                        choices=names(tibList),
+                        selected= name()  ) #res$name ) #res$selected is name
     } 
   })
   
@@ -95,15 +115,21 @@ modulePointsBar<-function(
   #   }
   # })
   
-  observe({
-    selection<-getSelectInfo()$selected
-    ptRList<-getPtDefs()$pts
-    len<-length(ptRList[[selection ]])/2
-    # if(result$point.index>=len){
-    #     disable("forwardPt")
-    #   } else {
-    #     enable("forwardPt")
-    #   }
+  observe({  # point range checking
+    endIndx<-getTibPtsColEndIndex()
+    indx<-index()
+    
+    if(length(endIndx)==0 || length(indx)==0 || !is.numeric(indx) || !is.finite(indx) || indx<0){
+      disable("forwardPt")
+    } else {
+      begIndx<-c(0,endIndx)+1
+      row<-sum(begIndx<indx)
+      if(row<1 || indx>=endIndx[row]){
+        disable("forwardPt")
+      } else {
+        enable("forwardPt")
+      }
+    }
   })
   
   # observe(
@@ -117,23 +143,33 @@ modulePointsBar<-function(
  
   #---selected point forward button-----
   observeEvent(input$forwardPt,{
-    selection<-input$name
+    #selection<-input$name
     #selection<-input$ptRSelect
-    ptRList<-getPtDefs()$pts
-    len<-length(ptRList[[selection ]])/2
-    result$point.index<-min(len, result$point.index+1)
+    #ptRList<-getPtDefs()$pts
+    #len<-length(ptRList[[selection ]])/2
+    if(length(index())>0){
+      result$point.index<-min(len, index())
+    } else {
+      result$point.index<-0
+    }
   })
   
 
   #---selected point backward button-----
   observeEvent(input$backwardPt,{
     #decrement selectedPointIndex
-    selection<-input$name
+    #selection<-input$name
     #selection<-selectedPoint$name
-    ptRList<-getPtDefs()$pts
-    len<-length(ptRList[[selection ]])/2
-    if(len>0){
-      result$point.index<-max(1,result$point.index-1)
+    #ptRList<-getPtDefs()$pts
+    #len<-length(ptRList[[selection ]])/2
+    
+    # if(len>0){
+    #   result$point.index<-max(1,result$point.index-1)
+    # } else {
+    #   result$point.index<-0
+    # }
+    if(length(index())>0){
+      result$point.index<-max(1, index())
     } else {
       result$point.index<-0
     }

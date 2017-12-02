@@ -322,9 +322,11 @@ statusPlotTagDrag<-callModule(
   svgID='ptR_SVG_TagDrag',
   showPts.compound=reactive({
     showPts.dragTag(
-      ptName=getTagName(), pts=getPtDefs()$pts[[getTagName()]],
+      ptName=getTagName(), 
+      pts=matrix(unlist(getPtDefs()$tib[[getTagName()]]),2) ,
       selectedPointIndx=as.numeric( getTagIndex() ),
-      ptDisplayMode=getDisplayModeTag(), tags=getTagDF()$tag 
+      ptDisplayMode=getDisplayModeTag(), 
+      tags=getTagIndexChoices()
     )
   }),
   ptrDisplayScript = reactive({ svgToolsScript( "TagDrag") }), # reactive({ js.scripts[[ "TagDrag"]] }),

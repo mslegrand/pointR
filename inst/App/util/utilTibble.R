@@ -1,13 +1,13 @@
 library(tidyverse)
 
-ptR<-list(
-  
-  x=tibble(
-    pts=list(matrix(1:6,2), matrix(11:14,2)),
-    fill=c('red','white')
-  )
-
-)
+# ptR<-list(
+#   
+#   x=tibble(
+#     pts=list(matrix(1:6,2), matrix(11:14,2)),
+#     fill=c('red','white')
+#   )
+# 
+# )
 
 # getPtRTibble<-function(ptDef, tibble.name){
 #   ptDef[[tibble.name]]
@@ -61,7 +61,7 @@ ptR<-list(
 # cloneRow
 # 
 
-tib<- ptR$x
+#tib<- ptR$x
 
 
 #returns TRUE if all numeric
@@ -72,7 +72,7 @@ isNumericString<-function(x){
 #clones rowIndex and places new row at end
 
 cloneTib<-function(tib, rowIndex=nrow(tib)){
-  bind_rows(tib, tib[rowIndx,])
+  bind_rows(tib, tib[rowIndex,])
 }
 
 
@@ -87,34 +87,34 @@ tagTib<-function(tib, ptCol,  rowIndex=nrow(tib), ptIndx){
   tmp<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),]) # clones row
   pts<-tmp[[rowIndex, ptCol]] # extract pts in that row and
   ini<-1:(ptIndx-1)
-  tmp[[rowIndx,ptCol]]<-pts[,ini] # keep ini
-  tmp[[(rowIndx+1),ptCol]]<-pts[,-ini] # remove ini
+  tmp[[rowIndex,ptCol]]<-pts[,ini] # keep ini
+  tmp[[(rowIndex+1),ptCol]]<-pts[,-ini] # remove ini
   tmp
 }
 
 # y=util to discover which colunns might be points
-tagTib<-function(tib, ptCol,  rowIndex=nrow(tib), ptIndx){
+tagTib<-function(tib, ptColIndex,  rowIndex=nrow(tib), matCol){
   tmp<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
-  pts<-tmp[[rowIndex, ptCol]]
-  tmp[[rowIndx,ptCol]]<-pts[,1:(ptIndx-1)]
-  tmp[[(rowIndx+1),ptCol]]<-pts[,-(1:(ptIndx-1))]
+  pts<-tmp[[rowIndex, ptColIndex]]
+  tmp[[rowIndex,ptColIndex]]<-pts[,1:(matCol-1)]
+  tmp[[(rowIndex+1),ptColIndex]]<-pts[,-(1:(matCol-1))]
   tmp
 }
 
 extendTib<-function(tib){
-  rowIndx<-nrow(tib)
-  if(rowIndx>0){
-    tib<-bind_rows(tib, tib[rowIndx,])
+  rowIndex<-nrow(tib)
+  if(rowIndex>0){
+    tib<-bind_rows(tib, tib[rowIndex,])
     sapply(tib, function(x)class(x[[1]])=='matrix')->indx
-    tib[rowIndx+1,indx]<-c()
+    tib[rowIndex+1,indx]<-c()
   }
   tib
 }
 
 ptColTib<-function(tib){
-  rowIndx<-nrow(tib)
+  rowIndex<-nrow(tib)
   colIndx<-c()
-  if(rowIndx>0){
+  if(rowIndex>0){
     sapply(tib, function(x)class(x[[1]])=='matrix')->indx
     colIndx<-which(indx)
   }
@@ -123,7 +123,6 @@ ptColTib<-function(tib){
 
 
 # extract the given tib column
-=
 getColTib<-function(tib, indx){
   tib[[indx]]
 }
@@ -138,8 +137,8 @@ setColTib<-function(tib, indx, value){
 
 # remove a row from the tib
 
-removeRowTib<-function(tib, rowIndx){
-  tib[-rowIndx,]
+removeRowTib<-function(tib, rowIndex){
+  tib[-rowIndex,]
 }
 
 
@@ -244,7 +243,13 @@ replacePoint<-function(tib, row, ptCol, ptIndx, pt){
   tib
 }
 
+# temp utils to merge back the pts and df 
 
+ 
+getTibPointId<-function(name, pts ){ #pts are to be a list of matrices
+  tmp<-sapply(pts, ncol)
+  id<-sapply(1:length(tmp), function(i)paste0('pd-',name,'-',i,'-',1:tmp[[i]]))
+}
 
 
 # Should we have the same for matrix??? (but ignore row unless tagged?)

@@ -6,9 +6,9 @@
 
 # called indirectly by either a new/load source or upon a commit???
 # called directly by getSelectInfo, which is called by pointsBar module initialization
-ex.getSelectInfo<-function(ptRList, selected, point.index){
-  choices<-names(ptRList)
-  if(length(choices)==0 ){
+ex.getSelectInfo<-function(tibList, selected, point.index){
+  choices<-names(tibList)
+  if(length(tibList)==0 ){
     rtv<-list(selected=NULL, point.index =0 )  
     return(rtv)
   }
@@ -16,7 +16,9 @@ ex.getSelectInfo<-function(ptRList, selected, point.index){
   if(length(selected)<1 || !(selected %in% choices) ){ # a new choice
     #pick the first choice candidate
     selected=choices[1]
-    pts<-ptRList[[selected]]
+#!!! ERROR  to extract points, we need the point column from the tib list. 
+# BUT WE DON'T HAVE ACCESS TO THAT HERE !!!
+    pts<-tibList[[selected]] 
     point.index<-length(pts)/2
     rtv<-list(
       selected=selected,
@@ -25,7 +27,7 @@ ex.getSelectInfo<-function(ptRList, selected, point.index){
     return(rtv)
   }
   #default: an existing choice
-  point.index<-min(point.index, length( ptRList[[selected]])/2 ) #cannot be longer than the number of points
+  point.index<-min(point.index, length( tibList[[selected]])/2 ) #cannot be longer than the number of points
   rtv<-list(
     selected=selected, 
     point.index=point.index
@@ -34,122 +36,156 @@ ex.getSelectInfo<-function(ptRList, selected, point.index){
 }
 
 getSelectInfo<-reactive({ #used by pointsBar only??
-  name<-getPtName()
+  name<-getTibName()
   indx<-getPtIndex()
-  pts<-getPtDefs()$pts
-  ex.getSelectInfo(pts, name, indx)
+  tibs<-getPtDefs()$tib
+  ex.getSelectInfo(tibs, name, indx)
   #ex.getSelectInfo(getPtDefs()$pts, getPtName(), getPtIndex())
 })
 
 
 #CALL modulePointsBarUI
-pointInfoList<-callModule( #auto  input, output, session 
+
+returnValue4ModulePointsBar<-callModule( #auto  input, output, session 
   module=modulePointsBar, 
   id="pointsBar", 
   barName=rightPanel,
-  getSelectInfo=getSelectInfo, #not the best way, but ...
+  getTibPtsColEndIndex=getTibPtsColEndIndex,
+  #getSelectInfo=getSelectInfo, #not the best way, but ...
   getPtDefs=getPtDefs, 
-  name=getPtName, 
-  index=getPtIndex, 
-  isTaggable=isTaggable,
+  name=getTibName, 
+  index=getPtIndex,
+  #isTaggable=isTaggable,
   headerId=NS("pointsBar", 'header')
 )
 
-#-----REACTIVES   based on modulePointsBar::pointInfoList
+#-----REACTIVES   based on modulePointsBar::returnValue4ModulePointsBar
 
-observeEvent(pointInfoList$showGrid() ,{
+observeEvent(returnValue4ModulePointsBar$showGrid() ,{
   if(rightPanel()=="Points"){
-    displayOptions$showGrid<-pointInfoList$showGrid() 
+    displayOptions$showGrid<-returnValue4ModulePointsBar$showGrid() 
   }
 })
 
 
 
-displayMode<-reactive({pointInfoList$displayMode()})
-insertMode<-reactive({pointInfoList$insertMode() })
+displayMode<-reactive({returnValue4ModulePointsBar$displayMode()})
+insertMode<-reactive({returnValue4ModulePointsBar$insertMode() })
 
-#-----OBSERVERS  using  modulePointsBar::pointInfoList
+#-----OBSERVERS  using  modulePointsBar::returnValue4ModulePointsBar
 
 # --SELECTION EVENTS-------------------------------
 observe({
-  name<-pointInfoList$name()
+  name<-returnValue4ModulePointsBar$name()
     if(!is.null(name)){
-      selectedPoint$name<-pointInfoList$name()
+      selectedPoint$name<-returnValue4ModulePointsBar$name()
     }
 })
 
 # selected pts index
-observe({ selectedPoint$point.index<-pointInfoList$index() })
+observeEvent(returnValue4ModulePointsBar$index(), { 
+  if(rightPanel()=="Points"){
+    updateSelected(point.index=returnValue4ModulePointsBar$index() )
+  }
+})
 
 #-----------BUTTON EVENTS--------------------
 #---BUTTON: remove selected point  -----
-observeEvent( pointInfoList$removePt(), {
-  selection<-selectedPoint$name
-  #selection<-input$ptRSelect
+observeEvent( returnValue4ModulePointsBar$removePt(), {
+  selection<-getTibName() #selectedPoint$name
+cat('Enter removePt\n')  
   if(selection!=""){
-    ptRList<-getPtDefs()$pts
-    pts<-ptRList[[selection]]
-    if(length(pts)==0){  #if no points, return
-      return(NULL)
-    }
-    indx=selectedPoint$point.index 
+    ptDefs<-getPtDefs()
+
+    if(length(ptDefs$tib)==0){return(NULL)}
+    #do more checks as necessary
+    
+    #ptRList<-getPtDefs()$pts
+    #pts<-ptRList[[selection]]
+    
+    # if(length(pts)==0){  #if no points, return
+    #   return(NULL)
+    # }
+    indx=getPtIndex() #selectedPoint$point.index 
+    # if(indx==0){ return(NULL)}
+    
+    cat("indx=",indx,"\n")
     src<-getCode() 
     
-    #delete the point from the ptR list
+    #get row, col
     if(indx>=1){
-      pts<-pts[-c(2*indx,2*indx-1)]
-      selectedPoint$point.index<-max(1,selectedPoint$point.index-1)
-    } 
-    if( indx==0 || length(pts)<1 ){
-      pts<-list(NULL)
-      selectedPoint$point.index<-0 
-      ptRList[selection]<-pts
-    } else {
-      ptRList[[selection]]<-pts
-    }
-     #src<-pts2Source(src,ptRList)
-    
-    tagRList<-getPtDefs()$df
-    if(!is.null(tagRList)){ #tagR exists
-      df<-tagRList[[selection]] 
-      if(!is.null(df)){ #df==tagR$x exists
-        if(length(ptRList[[selection]])==0){ #no points 
-          tagRList[selection]<-NULL #remove tagR$x
-        } else { # has points
-          tags<-df$tag
-          freq<-reactiveTag$freq[[selection]]
-          # (this is the manual case)
-          if(is.null(freq)){
-            if(indx==1 && !(2 %in% tags)){ #do nothing
-            } else {
-              if(indx %in% tags){ #remove the tag row
-                df<-subset(df,tags!=indx)
-                tags<-df$tag
-              }
-            }
-            #slide tags nos. down 
-            tags2move<-tags>indx
-            if(length(tags2move)>0){
-              tags[tags>indx]<-tags[tags>indx]-1
-              df$tag<-tags
-              tagRList[[selection]]<-df
-            }
-          } else { # freq is not null, 
-            pts<-ptRList[[selection]]
-            if( length(pts)/2<tail(tags,1) ){
-              # if no of pts == last tag, then remove the last row from df
-              n<-length(tags)-1
-              df<-head(df, n)
-              tagRList[[selection]]<-df
-            }
-          }
+      rc<-absPtIndx2TibPtPos(indx)
+      m<-ptDefs$tib[[selection]][[ rc$row, getTibPtColPos() ]] #!!! probably need some checking here
+      print(m)
+      cat("rc$matCol=",rc$matCol,"\n")
+      if(length(m)>0 && rc$matCol<= ncol(m)){
+        if(ncol(m)>0){ # After removal matrix will be empty
+          ptDefs$tib[[selection]][[ rc$row, getTibPtColPos() ]]<-m[,-rc$matCol]
+          updateSelected(point.index= indx-1) #!!! will need revisit soon
         }
-        
-        # ptRList
-        # src<-df2Source(src,tagList)
       }
     }
-    newPtDefs<-list(pts=ptRList, df= tagRList )
+    # get m<-mat[row,col]
+    # if ncol(m)<=1, remove row
+    # else remove m$matCol from m
+    # replace in ptDefs
+    # have a nice day
+     
+    #delete the point from the ptR list
+    # if(indx>=1){
+    #   pts<-pts[-c(2*indx,2*indx-1)]
+    #   selectedPoint$point.index<-max(1,selectedPoint$point.index-1)
+    # } 
+    # if( indx==0 || length(pts)<1 ){
+    #   pts<-list(NULL)
+    #   selectedPoint$point.index<-0 
+    #   ptRList[selection]<-pts
+    # } else {
+    #   ptRList[[selection]]<-pts
+    # }
+     #src<-pts2Source(src,ptRList)
+    
+    # tagRList<-getPtDefs()$df
+    # if(!is.null(tagRList)){ #tagR exists
+    #   df<-tagRList[[selection]]
+    #   if(!is.null(df)){ #df==tagR$x exists
+    #     if(length(ptRList[[selection]])==0){ #no points
+    #       tagRList[selection]<-NULL #remove tagR$x
+    #     } else { # has points
+    #       tags<-df$tag
+    #       freq<-reactiveTag$freq[[selection]]
+    #       # (this is the manual case)
+    #       if(is.null(freq)){
+    #         if(indx==1 && !(2 %in% tags)){ #do nothing
+    #         } else {
+    #           if(indx %in% tags){ #remove the tag row
+    #             df<-subset(df,tags!=indx)
+    #             tags<-df$tag
+    #           }
+    #         }
+    #         #slide tags nos. down
+    #         tags2move<-tags>indx
+    #         if(length(tags2move)>0){
+    #           tags[tags>indx]<-tags[tags>indx]-1
+    #           df$tag<-tags
+    #           tagRList[[selection]]<-df
+    #         }
+    #       } else { # freq is not null,
+    #         pts<-ptRList[[selection]]
+    #         if( length(pts)/2<tail(tags,1) ){
+    #           # if no of pts == last tag, then remove the last row from df
+    #           n<-length(tags)-1
+    #           df<-head(df, n)
+    #           tagRList[[selection]]<-df
+    #         }
+    #       }
+    #     }
+    #     
+    #     # ptRList
+    #     # src<-df2Source(src,tagList)
+    #   }
+    # }
+    newPtDefs<-ptDefs
     sender='points.deletePoint'
     updateAceExtDef(newPtDefs, sender=sender)
     # setCode(src) #!!!
@@ -238,56 +274,83 @@ observeEvent(input$okTag, { #move into module???
 
 
 
+# #---TAG THIS POINT button-----
+# # note: in 1st tag, calls freqModal to complete the work, which exits in the okTag above
+# observeEvent( returnValue4ModulePointsBar$tagPt(), {
+#   #There are 3 distinct cases: 
+#   # 1. tagR list not there, add tagR list, selection and insert 
+#   # 2. tagR list there, but selection is not: add selection and insert 
+#   # 3  Both tagR list and tagR[[selection]] are there, just add tag no.
+#   if(rightPanel()=="Points"){
+#     #selection<-input$ptRSelect
+#     selection<-selectedPoint$name
+#     ptDefs<-getPtDefs()
+#     ptsList<-ptDefs$pts
+#     dfList<-ptDefs$df
+#     point.index<-max(1,selectedPoint$point.index) #can change later
+#     #PROPOSED REWRITE:
+#     ok= !(is.null(dfList)) && !(is.null(dfList[[selection]]) )
+#     if(!ok) { #this is a first tag
+#       showModal( modalFreq() ) #observer for showModal must complete the work
+#     } else { # this is a second tag (and hence manual)
+#       #if(reactiveTag$freq[[selection]]==0){ #manual case
+#       #add this tag
+#       df<-dfList[[selection]]
+#       if("tag" %in% names(df)){ # if not, then do nothing
+#         tags<-df$tag
+#         if(!(point.index %in% tags)){
+#           row<-max(tags[tags<point.index])
+#           tmp.df<-subset(df,tag==row)
+#           tmp.df$tag<-point.index
+#           df<-rbind(df, tmp.df)
+#           ordrows<-order(df$tag)
+#           df<-df[ordrows,,drop=FALSE]
+#           dfList[[selection]]<-df
+#           src<-getCode() 
+#           #src<-df2Source(src,dfList)
+#           # setCode(src) #!!!
+#           
+#           newPtDef<-list(pts=ptsList, df= dfList )
+#           updateAceExtDef(newPtDef, 'tag.pt')
+#           # replacementList<-ptDef2ReplacementList(newPtDef, src)
+#           # #src<-df2Source(src,dfList) #insert points into src
+#           # 
+#           # if( length(replacementList)>0 ){
+#           #   session$sendCustomMessage(
+#           #     type = "shinyAceExt",
+#           #     list(id= "source", replacement=replacementList, sender='tag.pt.button', ok=1)
+#           #   )
+#           # }
+#         }
+#       }
+#     }
+#   } #end of if
+# }) #end of point InfoList Tag Point, 
+
+
 #---TAG THIS POINT button-----
 # note: in 1st tag, calls freqModal to complete the work, which exits in the okTag above
-observeEvent( pointInfoList$tagPt(), {
-  #There are 3 distinct cases: 
-  # 1. tagR list not there, add tagR list, selection and insert 
-  # 2. tagR list there, but selection is not: add selection and insert 
-  # 3  Both tagR list and tagR[[selection]] are there, just add tag no.
+observeEvent( returnValue4ModulePointsBar$tagPt(), {
+  
   if(rightPanel()=="Points"){
     #selection<-input$ptRSelect
-    selection<-selectedPoint$name
+    cat("Enter tagPt\n")
+    src<-getCode() 
+    selection<-getTibName() #selectedPoint$name
     ptDefs<-getPtDefs()
-    ptsList<-ptDefs$pts
-    dfList<-ptDefs$df
-    point.index<-max(1,selectedPoint$point.index) #can change later
-    #PROPOSED REWRITE:
-    ok= !(is.null(dfList)) && !(is.null(dfList[[selection]]) )
-    if(!ok) { #this is a first tag
-      showModal( modalFreq() ) #observer for showModal must complete the work
-    } else { # this is a second tag (and hence manual)
-      #if(reactiveTag$freq[[selection]]==0){ #manual case
-      #add this tag
-      df<-dfList[[selection]]
-      if("tag" %in% names(df)){ # if not, then do nothing
-        tags<-df$tag
-        if(!(point.index %in% tags)){
-          row<-max(tags[tags<point.index])
-          tmp.df<-subset(df,tag==row)
-          tmp.df$tag<-point.index
-          df<-rbind(df, tmp.df)
-          ordrows<-order(df$tag)
-          df<-df[ordrows,,drop=FALSE]
-          dfList[[selection]]<-df
-          src<-getCode() 
-          #src<-df2Source(src,dfList)
-          # setCode(src) #!!!
-          
-          newPtDef<-list(pts=ptsList, df= dfList )
-          updateAceExtDef(newPtDef, 'tag.pt')
-          # replacementList<-ptDef2ReplacementList(newPtDef, src)
-          # #src<-df2Source(src,dfList) #insert points into src
-          # 
-          # if( length(replacementList)>0 ){
-          #   session$sendCustomMessage(
-          #     type = "shinyAceExt",
-          #     list(id= "source", replacement=replacementList, sender='tag.pt.button', ok=1)
-          #   )
-          # }
-        }
-      }
+    indx<-getPtIndex() #selectedPoint$point.index
+    rc<-absPtIndx2TibPtPos(indx) #point location
+    m<-ptDefs$tib[[selection]][[ rc$row, getTibPtColPos() ]]
+    if(ncol(m)<1){ 
+      return(NULL) # bail if matrix of points is empth
     }
+    tib<-ptDefs$tib[[selection]] #get the tib 
+    tib<-tagTib(tib, getTibPtColPos(), rc$row, rc$matCol)
+    ptDefs$tib[[selection]]<-tib 
+    sender='tagPt'
+    updateAceExtDef(ptDefs, sender=sender)
+    updateSelected(point.index=indx)
+    
   } #end of if
 }) #end of point InfoList Tag Point, 
 

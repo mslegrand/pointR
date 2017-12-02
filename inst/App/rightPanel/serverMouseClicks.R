@@ -1,46 +1,29 @@
 #// called when adding a new point
-addPt2ptDefs<-function(newPt, indx, ptDefs, selection){
-  #selection<-input$ptRSelect
-  #selection<-selectedPoint$name
-  #update local ptRList
-  #indx<-selectedPoint$point.index
 
-  ptRList<-ptDefs$pts
-  ptRList[[selection]]<-append(ptRList[[selection]],newPt,2*indx)
 
-  #df<-NULL
-  tagList<-ptDefs$df
-  if(!is.null(tagList)){
-    df<-tagList[[selection]]
-    #if selection has been tagged, and we have a frequency
-    # the also update the tags
-    if(!is.null(df)){ 
-      tags<-df$tag
-      freq<-reactiveTag$freq[[selection]]
-      if(is.null(freq)){
-        tags2move<-which(tags>indx)
-        if(length(tags2move)>0){
-          tags[tags2move]<-1+ tags[tags2move]
-          df$tag<-tags
-          tagList[[selection]]<-df
-        }
-      } else { # freq assigned case: ADD TAG AT END IF NEEDED.
-        freq<-as.integer(freq)
-        len<-length(ptRList[[selection]])/2
-        if( freq==1|| 1==(len %% freq)){
-          df2append<-tail(df,1)
-          df2append$tag<-len
-          df<-rbind(df,df2append)
-          tagList[[selection]]<-df
-        }
-      }
-    } 
-    # otherwise there is nothing to do for tags
-  } # end of tagR handling
-  #update point values
-  #selectedPoint$point.index<-selectedPoint$point.index+1
-  newPtDefs<-list(pts=ptRList, df= tagList )
-  #replacementList<-ptDef2ReplacementList(newPtDef, src)
+
+
+
+
+
+addPt2ptDefs<-function(name, row, matCol, point.indx, ptDefs, newPt){
+  
+  if(is.numeric(row) && is.numeric(matCol) && is.numeric(point.indx) &&
+     row>0 && length(ptDefs$tib)>0 && length(ptDefs$tib[[name]])>0 
+     && row<=nrow(ptDefs$tib[[name]])
+     ){
+    
+    tib<-ptDefs$tib[[name]]
+    col<-getTibPtColPos() #which(names(tib)==ptColName)
+    pts<-tib[[row,col]] 
+    pts<-append(pts,newPt,2*(matCol))
+    tib[[row,col]]<-matrix(pts,2)
+    ptDefs$tib[[name]]<-tib
+  } else {
+    ptDefs<-NULL #failed
+    cat("addPt2ptDefs returning NULL")
+  }
+  ptDefs
 }
 
 observe({ 
@@ -49,73 +32,106 @@ observe({
     if(length(input$mouseMssg)>0){
       #get cmd
       cmd<-input$mouseMssg$cmd
+      # isolate({
+      #   cat("input$mouseMssg\n")
+      #   print(input$mouseMssg)
+      #   cat("\n")        
+      # })
       if(length(input$mouseMssg$vec)>0){
-        vec<- unlist(input$mouseMssg$vec)
+        vec<- as.numeric(unlist(input$mouseMssg$vec))
       }
       src<-getCode()
       
       replacementList<-list()
-      #todo: error check???
-      #pt<-eval(parse(text=pt)) 
-      #ptRList<-getPtDefs()$pts
-      ptDefs<-getPtDefs()
+      
+      ptDefs<-getPtDefs() #!!!  to do: replace with getTib
+  
       barName=rightPanel()
       if(barName=="Points"){
         sender='PointsBar.mouse'
         if(cmd=='add'){ #---------add point
+          sender='PointsBar.mouse.add'
+          #cat('Enter: mouse cmd add')
           newPt<-vec
           #get selection
-          selection<-selectedPoint$name
+          
+          selection<-getTibName() #selectedPoint$name
           #update local ptRList
-          indx<-selectedPoint$point.index
-          ptDefs<-getPtDefs()
-          newPtDefs<-addPt2ptDefs(newPt, indx, ptDefs, selection)
-          selectedPoint$point.index<-selectedPoint$point.index+1
-          updateAceExtDef(newPtDefs, sender=sender)
-        }
+          indx<-getPtIndex() #selectedPoint$point.index
+          #cat('cmd add: getPtIndx()=', indx,'\n')
+          rc<-absPtIndx2TibPtPos(indx)
+          if(is.null(rc)){
+            cat('rc is null\n')
+          } else {
+            newPtDefs<-addPt2ptDefs(
+            getTibName(),
+            rc$row,
+            rc$matCol,
+            indx,
+            ptDefs, 
+            newPt 
+          )
+          
+          if(!is.null(newPtDefs)){ #update only upon success
+             #selectedTibble$point.index<-selectedTibble$point.index+1
+              updateAceExtDef(newPtDefs, sender=sender)
+              updateSelected(point.index=indx+1)
+          }
+          }
+
+         }
         
         if(cmd=='move'){ # --------move point
+          #cat('Enter: mouse cmd move')
+          sender='PointsBar.mouse.move'
           id<-input$mouseMssg$id
           vid<-strsplit(id,"-")[[1]] 
           #get selection
           selection<-vid[2]
           #get point index
-          indx<-2*as.numeric(vid[3])-1
-          #reassign point
+          
+          indx<-as.numeric(vid[3]) # index is the absolute position of in the points array
+          
+          newPt<-vec
+          #m[,rindx]<-newPt # m is the matrix of points in the given row
+          
+           
+           #reassign point
+ 
+          #selectedPoint$point.index<-(indx+1)/2
+          
+          
+          rc<-absPtIndx2TibPtPos(indx)
+          ptDefs$tib[[selection]][[ rc$row, getTibPtColPos() ]][,rc$matCol]<-newPt
           newPtDefs<-ptDefs
-          newPtDefs$pts[[selection]][indx:(indx+1)]<-vec
-          selectedPoint$point.index<-(indx+1)/2
+          #selectedTibble$point.index<-rc$matColPos
+          #selectedTibble$row<-rc$row
+
           updateAceExtDef(newPtDefs, sender=sender)
+          updateSelected(point.index=indx)
         }        
       }
 
       if(barName=='tagDrag'){
         sender='tagDrag.mouse'
         if(cmd=='transGrp'){ # -- move tagged group (from tagDrag)
+          
           tid<-input$mouseMssg$id
-          vec<- input$mouseMssg$vec
-          dxy<-unlist(vec) #eval(parse(text=tmp))
-          # get the tag name, 
-          ptName<-getPtName() 
-          # get points
-          ptRList<-getPtDefs()$pts
-          pts<-getPtDefs()$pts[[ptName]] #ptRList[[ptName]]
-          tagRList<-getPtDefs()$df
-          tag.indx<-getPtIndex() #as.numeric(tagDragInfoList$index() ) #!!! tagIndx2 should be replaced with a safer alternative
-          ptTags<-getPtDefs()$df[[ptName]]
-          if( !is.null(tag.indx) && !is.null(ptTags)){
-            tags<-ptTags$tag
-            ti<-which(tag.indx==tags) 
-            id.nos<-sequence(ncol(pts))
-            # the tag point range
-            tagInterval<-findInterval(id.nos,tags)
-            tmp<-pts[,tagInterval==ti]
-            pts[,tagInterval==ti]<-matrix(tmp+dxy,2)
-            ptRList[[ptName]]<-pts
-            
-            newPtDefs<-list(pts=ptRList, df= tagRList ) 
-            updateAceExtDef(newPtDefs, sender=sender)
-          }
+          #vec<- as.numeric(input$mouseMssg$vec)
+          dxy<-vec #eval(parse(text=tmp))
+          tmp<-unlist(str_split(tid,"_"))
+          row<-as.numeric(tail(tmp,1))
+          
+          selection<-getTibName() #selectedPoint$name
+          #rc<-absPtIndx2TibPtPos(indx)
+          m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]
+          ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]<-m+vec
+          newPtDefs<-ptDefs
+          #selectedTibble$point.index<-rc$matColPos
+          #selectedTibble$row<-rc$row
+          
+          updateAceExtDef(newPtDefs, sender=sender)
+          #updateSelected(point.index=indx)
         }
       }
       
@@ -128,8 +144,11 @@ observe({
           tag.index<-as.integer(tag.index)
           tagIndices<-getTagIndexChoices()
          
+         
           point.index<-tagIndices[tag.index]
-          selectedPoint$point.index<-point.index
+          
+          #selectedPoint$point.index<-point.index
+          updateSelected(point.index=point.index )
         }
       }
       

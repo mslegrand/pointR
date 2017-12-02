@@ -1,7 +1,6 @@
 #serverPlotBar
 
 observeEvent(input$plotNavBar, {
-  #cmd<-input$plotNavBar$item
   cmd<-getRightMenuCmd()
   if(is.null(cmd)){
     cmd<-"Points"
