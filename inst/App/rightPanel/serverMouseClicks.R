@@ -19,6 +19,7 @@ addPt2ptDefs<-function(name, row, matCol, point.indx, ptDefs, newPt){
     pts<-append(pts,newPt,2*(matCol))
     tib[[row,col]]<-matrix(pts,2)
     ptDefs$tib[[name]]<-tib
+    updateSelected(row=row, matCol=matCol+1, point.index=point.indx+1 )
   } else {
     ptDefs<-NULL #failed
     cat("addPt2ptDefs returning NULL")
@@ -106,9 +107,10 @@ observe({
           newPtDefs<-ptDefs
           #selectedTibble$point.index<-rc$matColPos
           #selectedTibble$row<-rc$row
-
+          # selectedTibble$row<-rc$row
+          # selectedTibble$col<-rc$col
           updateAceExtDef(newPtDefs, sender=sender)
-          updateSelected(point.index=indx)
+          updateSelected(point.index=indx, row=rc$row, matCol=rc$matCol)
         }        
       }
 

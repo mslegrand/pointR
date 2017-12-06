@@ -8,17 +8,21 @@ selectedTibble <- reactiveValues(
   name="x", #NULL,       # name of current point array
   row=1,
   column=1, # default to last col?
+  matCol=0,
   ptColName='pts',
-  index=0          #  selected pt.indx (column) in current point array
+  index=0          #  
 )
 
 
-updateSelected<-function( name, row, column, point.index, ptColName ){
+
+
+updateSelected<-function( name, row, column, matCol, point.index, ptColName ){
   if(!missing(name)){
     selectedPoint$name=name
     selectedTibble$name=name
   }
   if(!missing(point.index)){
+    cat("updateSelected: setting point.index=",point.index,"\n")
     selectedPoint$point.index=as.numeric(point.index)
   }
   if(!missing(ptColName)){
@@ -26,12 +30,17 @@ updateSelected<-function( name, row, column, point.index, ptColName ){
   }
   if(!missing(row)){ # !!! may want to provide a check here
     selectedTibble$row=row
-    point.index<-selectedPoint$point.index
-    if( row>0 ){
-      endPos<-getTibPtsColEndIndex()
-      begPos<-c(0,endPos)+1
-      selectedPoint$point.index<-point.index<-min(max(point.index,begPos[row]),endPos[row])
-    } 
+    cat("updateSelected: setting row=",row,"\n")
+    # point.index<-selectedPoint$point.index
+    # if( row>0 ){
+    #   endPos<-getTibPtsColEndIndex()
+    #   begPos<-c(0,endPos)+1
+    #   selectedPoint$point.index<-point.index<-min(max(point.index,begPos[row]),endPos[row])
+    # } 
+  }
+  if(!missing(matCol)){
+    cat("updateSelected: setting matCol=",matCol,"\n")
+    selectedTibble$matCol=matCol
   }
   if(!missing(column)){
     selectedTibble$column=column
@@ -59,7 +68,22 @@ getCode<-reactive({request$code})
 getPtName<-reactive({selectedPoint$name})
 getTibName<-reactive({selectedTibble$name}) #allw to be null only if tib is null
 
-getPtIndex<-reactive({as.numeric(selectedPoint$point.index)})
+getPtIndexChoices<-reactive({ 
+  isolate(print(getTibPts() ))
+  t<-length(unlist(getTibPts()))/2
+  b<-min(1,t)
+  b:t
+})
+
+getPtIndex<-reactive({
+  if(length(selectedPoint$point.index)>0){
+    as.numeric(selectedPoint$point.index)
+  } else {
+      max(getPtIndexChoices())
+  }
+})
+
+
 
 getTib<-reactive({ getPtDefs()$tib[[ getTibName() ]] })
 getTibPtColPos<-reactive({ which(names(getTib())==selectedTibble$ptColName )})
@@ -154,7 +178,36 @@ absPtIndx2TibPtPos<-function(indx){
 #     note: 2 or 3 implies have changed 
 
 getTibRow<-reactive({selectedTibble$row})
-getTibIndex<-reactive({selectedTibble$index})
+getTibRowChoices<-reactive({ 
+  tib<-getTib()
+  if(!is.null(tib) && is.finite(nrow(tib)) && nrow(tib)>0 ){
+    1:nrow(tib) 
+  } else {
+    1
+  }
+})
+
+getTibMatCol<-reactive({ selectedTibble$matCol })
+
+getTibMatColChoices<-reactive({ 
+  tib<-getTib()
+  if(!is.null(tib) && is.finite(nrow(tib)) 
+     && nrow(tib)>0 
+     && getTibRow()<nrow(tib)
+     && !is.null(getTibPtColPos() )
+  ){
+    m<-tib[[getTibRow() ,getTibPtColPos() ]] 
+    1:ncol(m)
+  } else {
+    0:0
+  }
+})
+
+
+
+#getTibIndex<-reactive({selectedTibble$index})
+
+
 
 #inverse function : not used
 tibPtPos2AbsPtIndx<-reactive({

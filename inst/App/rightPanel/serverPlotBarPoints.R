@@ -6,42 +6,42 @@
 
 # called indirectly by either a new/load source or upon a commit???
 # called directly by getSelectInfo, which is called by pointsBar module initialization
-ex.getSelectInfo<-function(tibList, selected, point.index){
-  choices<-names(tibList)
-  if(length(tibList)==0 ){
-    rtv<-list(selected=NULL, point.index =0 )  
-    return(rtv)
-  }
-  
-  if(length(selected)<1 || !(selected %in% choices) ){ # a new choice
-    #pick the first choice candidate
-    selected=choices[1]
-#!!! ERROR  to extract points, we need the point column from the tib list. 
-# BUT WE DON'T HAVE ACCESS TO THAT HERE !!!
-    pts<-tibList[[selected]] 
-    point.index<-length(pts)/2
-    rtv<-list(
-      selected=selected,
-      point.index=point.index
-    )
-    return(rtv)
-  }
-  #default: an existing choice
-  point.index<-min(point.index, length( tibList[[selected]])/2 ) #cannot be longer than the number of points
-  rtv<-list(
-    selected=selected, 
-    point.index=point.index
-  )
-  return(rtv)  
-}
+# ex.getSelectInfo<-function(tibList, selected, point.index){
+#   choices<-names(tibList)
+#   if(length(tibList)==0 ){
+#     rtv<-list(selected=NULL, point.index =0 )  
+#     return(rtv)
+#   }
+#   
+#   if(length(selected)<1 || !(selected %in% choices) ){ # a new choice
+#     #pick the first choice candidate
+#     selected=choices[1]
+# #!!! ERROR  to extract points, we need the point column from the tib list. 
+# # BUT WE DON'T HAVE ACCESS TO THAT HERE !!!
+#     pts<-tibList[[selected]] 
+#     point.index<-length(pts)/2
+#     rtv<-list(
+#       selected=selected,
+#       point.index=point.index
+#     )
+#     return(rtv)
+#   }
+#   #default: an existing choice
+#   point.index<-min(point.index, length( tibList[[selected]])/2 ) #cannot be longer than the number of points
+#   rtv<-list(
+#     selected=selected, 
+#     point.index=point.index
+#   )
+#   return(rtv)  
+# }
 
-getSelectInfo<-reactive({ #used by pointsBar only??
-  name<-getTibName()
-  indx<-getPtIndex()
-  tibs<-getPtDefs()$tib
-  ex.getSelectInfo(tibs, name, indx)
-  #ex.getSelectInfo(getPtDefs()$pts, getPtName(), getPtIndex())
-})
+# getSelectInfo<-reactive({ #used by pointsBar only??
+#   name<-getTibName()
+#   indx<-getPtIndex()
+#   tibs<-getPtDefs()$tib
+#   ex.getSelectInfo(tibs, name, indx)
+#   #ex.getSelectInfo(getPtDefs()$pts, getPtName(), getPtIndex())
+# })
 
 
 #CALL modulePointsBarUI
@@ -50,11 +50,17 @@ returnValue4ModulePointsBar<-callModule( #auto  input, output, session
   module=modulePointsBar, 
   id="pointsBar", 
   barName=rightPanel,
-  getTibPtsColEndIndex=getTibPtsColEndIndex,
+  #getTibPtsColEndIndex=getTibPtsColEndIndex,
   #getSelectInfo=getSelectInfo, #not the best way, but ...
-  getPtDefs=getPtDefs, 
+  #getPtDefs=getPtDefs, 
   name=getTibName, 
-  index=getPtIndex,
+  nameChoices=getTagNameChoices,
+  ptIndex=getPtIndex,
+  ptIndexChoices=getPtIndexChoices,
+  tibRow=getTibRow,
+  rowChoices=getTibRowChoices,
+  matCol=getTibMatCol,
+  matColChoices=getTibMatColChoices,
   #isTaggable=isTaggable,
   headerId=NS("pointsBar", 'header')
 )
@@ -83,9 +89,9 @@ observe({
 })
 
 # selected pts index
-observeEvent(returnValue4ModulePointsBar$index(), { 
+observeEvent(returnValue4ModulePointsBar$pointIndex(), { 
   if(rightPanel()=="Points"){
-    updateSelected(point.index=returnValue4ModulePointsBar$index() )
+    updateSelected(point.index=returnValue4ModulePointsBar$pointIndex() )
   }
 })
 
@@ -113,7 +119,7 @@ cat('Enter removePt\n')
     src<-getCode() 
     
     #get row, col
-    if(indx>=1){
+    if(indx>=1){ #should be unnecessary, but...
       rc<-absPtIndx2TibPtPos(indx)
       m<-ptDefs$tib[[selection]][[ rc$row, getTibPtColPos() ]] #!!! probably need some checking here
       print(m)
@@ -234,6 +240,8 @@ observeEvent(input$okTag, { #move into module???
   ptsList<-ptDefs$pts
   dfList<-ptDefs$df
   point.index<-max(1,selectedPoint$point.index) #can change later
+  updateSelected(row=getTibRow()+1, matCol=1)
+  
   
   if(!is.null(reactiveTag$freq[[selection]])){ #pad tags to the end and exit
     freq<-as.integer(reactiveTag$freq[[selection]])
@@ -342,19 +350,36 @@ observeEvent( returnValue4ModulePointsBar$tagPt(), {
     rc<-absPtIndx2TibPtPos(indx) #point location
     m<-ptDefs$tib[[selection]][[ rc$row, getTibPtColPos() ]]
     if(ncol(m)<1){ 
-      return(NULL) # bail if matrix of points is empth
+      return(NULL) # bail if matrix of points is empty
     }
     tib<-ptDefs$tib[[selection]] #get the tib 
     tib<-tagTib(tib, getTibPtColPos(), rc$row, rc$matCol)
     ptDefs$tib[[selection]]<-tib 
     sender='tagPt'
     updateAceExtDef(ptDefs, sender=sender)
-    updateSelected(point.index=indx)
+    updateSelected(point.index=indx, row=getTibRow()+1, matCol=1)
     
   } #end of if
 }) #end of point InfoList Tag Point, 
 
 
+observeEvent( returnValue4ModulePointsBar$forwardPt(), {
+  if(length(selectedPoint$point.index)>0){
+    selectedPoint$point.index=min(selectedPoint$point.index+1, max(getPtIndexChoices()) )
+    rc<-absPtIndx2TibPtPos(selectedPoint$point.index)
+    selectedTibble$row<-rc$row
+    selectedTibble$col<-rc$col
+  }
+})
+
+observeEvent( returnValue4ModulePointsBar$backwardPt(), {
+  if(length(selectedPoint$point.index)>0){
+    selectedPoint$point.index=max(selectedPoint$point.index-1, 0 )
+    rc<-absPtIndx2TibPtPos(selectedPoint$point.index)
+    selectedTibble$row<-rc$row
+    selectedTibble$col<-rc$col
+  }
+})
 
 # ===============END SERVER Module PointsBar=======================
 

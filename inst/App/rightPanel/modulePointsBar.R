@@ -13,7 +13,7 @@ modulePointsBarUI <- function(id, input, output) {
         div(style="display:inline-block",
               selectInput( ns("name"), "Name", list("x"), 
                            selected="x", multiple=FALSE,  selectize = FALSE,
-                           width="150px",size=1  )#,
+                           width="100px",size=1  )#,
                
               # numericInput( ns("col"), "matrix col", 1, min=1, step=1,
               #               width="50px" )
@@ -22,13 +22,16 @@ modulePointsBarUI <- function(id, input, output) {
             numericInput( ns("row"), "Row", 1, min=1, max=10, step=1, width="80px" )
         ),
         div(style="display:inline-block",
-            numericInput( ns("col"), "Index", 1, min=1, max=10, step=1, width="80px" )
+            numericInput( ns("matCol"), "Mat Col", 1, min=1, max=10, step=1, width="80px" )
+        ),
+        div(style="display:inline-block",
+            numericInput( ns("ptIndx"), "ptIndx", 1, min=1, max=10, step=1, width="80px" )
         ),
         div(style="display:inline-block",
               selectInput(ns("displayMode"), "Display Mode",
                           list("Normal","Labeled","Hidden"), selected="Normal", 
                           multiple=FALSE, selectize = FALSE,
-                          width="150px", size=1 )
+                          width="100px", size=1 )
         ),
         # div(style="display:inline-block",
         #       textOutput(ns("tagFreq"), "Auto Tag",
@@ -52,18 +55,23 @@ modulePointsBar<-function(
         barName,
         getTibPtsColEndIndex,
         #getSelectInfo, 
-        getPtDefs, 
+        #getPtDefs, 
         name, 
-        index,
+        nameChoices,
+        ptIndex,
+        ptIndexChoices,
+        tibRow,
+        rowChoices,
+        matCol,
+        matColChoices,
         #isTaggable,
         headerId){
   
   result<-reactiveValues( #
-    point.index=0
+    point.index=0,
+    row=1,
+    matCol=0
   )
-  
-  getIndx<-reactive({point.indx})
-  output$indx<-renderText({ getIndx() })
   
   triggerRefresh<-function(sender, rollBack=TRUE, auxValue=FALSE){ # to be used to force a code refresh???
     session$sendCustomMessage(
@@ -72,114 +80,83 @@ modulePointsBar<-function(
     )
   }
   
-  # !!! Unclear what this observer is ablout
-  observe({ # updates name when changing points using mouse
+
+  observeEvent(barName(), { # updates only when either barName changes to points
     if(identical( barName(), 'Points')){
-      #sender=paste0(barName(),'.point')
-      #triggerRefresh(sender, rollBack=TRUE)
-      # session$sendCustomMessage(
-      #   type = "shinyAceExt",
-      #   list(id= "source", sender=sender, getValue=TRUE)
-      # )
-      
-### !!!!
-# !!! TODO ------REPLACE length(names(ptRList)) with tib names------------
-      tibList<-getPtDefs()$tibs # Turn on/off header depending on whether we have pt data.
-      if(length(names(tibList))==0){
+      cat("ModulePointsBar:: observeEvent 123\n")
+      if(length(nameChoices())==0){ #name choices
         hideElement( headerId )
       } else {
-        showElement( headerId)
+        showElement( headerId)      
+        updateSelectInput(session, "name", choices=nameChoices(), selected= name()  )
+        updateSelectInput(session, "ptIndx", choices=ptIndexChoices(), selected= ptIndex() )
+        result$point.index<-ptIndex()
+        result$row<-tibRow
+        result$matCol<-matCol
       }
-      
-      #selection<-name()
-      
-      #res<-getSelectInfo() # triggered by changes for getPtName, getPtIndex. getPtDefs
-     
-      
-      #result$point.index<-res$point.index
-      
-      result$point.index<-index()
-      updateSelectInput(session, "name",
-                        choices=names(tibList),
-                        selected= name()  ) #res$name ) #res$selected is name
     } 
   })
   
-  # observe({
-  #   ptRList<-getPtDefs()$pts #trigger is name or index
-  #   #res<-getSelectInfo()
-  #   if(result$point.index<=1){
-  #     disable("backwardPt")
+  observeEvent( c(ptIndex(),ptIndexChoices()), {
+    if(identical( barName(), 'Points')){
+      cat("ModulePointsBar:: observeEvent 124\n")
+      choices=ptIndexChoices()
+      cat("ModulePointsBar:: observeEvent choices\n")
+      print(choices)
+      print(ptIndex())
+      updateSelectInput(session, "ptIndx", choices=choices, selected=ptIndex())
+      result$point.index=ptIndex()
+      if( result$point.index < max(ptIndexChoices())){
+        enable("forwardPt")
+      } else {
+        disable("forwardPt")
+      }
+      if( result$point.index > min(ptIndexChoices())){
+        enable("backwardPt")
+      } else {
+        disable("backwardPt")
+      }
+    }
+  } )
+  
+  observeEvent( c(tibRow(),rowChoices(), matCol(), matColChoices() ),{
+    if(identical( barName(), 'Points')){
+      cat("ModulePointsBar:: observeEvent 125\n")
+      cat("ModulePointsBar:: observeEvent rowChoices\n")
+      result$row=tibRow()
+      result$matCol=matCol()
+      updateSelectInput(session, "row", choices=rowChoices(), selected=result$row)
+      updateSelectInput(session, "matCol", choices=matColChoices(), selected=result$matCol )
+    }
+  })
+  
+  #---selected point forward button-----
+  # observeEvent(input$forwardPt,{
+  #   len<-max(getPtIndexChoices)
+  #   if(length(ptIndex())>0){
+  #     result$point.index<-min(len, ptIndex())
   #   } else {
-  #     enable("backwardPt")
+  #     result$point.index<-0
   #   }
   # })
   
-  observe({  # point range checking
-    endIndx<-getTibPtsColEndIndex()
-    indx<-index()
-    
-    if(length(endIndx)==0 || length(indx)==0 || !is.numeric(indx) || !is.finite(indx) || indx<0){
-      disable("forwardPt")
-    } else {
-      begIndx<-c(0,endIndx)+1
-      row<-sum(begIndx<indx)
-      if(row<1 || indx>=endIndx[row]){
-        disable("forwardPt")
-      } else {
-        enable("forwardPt")
-      }
-    }
-  })
-  
-  # observe(
-  #   if(isTaggable()){
-  #     enable("tagPt")
-  #   } else {
-  #     disable("tagPt")
-  #   }
-  # )
-  
- 
-  #---selected point forward button-----
-  observeEvent(input$forwardPt,{
-    #selection<-input$name
-    #selection<-input$ptRSelect
-    #ptRList<-getPtDefs()$pts
-    #len<-length(ptRList[[selection ]])/2
-    if(length(index())>0){
-      result$point.index<-min(len, index())
-    } else {
-      result$point.index<-0
-    }
-  })
-  
 
   #---selected point backward button-----
-  observeEvent(input$backwardPt,{
-    #decrement selectedPointIndex
-    #selection<-input$name
-    #selection<-selectedPoint$name
-    #ptRList<-getPtDefs()$pts
-    #len<-length(ptRList[[selection ]])/2
-    
-    # if(len>0){
-    #   result$point.index<-max(1,result$point.index-1)
-    # } else {
-    #   result$point.index<-0
-    # }
-    if(length(index())>0){
-      result$point.index<-max(1, index())
-    } else {
-      result$point.index<-0
-    }
-  })
+  # observeEvent(input$backwardPt,{
+  #   if(length(ptIndex())>0){
+  #     result$point.index<-max(0, ptIndex()-1)
+  #   } else {
+  #     result$point.index<-0
+  #   }
+  # })
   
   list(
     name         =reactive({input$name}),
-    index        =reactive({result$point.index}),    
+    pointIndex   =reactive({result$point.index}),  
     displayMode  =reactive({input$displayMode}),
     #tagFreq      =reactive({input$tagFreq}),
+    backwardPt   = reactive(input$backwardPt),
+    forwardPt    = reactive(input$forwardPt),
     insertMode   =reactive({input$insertMode}),
     showGrid     =reactive({input$showGrid}),
     removePt     =reactive({input$removePt}),

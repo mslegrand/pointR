@@ -3,12 +3,13 @@
 observeEvent(input$plotNavBar, {
   cmd<-getRightMenuCmd()
   if(is.null(cmd)){
-    cmd<-"Points"
+    cmd<-"Points" 
   }
   panels$right<-cmd #Point, tagValues, tagDrag, transfo
   if(!is.null(cmd)){
     dirtyDMDM(session, "plotNavBar")
   }
+  cat('barName changed\n')
 })
 
 output$TopRightPanel<-renderUI({
