@@ -5,7 +5,7 @@
  #  conditionalPanel( "input.plotNavBar=='tagValues'", moduleTagValUI("tagValBar"))
  # })
 
-tagValInfoList<-callModule(
+returnValue4ModuleTagVal<-callModule(
   module=moduleTagVal,
   id="tagValBar",
   id2="tagValBar",
@@ -18,11 +18,11 @@ tagValInfoList<-callModule(
   getTagIndex=reactive({getTagIndex()})
 )
 
-#observes tagValInfoList$name, tagValInfoList$index
-observeEvent(c(tagValInfoList$name(),tagValInfoList$index()),{
+#observes returnValue4ModuleTagVal$name, returnValue4ModuleTagVal$index
+observeEvent(c(returnValue4ModuleTagVal$name(),returnValue4ModuleTagVal$index()),{
   if(rightPanel()=='tagValues'){
-    name<-tagValInfoList$name()
-    index<-tagValInfoList$index()
+    name<-returnValue4ModuleTagVal$name()
+    index<-returnValue4ModuleTagVal$index()
     if(!is.null(name)){
       selectedPoint$name<-name
       selectedPoint$point.index<-as.numeric(index)
@@ -31,16 +31,16 @@ observeEvent(c(tagValInfoList$name(),tagValInfoList$index()),{
 })
 
 
-observeEvent(tagValInfoList$updateTagsNow(),{
-  if(tagValInfoList$updateTagsNow()>0 
+observeEvent(returnValue4ModuleTagVal$updateTagsNow(),{
+  if(returnValue4ModuleTagVal$updateTagsNow()>0 
      && rightPanel()=='tagValues'){
-    name<-tagValInfoList$name()
-    index<-tagValInfoList$index()
+    name<-returnValue4ModuleTagVal$name()
+    index<-returnValue4ModuleTagVal$index()
     if(!is.null(name)){
       selectedPoint$name<-name
       selectedPoint$point.index<-as.numeric(index)
     }
-    tagRList<-tagValInfoList$tagRList()
+    tagRList<-returnValue4ModuleTagVal$tagRList()
     if( !is.null(tagRList) ){
       newPtDefs<-getPtDefs()
       newPtDefs$df<-tagRList

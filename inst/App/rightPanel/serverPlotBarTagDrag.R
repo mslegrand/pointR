@@ -5,7 +5,7 @@
  #  conditionalPanel( "input.plotNavBar=='tagDrag'", moduleTagDragUI("tagDragBar"))
  # })
 
-tagDragInfoList<-callModule(
+returnValue4ModuleTagDrag<-callModule(
   module=moduleTagDrag,
   id="tagDragBar",
   barName=reactive({rightPanel()}),
@@ -16,8 +16,8 @@ tagDragInfoList<-callModule(
 )
 
 observe({
-  name<-tagDragInfoList$name()
-  index<-tagDragInfoList$index()
+  name<-returnValue4ModuleTagDrag$name()
+  index<-returnValue4ModuleTagDrag$index()
   if(rightPanel()=="tagDrag"){
     isolate({
       if(!is.null(name) && !is.null(index)){
@@ -29,11 +29,11 @@ observe({
 })
 
 observeEvent( 
-  tagDragInfoList$tagClone(),
+  returnValue4ModuleTagDrag$tagClone(),
   {
     if(rightPanel()=="tagDrag"){
-      name<-tagDragInfoList$name()
-      index<-tagDragInfoList$index()
+      name<-returnValue4ModuleTagDrag$name()
+      index<-returnValue4ModuleTagDrag$index()
       ptRList<-getPtDefs()$pts
       tagRList<-getPtDefs()$df
       pts<-getPtDefs()$pts[[name]] 
@@ -72,11 +72,11 @@ observeEvent(
 
 #delete tag set
 observeEvent( 
-  tagDragInfoList$tagDelete(),
+  returnValue4ModuleTagDrag$tagDelete(),
   {
     if(rightPanel()=="tagDrag"){
-      name<-    tagDragInfoList$name()
-      index<-   tagDragInfoList$index()
+      name<-    returnValue4ModuleTagDrag$name()
+      index<-   returnValue4ModuleTagDrag$index()
       ptRList<- getPtDefs()$pts
       tagRList<-getPtDefs()$df
       pts<-     getPtDefs()$pts[[name]] 
@@ -140,11 +140,11 @@ observeEvent(
 #}
 
 observeEvent( 
-  tagDragInfoList$tagMoveUp(),
+  returnValue4ModuleTagDrag$tagMoveUp(),
   {
     if(rightPanel()=="tagDrag"){
-      name<-    tagDragInfoList$name()
-      index<-   tagDragInfoList$index()
+      name<-    returnValue4ModuleTagDrag$name()
+      index<-   returnValue4ModuleTagDrag$index()
       if(is.null(index)||index==0){ return(NULL) }
       ptRList<- getPtDefs()$pts
       tagRList<-getPtDefs()$df
@@ -190,11 +190,11 @@ observeEvent(
 )
 
 observeEvent( 
-  tagDragInfoList$tagMoveDown(),
+  returnValue4ModuleTagDrag$tagMoveDown(),
   {
     if(rightPanel()=="tagDrag"){
-      name<-    tagDragInfoList$name()
-      index<-   tagDragInfoList$index()
+      name<-    returnValue4ModuleTagDrag$name()
+      index<-   returnValue4ModuleTagDrag$index()
       if(is.null(index)||index==0){ return(NULL) }
       ptRList<- getPtDefs()$pts
       tagRList<-getPtDefs()$df
