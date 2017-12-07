@@ -19,10 +19,10 @@ modulePointsBarUI <- function(id, input, output) {
               #               width="50px" )
         ),
         div(style="display:inline-block",
-            numericInput( ns("row"), "Row", 1, min=1, max=10, step=1, width="80px" )
+            numericInput( ns("rowIndex"), "Row", 1, min=1, max=10, step=1, width="80px" )
         ),
         div(style="display:inline-block",
-            numericInput( ns("matCol"), "Mat Col", 1, min=1, max=10, step=1, width="80px" )
+            numericInput( ns("matColIndex"), "Mat Col", 1, min=1, max=10, step=1, width="80px" )
         ),
         div(style="display:inline-block",
             numericInput( ns("ptIndx"), "ptIndx", 1, min=1, max=10, step=1, width="80px" )
@@ -53,24 +53,24 @@ modulePointsBarUI <- function(id, input, output) {
 modulePointsBar<-function(
         input, output, session,
         barName,
-        getTibPtsColEndIndex,
+        #getTibPtsColEndIndex, #not used??
         #getSelectInfo, 
         #getPtDefs, 
         name, 
         nameChoices,
         ptIndex,
         ptIndexChoices,
-        tibRow,
-        rowChoices,
-        matCol,
-        matColChoices,
+        rowIndex,
+        rowIndexChoices,
+        matColIndex,
+        matColIndexChoices,
         #isTaggable,
         headerId){
   
   result<-reactiveValues( #
     point.index=0,
-    row=1,
-    matCol=0
+    rowIndex=1,
+    matColIndex=0
   )
   
   triggerRefresh<-function(sender, rollBack=TRUE, auxValue=FALSE){ # to be used to force a code refresh???
@@ -91,11 +91,13 @@ modulePointsBar<-function(
         updateSelectInput(session, "name", choices=nameChoices(), selected= name()  )
         updateSelectInput(session, "ptIndx", choices=ptIndexChoices(), selected= ptIndex() )
         result$point.index<-ptIndex()
-        result$row<-tibRow
-        result$matCol<-matCol
+        result$rowIndex<-rowIndex
+        result$matColIndex<-matColIndex
       }
     } 
   })
+  
+  
   
   observeEvent( c(ptIndex(),ptIndexChoices()), {
     if(identical( barName(), 'Points')){
@@ -119,16 +121,21 @@ modulePointsBar<-function(
     }
   } )
   
-  observeEvent( c(tibRow(),rowChoices(), matCol(), matColChoices() ),{
+  
+  
+  observeEvent( c(rowIndex(),rowIndexChoices(), matColIndex(), matColIndexChoices() ),{
     if(identical( barName(), 'Points')){
       cat("ModulePointsBar:: observeEvent 125\n")
       cat("ModulePointsBar:: observeEvent rowChoices\n")
-      result$row=tibRow()
-      result$matCol=matCol()
-      updateSelectInput(session, "row", choices=rowChoices(), selected=result$row)
-      updateSelectInput(session, "matCol", choices=matColChoices(), selected=result$matCol )
+      result$rowIndex=rowIndex()
+      result$matColIndex=matColIndex()
+      updateSelectInput(session, "rowIndex", choices=rowIndexChoices(), selected=rowIndex() )
+      updateSelectInput(session, "matColIndex", choices=matColIndexChoices(), selected=matColIndex() )
     }
   })
+
+  
+  
   
   #---selected point forward button-----
   # observeEvent(input$forwardPt,{
@@ -152,7 +159,9 @@ modulePointsBar<-function(
   
   list(
     name         =reactive({input$name}),
-    pointIndex   =reactive({result$point.index}),  
+    pointIndex   =reactive({result$point.index}), 
+    rowIndex     = reactive(input$rowIndex),
+    matColIndex   = reactive(input$matColIndex),
     displayMode  =reactive({input$displayMode}),
     #tagFreq      =reactive({input$tagFreq}),
     backwardPt   = reactive(input$backwardPt),
