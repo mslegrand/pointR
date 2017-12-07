@@ -57,10 +57,10 @@ returnValue4ModulePointsBar<-callModule( #auto  input, output, session
   nameChoices=getTagNameChoices,
   ptIndex=getPtIndex,
   ptIndexChoices=getPtIndexChoices,
-  tibRow=getTibRow,
-  rowChoices=getTibRowChoices,
-  matCol=getTibMatCol,
-  matColChoices=getTibMatColChoices,
+  rowIndex=getTibRow,
+  rowIndexChoices=getTibRowChoices,
+  matColIndex=getTibMatCol,
+  matColIndexChoices=getTibMatColChoices,
   #isTaggable=isTaggable,
   headerId=NS("pointsBar", 'header')
 )
@@ -84,16 +84,28 @@ insertMode<-reactive({returnValue4ModulePointsBar$insertMode() })
 observe({
   name<-returnValue4ModulePointsBar$name()
     if(!is.null(name)){
-      selectedPoint$name<-returnValue4ModulePointsBar$name()
+      updateSelected(name=returnValue4ModulePointsBar$name())
     }
 })
 
+# Replace this with update of row, column and then tribute to point index
 # selected pts index
 observeEvent(returnValue4ModulePointsBar$pointIndex(), { 
   if(rightPanel()=="Points"){
     updateSelected(point.index=returnValue4ModulePointsBar$pointIndex() )
   }
 })
+
+
+# observeEvent(c(returnValue4ModulePointsBar$rowIndex(), returnValue4ModulePointsBar$matColIndex()){ 
+#   if(rightPanel()=="Points"){
+#     updateSelected(row=returnValue4ModulePointsBar$rowIndex(),  matCol=returnValue4ModulePointsBar$matColIndex() )
+#   }
+# })
+
+
+
+
 
 #-----------BUTTON EVENTS--------------------
 #---BUTTON: remove selected point  -----
@@ -226,7 +238,7 @@ observeEvent(input$okTag, { #move into module???
   # 2. tagR list there, but selection is not: add selection and insert
   
   # Check that data object exists and is data frame.
-  selection<-selectedPoint$name
+  selection<-getTibName() #selectedPoint$name
   if(input$tagFreq=="Off"){
     reactiveTag$freq[[selection]] <- NULL
   } else{
@@ -239,8 +251,9 @@ observeEvent(input$okTag, { #move into module???
   ptDefs<-getPtDefs()
   ptsList<-ptDefs$pts
   dfList<-ptDefs$df
-  point.index<-max(1,selectedPoint$point.index) #can change later
-  updateSelected(row=getTibRow()+1, matCol=1)
+  point.index<-getPtIndex()
+  point.index<-max(1,point.index) #!!!TODO: change later
+  updateSelected(row=getTibRow()+1, matCol=1, point.index=point.index)
   
   
   if(!is.null(reactiveTag$freq[[selection]])){ #pad tags to the end and exit
@@ -364,20 +377,25 @@ observeEvent( returnValue4ModulePointsBar$tagPt(), {
 
 
 observeEvent( returnValue4ModulePointsBar$forwardPt(), {
-  if(length(selectedPoint$point.index)>0){
-    selectedPoint$point.index=min(selectedPoint$point.index+1, max(getPtIndexChoices()) )
-    rc<-absPtIndx2TibPtPos(selectedPoint$point.index)
-    selectedTibble$row<-rc$row
-    selectedTibble$col<-rc$col
+  point.index<getPtIndex()
+  if(length( point.index)>0){
+    point.index=min(point.index+1, max(getPtIndexChoices()) )
+    rc<-absPtIndx2TibPtPos(point.index)
+    updateSelected( row=rc$row, matCol=rc$matCol, point.index= point.index )
+    # selectedTibble$row<-rc$row
+    # selectedTibble$col<-rc$col
+    
   }
 })
 
 observeEvent( returnValue4ModulePointsBar$backwardPt(), {
-  if(length(selectedPoint$point.index)>0){
-    selectedPoint$point.index=max(selectedPoint$point.index-1, 0 )
-    rc<-absPtIndx2TibPtPos(selectedPoint$point.index)
-    selectedTibble$row<-rc$row
-    selectedTibble$col<-rc$col
+  point.index<getPtIndex()
+  if(length(point.index)>0){
+    point.index=max(point.index-1, 0 )
+    rc<-absPtIndx2TibPtPos(point.index)
+    updateSelected( row=rc$row, matCol=rc$matCol, point.index= point.index )
+    # selectedTibble$row<-rc$row
+    # selectedTibble$col<-rc$col
   }
 })
 

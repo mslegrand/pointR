@@ -21,8 +21,12 @@ observe({
   if(rightPanel()=="tagDrag"){
     isolate({
       if(!is.null(name) && !is.null(index)){
-        selectedPoint$name<-name
-        selectedPoint$point.index<-as.numeric(index)
+        # selectedPoint$name<-name
+        # selectedPoint$point.index<-as.numeric(index)
+        point.index<-as.numeric(index)
+        rc<-absPtIndx2TibPtPos(index)
+        updateSelected( name=name, row=rc$row, matCol=rc$matCol, point.index=point.index )
+        
       }
     })  
   }
@@ -64,7 +68,12 @@ observeEvent(
       sender='tagDrag.Clone'
       updateAceExtDef(newPtDefs, sender)
       
-      selectedPoint$point.index<-as.numeric(index)+tiSize
+      point.index<-as.numeric(index)+tiSize
+      
+      
+      rc<-absPtIndx2TibPtPos(index)
+      updateSelected(  row=rc$row, matCol=rc$matCol, point.index=point.index )
+      
       
     }
   }
@@ -113,7 +122,11 @@ observeEvent(
       #will need to handle case when no more tagged points!!!
       #update
       #setCode(scrCode) #!!!
-      selectedPoint$point.index<-as.numeric(index)-tiSize
+      point.index<-as.numeric(index)-tiSize
+      
+      rc<-absPtIndx2TibPtPos(index)
+      updateSelected(  row=rc$row, matCol=rc$matCol, point.index=point.index )
+      
     }
   }
 )
@@ -184,7 +197,12 @@ observeEvent(
       #update
       #setCode(code) #!!!
       
-      selectedPoint$point.index<-tags[t1]
+      point.index<-tags[t1]
+      
+      rc<-absPtIndx2TibPtPos(index)
+      updateSelected(  row=rc$row, matCol=rc$matCol, point.index=point.index )
+      
+      
     }
   }
 )
@@ -236,7 +254,9 @@ observeEvent(
         #will need to handle case when no more tagged points!!!
         #update
         #setCode(scrCode)
-        selectedPoint$point.index<-tags[t0]
+        point.index<-tags[t0]
+        rc<-absPtIndx2TibPtPos(index)
+        updateSelected(  row=rc$row, matCol=rc$matCol, point.index=point.index )
       }
     }
   }

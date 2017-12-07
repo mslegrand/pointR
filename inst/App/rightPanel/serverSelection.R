@@ -68,6 +68,7 @@ getCode<-reactive({request$code})
 getPtName<-reactive({selectedPoint$name})
 getTibName<-reactive({selectedTibble$name}) #allw to be null only if tib is null
 
+
 getPtIndexChoices<-reactive({ 
   isolate(print(getTibPts() ))
   t<-length(unlist(getTibPts()))/2

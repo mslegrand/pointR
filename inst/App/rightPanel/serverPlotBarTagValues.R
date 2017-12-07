@@ -24,8 +24,11 @@ observeEvent(c(returnValue4ModuleTagVal$name(),returnValue4ModuleTagVal$index())
     name<-returnValue4ModuleTagVal$name()
     index<-returnValue4ModuleTagVal$index()
     if(!is.null(name)){
-      selectedPoint$name<-name
-      selectedPoint$point.index<-as.numeric(index)
+      # selectedPoint$name<-name
+      # selectedPoint$point.index<-as.numeric(index)
+      point.index<-as.numeric(index)
+      rc<-absPtIndx2TibPtPos(point.index)
+      updateSelected(name=name, row=rc$row, matCol=rc$matCol, point.index=point.index)
     }
   }
 })
@@ -37,8 +40,11 @@ observeEvent(returnValue4ModuleTagVal$updateTagsNow(),{
     name<-returnValue4ModuleTagVal$name()
     index<-returnValue4ModuleTagVal$index()
     if(!is.null(name)){
-      selectedPoint$name<-name
-      selectedPoint$point.index<-as.numeric(index)
+      # selectedPoint$name<-name
+      # selectedPoint$point.index<-as.numeric(index)
+      point.index<-as.numeric(index)
+      rc<-absPtIndx2TibPtPos(index)
+      updateSelected( name=name, row=rc$row, matCol=rc$matCol, point.index=point.index )
     }
     tagRList<-returnValue4ModuleTagVal$tagRList()
     if( !is.null(tagRList) ){

@@ -77,11 +77,24 @@ observe({
       # get valid point name, then set index to last valid index. (length of points?)
       pd<-getPtDefs()
       if(length(pd)>0){
-        pts<-pd$tib #!!! check this
-        name<-tail(names(pts),1)
-        l<-length(pts[[name]])
-        selectedPoint$name<-name
-        selectedPoint$point.index<-l/2
+        tibs<-pd$tib #!!! check this
+        name<-tail(names(tibs),1) #kludge, last name
+        pts<-tibs[[name]][['pts']] # kludge for now
+        if(!is.null(pts)){
+          row<-nrow(pts)
+          m<-pts[[row]]
+          matCol<-ncol(m)
+          point.index<-length(unlist(pts))/2
+        } else{
+          row<-0
+          matCol<-0
+          point.index<-0
+        }
+        
+        # selectedPoint$name<-name
+        # selectedPoint$point.index<-l/2
+        
+        updateSelected( name=name, row=row, matCol=matCol, point.index=point.index )
       }
     } 
     
