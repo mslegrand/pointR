@@ -83,7 +83,9 @@ modulePointsBar<-function(
 
   observeEvent(barName(), { # updates only when either barName changes to points
     if(identical( barName(), 'Points')){
-      cat("ModulePointsBar:: observeEvent 123\n")
+      # cat("ModulePointsBar:: observeEvent 123\n")
+      # cat("nameChoices=")
+      # print(nameChoices())
       if(length(nameChoices())==0){ #name choices
         hideElement( headerId )
       } else {
@@ -101,11 +103,11 @@ modulePointsBar<-function(
   
   observeEvent( c(ptIndex(),ptIndexChoices()), {
     if(identical( barName(), 'Points')){
-      cat("ModulePointsBar:: observeEvent 124\n")
+      # cat("ModulePointsBar:: observeEvent 124\n")
       choices=ptIndexChoices()
-      cat("ModulePointsBar:: observeEvent choices\n")
-      print(choices)
-      print(ptIndex())
+      # cat("ModulePointsBar:: observeEvent choices\n")
+      # print(choices)
+      # print(ptIndex())
       updateSelectInput(session, "ptIndx", choices=choices, selected=ptIndex())
       result$point.index=ptIndex()
       if( result$point.index < max(ptIndexChoices())){
@@ -118,6 +120,7 @@ modulePointsBar<-function(
       } else {
         disable("backwardPt")
       }
+      # cat('leaving ModulePointsBar:: observeEvent 124\n')
     }
   } )
   
@@ -125,8 +128,12 @@ modulePointsBar<-function(
   
   observeEvent( c(rowIndex(),rowIndexChoices(), matColIndex(), matColIndexChoices() ),{
     if(identical( barName(), 'Points')){
-      cat("ModulePointsBar:: observeEvent 125\n")
-      cat("ModulePointsBar:: observeEvent rowChoices\n")
+      # cat("ModulePointsBar:: observeEvent 125\n")
+      # cat("ModulePointsBar:: observeEvent rowChoices\n")
+      # print("rowIndex")
+      # print(rowIndex())
+      # print("matColIndex")
+      # print(matColIndex())
       result$rowIndex=rowIndex()
       result$matColIndex=matColIndex()
       updateSelectInput(session, "rowIndex", choices=rowIndexChoices(), selected=rowIndex() )

@@ -19,10 +19,10 @@ addPt2ptDefs<-function(name, row, matCol, point.indx, ptDefs, newPt){
     pts<-append(pts,newPt,2*(matCol))
     tib[[row,col]]<-matrix(pts,2)
     ptDefs$tib[[name]]<-tib
-    updateSelected(row=row, matCol=matCol+1, point.index=point.indx+1 )
+    #updateSelected(row=row, matCol=matCol+1, point.index=point.indx+1 )
   } else {
     ptDefs<-NULL #failed
-    cat("addPt2ptDefs returning NULL")
+    #cat("addPt2ptDefs returning NULL")
   }
   ptDefs
 }
@@ -58,17 +58,24 @@ observe({
           
           selection<-getTibName() #selectedPoint$name
           #update local ptRList
-          indx<-getPtIndex() #selectedPoint$point.index
-          #cat('cmd add: getPtIndx()=', indx,'\n')
-          rc<-absPtIndx2TibPtPos(indx)
+          point.indx<-getPtIndex() #selectedPoint$point.index
+          #cat('cmd add: getPtIndx()=', point.indx,'\n')
+          rc<-absPtIndx2TibPtPos(point.indx)
+          
+          # rowIndex<-as.numeric(vid[3])
+          # matColIndx<-as.numeric(vid[4])
+          # rc<-list(row=rowIndex, matCol= matColIndx)
+          # indx<-tibPtPos2AbsPtIndx()(rowIndex, matColIndx)
+          
+          
           if(is.null(rc)){
-            cat('rc is null\n')
+            cat('rc is null\n') #should never happen???
           } else {
             newPtDefs<-addPt2ptDefs(
             getTibName(),
             rc$row,
             rc$matCol,
-            indx,
+            point.indx,
             ptDefs, 
             newPt 
           )
@@ -76,7 +83,9 @@ observe({
           if(!is.null(newPtDefs)){ #update only upon success
              #selectedTibble$point.index<-selectedTibble$point.index+1
               updateAceExtDef(newPtDefs, sender=sender)
-              updateSelected(point.index=indx+1)
+              #updateSelected(point.index=indx+1)
+              updateSelected(row=rc$row, matCol=rc$matCol+1, point.index=point.indx+1 )
+              #cat('mouse add:: updateSelected')
           }
           }
 
@@ -91,7 +100,8 @@ observe({
           selection<-vid[2]
           #get point index
           
-          indx<-as.numeric(vid[3]) # index is the absolute position of in the points array
+          #indx<-as.numeric(vid[3]) # index is the absolute position of in the points array
+          
           
           newPt<-vec
           #m[,rindx]<-newPt # m is the matrix of points in the given row
@@ -102,7 +112,14 @@ observe({
           #selectedPoint$point.index<-(indx+1)/2
           
           
-          rc<-absPtIndx2TibPtPos(indx)
+          #rc<-absPtIndx2TibPtPos(indx)
+          rowIndex<-as.numeric(vid[3])
+          matColIndx<-as.numeric(vid[4])
+          rc<-list(row=rowIndex, matCol= matColIndx)
+          indx<-tibPtPos2AbsPtIndx()(rowIndex, matColIndx)
+          
+          
+          cat('point.index=',indx,'\n')
           ptDefs$tib[[selection]][[ rc$row, getTibPtColPos() ]][,rc$matCol]<-newPt
           newPtDefs<-ptDefs
           #selectedTibble$point.index<-rc$matColPos
