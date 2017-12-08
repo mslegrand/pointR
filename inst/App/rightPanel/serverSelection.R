@@ -210,15 +210,14 @@ getTibMatColChoices<-reactive({
 
 
 
-#inverse function : not used
+#inverse function : !!!WARNING assumes no empty rows (gaps)
 tibPtPos2AbsPtIndx<-reactive({
-  cs<-getTibPtsNCol()
-  if(length(nCols)>0){
-    cs<-cumsum(cs)
-  }
+  pts<-getTibPts()
   function(row, matCol){
-    if( row>0 && matCol>0 && length(cs)>0 ){
-      sum(cs[1:row])+matCol
+    cs<-sapply(pts,ncol)
+    if(length(cs)>0 && row>0  ){
+      cs<-c(0,cumsum(cs))
+      cs[row] +matCol
     } else {
       0
     }
