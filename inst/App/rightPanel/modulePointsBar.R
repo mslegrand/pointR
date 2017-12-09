@@ -181,8 +181,8 @@ modulePointsBar<-function(
       # print(rowIndex())
       # print("matColIndex")
       # print(matColIndex())
-      result$rowIndex=rowIndex()
-      result$matColIndex=matColIndex()
+      # result$rowIndex=rowIndex()
+      # result$matColIndex=matColIndex()
       #updateSelectInput(session, "rowIndex", choices=rowIndexChoices(), selected=rowIndex() )
       updateNumericInput(session, "rowIndex", 
                          min=min(rowIndexChoices()),

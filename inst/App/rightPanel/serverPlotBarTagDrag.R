@@ -74,25 +74,84 @@ observeEvent(
       sender='deleteRow'
       ptDefs<-getPtDefs()
       name<-getTibName()
-      tib<-ptDefs$tib[[name]]
+      newTib<-ptDefs$tib[[name]]
       rowIndex<-getTibRow()
+      
       # !!!TODO handle case where this would be last row.
-      newTib<-tib[-rowIndex,]
+      newTib<-newTib[-rowIndex,]
+      ptDefs$tib[[name]]<-newTib
+      newPtDefs<-ptDefs
+      
+      #adjust position
       rowIndex<-min(rowIndex, nrow(newTib))
       matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
-      if(length(matCol)==0){stop('tagDelete: pt row is empty')}
-      
+      if(length(matCol)==0){matCol=0}
+      #adjust point.index
       pts<-newTib[[getTibPtColPos()]]
       point.index<-ptPos2AbsPtIndx(pts, rowIndex, matCol)
       
-      ptDefs$tib[[name]]<-newTib
-      newPtDefs<-ptDefs
+      
       updateAceExtDef(newPtDefs, sender=sender)
       updateSelected(row=rowIndex, matCol=matCol, point.index=point.index)
     }
   }
 )
 
+observeEvent( returnValue4ModuleTagDrag$tagMoveUp(),{ 
+    if(rightPanel()=="tagDrag"){
+      rowIndex<-getTibRow()
+      if(rowIndex>1){
+          sender='tagMoveUp'
+          ptDefs<-getPtDefs()
+          name<-    getTibName()
+          newTib<-ptDefs$tib[[name]]
+          
+          newTib[c(rowIndex,rowIndex-1),]<-newTib[c(rowIndex-1,rowIndex),]
+          ptDefs$tib[[name]]<-newTib
+          newPtDefs<-ptDefs
+          
+          #adjust position
+          rowIndex<-rowIndex-1
+          matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
+          if(length(matCol)==0){matCol=0}
+          #adjust point.index
+          pts<-newTib[[getTibPtColPos()]]
+          point.index<-ptPos2AbsPtIndx(pts, rowIndex, matCol)
+      
+          
+          updateAceExtDef(newPtDefs, sender=sender)
+          updateSelected(row=rowIndex, matCol=matCol, point.index=point.index)   
+      }
+    }
+})
+
+observeEvent( returnValue4ModuleTagDrag$tagMoveDown(),{ 
+  if(rightPanel()=="tagDrag"){
+    rowIndex<-getTibRow()
+    ptDefs<-getPtDefs()
+    name<-    getTibName()
+    newTib<-ptDefs$tib[[name]]
+    if(rowIndex<nrow(newTib)){
+      sender='tagMoveDown'
+      
+      newTib[c(rowIndex,rowIndex+1),]<-newTib[c(rowIndex+1,rowIndex),]
+      ptDefs$tib[[name]]<-newTib
+      newPtDefs<-ptDefs
+      
+      #adjust position
+      rowIndex<-rowIndex+1
+      matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
+      if(length(matCol)==0){matCol=0}
+      #adjust point.index
+      pts<-newTib[[getTibPtColPos()]]
+      point.index<-ptPos2AbsPtIndx(pts, rowIndex, matCol)
+      
+      
+      updateAceExtDef(newPtDefs, sender=sender)
+      updateSelected(row=rowIndex, matCol=matCol, point.index=point.index)   
+    }
+  }
+})
 
 #delete tag set
 # observeEvent( 
@@ -167,7 +226,9 @@ observeEvent(
 #
 #}
 
-# observeEvent( 
+
+
+# observeEvent(
 #   returnValue4ModuleTagDrag$tagMoveUp(),
 #   {
 #     if(rightPanel()=="tagDrag"){
@@ -216,8 +277,6 @@ observeEvent(
 # 
 #       rc<-absPtIndx2TibPtPos(index)
 #       updateSelected(  row=rc$row, matCol=rc$matCol, point.index=point.index )
-#       
-#       
 #     }
 #   }
 # )
