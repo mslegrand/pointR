@@ -91,10 +91,28 @@ modulePointsBar<-function(
       } else {
         showElement( headerId)      
         updateSelectInput(session, "name", choices=nameChoices(), selected= name()  )
-        updateSelectInput(session, "ptIndx", choices=ptIndexChoices(), selected= ptIndex() )
+        updateNumericInput(session, "ptIndx", 
+                           min=min(ptIndexChoices()),
+                           max=max(ptIndexChoices()),
+                           value=ptIndex()
+         )
+        # result$rowIndex=rowIndex()
+        # result$matColIndex=matColIndex()
+        # #updateSelectInput(session, "rowIndex", choices=rowIndexChoices(), selected=rowIndex() )
+        updateNumericInput(session, "rowIndex", 
+                           min=min(rowIndexChoices()),
+                           max=max(rowIndexChoices()),
+                           value=rowIndex()
+        )
+        updateNumericInput(session, "matColIndex", 
+                           min=min(matColIndexChoices()),
+                           max=max(matColIndexChoices()),
+                           value=matColIndex()
+        )
+        
         result$point.index<-ptIndex()
-        result$rowIndex<-rowIndex
-        result$matColIndex<-matColIndex
+        result$rowIndex<-rowIndex()
+        result$matColIndex<-matColIndex()
       }
     } 
   })
@@ -110,12 +128,30 @@ modulePointsBar<-function(
       # print(ptIndex())
       updateSelectInput(session, "ptIndx", choices=choices, selected=ptIndex())
       result$point.index=ptIndex()
-      if( result$point.index < max(ptIndexChoices())){
+      # if( result$point.index < max(ptIndexChoices())){
+      #   enable("forwardPt")
+      # } else {
+      #   disable("forwardPt")
+      # }
+      # if( result$point.index > min(ptIndexChoices())){
+      #   enable("backwardPt")
+      # } else {
+      #   disable("backwardPt")
+      # }
+      # cat('leaving ModulePointsBar:: observeEvent 124\n')
+    }
+  } )
+  
+  observeEvent( c(barName(), matColIndex(),matColIndexChoices()), {
+    if(identical( barName(), 'Points')){
+      # cat("ModulePointsBar:: observeEvent 124\n")
+      choices=matColIndexChoices()
+      if( matColIndex() < max(matColIndexChoices())){
         enable("forwardPt")
       } else {
         disable("forwardPt")
       }
-      if( result$point.index > min(ptIndexChoices())){
+      if( matColIndex() > min(matColIndexChoices())){
         enable("backwardPt")
       } else {
         disable("backwardPt")
@@ -124,9 +160,20 @@ modulePointsBar<-function(
     }
   } )
   
+  observeEvent( matColIndex(), { #!!! this allows for empty rows of points
+    if(matColIndex()!=0){
+      cat("matColIndex()",matColIndex(),"\n")
+      enable("removePt")
+      enable("tagPt")
+    } else {
+      disable("removePt")
+      disable("tagPt")
+    }
+  })
   
   
-  observeEvent( c(rowIndex(),rowIndexChoices(), matColIndex(), matColIndexChoices() ),{
+  
+  observeEvent( c( rowIndex(),rowIndexChoices(), matColIndex(), matColIndexChoices() ),{
     if(identical( barName(), 'Points')){
       # cat("ModulePointsBar:: observeEvent 125\n")
       # cat("ModulePointsBar:: observeEvent rowChoices\n")
@@ -136,8 +183,18 @@ modulePointsBar<-function(
       # print(matColIndex())
       result$rowIndex=rowIndex()
       result$matColIndex=matColIndex()
-      updateSelectInput(session, "rowIndex", choices=rowIndexChoices(), selected=rowIndex() )
-      updateSelectInput(session, "matColIndex", choices=matColIndexChoices(), selected=matColIndex() )
+      #updateSelectInput(session, "rowIndex", choices=rowIndexChoices(), selected=rowIndex() )
+      updateNumericInput(session, "rowIndex", 
+                         min=min(rowIndexChoices()),
+                         max=max(rowIndexChoices()),
+                         value=rowIndex()
+      )
+      updateNumericInput(session, "matColIndex", 
+                         min=min(matColIndexChoices()),
+                         max=max(matColIndexChoices()),
+                         value=matColIndex()
+      )
+      #updateSelectInput(session, "matColIndex", choices=matColIndexChoices(), selected=matColIndex() )
     }
   })
 
