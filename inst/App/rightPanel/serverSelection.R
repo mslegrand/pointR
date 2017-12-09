@@ -40,7 +40,12 @@ updateSelected<-function( name, row, column, matCol, point.index, ptColName ){
   }
   if(!missing(matCol)){
     cat("updateSelected: setting matCol=",matCol,"\n")
-    selectedTibble$matCol=matCol
+    if(matCol=='end'){
+      mc<-ncol(getTibPts()[[selectedTibble$row]])
+      selectedTibble$matCol = ifelse(is.integer(mc), mc, 0)
+    } else {
+      selectedTibble$matCol=matCol
+    }
   }
   if(!missing(column)){
     selectedTibble$column=column
@@ -70,7 +75,7 @@ getTibName<-reactive({selectedTibble$name}) #allw to be null only if tib is null
 
 
 getPtIndexChoices<-reactive({ 
-  isolate(print(getTibPts() ))
+  #isolate(print(getTibPts() ))
   t<-length(unlist(getTibPts()))/2
   b<-min(1,t)
   b:t
@@ -190,18 +195,21 @@ getTibRowChoices<-reactive({
 
 getTibMatCol<-reactive({ selectedTibble$matCol })
 
+getTibPos<-reactive({
+  list(row=selectedTibble$row, matCol=selectedTibble$matCol)
+})
+
 getTibMatColChoices<-reactive({ 
-  tib<-getTib()
-  if(!is.null(tib) && is.finite(nrow(tib)) 
-     && nrow(tib)>0 
-     && getTibRow()<nrow(tib)
-     && !is.null(getTibPtColPos() )
-  ){
-    m<-tib[[getTibRow() ,getTibPtColPos() ]] 
-    1:ncol(m)
-  } else {
-    0:0
-  }
+  row<-getTibRow()
+  pts<-getTibPts()
+  rtv<-0
+  if(row %in% getTibRowChoices() ){ #row check
+    mc<-ncol(pts[[row]])
+    if(length(mc)>0 && mc>0){ 
+      rtv<-1:mc
+    }
+  } 
+  rtv
 })
 
 
@@ -223,6 +231,25 @@ tibPtPos2AbsPtIndx<-reactive({
     }
   }
 })
+
+ptPos2AbsPtIndx<-function(pts, row, matCol  ){
+  if(!is(pts,'list') || !is(row, 'integer') || !is(matCol, 'integer')){
+    cat("class(pts)=", class(pts),"\n")
+    cat("class(row)=", class(row),"\n")
+    cat("class(matCol)=", class(matCol),"\n")
+    #stop('cannot compute ptIndex')
+  }
+  if( length(pts)<row ){
+    stop('row number is out of bounds of points')
+  }
+  cs<-sapply(pts, ncol)
+  if(length(cs)>0 && row>0  ){
+    cs<-c(0,cumsum(cs))
+    cs[row] +matCol
+  } else {
+    0
+  }
+}
 
 
 #-----------------------

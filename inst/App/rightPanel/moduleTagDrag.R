@@ -15,20 +15,34 @@ moduleTagDragUI<-function(id, input, output) {
         choice=list(),  selected=NULL, width="100px"  )
       ),
       div(style="display:inline-block",
-        selectInput(ns("index"), "Tag-No",
-        multiple=FALSE, size=1, selectize = FALSE, 
-        choice=list(), selected=NULL, width="60px"  )
+          numericInput( ns("rowIndex"), "Row", 1, min=1, max=10, step=1, width="80px" )
+      ),
+      div(style="display:inline-block",
+          numericInput( ns("matColIndex"), "Mat Col", 1, min=1, max=10, step=1, width="80px" )
+      ),
+      div(style="display:inline-block",
+          numericInput( ns("ptIndx"), "ptIndx", 1, min=1, max=10, step=1, width="80px" )
       )
+      # ,
+      # div(style="display:inline-block",
+      #   selectInput(ns("index"), "Tag-No",
+      #   multiple=FALSE, size=1, selectize = FALSE, 
+      #   choice=list(), selected=NULL, width="60px"  )
+      # )
     ) #absolute panel end
   )
 }
 
 moduleTagDrag<-function(input, output, session, 
   barName, 
-  getTagNameChoices,
-  getTagName, 
-  getTagIndexChoices,
-  getTagIndex
+  name, 
+  nameChoices,
+  ptIndex,
+  ptIndexChoices,
+  rowIndex,
+  rowIndexChoices,
+  matColIndex,
+  matColIndexChoices
 ){
 
   # non-reactive function (not used???)
@@ -46,32 +60,44 @@ moduleTagDrag<-function(input, output, session,
   #   tagColChoice
   # }
   
-  observe({ #update the name 
+  observeEvent(barName(), { #update the name 
     if(identical( barName(), 'tagDrag')){
-      tagNameChoices<-getTagNameChoices() 
-      tagName<-getTagName()
       updateSelectInput(session, "name", 
-        choices=tagNameChoices, 
-        selected=tagName)
+        choices=nameChoices(), 
+        selected=name())
     } 
   })  
   
-  observe({ #update index
+  observeEvent( c(barName(), rowIndex(), rowIndexChoices() ),  { #update index
+     
      if(identical( barName(), 'tagDrag')){
-      tagIndxChoices<-getTagIndexChoices()
-      tagIndx<-getTagIndex()
-      updateSelectInput(
+      updateNumericInput(
         session, 
-        "index", 
-        choices=tagIndxChoices, 
-        selected=tagIndx
+        "rowIndex", 
+        min=min(rowIndexChoices()),
+        max=max(rowIndexChoices()),
+        value=rowIndex()
       )
     } 
-  }) 
+  })
+  
+  observeEvent( c(barName(), matColIndex(), matColIndexChoices() ),  { #update index
+    if(identical( barName(), 'tagDrag')){
+      updateNumericInput(
+        session, 
+        "matColIndex", 
+        min=min(matColIndexChoices()), 
+        max=max(matColIndexChoices()), 
+        value=matColIndex()
+      )
+    } 
+  })
+  
+  
   
   list(
     name        =reactive({input$name}),
-    index       =reactive({as.numeric( input$index )}),
+    rowIndex    =reactive({as.numeric( input$rowIndex )}),
     tagClone    =reactive({input$tagClone}),
     tagDelete   =reactive({input$tagDelete}),
     tagMoveUp   =reactive({input$tagMoveUp}),

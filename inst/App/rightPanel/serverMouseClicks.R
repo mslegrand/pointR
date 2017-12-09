@@ -145,12 +145,15 @@ observe({
           #rc<-absPtIndx2TibPtPos(indx)
           m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]
           ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]<-m+vec
+          matCol<-ncol(m)
+          pts<-ptDefs$tib[[selection]][[getTibPtColPos()]]
+          point.index<-ptPos2AbsPtIndx(pts,row, matCol)
           newPtDefs<-ptDefs
           #selectedTibble$point.index<-rc$matColPos
           #selectedTibble$row<-rc$row
           
           updateAceExtDef(newPtDefs, sender=sender)
-          #updateSelected(point.index=indx)
+          updateSelected(row=row, matCol=matCol, point.index=point.index)
         }
       }
       

@@ -81,20 +81,30 @@ insertMode<-reactive({returnValue4ModulePointsBar$insertMode() })
 #-----OBSERVERS  using  modulePointsBar::returnValue4ModulePointsBar
 
 # --SELECTION EVENTS-------------------------------
-observe({
-  name<-returnValue4ModulePointsBar$name()
+observeEvent(returnValue4ModulePointsBar$name(), {
+  if(rightPanel()=="Points"){
+    name<-returnValue4ModulePointsBar$name()
     if(!is.null(name)){
       updateSelected(name=returnValue4ModulePointsBar$name())
     }
+  }
 })
+
+
 
 # Replace this with update of row, column and then tribute to point index
 # selected pts index
-observeEvent(returnValue4ModulePointsBar$pointIndex(), { 
-  if(rightPanel()=="Points"){
-    updateSelected(point.index=returnValue4ModulePointsBar$pointIndex() )
-  }
-})
+# observeEvent(returnValue4ModulePointsBar$pointIndex(), { 
+#   if(rightPanel()=="Points"){
+#     cat("serverPlotBar:: observeEvent- 625\n")
+#     cat("returnValue4ModulePointsBar$pointIndex()=\n")
+#     indx<-returnValue4ModulePointsBar$pointIndex() 
+#     print(returnValue4ModulePointsBar$pointIndex())
+#     #rc<-absPtIndx2TibPtPos(indx)
+#    
+#     updateSelected(row=row, matCol=matCol, point.index=returnValue4ModulePointsBar$pointIndex() )
+#   }
+# })
 
 
 # observeEvent(c(returnValue4ModulePointsBar$rowIndex(), returnValue4ModulePointsBar$matColIndex()){ 
@@ -253,6 +263,7 @@ observeEvent(input$okTag, { #move into module???
   dfList<-ptDefs$df
   point.index<-getPtIndex()
   point.index<-max(1,point.index) #!!!TODO: change later
+  
   updateSelected(row=getTibRow()+1, matCol=1, point.index=point.index)
   
   
@@ -359,8 +370,10 @@ observeEvent( returnValue4ModulePointsBar$tagPt(), {
     src<-getCode() 
     selection<-getTibName() #selectedPoint$name
     ptDefs<-getPtDefs()
-    indx<-getPtIndex() #selectedPoint$point.index
-    rc<-absPtIndx2TibPtPos(indx) #point location
+    #indx<-getPtIndex() #selectedPoint$point.index
+    #rc<-absPtIndx2TibPtPos(indx) #point location
+    rc<-list( row=getTibRow(), matCol=getTibMatCol() )
+    
     m<-ptDefs$tib[[selection]][[ rc$row, getTibPtColPos() ]]
     if(ncol(m)<1){ 
       return(NULL) # bail if matrix of points is empty
@@ -370,18 +383,20 @@ observeEvent( returnValue4ModulePointsBar$tagPt(), {
     ptDefs$tib[[selection]]<-tib 
     sender='tagPt'
     updateAceExtDef(ptDefs, sender=sender)
-    updateSelected(point.index=indx, row=getTibRow()+1, matCol=1)
-    
+    #updateSelected(point.index=indx, row=getTibRow()+1, matCol=1)
+    updateSelected(row=getTibRow()+1, matCol=1)
   } #end of if
 }) #end of point InfoList Tag Point, 
 
 
 observeEvent( returnValue4ModulePointsBar$forwardPt(), {
-  point.index<getPtIndex()
-  if(length( point.index)>0){
-    point.index=min(point.index+1, max(getPtIndexChoices()) )
-    rc<-absPtIndx2TibPtPos(point.index)
-    updateSelected( row=rc$row, matCol=rc$matCol, point.index= point.index )
+  matColIndex<-getTibMatCol()
+  if(length( matColIndex)>0){
+    cat("observeEvent:: serverPlotBar 99\n")
+    matColIndex=min(matColIndex+1, max(getTibMatColChoices()) )
+    point.index<-tibPtPos2AbsPtIndx()(getTibRow(), matColIndex )
+    #rc<-absPtIndx2TibPtPos(point.index)
+    updateSelected(  matCol=matColIndex, point.index=point.index )
     # selectedTibble$row<-rc$row
     # selectedTibble$col<-rc$col
     
@@ -389,11 +404,13 @@ observeEvent( returnValue4ModulePointsBar$forwardPt(), {
 })
 
 observeEvent( returnValue4ModulePointsBar$backwardPt(), {
-  point.index<getPtIndex()
-  if(length(point.index)>0){
-    point.index=max(point.index-1, 0 )
-    rc<-absPtIndx2TibPtPos(point.index)
-    updateSelected( row=rc$row, matCol=rc$matCol, point.index= point.index )
+  matColIndex<-getTibMatCol()
+  if(length(matColIndex)>0){
+    cat("observeEvent:: serverPlotBar 98\n")
+    matColIndex=max(matColIndex-1, min(getTibMatColChoices()) )
+  #  rc<-absPtIndx2TibPtPos(point.index)
+    point.index<-tibPtPos2AbsPtIndx()(getTibRow(), matColIndex )
+    updateSelected(  matCol=matColIndex, point.index=point.index  )
     # selectedTibble$row<-rc$row
     # selectedTibble$col<-rc$col
   }
@@ -408,55 +425,98 @@ observeEvent( returnValue4ModulePointsBar$backwardPt(), {
 #---------ShowPts----------------------------------
 
   showPts.PtCmd %<c-% function(
-      ptName, pts=NULL,  
-      selectedPointIndx=NULL, ptDisplayMode="Normal"
+      ptName, 
+      pts=NULL,  
+      selectedPointIndx=NULL, 
+      rowIndex=NULL,
+      matColIndex=NULL,
+      ptDisplayMode="Normal"
   ){
     onMouseDownTxt='ptRPlotter_ptR_SVG_Point.selectPoint(evt)'
     
     if(is.null(pts) ){ return(NULL) } 
     if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
-    if(length(pts)<2 ){ return(NULL)}
+    
+    cat("pts-----------------------------------------------\n")
+    print(pts)
+    if(length(unlist(pts))<2){ return(NULL)}
     
     selectedPointIndx<-as.numeric(selectedPointIndx)
+    cat("selectedPointIndx=",selectedPointIndx,"\n")
+    
     colorScheme<-c(default="green", ending="red", selected="blue")
-    m<-matrix(pts,2) # is this really necessary????
-     
+    semitransparent<-0.3
+    
+    cat("rowIndex",rowIndex,"\n")
+    cat("class(rowIndex)",class(rowIndex),"\n")
+    
+    cat("matColIndex",matColIndex,"\n")
+    cat("class(matColIndex)",class(matColIndex),"\n")
+    
+    # genId<-function(){
+    #   nid<-0 # use to generate ids
+    #   function(){
+    #     nid<<-nid+1
+    #     paste("pd",ptName,nid,sep="-")
+    #   }
+    # } 
+    # ptId<-genId()
+    
+    #nid<-0
+    opacity<-rep(semitransparent, length(pts) )
+    opacity[rowIndex]<-1
+    
     #form list of  all point renderings
-    lapply(1:ncol(m), function(i){
-      id<-paste("pd",ptName,i,sep="-")
-      pt<-m[,i]
-      color=colorScheme['default']
-      if(i==length(pts)/2) { #ncol(m)){
-          color=colorScheme['ending']   
+    lapply(seq(length(pts)), function(i){
+      m<-pts[[i]]
+      if(length(m)==0){ # or !is(m,'matrix')
+        NULL
+      } else {
+        lapply(seq(ncol(m)), function(j){ #j is the matCol index
+          #nid<<-nid+1
+          #cat("nid=",nid,"\n")
+          #id<-ptId() #
+          #id<-paste("pd",ptName,nid,sep="-")
+          id<-paste("pd",ptName,i,j,sep="-")
+          cat("id=", id, "\n")
+          pt<-m[,j]
+          color=colorScheme['default']
+          # if(i==length(pts)/2) { #ncol(m)){
+          #   color=colorScheme['ending']   
+          # } 
+          list(
+            #if(identical(selectedPointIndx, nid )){
+            #if(identical(i,rowIndex) && identical(j, matColIndex) ){
+            if(i==rowIndex && j== matColIndex ){
+              circle(class="draggable", 
+                     id=id,  
+                     cxy=pt, r=9, fill="yellow", 
+                     opacity=opacity[i],
+                     stroke=colorScheme['selected'], stroke.width=3,
+                     #transform="matrix(1 0 0 1 0 0)", 
+                     onmousedown=onMouseDownTxt
+                     #'ptRPlotter_ptR_SVG_Point.selectPoint' #onmousedown 
+              )
+            } else { #a non-selected point
+              circle(class="draggable", 
+                     id=id,  
+                     cxy=pt, r=8, fill=color, opacity=opacity[i],
+                     #transform="matrix(1 0 0 1 0 0)", 
+                     onmousedown=onMouseDownTxt
+                     #'ptRPlotter_ptR_SVG_Point.selectPoint' #onemousedown 
+              )
+            },
+            if(ptDisplayMode=="Labeled"){
+              text(paste0(i,",",j), cxy=pt+10*c(1,-1),  
+                   stroke='black', font.size=12, opacity=1) 
+            } else {
+              NULL
+            }
+          )
+        }) #end lapply of this row
       }
-      list(
-        if(identical(selectedPointIndx, as.numeric(i) )){
-          circle(class="draggable", 
-                 id=id,  
-                 cxy=pt, r=9, fill="yellow", 
-                 opacity=1,
-                 stroke=colorScheme['selected'], stroke.width=3,
-                 #transform="matrix(1 0 0 1 0 0)", 
-                 onmousedown=onMouseDownTxt
-                   #'ptRPlotter_ptR_SVG_Point.selectPoint' #onmousedown 
-                 )
-        } else { #a non-selected point
-          circle(class="draggable", 
-                 id=id,  
-                 cxy=pt, r=8, fill=color, opacity=1,
-                 #transform="matrix(1 0 0 1 0 0)", 
-                 onmousedown=onMouseDownTxt
-                   #'ptRPlotter_ptR_SVG_Point.selectPoint' #onemousedown 
-                 )
-        },
-        if(ptDisplayMode=="Labeled"){
-            text(paste(i), cxy=pt+10*c(1,-1),  
-               stroke='black', font.size=12, opacity=1) 
-        } else {
-          NULL
-        }
-      )
-    }) #end lapply
+ 
+    }) #end lapply of points
   } #end showPts.PtCmd
 
 
@@ -488,8 +548,11 @@ statusPlotPoint<-callModule(
     list(
       newPtLayer( insertMode(), getSVGWH() ),
       showPts.PtCmd(
-        ptName=getPtName(), pts=getPtDefs()$pts[[getPtName()]],
+        ptName=getPtName(), 
+        pts=getTibPts(), #getPtDefs()$pts[[getPtName()]],
         selectedPointIndx=as.numeric( getPtIndex() ),
+        rowIndex=getTibRow(),
+        matColIndex=getTibMatCol(),
         ptDisplayMode=displayMode()
       )
     )

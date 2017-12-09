@@ -8,128 +8,143 @@
 returnValue4ModuleTagDrag<-callModule(
   module=moduleTagDrag,
   id="tagDragBar",
-  barName=reactive({rightPanel()}),
-  getTagNameChoices=reactive({getTagNameChoices()}) ,
-  getTagName=reactive({getTagName()}),
-  getTagIndexChoices=reactive({getTagIndexChoices()}),
-  getTagIndex=reactive({getTagIndex()})
+  barName=rightPanel,
+  name=getTibName,
+  nameChoices=getTagNameChoices,
+  ptIndex=getPtIndex,
+  ptIndexChoices=getPtIndexChoices,
+  rowIndex=getTibRow,
+  rowIndexChoices=getTibRowChoices,
+  matColIndex=getTibMatCol,
+  matColIndexChoices=getTibMatColChoices
+  # getTagNameChoices=reactive({getTagNameChoices()}) ,
+  # getTagName=reactive({getTagName()}),
+  # getTagIndexChoices=reactive({getTagIndexChoices()}),
+  # getTagIndex=reactive({getTagIndex()})
 )
 
-observe({
-  name<-returnValue4ModuleTagDrag$name()
-  index<-returnValue4ModuleTagDrag$index()
+
+observeEvent( returnValue4ModuleTagDrag$name() ,{
   if(rightPanel()=="tagDrag"){
-    isolate({
-      if(!is.null(name) && !is.null(index)){
-        # selectedPoint$name<-name
-        # selectedPoint$point.index<-as.numeric(index)
-        point.index<-as.numeric(index)
-        rc<-absPtIndx2TibPtPos(index)
-        updateSelected( name=name, row=rc$row, matCol=rc$matCol, point.index=point.index )
-        
-      }
-    })  
+    name<-returnValue4ModuleTagDrag$name()
+    if(!is.null(name)){
+      updateSelected(name=returnValue4ModuleTagDrag$name())
+    }
   }
 })
 
-observeEvent( 
+observeEvent( returnValue4ModuleTagDrag$rowIndex(), {
+  if(rightPanel()=="tagDrag"){
+    rowIndex<-returnValue4ModuleTagDrag$rowIndex()
+    if(!is.null(rowIndex)){
+      rowIndex=as.integer(rowIndex)
+      updateSelected(row=rowIndex, matCol='end')
+    }
+  }
+})
+
+observeEvent(
   returnValue4ModuleTagDrag$tagClone(),
   {
     if(rightPanel()=="tagDrag"){
-      name<-returnValue4ModuleTagDrag$name()
-      index<-returnValue4ModuleTagDrag$index()
-      ptRList<-getPtDefs()$pts
-      tagRList<-getPtDefs()$df
-      pts<-getPtDefs()$pts[[name]] 
-      df<-tagRList[[name]]
-      tags<-df$tag
-      ti<-which(index==tags) 
-      id.nos<-sequence(ncol(pts))
-      tagInterval<-findInterval(id.nos,tags)
-      ptsA<-pts[,tagInterval<=ti]
-      ptsB<-pts[,tagInterval>=ti]
+      sender='cloneRow'
+      ptDefs<-getPtDefs()
+      name<-getTibName()
+      tib<-ptDefs$tib[[name]]
+      rowIndex<-getTibRow()
+      newTib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
+      rowIndx=rowIndex+1
+      matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
       
-      tiSize<-ncol(matrix(pts[,tagInterval==ti],2))
+      pts<-newTib[[getTibPtColPos()]]
+      point.index<-ptPos2AbsPtIndx(pts, rowIndex, matCol)
       
-      ptsNew<-matrix(c(ptsA,ptsB),2)
-      t2<-tags[tags>=index]+tiSize
-      t1<-tags[tags<=index]
-      tagsNew<-c(t1,t2)
-      
-      df1<-subset(df,df$tag<=index)
-      df2<-subset(df,df$tag>=index)
-      dfNew<-as.data.frame(rbind(df1,df2))
-      dfNew$tag<-tagsNew
-      
-      ptRList[[name]]<-ptsNew
-      tagRList[[name]]<-dfNew
-      
-      newPtDefs<-list(pts=ptRList, df= tagRList ) 
-      sender='tagDrag.Clone'
-      updateAceExtDef(newPtDefs, sender)
-      
-      point.index<-as.numeric(index)+tiSize
-      
-      
-      rc<-absPtIndx2TibPtPos(index)
-      updateSelected(  row=rc$row, matCol=rc$matCol, point.index=point.index )
-      
-      
+      ptDefs$tib[[name]]<-newTib
+      newPtDefs<-ptDefs
+      updateAceExtDef(newPtDefs, sender=sender)
+      updateSelected(row=rowIndex, matCol=matCol, point.index=point.index)
     }
   }
 )
 
-#delete tag set
-observeEvent( 
+observeEvent(
   returnValue4ModuleTagDrag$tagDelete(),
   {
     if(rightPanel()=="tagDrag"){
-      name<-    returnValue4ModuleTagDrag$name()
-      index<-   returnValue4ModuleTagDrag$index()
-      ptRList<- getPtDefs()$pts
-      tagRList<-getPtDefs()$df
-      pts<-     getPtDefs()$pts[[name]] 
-      df<-      tagRList[[name]]
-      tags<-    df$tag
-      ti<-which(index==tags) 
-      id.nos<-sequence(ncol(pts))
-      tagInterval<-findInterval(id.nos,tags)
-      ptsA<-pts[,tagInterval<ti]
-      ptsB<-pts[,tagInterval>ti]
+      sender='deleteRow'
+      ptDefs<-getPtDefs()
+      name<-getTibName()
+      tib<-ptDefs$tib[[name]]
+      rowIndex<-getTibRow()
+      # !!!TODO handle case where this would be last row.
+      newTib<-tib[-rowIndex,]
+      rowIndex<-min(rowIndex, nrow(newTib))
+      matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
+      if(length(matCol)==0){stop('tagDelete: pt row is empty')}
       
-      tiSize<-ncol(pts[,tagInterval==ti])
+      pts<-newTib[[getTibPtColPos()]]
+      point.index<-ptPos2AbsPtIndx(pts, rowIndex, matCol)
       
-      ptsNew<-matrix(c(ptsA,ptsB),2)
-      t2<-tags[tags>index]-tiSize
-      t1<-tags[tags<index]
-      tagsNew<-c(t1,t2)
-      
-      df1<-subset(df,df$tag<index)
-      df2<-subset(df,df$tag>index)
-      dfNew<-as.data.frame(rbind(df1,df2))
-      dfNew$tag<-tagsNew
-      ptRList[[name]]<-ptsNew
-      tagRList[[name]]<-dfNew
-      #scrCode<-getCode()
-      
-      # scrCode<-pts2Source(scrCode,ptRList)
-      # scrCode<-df2Source( scrCode, tagRList)
-      
-      
-      newPtDefs<-list(pts=ptRList, df= tagRList ) 
-      updateAceExtDef(newPtDefs, "tagDrag.drag")
-      
-      #will need to handle case when no more tagged points!!!
-      #update
-      #setCode(scrCode) #!!!
-      point.index<-as.numeric(index)-tiSize
-      
-      rc<-absPtIndx2TibPtPos(index)
-      updateSelected(  row=rc$row, matCol=rc$matCol, point.index=point.index )
-      
+      ptDefs$tib[[name]]<-newTib
+      newPtDefs<-ptDefs
+      updateAceExtDef(newPtDefs, sender=sender)
+      updateSelected(row=rowIndex, matCol=matCol, point.index=point.index)
     }
   }
 )
+
+
+#delete tag set
+# observeEvent( 
+#   returnValue4ModuleTagDrag$tagDelete(),
+#   {
+#     if(rightPanel()=="tagDrag"){
+#       name<-    returnValue4ModuleTagDrag$name()
+#       index<-   returnValue4ModuleTagDrag$index()
+#       ptRList<- getPtDefs()$pts
+#       tagRList<-getPtDefs()$df
+#       pts<-     getPtDefs()$pts[[name]]
+#       df<-      tagRList[[name]]
+#       tags<-    df$tag
+#       ti<-which(index==tags)
+#       id.nos<-sequence(ncol(pts))
+#       tagInterval<-findInterval(id.nos,tags)
+#       ptsA<-pts[,tagInterval<ti]
+#       ptsB<-pts[,tagInterval>ti]
+# 
+#       tiSize<-ncol(pts[,tagInterval==ti])
+# 
+#       ptsNew<-matrix(c(ptsA,ptsB),2)
+#       t2<-tags[tags>index]-tiSize
+#       t1<-tags[tags<index]
+#       tagsNew<-c(t1,t2)
+# 
+#       df1<-subset(df,df$tag<index)
+#       df2<-subset(df,df$tag>index)
+#       dfNew<-as.data.frame(rbind(df1,df2))
+#       dfNew$tag<-tagsNew
+#       ptRList[[name]]<-ptsNew
+#       tagRList[[name]]<-dfNew
+#       #scrCode<-getCode()
+# 
+#       # scrCode<-pts2Source(scrCode,ptRList)
+#       # scrCode<-df2Source( scrCode, tagRList)
+# 
+# 
+#       newPtDefs<-list(pts=ptRList, df= tagRList )
+#       updateAceExtDef(newPtDefs, "tagDrag.drag")
+# 
+#       #will need to handle case when no more tagged points!!!
+#       #update
+#       #setCode(scrCode) #!!!
+#       point.index<-as.numeric(index)-tiSize
+# 
+#       rc<-absPtIndx2TibPtPos(index)
+#       updateSelected(  row=rc$row, matCol=rc$matCol, point.index=point.index )
+# 
+#     }
+#   }
+# )
 
 #swapTagPoints<-function(pts, df, t0,t1){
 #
@@ -152,157 +167,164 @@ observeEvent(
 #
 #}
 
-observeEvent( 
-  returnValue4ModuleTagDrag$tagMoveUp(),
-  {
-    if(rightPanel()=="tagDrag"){
-      name<-    returnValue4ModuleTagDrag$name()
-      index<-   returnValue4ModuleTagDrag$index()
-      if(is.null(index)||index==0){ return(NULL) }
-      ptRList<- getPtDefs()$pts
-      tagRList<-getPtDefs()$df
-      
-      pts<-     ptRList[[name]] 
-      df<-      tagRList[[name]]
-      
-      tags<-    df$tag
-      t0<-which(index==tags) 
-      t1<-t0+1
-      if(t1>length(tags)){return(NULL)}
-      
-      id.nos<-sequence(ncol(pts))
-      tagInterval<-findInterval(id.nos,tags)
-      ptsA   <-pts[,tagInterval<t0]
-      ptsB   <-pts[,tagInterval>t1]
-      ptsT0  <-pts[,tagInterval==t0]
-      ptsT1  <-pts[,tagInterval==t1]
-      pts <-matrix(c(ptsA,ptsT1, ptsT0, ptsB),2)
-      
-      df[c(t0,t1),]<-df[c(t1,t0),]
-      t1Size      <-ncol(matrix(ptsT1,2))
-      tags[t1]    <-tags[t0]+t1Size
-      df$tag      <-tags
-      
-      ptRList[[name]]  <-pts
-      tagRList[[name]] <-df
-      
-      # code<-srcGet()
-      # code<-pts2Source(code,ptRList)
-      # code<-df2Source( code, tagRList)
+# observeEvent( 
+#   returnValue4ModuleTagDrag$tagMoveUp(),
+#   {
+#     if(rightPanel()=="tagDrag"){
+#       name<-    returnValue4ModuleTagDrag$name()
+#       index<-   returnValue4ModuleTagDrag$index()
+#       if(is.null(index)||index==0){ return(NULL) }
+#       ptRList<- getPtDefs()$pts
+#       tagRList<-getPtDefs()$df
+# 
+#       pts<-     ptRList[[name]]
+#       df<-      tagRList[[name]]
+# 
+#       tags<-    df$tag
+#       t0<-which(index==tags)
+#       t1<-t0+1
+#       if(t1>length(tags)){return(NULL)}
+# 
+#       id.nos<-sequence(ncol(pts))
+#       tagInterval<-findInterval(id.nos,tags)
+#       ptsA   <-pts[,tagInterval<t0]
+#       ptsB   <-pts[,tagInterval>t1]
+#       ptsT0  <-pts[,tagInterval==t0]
+#       ptsT1  <-pts[,tagInterval==t1]
+#       pts <-matrix(c(ptsA,ptsT1, ptsT0, ptsB),2)
+# 
+#       df[c(t0,t1),]<-df[c(t1,t0),]
+#       t1Size      <-ncol(matrix(ptsT1,2))
+#       tags[t1]    <-tags[t0]+t1Size
+#       df$tag      <-tags
+# 
+#       ptRList[[name]]  <-pts
+#       tagRList[[name]] <-df
+# 
+#       # code<-srcGet()
+#       # code<-pts2Source(code,ptRList)
+#       # code<-df2Source( code, tagRList)
+# 
+#       newPtDefs<-list(pts=ptRList, df= tagRList )
+#       updateAceExtDef(newPtDefs, "tagDrag.MoveUp")
+# 
+#       #will need to handle case when no more tagged points!!!
+#       #update
+#       #setCode(code) #!!!
+# 
+#       point.index<-tags[t1]
+# 
+#       rc<-absPtIndx2TibPtPos(index)
+#       updateSelected(  row=rc$row, matCol=rc$matCol, point.index=point.index )
+#       
+#       
+#     }
+#   }
+# )
 
-      newPtDefs<-list(pts=ptRList, df= tagRList ) 
-      updateAceExtDef(newPtDefs, "tagDrag.MoveUp")
-      
-      #will need to handle case when no more tagged points!!!
-      #update
-      #setCode(code) #!!!
-      
-      point.index<-tags[t1]
-      
-      rc<-absPtIndx2TibPtPos(index)
-      updateSelected(  row=rc$row, matCol=rc$matCol, point.index=point.index )
-      
-      
-    }
-  }
-)
-
-observeEvent( 
-  returnValue4ModuleTagDrag$tagMoveDown(),
-  {
-    if(rightPanel()=="tagDrag"){
-      name<-    returnValue4ModuleTagDrag$name()
-      index<-   returnValue4ModuleTagDrag$index()
-      if(!is.null(index) && index>0){ 
-        ptRList<- getPtDefs()$pts
-        tagRList<-getPtDefs()$df
-        
-        pts<-     ptRList[[name]] 
-        df<-      tagRList[[name]]
-        
-        tags<-    df$tag
-        t1<-which(index==tags) 
-        t0<-t1-1
-        if(t0==0){ return(NULL) }
-        
-        
-        id.nos<-sequence(ncol(pts))
-        tagInterval<-findInterval(id.nos,tags)
-        ptsA   <-pts[,tagInterval<t0]
-        ptsB   <-pts[,tagInterval>t1]
-        ptsT0  <-pts[,tagInterval==t0]
-        ptsT1  <-pts[,tagInterval==t1]
-        pts <-matrix(c(ptsA,ptsT1, ptsT0, ptsB),2)
-        
-        df[c(t0,t1),]<-df[c(t1,t0),]
-        t1Size      <-ncol(matrix(ptsT1,2))
-        tags[t1]    <-tags[t0]+t1Size
-        df$tag      <-tags
-        
-        ptRList[[name]]  <-pts
-        tagRList[[name]] <-df
-        
-        newPtDefs<-list(pts=ptRList, df= tagRList ) 
-        updateAceExtDef(newPtDefs, "tagDrag.MoveDown")
-        
-        
-        #scr<-getCode()
-        # scrCode<-srcGet()
-        # scrCode<-pts2Source(scrCode,ptRList)
-        # scrCode<-df2Source( scrCode, tagRList)
-        # 
-        #will need to handle case when no more tagged points!!!
-        #update
-        #setCode(scrCode)
-        point.index<-tags[t0]
-        rc<-absPtIndx2TibPtPos(index)
-        updateSelected(  row=rc$row, matCol=rc$matCol, point.index=point.index )
-      }
-    }
-  }
-)
+# observeEvent( 
+#   returnValue4ModuleTagDrag$tagMoveDown(),
+#   {
+#     if(rightPanel()=="tagDrag"){
+#       name<-    returnValue4ModuleTagDrag$name()
+#       index<-   returnValue4ModuleTagDrag$index()
+#       if(!is.null(index) && index>0){
+#         ptRList<- getPtDefs()$pts
+#         tagRList<-getPtDefs()$df
+# 
+#         pts<-     ptRList[[name]]
+#         df<-      tagRList[[name]]
+# 
+#         tags<-    df$tag
+#         t1<-which(index==tags)
+#         t0<-t1-1
+#         if(t0==0){ return(NULL) }
+# 
+# 
+#         id.nos<-sequence(ncol(pts))
+#         tagInterval<-findInterval(id.nos,tags)
+#         ptsA   <-pts[,tagInterval<t0]
+#         ptsB   <-pts[,tagInterval>t1]
+#         ptsT0  <-pts[,tagInterval==t0]
+#         ptsT1  <-pts[,tagInterval==t1]
+#         pts <-matrix(c(ptsA,ptsT1, ptsT0, ptsB),2)
+# 
+#         df[c(t0,t1),]<-df[c(t1,t0),]
+#         t1Size      <-ncol(matrix(ptsT1,2))
+#         tags[t1]    <-tags[t0]+t1Size
+#         df$tag      <-tags
+# 
+#         ptRList[[name]]  <-pts
+#         tagRList[[name]] <-df
+# 
+#         newPtDefs<-list(pts=ptRList, df= tagRList )
+#         updateAceExtDef(newPtDefs, "tagDrag.MoveDown")
+# 
+# 
+#         #scr<-getCode()
+#         # scrCode<-srcGet()
+#         # scrCode<-pts2Source(scrCode,ptRList)
+#         # scrCode<-df2Source( scrCode, tagRList)
+#         #
+#         #will need to handle case when no more tagged points!!!
+#         #update
+#         #setCode(scrCode)
+#         point.index<-tags[t0]
+#         rc<-absPtIndx2TibPtPos(index)
+#         updateSelected(  row=rc$row, matCol=rc$matCol, point.index=point.index )
+#       }
+#     }
+#   }
+# )
 
 #-------------------------------------------
 
 
-  showPts.dragTag %<c-% function(ptName, pts, selectedPointIndx, ptDisplayMode,  tags=NULL){
+  showPts.dragTag %<c-% function(
+    ptName=NULL, 
+    pts=NULL, 
+    #selectedPointIndx, 
+    rowIndex=NULL,
+    ptDisplayMode#,  
+    #tags=NULL
+    ){
     onMouseDownTxt="ptRPlotter_ptR_SVG_TagDrag.selectElement(evt)" 
     
+    
+    cat("rowIndx=", rowIndex, "\n")
     if(length(ptName)<1){return(NULL)}
     if(length(pts)<2)  {return(NULL) }
-    if(length(tags)<1){return(NULL)}
-    if(length(selectedPointIndx)<1 || selectedPointIndx==0){return(NULL)}
+    
+    if(length(rowIndex)<1 || rowIndex==0){return(NULL)}
 
-    tag.indx<-selectedPointIndx #this is the position of the first point of the tagged set 
+    #tag.indx<-selectedPointIndx #this is the position of the first point of the tagged set 
     semitransparent<-0.3
     colorScheme<-c(default="purple", ending="red", selected="blue")
     color<-colorScheme[1]
-    m<-matrix(pts,2)
+    #m<-matrix(pts,2)
     
-  if( !is.null(tag.indx) && !is.null(tags)){
+  
    
-      ti<-which(max(tags[tags<=tag.indx])==tags )
-      id.nos<-sequence(ncol(m))
-      ids<-paste("pd",ptName,id.nos,sep="-")
-      tagInterval<-findInterval(id.nos,tags)
-      tagIntList<-tapply(id.nos, findInterval(id.nos,tags), list )
-      opacity<-rep(semitransparent, length(tags))
-      opacity[ti]<-1
-      # iterate over tagIntList
-      indx<-unique(tagInterval)
-      indx<-indx[-ti]
-      list( 
-        lapply(indx, function(i){
+    opacity<-rep(semitransparent, length(pts)) 
+    opacity[rowIndex]<-1 
+    rowNums<-seq(length(pts))
+    ids<-paste("pd",ptName,rowNums,sep="-")
+    offRows<-rowNums[-rowIndex]
+    mRow<-pts[[rowIndex]]
+      
+    list( 
+        lapply(offRows, function(i){
+          m<-pts[[i]]
           g( opacity=opacity[i], 
              fill='purple',
              transform="matrix(1 0 0 1 0 0)", 
              onmousedown=onMouseDownTxt,
              tid=paste0("ptR_Tag_",i),
-             lapply(tagIntList[[i]], function(j){
+             lapply(seq(ncol(m)), function(j){
                list(
-                  circle(   cxy=m[,j], r=8),
+                  circle(cxy=m[,j], r=8),
                   if(ptDisplayMode=="Labeled"){
-                    text(paste(j), cxy=m[,j]+10*c(1,-1),  stroke='black', font.size=12) #opac)
+                    text( paste(j), cxy=m[,j]+10*c(1,-1),  stroke='black', font.size=12) 
                   } else {
                     NULL
                   }
@@ -310,24 +332,23 @@ observeEvent(
              })
           )
         }),
-        g( opacity=opacity[ti], 
+        g( opacity=opacity[rowIndex], 
            fill='purple',
            transform="matrix(1 0 0 1 0 0)", 
            onmousedown=onMouseDownTxt,
-           tid=paste0("ptR_Tag_",ti),
-           lapply(tagIntList[[ti]], function(j){
+           tid=paste0("ptR_Tag_",rowIndex),
+           lapply(seq(ncol(mRow)), function(j){
             list(
-             circle(   cxy=m[,j], r=8),
+             circle(   cxy=mRow[,j], r=8),
              if(ptDisplayMode=="Labeled"){
-                  text(paste(j), cxy=m[,j]+10*c(1,-1),  stroke='black', font.size=12) #opac)
+                  text(paste(j), cxy=mRow[,j]+10*c(1,-1),  stroke='black', font.size=12) #opac)
                 } else {
                   NULL
                 }
             )
            })
         )
-      )
-      } #end if
+      ) #end list
   } #end showPts
 
 
@@ -343,11 +364,12 @@ statusPlotTagDrag<-callModule(
   svgID='ptR_SVG_TagDrag',
   showPts.compound=reactive({
     showPts.dragTag(
-      ptName=getTagName(), 
-      pts=matrix(unlist(getPtDefs()$tib[[getTagName()]]),2) ,
-      selectedPointIndx=as.numeric( getTagIndex() ),
-      ptDisplayMode=getDisplayModeTag(), 
-      tags=getTagIndexChoices()
+      ptName=getPtName(), 
+      pts=getTibPts(), #matrix(unlist(getPtDefs()$tib[[getTagName()]]),2) ,
+      #selectedPointIndx=as.numeric( getTagIndex() ),
+      rowIndex=getTibRow(),
+      ptDisplayMode=getDisplayModeTag() #, 
+      #tags=getTagIndexChoices()
     )
   }),
   ptrDisplayScript = reactive({ svgToolsScript( "TagDrag") }), # reactive({ js.scripts[[ "TagDrag"]] }),
