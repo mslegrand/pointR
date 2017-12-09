@@ -58,24 +58,25 @@ observe({
           
           selection<-getTibName() #selectedPoint$name
           #update local ptRList
-          point.indx<-getPtIndex() #selectedPoint$point.index
+          #point.indx<-getPtIndex() #selectedPoint$point.index
           #cat('cmd add: getPtIndx()=', point.indx,'\n')
-          rc<-absPtIndx2TibPtPos(point.indx)
+          #rc<-absPtIndx2TibPtPos(point.indx)
           
-          # rowIndex<-as.numeric(vid[3])
-          # matColIndx<-as.numeric(vid[4])
-          # rc<-list(row=rowIndex, matCol= matColIndx)
+          rowIndex<-row<-getTibRow()
+          
+          matColIndx<-getTibMatCol()
+          #rc<-list(row=rowIndex, matCol= matColIndx)
           # indx<-tibPtPos2AbsPtIndx()(rowIndex, matColIndx)
+          point.indx<-0  # TODO!!! remove this
           
-          
-          if(is.null(rc)){
-            cat('rc is null\n') #should never happen???
+          if(is.null(matColIndx)){
+            cat('matColIndx is null\n') #should never happen???
           } else {
             newPtDefs<-addPt2ptDefs(
             getTibName(),
-            rc$row,
-            rc$matCol,
-            point.indx,
+            rowIndex,
+            matColIndx,
+            point.indx, # TODO!!! remove this
             ptDefs, 
             newPt 
           )
@@ -84,7 +85,7 @@ observe({
              #selectedTibble$point.index<-selectedTibble$point.index+1
               updateAceExtDef(newPtDefs, sender=sender)
               #updateSelected(point.index=indx+1)
-              updateSelected(row=rc$row, matCol=rc$matCol+1, point.index=point.indx+1 )
+              updateSelected(row=rowIndex, matCol=matColIndx+1 )
               #cat('mouse add:: updateSelected')
           }
           }

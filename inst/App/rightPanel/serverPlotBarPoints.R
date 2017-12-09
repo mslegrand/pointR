@@ -124,99 +124,22 @@ observeEvent( returnValue4ModulePointsBar$removePt(), {
 cat('Enter removePt\n')  
   if(selection!=""){
     ptDefs<-getPtDefs()
-
     if(length(ptDefs$tib)==0){return(NULL)}
-    #do more checks as necessary
-    
-    #ptRList<-getPtDefs()$pts
-    #pts<-ptRList[[selection]]
-    
-    # if(length(pts)==0){  #if no points, return
-    #   return(NULL)
-    # }
-    indx=getPtIndex() #selectedPoint$point.index 
-    # if(indx==0){ return(NULL)}
-    
-    cat("indx=",indx,"\n")
-    src<-getCode() 
+    matCol<-getTibMatCol()
+    #src<-getCode() 
     
     #get row, col
-    if(indx>=1){ #should be unnecessary, but...
-      rc<-absPtIndx2TibPtPos(indx)
-      m<-ptDefs$tib[[selection]][[ rc$row, getTibPtColPos() ]] #!!! probably need some checking here
-      print(m)
-      cat("rc$matCol=",rc$matCol,"\n")
-      if(length(m)>0 && rc$matCol<= ncol(m)){
-        if(ncol(m)>0){ # After removal matrix will be empty
-          ptDefs$tib[[selection]][[ rc$row, getTibPtColPos() ]]<-m[,-rc$matCol]
-          updateSelected(point.index= indx-1) #!!! will need revisit soon
-        }
-      }
+    if(matCol>=1){ 
+      row<-getTibRow()
+      m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]][,-matCol] 
+      #!!! probably need some checking here
+      ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]<-m
+      matCol<-min(matCol, length(m)/2)
+      newPtDefs<-ptDefs
+      sender='points.deletePoint'
+      updateAceExtDef(newPtDefs, sender=sender)
+      updateSelected(matCol=matCol)
     }
-    # get m<-mat[row,col]
-    # if ncol(m)<=1, remove row
-    # else remove m$matCol from m
-    # replace in ptDefs
-    # have a nice day
-     
-    #delete the point from the ptR list
-    # if(indx>=1){
-    #   pts<-pts[-c(2*indx,2*indx-1)]
-    #   selectedPoint$point.index<-max(1,selectedPoint$point.index-1)
-    # } 
-    # if( indx==0 || length(pts)<1 ){
-    #   pts<-list(NULL)
-    #   selectedPoint$point.index<-0 
-    #   ptRList[selection]<-pts
-    # } else {
-    #   ptRList[[selection]]<-pts
-    # }
-     #src<-pts2Source(src,ptRList)
-    
-    # tagRList<-getPtDefs()$df
-    # if(!is.null(tagRList)){ #tagR exists
-    #   df<-tagRList[[selection]]
-    #   if(!is.null(df)){ #df==tagR$x exists
-    #     if(length(ptRList[[selection]])==0){ #no points
-    #       tagRList[selection]<-NULL #remove tagR$x
-    #     } else { # has points
-    #       tags<-df$tag
-    #       freq<-reactiveTag$freq[[selection]]
-    #       # (this is the manual case)
-    #       if(is.null(freq)){
-    #         if(indx==1 && !(2 %in% tags)){ #do nothing
-    #         } else {
-    #           if(indx %in% tags){ #remove the tag row
-    #             df<-subset(df,tags!=indx)
-    #             tags<-df$tag
-    #           }
-    #         }
-    #         #slide tags nos. down
-    #         tags2move<-tags>indx
-    #         if(length(tags2move)>0){
-    #           tags[tags>indx]<-tags[tags>indx]-1
-    #           df$tag<-tags
-    #           tagRList[[selection]]<-df
-    #         }
-    #       } else { # freq is not null,
-    #         pts<-ptRList[[selection]]
-    #         if( length(pts)/2<tail(tags,1) ){
-    #           # if no of pts == last tag, then remove the last row from df
-    #           n<-length(tags)-1
-    #           df<-head(df, n)
-    #           tagRList[[selection]]<-df
-    #         }
-    #       }
-    #     }
-    #     
-    #     # ptRList
-    #     # src<-df2Source(src,tagList)
-    #   }
-    # }
-    newPtDefs<-ptDefs
-    sender='points.deletePoint'
-    updateAceExtDef(newPtDefs, sender=sender)
-    # setCode(src) #!!!
   }
 }) #end remove point observer
 

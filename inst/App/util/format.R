@@ -49,12 +49,17 @@ toStrPtR.character<-function(x, ...){
   toString(shQuote(x), ...)
 }
 toStrPtR.matrix<-function(x, digits=0, ...){
-  tmp<-as.numeric(format(x, digits, ...))
-  tmp<-matrix(tmp,2)
-  fpts<-apply(tmp, 2, function(x)paste(x,collapse=","))
-  fpts<-paste0("c(",fpts,")")
-  fpts<-paste(fpts, collapse=",")
-  paste0("matrix( c(",fpts,"), 2)")
+  if(length(x)==0){
+    "matrix(0,2,0)"
+  } else {
+    tmp<-as.numeric(format(x, digits, ...))
+    tmp<-matrix(tmp,2)
+    fpts<-apply(tmp, 2, function(x)paste(x,collapse=","))
+    fpts<-paste0("c(",fpts,")")
+    fpts<-paste(fpts, collapse=",")
+    paste0("matrix( c(",fpts,"), 2)")
+  }
+
 }
 
 
@@ -66,12 +71,17 @@ toStrPtR0.character<-function(x, ...){
  #paste0(shQuote(x),",")
 }
 toStrPtR0.matrix<-function(x, digits=0, ...){
-  tmp<-as.numeric(format(x, digits, ...))
-  tmp<-matrix(tmp,2)
-  fpts<-apply(tmp, 2, function(x)paste(x,collapse=","))
-  fpts<-paste0("c(",fpts,")")
-  fpts<-paste(fpts, collapse=",")
-  paste0("matrix( c(",fpts,"), 2)")
+  if(length(x)==0){
+    "matrix(0,2,0)"
+  } else {
+    tmp<-as.numeric(format(x, digits, ...))
+    tmp<-matrix(tmp,2)
+    fpts<-apply(tmp, 2, function(x)paste(x,collapse=","))
+    fpts<-paste0("c(",fpts,")")
+    fpts<-paste(fpts, collapse=",")
+    paste0("matrix( c(",fpts,"), 2)")
+  }
+
 }
 
 
