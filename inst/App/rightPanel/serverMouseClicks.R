@@ -162,15 +162,16 @@ observe({
         sender='tagVal.mouse'
         if(cmd=='tagValSelect'){ # -- move tagged group (from tagDrag)
           tid<-input$mouseMssg$id
-          tag.index<-tail(str_split(tid, "_")[[1]],1)
-          tag.index<-as.integer(tag.index)
-          tagIndices<-getTagIndexChoices()
-         
-         
-          point.index<-tagIndices[tag.index]
+          tmp<-unlist(str_split(tid,"_"))
+          row<-as.numeric(tail(tmp,1))
+          selection<-getTibName() #selectedPoint$name
+          m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]
+          matCol<-ncol(m)
+          m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]
+          pts<-ptDefs$tib[[selection]][[getTibPtColPos()]]
+          point.index<-ptPos2AbsPtIndx(pts,row, matCol)
           
-          #selectedPoint$point.index<-point.index
-          updateSelected(point.index=point.index )
+          updateSelected(row=row, matCol=matCol, point.index=point.index)
         }
       }
       

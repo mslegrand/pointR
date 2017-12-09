@@ -63,72 +63,76 @@ observeEvent(returnValue4ModuleTagVal$updateTagsNow(),{
 #----------------------------------------------------------------
 
 
-showPts.valTag %<c-% function(ptName, pts, 
-                              selectedPointIndx, ptDisplayMode,  tags=NULL){
-  
+showPts.valTag %<c-% function(
+  ptName=NULL, 
+  pts=NULL, 
+  #selectedPointIndx, 
+  rowIndex=NULL,
+  ptDisplayMode #,  
+  #tags=NULL
+  ){
+  onMouseDownTxt<-"ptRPlotter_ptR_SVG_TagVal.selectElement(evt)"
+ 
+  #cat("rowIndx=", rowIndex, "\n")
   if(length(ptName)<1){return(NULL)}
   if(length(pts)<2)  {return(NULL) }
-  if(length(tags)<1){return(NULL)}
-  if(length(selectedPointIndx)<1 || selectedPointIndx==0){return(NULL)}
   
-  tag.indx<-selectedPointIndx #this is the position of the first point of the tagged set 
+  if(length(rowIndex)<1 || rowIndex==0){return(NULL)}
+  
+  #tag.indx<-selectedPointIndx #this is the position of the first point of the tagged set 
   semitransparent<-0.3
-  colorScheme<-c(default="green", ending="red", selected="blue")
+  colorScheme<-c(default="purple", ending="red", selected="blue")
   color<-colorScheme[1]
-  m<-matrix(pts,2)
-  onMouseDownTxt<-"ptRPlotter_ptR_SVG_TagVal.selectElement(evt)"
-  tidPrefix<-"ptR_TagV_"
+  #m<-matrix(pts,2)
   
-  if( !is.null(tag.indx) && !is.null(tags)){
-    
-    ti<-which(max(tags[tags<=tag.indx])==tags )
-    id.nos<-sequence(ncol(m))
-    ids<-paste("pd",ptName,id.nos,sep="-")
-    tagInterval<-findInterval(id.nos,tags)
-    tagIntList<-tapply(id.nos, findInterval(id.nos,tags), list )
-    opacity<-rep(semitransparent, length(tags))
-    opacity[ti]<-1
-    # iterate over tagIntList
-    indx<-unique(tagInterval)
-    indx<-indx[-ti]
-    list( 
-      lapply(indx, function(i){
-        g( opacity=opacity[i], 
-           fill='purple',
-           transform="matrix(1 0 0 1 0 0)", 
-           onmousedown=onMouseDownTxt,
-           tid=paste0(tidPrefix,i),
-           lapply(tagIntList[[i]], function(j){
-             list(
-               circle(   cxy=m[,j], r=8),
-               if(ptDisplayMode=="Labeled"){
-                 text(paste(j), cxy=m[,j]+10*c(1,-1),  stroke='black', font.size=12) #opac)
-               } else {
-                 NULL
-               }
-             )
-           })
-        )
-      }),
-      g( opacity=opacity[ti], 
+  
+  
+  opacity<-rep(semitransparent, length(pts)) 
+  opacity[rowIndex]<-1 
+  rowNums<-seq(length(pts))
+  ids<-paste("pd",ptName,rowNums,sep="-")
+  offRows<-rowNums[-rowIndex]
+  mRow<-pts[[rowIndex]]
+  
+  list( 
+    lapply(offRows, function(i){
+      m<-pts[[i]]
+      g( opacity=opacity[i], 
          fill='purple',
          transform="matrix(1 0 0 1 0 0)", 
          onmousedown=onMouseDownTxt,
-         tid=paste0(tidPrefix,ti),
-         lapply(tagIntList[[ti]], function(j){
+         tid=paste0("ptR_Tag_",i),
+         lapply(seq(ncol(m)), function(j){
            list(
-             circle(   cxy=m[,j], r=8),
+             circle(cxy=m[,j], r=8),
              if(ptDisplayMode=="Labeled"){
-               text(paste(j), cxy=m[,j]+10*c(1,-1),  stroke='black', font.size=12) #opac)
+               text( paste(j), cxy=m[,j]+10*c(1,-1),  stroke='black', font.size=12) 
              } else {
                NULL
              }
            )
          })
       )
+    }),
+    g( opacity=opacity[rowIndex], 
+       fill='purple',
+       transform="matrix(1 0 0 1 0 0)", 
+       onmousedown=onMouseDownTxt,
+       tid=paste0("ptR_Tag_",rowIndex),
+       lapply(seq(ncol(mRow)), function(j){
+         list(
+           circle(   cxy=mRow[,j], r=8),
+           if(ptDisplayMode=="Labeled"){
+             text(paste(j), cxy=mRow[,j]+10*c(1,-1),  stroke='black', font.size=12) #opac)
+           } else {
+             NULL
+           }
+         )
+       })
     )
-  } #end if
+  ) #end list
 } #end showPts
+
 
 
 statusPlotTagVal<-callModule(
@@ -137,11 +141,12 @@ statusPlotTagVal<-callModule(
   svgID='ptR_SVG_TagVal',
   showPts.compound=reactive({
     showPts.valTag(
-      ptName=getTagName(), 
-      pts=matrix(unlist(getPtDefs()$tib[[getTagName()]]),2) ,
-      selectedPointIndx=as.numeric( getTagIndex() ),
-      ptDisplayMode=getDisplayModeTag(), 
-      tags=getTagIndexChoices()
+      ptName=getTibName(), 
+      pts=getTibPts(), #matrix(unlist(getPtDefs()$tib[[getTagName()]]),2) ,
+      #selectedPointIndx=as.numeric( getTagIndex() ),
+      rowIndex=getTibRow(),
+      ptDisplayMode=getDisplayModeTag() #, 
+      #tags=getTagIndexChoices()
     )
   }),
   ptrDisplayScript = reactive({ svgToolsScript( "TagVal") }), #ptrDisplayScript = reactive({ js.scripts[[ "TagVal"]]}),
