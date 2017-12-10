@@ -79,7 +79,7 @@ observe({
       if(length(pd)>0){
         tibs<-pd$tib #!!! check this
         name<-tail(names(tibs),1) #kludge, last name
-        pts<-tibs[[name]][['pts']] # kludge for now
+        pts<-tibs[[name]][[name]] # !!!KLUDGE for now, ASSUME TIB NAME AND POINTS NAME ARE SAME!!!
         if(!is.null(pts)){
           row<-nrow(pts)
           m<-pts[[row]]

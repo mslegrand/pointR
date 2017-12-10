@@ -10,7 +10,7 @@ returnValue4ModuleTagDrag<-callModule(
   id="tagDragBar",
   barName=rightPanel,
   name=getTibName,
-  nameChoices=getTagNameChoices,
+  nameChoices=getTibNameChoices,
   ptIndex=getPtIndex,
   ptIndexChoices=getPtIndexChoices,
   rowIndex=getTibRow,

@@ -54,7 +54,7 @@ returnValue4ModulePointsBar<-callModule( #auto  input, output, session
   #getSelectInfo=getSelectInfo, #not the best way, but ...
   #getPtDefs=getPtDefs, 
   name=getTibName, 
-  nameChoices=getTagNameChoices,
+  nameChoices=getTibNameChoices,
   ptIndex=getPtIndex,
   ptIndexChoices=getPtIndexChoices,
   rowIndex=getTibRow,

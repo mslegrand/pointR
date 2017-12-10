@@ -45,6 +45,28 @@ NULL
 )
 "->codeTemplate
 
+# defines
+#-------------------------------
+
+"library(svgR)
+library(tidyverse)
+WH<-c(600,400)
+
+# Defined by mouse: edit with care!
+ptR<-list(
+  x=tribble(
+   ~x,             ~fill,
+   matrix(NA,2,0), 'red'
+  )
+)
+
+svgR(wh=WH,
+#your custom code goes here
+NULL
+)
+"->codeTemplate
+
+
 
 
 
@@ -183,7 +205,7 @@ ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
         #!!!KLUDGE first kludge (undo later)
         ptDefs$tib<-get(ptTag) #at this stage we have ptR as a list of tibbles, each tibble containings points tib$p
         ptDefs$pts<-lapply(names(ptDefs$tib), function(nm){
-          pts<-unlist(ptDefs$tib[[nm]]$pts) #!!!temporary change this to be more general later
+          pts<-unlist(ptDefs$tib[[nm]][[nm]]) #!!!temporary change this to be more general later
           #pts<-lapply(ptR, function(x)do.call(cbind, x)) 
           if(length(pts)>0)
             matrix(unlist(pts),2)
@@ -362,11 +384,11 @@ olde2newFmtPtDef2ListOfLists<-function(newPtDef){
 
 #!!! kludge to convert output to ints
 pts2Integers<-function(newtib){
-  ptsCol<-'pts' #!!!kludge: must change shortly
+  #ptsCol<-'pts' #!!!kludge: must change shortly CHANGED: REPLACED ptsCol with mn
   
   for(nm in names(newtib)){
-    ptsll<-newtib[[nm]][[ptsCol]] #ptsll is a list of matrices
-    newtib[[nm]][[ptsCol]]<-sapply(ptsll, function(mm){
+    ptsll<-newtib[[nm]][[nm]] #  !!!KLUDGE  ptsll is a list of matrices
+    newtib[[nm]][[nm]]<-sapply(ptsll, function(mm){
       matrix(as.integer(mm),2)
     }, 
     simplify=FALSE)

@@ -8,54 +8,49 @@
 returnValue4ModuleTagVal<-callModule(
   module=moduleTagVal,
   id="tagValBar",
-  id2="tagValBar",
+  id2="tagValBar", # !!! DO  WE STILL NEED THIS???? 
   barName=rightPanel ,
-  getCode=getCode, # or wrap
-  getPtDefs=reactive({x<-getPtDefs(); x}),
-  getTagNameChoices=reactive({getTagNameChoices()}) ,
-  getTagName=reactive({getTagName()}),
-  getTagIndexChoices=reactive({getTagIndexChoices()}),
-  getTagIndex=reactive({getTagIndex()})
+  name=getTibName,
+  nameChoices=getTibNameChoices,
+  ptIndex=getPtIndex,
+  ptIndexChoices=getPtIndexChoices,
+  rowIndex=getTibRow,
+  rowIndexChoices=getTibRowChoices,
+  matColIndex=getTibMatCol,
+  matColIndexChoices=getTibMatColChoices,
+  columnName= getTibColumnName,
+  columnNameChoices=getTibColumnNameChoices
+  # getCode=getCode, # or wrap
+  # getPtDefs=reactive({x<-getPtDefs(); x}),
+  # getTagNameChoices=reactive({getTagNameChoices()}) ,
+  # getTagName=reactive({getTagName()}),
+  # getTagIndexChoices=reactive({getTagIndexChoices()}),
+  # getTagIndex=reactive({getTagIndex()})
 )
 
 #observes returnValue4ModuleTagVal$name, returnValue4ModuleTagVal$index
-observeEvent(c(returnValue4ModuleTagVal$name(),returnValue4ModuleTagVal$index()),{
+observeEvent(c(returnValue4ModuleTagVal$name(),returnValue4ModuleTagVal$rowIndex()),{
   if(rightPanel()=='tagValues'){
     name<-returnValue4ModuleTagVal$name()
-    index<-returnValue4ModuleTagVal$index()
+    rowIndex<-returnValue4ModuleTagVal$rowIndex()
     if(!is.null(name)){
+      newTib<-getPtDefs()$tib[[name]]
+      matColIndex<-ncol(newTib[[rowIndex, getTibPtColPos()]])
+      pts<-newTib[[getTibPtColPos()]]
+      point.index<-ptPos2AbsPtIndx(pts, rowIndex, matColIndex)
       # selectedPoint$name<-name
       # selectedPoint$point.index<-as.numeric(index)
-      point.index<-as.numeric(index)
-      rc<-absPtIndx2TibPtPos(point.index)
-      updateSelected(name=name, row=rc$row, matCol=rc$matCol, point.index=point.index)
+      #point.index<-as.numeric(index)
+      #rc<-absPtIndx2TibPtPos(point.index)
+      
+      updateSelected(name=name, row=rowIndex, 
+                     matCol=matColIndex, 
+                     point.index=point.index)
     }
   }
 })
 
 
-observeEvent(returnValue4ModuleTagVal$updateTagsNow(),{
-  if(returnValue4ModuleTagVal$updateTagsNow()>0 
-     && rightPanel()=='tagValues'){
-    name<-returnValue4ModuleTagVal$name()
-    index<-returnValue4ModuleTagVal$index()
-    if(!is.null(name)){
-      # selectedPoint$name<-name
-      # selectedPoint$point.index<-as.numeric(index)
-      point.index<-as.numeric(index)
-      rc<-absPtIndx2TibPtPos(index)
-      updateSelected( name=name, row=rc$row, matCol=rc$matCol, point.index=point.index )
-    }
-    tagRList<-returnValue4ModuleTagVal$tagRList()
-    if( !is.null(tagRList) ){
-      newPtDefs<-getPtDefs()
-      newPtDefs$df<-tagRList
-      updateAceExtDef(newPtDefs, sender="tagVal.UpdateTagsNow")
-      #src<-df2Source(getCode(),tagRList)
-      # setCode(src) #!!!
-    }
-  }
-})
 
 
 #----------------------------------------------------------------

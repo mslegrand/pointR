@@ -65,7 +65,7 @@ checkPtrSyntax<-function(src){
 processCommit<-reactive({
     src<-getCode() #input$source #------ace editor
     if(length(src)==1 && nchar(src)>0){
-      ptRList<-getPtDefs()$pts
+      ptRList<-getPtDefs()$tib
       tryCatch({
         lines<-strsplit(src,"\n") 
         lines<-lines[[1]]

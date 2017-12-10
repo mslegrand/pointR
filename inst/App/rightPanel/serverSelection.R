@@ -7,9 +7,9 @@ selectedPoint <- reactiveValues(
 selectedTibble <- reactiveValues(
   name="x", #NULL,       # name of current point array
   row=1,
-  column=1, # default to last col?
+  column='x', # default to last col?
   matCol=0,
-  ptColName='pts',
+  ptColName='x',
   index=0          #  
 )
 
@@ -52,12 +52,6 @@ updateSelected<-function( name, row, column, matCol, point.index, ptColName ){
   }
 }
 
-# selectedPoint <- reactiveValues(
-#   tibble.name="x", #NULL,       # name of current point array
-#   point.index=0,          #  selected pt.indx (column) in current point array
-#   point.col.name='pts',
-#   row.num=1
-# )
 
 
 
@@ -72,6 +66,9 @@ updateSelected<-function( name, row, column, matCol, point.index, ptColName ){
 getCode<-reactive({request$code})
 getPtName<-reactive({selectedPoint$name})
 getTibName<-reactive({selectedTibble$name}) #allw to be null only if tib is null
+getTibNameChoices<-reactive({
+  names(getPtDefs()$tib)
+}) #allw to be null only if tib is null
 
 
 getPtIndexChoices<-reactive({ 
@@ -193,12 +190,20 @@ getTibRowChoices<-reactive({
   }
 })
 
-getTibMatCol<-reactive({ selectedTibble$matCol })
+getTibColumnName<-reactive({selectedTibble$column})
+getTibColumnNameChoices<-reactive({ 
+  tib<-getTib()
+  if(!is.null(tib)){
+    names(tib)
+  } else {
+    ""
+  }
+})
 
+getTibMatCol<-reactive({ selectedTibble$matCol })
 getTibPos<-reactive({
   list(row=selectedTibble$row, matCol=selectedTibble$matCol)
 })
-
 getTibMatColChoices<-reactive({ 
   row<-getTibRow()
   pts<-getTibPts()
@@ -256,11 +261,11 @@ ptPos2AbsPtIndx<-function(pts, row, matCol  ){
 
 
 
-#gets the tagged names
-getTagNameChoices<-reactive({
-  names(getPtDefs()$tib)
-  #intersect(names(getPtDefs()$pts), names(getPtDefs()$df))
-})
+# #gets the tagged names
+# getTagNameChoices<-reactive({
+#   names(getPtDefs()$tib)
+#   #intersect(names(getPtDefs()$pts), names(getPtDefs()$df))
+# })
 
 # getSelectInfo<-reactive({ #used by pointsBar only??
 #   name<-getPtName()
@@ -275,35 +280,35 @@ getTagNameChoices<-reactive({
 # })
 
 #gets a tagged name (=ptName unless ptName is not tagged)
-getTagName<-reactive({
-  #exGetTagName( getTagNameChoices(), getPtName() )
-  getTibName()
-})
+# getTagName<-reactive({
+#   #exGetTagName( getTagNameChoices(), getPtName() )
+#   getTibName()
+# })
 
 #uses getTibPts
-getTagIndexChoices<-reactive({  
-  #getPtDefs()$df[[getTagName()]]$tag
-  nCols<-sapply(getTibPts(),ncol)
-  if(length(nCols)>0){
-    endPos<-cumsum(nCols)
-    begPos<-c(1,1+endPos[-length(endPos)])
-  } else {
-    begPos<-0
-  }
-  begPos
-})
+# getTagIndexChoices<-reactive({  
+#   #getPtDefs()$df[[getTagName()]]$tag
+#   nCols<-sapply(getTibPts(),ncol)
+#   if(length(nCols)>0){
+#     endPos<-cumsum(nCols)
+#     begPos<-c(1,1+endPos[-length(endPos)])
+#   } else {
+#     begPos<-0
+#   }
+#   begPos
+# })
 
 #uses pointIndex
-getTagIndex<-reactive({ 
-  #choices<-getTagIndexChoices()
-  indx<-getPtIndex()
-  if(length(indx)>0){
-    ch<-getTagIndexChoices()
-    max(ch[indx>=ch])
-  } else
-    0
-})
-
+# getTagIndex<-reactive({ 
+#   #choices<-getTagIndexChoices()
+#   indx<-getPtIndex()
+#   if(length(indx)>0){
+#     ch<-getTagIndexChoices()
+#     max(ch[indx>=ch])
+#   } else
+#     0
+# })
+# 
 
 
 
