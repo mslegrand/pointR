@@ -1,9 +1,6 @@
 
 
 # --------------input$plotNavBar=="tagValues"---------------- 
- # output$TagValuesPanel<-renderUI({
- #  conditionalPanel( "input.plotNavBar=='tagValues'", moduleTagValUI("tagValBar"))
- # })
 
 returnValue4ModuleTagVal<-callModule(
   module=moduleTagVal,
@@ -12,8 +9,6 @@ returnValue4ModuleTagVal<-callModule(
   barName=rightPanel ,
   name=getTibName,
   nameChoices=getTibNameChoices,
-  ptIndex=getPtIndex,
-  ptIndexChoices=getPtIndexChoices,
   rowIndex=getTibRow,
   rowIndexChoices=getTibRowChoices,
   matColIndex=getTibMatCol,
@@ -33,11 +28,10 @@ observeEvent(c(returnValue4ModuleTagVal$name(),returnValue4ModuleTagVal$rowIndex
       newTib<-getPtDefs()$tib[[name]]
       matColIndex<-ncol(newTib[[rowIndex, getTibPtColPos()]])
       pts<-newTib[[getTibPtColPos()]]
-      point.index<-ptPos2AbsPtIndx(pts, rowIndex, matColIndex)
+      
     
       updateSelected(name=name, row=rowIndex, 
-                     matCol=matColIndex, 
-                     point.index=point.index)
+                     matCol=matColIndex)
     }
   }
 })
@@ -148,28 +142,6 @@ observeEvent(input$commitNewCol, {
 
 
 
-# modalEditValue<-function( oldValue, row, columnName){
-#   #attrValueModal <- function(attrName, failedName=FALSE, failedValue=FALSE) {
-#     #attrValueModal <- function(attrName, failedName=FALSE, failedValue=FALSE) {
-#     doOk<-'updateTibVal'
-#     modalDialog(
-#       #onkeypress=doOk,
-#       span(paste('row=',row),
-#       span(paste('column=',columnName)
-#       
-#       textInput(ns("modalAttrValue"), "New  Value"), 
-#       span('Enter new choice for the given named attribute'), 
-#       if (failedName)
-#         div(tags$b("Invalid Attribute Name: must begin with a character", style = "color: red;")),
-#       if (failedValue)
-#         div(tags$b("Invalid Attribute Value: must begin with printable character other than space", style = "color: red;")),
-#       footer = tagList(
-#         modalButton("Cancel"),
-#         actionButton(ns("ok"), "Commit")
-#       )
-#     ) 
-#   }
-# }
 
 #--------EDIT VALUE------------------------------
 observeEvent(returnValue4ModuleTagVal$entryValue(),{
@@ -184,7 +156,7 @@ observeEvent(returnValue4ModuleTagVal$entryValue(),{
     )  ){
       entry<-returnValue4ModuleTagVal$entryValue()
       # !!! TODO: type check if numeric
-      #cat('entry=',entry,'\n')
+      
       newPtDefs<-getPtDefs()
       name<-getTibName()
       column<-getTibColumn()
@@ -206,7 +178,6 @@ observeEvent(returnValue4ModuleTagVal$entryValue(),{
 showPts.valTag %<c-% function(
   ptName=NULL, 
   pts=NULL, 
-  #selectedPointIndx, 
   rowIndex=NULL,
   ptDisplayMode #,  
   #tags=NULL
@@ -219,11 +190,10 @@ showPts.valTag %<c-% function(
   
   if(length(rowIndex)<1 || rowIndex==0){return(NULL)}
   
-  #tag.indx<-selectedPointIndx #this is the position of the first point of the tagged set 
   semitransparent<-0.3
   colorScheme<-c(default="purple", ending="red", selected="blue")
   color<-colorScheme[1]
-  #m<-matrix(pts,2)
+  
   
   
   
@@ -282,11 +252,11 @@ statusPlotTagVal<-callModule(
   showPts.compound=reactive({
     showPts.valTag(
       ptName=getTibName(), 
-      pts=getTibPts(), #matrix(unlist(getPtDefs()$tib[[getTagName()]]),2) ,
-      #selectedPointIndx=as.numeric( getTagIndex() ),
+      pts=getTibPts(), 
+      
       rowIndex=getTibRow(),
       ptDisplayMode=getDisplayModeTag() #, 
-      #tags=getTagIndexChoices()
+      
     )
   }),
   ptrDisplayScript = reactive({ svgToolsScript( "TagVal") }), #ptrDisplayScript = reactive({ js.scripts[[ "TagVal"]]}),

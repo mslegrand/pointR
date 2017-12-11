@@ -19,9 +19,6 @@ moduleTagDragUI<-function(id, input, output) {
       ),
       div(style="display:inline-block",
           numericInput( ns("matColIndex"), "Mat Col", 1, min=1, max=10, step=1, width="80px" )
-      ),
-      div(style="display:inline-block",
-          numericInput( ns("ptIndx"), "ptIndx", 1, min=1, max=10, step=1, width="80px" )
       )
       # ,
       # div(style="display:inline-block",
@@ -37,8 +34,6 @@ moduleTagDrag<-function(input, output, session,
   barName, 
   name, 
   nameChoices,
-  ptIndex,
-  ptIndexChoices,
   rowIndex,
   rowIndexChoices,
   matColIndex,

@@ -17,10 +17,10 @@ observe({input$messageFromAce
         processCommit()
       } 
       if( request$sender %in% 'cmd.openFileNow'){
-        #set point.index to end of points (if points)
+        # !!! TODO: set point.index to end of points (if points)
       }
       if(request$sender %in% 'cmd.saveFileNow'){
-        #cat('observe {input$messageFromAce:: cmd.saveFileNow\n')
+        # cat('observe {input$messageFromAce:: cmd.saveFileNow\n')
         datapath<-input$messageFromAce$auxValue
         txt<-input$messageFromAce$code
         writeLines(txt, datapath)
@@ -78,23 +78,20 @@ observe({
       pd<-getPtDefs()
       if(length(pd)>0){
         tibs<-pd$tib #!!! check this
-        name<-tail(names(tibs),1) #kludge, last name
+        name<-tail(names(tibs),1) # KLUDGE, last name
         pts<-tibs[[name]][[name]] # !!!KLUDGE for now, ASSUME TIB NAME AND POINTS NAME ARE SAME!!!
+        # !!! TODO:  find and set point column
+        
         if(!is.null(pts)){
           row<-nrow(pts)
           m<-pts[[row]]
           matCol<-ncol(m)
-          point.index<-length(unlist(pts))/2
         } else{
           row<-0
           matCol<-0
-          point.index<-0
         }
         
-        # selectedPoint$name<-name
-        # selectedPoint$point.index<-l/2
-        
-        updateSelected( name=name, row=row, matCol=matCol, point.index=point.index )
+        updateSelected( name=name, row=row, matCol=matCol)
       }
     } 
     

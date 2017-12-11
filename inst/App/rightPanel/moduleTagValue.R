@@ -41,8 +41,6 @@ moduleTagVal<-function(input, output, session,
   barName, 
   name, 
   nameChoices,
-  ptIndex,
-  ptIndexChoices,
   rowIndex,
   rowIndexChoices,
   matColIndex,
@@ -137,119 +135,7 @@ moduleTagVal<-function(input, output, session,
     } 
   })
 
- 
   
-  # # triggered by pressing "Update" button
-  # observeEvent(
-  #   input$updateVal,
-  #   {
-  #     if(identical( barName(), 'tagValues')){
-  #       if(
-  #         !is.null(localReactive$tagRList) && nchar(input$name)>0 && 
-  #         length(input$attrName)>0 && length(input$index)>0 &&
-  #         length(input$attrVal)>0
-  #       )
-  #       {
-  #         tagValueVec<-  localReactive$tagRList[[input$name]][[input$attrName]]
-  #         tags<-localReactive$tagRList[[input$name]]$tag
-  #         tmp<-as.integer(input$index)
-  #         indx<-which(tmp==tags)
-  #         tagValueVec[indx]<-input$attrVal
-  #         localReactive$tagRList[[input$name]][[input$attrName]]<-tagValueVec
-  #         localReactive$updateTagsNow<-localReactive$updateTagsNow+1
-  #       }
-  #     }
-  #   }
-  # )
-  # 
-  
-  
-  # # Return the UI for a modal dialog with data selection input. I
-  # attrValueModal <- function(attrName, failedName=FALSE, failedValue=FALSE) {
-  #   doOk<-paste0(
-  #     'shinyjs.triggerButtonOnEnter(event,"',
-  #     ns("ok"), 
-  #     '")')
-  #   modalDialog(
-  #     onkeypress=doOk,
-  #     textInput(ns("modalAttrName"), "Attribute Name", value=attrName),
-  #     textInput(ns("modalAttrValue"), "New Attribute Value"), 
-  #     span('Enter new choice for the given named attribute'), 
-  #     if (failedName)
-  #       div(tags$b("Invalid Attribute Name: must begin with a character", style = "color: red;")),
-  #     if (failedValue)
-  #       div(tags$b("Invalid Attribute Value: must begin with printable character other than space", style = "color: red;")),
-  #     footer = tagList(
-  #       modalButton("Cancel"),
-  #       actionButton(ns("ok"), "Commit")
-  #     )
-  #   ) 
-  # }
-  # 
-  # #invokes modal for new attribute
-  # observeEvent(input$New,{
-  #   attrName<-input$attrName
-  #   showModal( attrValueModal(attrName ) ) 
-  # })
-  # 
-  # observe( {
-  #   localReactive$attribute
-  #   if(!is.null(localReactive$attribute)){
-  #     choices = getTagColChoices()
-  #     selected=localReactive$attribute
-  #     updateSelectInput(session, "attrName", #fails for some reason
-  #                       choices=choices,
-  #                       selected=selected)
-  #   }
-  # })
-  # # 
-  # 
-  # 
-  # #dialog box ok handler
-  # observeEvent(input$ok, {
-  #   if(identical( barName(), 'tagValues')){
-  #     if( length(input$name)>0 &&  
-  #         length(input$index)>0 &&
-  #         !is.null(localReactive$tagRList)
-  #     ){
-  #       nameOK<-grepl(pattern = "^[[:alpha:]]", input$modalAttrName) && input$modalAttrName!="tag"
-  #       valueOK<-grepl(pattern = "^[[:graph:]]", input$modalAttrValue)
-  #       if( nameOK && valueOK){
-  #           tagAttrNames<-  names(localReactive$tagRList[[input$name]])
-  #           modalAttrName<-input$modalAttrName
-  #           
-  #           tags<-localReactive$tagRList[[input$name]]$tag
-  #           if(modalAttrName %in% tagAttrNames){
-  #             tagValueVec<-localReactive$tagRList[[input$name]][[modalAttrName]]
-  #             tmp<-as.integer(input$index)
-  #             indx<-which(tmp==tags)
-  #             tagValueVec[indx]<-input$modalAttrValue 
-  #             updateSelectInput(session, 
-  #                               inputId="attrName", #fails to update
-  #                               selected=modalAttrName)
-  # 
-  #           } else { #this is a new attributeName
-  #             tagValueVec<-rep( input$modalAttrValue, length(tags) ) 
-  #             tagAttrNames<-c(tagAttrNames,modalAttrName)
-  #             updateSelectInput(session, 
-  #                               inputId="attrName",  #fails to update
-  #                               choices=tagAttrNames, 
-  #                               selected=modalAttrName) 
-  #           }
-  #           localReactive$attribute<-modalAttrName
-  #           localReactive$tagRList[[input$name]][[modalAttrName]]<-tagValueVec
-  #           localReactive$updateTagsNow<-localReactive$updateTagsNow+1
-  #           removeModal()
-  #     } else { # invalid modal input
-  #         modalAttrName<-input$modalAttrName
-  #         showModal(attrValueModal(modalAttrName, 
-  #             failedName=!nameOK, failedValue=!valueOK) )
-  #       }
-  #     } #else ignore
-  #   }
-  # })
-  # 
-
   #when name, index, attrName valid, and attrVal changes, update the ptDefs and code
   list( 
     name         =reactive({input$name}),

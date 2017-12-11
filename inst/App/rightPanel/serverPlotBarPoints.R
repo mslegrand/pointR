@@ -4,44 +4,6 @@
 
 # ===============Begin Server PointsBar=======================
 
-# called indirectly by either a new/load source or upon a commit???
-# called directly by getSelectInfo, which is called by pointsBar module initialization
-# ex.getSelectInfo<-function(tibList, selected, point.index){
-#   choices<-names(tibList)
-#   if(length(tibList)==0 ){
-#     rtv<-list(selected=NULL, point.index =0 )  
-#     return(rtv)
-#   }
-#   
-#   if(length(selected)<1 || !(selected %in% choices) ){ # a new choice
-#     #pick the first choice candidate
-#     selected=choices[1]
-# #!!! ERROR  to extract points, we need the point column from the tib list. 
-# # BUT WE DON'T HAVE ACCESS TO THAT HERE !!!
-#     pts<-tibList[[selected]] 
-#     point.index<-length(pts)/2
-#     rtv<-list(
-#       selected=selected,
-#       point.index=point.index
-#     )
-#     return(rtv)
-#   }
-#   #default: an existing choice
-#   point.index<-min(point.index, length( tibList[[selected]])/2 ) #cannot be longer than the number of points
-#   rtv<-list(
-#     selected=selected, 
-#     point.index=point.index
-#   )
-#   return(rtv)  
-# }
-
-# getSelectInfo<-reactive({ #used by pointsBar only??
-#   name<-getTibName()
-#   indx<-getPtIndex()
-#   tibs<-getPtDefs()$tib
-#   ex.getSelectInfo(tibs, name, indx)
-#   #ex.getSelectInfo(getPtDefs()$pts, getPtName(), getPtIndex())
-# })
 
 
 #CALL modulePointsBarUI
@@ -50,18 +12,12 @@ returnValue4ModulePointsBar<-callModule( #auto  input, output, session
   module=modulePointsBar, 
   id="pointsBar", 
   barName=rightPanel,
-  #getTibPtsColEndIndex=getTibPtsColEndIndex,
-  #getSelectInfo=getSelectInfo, #not the best way, but ...
-  #getPtDefs=getPtDefs, 
   name=getTibName, 
   nameChoices=getTibNameChoices,
-  ptIndex=getPtIndex,
-  ptIndexChoices=getPtIndexChoices,
   rowIndex=getTibRow,
   rowIndexChoices=getTibRowChoices,
   matColIndex=getTibMatCol,
   matColIndexChoices=getTibMatColChoices,
-  #isTaggable=isTaggable,
   headerId=NS("pointsBar", 'header')
 )
 
@@ -92,35 +48,10 @@ observeEvent(returnValue4ModulePointsBar$name(), {
 
 
 
-# Replace this with update of row, column and then tribute to point index
-# selected pts index
-# observeEvent(returnValue4ModulePointsBar$pointIndex(), { 
-#   if(rightPanel()=="Points"){
-#     cat("serverPlotBar:: observeEvent- 625\n")
-#     cat("returnValue4ModulePointsBar$pointIndex()=\n")
-#     indx<-returnValue4ModulePointsBar$pointIndex() 
-#     print(returnValue4ModulePointsBar$pointIndex())
-#     #rc<-absPtIndx2TibPtPos(indx)
-#    
-#     updateSelected(row=row, matCol=matCol, point.index=returnValue4ModulePointsBar$pointIndex() )
-#   }
-# })
-
-
-# observeEvent(c(returnValue4ModulePointsBar$rowIndex(), returnValue4ModulePointsBar$matColIndex()){ 
-#   if(rightPanel()=="Points"){
-#     updateSelected(row=returnValue4ModulePointsBar$rowIndex(),  matCol=returnValue4ModulePointsBar$matColIndex() )
-#   }
-# })
-
-
-
-
-
 #-----------BUTTON EVENTS--------------------
 #---BUTTON: remove selected point  -----
 observeEvent( returnValue4ModulePointsBar$removePt(), {
-  selection<-getTibName() #selectedPoint$name
+  selection<-getTibName() 
 cat('Enter removePt\n')  
   if(selection!=""){
     ptDefs<-getPtDefs()
@@ -163,124 +94,6 @@ modalFreq <- function(failed = FALSE) {
   ) 
 }
 
-# When okTag button of modalFreq isis pressed, 
-# Corresponds to initial point tag
-observeEvent(input$okTag, { #move into module???
-  #covers the two cases
-  # 1. tagR list not there, add tagR list, selection and insert 
-  # 2. tagR list there, but selection is not: add selection and insert
-  
-  # Check that data object exists and is data frame.
-  selection<-getTibName() #selectedPoint$name
-  if(input$tagFreq=="Off"){
-    reactiveTag$freq[[selection]] <- NULL
-  } else{
-    reactiveTag$freq[[selection]] <- as.numeric(input$tagFreq)
-  }
-    # set the value here
-  removeModal()
-  # and complete the processing
-  src<-getCode()
-  ptDefs<-getPtDefs()
-  ptsList<-ptDefs$pts
-  dfList<-ptDefs$df
-  point.index<-getPtIndex()
-  point.index<-max(1,point.index) #!!!TODO: change later
-  
-  updateSelected(row=getTibRow()+1, matCol=1, point.index=point.index)
-  
-  
-  if(!is.null(reactiveTag$freq[[selection]])){ #pad tags to the end and exit
-    freq<-as.integer(reactiveTag$freq[[selection]])
-    tags<-seq.int(from=1,to=ncol(ptsList[[selection]]), by=freq)
-  } else { #manual # add the last pt and be cool
-    if(point.index>=1){
-      tags<-unique(c(1,point.index))
-    }
-  }
-  df<-data.frame(tag=tags) #creates a data frame with tags entry
-  if(is.null(dfList) ){ # 1 if dfList is NULL, create new
-    dfList= structure( list( df) , names=selection )
-  } else {
-    dfList[[selection]]<-df
-  }
-  #src<-getCode()
-  newPtDef<-list(pts=ptsList, df= dfList )
-  
-  # !!!TODO Iterate thru columns of newPtDef$pts and convert to list of lists
-  pts<-newPtDef$pts
-  
- 
-  newPtDef<-olde2newFmtPtDef2ListOfLists(newPtDef)
-  
-  
-  replacementList<-ptDef2ReplacementList(selection, newPtDef, src)
-  
-  
-  if( length(replacementList)>0 ){
-    #!!! TODO can we replace the following with an updateAceExtDef???
-    # session$sendCustomMessage(
-    #   type = "shinyAceExt",
-    #   list(id= "source", replacement=replacementList, sender='tag.pt.button', ok=1) # wtf ok (data.ok in aceExt.js) only revelant when setValue is attr
-    # )
-    updateAceExtDef( newPtDef, 'tag.pt')
-  }
-}) #end of okTag button press
-
-
-
-# #---TAG THIS POINT button-----
-# # note: in 1st tag, calls freqModal to complete the work, which exits in the okTag above
-# observeEvent( returnValue4ModulePointsBar$tagPt(), {
-#   #There are 3 distinct cases: 
-#   # 1. tagR list not there, add tagR list, selection and insert 
-#   # 2. tagR list there, but selection is not: add selection and insert 
-#   # 3  Both tagR list and tagR[[selection]] are there, just add tag no.
-#   if(rightPanel()=="Points"){
-#     #selection<-input$ptRSelect
-#     selection<-selectedPoint$name
-#     ptDefs<-getPtDefs()
-#     ptsList<-ptDefs$pts
-#     dfList<-ptDefs$df
-#     point.index<-max(1,selectedPoint$point.index) #can change later
-#     #PROPOSED REWRITE:
-#     ok= !(is.null(dfList)) && !(is.null(dfList[[selection]]) )
-#     if(!ok) { #this is a first tag
-#       showModal( modalFreq() ) #observer for showModal must complete the work
-#     } else { # this is a second tag (and hence manual)
-#       #if(reactiveTag$freq[[selection]]==0){ #manual case
-#       #add this tag
-#       df<-dfList[[selection]]
-#       if("tag" %in% names(df)){ # if not, then do nothing
-#         tags<-df$tag
-#         if(!(point.index %in% tags)){
-#           row<-max(tags[tags<point.index])
-#           tmp.df<-subset(df,tag==row)
-#           tmp.df$tag<-point.index
-#           df<-rbind(df, tmp.df)
-#           ordrows<-order(df$tag)
-#           df<-df[ordrows,,drop=FALSE]
-#           dfList[[selection]]<-df
-#           src<-getCode() 
-#           #src<-df2Source(src,dfList)
-#           # setCode(src) #!!!
-#           
-#           newPtDef<-list(pts=ptsList, df= dfList )
-#           updateAceExtDef(newPtDef, 'tag.pt')
-#           # replacementList<-ptDef2ReplacementList(newPtDef, src)
-#           # #src<-df2Source(src,dfList) #insert points into src
-#           # 
-#           # if( length(replacementList)>0 ){
-#           #   session$sendCustomMessage(
-#           #     type = "shinyAceExt",
-#           #     list(id= "source", replacement=replacementList, sender='tag.pt.button', ok=1)
-#           #   )
-#           # }
-#         }
-#       }
-#     }
-#   } #end of if
-# }) #end of point InfoList Tag Point, 
 
 
 #---TAG THIS POINT button-----
@@ -291,10 +104,9 @@ observeEvent( returnValue4ModulePointsBar$tagPt(), {
     #selection<-input$ptRSelect
     cat("Enter tagPt\n")
     src<-getCode() 
-    selection<-getTibName() #selectedPoint$name
+    selection<-getTibName()
     ptDefs<-getPtDefs()
-    #indx<-getPtIndex() #selectedPoint$point.index
-    #rc<-absPtIndx2TibPtPos(indx) #point location
+    
     rc<-list( row=getTibRow(), matCol=getTibMatCol() )
     
     m<-ptDefs$tib[[selection]][[ rc$row, getTibPtColPos() ]]
@@ -307,7 +119,6 @@ observeEvent( returnValue4ModulePointsBar$tagPt(), {
     ptDefs$tib[[selection]]<-tib 
     sender='tagPt'
     updateAceExtDef(ptDefs, sender=sender)
-    #updateSelected(point.index=indx, row=getTibRow()+1, matCol=1)
     updateSelected(row=getTibRow()+1, matCol=1)
   } #end of if
 }) #end of point InfoList Tag Point, 
@@ -317,13 +128,8 @@ observeEvent( returnValue4ModulePointsBar$forwardPt(), {
   matColIndex<-getTibMatCol()
   if(length( matColIndex)>0){
     cat("observeEvent:: serverPlotBar 99\n")
-    matColIndex=min(matColIndex+1, max(getTibMatColChoices()) )
-    point.index<-tibPtPos2AbsPtIndx()(getTibRow(), matColIndex )
-    #rc<-absPtIndx2TibPtPos(point.index)
-    updateSelected(  matCol=matColIndex, point.index=point.index )
-    # selectedTibble$row<-rc$row
-    # selectedTibble$col<-rc$col
-    
+    matColIndex=max(matColIndex+1, min(getTibMatColChoices()) )
+    updateSelected(  matCol=matColIndex )
   }
 })
 
@@ -332,11 +138,7 @@ observeEvent( returnValue4ModulePointsBar$backwardPt(), {
   if(length(matColIndex)>0){
     cat("observeEvent:: serverPlotBar 98\n")
     matColIndex=max(matColIndex-1, min(getTibMatColChoices()) )
-  #  rc<-absPtIndx2TibPtPos(point.index)
-    point.index<-tibPtPos2AbsPtIndx()(getTibRow(), matColIndex )
-    updateSelected(  matCol=matColIndex, point.index=point.index  )
-    # selectedTibble$row<-rc$row
-    # selectedTibble$col<-rc$col
+    updateSelected(  matCol=matColIndex  )
   }
 })
 
@@ -351,7 +153,6 @@ observeEvent( returnValue4ModulePointsBar$backwardPt(), {
   showPts.PtCmd %<c-% function(
       ptName, 
       pts=NULL,  
-      selectedPointIndx=NULL, 
       rowIndex=NULL,
       matColIndex=NULL,
       ptDisplayMode="Normal"
@@ -361,12 +162,9 @@ observeEvent( returnValue4ModulePointsBar$backwardPt(), {
     if(is.null(pts) ){ return(NULL) } 
     if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
     
-    cat("pts-----------------------------------------------\n")
-    print(pts)
+    # cat("pts-----------------------------------------------\n")
+    # print(pts)
     if(length(unlist(pts))<2){ return(NULL)}
-    
-    selectedPointIndx<-as.numeric(selectedPointIndx)
-    cat("selectedPointIndx=",selectedPointIndx,"\n")
     
     colorScheme<-c(default="green", ending="red", selected="blue")
     semitransparent<-0.3
@@ -377,16 +175,6 @@ observeEvent( returnValue4ModulePointsBar$backwardPt(), {
     cat("matColIndex",matColIndex,"\n")
     cat("class(matColIndex)",class(matColIndex),"\n")
     
-    # genId<-function(){
-    #   nid<-0 # use to generate ids
-    #   function(){
-    #     nid<<-nid+1
-    #     paste("pd",ptName,nid,sep="-")
-    #   }
-    # } 
-    # ptId<-genId()
-    
-    #nid<-0
     opacity<-rep(semitransparent, length(pts) )
     opacity[rowIndex]<-1
     
@@ -397,20 +185,13 @@ observeEvent( returnValue4ModulePointsBar$backwardPt(), {
         NULL
       } else {
         lapply(seq(ncol(m)), function(j){ #j is the matCol index
-          #nid<<-nid+1
-          #cat("nid=",nid,"\n")
-          #id<-ptId() #
-          #id<-paste("pd",ptName,nid,sep="-")
+          
           id<-paste("pd",ptName,i,j,sep="-")
           cat("id=", id, "\n")
           pt<-m[,j]
           color=colorScheme['default']
-          # if(i==length(pts)/2) { #ncol(m)){
-          #   color=colorScheme['ending']   
-          # } 
+          
           list(
-            #if(identical(selectedPointIndx, nid )){
-            #if(identical(i,rowIndex) && identical(j, matColIndex) ){
             if(i==rowIndex && j== matColIndex ){
               circle(class="draggable", 
                      id=id,  
@@ -419,7 +200,6 @@ observeEvent( returnValue4ModulePointsBar$backwardPt(), {
                      stroke=colorScheme['selected'], stroke.width=3,
                      #transform="matrix(1 0 0 1 0 0)", 
                      onmousedown=onMouseDownTxt
-                     #'ptRPlotter_ptR_SVG_Point.selectPoint' #onmousedown 
               )
             } else { #a non-selected point
               circle(class="draggable", 
@@ -427,7 +207,6 @@ observeEvent( returnValue4ModulePointsBar$backwardPt(), {
                      cxy=pt, r=8, fill=color, opacity=opacity[i],
                      #transform="matrix(1 0 0 1 0 0)", 
                      onmousedown=onMouseDownTxt
-                     #'ptRPlotter_ptR_SVG_Point.selectPoint' #onemousedown 
               )
             },
             if(ptDisplayMode=="Labeled"){
@@ -472,9 +251,8 @@ statusPlotPoint<-callModule(
     list(
       newPtLayer( insertMode(), getSVGWH() ),
       showPts.PtCmd(
-        ptName=getPtName(), 
+        ptName=getTibName(), 
         pts=getTibPts(), #getPtDefs()$pts[[getPtName()]],
-        selectedPointIndx=as.numeric( getPtIndex() ),
         rowIndex=getTibRow(),
         matColIndex=getTibMatCol(),
         ptDisplayMode=displayMode()

@@ -11,8 +11,6 @@ returnValue4ModuleTagDrag<-callModule(
   barName=rightPanel,
   name=getTibName,
   nameChoices=getTibNameChoices,
-  ptIndex=getPtIndex,
-  ptIndexChoices=getPtIndexChoices,
   rowIndex=getTibRow,
   rowIndexChoices=getTibRowChoices,
   matColIndex=getTibMatCol,
@@ -53,12 +51,12 @@ observeEvent(
       matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
       
       pts<-newTib[[getTibPtColPos()]]
-      point.index<-ptPos2AbsPtIndx(pts, rowIndex, matCol)
+      
       
       ptDefs$tib[[name]]<-newTib
       newPtDefs<-ptDefs
       updateAceExtDef(newPtDefs, sender=sender)
-      updateSelected(row=rowIndex, matCol=matCol, point.index=point.index)
+      updateSelected(row=rowIndex, matCol=matCol)
     }
   }
 )
@@ -82,13 +80,8 @@ observeEvent(
       rowIndex<-min(rowIndex, nrow(newTib))
       matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
       if(length(matCol)==0){matCol=0}
-      #adjust point.index
-      pts<-newTib[[getTibPtColPos()]]
-      point.index<-ptPos2AbsPtIndx(pts, rowIndex, matCol)
-      
-      
       updateAceExtDef(newPtDefs, sender=sender)
-      updateSelected(row=rowIndex, matCol=matCol, point.index=point.index)
+      updateSelected(row=rowIndex, matCol=matCol)
     }
   }
 )
@@ -110,13 +103,8 @@ observeEvent( returnValue4ModuleTagDrag$tagMoveUp(),{
           rowIndex<-rowIndex-1
           matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
           if(length(matCol)==0){matCol=0}
-          #adjust point.index
-          pts<-newTib[[getTibPtColPos()]]
-          point.index<-ptPos2AbsPtIndx(pts, rowIndex, matCol)
-      
-          
           updateAceExtDef(newPtDefs, sender=sender)
-          updateSelected(row=rowIndex, matCol=matCol, point.index=point.index)   
+          updateSelected(row=rowIndex, matCol=matCol)   
       }
     }
 })
@@ -138,13 +126,8 @@ observeEvent( returnValue4ModuleTagDrag$tagMoveDown(),{
       rowIndex<-rowIndex+1
       matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
       if(length(matCol)==0){matCol=0}
-      #adjust point.index
-      pts<-newTib[[getTibPtColPos()]]
-      point.index<-ptPos2AbsPtIndx(pts, rowIndex, matCol)
-      
-      
       updateAceExtDef(newPtDefs, sender=sender)
-      updateSelected(row=rowIndex, matCol=matCol, point.index=point.index)   
+      updateSelected(row=rowIndex, matCol=matCol)   
     }
   }
 })
@@ -157,10 +140,8 @@ observeEvent( returnValue4ModuleTagDrag$tagMoveDown(),{
   showPts.dragTag %<c-% function(
     ptName=NULL, 
     pts=NULL, 
-    #selectedPointIndx, 
     rowIndex=NULL,
-    ptDisplayMode#,  
-    #tags=NULL
+    ptDisplayMode 
     ){
     onMouseDownTxt="ptRPlotter_ptR_SVG_TagDrag.selectElement(evt)" 
     
@@ -171,14 +152,10 @@ observeEvent( returnValue4ModuleTagDrag$tagMoveDown(),{
     
     if(length(rowIndex)<1 || rowIndex==0){return(NULL)}
 
-    #tag.indx<-selectedPointIndx #this is the position of the first point of the tagged set 
     semitransparent<-0.3
     colorScheme<-c(default="purple", ending="red", selected="blue")
     color<-colorScheme[1]
-    #m<-matrix(pts,2)
-    
-  
-   
+ 
     opacity<-rep(semitransparent, length(pts)) 
     opacity[rowIndex]<-1 
     rowNums<-seq(length(pts))
@@ -240,7 +217,6 @@ statusPlotTagDrag<-callModule(
     showPts.dragTag(
       ptName=getTibName(), 
       pts=getTibPts(), #matrix(unlist(getPtDefs()$tib[[getTagName()]]),2) ,
-      #selectedPointIndx=as.numeric( getTagIndex() ),
       rowIndex=getTibRow(),
       ptDisplayMode=getDisplayModeTag() #, 
       #tags=getTagIndexChoices()

@@ -6,20 +6,21 @@
 
 
 
-addPt2ptDefs<-function(name, row, matCol, point.indx, ptDefs, newPt){
+addPt2ptDefs<-function(name, row, matCol,  ptDefs, newPt){
   
-  if(is.numeric(row) && is.numeric(matCol) && is.numeric(point.indx) &&
-     row>0 && length(ptDefs$tib)>0 && length(ptDefs$tib[[name]])>0 
-     && row<=nrow(ptDefs$tib[[name]])
+  if(is.numeric(row) && 
+     is.numeric(matCol)  &&
+     row>0 && 
+     length(ptDefs$tib)>0 && 
+     length(ptDefs$tib[[name]])>0 && 
+     row<=nrow(ptDefs$tib[[name]])
      ){
-    
     tib<-ptDefs$tib[[name]]
     col<-getTibPtColPos() #which(names(tib)==ptColName)
     pts<-tib[[row,col]] 
     pts<-append(pts,newPt,2*(matCol))
     tib[[row,col]]<-matrix(pts,2)
     ptDefs$tib[[name]]<-tib
-    #updateSelected(row=row, matCol=matCol+1, point.index=point.indx+1 )
   } else {
     ptDefs<-NULL #failed
     #cat("addPt2ptDefs returning NULL")
@@ -33,20 +34,13 @@ observe({
     if(length(input$mouseMssg)>0){
       #get cmd
       cmd<-input$mouseMssg$cmd
-      # isolate({
-      #   cat("input$mouseMssg\n")
-      #   print(input$mouseMssg)
-      #   cat("\n")        
-      # })
+      
       if(length(input$mouseMssg$vec)>0){
         vec<- as.numeric(unlist(input$mouseMssg$vec))
       }
       src<-getCode()
-      
       replacementList<-list()
-      
       ptDefs<-getPtDefs() #!!!  to do: replace with getTib
-  
       barName=rightPanel()
       if(barName=="Points"){
         sender='PointsBar.mouse'
@@ -56,40 +50,26 @@ observe({
           newPt<-vec
           #get selection
           
-          selection<-getTibName() #selectedPoint$name
-          #update local ptRList
-          #point.indx<-getPtIndex() #selectedPoint$point.index
-          #cat('cmd add: getPtIndx()=', point.indx,'\n')
-          #rc<-absPtIndx2TibPtPos(point.indx)
-          
+          selection<-getTibName() 
           rowIndex<-row<-getTibRow()
-          
           matColIndx<-getTibMatCol()
-          #rc<-list(row=rowIndex, matCol= matColIndx)
-          # indx<-tibPtPos2AbsPtIndx()(rowIndex, matColIndx)
-          point.indx<-0  # TODO!!! remove this
-          
+
           if(is.null(matColIndx)){
             cat('matColIndx is null\n') #should never happen???
           } else {
             newPtDefs<-addPt2ptDefs(
-            getTibName(),
-            rowIndex,
-            matColIndx,
-            point.indx, # TODO!!! remove this
-            ptDefs, 
-            newPt 
-          )
-          
-          if(!is.null(newPtDefs)){ #update only upon success
-             #selectedTibble$point.index<-selectedTibble$point.index+1
-              updateAceExtDef(newPtDefs, sender=sender)
-              #updateSelected(point.index=indx+1)
-              updateSelected(row=rowIndex, matCol=matColIndx+1 )
-              #cat('mouse add:: updateSelected')
+              getTibName(),
+              rowIndex,
+              matColIndx,
+              ptDefs, 
+              newPt 
+            )
+            if(!is.null(newPtDefs)){ #update only upon success
+                updateAceExtDef(newPtDefs, sender=sender)
+                updateSelected(row=rowIndex, matCol=matColIndx+1 )
+                # cat('mouse add:: updateSelected')
+            }
           }
-          }
-
          }
         
         if(cmd=='move'){ # --------move point
@@ -100,35 +80,14 @@ observe({
           #get selection
           selection<-vid[2]
           #get point index
-          
           #indx<-as.numeric(vid[3]) # index is the absolute position of in the points array
-          
-          
           newPt<-vec
-          #m[,rindx]<-newPt # m is the matrix of points in the given row
-          
-           
-           #reassign point
- 
-          #selectedPoint$point.index<-(indx+1)/2
-          
-          
-          #rc<-absPtIndx2TibPtPos(indx)
           rowIndex<-as.numeric(vid[3])
           matColIndx<-as.numeric(vid[4])
-          rc<-list(row=rowIndex, matCol= matColIndx)
-          indx<-tibPtPos2AbsPtIndx()(rowIndex, matColIndx)
-          
-          
-          cat('point.index=',indx,'\n')
-          ptDefs$tib[[selection]][[ rc$row, getTibPtColPos() ]][,rc$matCol]<-newPt
+          ptDefs$tib[[selection]][[ rowIndex, getTibPtColPos() ]][,matColIndx]<-newPt
           newPtDefs<-ptDefs
-          #selectedTibble$point.index<-rc$matColPos
-          #selectedTibble$row<-rc$row
-          # selectedTibble$row<-rc$row
-          # selectedTibble$col<-rc$col
           updateAceExtDef(newPtDefs, sender=sender)
-          updateSelected(point.index=indx, row=rc$row, matCol=rc$matCol)
+          updateSelected( row=rowIndex, matCol=matColIndx)
         }        
       }
 
@@ -142,19 +101,13 @@ observe({
           tmp<-unlist(str_split(tid,"_"))
           row<-as.numeric(tail(tmp,1))
           
-          selection<-getTibName() #selectedPoint$name
-          #rc<-absPtIndx2TibPtPos(indx)
+          selection<-getTibName() 
           m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]
           ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]<-m+vec
           matCol<-ncol(m)
-          pts<-ptDefs$tib[[selection]][[getTibPtColPos()]]
-          point.index<-ptPos2AbsPtIndx(pts,row, matCol)
           newPtDefs<-ptDefs
-          #selectedTibble$point.index<-rc$matColPos
-          #selectedTibble$row<-rc$row
-          
           updateAceExtDef(newPtDefs, sender=sender)
-          updateSelected(row=row, matCol=matCol, point.index=point.index)
+          updateSelected(row=row, matCol=matCol)
         }
       }
       
@@ -165,14 +118,14 @@ observe({
           tid<-input$mouseMssg$id
           tmp<-unlist(str_split(tid,"_"))
           row<-as.numeric(tail(tmp,1))
-          selection<-getTibName() #selectedPoint$name
+          selection<-getTibName() 
           m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]
           matCol<-ncol(m)
           m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]
           pts<-ptDefs$tib[[selection]][[getTibPtColPos()]]
-          point.index<-ptPos2AbsPtIndx(pts,row, matCol)
           
-          updateSelected(row=row, matCol=matCol, point.index=point.index)
+          
+          updateSelected(row=row, matCol=matCol)
         }
       }
       
