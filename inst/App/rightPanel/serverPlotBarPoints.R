@@ -107,19 +107,21 @@ observeEvent( returnValue4ModulePointsBar$tagPt(), {
     selection<-getTibName()
     ptDefs<-getPtDefs()
     
-    rc<-list( row=getTibRow(), matCol=getTibMatCol() )
+    row=getTibRow() 
+    matCol=getTibMatCol() 
     
-    m<-ptDefs$tib[[selection]][[ rc$row, getTibPtColPos() ]]
+    m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]
     if(ncol(m)<1){ 
       return(NULL) # bail if matrix of points is empty
     }
     tib<-ptDefs$tib[[selection]] #get the tib 
-    tib<-tagTib(tib, getTibPtColPos(), rc$row, rc$matCol)
-    
+    tib<-tagTib(tib, getTibPtColPos(), row, matCol)
+    row<-row+1
+    matCol<-length(tib[[row, getTibPtColPos()]])/2
     ptDefs$tib[[selection]]<-tib 
     sender='tagPt'
     updateAceExtDef(ptDefs, sender=sender)
-    updateSelected(row=getTibRow()+1, matCol=1)
+    updateSelected(row=row, matCol=matCol)
   } #end of if
 }) #end of point InfoList Tag Point, 
 

@@ -6,13 +6,13 @@ selectedTibble <- reactiveValues(
   column=1, # !!! KLUDGE for now. default to last col?
   matCol=0,
   ptColName='x',
-  index=0          #  
+  index=0          
 )
 
 
 
 
-updateSelected<-function( name, row, column, matCol, point.index, ptColName ){
+updateSelected<-function( name, row, column, matCol,  ptColName ){
   if(!missing(name)){
     selectedTibble$name=name
   }

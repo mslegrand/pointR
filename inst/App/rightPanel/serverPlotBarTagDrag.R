@@ -166,7 +166,10 @@ observeEvent( returnValue4ModuleTagDrag$tagMoveDown(),{
     list( 
         lapply(offRows, function(i){
           m<-pts[[i]]
-          g( opacity=opacity[i], 
+          if(length(m)==0){
+            NULL
+          } else {
+             g( opacity=opacity[i], 
              fill='purple',
              transform="matrix(1 0 0 1 0 0)", 
              onmousedown=onMouseDownTxt,
@@ -181,9 +184,13 @@ observeEvent( returnValue4ModuleTagDrag$tagMoveDown(),{
                   }
                )
              })
-          )
+            )
+          }
         }),
-        g( opacity=opacity[rowIndex], 
+        if(length( mRow)==0){
+          NULL
+        } else {
+          g( opacity=opacity[rowIndex], 
            fill='purple',
            transform="matrix(1 0 0 1 0 0)", 
            onmousedown=onMouseDownTxt,
@@ -198,7 +205,8 @@ observeEvent( returnValue4ModuleTagDrag$tagMoveDown(),{
                 }
             )
            })
-        )
+          )
+        }
       ) #end list
   } #end showPts
 

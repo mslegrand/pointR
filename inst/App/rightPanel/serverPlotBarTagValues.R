@@ -207,7 +207,10 @@ showPts.valTag %<c-% function(
   list( 
     lapply(offRows, function(i){
       m<-pts[[i]]
-      g( opacity=opacity[i], 
+      if(length(m)==0){
+        NULL
+      } else {
+        g( opacity=opacity[i], 
          fill='purple',
          transform="matrix(1 0 0 1 0 0)", 
          onmousedown=onMouseDownTxt,
@@ -222,9 +225,13 @@ showPts.valTag %<c-% function(
              }
            )
          })
-      )
+        )
+      }
     }),
-    g( opacity=opacity[rowIndex], 
+    if(length(mRow)==0){
+      NULL
+    } else {
+          g( opacity=opacity[rowIndex], 
        fill='purple',
        transform="matrix(1 0 0 1 0 0)", 
        onmousedown=onMouseDownTxt,
@@ -239,7 +246,8 @@ showPts.valTag %<c-% function(
            }
          )
        })
-    )
+      )
+    }
   ) #end list
 } #end showPts
 
