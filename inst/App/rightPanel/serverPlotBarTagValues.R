@@ -57,49 +57,41 @@ observeEvent(c(returnValue4ModuleTagVal$name(),returnValue4ModuleTagVal$columnNa
   }
 })
 
-# observeEvent(c(returnValue4ModuleTagVal$name(),returnValue4ModuleTagVal$rowIndex()),{
-#   if(rightPanel()=='tagValues'){
-#     name<-returnValue4ModuleTagVal$name()
-#     rowIndex<-returnValue4ModuleTagVal$rowIndex()
-#     if(!is.null(name)){
-#       tib<-getPtDefs()$tib[[name]]
-#       
-#       matColIndex<-ncol(tib[[rowIndex, getTibPtColPos()]])
-#       pts<-tib[[getTibPtColPos()]]
-#       point.index<-ptPos2AbsPtIndx(pts, rowIndex, matColIndex)
-#       updateSelected(name=name, row=rowIndex, 
-#                      matCol=matColIndex, 
-#                      point.index=point.index)
-#     }
-#   }
-# })
-
-#EACH OF THE FOLLOWING WILL REQUIRE A MODAL DIALOG
-# 3 PARTS : 
-#  1. FN to create modal instance (contains modalDialog in body) 
-#    fn<-function(...){ modalDialog(xxxxx)}
-#  2. call to showModal( fn(...))  (placed in the observeEvents below)
-#  3. ok handler specific to the request to process that request and then close modal
-#
-# caveate: if not in module, must assure that ok event (input$okid) hasu unique
-# to the app id., so intead of ok as the submit, we use "okDeleteTibCol" 
-
 #--------DELETE COLUMN------------------------------
+
+deleteColumnModal <- function(columnName = NULL) {
+  warningMssg<-paste('Warning: About to delete the column:', columnName) 
+  modalDialog(
+    span('DELETING!!!'), 
+    if(!is.null(columnName)){
+      div(
+        tags$b(warningMssg, style = "color: red;")
+      ) 
+    },
+    footer = tagList(
+      modalButton("Cancel"),
+      actionButton("deleteColumnButton", "Delete")
+    )
+  ) 
+}
 
 observeEvent(returnValue4ModuleTagVal$deleteColumn(),{
   if(rightPanel()=='tagValues'){
-    # name<-returnValue4ModuleTagVal$name()
-    # rowIndex<-returnValue4ModuleTagVal$rowIndex()
-    # if(!is.null(name)){
-    #   newTib<-getPtDefs()$tib[[name]]
-    #   matColIndex<-ncol(newTib[[rowIndex, getTibPtColPos()]])
-    #   pts<-newTib[[getTibPtColPos()]]
-    #   point.index<-ptPos2AbsPtIndx(pts, rowIndex, matColIndex)
-    #   
-    #   updateSelected(name=name, row=rowIndex, 
-    #                  matCol=matColIndex, 
-    #                  point.index=point.index)
-    # }
+    columnName<-getTibColumnName()
+    # !!! Addchecks here
+    showModal(deleteColumnModal(columnName))
+  }
+})
+
+observeEvent(input$deleteColumnButton, {
+  if(rightPanel()=='tagValues'){
+    indx<-getTibColumn()
+    newPtDefs<-getPtDefs()
+    newPtDefs$tib[[getTibName()]]<-newPtDefs$tib[[getTibName()]][,-indx]
+    sender<-'deleteColumn'
+    updateAceExtDef(newPtDefs, sender=sender)
+    # update columnSelection
+    removeModal() #close dialog
   }
 })
 
