@@ -92,12 +92,12 @@ shinyServer(function(input, output,session) {
   
 #---navbar disable /enabler controls
   observe({
-    tagsMissing<-is.null(getPtDefs()$df)
+    isTibble<-TRUE # !!!TODO implement simple matrices  
     isolate({
-      if(tagsMissing){
-        disableDMDM(session, "plotNavBar", "Tags")
-      } else {
+      if(isTibble){
         enableDMDM(session, "plotNavBar", "Tags")
+      } else {
+        disableDMDM(session, "plotNavBar", "Tags")
       }
     })
   })
