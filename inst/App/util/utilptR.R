@@ -187,7 +187,7 @@ matrices2tags<-function(mats){
 ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
   ptDefs<-list(pts=NULL, df=NULL)
   if(length(ptDefs)==0){
-    return(list(pts=c(), df=c()))
+    return(list(pts=c(), df=c(), tib=c()))
   }
   if( any(grepl(ptTag,src) ) ){
     try({
@@ -197,13 +197,13 @@ ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
         # WITH DISABLE GRAPH BAR PTR CONTROLS
         # PTR SELECTION, GROUPS, EDITS, ...
         # KEEP TRANSFORMATIONS FOR THE TIME BEING
-        ptDefs$pts<-list()
+        #ptDefs$pts<-list()
         ptDefs$tib<-list()
       } else {
         eval(parse(text=ptDefTxt1)) #stupid eval to obtain the points
         
         #!!!KLUDGE first kludge (undo later)
-        ptDefs$tib<-get(ptTag) #at this stage we have ptR as a list of tibbles, each tibble containings points tib$p
+        ptDefs$tib<-get(ptTag) #at this stage we have ptR as a list of tibbles, each tibble containings points with name same as tib
         ptDefs$pts<-lapply(names(ptDefs$tib), function(nm){
           pts<-unlist(ptDefs$tib[[nm]][[nm]]) #!!!temporary change this to be more general later
           #pts<-lapply(ptR, function(x)do.call(cbind, x)) 
@@ -213,14 +213,14 @@ ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
             matrix(NA,2,0)
         })
         names(ptDefs$pts)<-names(ptDefs$tib) #!!! or put in structure
-        ptDefs$df<-lapply(names(ptDefs$tib), function(nm){
-          df<-ptDefs$tib[[nm]]
-          pts<-df$pts #!!!temporary change this to be more general later
-          tdf<-tibble(tag=matrices2tags(pts))
-          df<-cbind(tdf,df)
-          df[,-which(names(df)=='pts')] #!!!temporary change this to be more general later
-        })
-        names(ptDefs$df)<-names(ptDefs$tib)
+        # ptDefs$df<-lapply(names(ptDefs$tib), function(nm){
+        #   df<-ptDefs$tib[[nm]]
+        #   pts<-df[[nm]] #!!!temporary change this to be more general later
+        #   tdf<-tibble(tag=matrices2tags(pts))
+        #   df<-cbind(tdf,df)
+        #   df[,-which(names(df)=='pts')] #!!!temporary change this to be more general later
+        # })
+        #names(ptDefs$df)<-names(ptDefs$tib)
       }
     })
   }

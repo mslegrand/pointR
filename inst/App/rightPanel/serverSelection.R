@@ -7,7 +7,7 @@ selectedPoint <- reactiveValues(
 selectedTibble <- reactiveValues(
   name="x", #NULL,       # name of current point array
   row=1,
-  column='x', # default to last col?
+  column=1, # !!! KLUDGE for now. default to last col?
   matCol=0,
   ptColName='x',
   index=0          #  
@@ -69,6 +69,22 @@ getTibName<-reactive({selectedTibble$name}) #allw to be null only if tib is null
 getTibNameChoices<-reactive({
   names(getPtDefs()$tib)
 }) #allw to be null only if tib is null
+
+
+getTibColumn<-reactive({selectedTibble$column})
+
+getTibEntry<-reactive({
+  name<-getTibName()
+  row<-getTibRow()
+  col<-getTibColumn()
+  getPtDefs()$tib[[getTibName()]][[row,col]]
+})
+
+getTibEntryChoices<-reactive({
+  name<-getTibName()
+  col<-getTibColumn()
+  getPtDefs()$tib[[getTibName()]][,col]
+})
 
 
 getPtIndexChoices<-reactive({ 
@@ -190,7 +206,10 @@ getTibRowChoices<-reactive({
   }
 })
 
-getTibColumnName<-reactive({selectedTibble$column})
+getTibColumnName<-reactive({
+  names(getTib())[ selectedTibble$column ]
+  
+  })
 getTibColumnNameChoices<-reactive({ 
   tib<-getTib()
   if(!is.null(tib)){

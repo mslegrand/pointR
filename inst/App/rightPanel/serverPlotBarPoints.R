@@ -303,6 +303,7 @@ observeEvent( returnValue4ModulePointsBar$tagPt(), {
     }
     tib<-ptDefs$tib[[selection]] #get the tib 
     tib<-tagTib(tib, getTibPtColPos(), rc$row, rc$matCol)
+    
     ptDefs$tib[[selection]]<-tib 
     sender='tagPt'
     updateAceExtDef(ptDefs, sender=sender)

@@ -7,13 +7,13 @@ moduleTagValUI<-function(id, input, output) {
   tagList(
     absolutePanel( "class"="footerPanel", draggable=FALSE,
                    actionButton(ns("newColumn"),   label = "Add Column"   ),
-                   actionButton(ns("deleteColumn"),  label = "Delete Column"),
-                   actionButton(ns("editValue"), label = "Edit Entry") 
+                   actionButton(ns("deleteColumn"),  label = "Delete Column")#,
+                   #actionButton(ns("applyTibEdit"), label = "Apply Changes") 
     ), #end footer panel
     absolutePanel( 
       top=50, left=0, width="100%", "class"="headerPanel", draggable=FALSE,
       div(style="display:inline-block",
-        selectInput( ns("name"), "Point Matrix",
+        selectInput( ns("name"), "Tibble",
         multiple=FALSE, size=1, selectize = FALSE,
         choices=list(),  selected=NULL, width="80px"  )
       ),
@@ -26,17 +26,12 @@ moduleTagValUI<-function(id, input, output) {
         choices=list(),  selected=NULL, width="120px"  )
       ),
       div(style="display:inline-block", 
-        selectInput(ns("columnNameValue"), "Value", 
-        multiple=FALSE, size=1, selectize = FALSE,  
-        choices=list(),  selected=NULL, width="100px"  )
+          selectizeInput(ns("entryValue"), "Value", 
+          #multiple=FALSE, #size=1, 
+          options = list(create = TRUE),
+        #selectize = TRUE,  
+          choices=list(),  selected=NULL, width="100px"  )
       )
-      #,
-      # div(style="display:inline-block",
-      #   actionButton(ns( "New" ), label = "New") #buttonSmall
-      # ),
-      # div(style="display:inline-block",
-      #     actionButton(ns( "updateVal" ), label = "Update") #buttonSmall
-      # )
   ) # end header panel
   )
 }
@@ -53,12 +48,20 @@ moduleTagVal<-function(input, output, session,
   matColIndex,
   matColIndexChoices,
   columnName,
-  columnNameChoices
+  columnNameChoices,
+  getTibEntry,
+  getTibEntryChoices
 ){
   ns<-NS(id2)
+  result <- reactiveValues(
+    ptDefs=NULL
+  ) # note we add name post mortem!!!
+  
+  
   
   observeEvent(barName(), { #update the name 
     if(identical( barName(), 'tagValues')){
+      
       updateSelectInput(session, "name", 
                         choices=nameChoices(), 
                         selected=name())
@@ -69,11 +72,19 @@ moduleTagVal<-function(input, output, session,
         max=max(rowIndexChoices()),
         value=rowIndex()
       )
-      
-      
       updateSelectInput(session, "columnName", 
                         choices=columnNameChoices(), 
                         selected=columnName() )
+      entry=getTibEntry()
+      if(is(entry,'matrix')){
+        entry='matrix'
+        entryChoices=c('point','matrix')
+      } else {
+        entryChoices=getTibEntryChoices()
+      }
+      updateSelectInput(session, "entryValue", 
+                        choices=entryChoices, 
+                        selected=entry )
     } 
   })  
   
@@ -86,10 +97,46 @@ moduleTagVal<-function(input, output, session,
         max=max(rowIndexChoices()),
         value=rowIndex()
       )
+      entry=getTibEntry()
+      
+      if(is(entry,'matrix')){
+        entry='matrix'
+        cat("observeEvent( c(barName(), rowIndex(), rowIndexChoices(): entry=", entry, "\n")
+        cat("observeEvent( c(barName(), rowIndex(), rowIndexChoices(): input$entryValue=", input$entryValue, "\n")
+        entryChoices=c('point','matrix')
+        if( !(input$entryValue %in% entryChoices ) ){
+          updateSelectInput(session, "entryValue", 
+                            choices=entryChoices, 
+                            selected=entry )
+        }
+      } else {
+        entryChoices=getTibEntryChoices()
+        updateSelectInput(session, "entryValue", 
+                          choices=entryChoices, 
+                          selected=entry )
+      }
+    } 
+  }) 
+  
+  observeEvent( columnName() , { 
+    if(identical( barName(), 'tagValues')){
+      updateSelectInput(session, "columnName", 
+                        choices=columnNameChoices(), 
+                        selected=columnName() )
+      entry=getTibEntry()
+      if(is(entry,'matrix')){
+        entry='matrix'
+        entryChoices=c('point','matrix')
+      } else {
+        entryChoices=getTibEntryChoices()
+      }
+      cat("observeEvent( columnName(): entry=", entry, "\n")
+      updateSelectInput(session, "entryValue", 
+                        choices=entryChoices, 
+                        selected=entry )
     } 
   })
-  
- 
+
  
   
   # # triggered by pressing "Update" button
@@ -205,8 +252,12 @@ moduleTagVal<-function(input, output, session,
 
   #when name, index, attrName valid, and attrVal changes, update the ptDefs and code
   list( 
-    name      =reactive({input$name}),
-    rowIndex = reactive({input$rowIndex}),
-    columnName     =reactive({input$columnName})
-    )
+    name         =reactive({input$name}),
+    rowIndex     = reactive({input$rowIndex}),
+    columnName    =reactive({input$columnName}),
+    entryValue   =reactive(input$entryValue),
+    newColumn =    reactive({input$newColumn}),
+    deleteColumn = reactive({input$deleteColumn}),
+    applyTibEdit = reactive({input$applyTibEdit})
+  )
 }

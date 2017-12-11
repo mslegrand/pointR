@@ -83,14 +83,14 @@ cloneTibAtRow<-function(tib, rowIndex=nrow(tib)){
 }
 
 # splits tib at point given by rowIndex, ptIndex
-tagTib<-function(tib, ptCol,  rowIndex=nrow(tib), ptIndx){
-  tmp<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),]) # clones row
-  pts<-tmp[[rowIndex, ptCol]] # extract pts in that row and
-  ini<-1:(ptIndx-1)
-  tmp[[rowIndex,ptCol]]<-pts[,ini] # keep ini
-  tmp[[(rowIndex+1),ptCol]]<-pts[,-ini] # remove ini
-  tmp
-}
+# tagTib<-function(tib, ptCol,  rowIndex=nrow(tib), ptIndx){
+#   tmp<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),]) # clones row
+#   pts<-tmp[[rowIndex, ptCol]] # extract pts in that row and
+#   ini<-1:(ptIndx-1)
+#   tmp[[rowIndex,ptCol]]<-pts[,ini] # keep ini
+#   tmp[[(rowIndex+1),ptCol]]<-pts[,-ini] # remove ini
+#   tmp
+# }
 
 # y=util to discover which colunns might be points
 tagTib<-function(tib, ptColIndex,  rowIndex=nrow(tib), matCol){
