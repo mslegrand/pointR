@@ -1,39 +1,59 @@
 
+
 #currently update triggers value from choice to ace
 # propose
+# tagValHeadWidth<-c(100,70,120,200)
+# tagValHeadLeft<-cumsum(c(10,tagValHeadWidth)+5)
+# tagValHeadWidth<-paste0(tagValHeadWidth,"px")
+# tagValHeadLeft<-paste0(tagValHeadLeft,"px")
+
 moduleTagValUI<-function(id, input, output) { 
   ns <- NS(id)
   #useShinyjs()
   tagList(
+    # beginfooter panel
     absolutePanel( "class"="footerPanel", draggable=FALSE,
-                   actionButton(ns("newColumn"),   label = "Add Column"   ),
-                   actionButton(ns("deleteColumn"),  label = "Delete Column")#,
-                   #actionButton(ns("applyTibEdit"), label = "Apply Changes") 
-    ), #end footer panel
+                   actionButton(ns("newColumn"),    label = "Add Column"   ),
+                   actionButton(ns("deleteColumn"),  label = "Delete Column")
+    ), 
+    #end footer panel
+    #begin headerPanel
     absolutePanel( 
-      top=50, left=0, width="100%", "class"="headerPanel", draggable=FALSE,
-      div(style="display:inline-block",
-        selectInput( ns("name"), "Tibble",
-        multiple=FALSE, size=1, selectize = FALSE,
-        choices=list(),  selected=NULL, width="80px"  )
-      ),
-      div(style="display:inline-block",
-          numericInput( ns("rowIndex"), "Row", 1, min=1, max=10, step=1, width="80px" )
-      ), 
-      div(style="display:inline-block",
-        selectInput(ns("columnName"), label="Column",
-        multiple=FALSE, size=1, selectize = FALSE, 
-        choices=list(),  selected=NULL, width="120px"  )
-      ),
-      div(style="display:inline-block", 
+        top=50, left=0, width="100%", "class"="headerPanel", draggable=FALSE, height="80px"
+    ),
+        #bottom=0, #height="200px",
+        #div(style="display:inline-block",
+        absolutePanel( top=50, left=15 ,style="display:inline-block",
+          selectizeInput( ns("name"), "Data", choices=list(),  selected=NULL, 
+            width= '100px' 
+          )
+        ),
+        absolutePanel( top=50, left=125 ,
+          numericInput( ns("rowIndex"), "Row", 1, min=1, max=10, step=1, 
+             width= '70px' 
+          )
+        ), 
+        absolutePanel( top=50, left=200 ,
+          selectizeInput(ns("columnName"), label="Column",
+            choices=list(),  selected=NULL, 
+            width= '120px' 
+          )
+        ),
+        absolutePanel( top=50, left=325 ,
           selectizeInput(ns("entryValue"), "Value", 
-          #multiple=FALSE, #size=1, 
-          options = list(create = TRUE),
-        #selectize = TRUE,  
-          choices=list(),  selected=NULL, width="100px"  )
-      )
-  ) # end header panel
-  )
+            options = list(create = TRUE),
+            choices=list(),  selected=NULL, 
+            width= '200px' 
+          )
+        )
+        # ,
+        # absolutePanel(top=0, left=530, 
+        #   sliderInput(ns("decimal"), "Decimal:",
+        #          min = 0, max = 1, width='200px', 
+        #         value = 0.5, step = 0.1)
+        # )
+      #) # end header panel
+  ) # end taglist
 }
 
 moduleTagVal<-function(input, output, session, 

@@ -1,32 +1,31 @@
 moduleTagDragUI<-function(id, input, output) { 
   ns <- NS(id)  
   tagList(
+    # beginfooter panel
     absolutePanel( "class"="footerPanel", draggable=FALSE,
       actionButton(ns("tagClone"),   label = "Clone"   ),
       actionButton(ns("tagDelete"),  label = "Delete"),
       actionButton(ns("tagMoveUp"), label = "Send Up"),
       actionButton(ns("tagMoveDown"), label = "Send  Down")
     ),
+    #end footer panel
+    #begin headerPanel
     absolutePanel( 
-      top=50, left=0, width="100%", "class"="headerPanel", draggable=FALSE,
-      div(style="display:inline-block",
-        selectInput( ns("name"), "Point Matrix",
-        multiple=FALSE, size=1, selectize = FALSE,
-        choice=list(),  selected=NULL, width="100px"  )
+      top=50, left=0, width="100%", "class"="headerPanel", draggable=FALSE, height="80px"
+    ),
+      #bottom=0, #height="200px",
+      #div(style="display:inline-block",
+      absolutePanel( top=50, left=15 ,style="display:inline-block",
+          selectizeInput( ns("name"), "Data", choices=list(),  selected=NULL, 
+                          width= '100px' 
+          )
       ),
-      div(style="display:inline-block",
-          numericInput( ns("rowIndex"), "Row", 1, min=1, max=10, step=1, width="80px" )
-      ),
-      div(style="display:inline-block",
-          numericInput( ns("matColIndex"), "Mat Col", 1, min=1, max=10, step=1, width="80px" )
+      absolutePanel( top=50, left=125 ,
+                     numericInput( ns("rowIndex"), "Row", 1, min=1, max=10, step=1, 
+                                   width= '70px' 
+                     )
       )
-      # ,
-      # div(style="display:inline-block",
-      #   selectInput(ns("index"), "Tag-No",
-      #   multiple=FALSE, size=1, selectize = FALSE, 
-      #   choice=list(), selected=NULL, width="60px"  )
-      # )
-    ) #absolute panel end
+    #) #absolute panel end
   )
 }
 
