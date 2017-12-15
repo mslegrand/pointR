@@ -42,7 +42,7 @@ observe({
       replacementList<-list()
       ptDefs<-getPtDefs() #!!!  to do: replace with getTib
       barName=rightPanel()
-      if(barName=="Points"){
+      if(barName=="Points" || (barName=='tagValues' && getPlotState()=='point') ){
         sender='PointsBar.mouse'
         if(cmd=='add'){ #---------add point
           sender='PointsBar.mouse.add'
