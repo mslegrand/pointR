@@ -29,10 +29,19 @@ shinyServer(function(input, output,session) {
   
   panels<-reactiveValues(
     left='source',   #to be used as editor name later, for connecting to right graphics
-    right="Points"
+    right="Points",
+    state='point'
   )
   
   rightPanel<-reactive({panels$right})
+  getPlotState<-reactive({panels$state})
+  setPlotState<-function(state){
+    if(state %in% c('matrix','point')){
+      panels$state<-state
+    } else {
+      panels$state<-'value'
+    }
+  }
   updateRightPanel<-function(panel){ panels$right<-panel}
 
   getLeftMenuCmd<-reactive({input$editNavBar$item})
@@ -110,6 +119,8 @@ shinyServer(function(input, output,session) {
 #------------------rightPanel--------------------------------
 source("rightPanel/serverDisplayOptions.R", local=TRUE)
 source("rightPanel/serverSelection.R", local=TRUE) 
+source("rightPanel/cmdNewColumn.R", local=TRUE)
+source("rightPanel/cmdDeleteColumn.R", local=TRUE)
 source("rightPanel/serverPlotBarPoints.R", local=TRUE) 
 source("rightPanel/serverPlotBarTagValues.R", local=TRUE)  
 source("rightPanel/serverPlotBarTagDrag.R", local=TRUE)  
