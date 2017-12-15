@@ -204,15 +204,20 @@ ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
         
         #!!!KLUDGE first kludge (undo later)
         ptDefs$tib<-get(ptTag) #at this stage we have ptR as a list of tibbles, each tibble containings points with name same as tib
-        ptDefs$pts<-lapply(names(ptDefs$tib), function(nm){
-          pts<-unlist(ptDefs$tib[[nm]][[nm]]) #!!!temporary change this to be more general later
-          #pts<-lapply(ptR, function(x)do.call(cbind, x)) 
-          if(length(pts)>0)
-            matrix(unlist(pts),2)
-          else
-            matrix(NA,2,0)
-        })
-        names(ptDefs$pts)<-names(ptDefs$tib) #!!! or put in structure
+        # TODO add columnInfo to ptDefs
+        # for each named tib, add a named vector with
+        # rows correspoinding to the names of the tib and values appropriately guessed
+        
+        
+        # ptDefs$pts<-lapply(names(ptDefs$tib), function(nm){
+        #   pts<-unlist(ptDefs$tib[[nm]][[nm]]) #!!!temporary change this to be more general later
+        #   #pts<-lapply(ptR, function(x)do.call(cbind, x)) 
+        #   if(length(pts)>0)
+        #     matrix(unlist(pts),2)
+        #   else
+        #     matrix(NA,2,0)
+        # })
+        # names(ptDefs$pts)<-names(ptDefs$tib) #!!! or put in structure
         # ptDefs$df<-lapply(names(ptDefs$tib), function(nm){
         #   df<-ptDefs$tib[[nm]]
         #   pts<-df[[nm]] #!!!temporary change this to be more general later
@@ -397,7 +402,49 @@ pts2Integers<-function(newtib){
 }
 
 
-# #to test
+
+## looks at the class of the last entry to return selectorType
+# tib2ColType<-function( tib, column){
+#   lastVal<-last(tib[[column]])
+#   cv=class(lastVal)
+#   if(is.character(cv) && isColor(lastVal)){
+#     cv<-'color'
+#   }
+#   if(cv)
+#   cv
+# }
+
+#this would be used when opening a file
+## choices 
+choices2ColType<-function( choices, column){
+  ct<-NULL
+  lastVal<-last(choices)
+  cv=class(lastVal)
+  ct<-list(cv)
+  if(is.character(cv) && isColor(lastVal)){
+    ct<-list('colorPicker')
+  }
+  if(column %in% c('opacity' )){
+    ct<-list('slider','decimal',0,1)
+  }
+  ct
+}
+
+#this would be used when adding an new column
+val2ColType<-function(val, column){
+  tmp<-type.convert(val)
+  cv=class(lastVal)
+  ct<-list(cv)
+  if(is.character(cv) && isColor(lastVal)){
+    ct<-list('colorPicker')
+  }
+  if(column %in% c('opacity' )){
+    ct<-list('slider','decimal',0,1)
+  }
+  ct
+}
+
+ # #to test
 # ptDef2PtTibList<-function(newPtDef){
 #   ptTibList<-sapply( names(newPtDef$tib), function(nm){
 #     pts<-as.integer(unlist(newPtDef$pts[[nm]]))

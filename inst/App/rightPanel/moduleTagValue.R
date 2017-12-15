@@ -10,12 +10,21 @@
 moduleTagValUI<-function(id, input, output) { 
   ns <- NS(id)
   #useShinyjs()
-  tagList(
-    # beginfooter panel
+  tagList(# beginfooter panel
     absolutePanel( "class"="footerPanel", draggable=FALSE,
-                   actionButton(ns("newColumn"),    label = "Add Column"   ),
-                   actionButton(ns("deleteColumn"),  label = "Delete Column")
-    ), 
+        conditionalPanel(condition = sprintf("input['%s'] == 'matrix'", ns("entryValue")),
+           actionButton(ns("tagClone"),   label = "Clone"   ),
+           actionButton(ns("tagDelete"),  label = "Delete"),
+           actionButton(ns("tagMoveUp"), label = "Send Up"),
+           actionButton(ns("tagMoveDown"), label = "Send  Down")
+        ),
+        conditionalPanel(condition = sprintf("input['%s'] == 'point'", ns("entryValue")),
+          actionButton(ns("forwardPt" ), label = "Forward Pt"),
+          actionButton(ns("backwardPt"), label = "Backward Pt"),
+          actionButton(ns("removePt"), label = "Delete Pt"),
+          actionButton(ns("tagPt"), label = "Tag Pt") 
+        )
+    ),
     #end footer panel
     #begin headerPanel
     absolutePanel( 
@@ -45,6 +54,14 @@ moduleTagValUI<-function(id, input, output) {
             choices=list(),  selected=NULL, 
             width= '200px' 
           )
+        ),
+        absolutePanel(top=50, left=530,
+          conditionalPanel( condition = sprintf("input['%s'] == 'point'", ns("entryValue")),
+            numericInput(ns("matColIndex"), label="Mat Col", value=1,
+                         min=1, max=1, step=1,
+                         width= '80px' 
+            )
+        )
         )
         # ,
         # absolutePanel(top=0, left=530, 
@@ -75,6 +92,34 @@ moduleTagVal<-function(input, output, session,
     ptDefs=NULL
   ) # note we add name post mortem!!!
   
+  updateEntry<-function(){
+    entry=getTibEntry()
+    if(is(entry,'matrix')){
+      entry='matrix'
+      entryChoices=c('point','matrix')
+      if( !(input$entryValue %in% entryChoices ) ){
+        "cat updating entryValue"
+        updateSelectInput(session, "entryValue", 
+                          choices=entryChoices, 
+                          selected=entry )
+      }
+    } else {
+      entryChoices=getTibEntryChoices()
+      updateSelectInput(session, "entryValue", 
+                        choices=entryChoices, 
+                        selected=entry )
+    }
+  }
+  
+  updateMatCol<-function(){
+    if(!is.null(input$entryValue) && input$entryValue=='point'){
+      updateNumericInput(session, "matColIndex", 
+                         min=min(matColIndexChoices()),
+                         max=max(matColIndexChoices()),
+                         value=matColIndex()
+      )      
+    }
+  }
   
   
   observeEvent(barName(), { #update the name 
@@ -93,17 +138,10 @@ moduleTagVal<-function(input, output, session,
       updateSelectInput(session, "columnName", 
                         choices=columnNameChoices(), 
                         selected=columnName() )
-      entry=getTibEntry()
-      if(is(entry,'matrix')){
-        entry='matrix'
-        entryChoices=c('point','matrix')
-      } else {
-        entryChoices=getTibEntryChoices()
-      }
-      updateSelectInput(session, "entryValue", 
-                        choices=entryChoices, 
-                        selected=entry )
-    } 
+      
+      updateEntry()
+      updateMatCol()
+    }
   })  
   
   observeEvent( c(barName(), rowIndex(), rowIndexChoices() ),  { #update index
@@ -115,24 +153,8 @@ moduleTagVal<-function(input, output, session,
         max=max(rowIndexChoices()),
         value=rowIndex()
       )
-      entry=getTibEntry()
-      
-      if(is(entry,'matrix')){
-        entry='matrix'
-        cat("observeEvent( c(barName(), rowIndex(), rowIndexChoices(): entry=", entry, "\n")
-        cat("observeEvent( c(barName(), rowIndex(), rowIndexChoices(): input$entryValue=", input$entryValue, "\n")
-        entryChoices=c('point','matrix')
-        if( !(input$entryValue %in% entryChoices ) ){
-          updateSelectInput(session, "entryValue", 
-                            choices=entryChoices, 
-                            selected=entry )
-        }
-      } else {
-        entryChoices=getTibEntryChoices()
-        updateSelectInput(session, "entryValue", 
-                          choices=entryChoices, 
-                          selected=entry )
-      }
+      updateEntry()
+      updateMatCol()
     } 
   }) 
   
@@ -141,19 +163,21 @@ moduleTagVal<-function(input, output, session,
       updateSelectInput(session, "columnName", 
                         choices=columnNameChoices(), 
                         selected=columnName() )
-      entry=getTibEntry()
-      if(is(entry,'matrix')){
-        entry='matrix'
-        entryChoices=c('point','matrix')
-      } else {
-        entryChoices=getTibEntryChoices()
-      }
-      cat("observeEvent( columnName(): entry=", entry, "\n")
-      updateSelectInput(session, "entryValue", 
-                        choices=entryChoices, 
-                        selected=entry )
+      updateEntry()
+      updateMatCol()
+     } 
+  })
+  
+  observeEvent( getTibEntry() , { 
+    if(identical( barName(), 'tagValues')){
+      updateSelectInput(session, "columnName", 
+                        choices=columnNameChoices(), 
+                        selected=columnName() )
+      updateEntry()
+      updateMatCol()
     } 
   })
+  
 
   
   #when name, index, attrName valid, and attrVal changes, update the ptDefs and code
@@ -162,8 +186,16 @@ moduleTagVal<-function(input, output, session,
     rowIndex     = reactive({input$rowIndex}),
     columnName    =reactive({input$columnName}),
     entryValue   =reactive(input$entryValue),
-    newColumn =    reactive({input$newColumn}),
-    deleteColumn = reactive({input$deleteColumn}),
-    applyTibEdit = reactive({input$applyTibEdit})
+    applyTibEdit = reactive({input$applyTibEdit}),
+    tagClone    =reactive({input$tagClone}),
+    tagDelete   =reactive({input$tagDelete}),
+    tagMoveUp   =reactive({input$tagMoveUp}),
+    tagMoveDown   =reactive({input$tagMoveDown}),
+    matColIndex   = reactive(input$matColIndex),
+    backwardPt   = reactive(input$backwardPt),
+    forwardPt    = reactive(input$forwardPt),
+    removePt     =reactive({input$removePt}),
+    tagPt        =reactive({input$tagPt})
+    
   )
 }

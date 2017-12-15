@@ -224,7 +224,7 @@ statusPlotTagDrag<-callModule(
   showPts.compound=reactive({
     showPts.dragTag(
       ptName=getTibName(), 
-      pts=getTibPts(), #matrix(unlist(getPtDefs()$tib[[getTagName()]]),2) ,
+      pts=getTibPts(), 
       rowIndex=getTibRow(),
       ptDisplayMode=getDisplayModeTag() #, 
       #tags=getTagIndexChoices()

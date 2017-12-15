@@ -28,8 +28,7 @@ observeEvent(c(returnValue4ModuleTagVal$name(),returnValue4ModuleTagVal$rowIndex
       newTib<-getPtDefs()$tib[[name]]
       matColIndex<-ncol(newTib[[rowIndex, getTibPtColPos()]])
       pts<-newTib[[getTibPtColPos()]]
-      
-    
+
       updateSelected(name=name, row=rowIndex, 
                      matCol=matColIndex)
     }
@@ -51,121 +50,228 @@ observeEvent(c(returnValue4ModuleTagVal$name(),returnValue4ModuleTagVal$columnNa
   }
 })
 
-#--------DELETE COLUMN------------------------------
-
-deleteColumnModal <- function(columnName = NULL) {
-  warningMssg<-paste('Warning: About to delete the column:', columnName) 
-  modalDialog(
-    span('DELETING!!!'), 
-    if(!is.null(columnName)){
-      div(
-        tags$b(warningMssg, style = "color: red;")
-      ) 
-    },
-    footer = tagList(
-      modalButton("Cancel"),
-      actionButton("deleteColumnButton", "Delete")
-    )
-  ) 
-}
-
-observeEvent(returnValue4ModuleTagVal$deleteColumn(),{
-  if(rightPanel()=='tagValues'){
-    columnName<-getTibColumnName()
-    # !!! Addchecks here
-    showModal(deleteColumnModal(columnName))
-  }
-})
-
-observeEvent(input$deleteColumnButton, {
-  if(rightPanel()=='tagValues'){
-    indx<-getTibColumn()
-    newPtDefs<-getPtDefs()
-    newPtDefs$tib[[getTibName()]]<-newPtDefs$tib[[getTibName()]][,-indx]
-    sender<-'deleteColumn'
-    updateAceExtDef(newPtDefs, sender=sender)
-    # update columnSelection
-    removeModal() #close dialog
-  }
-})
-
-
-#--------NEW COLUMN------------------------------
-attrValueModal <- function(errMssg=NULL) {
-  doOk<-"shinyjs.triggerButtonOnEnter(event,\"commitNewCol\")"
-  modalDialog(
-    onkeypress=doOk, 
-    span('Enter both a name for the new column and a value for its entries'), 
-    textInput("modalAttrName", "Enter the name for the new column"),
-    textInput("modalAttrValue", "Enter an entry value for the new column"), 
-    if(!is.null(errMssg)){
-      div(tags$b(errMssg, style = "color: red;"))
-    },
-    footer = tagList(
-      modalButton("Cancel"),
-      actionButton("commitNewCol", "Commit")
-    )
-  ) 
-}
-
-observeEvent(returnValue4ModuleTagVal$newColumn(),{
-  if(identical( rightPanel(), 'tagValues')){
-     showModal( attrValueModal() )
-  }
-})
-
-observeEvent(input$commitNewCol, {
-  if(identical( rightPanel(), 'tagValues')){
-    #checks 
-    if(!grepl(pattern = "^[[:alpha:]]", input$modalAttrName)){ # check name syntax
-      showModal(attrValueModal( errMssg="Invalid Column Name: must begin with a character") )
-    } else if( input$modalAttrName %in% names(getTib()) ){ # check name uniqueness
-      showModal(attrValueModal( errMssg="Invalid Column Name: this name is already taken!") )
-    } else if(!grepl(pattern = "^[[:graph:]]", input$modalAttrValue) ){  # check value uniqueness
-      showModal(attrValueModal( errMssg="Invalid Column Value: must begin with printable character other than space") )
-    } else { 
-      #add name to tib
-      newPtDefs<-getPtDefs()
-      newColName<-input$modalAttrName
-      
-      newPtDefs$tib[[getTibName()]]<-add_column(newPtDefs$tib[[getTibName()]], 
-                                                !!(newColName):=input$modalAttrValue   )     
-      # updateAce
-      
-      sender<-'addNewColumn'
-      updateAceExtDef(newPtDefs, sender=sender)
-      # set selection to this column?
-      removeModal() #close dialog
-    }
-  }
-})
-
 
 
 
 #--------EDIT VALUE------------------------------
 observeEvent(returnValue4ModuleTagVal$entryValue(),{
   if(rightPanel()=='tagValues'){
+    cat('entryBAlue\n')
     # assuming tib is uptodate, simply work on the existing tib
     name<-returnValue4ModuleTagVal$name()
+    cat('name=',name,'\n')
     #rowIndex<-returnValue4ModuleTagVal$rowIndex()
     if(!is.null(name) && 
        length(returnValue4ModuleTagVal$entryValue())>0 &&
-       nchar(returnValue4ModuleTagVal$entryValue())>0 &&
-       (getTibColumn()!=getTibPtColPos() 
-    )  ){
+       nchar(returnValue4ModuleTagVal$entryValue())>0   ){
       entry<-returnValue4ModuleTagVal$entryValue()
       # !!! TODO: type check if numeric
-      
-      newPtDefs<-getPtDefs()
-      name<-getTibName()
-      column<-getTibColumn()
-      row<-getTibRow()
-      
-      sender='applyTibEdit'
-      newPtDefs$tib[[getTibName()]][[row,column ]]<-entry
-      updateAceExtDef(newPtDefs, sender=sender)
+      cat('entry=',entry,'\n')
+      setPlotState(entry)
+      if(!entry %in% c('matrix','point')){
+        newPtDefs<-getPtDefs()
+        name<-getTibName()
+        column<-getTibColumn()
+        row<-getTibRow()
+        
+        sender='applyTibEdit'
+        newPtDefs$tib[[getTibName()]][[row,column ]]<-entry
+        updateAceExtDef(newPtDefs, sender=sender)
+      } 
     }
+  }
+})
+
+observeEvent(
+  returnValue4ModuleTagVal$tagClone(),
+  {
+    #if(rightPanel()=="tagDrag"){
+      sender='cloneRow'
+      ptDefs<-getPtDefs()
+      name<-getTibName()
+      tib<-ptDefs$tib[[name]]
+      rowIndex<-getTibRow()
+      newTib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
+      rowIndx=rowIndex+1
+      matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
+      
+      pts<-newTib[[getTibPtColPos()]]
+      
+      ptDefs$tib[[name]]<-newTib
+      newPtDefs<-ptDefs
+      updateAceExtDef(newPtDefs, sender=sender)
+      updateSelected(row=rowIndex, matCol=matCol)
+    }
+  #}
+)
+
+observeEvent(
+  returnValue4ModuleTagVal$tagDelete(),
+  {
+    #if(rightPanel()=="tagDrag"){
+      sender='deleteRow'
+      ptDefs<-getPtDefs()
+      name<-getTibName()
+      newTib<-ptDefs$tib[[name]]
+      rowIndex<-getTibRow()
+      
+      # !!!TODO handle case where this would be last row.
+      newTib<-newTib[-rowIndex,]
+      ptDefs$tib[[name]]<-newTib
+      newPtDefs<-ptDefs
+      
+      #adjust position
+      rowIndex<-min(rowIndex, nrow(newTib))
+      matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
+      if(length(matCol)==0){matCol=0}
+      updateAceExtDef(newPtDefs, sender=sender)
+      updateSelected(row=rowIndex, matCol=matCol)
+    }
+  #}
+)
+
+observeEvent( returnValue4ModuleTagVal$tagMoveUp(),{ 
+  #if(rightPanel()=="tagDrag"){
+    rowIndex<-getTibRow()
+    if(rowIndex>1){
+      sender='tagMoveUp'
+      ptDefs<-getPtDefs()
+      name<-    getTibName()
+      newTib<-ptDefs$tib[[name]]
+      
+      newTib[c(rowIndex,rowIndex-1),]<-newTib[c(rowIndex-1,rowIndex),]
+      ptDefs$tib[[name]]<-newTib
+      newPtDefs<-ptDefs
+      
+      #adjust position
+      rowIndex<-rowIndex-1
+      matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
+      if(length(matCol)==0){matCol=0}
+      updateAceExtDef(newPtDefs, sender=sender)
+      updateSelected(row=rowIndex, matCol=matCol)   
+    }
+  #}
+})
+
+observeEvent( returnValue4ModuleTagVal$tagMoveDown(),{ 
+  #if(rightPanel()=="tagDrag"){
+    rowIndex<-getTibRow()
+    ptDefs<-getPtDefs()
+    name<-    getTibName()
+    newTib<-ptDefs$tib[[name]]
+    if(rowIndex<nrow(newTib)){
+      sender='tagMoveDown'
+      
+      newTib[c(rowIndex,rowIndex+1),]<-newTib[c(rowIndex+1,rowIndex),]
+      ptDefs$tib[[name]]<-newTib
+      newPtDefs<-ptDefs
+      
+      #adjust position
+      rowIndex<-rowIndex+1
+      matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
+      if(length(matCol)==0){matCol=0}
+      updateAceExtDef(newPtDefs, sender=sender)
+      updateSelected(row=rowIndex, matCol=matCol)   
+    }
+  #}
+})
+
+
+#-------points----------------------------------------------
+
+#-----------BUTTON EVENTS--------------------
+#---BUTTON: remove selected point  -----
+observeEvent( returnValue4ModuleTagVal$removePt(), {
+  selection<-getTibName() 
+  cat('Enter removePt\n')  
+  if(selection!=""){
+    ptDefs<-getPtDefs()
+    if(length(ptDefs$tib)==0){return(NULL)}
+    matCol<-getTibMatCol()
+    #src<-getCode() 
+    
+    #get row, col
+    if(matCol>=1){ 
+      row<-getTibRow()
+      m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]][,-matCol] 
+      #!!! probably need some checking here
+      ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]<-m
+      matCol<-min(matCol, length(m)/2)
+      newPtDefs<-ptDefs
+      sender='points.deletePoint'
+      updateAceExtDef(newPtDefs, sender=sender)
+      updateSelected(matCol=matCol)
+    }
+  }
+}) #end remove point observer
+
+#----begin for Tagging-------------------------------------
+
+# Return the UI for a modal dialog with data selection input. If 'failed' is
+# TRUE, then display a message that the previous value was invalid.
+modalFreq <- function(failed = FALSE) {
+  doOk<-'shinyjs.triggerButtonOnEnter(event,"okTag")'
+  modalDialog(
+    onkeydown=doOk,
+    selectInput("tagFreq", "Auto Tag",
+                c(list("Off"),1:20), selected="Off", 
+                multiple=FALSE, selectize = FALSE,
+                width="80px", size=1  ), 
+    span('Start tagging current point matrix'), 
+    footer = tagList(
+      modalButton("Cancel"),
+      actionButton("okTag", "OK")
+    )
+  ) 
+}
+
+
+
+#---TAG THIS POINT button-----
+# note: in 1st tag, calls freqModal to complete the work, which exits in the okTag above
+observeEvent( returnValue4ModuleTagVal$tagPt(), {
+  
+  #if(rightPanel()=="Points"){
+    #selection<-input$ptRSelect
+    cat("Enter tagPt\n")
+    src<-getCode() 
+    selection<-getTibName()
+    ptDefs<-getPtDefs()
+    
+    row=getTibRow() 
+    matCol=getTibMatCol() 
+    
+    m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]
+    if(ncol(m)<1){ 
+      return(NULL) # bail if matrix of points is empty
+    }
+    tib<-ptDefs$tib[[selection]] #get the tib 
+    tib<-tagTib(tib, getTibPtColPos(), row, matCol)
+    row<-row+1
+    matCol<-length(tib[[row, getTibPtColPos()]])/2
+    ptDefs$tib[[selection]]<-tib 
+    sender='tagPt'
+    updateAceExtDef(ptDefs, sender=sender)
+    updateSelected(row=row, matCol=matCol)
+  #} #end of if
+}) #end of point InfoList Tag Point, 
+
+
+observeEvent( returnValue4ModuleTagVal$forwardPt(), {
+  matColIndex<-getTibMatCol()
+  if(length( matColIndex)>0){
+    cat("observeEvent:: serverPlotBar 99\n")
+    matColIndex=max(matColIndex+1, min(getTibMatColChoices()) )
+    updateSelected(  matCol=matColIndex )
+  }
+})
+
+observeEvent( returnValue4ModuleTagVal$backwardPt(), {
+  matColIndex<-getTibMatCol()
+  if(length(matColIndex)>0){
+    cat("observeEvent:: serverPlotBar 98\n")
+    matColIndex=max(matColIndex-1, min(getTibMatColChoices()) )
+    updateSelected(  matCol=matColIndex  )
   }
 })
 

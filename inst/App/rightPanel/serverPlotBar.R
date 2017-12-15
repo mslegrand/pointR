@@ -35,6 +35,13 @@ observeEvent(input$plotNavBar, {
     renameDMDM(session,  "plotNavBar", "cmdShowPointLabels", "Show  Labels", newValue="cmdHidePointLabels")
     setDisplayOption(ptMode='Labeled')
   }
+  if(cmd == 'cmdNewColumn'){
+    showModal( addNewColModal() )
+  }
+  if(cmd == 'cmdDeleteColumn'){
+    columnName<-getTibColumnName()
+    showModal(deleteColumnModal(columnName))
+  }
   if(!is.null(cmd)){
     dirtyDMDM(session, "plotNavBar")
   }
@@ -71,18 +78,50 @@ output$TopRightPanel<-renderUI({
 
 
 
+# output$MidRightPanel<-renderUI({
+#   
+#   state<-getPlotState()
+#   chosenRightPanel<-rightPanel()
+#   if(state=="points"){
+#     modulePlotSVGrUI("svgPointsMod")
+#   } else if (state=='tagValues'){
+#     modulePlotSVGrUI("svgTagValsMod")
+#   } else if (state=='matrix'){
+#     modulePlotSVGrUI("svgTagDragMod")
+#   } else if (state=='Transforms'){
+#     modulePlotSVGrUI("svgTransformMod")
+#   } else if (state=="logPanel"){
+#     moduleLogUI("errLogMod")
+#   } 
+# })
+
+
+
 output$MidRightPanel<-renderUI({
   chosenRightPanel<-rightPanel()
   if(chosenRightPanel=="Points"){
     modulePlotSVGrUI("svgPointsMod")
   } else if (chosenRightPanel=='tagValues'){
-    modulePlotSVGrUI("svgTagValsMod")
+    state<-getPlotState()
+    cat('state=',state,"'\n")
+    if(!is.null(state)){
+      if(state=="point"){
+        modulePlotSVGrUI("svgPointsMod")
+      } else if (state=='value'){
+        modulePlotSVGrUI("svgTagValsMod")
+      } else if (state=='matrix'){
+        modulePlotSVGrUI("svgTagDragMod")
+      }
+    } else {
+      setPlotState("value")
+      modulePlotSVGrUI("svgTagValsMod")
+    }
   } else if (chosenRightPanel=='tagDrag'){
     modulePlotSVGrUI("svgTagDragMod")
   } else if (chosenRightPanel=='Transforms'){
     modulePlotSVGrUI("svgTransformMod")
   } else if (chosenRightPanel=="logPanel"){
     moduleLogUI("errLogMod")
-  } 
+  }
 })
 

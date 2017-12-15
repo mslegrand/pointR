@@ -14,7 +14,7 @@ cmdFileNew<-function(){
   # displayOptions$showGrid=FALSE
   # displayOptions$ptMode="Normal"
   mssg$error<-""
-  updateSelectInput(session, "ptRSelect",  choices=c("x"), selected="x" ) 
-  updateNavbarPage(session, "tagFreq", selected ="Off") 
+  updateSelectInput(session, "ptRSelect",  choices=c("x"), selected="x" ) # !!! DOES NOTHING
+  updateNavbarPage(session, "tagFreq", selected ="Off") # !!! DOES NOTHING
   
 }

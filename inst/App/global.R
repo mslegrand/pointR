@@ -11,6 +11,12 @@ initResourcePaths <- function() {
   HTML("")
 }
 
+`%AND%` <- function(x, y) {
+  if (!is.null(x) && !is.na(x))
+    if (!is.null(y) && !is.na(y))
+      return(y)
+  return(NULL)
+}
 
 
 # pkgsCRAN<-c("stringr", "svDialogs", "devtools",  "lintr")
