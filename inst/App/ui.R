@@ -152,6 +152,15 @@ shinyUI(
           dmdMenuBarPage(
             menuBarId="plotNavBar",
             #---------------DisplayOptions----------------------------------------
+            menuDropdown('Data',
+                menuItem('Add Column', value='cmdNewColumn'),
+                menuItem('Delete Column', value='cmdDeleteColumn'),
+                menuItem('Rename Column', value='cmdRenameColumn'),
+                menuItem('Clone Column', value='cmdCloneColumn'),
+                menuItem('New Tibble', value='cmdNewTibble'),
+                menuItem('Rename Tibble', value='cmdRenameTibble'),
+                menuItem('Delete Tibble', value='cmdDeleteTibble')
+            ),
             menuDropdown('Display', 
                          menuDropdown('Points',
                                       menuItem('Hide Points', value='cmdHidePoints'), 
