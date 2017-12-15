@@ -1,9 +1,9 @@
 
 
 selectedTibble <- reactiveValues(
-  name="x", #NULL,       # name of current point array
+  name="x",        # name of current point array
   row=1,
-  column=1, # !!! KLUDGE for now. default to last col?
+  column=1, # !!! KLUDGE for now. should this default to last col?
   matCol=0,
   ptColName='x',
   index=0          
@@ -50,7 +50,33 @@ getTibEntry<-reactive({
   name<-getTibName()
   row<-getTibRow()
   col<-getTibColumn()
-  getPtDefs()$tib[[getTibName()]][[row,col]]
+  
+  if(length(name)>0 && nchar(name)>0){
+    tib<-getPtDefs()$tib[[name]]
+  } else {
+    tib<-NULL
+  }
+  if(!is.null(tib)){
+    trows<-nrow(tib)
+  } else {
+    trows<-0
+  }
+  if(!is.null(tib)){
+    tcols<-ncol(tib)
+  } else {
+    tcols<-0
+  }
+  if(trows>0 && row >0 && row<=trows ){
+    tcols<-ncol(tib)
+  } else {
+    tcols<-0
+  }
+  if(tcols>0 && col >0 && col<=tcols ){
+    entry<-tib[[row,col]]
+  } else {
+    entry<-NULL
+  }
+  entry
 })
 
 getTibEntryChoices<-reactive({
