@@ -23,15 +23,9 @@ returnValue4ModulePointsBar<-callModule( #auto  input, output, session
 
 #-----REACTIVES   based on modulePointsBar::returnValue4ModulePointsBar
 
-observeEvent(returnValue4ModulePointsBar$showGrid() ,{
-  if(rightPanel()=="Points"){
-    displayOptions$showGrid<-returnValue4ModulePointsBar$showGrid() 
-  }
-})
 
 
 
-displayMode<-reactive({returnValue4ModulePointsBar$displayMode()})
 insertMode<-reactive({returnValue4ModulePointsBar$insertMode() })
 
 #-----OBSERVERS  using  modulePointsBar::returnValue4ModulePointsBar

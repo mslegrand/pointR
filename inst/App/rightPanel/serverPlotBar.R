@@ -1,16 +1,46 @@
 #serverPlotBar
+# this is the menubar for the plot window
 
 observeEvent(input$plotNavBar, {
   cmd<-getRightMenuCmd()
   if(is.null(cmd)){
     cmd<-"Points" 
   }
-  panels$right<-cmd #Point, tagValues, tagDrag, transfo
+  if(cmd %in% c( "Points", 'tagValues', 'tagDrag', 'Transforms', 'log')){
+    panels$right<-cmd #Point, tagValues, tagDrag, transfo
+    cat('barName changed\n')
+  }
+  if(cmd == 'cmdShowGrid'){
+    renameDMDM(session,  "plotNavBar", "cmdShowGrid", "Hide Grid", newValue="cmdHideGrid")
+    setDisplayOption(showGrid=TRUE)
+  }
+  if(cmd == 'cmdHideGrid'){
+    renameDMDM(session,  "plotNavBar",  "cmdHideGrid", "Show Grid",newValue="cmdShowGrid")
+    setDisplayOption(showGrid=FALSE)
+  }
+  
+  if(cmd == 'cmdHidePoints'){
+    renameDMDM(session,  "plotNavBar", "cmdHidePoints", "Hide Points", newValue="cmdShowPoints")
+    setDisplayOption(ptMode='Hidden')
+  }
+  if(cmd == 'cmdShowPoints'){
+    renameDMDM(session,  "plotNavBar", "cmdShowPoints", "Show Points", newValue="cmdHidePoints")
+    setDisplayOption(ptMode='Normal')
+  }
+  if(cmd == 'cmdHidePointLabels'){
+    renameDMDM(session,  "plotNavBar", "cmdHidePointLabels", "Hide  Labels", newValue="cmdShowPointLabels")
+    setDisplayOption(ptMode='Normal')
+  }
+  if(cmd == 'cmdShowPointLabels'){
+    renameDMDM(session,  "plotNavBar", "cmdShowPointLabels", "Show  Labels", newValue="cmdHidePointLabels")
+    setDisplayOption(ptMode='Labeled')
+  }
   if(!is.null(cmd)){
     dirtyDMDM(session, "plotNavBar")
   }
-  cat('barName changed\n')
 })
+
+
 
 output$TopRightPanel<-renderUI({
   chosenRightPanel<-rightPanel()

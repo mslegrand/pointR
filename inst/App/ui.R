@@ -151,6 +151,25 @@ shinyUI(
         bootstrapPage(
           dmdMenuBarPage(
             menuBarId="plotNavBar",
+            #---------------DisplayOptions----------------------------------------
+            menuDropdown('Display', 
+                         menuDropdown('Points',
+                                      menuItem('Hide Points', value='cmdHidePoints'), 
+                                      menuItem('Show Points with Labels', value='cmdShowPointLabels')
+                         ),
+                         menuDropdown( 'Grid',
+                                       menuItem('Show Grid', value='cmdShowGrid'),
+                                       menuDropdown('lines',
+                                                    menuItem('Width', value='cmdGridLineWidh'), 
+                                                    menuItem('Color', value='cmdGridLineColor')
+                                       )
+                         ),
+                         menuDropdown( 'Backdrop',
+                                       menuItem('Hide', value='cmdHideBack'),
+                                       menuItem('Color', value='cmdBackDropColor')
+                         )
+            ) ,
+            
             #---------------plotNavBar:points  ------------------------------------
             menuItem("Points" ), #end of tab panel "Points"
             #---------------plotNavBar:TAGS  ------------------------------------
