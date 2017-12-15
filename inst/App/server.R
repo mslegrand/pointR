@@ -40,11 +40,8 @@ shinyServer(function(input, output,session) {
   
   reactiveTag<-reactiveValues(freq=list())
   
-  displayOptions<-reactiveValues(
-    insertMode=TRUE,
-    showGrid=FALSE,
-    ptMode="Normal"
-  )
+  
+  
   
   getPtDefs<- reactive({ 
     ex.getPtDefs(getCode() ) 
@@ -53,13 +50,7 @@ shinyServer(function(input, output,session) {
   mssg<-reactiveValues(error="") 
   getErrorMssg<-reactive({ mssg$error })
   
-  #this is tagDisplay Mode
-  getDisplayModeTag<-reactive({
-    if(displayMode()=="hidden"){
-    } else {
-      displayMode()
-    }
-  })
+ 
   
   usingTransformDraggable<-reactive({
     length(getCode()) >0 &&
@@ -117,6 +108,7 @@ shinyServer(function(input, output,session) {
 
 
 #------------------rightPanel--------------------------------
+source("rightPanel/serverDisplayOptions.R", local=TRUE)
 source("rightPanel/serverSelection.R", local=TRUE) 
 source("rightPanel/serverPlotBarPoints.R", local=TRUE) 
 source("rightPanel/serverPlotBarTagValues.R", local=TRUE)  
