@@ -36,7 +36,7 @@ left:10px;
 overflow: hidden;
 }
 .cSvgHtml{
-  top:125px; 
+  top:135px; 
   left:5px; 
   right:5px;  
   bottom:40px;
@@ -71,7 +71,7 @@ overflow: hidden;
 .headerPanel{
 background-color: #8888AA; 
 border-color: #88AAAA; 
-top:50; 
+top:30px; 
 left:0; 
 padding-top: 0; 
 padding-bottom: 0; 

@@ -93,21 +93,31 @@ moduleTagVal<-function(input, output, session,
   ) # note we add name post mortem!!!
   
   updateEntry<-function(){
+    cat("\n----------updateEntry-------------------\n")
     entry=getTibEntry()
     if(is(entry,'matrix')){
+      cat("----------updateEntry::matrix-------------------\n")
       entry='matrix'
+      cat('---------attn: class(entry)=',class(entry),"\n")
       entryChoices=c('point','matrix')
-      if( !(input$entryValue %in% entryChoices ) ){
+      if(length(input$entryValue)==0 || !(input$entryValue %in% entryChoices ) ){
         "cat updating entryValue"
         updateSelectInput(session, "entryValue", 
                           choices=entryChoices, 
                           selected=entry )
       }
     } else {
+      cat("----------updateEntry::else-------------------\n")
       entryChoices=getTibEntryChoices()
-      updateSelectInput(session, "entryValue", 
+      if(length(entry)>0 && length(entryChoices)>0 ){
+        #cat("updateEntry::entry=\n")
+        #print(entry)
+        cat("updateEntry::entryChoices=\n")
+        print(entryChoices)
+              updateSelectInput(session, "entryValue", 
                         choices=entryChoices, 
                         selected=entry )
+      }
     }
   }
   
@@ -121,10 +131,19 @@ moduleTagVal<-function(input, output, session,
     }
   }
   
+  updateColumnName<-function(){
+    #if(!is.null(columnName()) && ( is.null( input$columnName ) || !(input$columnName %in% columnNameChoices()))){
+      if(!is.null(columnName())){ 
+        updateSelectInput(session, "columnName", 
+                          choices=columnNameChoices(), 
+                          selected=columnName() )
+    }
+  }
+  
   
   observeEvent(barName(), { #update the name 
     if(identical( barName(), 'tagValues')){
-      
+      cat('oE 1-123\n')
       updateSelectInput(session, "name", 
                         choices=nameChoices(), 
                         selected=name())
@@ -135,10 +154,8 @@ moduleTagVal<-function(input, output, session,
         max=max(rowIndexChoices()),
         value=rowIndex()
       )
-      updateSelectInput(session, "columnName", 
-                        choices=columnNameChoices(), 
-                        selected=columnName() )
       
+      updateColumnName()
       updateEntry()
       updateMatCol()
     }
@@ -146,6 +163,7 @@ moduleTagVal<-function(input, output, session,
   
   observeEvent( c(barName(), rowIndex(), rowIndexChoices() ),  { #update index
     if(identical( barName(), 'tagValues')){
+      cat('oE 1-124\n')
       updateNumericInput(
         session, 
         "rowIndex", 
@@ -158,11 +176,14 @@ moduleTagVal<-function(input, output, session,
     } 
   }) 
   
-  observeEvent( columnName() , { 
+  observeEvent( columnName() , {
+    cat("oE1-125.1\n")
     if(identical( barName(), 'tagValues')){
-      updateSelectInput(session, "columnName", 
-                        choices=columnNameChoices(), 
-                        selected=columnName() )
+      cat('oE 1-125.2\n')
+      updateColumnName()
+      # updateSelectInput(session, "columnName", 
+      #                   choices=columnNameChoices(), 
+      #                   selected=columnName() )
       updateEntry()
       updateMatCol()
      } 
@@ -170,9 +191,11 @@ moduleTagVal<-function(input, output, session,
   
   observeEvent( getTibEntry() , { 
     if(identical( barName(), 'tagValues')){
-      updateSelectInput(session, "columnName", 
-                        choices=columnNameChoices(), 
-                        selected=columnName() )
+      cat('oE 1-126\n')
+      # updateSelectInput(session, "columnName", 
+      #                   choices=columnNameChoices(), 
+      #                   selected=columnName() )
+      updateColumnName()
       updateEntry()
       updateMatCol()
     } 
@@ -196,6 +219,5 @@ moduleTagVal<-function(input, output, session,
     forwardPt    = reactive(input$forwardPt),
     removePt     =reactive({input$removePt}),
     tagPt        =reactive({input$tagPt})
-    
   )
 }

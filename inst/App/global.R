@@ -18,6 +18,21 @@ initResourcePaths <- function() {
   return(NULL)
 }
 
+list.entry.at.index<-function(ll, indx){
+  if(!is(ll,'list')){
+    cat('1\n')
+    return(NULL)
+  }
+  if(!(class(indx) %in% c('integer', 'numeric'))){ 
+    cat('2\n')
+    return(NULL)
+  } 
+  if(!(indx>=1 && indx<= length(ll))){
+    cat('3\n')
+    return(NULL)
+  }
+  ll[[indx]] 
+}
 
 # pkgsCRAN<-c("stringr", "svDialogs", "devtools",  "lintr")
 # for(pkgName in pkgsCRAN){  

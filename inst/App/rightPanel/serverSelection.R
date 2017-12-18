@@ -3,7 +3,7 @@
 selectedTibble <- reactiveValues(
   name="x",        # name of current point array
   row=1,
-  column=1, # !!! KLUDGE for now. should this default to last col?
+  columnName='x', # !!! KLUDGE for now. should this default to last col?
   matCol=0,
   ptColName='x',
   index=0          
@@ -12,8 +12,9 @@ selectedTibble <- reactiveValues(
 
 
 
-updateSelected<-function( name, row, column, matCol,  ptColName ){
+updateSelected<-function( name, row, columnName, matCol,  ptColName ){
   if(!missing(name)){
+    cat("updateSelected: setting name=",name,"\n")
     selectedTibble$name=name
   }
   if(!missing(ptColName)){
@@ -32,8 +33,10 @@ updateSelected<-function( name, row, column, matCol,  ptColName ){
       selectedTibble$matCol=matCol
     }
   }
-  if(!missing(column)){
-    selectedTibble$column=column
+  
+  if(!missing(columnName)){
+    cat("updateSelected: setting columnName=",columnName,"\n")
+    selectedTibble$columnName=columnName
   }
 }
 
@@ -43,46 +46,83 @@ getTibNameChoices<-reactive({
   names(getPtDefs()$tib)
 }) #allow to be null only if tib is null
 
+getTibColumnName<-reactive({
+  selectedTibble$columnName
+})
+getTibColumnNameChoices<-reactive({ 
+  tib<-getTib()
+  if(!is.null(tib)){
+    names(tib)
+  } else {
+    ""
+  }
+})
 
-getTibColumn<-reactive({selectedTibble$column})
+getTibColumn<-reactive({
+  colName<-getTibColumnName()
+  if(!is.null(colName) && nchar(colName)>0){
+    columnNameChoices=getTibColumnNameChoices()
+    ptPos<-getTibPtColPos()
+    column<-match(colName, columnNameChoices, nomatch=ptPos)
+  } else {
+    column<-NULL
+  }
+  column
+})
 
 getTibEntry<-reactive({
   name<-getTibName()
   row<-getTibRow()
-  col<-getTibColumn()
-  
-  if(length(name)>0 && nchar(name)>0){
-    tib<-getPtDefs()$tib[[name]]
-  } else {
-    tib<-NULL
-  }
-  if(!is.null(tib)){
-    trows<-nrow(tib)
-  } else {
-    trows<-0
-  }
-  if(!is.null(tib)){
-    tcols<-ncol(tib)
-  } else {
-    tcols<-0
-  }
-  if(trows>0 && row >0 && row<=trows ){
-    tcols<-ncol(tib)
-  } else {
-    tcols<-0
-  }
-  if(tcols>0 && col >0 && col<=tcols ){
-    entry<-tib[[row,col]]
+  columnName<-getTibColumnName()
+  # if name, row or colName is NULL or NA return NULL 
+  # if colname not in tib return NULL
+  # if row not in
+  cat("\n-----Entering-----getTibEntry::----------------\n")
+  tib<-name %AND% getPtDefs()$tib[[name]]
+  cat("getTibEntry:: class(name)=",class(name),"\n")
+  cat("getTibEntry:: class(tib)=",class(tib),"\n")
+  cat("getTibEntry:: class(columnName)=",class(columnName),"\n")
+  columnValues<- columnName %AND% tib[[columnName]]
+  cat("getTibEntry:: class(columnValues)=",class(columnValues),"\n")
+  trows<-columnValues %AND% length(columnValues)
+  cat("getTibEntry:: class(trows)=",class(trows),"\n")
+  cat("getTibEntry:: class(row)=",class(row),"\n")
+  # entry<-trows %AND% row %AND% 
+  #   (
+  #     if(1<=row && row<=trows){
+  #       cat("row=" ,row,"\n")
+  #       cat("columnName=" ,columnName,"\n")
+  #       cat("class(tib[[columnName]][[row]])=" ,class(tib[[columnName]][[row]]),"\n")
+  #       x<-as.list(tib[[columnName]])[[row]]
+  #       x
+  #     }else{
+  #        NULL
+  #     }
+  #   )
+  entryOk<-trows %AND% row %AND% 
+      if(1<=row && row<=trows){ TRUE } else { NULL}
+  if(!is.null(entryOk)){
+     entry<- as.list(tib[[columnName]])[[row]]
   } else {
     entry<-NULL
   }
+   
+  cat("\n-----Exiting-----getTibEntry::----------------\n")
   entry
 })
 
 getTibEntryChoices<-reactive({
+  cat("\n-----Entering-----getTibEntryChoices::----------------\n")
+  cat("getTibEntryChoices::\n")
   name<-getTibName()
-  col<-getTibColumn()
-  getPtDefs()$tib[[getTibName()]][,col]
+  columnName<-getTibColumnName()
+  tib<-name %AND% getPtDefs()$tib[[name]]
+  columnValues<- columnName %AND% tib[[columnName]]   
+  #columnValues<-columnValues %AND% as.list(columnValues)
+  
+  columnValues <-columnValues %AND% as.list(columnValues)
+  cat("\n-----Exiting-----getTibEntryChoices::----------------\n")
+  columnValues
 })
 
 getTib<-reactive({ getPtDefs()$tib[[ getTibName() ]] })
@@ -148,23 +188,13 @@ getTibRowChoices<-reactive({
   }
 })
 
-getTibColumnName<-reactive({
-  names(getTib())[ selectedTibble$column ]
-  
-  })
-getTibColumnNameChoices<-reactive({ 
-  tib<-getTib()
-  if(!is.null(tib)){
-    names(tib)
-  } else {
-    ""
-  }
-})
+
 
 getTibMatCol<-reactive({ selectedTibble$matCol })
 # getTibPos<-reactive({
 #   list(row=selectedTibble$row, matCol=selectedTibble$matCol)
 # })
+
 getTibMatColChoices<-reactive({ 
   row<-getTibRow()
   pts<-getTibPts()

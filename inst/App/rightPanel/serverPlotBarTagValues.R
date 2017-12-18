@@ -22,6 +22,7 @@ returnValue4ModuleTagVal<-callModule(
 #name, rowIndex
 observeEvent(c(returnValue4ModuleTagVal$name(),returnValue4ModuleTagVal$rowIndex()),{
   if(rightPanel()=='tagValues'){
+    cat('oE 2-123\n')
     name<-returnValue4ModuleTagVal$name()
     rowIndex<-returnValue4ModuleTagVal$rowIndex()
     if(!is.null(name)){
@@ -34,18 +35,23 @@ observeEvent(c(returnValue4ModuleTagVal$name(),returnValue4ModuleTagVal$rowIndex
     }
   }
 })
-
+ 
 #name, columnName
 observeEvent(c(returnValue4ModuleTagVal$name(),returnValue4ModuleTagVal$columnName()),{
   if(rightPanel()=='tagValues'){
+    cat('\n--------------------\noE 2-124\n')
     name<-returnValue4ModuleTagVal$name()
     colName<-returnValue4ModuleTagVal$columnName()
-    #cat('colName==',colName,"\n")
-    if(!is.null(name) ){
-      columnNameChoices=getTibColumnNameChoices()
-      ptPos<-getTibPtColPos()
-      column<-match(colName, columnNameChoices, nomatch=ptPos)
-      updateSelected(column=column)
+    cat('colName==',colName,"\n")
+    if(!is.null(colName) ){
+      # columnNameChoices=getTibColumnNameChoices()
+      # ptPos<-getTibPtColPos()
+      # column<-match(colName, columnNameChoices, nomatch=ptPos)
+      # cat('oE 2-124 columnName=', colName, "\n")
+      # cat('oE 2-124 columnNameChoices=\n')
+      # print(columnNameChoices)
+      # cat('oE 2-124 setting column index=', column, "\n")
+      updateSelected(columnName=colName)
     }
   }
 })
@@ -56,27 +62,35 @@ observeEvent(c(returnValue4ModuleTagVal$name(),returnValue4ModuleTagVal$columnNa
 #--------EDIT VALUE------------------------------
 observeEvent(returnValue4ModuleTagVal$entryValue(),{
   if(rightPanel()=='tagValues'){
-    cat('entryBAlue\n')
+    cat('\nentryVAlue\n')
+    cat('oE 2-125\n')
     # assuming tib is uptodate, simply work on the existing tib
     name<-returnValue4ModuleTagVal$name()
     cat('name=',name,'\n')
+    entry<-returnValue4ModuleTagVal$entryValue()
     #rowIndex<-returnValue4ModuleTagVal$rowIndex()
+    row=returnValue4ModuleTagVal$rowIndex()
+    columnName<-returnValue4ModuleTagVal$columnName()
+    cat('row=',row,"\n")
+    cat("columnName=" ,columnName,"\n")
+    
+    cat('entry=',entry,'\n')
     if(!is.null(name) && 
-       length(returnValue4ModuleTagVal$entryValue())>0 &&
-       nchar(returnValue4ModuleTagVal$entryValue())>0   ){
-      entry<-returnValue4ModuleTagVal$entryValue()
+       length(entry)>0 &&
+       nchar(entry)>0   ){
+      #entry<-returnValue4ModuleTagVal$entryValue()
       # !!! TODO: type check if numeric
-      cat('entry=',entry,'\n')
+      
       setPlotState(entry)
       if(!entry %in% c('matrix','point')){
         newPtDefs<-getPtDefs()
         name<-getTibName()
         column<-getTibColumn()
         row<-getTibRow()
-        
         sender='applyTibEdit'
         newPtDefs$tib[[getTibName()]][[row,column ]]<-entry
         updateAceExtDef(newPtDefs, sender=sender)
+        updateSelected( name=name, columnName=columnName, row=row)
       } 
     }
   }
@@ -85,6 +99,7 @@ observeEvent(returnValue4ModuleTagVal$entryValue(),{
 observeEvent(
   returnValue4ModuleTagVal$tagClone(),
   {
+    cat('oE 2-123\n')
     #if(rightPanel()=="tagDrag"){
       sender='cloneRow'
       ptDefs<-getPtDefs()
@@ -290,9 +305,11 @@ showPts.valTag %<c-% function(
   ){
   onMouseDownTxt<-"ptRPlotter_ptR_SVG_TagVal.selectElement(evt)"
  
-  #cat("rowIndx=", rowIndex, "\n")
+  cat("rowIndx=", rowIndex, "\n")
+  cat("length(ptName)=", length(ptName), "\n")
+  cat("length(pts)=", length(pts), "\n")
   if(length(ptName)<1){return(NULL)}
-  if(length(pts)<2)  {return(NULL) }
+  if(length(pts)<1)  {return(NULL) }
   
   if(length(rowIndex)<1 || rowIndex==0){return(NULL)}
   
@@ -300,20 +317,18 @@ showPts.valTag %<c-% function(
   colorScheme<-c(default="purple", ending="red", selected="blue")
   color<-colorScheme[1]
   
-  
-  
-  
   opacity<-rep(semitransparent, length(pts)) 
   opacity[rowIndex]<-1 
   rowNums<-seq(length(pts))
   ids<-paste("pd",ptName,rowNums,sep="-")
   offRows<-rowNums[-rowIndex]
   mRow<-pts[[rowIndex]]
-  
+
   list( 
     lapply(offRows, function(i){
       m<-pts[[i]]
       if(length(m)==0){
+        cat('m is null\n')
         NULL
       } else {
         g( opacity=opacity[i], 
@@ -335,6 +350,7 @@ showPts.valTag %<c-% function(
       }
     }),
     if(length(mRow)==0){
+      cat('length(mRow)=0\n')
       NULL
     } else {
           g( opacity=opacity[rowIndex], 

@@ -31,7 +31,8 @@ $('#buttonFileOpenHidden').on('selection', function(event, path){
 $('document').ready(function()
 {
   $('.hiddenButton').hide();
-                
 });
+
+
 
 

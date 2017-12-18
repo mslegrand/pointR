@@ -43,31 +43,31 @@ observeEvent(returnValue4ModulePointsBar$name(), {
 
 
 #-----------BUTTON EVENTS--------------------
-#---BUTTON: remove selected point  -----
-observeEvent( returnValue4ModulePointsBar$removePt(), {
-  selection<-getTibName() 
-cat('Enter removePt\n')  
-  if(selection!=""){
-    ptDefs<-getPtDefs()
-    if(length(ptDefs$tib)==0){return(NULL)}
-    matCol<-getTibMatCol()
-    #src<-getCode() 
-    
-    #get row, col
-    if(matCol>=1){ 
-      row<-getTibRow()
-      m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]][,-matCol] 
-      #!!! probably need some checking here
-      ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]<-m
-      matCol<-min(matCol, length(m)/2)
-      newPtDefs<-ptDefs
-      sender='points.deletePoint'
-      updateAceExtDef(newPtDefs, sender=sender)
-      updateSelected(matCol=matCol)
-    }
-  }
-}) #end remove point observer
-
+# #---BUTTON: remove selected point  -----
+# observeEvent( returnValue4ModulePointsBar$removePt(), {
+#   selection<-getTibName() 
+# cat('Enter removePt\n')  
+#   if(selection!=""){
+#     ptDefs<-getPtDefs()
+#     if(length(ptDefs$tib)==0){return(NULL)}
+#     matCol<-getTibMatCol()
+#     #src<-getCode() 
+#     
+#     #get row, col
+#     if(matCol>=1){ 
+#       row<-getTibRow()
+#       m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]][,-matCol] 
+#       #!!! probably need some checking here
+#       ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]<-m
+#       matCol<-min(matCol, length(m)/2)
+#       newPtDefs<-ptDefs
+#       sender='points.deletePoint'
+#       updateAceExtDef(newPtDefs, sender=sender)
+#       updateSelected(matCol=matCol)
+#     }
+#   }
+# }) #end remove point observer
+# 
 #----begin for Tagging-------------------------------------
 
 # Return the UI for a modal dialog with data selection input. If 'failed' is
@@ -90,53 +90,53 @@ modalFreq <- function(failed = FALSE) {
 
 
 
-#---TAG THIS POINT button-----
-# note: in 1st tag, calls freqModal to complete the work, which exits in the okTag above
-observeEvent( returnValue4ModulePointsBar$tagPt(), {
-  
-  if(rightPanel()=="Points"){
-    #selection<-input$ptRSelect
-    cat("Enter tagPt\n")
-    src<-getCode() 
-    selection<-getTibName()
-    ptDefs<-getPtDefs()
-    
-    row=getTibRow() 
-    matCol=getTibMatCol() 
-    
-    m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]
-    if(ncol(m)<1){ 
-      return(NULL) # bail if matrix of points is empty
-    }
-    tib<-ptDefs$tib[[selection]] #get the tib 
-    tib<-tagTib(tib, getTibPtColPos(), row, matCol)
-    row<-row+1
-    matCol<-length(tib[[row, getTibPtColPos()]])/2
-    ptDefs$tib[[selection]]<-tib 
-    sender='tagPt'
-    updateAceExtDef(ptDefs, sender=sender)
-    updateSelected(row=row, matCol=matCol)
-  } #end of if
-}) #end of point InfoList Tag Point, 
-
-
-observeEvent( returnValue4ModulePointsBar$forwardPt(), {
-  matColIndex<-getTibMatCol()
-  if(length( matColIndex)>0){
-    cat("observeEvent:: serverPlotBar 99\n")
-    matColIndex=max(matColIndex+1, min(getTibMatColChoices()) )
-    updateSelected(  matCol=matColIndex )
-  }
-})
-
-observeEvent( returnValue4ModulePointsBar$backwardPt(), {
-  matColIndex<-getTibMatCol()
-  if(length(matColIndex)>0){
-    cat("observeEvent:: serverPlotBar 98\n")
-    matColIndex=max(matColIndex-1, min(getTibMatColChoices()) )
-    updateSelected(  matCol=matColIndex  )
-  }
-})
+# #---TAG THIS POINT button-----
+# # note: in 1st tag, calls freqModal to complete the work, which exits in the okTag above
+# observeEvent( returnValue4ModulePointsBar$tagPt(), {
+#   
+#   if(rightPanel()=="Points"){
+#     #selection<-input$ptRSelect
+#     cat("Enter tagPt\n")
+#     src<-getCode() 
+#     selection<-getTibName()
+#     ptDefs<-getPtDefs()
+#     
+#     row=getTibRow() 
+#     matCol=getTibMatCol() 
+#     
+#     m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]
+#     if(ncol(m)<1){ 
+#       return(NULL) # bail if matrix of points is empty
+#     }
+#     tib<-ptDefs$tib[[selection]] #get the tib 
+#     tib<-tagTib(tib, getTibPtColPos(), row, matCol)
+#     row<-row+1
+#     matCol<-length(tib[[row, getTibPtColPos()]])/2
+#     ptDefs$tib[[selection]]<-tib 
+#     sender='tagPt'
+#     updateAceExtDef(ptDefs, sender=sender)
+#     updateSelected(row=row, matCol=matCol)
+#   } #end of if
+# }) #end of point InfoList Tag Point, 
+# 
+# 
+# observeEvent( returnValue4ModulePointsBar$forwardPt(), {
+#   matColIndex<-getTibMatCol()
+#   if(length( matColIndex)>0){
+#     cat("observeEvent:: serverPlotBar 99\n")
+#     matColIndex=max(matColIndex+1, min(getTibMatColChoices()) )
+#     updateSelected(  matCol=matColIndex )
+#   }
+# })
+# 
+# observeEvent( returnValue4ModulePointsBar$backwardPt(), {
+#   matColIndex<-getTibMatCol()
+#   if(length(matColIndex)>0){
+#     cat("observeEvent:: serverPlotBar 98\n")
+#     matColIndex=max(matColIndex-1, min(getTibMatColChoices()) )
+#     updateSelected(  matCol=matColIndex  )
+#   }
+# })
 
 # ===============END SERVER Module PointsBar=======================
 
@@ -158,8 +158,8 @@ observeEvent( returnValue4ModulePointsBar$backwardPt(), {
     if(is.null(pts) ){ return(NULL) } 
     if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
     
-    # cat("pts-----------------------------------------------\n")
-    # print(pts)
+     cat("pts-----------------------------------------------\n")
+     print(pts)
     if(length(unlist(pts))<2){ return(NULL)}
     
     colorScheme<-c(default="green", ending="red", selected="blue")
@@ -173,10 +173,13 @@ observeEvent( returnValue4ModulePointsBar$backwardPt(), {
     
     opacity<-rep(semitransparent, length(pts) )
     opacity[rowIndex]<-1
+    cat("seq(length(pts))=",seq(length(pts)))
     
     #form list of  all point renderings
     lapply(seq(length(pts)), function(i){
       m<-pts[[i]]
+      print(i)
+      print(m)
       if(length(m)==0){ # or !is(m,'matrix')
         NULL
       } else {

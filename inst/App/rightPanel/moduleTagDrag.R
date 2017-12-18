@@ -55,6 +55,7 @@ moduleTagDrag<-function(input, output, session,
   # }
   
   observeEvent(barName(), { #update the name 
+    cat('oE 123\n')
     if(identical( barName(), 'tagDrag')){
       updateSelectInput(session, "name", 
         choices=nameChoices(), 
@@ -65,6 +66,7 @@ moduleTagDrag<-function(input, output, session,
   observeEvent( c(barName(), rowIndex(), rowIndexChoices() ),  { #update index
      
      if(identical( barName(), 'tagDrag')){
+       cat('oE 124\n')
       updateNumericInput(
         session, 
         "rowIndex", 
