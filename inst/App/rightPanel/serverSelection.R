@@ -18,6 +18,7 @@ updateSelected<-function( name, row, columnName, matCol,  ptColName ){
     selectedTibble$name=name
   }
   if(!missing(ptColName)){
+    cat("updateSelected: setting ptColName=",name,"\n")
     selectedTibble$ptColName=ptColName
   }
   if(!missing(row)){ # !!! may want to provide a check here
@@ -51,11 +52,8 @@ getTibColumnName<-reactive({
 })
 getTibColumnNameChoices<-reactive({ 
   tib<-getTib()
-  if(!is.null(tib)){
-    names(tib)
-  } else {
-    ""
-  }
+  choices<-tib %AND% names(tib)
+  choices
 })
 
 getTibColumn<-reactive({
@@ -72,7 +70,7 @@ getTibColumn<-reactive({
 
 getTibEntry<-reactive({
   name<-getTibName()
-  row<-getTibRow()
+  rowNum<-getTibRow()
   columnName<-getTibColumnName()
   # if name, row or colName is NULL or NA return NULL 
   # if colname not in tib return NULL
@@ -86,23 +84,22 @@ getTibEntry<-reactive({
   cat("getTibEntry:: class(columnValues)=",class(columnValues),"\n")
   trows<-columnValues %AND% length(columnValues)
   cat("getTibEntry:: class(trows)=",class(trows),"\n")
-  cat("getTibEntry:: class(row)=",class(row),"\n")
+  cat("getTibEntry:: class(row)=",class(rowNum),"\n")
   # entry<-trows %AND% row %AND% 
   #   (
   #     if(1<=row && row<=trows){
   #       cat("row=" ,row,"\n")
   #       cat("columnName=" ,columnName,"\n")
   #       cat("class(tib[[columnName]][[row]])=" ,class(tib[[columnName]][[row]]),"\n")
-  #       x<-as.list(tib[[columnName]])[[row]]
-  #       x
+  #       tib[[columnName]])[[row]]
   #     }else{
   #        NULL
   #     }
   #   )
-  entryOk<-trows %AND% row %AND% 
-      if(1<=row && row<=trows){ TRUE } else { NULL}
+  entryOk<-trows %AND% rowNum %AND% (if(1<=rowNum && rowNum<=trows){ TRUE } else { NULL})
   if(!is.null(entryOk)){
-     entry<- as.list(tib[[columnName]])[[row]]
+     entry<- as.list(tib[[columnName]])[[rowNum]]
+     print(entry)
   } else {
     entry<-NULL
   }
@@ -125,14 +122,14 @@ getTibEntryChoices<-reactive({
   columnValues
 })
 
-getTib<-reactive({ getPtDefs()$tib[[ getTibName() ]] })
+getTib<-reactive({ getTibName() %AND% getPtDefs()$tib[[ getTibName() ]] })
 getTibPtColPos<-reactive({ which(names(getTib())==selectedTibble$ptColName )})
+
 getTibPts<-reactive({ 
-  if( !is.null(selectedTibble$ptColName)){
-    getTib()[[ selectedTibble$ptColName ]]
-  } else {
-    NULL
-  }
+  ptCol<-selectedTibble$ptColName
+  tib<-getTib()
+  pts <- tib %AND% ptCol %AND% tib[[ptCol]]
+  pts
 })
 
 
@@ -190,21 +187,28 @@ getTibRowChoices<-reactive({
 
 
 
-getTibMatCol<-reactive({ selectedTibble$matCol })
+getTibMatCol<-reactive({ 
+  cat( "selectedTibble$matCol=", selectedTibble$matCol ,"\n" )
+  selectedTibble$matCol 
+})
+
 # getTibPos<-reactive({
 #   list(row=selectedTibble$row, matCol=selectedTibble$matCol)
 # })
 
 getTibMatColChoices<-reactive({ 
-  row<-getTibRow()
+  rowNum<-getTibRow()
   pts<-getTibPts()
-  rtv<-0
-  if(row %in% getTibRowChoices() ){ #row check
-    mc<-ncol(pts[[row]])
-    if(length(mc)>0 && mc>0){ 
+  if(is.null(pts) || is.null(rowNum) || rowNum<1 || rowNum>length(pts)){
+    rtv<-NULL
+  } else {
+    mc<-ncol(pts[[rowNum]])
+    if(mc>0){
       rtv<-1:mc
+    } else {
+      rtv<-0
     }
-  } 
+  }
   rtv
 })
 

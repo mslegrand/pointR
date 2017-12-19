@@ -90,7 +90,6 @@ observe({
           row<-0
           matCol<-0
         }
-        
         updateSelected( name=name, row=row, matCol=matCol)
       }
     } 

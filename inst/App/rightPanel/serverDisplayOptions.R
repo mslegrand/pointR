@@ -20,8 +20,7 @@ setDisplayOption<-function( insertMode, showGrid, ptMode){
 
 #this is tagDisplay Mode
 getDisplayModeTag<-reactive({
-  if(displayMode()=="hidden"){
-  } else {
     displayMode()
-  }
 })
+
+getInsertMode<-reactive({displayOptions$insertMode })

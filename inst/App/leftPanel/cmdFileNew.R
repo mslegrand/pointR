@@ -1,6 +1,6 @@
 cmdFileNew<-function(){
   
-  updateRightPanel("Points")
+  updateRightPanel("tagValues")
   src<-codeTemplate
   session$sendCustomMessage(
     type = "shinyAceExt",

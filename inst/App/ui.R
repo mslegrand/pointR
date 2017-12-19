@@ -180,13 +180,7 @@ shinyUI(
             ) ,
             
             #---------------plotNavBar:points  ------------------------------------
-            menuItem("Points" ), #end of tab panel "Points"
-            #---------------plotNavBar:TAGS  ------------------------------------
-            menuDropdown(
-              "Tags",
-              menuItem("Value", value="tagValues"),
-              menuItem("Drag",  value="tagDrag")  # tabPanel("Wag"), # tabPanel("Mag")
-            ),
+            menuItem("Points", value="tagValues"),
             menuItem("Transforms"),
             menuItem("Log", value="logPanel")
           ), 

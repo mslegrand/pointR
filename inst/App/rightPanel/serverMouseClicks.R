@@ -41,8 +41,8 @@ observe({
       src<-getCode()
       replacementList<-list()
       ptDefs<-getPtDefs() #!!!  to do: replace with getTib
-      barName=rightPanel()
-      if(barName=="Points" || (barName=='tagValues' && getPlotState()=='point') ){
+      barName=rightMidPanel()
+      if(barName=="Points" || (barName=='tagValues.point' ) ){
         sender='PointsBar.mouse'
         if(cmd=='add'){ #---------add point
           sender='PointsBar.mouse.add'
@@ -91,7 +91,7 @@ observe({
         }        
       }
 
-      if(barName=='tagDrag'){
+      if(barName=='tagValues.matrix'){
         sender='tagDrag.mouse'
         if(cmd=='transGrp'){ # -- move tagged group (from tagDrag)
           
@@ -112,7 +112,7 @@ observe({
       }
       
             
-      if(barName=='tagValues'){
+      if(barName=='tagValues.value'){
         sender='tagVal.mouse'
         if(cmd=='tagValSelect'){ # -- move tagged group (from tagDrag)
           tid<-input$mouseMssg$id

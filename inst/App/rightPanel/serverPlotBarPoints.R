@@ -1,146 +1,4 @@
 
-# --------------input$plotNavBar=="Points"----------------
-
-
-# ===============Begin Server PointsBar=======================
-
-
-
-#CALL modulePointsBarUI
-
-returnValue4ModulePointsBar<-callModule( #auto  input, output, session 
-  module=modulePointsBar, 
-  id="pointsBar", 
-  barName=rightPanel,
-  name=getTibName, 
-  nameChoices=getTibNameChoices,
-  rowIndex=getTibRow,
-  rowIndexChoices=getTibRowChoices,
-  matColIndex=getTibMatCol,
-  matColIndexChoices=getTibMatColChoices,
-  headerId=NS("pointsBar", 'header')
-)
-
-#-----REACTIVES   based on modulePointsBar::returnValue4ModulePointsBar
-
-
-
-
-insertMode<-reactive({returnValue4ModulePointsBar$insertMode() })
-
-#-----OBSERVERS  using  modulePointsBar::returnValue4ModulePointsBar
-
-# --SELECTION EVENTS-------------------------------
-observeEvent(returnValue4ModulePointsBar$name(), {
-  if(rightPanel()=="Points"){
-    name<-returnValue4ModulePointsBar$name()
-    if(!is.null(name)){
-      updateSelected(name=returnValue4ModulePointsBar$name())
-    }
-  }
-})
-
-
-
-#-----------BUTTON EVENTS--------------------
-# #---BUTTON: remove selected point  -----
-# observeEvent( returnValue4ModulePointsBar$removePt(), {
-#   selection<-getTibName() 
-# cat('Enter removePt\n')  
-#   if(selection!=""){
-#     ptDefs<-getPtDefs()
-#     if(length(ptDefs$tib)==0){return(NULL)}
-#     matCol<-getTibMatCol()
-#     #src<-getCode() 
-#     
-#     #get row, col
-#     if(matCol>=1){ 
-#       row<-getTibRow()
-#       m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]][,-matCol] 
-#       #!!! probably need some checking here
-#       ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]<-m
-#       matCol<-min(matCol, length(m)/2)
-#       newPtDefs<-ptDefs
-#       sender='points.deletePoint'
-#       updateAceExtDef(newPtDefs, sender=sender)
-#       updateSelected(matCol=matCol)
-#     }
-#   }
-# }) #end remove point observer
-# 
-#----begin for Tagging-------------------------------------
-
-# Return the UI for a modal dialog with data selection input. If 'failed' is
-# TRUE, then display a message that the previous value was invalid.
-modalFreq <- function(failed = FALSE) {
-  doOk<-'shinyjs.triggerButtonOnEnter(event,"okTag")'
-  modalDialog(
-    onkeydown=doOk,
-    selectInput("tagFreq", "Auto Tag",
-                c(list("Off"),1:20), selected="Off", 
-                multiple=FALSE, selectize = FALSE,
-                width="80px", size=1  ), 
-    span('Start tagging current point matrix'), 
-    footer = tagList(
-      modalButton("Cancel"),
-      actionButton("okTag", "OK")
-    )
-  ) 
-}
-
-
-
-# #---TAG THIS POINT button-----
-# # note: in 1st tag, calls freqModal to complete the work, which exits in the okTag above
-# observeEvent( returnValue4ModulePointsBar$tagPt(), {
-#   
-#   if(rightPanel()=="Points"){
-#     #selection<-input$ptRSelect
-#     cat("Enter tagPt\n")
-#     src<-getCode() 
-#     selection<-getTibName()
-#     ptDefs<-getPtDefs()
-#     
-#     row=getTibRow() 
-#     matCol=getTibMatCol() 
-#     
-#     m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]
-#     if(ncol(m)<1){ 
-#       return(NULL) # bail if matrix of points is empty
-#     }
-#     tib<-ptDefs$tib[[selection]] #get the tib 
-#     tib<-tagTib(tib, getTibPtColPos(), row, matCol)
-#     row<-row+1
-#     matCol<-length(tib[[row, getTibPtColPos()]])/2
-#     ptDefs$tib[[selection]]<-tib 
-#     sender='tagPt'
-#     updateAceExtDef(ptDefs, sender=sender)
-#     updateSelected(row=row, matCol=matCol)
-#   } #end of if
-# }) #end of point InfoList Tag Point, 
-# 
-# 
-# observeEvent( returnValue4ModulePointsBar$forwardPt(), {
-#   matColIndex<-getTibMatCol()
-#   if(length( matColIndex)>0){
-#     cat("observeEvent:: serverPlotBar 99\n")
-#     matColIndex=max(matColIndex+1, min(getTibMatColChoices()) )
-#     updateSelected(  matCol=matColIndex )
-#   }
-# })
-# 
-# observeEvent( returnValue4ModulePointsBar$backwardPt(), {
-#   matColIndex<-getTibMatCol()
-#   if(length(matColIndex)>0){
-#     cat("observeEvent:: serverPlotBar 98\n")
-#     matColIndex=max(matColIndex-1, min(getTibMatColChoices()) )
-#     updateSelected(  matCol=matColIndex  )
-#   }
-# })
-
-# ===============END SERVER Module PointsBar=======================
-
-
 
 # ===============BEGIN SERVER Module svgPointsMod=======================
 
@@ -153,10 +11,15 @@ modalFreq <- function(failed = FALSE) {
       matColIndex=NULL,
       ptDisplayMode="Normal"
   ){
+    cat("showPts.PtCmd-----------------------------------------------\n")
+    cat("class(ptDisplayMode)="  ,  class(ptDisplayMode),"\n")
+    if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
     onMouseDownTxt='ptRPlotter_ptR_SVG_Point.selectPoint(evt)'
     
+    cat('\nshowPts.PtCmd:: class(pts)=',class(pts),'\n')
+    cat('\nshowPts.PtCmd:: length(pts)=',length(pts),'\n')
     if(is.null(pts) ){ return(NULL) } 
-    if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
+    
     
      cat("pts-----------------------------------------------\n")
      print(pts)
@@ -248,13 +111,13 @@ statusPlotPoint<-callModule(
   svgID='ptR_SVG_Point',
   showPts.compound=reactive({
     list(
-      newPtLayer( insertMode(), getSVGWH() ),
+      newPtLayer( getInsertMode(), getSVGWH() ),
       showPts.PtCmd(
         ptName=getTibName(), 
         pts=getTibPts(), #getPtDefs()$pts[[getPtName()]],
         rowIndex=getTibRow(),
         matColIndex=getTibMatCol(),
-        ptDisplayMode=displayMode()
+        ptDisplayMode=getDisplayModeTag()
       )
     )
   }),
@@ -271,6 +134,7 @@ statusPlotPoint<-callModule(
 observeEvent(statusPlotPoint$status(), {
   status<-statusPlotPoint$status()
   if( status$state!="PASS"){ 
+    cat("statusPlotPoint$status() error\n")
     updateRightPanel('logPanel')
     mssg$err<-status$message
   }

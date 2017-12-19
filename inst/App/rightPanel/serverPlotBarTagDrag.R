@@ -1,137 +1,4 @@
 
-# --------------input$plotNavBar=="dragTag"---------------- 
-
- # output$TagDragPanel<-renderUI({
- #  conditionalPanel( "input.plotNavBar=='tagDrag'", moduleTagDragUI("tagDragBar"))
- # })
-
-returnValue4ModuleTagDrag<-callModule(
-  module=moduleTagDrag,
-  id="tagDragBar",
-  barName=rightPanel,
-  name=getTibName,
-  nameChoices=getTibNameChoices,
-  rowIndex=getTibRow,
-  rowIndexChoices=getTibRowChoices,
-  matColIndex=getTibMatCol,
-  matColIndexChoices=getTibMatColChoices
-)
-
-
-# observeEvent( returnValue4ModuleTagDrag$name() ,{
-#   if(rightPanel()=="tagDrag"){
-#     name<-returnValue4ModuleTagDrag$name()
-#     if(!is.null(name)){
-#       updateSelected(name=returnValue4ModuleTagDrag$name())
-#     }
-#   }
-# })
-# 
-# observeEvent( returnValue4ModuleTagDrag$rowIndex(), {
-#   if(rightPanel()=="tagDrag"){
-#     rowIndex<-returnValue4ModuleTagDrag$rowIndex()
-#     if(!is.null(rowIndex)){
-#       rowIndex=as.integer(rowIndex)
-#       updateSelected(row=rowIndex, matCol='end')
-#     }
-#   }
-# })
-# 
-# observeEvent(
-#   returnValue4ModuleTagDrag$tagClone(),
-#   {
-#     if(rightPanel()=="tagDrag"){
-#       sender='cloneRow'
-#       ptDefs<-getPtDefs()
-#       name<-getTibName()
-#       tib<-ptDefs$tib[[name]]
-#       rowIndex<-getTibRow()
-#       newTib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
-#       rowIndx=rowIndex+1
-#       matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
-#       
-#       pts<-newTib[[getTibPtColPos()]]
-#       
-#       
-#       ptDefs$tib[[name]]<-newTib
-#       newPtDefs<-ptDefs
-#       updateAceExtDef(newPtDefs, sender=sender)
-#       updateSelected(row=rowIndex, matCol=matCol)
-#     }
-#   }
-# )
-# 
-# observeEvent(
-#   returnValue4ModuleTagDrag$tagDelete(),
-#   {
-#     if(rightPanel()=="tagDrag"){
-#       sender='deleteRow'
-#       ptDefs<-getPtDefs()
-#       name<-getTibName()
-#       newTib<-ptDefs$tib[[name]]
-#       rowIndex<-getTibRow()
-#       
-#       # !!!TODO handle case where this would be last row.
-#       newTib<-newTib[-rowIndex,]
-#       ptDefs$tib[[name]]<-newTib
-#       newPtDefs<-ptDefs
-#       
-#       #adjust position
-#       rowIndex<-min(rowIndex, nrow(newTib))
-#       matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
-#       if(length(matCol)==0){matCol=0}
-#       updateAceExtDef(newPtDefs, sender=sender)
-#       updateSelected(row=rowIndex, matCol=matCol)
-#     }
-#   }
-# )
-# 
-# observeEvent( returnValue4ModuleTagDrag$tagMoveUp(),{ 
-#     if(rightPanel()=="tagDrag"){
-#       rowIndex<-getTibRow()
-#       if(rowIndex>1){
-#           sender='tagMoveUp'
-#           ptDefs<-getPtDefs()
-#           name<-    getTibName()
-#           newTib<-ptDefs$tib[[name]]
-#           
-#           newTib[c(rowIndex,rowIndex-1),]<-newTib[c(rowIndex-1,rowIndex),]
-#           ptDefs$tib[[name]]<-newTib
-#           newPtDefs<-ptDefs
-#           
-#           #adjust position
-#           rowIndex<-rowIndex-1
-#           matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
-#           if(length(matCol)==0){matCol=0}
-#           updateAceExtDef(newPtDefs, sender=sender)
-#           updateSelected(row=rowIndex, matCol=matCol)   
-#       }
-#     }
-# })
-# 
-# observeEvent( returnValue4ModuleTagDrag$tagMoveDown(),{ 
-#   if(rightPanel()=="tagDrag"){
-#     rowIndex<-getTibRow()
-#     ptDefs<-getPtDefs()
-#     name<-    getTibName()
-#     newTib<-ptDefs$tib[[name]]
-#     if(rowIndex<nrow(newTib)){
-#       sender='tagMoveDown'
-#       
-#       newTib[c(rowIndex,rowIndex+1),]<-newTib[c(rowIndex+1,rowIndex),]
-#       ptDefs$tib[[name]]<-newTib
-#       newPtDefs<-ptDefs
-#       
-#       #adjust position
-#       rowIndex<-rowIndex+1
-#       matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
-#       if(length(matCol)==0){matCol=0}
-#       updateAceExtDef(newPtDefs, sender=sender)
-#       updateSelected(row=rowIndex, matCol=matCol)   
-#     }
-#   }
-# })
-
 
 
 #-------------------------------------------
@@ -143,6 +10,9 @@ returnValue4ModuleTagDrag<-callModule(
     rowIndex=NULL,
     ptDisplayMode 
     ){
+    cat("\nenter-------------showPts.dragTag-----------------------------------------------\n")
+    if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
+    
     onMouseDownTxt="ptRPlotter_ptR_SVG_TagDrag.selectElement(evt)" 
     
     cat("showPts.dragTag\n")
@@ -248,6 +118,7 @@ statusPlotTagDrag<-callModule(
 observeEvent(statusPlotTagDrag$status(), {
   status<-statusPlotTagDrag$status()
   if(status$state!="PASS"){
+    cat("statusPlotTagDrag$status error\n")
     updateRightPanel('logPanel')
     mssg$err<-status$message    # send mssg to log
     # switch to log 

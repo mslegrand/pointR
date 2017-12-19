@@ -91,7 +91,7 @@ openFileNow<-function(fileName){
       
     }
   }
-  updateRightPanel("Points")
+  updateRightPanel("tagValues")
   updateNavbarPage(session, "tagFreq", selected ="Off") 
   
 }

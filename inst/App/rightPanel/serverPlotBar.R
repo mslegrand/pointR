@@ -3,12 +3,17 @@
 
 observeEvent(input$plotNavBar, {
   cmd<-getRightMenuCmd()
+  if('character' %in% class(cmd)){
+    cat("cmd=\n")
+    print(cmd)
+  }
   if(is.null(cmd)){
-    cmd<-"Points" 
+    cmd<-"tagValues" 
   }
   if(cmd %in% c( "Points", 'tagValues', 'tagDrag', 'Transforms', 'log')){
-    panels$right<-cmd #Point, tagValues, tagDrag, transfo
-    cat('barName changed\n')
+    updateRightPanel(cmd)
+    #panels$right<-cmd #Point, tagValues, tagDrag, transfo
+    cat('right Panel  changed to ',cmd,'\n')
   }
   if(cmd == 'cmdShowGrid'){
     renameDMDM(session,  "plotNavBar", "cmdShowGrid", "Hide Grid", newValue="cmdHideGrid")
@@ -50,7 +55,8 @@ observeEvent(input$plotNavBar, {
 
 
 output$TopRightPanel<-renderUI({
-  chosenRightPanel<-rightPanel()
+  chosenRightPanel<-rightPanel() 
+  cat('output$TopRightPanel:: chosenRightPanel=',chosenRightPanel,"\n")
   if(chosenRightPanel=="Points"){
     modulePointsBarUI("pointsBar")
   } else if (chosenRightPanel=='tagValues'){
@@ -98,26 +104,17 @@ output$TopRightPanel<-renderUI({
 
 
 output$MidRightPanel<-renderUI({
-  chosenRightPanel<-rightPanel()
+ 
+  chosenRightPanel<-rightMidPanel()
+  cat('output$MidRightPanel:: chosenRightPanel=',chosenRightPanel,"\n")
   if(chosenRightPanel=="Points"){
     modulePlotSVGrUI("svgPointsMod")
-  } else if (chosenRightPanel=='tagValues'){
-    state<-getPlotState()
-    cat('state=',state,"'\n")
-    if(!is.null(state)){
-      if(state=="point"){
+  } else if (chosenRightPanel=='tagValues.point'){
         modulePlotSVGrUI("svgPointsMod")
-      } else if (state=='value'){
+  } else if (chosenRightPanel=='tagValues.value'){
         modulePlotSVGrUI("svgTagValsMod")
-      } else if (state=='matrix'){
+  } else if (chosenRightPanel=='tagValues.matrix'){
         modulePlotSVGrUI("svgTagDragMod")
-      }
-    } else {
-      setPlotState("value")
-      modulePlotSVGrUI("svgTagValsMod")
-    }
-  } else if (chosenRightPanel=='tagDrag'){
-    modulePlotSVGrUI("svgTagDragMod")
   } else if (chosenRightPanel=='Transforms'){
     modulePlotSVGrUI("svgTransformMod")
   } else if (chosenRightPanel=="logPanel"){

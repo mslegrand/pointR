@@ -16,30 +16,41 @@ returnValue4ModuleTagVal<-callModule(
   columnName= getTibColumnName,
   columnNameChoices=getTibColumnNameChoices,
   getTibEntry=getTibEntry,
-  getTibEntryChoices=getTibEntryChoices
+  getTibEntryChoices=getTibEntryChoices,
+  headerId=NS("tagValBar", 'header')
 )
 
 #name, rowIndex
 observeEvent(c(returnValue4ModuleTagVal$name(),returnValue4ModuleTagVal$rowIndex()),{
   if(rightPanel()=='tagValues'){
-    cat('oE 2-123\n')
+    cat('\n----Entering-----------oE 2-123\n')
     name<-returnValue4ModuleTagVal$name()
     rowIndex<-returnValue4ModuleTagVal$rowIndex()
-    if(!is.null(name)){
-      newTib<-getPtDefs()$tib[[name]]
-      matColIndex<-ncol(newTib[[rowIndex, getTibPtColPos()]])
-      pts<-newTib[[getTibPtColPos()]]
-
-      updateSelected(name=name, row=rowIndex, 
-                     matCol=matColIndex)
+    tib<-name %AND% getPtDefs()$tib[[name]]
+    colName<- tib %AND% getTibColumnName()
+    pointCol<-colName %AND% tib %AND% tib[[colName ]]
+    if( !is.null(pointCol) && !is.null(rowIndex) ){
+      if(1<=rowIndex && rowIndex<=length(pointCol)){
+        m<-pointCol[[rowIndex]]
+        if('matrix' %in% class(m)){
+          cat('----updateSelected matCol-----------oE 2-123\n')
+          matColIndex<-ncol(m)
+          cat('matColIndex=', matColIndex,"\n")
+          updateSelected(name=name, row=rowIndex, matCol=matColIndex)
+        }
+      }
     }
+      #pts<-newTib[[getTibPtColPos()]]
+    cat('----Exiting-----------oE 2-123\n')
   }
-})
+  
+  }
+)
  
 #name, columnName
 observeEvent(c(returnValue4ModuleTagVal$name(),returnValue4ModuleTagVal$columnName()),{
   if(rightPanel()=='tagValues'){
-    cat('\n--------------------\noE 2-124\n')
+    cat('\n-----Entering---------------\noE 2-124\n')
     name<-returnValue4ModuleTagVal$name()
     colName<-returnValue4ModuleTagVal$columnName()
     cat('colName==',colName,"\n")
@@ -62,37 +73,52 @@ observeEvent(c(returnValue4ModuleTagVal$name(),returnValue4ModuleTagVal$columnNa
 #--------EDIT VALUE------------------------------
 observeEvent(returnValue4ModuleTagVal$entryValue(),{
   if(rightPanel()=='tagValues'){
-    cat('\nentryVAlue\n')
+    cat('\n--------Entering---------entryVAlue\n')
     cat('oE 2-125\n')
+    
     # assuming tib is uptodate, simply work on the existing tib
-    name<-returnValue4ModuleTagVal$name()
-    cat('name=',name,'\n')
-    entry<-returnValue4ModuleTagVal$entryValue()
+    name<- returnValue4ModuleTagVal$name() 
+    entry<-name %AND% returnValue4ModuleTagVal$entryValue()
+    
+    cat('class(name)=',class(name),'\n')
+    
     #rowIndex<-returnValue4ModuleTagVal$rowIndex()
-    row=returnValue4ModuleTagVal$rowIndex()
-    columnName<-returnValue4ModuleTagVal$columnName()
+    row= entry %AND% returnValue4ModuleTagVal$rowIndex()
+    columnName<-row %AND% returnValue4ModuleTagVal$columnName()
     cat('row=',row,"\n")
     cat("columnName=" ,columnName,"\n")
     
     cat('entry=',entry,'\n')
-    if(!is.null(name) && 
-       length(entry)>0 &&
+    
+    if(!is.null(columnName) && 
+       #length(entry)>0 &&
        nchar(entry)>0   ){
       #entry<-returnValue4ModuleTagVal$entryValue()
       # !!! TODO: type check if numeric
-      
+      rP<-rightPanel()
+      if(is.null(rP))rP<-'NULL'
+      cat('rightPanel=',rP,"\n")
+      cat('class(entry)=',class(entry),"\n")
+      cat('entry=',entry,"\n")
+      cat('setting entry state\n')
       setPlotState(entry)
-      if(!entry %in% c('matrix','point')){
-        newPtDefs<-getPtDefs()
+      if(!(entry %in% c('matrix','point'))){
+        cat('inside entry state\n')
         name<-getTibName()
-        column<-getTibColumn()
-        row<-getTibRow()
-        sender='applyTibEdit'
-        newPtDefs$tib[[getTibName()]][[row,column ]]<-entry
-        updateAceExtDef(newPtDefs, sender=sender)
-        updateSelected( name=name, columnName=columnName, row=row)
+        newPtDefs<-getPtDefs()
+        column<-getTibColumnName()
+        row<-newPtDefs$tib[[name]] %AND% getTibRow()
+        if(!is.null(row) && row>=1 && row<=nrow(newPtDefs$tib[[name]]) ){
+          sender='applyTibEdit'
+          newPtDefs$tib[[getTibName()]][[row,column ]]<-entry
+          updateAceExtDef(newPtDefs, sender=sender)
+          updateSelected( name=name, columnName=columnName, row=row)
+        }
       } 
     }
+    isolate({
+      cat('--------Exiting---------entryVAlue\n')
+    })
   }
 })
 
@@ -274,18 +300,20 @@ observeEvent( returnValue4ModuleTagVal$tagPt(), {
 
 observeEvent( returnValue4ModuleTagVal$forwardPt(), {
   matColIndex<-getTibMatCol()
-  if(length( matColIndex)>0){
+  matColChoices<-getTibMatColChoices()
+  if(length( matColIndex)>0 && length(matColChoices)>0){
     cat("observeEvent:: serverPlotBar 99\n")
-    matColIndex=max(matColIndex+1, min(getTibMatColChoices()) )
+    matColIndex=max(matColIndex+1, min(matColChoices) )
     updateSelected(  matCol=matColIndex )
   }
 })
 
 observeEvent( returnValue4ModuleTagVal$backwardPt(), {
   matColIndex<-getTibMatCol()
-  if(length(matColIndex)>0){
+  matColChoices<-getTibMatColChoices()
+  if(length(matColIndex)>0 && length(matColChoices)>0){
     cat("observeEvent:: serverPlotBar 98\n")
-    matColIndex=max(matColIndex-1, min(getTibMatColChoices()) )
+    matColIndex=max(matColIndex-1, min(matColChoices) )
     updateSelected(  matCol=matColIndex  )
   }
 })
@@ -303,13 +331,16 @@ showPts.valTag %<c-% function(
   ptDisplayMode #,  
   #tags=NULL
   ){
+  if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
   onMouseDownTxt<-"ptRPlotter_ptR_SVG_TagVal.selectElement(evt)"
- 
+  
   cat("rowIndx=", rowIndex, "\n")
   cat("length(ptName)=", length(ptName), "\n")
   cat("length(pts)=", length(pts), "\n")
   if(length(ptName)<1){return(NULL)}
   if(length(pts)<1)  {return(NULL) }
+  
+  
   
   if(length(rowIndex)<1 || rowIndex==0){return(NULL)}
   
@@ -383,10 +414,8 @@ statusPlotTagVal<-callModule(
     showPts.valTag(
       ptName=getTibName(), 
       pts=getTibPts(), 
-      
       rowIndex=getTibRow(),
       ptDisplayMode=getDisplayModeTag() #, 
-      
     )
   }),
   ptrDisplayScript = reactive({ svgToolsScript( "TagVal") }), #ptrDisplayScript = reactive({ js.scripts[[ "TagVal"]]}),
@@ -401,21 +430,23 @@ statusPlotTagVal<-callModule(
 observeEvent(statusPlotTagVal$status(), {
   status<-statusPlotTagVal$status()
   if(status$state!="PASS"){
+    cat("statusPlotTagVal$status() ERRUR\n")
     updateRightPanel('logPanel')
     mssg$err<-status$message    # send mssg to log
+    #mssg$err<-'TagValGraphErr'
     # switch to log 
   }
 })
 
-observeEvent(statusPlotTagVal$status(), {
-  status<-statusPlotTagVal$status()
-  if(status$state!="PASS"){
-    updateRightPanel('logPanel')
-    mssg$err<-status$message    # send mssg to log
-    # switch to log 
-  }
-})
-
+# observeEvent(statusPlotTagVal$status(), {
+#   status<-statusPlotTagVal$status()
+#   if(status$state!="PASS"){
+#     updateRightPanel('logPanel')
+#     mssg$err<-status$message    # send mssg to log
+#     # switch to log 
+#   }
+# })
+# 
 
 
 
