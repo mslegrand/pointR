@@ -80,8 +80,8 @@ getSVGWH<-function(){ c(650,620)}
 
 
 #---load modules source -------------
-source("rightPanel/modulePointsBar.R")
+#source("rightPanel/modulePointsBar.R")
 source("rightPanel/moduleTagValue.R")
-source("rightPanel/moduleTagDrag.R")
+#source("rightPanel/moduleTagDrag.R")
 source("rightPanel/moduleSVGR.R")
 

@@ -25,21 +25,53 @@ observeEvent(c(returnValue4ModuleTagVal$name(),returnValue4ModuleTagVal$rowIndex
   if(rightPanel()=='tagValues'){
     cat('\n----Entering-----------oE 2-123\n')
     name<-returnValue4ModuleTagVal$name()
+    if(is.null(name)){cat('name is null\n')} else { 
+      cat('name=',name,'\n')
+      cat('nchar(name)=',nchar(name),'\n')
+    }
     rowIndex<-returnValue4ModuleTagVal$rowIndex()
     tib<-name %AND% getPtDefs()$tib[[name]]
-    colName<- tib %AND% getTibColumnName()
-    pointCol<-colName %AND% tib %AND% tib[[colName ]]
-    if( !is.null(pointCol) && !is.null(rowIndex) ){
-      if(1<=rowIndex && rowIndex<=length(pointCol)){
-        m<-pointCol[[rowIndex]]
-        if('matrix' %in% class(m)){
-          cat('----updateSelected matCol-----------oE 2-123\n')
-          matColIndex<-ncol(m)
-          cat('matColIndex=', matColIndex,"\n")
-          updateSelected(name=name, row=rowIndex, matCol=matColIndex)
-        }
+    ### todo 
+    # 1. bail unless rowIndex <= nrow(tib)
+    # 2. currentEntry<-  
+    colName<-getTibColumnName()
+    #browser()
+    indices<-extractSafeRowColIndex(tib, rowIndex, colName)
+    if(!is.null(indices)){
+      entry<-tib[[indices$rowIndex, indices$colIndex]]
+      if( is.matrix(entry) && dim(entry)[1]==2 ){
+        matColIndex<-ncol(entry)
+        updateSelected(name=name, row=rowIndex, matCol=matColIndex)
+      } else {
+        updateSelected(name=name, row=rowIndex)
       }
     }
+    
+    
+    
+    # 2 if not tibEdit.point
+    #    2.1 update now
+    # 2. if tibEdit.point point
+    #    2.1 get entry m
+    #    2.2 bail if n is empty?  
+    #    2.2 compute ncol(m)
+    #    compute Max matColIndex at that row
+    #    and update with the constraint of being <= ncol(m)
+    
+      
+    # pointCol<-colName %AND% tib %AND% tib[[colName ]]
+    # 
+    # if( !is.null(pointCol) && !is.null(rowIndex) ){
+    #   if(1<=rowIndex && rowIndex<=length(pointCol)){
+    #     m<-pointCol[[rowIndex]]
+    #     if('matrix' %in% class(m)){
+    #       cat('----updateSelected matCol-----------oE 2-123\n')
+    #       matColIndex<-ncol(m)
+    #       cat('matColIndex=', matColIndex,"\n")
+    #       updateSelected(name=name, row=rowIndex, matCol=matColIndex)
+    #     }
+    #   }
+    # }
       #pts<-newTib[[getTibPtColPos()]]
     cat('----Exiting-----------oE 2-123\n')
   }
@@ -54,7 +86,7 @@ observeEvent(c(returnValue4ModuleTagVal$name(),returnValue4ModuleTagVal$columnNa
     name<-returnValue4ModuleTagVal$name()
     colName<-returnValue4ModuleTagVal$columnName()
     cat('colName==',colName,"\n")
-    if(!is.null(colName) ){
+    if(!is.null(colName) && nchar(colName)>0){
       # columnNameChoices=getTibColumnNameChoices()
       # ptPos<-getTibPtColPos()
       # column<-match(colName, columnNameChoices, nomatch=ptPos)

@@ -185,14 +185,15 @@ matrices2tags<-function(mats){
 
 
 ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
-  ptDefs<-list(pts=NULL, df=NULL)
+  ptDefs<-list(pts=NULL, df=NULL, tib=NULL)
   if(length(ptDefs)==0){
-    return(list(pts=c(), df=c(), tib=c()))
+    return(list(pts=c(), df=c(), tib=list()))
   }
   if( any(grepl(ptTag,src) ) ){
     try({
       ptDefTxt1<-getDef(src, defTag=ptTag)
       if( is.null(ptDefTxt1)){
+        cat('\n===========ptDefTxt1 is NULL\n')
         #stop("failed to fint ptR")
         # WITH DISABLE GRAPH BAR PTR CONTROLS
         # PTR SELECTION, GROUPS, EDITS, ...
@@ -200,14 +201,18 @@ ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
         #ptDefs$pts<-list()
         ptDefs$tib<-list()
       } else {
+        cat('\n===========ptDefTxt1 is NOT NULL\n')
         eval(parse(text=ptDefTxt1)) #stupid eval to obtain the points
         
         #!!!KLUDGE first kludge (undo later)
         ptDefs$tib<-get(ptTag) #at this stage we have ptR as a list of tibbles, each tibble containings points with name same as tib
+        
+        print(ptDefs)
+        print(names(ptDefs$tib))
         # TODO add columnInfo to ptDefs
         # for each named tib, add a named vector with
         # rows correspoinding to the names of the tib and values appropriately guessed
-        
+        #browser()
         
         # ptDefs$pts<-lapply(names(ptDefs$tib), function(nm){
         #   pts<-unlist(ptDefs$tib[[nm]][[nm]]) #!!!temporary change this to be more general later

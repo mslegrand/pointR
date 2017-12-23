@@ -3,10 +3,9 @@
 selectedTibble <- reactiveValues(
   name="x",        # name of current point array
   row=1,
-  columnName='x', # !!! KLUDGE for now. should this default to last col?
+  columnName='x', # currently used only by tibbleEditor and could be placed there.
   matCol=0,
-  ptColName='x',
-  index=0          
+  ptColName='x'      # !!! KLUDGE for now. should this default to last col?
 )
 
 
@@ -42,12 +41,26 @@ updateSelected<-function( name, row, columnName, matCol,  ptColName ){
 }
 
 getCode<-reactive({request$code})
-getTibName<-reactive({selectedTibble$name}) #allw to be null only if tib is null
+getTibName<-reactive({selectedTibble$name}) #allow to be null only if tib is null
 getTibNameChoices<-reactive({
+  ptDefs<-getPtDefs()
+  if(is.null(ptDefs)){
+    cat('\n===============getTibNameChoices:: ptDefs is NULL tib')
+  } else {
+    cat('\n==============getTibNameChoices:: ptDefs is NOT NULL tib\n')
+    cat('\ngetTibNameChoices:: length(choices)=', length(names(getPtDefs()$tib)),"\n")
+    cat('\ngetTibNameChoices:: choices=', paste(names(getPtDefs()$tib),collapse=", "),"\n")
+  }
+  # rtv<-names(getPtDefs()$tib)
+  
+  #browser()
   names(getPtDefs()$tib)
 }) #allow to be null only if tib is null
 
 getTibColumnName<-reactive({
+  if( !is.null(selectedTibble$columnName)){
+    cat("getTibColumnName()=",selectedTibble$columnName,"\n")
+  }
   selectedTibble$columnName
 })
 getTibColumnNameChoices<-reactive({ 

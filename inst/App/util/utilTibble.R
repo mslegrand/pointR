@@ -1,5 +1,47 @@
 library(tidyverse)
 
+extractColumnIndex<-function(tib, colName){
+  if(!is.null(colName) && !is.null(tib)){
+    #if(!("tbl_df" %in% class(tib))){ stop("extractColumnIndex: tib is not a tibble")}
+    match(colName, names(tib), nomatch=NULL)
+  } else {
+    NULL
+  }
+}
+
+extractSafeRowColIndex<-function(tib, rowIndex, colName){
+  if(missing(tib) || missing(rowIndex) || missing(colName)){ stop("extractColumnIndex: missing param")}
+  if(is.null(tib)){ return(NULL)}
+  #if(!('tibble' %in% class(tib))){ stop("extractColumnIndex: tib is not a tibble")}
+  if(is.null(colName)){return(NULL)}
+  if(is.null(rowIndex)){ return(NULL) }
+  if(rowIndex<1 || rowIndex>nrow(tib)){return(NULL)}
+  colIndex<-match(colName, names(tib), nomatch=NULL)
+  if(is.null(colIndex)){ return(NULL)}
+  list(rowIndex=rowIndex, colIndex=colIndex)
+}
+
+extractTibColumnValuesAsList<-function(tib, colName){
+  if(!is.null(colName) && !is.null(tib)){
+    as.list(tib[[colName]])
+  } else {
+    NULL
+  }
+}
+
+extractTibColumnEntry<-function(tib, colName, rowIndex){
+  values<-colName2columnValues(tib,colName)
+  if(!is.null(values) && !is.null(rowIndex) && 0<rowIndex && rowIndex<=nrow(tib)){
+    entry<-values[[rowIndex]]
+  } else {
+    entry<-NULL
+  }
+  entry
+}
+
+
+
+
 # ptR<-list(
 #   
 #   x=tibble(

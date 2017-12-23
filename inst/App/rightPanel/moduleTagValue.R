@@ -103,7 +103,7 @@ moduleTagVal<-function(input, output, session,
       entryChoices=c('point','matrix')
       if(length(input$entryValue)==0 || !(input$entryValue %in% entryChoices ) ){
         "cat updating entryValue"
-        updateSelectInput(session, "entryValue", 
+        updateSelectizeInput(session, "entryValue", 
                           choices=entryChoices, 
                           selected=entry )
       }
@@ -115,7 +115,7 @@ moduleTagVal<-function(input, output, session,
         #print(entry)
         cat("updateEntry::entryChoices=\n")
         print(entryChoices)
-              updateSelectInput(session, "entryValue", 
+        updateSelectizeInput(session, "entryValue", 
                         choices=entryChoices, 
                         selected=entry )
       }
@@ -141,39 +141,64 @@ moduleTagVal<-function(input, output, session,
   
   updateColumnName<-function(){
     #if(!is.null(columnName()) && ( is.null( input$columnName ) || !(input$columnName %in% columnNameChoices()))){
+    
       if(!is.null(columnName()) && !is.null(columnNameChoices())){ 
         cat('\n----Entering moduleTagValue: updateColumnName\n')
-        updateSelectInput(session, "columnName", 
-                          choices=columnNameChoices(), 
+        cat('moduleTagValue: updateColumnName:: columnName=',columnName(),"\n")
+        cat()
+        updateSelectizeInput(session, "columnName", 
+                          choices=as.list(columnNameChoices()), 
                           selected=columnName() )
         cat('----Leaving moduleTagValue: updateColumnName\n')
     }
   }
   
   #ToDo!!! 
-  observeEvent(barName(), { #update the name 
+  observeEvent(c(barName(),name(), nameChoices() ), { #update the name 
     if(identical( barName(), 'tagValues')){
-      cat('\n-----Entering----barName initialization for TagVal \n')
+      cat('\n-----Entering----barName initialization for TagVal (XX) \n')
       if(length(nameChoices())==0){ #name choices
-        hideElement( headerId )
+        cat("\n------------------hiding header")
+        #hideElement( headerId ) 
       } else {
-        showElement( headerId)
-        updateSelectInput(session, "name", 
+        #showElement( headerId)
+        cat("\n\n*****************************************************\n")
+        if(is.null(name() )){
+          cat('name is null\n')
+        } else {
+          cat('name=',name(), "\n\n")
+        }
+        if(is.null(nameChoices())){
+          cat('nameChoices is null')
+        } else {
+          cat('nameChoices=',paste(nameChoices(), collapse=", "), "\n\n")
+        }
+        if(!is.null(name())){
+          cat("\n\n\n***************************************")
+          cat('\n\n-----------updating name\n')
+          cat('name=',name(), "\n\n")
+          cat('nameChoices=',paste(nameChoices(), collapse=", "), "\n\n")
+        }
+        updateSelectizeInput(session, "name", 
                           choices=nameChoices(), 
                           selected=name())
-        updateNumericInput(
-          session, 
-          "rowIndex", 
-          min=min(rowIndexChoices()),
-          max=max(rowIndexChoices()),
-          value=rowIndex()
-        )
+        rc<-rowIndexChoices()
+        if(!is.null(rc) && !is.null(rowIndexChoices())){
+            updateNumericInput(
+            session, 
+            "rowIndex", 
+            min=min(rowIndexChoices()),
+            max=max(rowIndexChoices()),
+            value=rowIndex()
+            )
+        }
+ 
         
         updateColumnName()
         updateEntry()
         updateMatCol()
       #cat('\n-----Exiting----oE 1-123\n')
-      cat('-----Leaving----barName initialization for TagVal \n')
+      cat('\n***********************\n-----Leaving----barName initialization for TagVal \n')
       }
     }
   })  
