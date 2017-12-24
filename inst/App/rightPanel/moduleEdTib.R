@@ -156,7 +156,7 @@ moduleEdTib<-function(input, output, session,
   #ToDo!!! 
   observeEvent(c(barName(),name(), nameChoices() ), { #update the name 
     if(identical( barName(), 'tibEditor')){
-      cat('\n-----Entering----barName initialization for TagVal (XX) \n')
+      cat('\n-----Entering----barName initialization for tibEditor (XX) \n')
       if(length(nameChoices())==0){ #name choices
         cat("\n------------------hiding header")
         #hideElement( headerId ) 
@@ -198,7 +198,7 @@ moduleEdTib<-function(input, output, session,
         updateEntry()
         updateMatCol()
       #cat('\n-----Exiting----oE 1-123\n')
-      cat('\n***********************\n-----Leaving----barName initialization for TagVal \n')
+      cat('\n***********************\n-----Leaving----barName initialization for tibEditor \n')
       }
     }
   })  
