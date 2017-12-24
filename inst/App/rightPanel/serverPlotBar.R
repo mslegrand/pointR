@@ -60,7 +60,7 @@ output$TopRightPanel<-renderUI({
   if(chosenRightPanel=="Points"){
     modulePointsBarUI("pointsBar")
   } else if (chosenRightPanel=='tagValues'){
-    moduleTagValUI("tagValBar", input, output)
+    moduleEdTibUI("tagValBar", input, output)
   } else if (chosenRightPanel=='tagDrag'){
     moduleTagDragUI("tagDragBar")
   } else if (chosenRightPanel=='Transforms'){

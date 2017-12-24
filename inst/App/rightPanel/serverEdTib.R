@@ -3,7 +3,7 @@
 # --------------input$plotNavBar=="tagValues"---------------- 
 
 returnValue4ModuleTagVal<-callModule(
-  module=moduleTagVal,
+  module=moduleEdTib,
   id="tagValBar",
   id2="tagValBar", # !!! DO  WE STILL NEED THIS???? 
   barName=rightPanel ,

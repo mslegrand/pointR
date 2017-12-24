@@ -7,7 +7,7 @@
 # tagValHeadWidth<-paste0(tagValHeadWidth,"px")
 # tagValHeadLeft<-paste0(tagValHeadLeft,"px")
 
-moduleTagValUI<-function(id, input, output) { 
+moduleEdTibUI<-function(id, input, output) { 
   ns <- NS(id)
   #useShinyjs()
   tagList(# beginfooter panel
@@ -73,7 +73,7 @@ moduleTagValUI<-function(id, input, output) {
   ) # end taglist
 }
 
-moduleTagVal<-function(input, output, session, 
+moduleEdTib<-function(input, output, session, 
   id2,
   barName, 
   name, 
