@@ -2,7 +2,7 @@
 
 # --------------input$plotNavBar=="tagValues"---------------- 
 
-returnValue4ModuleTagVal<-callModule(
+returnValue4ModuleEdTib<-callModule(
   module=moduleEdTib,
   id="tagValBar",
   id2="tagValBar", # !!! DO  WE STILL NEED THIS???? 
@@ -21,15 +21,15 @@ returnValue4ModuleTagVal<-callModule(
 )
 
 #name, rowIndex
-observeEvent(c(returnValue4ModuleTagVal$name(),returnValue4ModuleTagVal$rowIndex()),{
+observeEvent(c(returnValue4ModuleEdTib$name(),returnValue4ModuleEdTib$rowIndex()),{
   if(rightPanel()=='tagValues'){
     cat('\n----Entering-----------oE 2-123\n')
-    name<-returnValue4ModuleTagVal$name()
+    name<-returnValue4ModuleEdTib$name()
     if(is.null(name)){cat('name is null\n')} else { 
       cat('name=',name,'\n')
       cat('nchar(name)=',nchar(name),'\n')
     }
-    rowIndex<-returnValue4ModuleTagVal$rowIndex()
+    rowIndex<-returnValue4ModuleEdTib$rowIndex()
     tib<-name %AND% getPtDefs()$tib[[name]]
     ### todo 
     # 1. bail unless rowIndex <= nrow(tib)
@@ -80,11 +80,11 @@ observeEvent(c(returnValue4ModuleTagVal$name(),returnValue4ModuleTagVal$rowIndex
 )
 
 #name, columnName
-observeEvent(c(returnValue4ModuleTagVal$name(),returnValue4ModuleTagVal$columnName()),{
+observeEvent(c(returnValue4ModuleEdTib$name(),returnValue4ModuleEdTib$columnName()),{
   if(rightPanel()=='tagValues'){
     cat('\n-----Entering---------------\noE 2-124\n')
-    name<-returnValue4ModuleTagVal$name()
-    colName<-returnValue4ModuleTagVal$columnName()
+    name<-returnValue4ModuleEdTib$name()
+    colName<-returnValue4ModuleEdTib$columnName()
     cat('colName==',colName,"\n")
     if(!is.null(colName) && nchar(colName)>0){
       # columnNameChoices=getTibColumnNameChoices()
@@ -103,20 +103,20 @@ observeEvent(c(returnValue4ModuleTagVal$name(),returnValue4ModuleTagVal$columnNa
 
 
 #--------EDIT VALUE------------------------------
-observeEvent(returnValue4ModuleTagVal$entryValue(),{
+observeEvent(returnValue4ModuleEdTib$entryValue(),{
   if(rightPanel()=='tagValues'){
     cat('\n--------Entering---------entryVAlue\n')
     cat('oE 2-125\n')
     
     # assuming tib is uptodate, simply work on the existing tib
-    name<- returnValue4ModuleTagVal$name() 
-    entry<-name %AND% returnValue4ModuleTagVal$entryValue()
+    name<- returnValue4ModuleEdTib$name() 
+    entry<-name %AND% returnValue4ModuleEdTib$entryValue()
     
     cat('class(name)=',class(name),'\n')
     
-    #rowIndex<-returnValue4ModuleTagVal$rowIndex()
-    row= entry %AND% returnValue4ModuleTagVal$rowIndex()
-    columnName<-row %AND% returnValue4ModuleTagVal$columnName()
+    #rowIndex<-returnValue4ModuleEdTib$rowIndex()
+    row= entry %AND% returnValue4ModuleEdTib$rowIndex()
+    columnName<-row %AND% returnValue4ModuleEdTib$columnName()
     cat('row=',row,"\n")
     cat("columnName=" ,columnName,"\n")
     
@@ -125,7 +125,7 @@ observeEvent(returnValue4ModuleTagVal$entryValue(),{
     if(!is.null(columnName) && 
        #length(entry)>0 &&
        nchar(entry)>0   ){
-      #entry<-returnValue4ModuleTagVal$entryValue()
+      #entry<-returnValue4ModuleEdTib$entryValue()
       # !!! TODO: type check if numeric
       rP<-rightPanel()
       if(is.null(rP))rP<-'NULL'
@@ -155,7 +155,7 @@ observeEvent(returnValue4ModuleTagVal$entryValue(),{
 })
 
 observeEvent(
-  returnValue4ModuleTagVal$tagClone(),
+  returnValue4ModuleEdTib$tagClone(),
   {
     cat('oE 2-123\n')
     #if(rightPanel()=="tagDrag"){
@@ -179,7 +179,7 @@ observeEvent(
 )
 
 observeEvent(
-  returnValue4ModuleTagVal$tagDelete(),
+  returnValue4ModuleEdTib$tagDelete(),
   {
     #if(rightPanel()=="tagDrag"){
     sender='deleteRow'
@@ -203,7 +203,7 @@ observeEvent(
   #}
 )
 
-observeEvent( returnValue4ModuleTagVal$tagMoveUp(),{ 
+observeEvent( returnValue4ModuleEdTib$tagMoveUp(),{ 
   #if(rightPanel()=="tagDrag"){
   rowIndex<-getTibRow()
   if(rowIndex>1){
@@ -226,7 +226,7 @@ observeEvent( returnValue4ModuleTagVal$tagMoveUp(),{
   #}
 })
 
-observeEvent( returnValue4ModuleTagVal$tagMoveDown(),{ 
+observeEvent( returnValue4ModuleEdTib$tagMoveDown(),{ 
   #if(rightPanel()=="tagDrag"){
   rowIndex<-getTibRow()
   ptDefs<-getPtDefs()
@@ -254,7 +254,7 @@ observeEvent( returnValue4ModuleTagVal$tagMoveDown(),{
 
 #-----------BUTTON EVENTS--------------------
 #---BUTTON: remove selected point  -----
-observeEvent( returnValue4ModuleTagVal$removePt(), {
+observeEvent( returnValue4ModuleEdTib$removePt(), {
   selection<-getTibName() 
   cat('Enter removePt\n')  
   if(selection!=""){
@@ -302,7 +302,7 @@ modalFreq <- function(failed = FALSE) {
 
 #---TAG THIS POINT button-----
 # note: in 1st tag, calls freqModal to complete the work, which exits in the okTag above
-observeEvent( returnValue4ModuleTagVal$tagPt(), {
+observeEvent( returnValue4ModuleEdTib$tagPt(), {
   
   #if(rightPanel()=="Points"){
   #selection<-input$ptRSelect
@@ -330,7 +330,7 @@ observeEvent( returnValue4ModuleTagVal$tagPt(), {
 }) #end of point InfoList Tag Point, 
 
 
-observeEvent( returnValue4ModuleTagVal$forwardPt(), {
+observeEvent( returnValue4ModuleEdTib$forwardPt(), {
   matColIndex<-getTibMatCol()
   matColChoices<-getTibMatColChoices()
   if(length( matColIndex)>0 && length(matColChoices)>0){
@@ -340,7 +340,7 @@ observeEvent( returnValue4ModuleTagVal$forwardPt(), {
   }
 })
 
-observeEvent( returnValue4ModuleTagVal$backwardPt(), {
+observeEvent( returnValue4ModuleEdTib$backwardPt(), {
   matColIndex<-getTibMatCol()
   matColChoices<-getTibMatColChoices()
   if(length(matColIndex)>0 && length(matColChoices)>0){
