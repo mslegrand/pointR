@@ -1,6 +1,6 @@
 
 
-# --------------input$plotNavBar=="tagValues"---------------- 
+# --------------input$plotNavBar=="tibEditor"---------------- 
 
 returnValue4ModuleEdTib<-callModule(
   module=moduleEdTib,
@@ -22,7 +22,7 @@ returnValue4ModuleEdTib<-callModule(
 
 #name, rowIndex
 observeEvent(c(returnValue4ModuleEdTib$name(),returnValue4ModuleEdTib$rowIndex()),{
-  if(rightPanel()=='tagValues'){
+  if(rightPanel()=='tibEditor'){
     cat('\n----Entering-----------oE 2-123\n')
     name<-returnValue4ModuleEdTib$name()
     if(is.null(name)){cat('name is null\n')} else { 
@@ -81,7 +81,7 @@ observeEvent(c(returnValue4ModuleEdTib$name(),returnValue4ModuleEdTib$rowIndex()
 
 #name, columnName
 observeEvent(c(returnValue4ModuleEdTib$name(),returnValue4ModuleEdTib$columnName()),{
-  if(rightPanel()=='tagValues'){
+  if(rightPanel()=='tibEditor'){
     cat('\n-----Entering---------------\noE 2-124\n')
     name<-returnValue4ModuleEdTib$name()
     colName<-returnValue4ModuleEdTib$columnName()
@@ -104,7 +104,7 @@ observeEvent(c(returnValue4ModuleEdTib$name(),returnValue4ModuleEdTib$columnName
 
 #--------EDIT VALUE------------------------------
 observeEvent(returnValue4ModuleEdTib$entryValue(),{
-  if(rightPanel()=='tagValues'){
+  if(rightPanel()=='tibEditor'){
     cat('\n--------Entering---------entryVAlue\n')
     cat('oE 2-125\n')
     

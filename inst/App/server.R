@@ -29,7 +29,7 @@ shinyServer(function(input, output,session) {
   
   panels<-reactiveValues(
     left='source',   #to be used as editor name later, for connecting to right graphics
-    right="tagValues",
+    right="tibEditor",
     state='point'
   )
   
@@ -38,7 +38,7 @@ shinyServer(function(input, output,session) {
   rightMidPanel<-reactive({
     right<-panels$right
     state<-panels$state  
-    if(!is.null(right) && right=="tagValues"){
+    if(!is.null(right) && right=="tibEditor"){
       if(is.null(state)){ state='point'}
       rtv<-paste0(right,".",state)
     } else {

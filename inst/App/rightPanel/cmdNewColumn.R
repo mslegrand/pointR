@@ -20,7 +20,7 @@ addNewColModal <- function(errMssg=NULL) {
 
 
 observeEvent(input$commitNewCol, {
-  #if(identical( rightPanel(), 'tagValues')){
+  #if(identical( rightPanel(), 'tibEditor')){
     #checks 
     if(!grepl(pattern = "^[[:alpha:]]", input$modalAttrName)){ # check name syntax
       showModal(attrValueModal( errMssg="Invalid Column Name: must begin with a character") )

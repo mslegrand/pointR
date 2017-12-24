@@ -1,6 +1,6 @@
 cmdFileNew<-function(){
   
-  updateRightPanel("tagValues")
+  updateRightPanel("tibEditor")
   src<-codeTemplate
   session$sendCustomMessage(
     type = "shinyAceExt",

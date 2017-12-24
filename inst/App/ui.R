@@ -180,7 +180,7 @@ shinyUI(
             ) ,
             
             #---------------plotNavBar:points  ------------------------------------
-            menuItem("Points", value="tagValues"),
+            menuItem("Points", value="tibEditor"),
             menuItem("Transforms"),
             menuItem("Log", value="logPanel")
           ), 

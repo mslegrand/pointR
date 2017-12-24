@@ -94,7 +94,7 @@ moduleEdTib<-function(input, output, session,
   ) # note we add name post mortem!!!
   
   updateEntry<-function(){
-    cat("\nentering----moduleTagVal----------updateEntry-------------------\n")
+    cat("\nentering----moduleEdTib----------updateEntry-------------------\n")
     entry=getTibEntry()
     if(is(entry,'matrix')){
       cat("----------updateEntry::matrix-------------------\n")
@@ -120,12 +120,12 @@ moduleEdTib<-function(input, output, session,
                         selected=entry )
       }
     }
-    cat("\nexiting----moduleTagVal----------updateEntry-------------------\n")
+    cat("\nexiting----moduleEdTib----------updateEntry-------------------\n")
   }
   
   updateMatCol<-function(){
     if(!is.null(input$entryValue) && input$entryValue=='point'){
-      cat('\n----Entering moduleTagValue: updateMatCol\n')
+      cat('\n----Entering moduleEdTib: updateMatCol\n')
       mcChoices<-matColIndexChoices()
       if(!is.null(mcChoices) ){
         mcChoices<-matColIndex()
@@ -135,7 +135,7 @@ moduleEdTib<-function(input, output, session,
                          max=max(mcChoices),
                          value=matColIndex()
       ) 
-      cat('----Leaving moduleTagValue: updateMatCol\n')
+      cat('----Leaving moduleEdTib: updateMatCol\n')
     }
   }
   
@@ -143,19 +143,19 @@ moduleEdTib<-function(input, output, session,
     #if(!is.null(columnName()) && ( is.null( input$columnName ) || !(input$columnName %in% columnNameChoices()))){
     
       if(!is.null(columnName()) && !is.null(columnNameChoices())){ 
-        cat('\n----Entering moduleTagValue: updateColumnName\n')
-        cat('moduleTagValue: updateColumnName:: columnName=',columnName(),"\n")
+        cat('\n----Entering moduleEdTib: updateColumnName\n')
+        cat('moduleEdTib: updateColumnName:: columnName=',columnName(),"\n")
         cat()
         updateSelectizeInput(session, "columnName", 
                           choices=as.list(columnNameChoices()), 
                           selected=columnName() )
-        cat('----Leaving moduleTagValue: updateColumnName\n')
+        cat('----Leaving moduleEdTib: updateColumnName\n')
     }
   }
   
   #ToDo!!! 
   observeEvent(c(barName(),name(), nameChoices() ), { #update the name 
-    if(identical( barName(), 'tagValues')){
+    if(identical( barName(), 'tibEditor')){
       cat('\n-----Entering----barName initialization for TagVal (XX) \n')
       if(length(nameChoices())==0){ #name choices
         cat("\n------------------hiding header")
@@ -204,7 +204,7 @@ moduleEdTib<-function(input, output, session,
   })  
   
   observeEvent( c(barName(), rowIndex(), rowIndexChoices() ),  { #update index
-    if(identical( barName(), 'tagValues')){
+    if(identical( barName(), 'tibEditor')){
       cat('\n-----Entering----update rowIndex, rowIndexChoices \n')
       cat('\n---------entering--------oE 1-124\n')
       updateNumericInput(
@@ -224,7 +224,7 @@ moduleEdTib<-function(input, output, session,
   observeEvent( columnName() , {
     cat('\n-----Entering----update columnName \n')
     cat("\n---------entering------oE1-125.1\n")
-    if(identical( barName(), 'tagValues')){
+    if(identical( barName(), 'tibEditor')){
       cat('oE update 1-125.2\n')
       updateColumnName()
       # updateSelectInput(session, "columnName", 
@@ -238,7 +238,7 @@ moduleEdTib<-function(input, output, session,
   })
   
   observeEvent( getTibEntry() , { 
-    if(identical( barName(), 'tagValues')){
+    if(identical( barName(), 'tibEditor')){
       cat('\n-----Entering----update tibEntry \n')
       cat('oE 1-126\n')
       # updateSelectInput(session, "columnName", 

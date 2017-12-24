@@ -80,8 +80,8 @@ processCommit<-reactive({
         }
         if(length(svgRPos)==1){
           if(length(ptRPos)==0){
-            # switch to tagValues
-            updateRightPanel("tagValues")
+            # switch to tibEditor
+            updateRightPanel("tibEditor")
           }
         }
         if(length(svgRPos)==0){ # just R code I guess
@@ -101,7 +101,7 @@ processCommit<-reactive({
 
         #if in log page move to points
         if(rightPanel()=="logPanel"){
-          updateRightPanel("tagValues")
+          updateRightPanel("tibEditor")
         } 
         #remove all removeAllMarkers from ace since all sys go.
        

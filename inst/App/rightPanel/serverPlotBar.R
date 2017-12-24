@@ -8,11 +8,11 @@ observeEvent(input$plotNavBar, {
     print(cmd)
   }
   if(is.null(cmd)){
-    cmd<-"tagValues" 
+    cmd<-"tibEditor" 
   }
-  if(cmd %in% c( "Points", 'tagValues', 'tagDrag', 'Transforms', 'log')){
+  if(cmd %in% c( "Points", 'tibEditor', 'tagDrag', 'Transforms', 'log')){
     updateRightPanel(cmd)
-    #panels$right<-cmd #Point, tagValues, tagDrag, transfo
+    #panels$right<-cmd #Point, tibEditor, tagDrag, transfo
     cat('right Panel  changed to ',cmd,'\n')
   }
   if(cmd == 'cmdShowGrid'){
@@ -59,7 +59,7 @@ output$TopRightPanel<-renderUI({
   cat('output$TopRightPanel:: chosenRightPanel=',chosenRightPanel,"\n")
   if(chosenRightPanel=="Points"){
     modulePointsBarUI("pointsBar")
-  } else if (chosenRightPanel=='tagValues'){
+  } else if (chosenRightPanel=='tibEditor'){
     moduleEdTibUI("tagValBar", input, output)
   } else if (chosenRightPanel=='tagDrag'){
     moduleTagDragUI("tagDragBar")
@@ -90,7 +90,7 @@ output$TopRightPanel<-renderUI({
 #   chosenRightPanel<-rightPanel()
 #   if(state=="points"){
 #     modulePlotSVGrUI("svgPointsMod")
-#   } else if (state=='tagValues'){
+#   } else if (state=='tibEditor'){
 #     modulePlotSVGrUI("svgTagValsMod")
 #   } else if (state=='matrix'){
 #     modulePlotSVGrUI("svgTagDragMod")
@@ -109,11 +109,11 @@ output$MidRightPanel<-renderUI({
   cat('output$MidRightPanel:: chosenRightPanel=',chosenRightPanel,"\n")
   if(chosenRightPanel=="Points"){
     modulePlotSVGrUI("svgPointsMod")
-  } else if (chosenRightPanel=='tagValues.point'){
+  } else if (chosenRightPanel=='tibEditor.point'){
         modulePlotSVGrUI("svgPointsMod")
-  } else if (chosenRightPanel=='tagValues.value'){
+  } else if (chosenRightPanel=='tibEditor.value'){
         modulePlotSVGrUI("svgTagValsMod")
-  } else if (chosenRightPanel=='tagValues.matrix'){
+  } else if (chosenRightPanel=='tibEditor.matrix'){
         modulePlotSVGrUI("svgTagDragMod")
   } else if (chosenRightPanel=='Transforms'){
     modulePlotSVGrUI("svgTransformMod")
