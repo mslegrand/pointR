@@ -244,8 +244,23 @@ getTibMatCol<-reactive({
 # })
 
 getTibMatColChoices<-reactive({ 
+  # matColIndex<-0
+  # rowIndex<-getTibRow()
+  # colName<-selectedTibble$ptColName
+  # name<-returnValue4ModuleEdTib$name()
+  # tib<-name %AND% getPtDefs()$tib[[name]]
+  # 
+  # indices<-extractSafeRowColIndex(tib, rowIndex, colName)
+  # 
+  # if(!is.null(indices)){
+  #   entry<-tib[[indices$rowIndex, indices$colIndex]]
+  #   if( is.matrix(entry) && dim(entry)[1]==2 ){ # need to update the matColIndex
+  #     matColIndex<-ncol(entry)
+  #   }
+  # }
   rowNum<-getTibRow()
   pts<-getTibPts()
+  
   if(is.null(pts) || is.null(rowNum) || rowNum<1 || rowNum>length(pts)){
     rtv<-NULL
   } else {

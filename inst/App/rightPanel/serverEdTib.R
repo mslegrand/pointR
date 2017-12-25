@@ -21,39 +21,18 @@ returnValue4ModuleEdTib<-callModule(
 )
 
 
-#name, rowIndex
+#name
 observeEvent(returnValue4ModuleEdTib$name(),{
   if(rightPanel()=='tibEditor'){
     # cat('\n----Entering-----------oE 2-123\n')
     name<-returnValue4ModuleEdTib$name()
     if(name==getTibName()){ return(NULL) } #bail if moduleEdTib did not change name
-    resetSelectedTibbleName(name)
+    
     # name was changed by moduleEdTib
     # this invalidates all entries in selectedTibble
-    # 1. find new name in ptDefs
-    # 2. 
-    
-    
-    #tib<-name %AND% getPtDefs()$tib[[name]]
-    
-    # colName<-getTibColumnName()
-    # 
-    # indices<-extractSafeRowColIndex(tib, rowIndex, colName)
-    # if(!is.null(indices)){
-    #   entry<-tib[[indices$rowIndex, indices$colIndex]]
-    #   if( is.matrix(entry) && dim(entry)[1]==2 ){
-    #     matColIndex<-ncol(entry)
-    #     updateSelected(name=name, row=rowIndex, matCol=matColIndex)
-    #   } else {
-    #     updateSelected(name=name, row=rowIndex)
-    #   }
-    # }
-    
-    # cat('----Exiting-----------oE 2-123\n')
+    resetSelectedTibbleName(name)
   }
-  
-}
-)
+})
 
 
 # rowIndex
@@ -81,19 +60,7 @@ observeEvent(returnValue4ModuleEdTib$rowIndex(),{
   }
 })
 
-#name, columnName
-# observeEvent(c(returnValue4ModuleEdTib$name(),returnValue4ModuleEdTib$columnName()),{
-#   if(rightPanel()=='tibEditor'){
-#     cat('\n-----Entering---------------\noE 2-124\n')
-#     name<-returnValue4ModuleEdTib$name()
-#     colName<-returnValue4ModuleEdTib$columnName()
-#     cat('colName==',colName,"\n")
-#     if(!is.null(colName) && nchar(colName)>0 ){
-#       updateSelected(columnName=colName)
-#     }
-#     
-#   }
-# })
+
 
 # matColIndex
 observeEvent( returnValue4ModuleEdTib$matColIndex() ,{
@@ -108,10 +75,7 @@ observeEvent( returnValue4ModuleEdTib$matColIndex() ,{
 #  columnName
 observeEvent(returnValue4ModuleEdTib$columnName(),{
   if(rightPanel()=='tibEditor'){
-    #cat('\n-----Entering---------------returnValue4ModuleEdTib$columnName()----------\n')
-    #name<-returnValue4ModuleEdTib$name()
     colName<-returnValue4ModuleEdTib$columnName()
-    #cat('colName==',colName,"\n")
     if(!is.null(colName) && nchar(colName)>0 ){
       updateSelected(columnName=colName)
     }
@@ -298,32 +262,10 @@ observeEvent( returnValue4ModuleEdTib$removePt(), {
 
 #----begin for Tagging-------------------------------------
 
-# Return the UI for a modal dialog with data selection input. If 'failed' is
-# TRUE, then display a message that the previous value was invalid.
-# modalFreq <- function(failed = FALSE) {
-#   doOk<-'shinyjs.triggerButtonOnEnter(event,"okTag")'
-#   modalDialog(
-#     onkeydown=doOk,
-#     selectInput("tagFreq", "Auto Tag",
-#                 c(list("Off"),1:20), selected="Off", 
-#                 multiple=FALSE, selectize = FALSE,
-#                 width="80px", size=1  ), 
-#     span('Start tagging current point matrix'), 
-#     footer = tagList(
-#       modalButton("Cancel"),
-#       actionButton("okTag", "OK")
-#     )
-#   ) 
-# }
-
 
 
 #---TAG THIS POINT button-----
-# note: in 1st tag, calls freqModal to complete the work, which exits in the okTag above
 observeEvent( returnValue4ModuleEdTib$tagPt(), {
-  
-  #if(rightPanel()=="Points"){
-  #selection<-input$ptRSelect
   cat("Enter tagPt\n")
   src<-getCode() 
   selection<-getTibName()
@@ -344,20 +286,19 @@ observeEvent( returnValue4ModuleEdTib$tagPt(), {
   sender='tagPt'
   updateAceExtDef(ptDefs, sender=sender)
   updateSelected(row=row, matCol=matCol)
-  #} #end of if
 }) #end of point InfoList Tag Point, 
 
 
+# forward point
 observeEvent( returnValue4ModuleEdTib$forwardPt(), {
   matColIndex<-getTibMatCol()
   matColChoices<-getTibMatColChoices()
   if(length( matColIndex)>0 && length(matColChoices)>0){
-    cat("observeEvent:: serverPlotBar 99\n")
-    matColIndex=max(matColIndex+1, min(matColChoices) )
+    matColIndex=min(matColIndex+1, max(matColChoices) )
     updateSelected(  matCol=matColIndex )
   }
 })
-
+# backward point
 observeEvent( returnValue4ModuleEdTib$backwardPt(), {
   matColIndex<-getTibMatCol()
   matColChoices<-getTibMatColChoices()
