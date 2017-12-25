@@ -20,6 +20,8 @@ returnValue4ModuleEdTib<-callModule(
   headerId=NS("tagValBar", 'header')
 )
 
+
+
 #name, rowIndex
 observeEvent(c(returnValue4ModuleEdTib$name(),returnValue4ModuleEdTib$rowIndex()),{
   if(rightPanel()=='tibEditor'){
@@ -30,6 +32,9 @@ observeEvent(c(returnValue4ModuleEdTib$name(),returnValue4ModuleEdTib$rowIndex()
       cat('nchar(name)=',nchar(name),'\n')
     }
     rowIndex<-returnValue4ModuleEdTib$rowIndex()
+    if(rowIndex==getTibRow()){
+      return(NULL)
+    }
     tib<-name %AND% getPtDefs()$tib[[name]]
     ### todo 
     # 1. bail unless rowIndex <= nrow(tib)
@@ -47,32 +52,6 @@ observeEvent(c(returnValue4ModuleEdTib$name(),returnValue4ModuleEdTib$rowIndex()
       }
     }
     
-    
-    
-    # 2 if not tibEdit.point
-    #    2.1 update now
-    # 2. if tibEdit.point point
-    #    2.1 get entry m
-    #    2.2 bail if n is empty?  
-    #    2.2 compute ncol(m)
-    #    compute Max matColIndex at that row
-    #    and update with the constraint of being <= ncol(m)
-    
-    
-    # pointCol<-colName %AND% tib %AND% tib[[colName ]]
-    # 
-    # if( !is.null(pointCol) && !is.null(rowIndex) ){
-    #   if(1<=rowIndex && rowIndex<=length(pointCol)){
-    #     m<-pointCol[[rowIndex]]
-    #     if('matrix' %in% class(m)){
-    #       cat('----updateSelected matCol-----------oE 2-123\n')
-    #       matColIndex<-ncol(m)
-    #       cat('matColIndex=', matColIndex,"\n")
-    #       updateSelected(name=name, row=rowIndex, matCol=matColIndex)
-    #     }
-    #   }
-    # }
-    #pts<-newTib[[getTibPtColPos()]]
     cat('----Exiting-----------oE 2-123\n')
   }
   
@@ -86,19 +65,36 @@ observeEvent(c(returnValue4ModuleEdTib$name(),returnValue4ModuleEdTib$columnName
     name<-returnValue4ModuleEdTib$name()
     colName<-returnValue4ModuleEdTib$columnName()
     cat('colName==',colName,"\n")
-    if(!is.null(colName) && nchar(colName)>0){
-      # columnNameChoices=getTibColumnNameChoices()
-      # ptPos<-getTibPtColPos()
-      # column<-match(colName, columnNameChoices, nomatch=ptPos)
-      # cat('oE 2-124 columnName=', colName, "\n")
-      # cat('oE 2-124 columnNameChoices=\n')
-      # print(columnNameChoices)
-      # cat('oE 2-124 setting column index=', column, "\n")
+    if(!is.null(colName) && nchar(colName)>0 ){
       updateSelected(columnName=colName)
+    }
+    
+  }
+})
+
+# matColIndex
+
+observeEvent( returnValue4ModuleEdTib$matColIndex() ,{
+  if(rightPanel()=='tibEditor'){
+    matColIndex<-returnValue4ModuleEdTib$matColIndex()
+    if( !is.null(matColIndex) ){ #add check for range
+      updateSelected( matCol=matColIndex )
     }
   }
 })
 
+
+observeEvent(c(returnValue4ModuleEdTib$matCol(),returnValue4ModuleEdTib$columnName()),{
+  if(rightPanel()=='tibEditor'){
+    cat('\n-----Entering---------------\noE 2-124\n')
+    name<-returnValue4ModuleEdTib$name()
+    colName<-returnValue4ModuleEdTib$columnName()
+    cat('colName==',colName,"\n")
+    if(!is.null(colName) && nchar(colName)>0 ){
+      updateSelected(columnName=colName)
+    }
+  }
+})
 
 
 
