@@ -21,59 +21,81 @@ returnValue4ModuleEdTib<-callModule(
 )
 
 
-
 #name, rowIndex
-observeEvent(c(returnValue4ModuleEdTib$name(),returnValue4ModuleEdTib$rowIndex()),{
+observeEvent(returnValue4ModuleEdTib$name(),{
   if(rightPanel()=='tibEditor'){
-    cat('\n----Entering-----------oE 2-123\n')
+    # cat('\n----Entering-----------oE 2-123\n')
     name<-returnValue4ModuleEdTib$name()
-    if(is.null(name)){cat('name is null\n')} else { 
-      cat('name=',name,'\n')
-      cat('nchar(name)=',nchar(name),'\n')
-    }
-    rowIndex<-returnValue4ModuleEdTib$rowIndex()
-    if(rowIndex==getTibRow()){
-      return(NULL)
-    }
-    tib<-name %AND% getPtDefs()$tib[[name]]
-    ### todo 
-    # 1. bail unless rowIndex <= nrow(tib)
-    # 2. currentEntry<-  
-    colName<-getTibColumnName()
-    #browser()
-    indices<-extractSafeRowColIndex(tib, rowIndex, colName)
-    if(!is.null(indices)){
-      entry<-tib[[indices$rowIndex, indices$colIndex]]
-      if( is.matrix(entry) && dim(entry)[1]==2 ){
-        matColIndex<-ncol(entry)
-        updateSelected(name=name, row=rowIndex, matCol=matColIndex)
-      } else {
-        updateSelected(name=name, row=rowIndex)
-      }
-    }
+    if(name==getTibName()){ return(NULL) } #bail if moduleEdTib did not change name
+    resetSelectedTibbleName(name)
+    # name was changed by moduleEdTib
+    # this invalidates all entries in selectedTibble
+    # 1. find new name in ptDefs
+    # 2. 
     
-    cat('----Exiting-----------oE 2-123\n')
+    
+    #tib<-name %AND% getPtDefs()$tib[[name]]
+    
+    # colName<-getTibColumnName()
+    # 
+    # indices<-extractSafeRowColIndex(tib, rowIndex, colName)
+    # if(!is.null(indices)){
+    #   entry<-tib[[indices$rowIndex, indices$colIndex]]
+    #   if( is.matrix(entry) && dim(entry)[1]==2 ){
+    #     matColIndex<-ncol(entry)
+    #     updateSelected(name=name, row=rowIndex, matCol=matColIndex)
+    #   } else {
+    #     updateSelected(name=name, row=rowIndex)
+    #   }
+    # }
+    
+    # cat('----Exiting-----------oE 2-123\n')
   }
   
 }
 )
 
-#name, columnName
-observeEvent(c(returnValue4ModuleEdTib$name(),returnValue4ModuleEdTib$columnName()),{
+
+# rowIndex
+# if moduleEdTib changes the rowIndex,  matCol in selectedTibble needs to be updated
+observeEvent(returnValue4ModuleEdTib$rowIndex(),{
   if(rightPanel()=='tibEditor'){
-    cat('\n-----Entering---------------\noE 2-124\n')
-    name<-returnValue4ModuleEdTib$name()
-    colName<-returnValue4ModuleEdTib$columnName()
-    cat('colName==',colName,"\n")
-    if(!is.null(colName) && nchar(colName)>0 ){
-      updateSelected(columnName=colName)
-    }
+    rowIndex<-returnValue4ModuleEdTib$rowIndex()
+    if(rowIndex==getTibRow()){ return(NULL) } #bail if moduleEdTib did not change rowIndex 
     
+    # moduleEdTib changed rowIndex
+    # extract row, column entry from tib
+    name<-returnValue4ModuleEdTib$name()
+    tib<-name %AND% getPtDefs()$tib[[name]]
+    colName<-getTibColumnName()
+    indices<-extractSafeRowColIndex(tib, rowIndex, colName)
+    if(!is.null(indices)){
+      entry<-tib[[indices$rowIndex, indices$colIndex]]
+      if( is.matrix(entry) && dim(entry)[1]==2 ){ # need to update the matColIndex
+        matColIndex<-ncol(entry)
+        updateSelected(name=name, row=rowIndex, matCol=matColIndex)
+      } else { #not column of points, so no need to update matColIndex
+        updateSelected(name=name, row=rowIndex)
+      }
+    }
   }
 })
 
-# matColIndex
+#name, columnName
+# observeEvent(c(returnValue4ModuleEdTib$name(),returnValue4ModuleEdTib$columnName()),{
+#   if(rightPanel()=='tibEditor'){
+#     cat('\n-----Entering---------------\noE 2-124\n')
+#     name<-returnValue4ModuleEdTib$name()
+#     colName<-returnValue4ModuleEdTib$columnName()
+#     cat('colName==',colName,"\n")
+#     if(!is.null(colName) && nchar(colName)>0 ){
+#       updateSelected(columnName=colName)
+#     }
+#     
+#   }
+# })
 
+# matColIndex
 observeEvent( returnValue4ModuleEdTib$matColIndex() ,{
   if(rightPanel()=='tibEditor'){
     matColIndex<-returnValue4ModuleEdTib$matColIndex()
@@ -83,13 +105,13 @@ observeEvent( returnValue4ModuleEdTib$matColIndex() ,{
   }
 })
 
-
-observeEvent(c(returnValue4ModuleEdTib$matCol(),returnValue4ModuleEdTib$columnName()),{
+#  columnName
+observeEvent(returnValue4ModuleEdTib$columnName(),{
   if(rightPanel()=='tibEditor'){
-    cat('\n-----Entering---------------\noE 2-124\n')
-    name<-returnValue4ModuleEdTib$name()
+    #cat('\n-----Entering---------------returnValue4ModuleEdTib$columnName()----------\n')
+    #name<-returnValue4ModuleEdTib$name()
     colName<-returnValue4ModuleEdTib$columnName()
-    cat('colName==',colName,"\n")
+    #cat('colName==',colName,"\n")
     if(!is.null(colName) && nchar(colName)>0 ){
       updateSelected(columnName=colName)
     }
@@ -278,21 +300,21 @@ observeEvent( returnValue4ModuleEdTib$removePt(), {
 
 # Return the UI for a modal dialog with data selection input. If 'failed' is
 # TRUE, then display a message that the previous value was invalid.
-modalFreq <- function(failed = FALSE) {
-  doOk<-'shinyjs.triggerButtonOnEnter(event,"okTag")'
-  modalDialog(
-    onkeydown=doOk,
-    selectInput("tagFreq", "Auto Tag",
-                c(list("Off"),1:20), selected="Off", 
-                multiple=FALSE, selectize = FALSE,
-                width="80px", size=1  ), 
-    span('Start tagging current point matrix'), 
-    footer = tagList(
-      modalButton("Cancel"),
-      actionButton("okTag", "OK")
-    )
-  ) 
-}
+# modalFreq <- function(failed = FALSE) {
+#   doOk<-'shinyjs.triggerButtonOnEnter(event,"okTag")'
+#   modalDialog(
+#     onkeydown=doOk,
+#     selectInput("tagFreq", "Auto Tag",
+#                 c(list("Off"),1:20), selected="Off", 
+#                 multiple=FALSE, selectize = FALSE,
+#                 width="80px", size=1  ), 
+#     span('Start tagging current point matrix'), 
+#     footer = tagList(
+#       modalButton("Cancel"),
+#       actionButton("okTag", "OK")
+#     )
+#   ) 
+# }
 
 
 

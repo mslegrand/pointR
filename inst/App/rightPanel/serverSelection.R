@@ -9,7 +9,41 @@ selectedTibble <- reactiveValues(
 )
 
 
-
+resetSelectedTibbleName<-function(name, tibs){
+  if(is.null(name) || nchar(name)==0){ return(NULL)}
+  if(is.null(tibs) || is.null(names(tibs)) || length(names(tibs))==0){ return(NULL)}
+  if(!(name %in% names(tibs))){ name=tibs[[1]]}
+  
+  
+  #set name
+  selectedTibble$name=name
+  tib<-tibs[[name]]
+ 
+  # !!!KLUDGE for now, ASSUME TIB NAME AND POINTS NAME ARE SAME!!!
+  ptColName=name
+  # !!! TODO:  find and set point column
+  #set ptColName
+  selectedTibble$ptColName=ptColName 
+  #set columnName to be ptColName
+  colName=ptColName
+  selectedTibble$columnName=colName
+  
+  # set row
+  rowIndex=nrow( tib )
+  selectedTibble$row=rowIndex
+  
+  #next set matCol 
+  matColIndex<-0 # zero by default, reset if we can find a matrix entry
+  indices<-extractSafeRowColIndex(tib, rowIndex, ptColName)
+  if(!is.null(indices)){
+    entry<-tib[[indices$rowIndex, indices$colIndex]]
+    if( is.matrix(entry) && dim(entry)[1]==2 ){ 
+      matColIndex<-ncol(entry)
+    } 
+  }
+  selectedTibble$matCol<-matColIndex
+  pts<-tibs[[selectedTibble$name]][[selectedTibble$ptColName]] 
+}
 
 updateSelected<-function( name, row, columnName, matCol,  ptColName ){
   if(!missing(name)){

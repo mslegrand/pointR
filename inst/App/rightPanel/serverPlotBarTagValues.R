@@ -14,9 +14,9 @@ showPts.valTag %<c-% function(
   if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
   onMouseDownTxt<-"ptRPlotter_ptR_SVG_TagVal.selectElement(evt)"
   
-  cat("rowIndx=", rowIndex, "\n")
-  cat("length(ptName)=", length(ptName), "\n")
-  cat("length(pts)=", length(pts), "\n")
+  # cat("rowIndx=", rowIndex, "\n")
+  # cat("length(ptName)=", length(ptName), "\n")
+  # cat("length(pts)=", length(pts), "\n")
   if(length(ptName)<1){return(NULL)}
   if(length(pts)<1)  {return(NULL) }
   
@@ -110,7 +110,7 @@ statusPlotTagVal<-callModule(
 observeEvent(statusPlotTagVal$status(), {
   status<-statusPlotTagVal$status()
   if(status$state!="PASS"){
-    cat("statusPlotTagVal$status() ERRUR\n")
+    # cat("statusPlotTagVal$status() ERRUR\n")
     updateRightPanel('logPanel')
     mssg$err<-status$message    # send mssg to log
     #mssg$err<-'TagValGraphErr'

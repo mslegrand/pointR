@@ -76,7 +76,7 @@ openFileNow<-function(fileName){
     setCurrentFilePath(fileName) # should this be replaced by shinyFiles???
     setwd(dirname(fileName))  # should this be replaced by shinyFiles???
     if(nchar(src)>0){
-      reactiveTag$freq<-list()
+      #reactiveTag$freq<-list()
       # may want to just leave  displayOptions unchanged???
       # displayOptions$insertMode=TRUE
       # displayOptions$showGrid=FALSE

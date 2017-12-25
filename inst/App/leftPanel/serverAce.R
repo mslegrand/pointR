@@ -79,18 +79,20 @@ observe({
       if(length(pd)>0){
         tibs<-pd$tib #!!! check this
         name<-tail(names(tibs),1) # KLUDGE, last name
-        pts<-tibs[[name]][[name]] # !!!KLUDGE for now, ASSUME TIB NAME AND POINTS NAME ARE SAME!!!
-        # !!! TODO:  find and set point column
+        resetSelectedTibbleName(name, tibs)
         
-        if(!is.null(pts)){
-          row<-nrow(pts)
-          m<-pts[[row]]
-          matCol<-ncol(m)
-        } else{
-          row<-0
-          matCol<-0
-        }
-        updateSelected( name=name, row=row, matCol=matCol)
+        # pts<-tibs[[name]][[name]] # !!!KLUDGE for now, ASSUME TIB NAME AND POINTS NAME ARE SAME!!!
+        # # !!! TODO:  find and set point column
+        # 
+        # if(!is.null(pts)){
+        #   row<-nrow(pts)
+        #   m<-pts[[row]]
+        #   matCol<-ncol(m)
+        # } else{
+        #   row<-0
+        #   matCol<-0
+        # }
+        # updateSelected( name=name, row=row, matCol=matCol)
       }
     } 
     
