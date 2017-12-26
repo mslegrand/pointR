@@ -30,7 +30,8 @@ observeEvent(returnValue4ModuleEdTib$name(),{
     
     # name was changed by moduleEdTib
     # this invalidates all entries in selectedTibble
-    resetSelectedTibbleName(name)
+    tibs<-getPtDefs()$tib
+    resetSelectedTibbleName(name, tibs)
   }
 })
 

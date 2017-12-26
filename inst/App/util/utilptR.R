@@ -57,6 +57,10 @@ ptR<-list(
   x=tribble(
    ~x,             ~fill,
    matrix(NA,2,0), 'red'
+  ),
+  y=tribble(
+   ~y,             ~stroke,
+   matrix(NA,2,0), 'black'
   )
 )
 
