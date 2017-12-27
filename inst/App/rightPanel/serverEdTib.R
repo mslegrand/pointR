@@ -279,7 +279,8 @@ observeEvent( returnValue4ModuleEdTib$tagPt(), {
   if(ncol(m)<1){ 
     return(NULL) # bail if matrix of points is empty
   }
-  tib<-ptDefs$tib[[selection]] #get the tib 
+  ptDefs$mats[selection]<-FALSE # no longer a matrix input!
+  tib<-ptDefs$tib[[selection]] #get the tib
   tib<-tagTib(tib, getTibPtColPos(), row, matCol)
   row<-row+1
   matCol<-length(tib[[row, getTibPtColPos()]])/2

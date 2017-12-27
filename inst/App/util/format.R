@@ -133,37 +133,43 @@ fmtPtR<-function( pts,  indent="  ", digits=0, ...){
 # get indices of candidats: which =='matrix'
 # the set tib to be cbind( tib[[,-ind]], tib[[,ind]])
 # to do: tibble name 
-fmtTribble<-function(tib, tibName, movePtsBack=TRUE, indent="  ", ...){
+fmtTribble<-function(tib, tibName, is.mat=FALSE, movePtsBack=TRUE, indent="  ", ...){
   #this moves the points to the rear
   n=2 # indent factor of 2 tabs
- 
+  
   indentName<-paste0(rep(indent, n=n),collapse="")
-  if(movePtsBack){
-    cl<-getTibColClass(tib)
-    indx<-c(which(cl!='matrix'), which(cl=='matrix'))
-  }
-  tib<-tib[,indx]
-  n<-names(tib)
-  nn<-matrix(paste0("~",n),1)
-  tmp<-sapply(1:ncol(tib), function(j){
-    sapply(1:nrow(tib),function(i){
-      toStrPtR0(tib[[i,j]])
+  cat("is.mat=",is.mat,"\n")
+  if(!is.mat){
+    if(movePtsBack){
+      cl<-getTibColClass(tib)
+      indx<-c(which(cl!='matrix'), which(cl=='matrix'))
+    }
+    tib<-tib[,indx]
+    n<-names(tib)
+    nn<-matrix(paste0("~",n),1)
+    tmp<-sapply(1:ncol(tib), function(j){
+      sapply(1:nrow(tib),function(i){
+        toStrPtR0(tib[[i,j]])
+      })
     })
-  })
-  tmp<-rbind(nn,tmp)
-  tmp[-length(tmp)]<-paste0(tmp[-length(tmp)],",")
-  # now make each col (sans last) to have same width
-  tmp[,-ncol(tmp)]<-format(tmp[,-ncol(tmp)])
-  #prepend with indent
-  indentContent<-paste0(indentName,indent)
-  indentContent<-matrix( indentContent, nrow(tmp), 1)
-  tmp<-cbind(indentContent,tmp)
-  # now combine into rows
-  tmp<-apply(tmp,1, function(x)paste0(x, collapse="  "))
-  # next combine rows
-  tname<-paste0(indentName, tibName, "= tribble(")
-  tend<-paste0(indentName,")")
-  tmp<-paste0(c(tname,tmp,tend), collapse="\n")
+    tmp<-rbind(nn,tmp)
+    tmp[-length(tmp)]<-paste0(tmp[-length(tmp)],",")
+    # now make each col (sans last) to have same width
+    tmp[,-ncol(tmp)]<-format(tmp[,-ncol(tmp)])
+    #prepend with indent
+    indentContent<-paste0(indentName,indent)
+    indentContent<-matrix( indentContent, nrow(tmp), 1)
+    tmp<-cbind(indentContent,tmp)
+    # now combine into rows
+    tmp<-apply(tmp,1, function(x)paste0(x, collapse="  "))
+    # next combine rows
+    tname<-paste0(indentName, tibName, "= tribble(")
+    tend<-paste0(indentName,")")
+    tmp<-paste0(c(tname,tmp,tend), collapse="\n")
+  } else {
+    m<-tib[[1,tibName]]
+    tmp<-paste0(indentName, tibName, "= ", toStrPtR0.matrix(m))
+  }
   tmp
 }
 
@@ -225,9 +231,9 @@ fmtTribble<-function(tib, tibName, movePtsBack=TRUE, indent="  ", ...){
   #   )
   # )
 
-  fmtTribbleList<-function(tibList){
+  fmtTribbleList<-function(tibList, mats){
     tmp<-sapply(names(tibList), function(nm){
-      fmtTribble(tibList[[nm]],nm)
+      fmtTribble(tibList[[nm]],nm, is.mat=mats[nm])
     })
     tmp<-paste0(tmp, collapse=",\n")
     paste('ptR<-list(',tmp,')',sep="\n")

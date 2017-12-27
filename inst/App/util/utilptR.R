@@ -61,7 +61,8 @@ ptR<-list(
   y=tribble(
    ~y,             ~stroke,
    matrix(NA,2,0), 'black'
-  )
+  ),
+  z=matrix(c(100,100,100,200,300,200),2)
 )
 
 svgR(wh=WH,
@@ -209,9 +210,20 @@ ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
         eval(parse(text=ptDefTxt1)) #stupid eval to obtain the points
         
         #!!!KLUDGE first kludge (undo later)
-        ptDefs$tib<-get(ptTag) #at this stage we have ptR as a list of tibbles, each tibble containings points with name same as tib
         
-        print(ptDefs)
+        
+        ptDefs$tib<-get(ptTag) #at this stage we have ptR as a list of tibbles, each tibble containings points with name same as tib
+        ptDefs$mats<-sapply(ptDefs$tib,is.matrix) #record what is a matrix
+        nms<-names(ptDefs$tib)
+        for(n in nms){ #convert matrics to tibbles
+          v<-ptDefs$tib[[n]]
+          if(is.matrix(v)){
+            tt<-tibble(key=list(v))
+            names(tt)=n
+            ptDefs$tib[[n]]<-tt
+          }
+        }
+        #print(ptDefs)
         print(names(ptDefs$tib))
         # TODO add columnInfo to ptDefs
         # for each named tib, add a named vector with
@@ -298,7 +310,7 @@ ptDef2ReplacementList<-function(name, newPtDef, txt){
   replacementList<-list()
   # get the text for the point replacement  
   #pt.repl<-fmtPtR(newPtDef$pts)
-  pt.repl<-fmtTribbleList(newPtDef$tib)
+  pt.repl<-fmtTribbleList(newPtDef$tib, newPtDef$mats)
   
   p.df<-getParseDataFrame(txt)
   ptR.df<-extractTagDF(p.df, tag='ptR')
