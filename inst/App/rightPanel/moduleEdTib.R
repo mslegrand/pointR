@@ -94,33 +94,33 @@ moduleEdTib<-function(input, output, session,
   ) # note we add name post mortem!!!
   
   updateEntry<-function(){
-    cat("\nentering----moduleEdTib----------updateEntry-------------------\n")
+    #cat("\nentering----moduleEdTib----------updateEntry-------------------\n")
     entry=getTibEntry()
     if(is(entry,'matrix')){
-      cat("----------updateEntry::matrix-------------------\n")
+      #cat("----------updateEntry::matrix-------------------\n")
       entry='matrix'
-      cat('---------attn: class(entry)=',class(entry),"\n")
+      #cat('---------attn: class(entry)=',class(entry),"\n")
       entryChoices=c('point','matrix')
       if(length(input$entryValue)==0 || !(input$entryValue %in% entryChoices ) ){
-        "cat updating entryValue"
+        #"cat updating entryValue"
         updateSelectizeInput(session, "entryValue", 
                           choices=entryChoices, 
                           selected=entry )
       }
     } else {
-      cat("----------updateEntry::else-------------------\n")
+      #cat("----------updateEntry::else-------------------\n")
       entryChoices=getTibEntryChoices()
       if(length(entry)>0 && length(entryChoices)>0 ){
         #cat("updateEntry::entry=\n")
         #print(entry)
-        cat("updateEntry::entryChoices=\n")
-        print(entryChoices)
+        #cat("updateEntry::entryChoices=\n")
+        #print(entryChoices)
         updateSelectizeInput(session, "entryValue", 
                         choices=entryChoices, 
                         selected=entry )
       }
     }
-    cat("\nexiting----moduleEdTib----------updateEntry-------------------\n")
+    # cat("\nexiting----moduleEdTib----------updateEntry-------------------\n")
   }
   
   # updateMatCol<-function(){
@@ -174,35 +174,35 @@ moduleEdTib<-function(input, output, session,
   #ToDo!!! 
   observeEvent(c(barName(),name(), nameChoices() ), { #update the name 
     if(identical( barName(), 'tibEditor')){
-      cat('\n-----Entering----barName initialization for tibEditor (XX) \n')
+      #cat('\n-----Entering----barName initialization for tibEditor (XX) \n')
       if(length(nameChoices())==0){ #name choices
-        cat("\n------------------hiding header")
+        #cat("\n------------------hiding header")
         #hideElement( headerId ) 
       } else {
         #showElement( headerId)
-        cat("\n\n*****************************************************\n")
-        if(is.null(name() )){
-          cat('name is null\n')
-        } else {
-          cat('name=',name(), "\n\n")
-        }
-        if(is.null(nameChoices())){
-          cat('nameChoices is null')
-        } else {
-          cat('nameChoices=',paste(nameChoices(), collapse=", "), "\n\n")
-        }
-        if(!is.null(name())){
-          cat("\n\n\n***************************************")
-          cat('\n\n-----------updating name\n')
-          cat('name=',name(), "\n\n")
-          cat('nameChoices=',paste(nameChoices(), collapse=", "), "\n\n")
-        }
+        #cat("\n\n*****************************************************\n")
+        # if(is.null(name() )){
+        #   cat('name is null\n')
+        # } else {
+        #   cat('name=',name(), "\n\n")
+        # }
+        # if(is.null(nameChoices())){
+        #   cat('nameChoices is null')
+        # } else {
+        #   cat('nameChoices=',paste(nameChoices(), collapse=", "), "\n\n")
+        # }
+        # if(!is.null(name())){
+        #   cat("\n\n\n***************************************")
+        #   cat('\n\n-----------updating name\n')
+        #   cat('name=',name(), "\n\n")
+        #   cat('nameChoices=',paste(nameChoices(), collapse=", "), "\n\n")
+        # }
         updateSelectizeInput(session, "name", 
                           choices=nameChoices(), 
                           selected=name())
         
       #cat('\n-----Exiting----oE 1-123\n')
-      cat('\n***********************\n-----Leaving----barName initialization for tibEditor \n')
+      #cat('\n***********************\n-----Leaving----barName initialization for tibEditor \n')
       }
     }
   }) 
@@ -211,8 +211,8 @@ moduleEdTib<-function(input, output, session,
   
   observeEvent( c(barName(), rowIndex(), rowIndexChoices() ),  { #update index
     if(identical( barName(), 'tibEditor')){
-      cat('\n-----Entering----update rowIndex, rowIndexChoices \n')
-      cat('\n---------entering--------oE 1-124\n')
+      # cat('\n-----Entering----update rowIndex, rowIndexChoices \n')
+      # cat('\n---------entering--------oE 1-124\n')
       updateNumericInput(
         session, 
         "rowIndex", 
@@ -222,8 +222,8 @@ moduleEdTib<-function(input, output, session,
       )
       #updateEntry()
       #updateMatCol()
-      cat('\n---------exiting--------oE 1-124\n')
-      cat('-----Exiting----update rowIndex, rowIndexChoices \n')
+      # cat('\n---------exiting--------oE 1-124\n')
+      # cat('-----Exiting----update rowIndex, rowIndexChoices \n')
     } 
   }) 
   
@@ -233,17 +233,17 @@ moduleEdTib<-function(input, output, session,
     # cat('\n-----Entering----update columnName \n')
     # cat("\n---------entering------oE1-125.1\n")
     if(identical( barName(), 'tibEditor')){
-      cat('oE update 1-125.2\n')
+      # cat('oE update 1-125.2\n')
       #updateColumnName()
       
       if(!is.null(columnName()) && !is.null(columnNameChoices())){ 
-        cat('\n----Entering moduleEdTib: updateColumnName\n')
-        cat('moduleEdTib: updateColumnName:: columnName=',columnName(),"\n")
+        # cat('\n----Entering moduleEdTib: updateColumnName\n')
+        # cat('moduleEdTib: updateColumnName:: columnName=',columnName(),"\n")
         
         updateSelectizeInput(session, "columnName", 
                              choices=as.list(columnNameChoices()), 
                              selected=columnName() )
-        cat('----Leaving moduleEdTib: updateColumnName\n')
+        # cat('----Leaving moduleEdTib: updateColumnName\n')
       }
       
       
@@ -259,16 +259,16 @@ moduleEdTib<-function(input, output, session,
   
   observeEvent( c(getTibEntry(), getTibEntryChoices()) , { 
     if(identical( barName(), 'tibEditor')){
-      cat('\n-----Entering----update tibEntry \n')
-      cat('oE 1-126\n')
-      # updateSelectInput(session, "columnName", 
+      # cat('\n-----Entering----update tibEntry \n')
+      # cat('oE 1-126\n')
+      # # updateSelectInput(session, "columnName", 
       #                   choices=columnNameChoices(), 
       #                   selected=columnName() )
       #updateColumnName()
       updateEntry()
       
       #updateMatCol()
-      cat('----Leaving----update tibEntry \n')
+      # cat('----Leaving----update tibEntry \n')
     } 
   })
   
