@@ -4,16 +4,12 @@
 observeEvent(input$plotNavBar, {
   cmd<-getRightMenuCmd()
   if('character' %in% class(cmd)){
-    cat("cmd=\n")
-    print(cmd)
   }
   if(is.null(cmd)){
     cmd<-"tibEditor" 
   }
   if(cmd %in% c( "Points", 'tibEditor', 'tagDrag', 'Transforms', 'log')){
     updateRightPanel(cmd)
-    #panels$right<-cmd #Point, tibEditor, tagDrag, transfo
-    cat('right Panel  changed to ',cmd,'\n')
   }
   if(cmd == 'cmdShowGrid'){
     renameDMDM(session,  "plotNavBar", "cmdShowGrid", "Hide Grid", newValue="cmdHideGrid")
@@ -50,13 +46,23 @@ observeEvent(input$plotNavBar, {
   if(!is.null(cmd)){
     dirtyDMDM(session, "plotNavBar")
   }
+  
 })
 
 
+observeEvent(input$useTribble,{
+  if(editOption$useTribbleFormat!=input$useTribble){
+    editOption$useTribbleFormat=input$useTribble
+    newPtDefs<-getPtDefs()
+    sender='useTibble'
+    updateAceExtDef(newPtDefs, sender=sender)
+  }
+
+})
 
 output$TopRightPanel<-renderUI({
   chosenRightPanel<-rightPanel() 
-  cat('output$TopRightPanel:: chosenRightPanel=',chosenRightPanel,"\n")
+  # cat('output$TopRightPanel:: chosenRightPanel=',chosenRightPanel,"\n")
   if(chosenRightPanel=="Points"){
     modulePointsBarUI("pointsBar")
   } else if (chosenRightPanel=='tibEditor'){
@@ -84,29 +90,10 @@ output$TopRightPanel<-renderUI({
 
 
 
-# output$MidRightPanel<-renderUI({
-#   
-#   state<-getPlotState()
-#   chosenRightPanel<-rightPanel()
-#   if(state=="points"){
-#     modulePlotSVGrUI("svgPointsMod")
-#   } else if (state=='tibEditor'){
-#     modulePlotSVGrUI("svgTagValsMod")
-#   } else if (state=='matrix'){
-#     modulePlotSVGrUI("svgTagDragMod")
-#   } else if (state=='Transforms'){
-#     modulePlotSVGrUI("svgTransformMod")
-#   } else if (state=="logPanel"){
-#     moduleLogUI("errLogMod")
-#   } 
-# })
-
-
-
 output$MidRightPanel<-renderUI({
  
   chosenRightPanel<-rightMidPanel()
-  cat('output$MidRightPanel:: chosenRightPanel=',chosenRightPanel,"\n")
+  # cat('output$MidRightPanel:: chosenRightPanel=',chosenRightPanel,"\n")
   if(chosenRightPanel=="Points"){
     modulePlotSVGrUI("svgPointsMod")
   } else if (chosenRightPanel=='tibEditor.point'){
@@ -116,6 +103,8 @@ output$MidRightPanel<-renderUI({
   } else if (chosenRightPanel=='tibEditor.matrix'){
         modulePlotSVGrUI("svgTagDragMod")
   } else if (chosenRightPanel=='Transforms'){
+    modulePlotSVGrUI("svgTransformMod")
+  } else if (chosenRightPanel=='tibEditor.transforms'){
     modulePlotSVGrUI("svgTransformMod")
   } else if (chosenRightPanel=="logPanel"){
     moduleLogUI("errLogMod")

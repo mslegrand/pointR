@@ -7,9 +7,11 @@ editOption<-reactiveValues(
   currentFilePath=defaultOpts [['currentFilePath']],
   #currentFile=defaultOpts ['currentFile'],
   #currentDirectory=defaultOpts ['currentDirectory'],
+  useTribbleFormat= defaultOpts[['useTribbleFormat']],
   recentFiles=defaultOpts [['recentFiles']], 
   .saved=TRUE
 )
+
 
 history<-reactiveValues(
   #currentFilePath = defaultOpts [['currentFilePath']],

@@ -3,43 +3,10 @@
 # #---Insert Value-------------------
 
 
-#------TAG BUTTONS
-# if moveTag 
-# load tagmove script and reload svgR, wait for movement
-# and update ptR
 
-observeEvent(
-  input$insertVal2Col, {
-    tagIndx<-as.numeric(input$tagIndx)
-    tagCol<- input$tagCol
-    if(length(tagCol)>0){ #or not NULL
-      value<-input$tagValEd
-      newPtDefs<-ptDefs()
-      tagRList<-newPtDefs()$df
-      tagPtName<-input$tagPts
-      df<-tagRList[[tagPtName]]
-      df[df$tag==tagIndx,tagCol]<-value
-      tagRList[[tagPtName]]<-df
-      newPtDefs$df<-tagRList
-      updateAceExtDef(newPtDefs, "tagButtons")
-      #src<-getCode() # !!!
-      #src<-df2Source(src, tagRList) !!!
-      #setCode(src) # !!!
-    }
-})
 #---commit  button----- 
 
-#(updates src with editor contents)
-# alternatively can use observeEvent( input$commit, { ... })
-# observe({
-#   c(input$commit, input$commitMssg )
-#   isolate({
-#     if(request$refresh>0){
-#       
-#     }
-#     
-#   })
-# })
+
 
 observe({
   c(input$commit,input$commitMssg )
@@ -50,17 +17,17 @@ observe({
   })
 })
 
-#!!!  unused?
-checkPtrSyntax<-function(src){
-  lines<-strsplit(src,"\n") 
-  lines<-lines[[1]]
-  ptRPos<-grep("^\\s*ptR<-",lines)
-  svgRPos<-grep("^\\s*svgR\\(",lines)
-  if(length(ptRPos)>1 )
-    base::stop("Bad File: Multiple  ptR lists")
-  if(length(svgRPos)>1) 
-    base::stop("Bad File: Multiple  ptR lists or svgR calls")
-}
+# #!!!  unused?
+# checkPtrSyntax<-function(src){
+#   lines<-strsplit(src,"\n") 
+#   lines<-lines[[1]]
+#   ptRPos<-grep("^\\s*ptR<-",lines)
+#   svgRPos<-grep("^\\s*svgR\\(",lines)
+#   if(length(ptRPos)>1 )
+#     base::stop("Bad File: Multiple  ptR lists")
+#   if(length(svgRPos)>1) 
+#     base::stop("Bad File: Multiple  ptR lists or svgR calls")
+# }
 
 processCommit<-reactive({
     src<-getCode() #input$source #------ace editor

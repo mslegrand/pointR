@@ -43,6 +43,7 @@ readOptionsJSON<-function(){
     currentDirectory=".",
     currentFilePath="./",
     tabType="Use Soft Tabs",
+    useTribbleFormat=TRUE,
     recentFiles=NULL
   )
   

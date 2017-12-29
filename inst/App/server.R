@@ -12,7 +12,6 @@ shinyServer(function(input, output,session) {
   
 # Reactive values----------
 
-  #source("util/serverManagerSrc.R", local=TRUE) no longer used
   
   request<-reactiveValues(
     code=NULL,
@@ -51,7 +50,6 @@ shinyServer(function(input, output,session) {
   
   setPlotState<-function(state){
     cat('setPlotstate=',state,"\n")
-    #cat('setPlotstate: pan',state,"\n")
     if(!is.null(state) && state %in% c('matrix','point')){
       panels$state<-state
     } else {
@@ -70,7 +68,8 @@ shinyServer(function(input, output,session) {
   
   
   getPtDefs<- reactive({ 
-    ex.getPtDefs(getCode() ) 
+    ptDefs<-ex.getPtDefs(getCode(), useTribbleFormat=editOption$useTribbleFormat ) 
+    ptDefs
   })  #extract points from user code
   
   mssg<-reactiveValues(error="") 

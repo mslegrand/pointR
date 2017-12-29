@@ -24,7 +24,6 @@ returnValue4ModuleEdTib<-callModule(
 #name
 observeEvent(returnValue4ModuleEdTib$name(),{
   if(rightPanel()=='tibEditor'){
-    # cat('\n----Entering-----------oE 2-123\n')
     name<-returnValue4ModuleEdTib$name()
     if(name==getTibName()){ return(NULL) } #bail if moduleEdTib did not change name
     
@@ -88,37 +87,20 @@ observeEvent(returnValue4ModuleEdTib$columnName(),{
 #--------EDIT VALUE------------------------------
 observeEvent(returnValue4ModuleEdTib$entryValue(),{
   if(rightPanel()=='tibEditor'){
-    cat('\n--------Entering---------entryVAlue\n')
-    cat('oE 2-125\n')
-    
     # assuming tib is uptodate, simply work on the existing tib
     name<- returnValue4ModuleEdTib$name() 
     entry<-name %AND% returnValue4ModuleEdTib$entryValue()
-    
-    cat('class(name)=',class(name),'\n')
-    
-    #rowIndex<-returnValue4ModuleEdTib$rowIndex()
+ 
     row= entry %AND% returnValue4ModuleEdTib$rowIndex()
     columnName<-row %AND% returnValue4ModuleEdTib$columnName()
-    cat('row=',row,"\n")
-    cat("columnName=" ,columnName,"\n")
     
-    cat('entry=',entry,'\n')
     
-    if(!is.null(columnName) && 
-       #length(entry)>0 &&
-       nchar(entry)>0   ){
-      #entry<-returnValue4ModuleEdTib$entryValue()
+    if(!is.null(columnName) && nchar(entry)>0   ){
       # !!! TODO: type check if numeric
       rP<-rightPanel()
       if(is.null(rP))rP<-'NULL'
-      cat('rightPanel=',rP,"\n")
-      cat('class(entry)=',class(entry),"\n")
-      cat('entry=',entry,"\n")
-      cat('setting entry state\n')
       setPlotState(entry)
       if(!(entry %in% c('matrix','point'))){
-        cat('inside entry state\n')
         name<-getTibName()
         newPtDefs<-getPtDefs()
         column<-getTibColumnName()
@@ -131,17 +113,12 @@ observeEvent(returnValue4ModuleEdTib$entryValue(),{
         }
       } 
     }
-    isolate({
-      cat('--------Exiting---------entryVAlue\n')
-    })
   }
 })
 
 observeEvent(
   returnValue4ModuleEdTib$tagClone(),
   {
-    cat('oE 2-123\n')
-    #if(rightPanel()=="tagDrag"){
     sender='cloneRow'
     ptDefs<-getPtDefs()
     name<-getTibName()
@@ -158,20 +135,19 @@ observeEvent(
     updateAceExtDef(newPtDefs, sender=sender)
     updateSelected(row=rowIndex, matCol=matCol)
   }
-  #}
 )
 
 observeEvent(
   returnValue4ModuleEdTib$tagDelete(),
   {
-    #if(rightPanel()=="tagDrag"){
     sender='deleteRow'
     ptDefs<-getPtDefs()
     name<-getTibName()
     newTib<-ptDefs$tib[[name]]
     rowIndex<-getTibRow()
-    
-    # !!!TODO handle case where this would be last row.
+    # !!!TODO handle case where this would be last existing row. What to do???
+    # for now we ignore
+    if(is.null(newTib) || nrow(newTib)<2){ return(NULL) }
     newTib<-newTib[-rowIndex,]
     ptDefs$tib[[name]]<-newTib
     newPtDefs<-ptDefs
@@ -187,7 +163,7 @@ observeEvent(
 )
 
 observeEvent( returnValue4ModuleEdTib$tagMoveUp(),{ 
-  #if(rightPanel()=="tagDrag"){
+  
   rowIndex<-getTibRow()
   if(rowIndex>1){
     sender='tagMoveUp'
@@ -206,11 +182,10 @@ observeEvent( returnValue4ModuleEdTib$tagMoveUp(),{
     updateAceExtDef(newPtDefs, sender=sender)
     updateSelected(row=rowIndex, matCol=matCol)   
   }
-  #}
+  
 })
 
 observeEvent( returnValue4ModuleEdTib$tagMoveDown(),{ 
-  #if(rightPanel()=="tagDrag"){
   rowIndex<-getTibRow()
   ptDefs<-getPtDefs()
   name<-    getTibName()
@@ -229,7 +204,7 @@ observeEvent( returnValue4ModuleEdTib$tagMoveDown(),{
     updateAceExtDef(newPtDefs, sender=sender)
     updateSelected(row=rowIndex, matCol=matCol)   
   }
-  #}
+
 })
 
 
@@ -239,13 +214,11 @@ observeEvent( returnValue4ModuleEdTib$tagMoveDown(),{
 #---BUTTON: remove selected point  -----
 observeEvent( returnValue4ModuleEdTib$removePt(), {
   selection<-getTibName() 
-  cat('Enter removePt\n')  
+  # cat('Enter removePt\n')  
   if(selection!=""){
     ptDefs<-getPtDefs()
     if(length(ptDefs$tib)==0){return(NULL)}
     matCol<-getTibMatCol()
-    #src<-getCode() 
-    
     #get row, col
     if(matCol>=1){ 
       row<-getTibRow()
@@ -267,7 +240,7 @@ observeEvent( returnValue4ModuleEdTib$removePt(), {
 
 #---TAG THIS POINT button-----
 observeEvent( returnValue4ModuleEdTib$tagPt(), {
-  cat("Enter tagPt\n")
+
   src<-getCode() 
   selection<-getTibName()
   ptDefs<-getPtDefs()
@@ -305,7 +278,6 @@ observeEvent( returnValue4ModuleEdTib$backwardPt(), {
   matColIndex<-getTibMatCol()
   matColChoices<-getTibMatColChoices()
   if(length(matColIndex)>0 && length(matColChoices)>0){
-    cat("observeEvent:: serverPlotBar 98\n")
     matColIndex=max(matColIndex-1, min(matColChoices) )
     updateSelected(  matCol=matColIndex  )
   }

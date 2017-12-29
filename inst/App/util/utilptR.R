@@ -56,14 +56,18 @@ WH<-c(600,400)
 ptR<-list(
   x=tribble(
    ~x,             ~fill,
-   matrix(NA,2,0), 'red'
+   matrix(c(100,200,300,200),2), 'red',
+   matrix(c(100,300,300,300),2), 'red',
+   matrix(0,2,0), 'blue'
   ),
   y=tribble(
    ~y,             ~stroke,
-   matrix(NA,2,0), 'black'
+   matrix(0,2,0), 'black'
   ),
   z=matrix(c(100,100,100,200,300,200),2)
 )
+
+
 
 svgR(wh=WH,
 #your custom code goes here
@@ -189,24 +193,24 @@ matrices2tags<-function(mats){
 }
 
 
-ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
-  ptDefs<-list(pts=NULL, df=NULL, tib=NULL)
+ex.getPtDefs<-function(src, useTribbleFormat, ptTag="ptR"  ){
+  if(is.null(useTribbleFormat)){
+    useTribbleFormat=FALSE
+  }
+  ptDefs<-list(tib=NULL, useTribbleFormat=useTribbleFormat)
   if(length(ptDefs)==0){
-    return(list(pts=c(), df=c(), tib=list()))
+    return(list( tib=list(), useTribbleFormat=useTribbleFormat))
   }
   if( any(grepl(ptTag,src) ) ){
     try({
       ptDefTxt1<-getDef(src, defTag=ptTag)
       if( is.null(ptDefTxt1)){
-        cat('\n===========ptDefTxt1 is NULL\n')
+        #cat('\n===========ptDefTxt1 is NULL\n')
         #stop("failed to fint ptR")
-        # WITH DISABLE GRAPH BAR PTR CONTROLS
-        # PTR SELECTION, GROUPS, EDITS, ...
-        # KEEP TRANSFORMATIONS FOR THE TIME BEING
-        #ptDefs$pts<-list()
+        
         ptDefs$tib<-list()
       } else {
-        cat('\n===========ptDefTxt1 is NOT NULL\n')
+       # cat('\n===========ptDefTxt1 is NOT NULL\n')
         eval(parse(text=ptDefTxt1)) #stupid eval to obtain the points
         
         #!!!KLUDGE first kludge (undo later)
@@ -223,50 +227,13 @@ ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
             ptDefs$tib[[n]]<-tt
           }
         }
-        #print(ptDefs)
-        print(names(ptDefs$tib))
-        # TODO add columnInfo to ptDefs
-        # for each named tib, add a named vector with
-        # rows correspoinding to the names of the tib and values appropriately guessed
-        #browser()
-        
-        # ptDefs$pts<-lapply(names(ptDefs$tib), function(nm){
-        #   pts<-unlist(ptDefs$tib[[nm]][[nm]]) #!!!temporary change this to be more general later
-        #   #pts<-lapply(ptR, function(x)do.call(cbind, x)) 
-        #   if(length(pts)>0)
-        #     matrix(unlist(pts),2)
-        #   else
-        #     matrix(NA,2,0)
-        # })
-        # names(ptDefs$pts)<-names(ptDefs$tib) #!!! or put in structure
-        # ptDefs$df<-lapply(names(ptDefs$tib), function(nm){
-        #   df<-ptDefs$tib[[nm]]
-        #   pts<-df[[nm]] #!!!temporary change this to be more general later
-        #   tdf<-tibble(tag=matrices2tags(pts))
-        #   df<-cbind(tdf,df)
-        #   df[,-which(names(df)=='pts')] #!!!temporary change this to be more general later
-        # })
-        #names(ptDefs$df)<-names(ptDefs$tib)
+        ptDefs$useTribbleFormat=useTribbleFormat
       }
     })
   }
+  ptDefs$useTribbleFormat=useTribbleFormat
   return(ptDefs)
 }
-
-#used by open and commit
-# inserts ptDefs into src code 
-# !!! to be obsolete soon
-# preProcCode<-function(src){
-#   ptDefs<-ex.getPtDefs(src)
-#   ptRList<-ptDefs$pts
-#   dfList<-ptDefs$df
-#   src<-pts2Source(src,ptRList)
-#   if(!is.null(dfList)){
-#     src<-df2Source(src, dfList)
-#   }
-#   return(src)
-# } 
-
 
 
 formatTrs<-function(tr){ #not used
@@ -309,8 +276,7 @@ defTag2replace<-function(defTag, defList, txt){
 ptDef2ReplacementList<-function(name, newPtDef, txt){
   replacementList<-list()
   # get the text for the point replacement  
-  #pt.repl<-fmtPtR(newPtDef$pts)
-  pt.repl<-fmtTribbleList(newPtDef$tib, newPtDef$mats)
+  pt.repl<-fmtTibbleList(newPtDef$tib, newPtDef$mats, as.Tribble=newPtDef$useTribbleFormat)
   
   p.df<-getParseDataFrame(txt)
   ptR.df<-extractTagDF(p.df, tag='ptR')
@@ -320,28 +286,6 @@ ptDef2ReplacementList<-function(name, newPtDef, txt){
     endRow= ptR.df$line2 -1,
     endColumn=ptR.df$col2 
   )
-  
-  # if(length(newPtDef$df)>0){
-  #   tag.repl<-formatDFDefs(newPtDef$df)
-  #   tagR.df<-extractTagDF(p.df, tag='tagR')
-  #   if( !is.null(tagR.df) ){
-  #     tag.Pos<-list(
-  #       startRow= tagR.df$line1 -1,
-  #       startColumn=tagR.df$col1 -1 ,
-  #       endRow= tagR.df$line2 -1,
-  #       endColumn=tagR.df$col2 
-  #     )
-  #     }else{
-  #       tag.Pos<-list(
-  #         startRow= ptR.df$line2,
-  #         startColumn=ptR.df$col2+1 ,
-  #         endRow= ptR.df$line2,
-  #         endColumn=ptR.df$col2+1 
-  #       )
-  #       tag.repl<-paste0("\n",tag.repl,"\n")
-  #     }
-  #   replacementList<-c(replacementList, list(list(rng=tag.Pos, txt= tag.repl)))
-  # }
   replacementList<-c(replacementList, list(list(rng=pt.Pos, txt= pt.repl)))
   replacementList
 }

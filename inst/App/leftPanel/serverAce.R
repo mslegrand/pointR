@@ -7,12 +7,12 @@ observe({input$messageFromAce
       #cat('observe input$messageFromAce:: entering\n')
       request$code<-input$messageFromAce$code
       request$sender<-input$messageFromAce$sender
-      #cat('input$messageFromAce::sender=',request$sender,"\n")
-      #cat('code=',nchar(request$code),"\n")
+      cat('input$messageFromAce::sender=',request$sender,"\n")
+      cat('nchar(code)=',nchar(request$code),"\n")
+      
       if(length(input$messageFromAce$dirty)>0){
         editOption$.saved <- !(as.numeric(input$messageFromAce$dirty) > 0)
       }
-      #processCommit()
       if(request$sender %in% c('cmd.commit','cmd.openFileNow', 'cmd.saveFileNow' )){
         processCommit()
       } 
@@ -20,7 +20,6 @@ observe({input$messageFromAce
         # !!! TODO: set point.index to end of points (if points)
       }
       if(request$sender %in% 'cmd.saveFileNow'){
-        # cat('observe {input$messageFromAce:: cmd.saveFileNow\n')
         datapath<-input$messageFromAce$auxValue
         txt<-input$messageFromAce$code
         writeLines(txt, datapath)
@@ -38,12 +37,10 @@ observe({input$messageFromAce
 })
 
 updateAceExtDef<-function(newPtDef, sender ){
-  
-  #newPtDef<-olde2newFmtPtDef2ListOfLists(newPtDef)
   #cat('sender=',sender,"\n")
   newPtDef$tib<-pts2Integers(newPtDef$tib )
   
-  replacementList<-ptDef2ReplacementList(name, newPtDef,getCode() )
+  replacementList<-ptDef2ReplacementList(name, newPtDef, getCode() )
   if( length(replacementList)>0 ){
     session$sendCustomMessage(
       type = "shinyAceExt",
@@ -67,10 +64,6 @@ observe({
   request$sender
   isolate({
     if(request$sender=='startup'){
-      # displayOptions$insertMode=TRUE
-      # displayOptions$showGrid=FALSE
-      # displayOptions$ptMode="Normal"
-      
       cmdFileNew()
     }
     if(request$sender %in% c( "cmd.openFileNow", "cmd.newFile")){ #!!! check these names
@@ -78,7 +71,7 @@ observe({
       pd<-getPtDefs()
       if(length(pd)>0){
         tibs<-pd$tib #!!! check this
-        name<-tail(names(tibs),1) # KLUDGE, last name 
+        name<-tail(names(tibs),1) # !!! KLUDGE, last name 
         resetSelectedTibbleName(name, tibs)
         
       }

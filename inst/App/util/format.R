@@ -1,12 +1,4 @@
 
-# - if character then sQuote
-# - if list then 
-# - if vector then
-# - if matrix then
-
-# tab<-function(n, sp=3){
-#   
-# }
 
 
 getTibColClass<-function(tib){
@@ -28,16 +20,6 @@ formatMatrix<-function(pts){
   return(fpts)
 }
 
-# getClass2(tib){
-#   sapply(1:ncol(tib), function(i)unique(sapply(tib[[i]],class)))
-# }
-# 
-# getClass1(tib){
-#   sapply(1:ncol(tib), function(i) class(tib[[i]]))
-# }
-
-# formatRow
-# if row is of type numeric
 
 
 
@@ -67,8 +49,11 @@ toStrPtR0<-function(x,...){ UseMethod("toStrPtR0") }
 
 toStrPtR0.default<-function(x,...){ format(x,...) }
 toStrPtR0.character<-function(x, ...){
-  shQuote(x)
- #paste0(shQuote(x),",")
+  if(length(x)>1){
+    paste0("c(",paste0(shQuote(x),collapse=","),")")
+  } else {
+    shQuote(x)
+  }
 }
 toStrPtR0.matrix<-function(x, digits=0, ...){
   if(length(x)==0){
@@ -104,19 +89,17 @@ pfmt.matrix<-function(x, digits=0, ...){
   toStrPtR0.matrix(x,digits, ...)
 }
 
-fmtTibble<-function(tib, indent=" ", ...){
-  n<-names(tib)
-  tmp<-sapply(n, function(x){
-    pfmt(tib[[x]])
-  })
-  tmp<-paste(n,tmp,sep="=")
-  paste0(indent,tmp,collapse=",\n")
-}
+
 
 getTibColClass<-function(tib){
   sapply(1:ncol(tib), function(j)class(tib[[1,j]]))
 }
 
+toStrPtR0.list<-function(x, digits=0, ...){
+  temp<-sapply(x, function(y) toStrPtR0(y,  ...))
+  temp<-paste0(temp, collapse=", ")
+  paste0("list(", temp, ")")
+}
 
 fmtPtR<-function( pts,  indent="  ", digits=0, ...){
   n<-names(pts)
@@ -133,93 +116,125 @@ fmtPtR<-function( pts,  indent="  ", digits=0, ...){
 # get indices of candidats: which =='matrix'
 # the set tib to be cbind( tib[[,-ind]], tib[[,ind]])
 # to do: tibble name 
-fmtTribble<-function(tib, tibName, is.mat=FALSE, movePtsBack=TRUE, indent="  ", ...){
+fmtTribble<-function(tib, tibName, movePtsBack=TRUE, indent="  ", ...){
   #this moves the points to the rear
   n=2 # indent factor of 2 tabs
-  
   indentName<-paste0(rep(indent, n=n),collapse="")
-  cat("is.mat=",is.mat,"\n")
-  if(!is.mat){
-    if(movePtsBack){
-      cl<-getTibColClass(tib)
-      indx<-c(which(cl!='matrix'), which(cl=='matrix'))
-    }
-    tib<-tib[,indx]
-    n<-names(tib)
-    nn<-matrix(paste0("~",n),1)
-    tmp<-sapply(1:ncol(tib), function(j){
-      sapply(1:nrow(tib),function(i){
-        toStrPtR0(tib[[i,j]])
-      })
-    })
-    tmp<-rbind(nn,tmp)
-    tmp[-length(tmp)]<-paste0(tmp[-length(tmp)],",")
-    # now make each col (sans last) to have same width
-    tmp[,-ncol(tmp)]<-format(tmp[,-ncol(tmp)])
-    #prepend with indent
-    indentContent<-paste0(indentName,indent)
-    indentContent<-matrix( indentContent, nrow(tmp), 1)
-    tmp<-cbind(indentContent,tmp)
-    # now combine into rows
-    tmp<-apply(tmp,1, function(x)paste0(x, collapse="  "))
-    # next combine rows
-    tname<-paste0(indentName, tibName, "= tribble(")
-    tend<-paste0(indentName,")")
-    tmp<-paste0(c(tname,tmp,tend), collapse="\n")
-  } else {
-    m<-tib[[1,tibName]]
-    tmp<-paste0(indentName, tibName, "= ", toStrPtR0.matrix(m))
+
+  if(movePtsBack){
+    cl<-getTibColClass(tib)
+    indx<-c(which(cl!='matrix'), which(cl=='matrix'))
   }
+  tib<-tib[,indx]
+  n<-names(tib)
+  nn<-matrix(paste0("~",n),1)
+  tmp<-sapply(1:ncol(tib), function(j){
+    sapply(1:nrow(tib),function(i){
+      toStrPtR0(tib[[i,j]])
+    })
+  })
+  tmp<-rbind(nn,tmp)
+  tmp[-length(tmp)]<-paste0(tmp[-length(tmp)],",")
+  # now make each col (sans last) to have same width
+  tmp[,-ncol(tmp)]<-format(tmp[,-ncol(tmp)])
+  #prepend with indent
+  indentContent<-paste0(indentName,indent)
+  indentContent<-matrix( indentContent, nrow(tmp), 1)
+  tmp<-cbind(indentContent,tmp)
+  # now combine into rows
+  tmp<-apply(tmp,1, function(x)paste0(x, collapse="  "))
+  # next combine rows
+  tname<-paste0(indentName, tibName, "= tribble(")
+  tend<-paste0(indentName,")")
+  tmp<-paste0(c(tname,tmp,tend), collapse="\n")
   tmp
 }
 
+fmtTibble<-function(tib, tibName, is.mat=FALSE, indent="  ", ...){
+  n=2
+  indentName<-paste0(rep(indent, n=n),collapse="")
+  
+  nam<-names(tib)
+  tmp<-sapply(nam, function(n){
+    toStrPtR0(tib[[n]])
+  })
+  tmp<-paste0(indentName,indent, nam,' = ',tmp)
+  
+  tmp<-paste0(indent,tmp,collapse=",\n")
+  tmp<-paste0(indent,tibName,'=tibble(\n',tmp,"\n",indent,")")
+}
+
+fmtMat<-function(tib, tibName, indent="  ", ...){ 
+  n=2 # indent factor of 2 tabs
+  indentName<-paste0(rep(indent, n=n),collapse="")
+  m<-tib[[1,tibName]]
+  tmp<-paste0(indentName, tibName, "= ", toStrPtR0.matrix(m))
+  tmp  
+}
 
 
-# 
-# x=tribble(
-#   ~fill,      ~pts,
-#   #------|---------
-#   'red',  list( matrix(c(1,2,3,4,5,6), 2) ) ,
-#   'blue', list( matrix(c(11,12,13,14,15,16), 2) )
-# )
-# 
-# 
-# 
-# xx=tribble(
-#   ~fill,      ~pts,
-#   #------|---------
-#   'red',   matrix(c(1,2,3,4,5,6), 2) ,
-#   'blue',  matrix(c(11,12,13,14,15,16), 2)
-# )
-# 
-# tib<-xx
-
-#vapply(tib, pfmt, character(1))
-#vapply(tib, toStrPtR0, character(1))
+fmtTibbleList<-function(tibList, mats, as.Tribble){
+  tmp<-sapply(names(tibList), function(nm){
+    if(mats[nm]==TRUE){
+      fmtMat(tibList[[nm]],nm)
+    } else {
+      if(as.Tribble){
+        fmtTribble(tibList[[nm]],nm)
+      } else {
+        fmtTibble(tibList[[nm]],nm)
+      }
+    }
+  })
+  tmp<-paste0(tmp, collapse=",\n")
+  paste('ptR<-list(',tmp,')',sep="\n")
+}
 
 
-# tt<-fmtTribble(tib, 'tib')
-# # 
-# yy<-tribble(
-#   ~ptss,      ~stroke,
-#   #------|---------
-#      matrix(c(1,2,3,4,5,6), 2) ,'red',
-#    matrix(c(11,12,13,14,15,16), 2), 'blue'
-# )
-# 
-# cat(fmtTribble(yy, 'yy'))
-# 
-# pts<-yy$ptss
-# cat(pfmt(pts))
-# #todo tree manupiplation with svgR
-
-# ptR<-list(
-#   x=list(matrix(1:6,2),matrix(11:18,2)),
-#   y=list(matrix(100:105,2))
-# )
-# 
-# cat(fmtPtR(ptR))
-
+  # 
+  # x=tribble(
+  #   ~fill,      ~pts,
+  #   #------|---------
+  #   'red',  list( matrix(c(1,2,3,4,5,6), 2) ) ,
+  #   'blue', list( matrix(c(11,12,13,14,15,16), 2) )
+  # )
+  # 
+  # 
+  # 
+  # xx=tribble(
+  #   ~fill,      ~pts,
+  #   #------|---------
+  #   'red',   matrix(c(1,2,3,4,5,6), 2) ,
+  #   'blue',  matrix(c(11,12,13,14,15,16), 2)
+  # )
+  # 
+  # tib<-xx
+  
+  #vapply(tib, pfmt, character(1))
+  #vapply(tib, toStrPtR0, character(1))
+  
+  
+  # tt<-fmtTribble(tib, 'tib')
+  # # 
+  # yy<-tribble(
+  #   ~ptss,      ~stroke,
+  #   #------|---------
+  #      matrix(c(1,2,3,4,5,6), 2) ,'red',
+  #    matrix(c(11,12,13,14,15,16), 2), 'blue'
+  # )
+  # 
+  # cat(fmtTribble(yy, 'yy'))
+  # 
+  # pts<-yy$ptss
+  # cat(pfmt(pts))
+  # #todo tree manupiplation with svgR
+  
+  # ptR<-list(
+  #   x=list(matrix(1:6,2),matrix(11:18,2)),
+  #   y=list(matrix(100:105,2))
+  # )
+  # 
+  # cat(fmtPtR(ptR))
+  
   # tibList=list(
   #   x=tribble(
   #   ~fill, ~pts,
@@ -230,12 +245,7 @@ fmtTribble<-function(tib, tibName, is.mat=FALSE, movePtsBack=TRUE, indent="  ", 
   #      matrix(1:4,2), 'blue'
   #   )
   # )
-
-  fmtTribbleList<-function(tibList, mats){
-    tmp<-sapply(names(tibList), function(nm){
-      fmtTribble(tibList[[nm]],nm, is.mat=mats[nm])
-    })
-    tmp<-paste0(tmp, collapse=",\n")
-    paste('ptR<-list(',tmp,')',sep="\n")
-  }
+  
+  
+   
   

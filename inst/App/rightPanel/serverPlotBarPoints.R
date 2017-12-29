@@ -11,45 +11,43 @@
       matColIndex=NULL,
       ptDisplayMode="Normal"
   ){
-    cat("showPts.PtCmd-----------------------------------------------\n")
-    cat("class(ptDisplayMode)="  ,  class(ptDisplayMode),"\n")
+    # cat("showPts.PtCmd-----------------------------------------------\n")
+    # cat("class(ptDisplayMode)="  ,  class(ptDisplayMode),"\n")
     if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
     onMouseDownTxt='ptRPlotter_ptR_SVG_Point.selectPoint(evt)'
     
-    cat('\nshowPts.PtCmd:: class(pts)=',class(pts),'\n')
-    cat('\nshowPts.PtCmd:: length(pts)=',length(pts),'\n')
+    # cat('\nshowPts.PtCmd:: class(pts)=',class(pts),'\n')
+    # cat('\nshowPts.PtCmd:: length(pts)=',length(pts),'\n')
     if(is.null(pts) ){ return(NULL) } 
     
     
-     cat("pts-----------------------------------------------\n")
-     print(pts)
+     # cat("pts-----------------------------------------------\n")
+     # print(pts)
     if(length(unlist(pts))<2){ return(NULL)}
     
     colorScheme<-c(default="green", ending="red", selected="blue")
     semitransparent<-0.3
     
-    cat("rowIndex",rowIndex,"\n")
-    cat("class(rowIndex)",class(rowIndex),"\n")
-    
-    cat("matColIndex",matColIndex,"\n")
-    cat("class(matColIndex)",class(matColIndex),"\n")
+    # cat("rowIndex",rowIndex,"\n")
+    # cat("class(rowIndex)",class(rowIndex),"\n")
+    # 
+    # cat("matColIndex",matColIndex,"\n")
+    # cat("class(matColIndex)",class(matColIndex),"\n")
     
     opacity<-rep(semitransparent, length(pts) )
     opacity[rowIndex]<-1
-    cat("seq(length(pts))=",seq(length(pts)))
+    
     
     #form list of  all point renderings
     lapply(seq(length(pts)), function(i){
       m<-pts[[i]]
-      print(i)
-      print(m)
       if(length(m)==0){ # or !is(m,'matrix')
         NULL
       } else {
         lapply(seq(ncol(m)), function(j){ #j is the matCol index
           
           id<-paste("pd",ptName,i,j,sep="-")
-          cat("id=", id, "\n")
+          
           pt<-m[,j]
           color=colorScheme['default']
           
@@ -121,7 +119,7 @@ statusPlotPoint<-callModule(
       )
     )
   }),
-  ptrDisplayScript = reactive({ svgToolsScript( "Points") }), #ptrDisplayScript =reactive({ js.scripts[[ "Points"]] }),
+  ptrDisplayScript = reactive({ svgToolsScript( "Points") }), 
   getSVGWH,
   showGrid,
   getCode,
@@ -134,7 +132,7 @@ statusPlotPoint<-callModule(
 observeEvent(statusPlotPoint$status(), {
   status<-statusPlotPoint$status()
   if( status$state!="PASS"){ 
-    cat("statusPlotPoint$status() error\n")
+    # cat("statusPlotPoint$status() error\n")
     updateRightPanel('logPanel')
     mssg$err<-status$message
   }

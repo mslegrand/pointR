@@ -89,9 +89,7 @@ shinyUI(
             menuDropdown(
               "Help",
               menuItem("Editor ShortCuts"),
-              #menuItem("Editor ShortCuts2"),
               menuItem("Element Reference"),
-              #menuItem("svgR User Guide"),
               menuDropdown(
                 "Useful Links", 
                 menuItem(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/User_Guide.html\"  target=\"_blank\" >svgR User Guide </a></li>")),
@@ -113,7 +111,7 @@ shinyUI(
                            title="Import Snippet", multiple=FALSE, 
                            class='hiddenButton'),
           h3(
-            textOutput( "fileName"), 
+            textOutput( "fileName"),
             style="white-space:nowrap;"
           ),
           absolutePanel( 
@@ -134,7 +132,7 @@ shinyUI(
           absolutePanel( 
             "class"="footerPanel", 
             draggable=FALSE,
-            actionButton("commit", label = "COMMIT EDIT") #,
+            actionButton("commit", label = "COMMIT EDIT") 
           )
           #-------left content end--------
         ) #----end of bootstrapPage
@@ -152,15 +150,21 @@ shinyUI(
           dmdMenuBarPage(
             menuBarId="plotNavBar",
             #---------------DisplayOptions----------------------------------------
-            menuDropdown('Data',
-                menuItem('Add Column', value='cmdNewColumn'),
-                menuItem('Delete Column', value='cmdDeleteColumn'),
-                menuItem('Rename Column', value='cmdRenameColumn'),
-                menuItem('Clone Column', value='cmdCloneColumn'),
-                menuItem('New Tibble', value='cmdNewTibble'),
-                menuItem('Rename Tibble', value='cmdRenameTibble'),
-                menuItem('Delete Tibble', value='cmdDeleteTibble')
+           
+            menuDropdown('Tibble',
+              menuItem('New Tibble', value='cmdNewTibble'),
+              menuItem('Rename Tibble', value='cmdRenameTibble'),
+              menuItem('Delete Tibble', value='cmdDeleteTibble'),
+              menuItem(NULL, value='cmdTibbleFormat', checkboxInput('useTribble', 'display as tribble', value = TRUE, width = NULL))
             ),
+            menuDropdown('Column',
+              menuItem('Add Column', value='cmdNewColumn'),
+              menuItem('Delete Column', value='cmdDeleteColumn'),
+              menuItem('Rename Column', value='cmdRenameColumn'),
+              menuItem('Clone Column', value='cmdCloneColumn'),
+              menuItem('Input Using', value='cmdInputUsingColumn')
+            ),
+            
             menuDropdown('Display', 
                          menuDropdown('Points',
                                       menuItem('Hide Points', value='cmdHidePoints'), 

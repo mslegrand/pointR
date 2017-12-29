@@ -10,20 +10,12 @@
     rowIndex=NULL,
     ptDisplayMode 
     ){
-    cat("\nenter-------------showPts.dragTag-----------------------------------------------\n")
     if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
     
     onMouseDownTxt="ptRPlotter_ptR_SVG_TagDrag.selectElement(evt)" 
     
-    cat("showPts.dragTag\n")
-    cat("showPts:: rowIndx=", rowIndex, "\n")
-    cat("length(ptName)=", length(ptName), "\n")
-    cat("length(pts)=", length(pts), "\n")
     if(length(ptName)<1){return(NULL)}
     if(length(pts)<1)  {return(NULL) }
-    cat('class(pts)=',class(pts),'\n')
-    cat('rowIndex=',rowIndex,'\n')
-    cat("length(pts)=",length(pts),"\n")
     if(length(rowIndex)<1 || rowIndex==0){return(NULL)}
     
     semitransparent<-0.3
@@ -41,7 +33,7 @@
         lapply(offRows, function(i){
           m<-pts[[i]]
           if(length(m)==0){
-            cat('m is null\n')
+            
             NULL
           } else {
              g( opacity=opacity[i], 
@@ -63,7 +55,7 @@
           }
         }),
         if(length( mRow)==0){
-          cat('length(mRow)=0\n')
+          
           NULL
         } else {
           g( opacity=opacity[rowIndex], 
@@ -88,10 +80,6 @@
 
 
 #-------------SVG-------------------------------------
-# 
-# output$svgTagDragPanel<-renderUI({
-#   conditionalPanel( "input.plotNavBar=='tagDrag'", modulePlotSVGrUI("svgTagDragMod"))
-# })
 
 statusPlotTagDrag<-callModule(
   module=modulePlotSVGr,
@@ -102,8 +90,7 @@ statusPlotTagDrag<-callModule(
       ptName=getTibName(), 
       pts=getTibPts(), 
       rowIndex=getTibRow(),
-      ptDisplayMode=getDisplayModeTag() #, 
-      #tags=getTagIndexChoices()
+      ptDisplayMode=getDisplayModeTag()  
     )
   }),
   ptrDisplayScript = reactive({ svgToolsScript( "TagDrag") }), # reactive({ js.scripts[[ "TagDrag"]] }),
@@ -118,7 +105,6 @@ statusPlotTagDrag<-callModule(
 observeEvent(statusPlotTagDrag$status(), {
   status<-statusPlotTagDrag$status()
   if(status$state!="PASS"){
-    cat("statusPlotTagDrag$status error\n")
     updateRightPanel('logPanel')
     mssg$err<-status$message    # send mssg to log
     # switch to log 
