@@ -9,14 +9,14 @@ returnValue4ModuleEdTib<-callModule(
   barName=rightPanel ,
   name=getTibName,
   nameChoices=getTibNameChoices,
-  rowIndex=getTibRow,
-  rowIndexChoices=getTibRowChoices,
-  matColIndex=getTibMatCol,
-  matColIndexChoices=getTibMatColChoices,
-  columnName= getTibColumnName,
-  columnNameChoices=getTibColumnNameChoices,
-  getTibEntry=getTibEntry,
-  getTibEntryChoices=getTibEntryChoices,
+  rowIndex=reactive({  if( getPlotState()!="transform" ){ getTibRow() } else { NULL } }),
+  rowIndexChoices=reactive({  if( getPlotState()!="transform" ){ getTibRowChoices() } else { NULL } }),
+  matColIndex=reactive({  if( getPlotState()!="transform" ){ getTibMatCol() } else { NULL } }),
+  matColIndexChoices=reactive({  if( getPlotState()!="transform" ){ getTibMatColChoices() } else { NULL } }),
+  columnName= reactive({  if( getPlotState()!="transform" ){ getTibColumnName() } else { NULL } }),
+  columnNameChoices=reactive({  if( getPlotState()!="transform" ){ getTibColumnNameChoices() } else { NULL } }),
+  getTibEntry=reactive({  if( getPlotState()!="transform" ){ getTibEntry() } else { NULL } }),
+  getTibEntryChoices=reactive({  if( getPlotState()!="transform" ){ getTibEntryChoices() } else { NULL } }),
   headerId=NS("tagValBar", 'header')
 )
 
@@ -26,19 +26,40 @@ observeEvent(returnValue4ModuleEdTib$name(),{
   if(rightPanel()=='tibEditor'){
     name<-returnValue4ModuleEdTib$name()
     if(name==getTibName()){ return(NULL) } #bail if moduleEdTib did not change name
-    
     # name was changed by moduleEdTib
     # this invalidates all entries in selectedTibble
-    tibs<-getPtDefs()$tib
-    resetSelectedTibbleName(name, tibs)
+    #if(!is.null(name)){cat('name=',name,'\n')} else{ cat('name is NULL')}
+    if(name==TransformTag){
+      # setPlotState  to EdTib.transform
+      #cat("setPlotState('transform')\n")
+      #update selected Transform
+      setPlotState('transform')
+      updateSelected(name=TransformTag)
+    } else {
+      tibs<-getPtDefs()$tib
+      #cat( sprintf("resetSelectedTibbleName(%s, %s)\n", name, tibs))
+      resetSelectedTibbleName(name, tibs)
+    }
   }
 })
 
+observeEvent(returnValue4ModuleEdTib$transformType(),{
+  if(rightPanel()=='tibEditor' && getPlotState()=='transform'){
+      tt<-returnValue4ModuleEdTib$transformType()
+      if(!is.null(tt)){ cat('tt=',tt,'\n') } else{ cat('tt in NULL\n') }
+      if(!is.null(tt) && tt!=selectedTibble$transformType){
+        selectedTibble$transformType<-tt
+        #cat("selectedTibble$transformType=",  selectedTibble$transformType,"\n")
+      }
+  }
+
+})
 
 # rowIndex
 # if moduleEdTib changes the rowIndex,  matCol in selectedTibble needs to be updated
 observeEvent(returnValue4ModuleEdTib$rowIndex(),{
-  if(rightPanel()=='tibEditor'){
+  if(rightPanel()=='tibEditor' && getPlotState()!='transform' ){
+    #cat("returnValue4ModuleEdTib$rowIndex()\n")
     rowIndex<-returnValue4ModuleEdTib$rowIndex()
     if(rowIndex==getTibRow()){ return(NULL) } #bail if moduleEdTib did not change rowIndex 
     
@@ -64,7 +85,8 @@ observeEvent(returnValue4ModuleEdTib$rowIndex(),{
 
 # matColIndex
 observeEvent( returnValue4ModuleEdTib$matColIndex() ,{
-  if(rightPanel()=='tibEditor'){
+  if(rightPanel()=='tibEditor' &&  getPlotState()!='transform' ){
+    #cat("returnValue4ModuleEdTib$matColIndex()\n")
     matColIndex<-returnValue4ModuleEdTib$matColIndex()
     if( !is.null(matColIndex) ){ #add check for range
       updateSelected( matCol=matColIndex )
@@ -74,9 +96,10 @@ observeEvent( returnValue4ModuleEdTib$matColIndex() ,{
 
 #  columnName
 observeEvent(returnValue4ModuleEdTib$columnName(),{
-  if(rightPanel()=='tibEditor'){
+  if(rightPanel()=='tibEditor' &&  getPlotState()!='transform' ){
     colName<-returnValue4ModuleEdTib$columnName()
     if(!is.null(colName) && nchar(colName)>0 ){
+      #cat("updating columnName=", colName, "\n")
       updateSelected(columnName=colName)
     }
   }
@@ -86,7 +109,8 @@ observeEvent(returnValue4ModuleEdTib$columnName(),{
 
 #--------EDIT VALUE------------------------------
 observeEvent(returnValue4ModuleEdTib$entryValue(),{
-  if(rightPanel()=='tibEditor'){
+  if(rightPanel()=='tibEditor' && getPlotState()!='transform'){
+    #cat("returnValue4ModuleEdTib$entryValue()\n")
     # assuming tib is uptodate, simply work on the existing tib
     name<- returnValue4ModuleEdTib$name() 
     entry<-name %AND% returnValue4ModuleEdTib$entryValue()

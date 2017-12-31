@@ -73,7 +73,6 @@ observe({
         tibs<-pd$tib #!!! check this
         name<-tail(names(tibs),1) # !!! KLUDGE, last name 
         resetSelectedTibbleName(name, tibs)
-        
       }
     } 
     

@@ -49,8 +49,8 @@ shinyServer(function(input, output,session) {
   getPlotState<-reactive({panels$state})
   
   setPlotState<-function(state){
-    cat('setPlotstate=',state,"\n")
-    if(!is.null(state) && state %in% c('matrix','point')){
+    #cat('setPlotstate=',state,"\n")
+    if(!is.null(state) && state %in% c('matrix','point', 'transform')){
       panels$state<-state
     } else {
       panels$state<-'value'
@@ -95,7 +95,22 @@ shinyServer(function(input, output,session) {
   showGrid<-reactive({displayOptions$showGrid})
 
   
-   
+  ptrDisplayScript =reactive({ 
+    type=rightMidPanel()
+    if(type=='tibEditor.transform'){
+      type=  paste0(type,".",getTransformType() )
+      cat("type=",type,"\n")
+    }
+    scripts<-list(
+      tibEditor.point=    'var ptRPlotter_ptR_SVG_Point = new PtRPanelPoints("ptR_SVG_Point");',
+      tibEditor.value=    'var ptRPlotter_ptR_SVG_TagVal = new PtRPanelTagVal("ptR_SVG_TagVal");',
+      tibEditor.transform.Translate= 'var ptRPlotter_ptR_SVG_TRANSFORM_TRANSLATE = new PtRPanelTranslate("ptR_SVG_TRANSFORM");',
+      tibEditor.transform.Rotate=    'var ptRPlotter_ptR_SVG_TRANSFORM_ROTATE = new PtRPanelRotate("ptR_SVG_TRANSFORM");',
+      tibEditor.transform.Scale=     'var ptRPlotter_ptR_SVG_TRANSFORM_SCALE = new PtRPanelScale("ptR_SVG_TRANSFORM");',
+      tibEditor.matrix=    'var ptRPlotter_ptR_SVG_TagDrag = new PtRPanelTagDrag("ptR_SVG_TagDrag");'
+    )
+    scripts[type]
+  })
   
 
 # Event Observers-------------------------------- 
@@ -118,18 +133,16 @@ shinyServer(function(input, output,session) {
     })
   })
   
-  observe({
-    using<-usingTransformDraggable()
-    isolate({
-      if(using){
-        enableDMDM(session, "plotNavBar", "Transforms")
-      } else {
-        disableDMDM(session, "plotNavBar", "Transforms")
-      }
-    })
-    
-  }
-  )
+  # observe({
+  #   using<-usingTransformDraggable()
+  #   isolate({
+  #     if(using){
+  #       enableDMDM(session, "plotNavBar", "Transforms")
+  #     } else {
+  #       disableDMDM(session, "plotNavBar", "Transforms")
+  #     }
+  #   })}
+  # )
 
 
 #------------------rightPanel--------------------------------

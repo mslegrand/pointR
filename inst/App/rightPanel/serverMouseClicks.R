@@ -129,8 +129,8 @@ observe({
         }
       }
       
-      if(barName=='Transforms'){
-        #-------transformations of nodes marked as class 'movable'
+      if(barName=='tibEditor.transform'){
+        #-------transformations of nodes marked as class 'movable' (or 'transFormR' or 'dragR' )
         sender=paste0(barName, '.mouse')
         if(cmd=='trans'){ # -- translate the object by id
           tid<-input$mouseMssg$id

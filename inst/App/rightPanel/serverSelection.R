@@ -5,9 +5,16 @@ selectedTibble <- reactiveValues(
   row=1,
   columnName='x', # currently used only by tibbleEditor and could be placed there.
   matCol=0,
-  ptColName='x'      # !!! KLUDGE for now. should this default to last col?
+  ptColName='x',      # !!! KLUDGE for now. should this default to last col?
+  transformType='Translate'
 )
 
+getTransformType<-reactive({ 
+  if(is.null(selectedTibble$transformType)){
+    selectedTibble$transformType ='Translate'
+  }
+  selectedTibble$transformType
+})
 
 resetSelectedTibbleName<-function(name, tibs){
   if(is.null(name) || nchar(name)==0){ return(NULL)}
@@ -47,15 +54,19 @@ resetSelectedTibbleName<-function(name, tibs){
 
 updateSelected<-function( name, row, columnName, matCol,  ptColName ){
   if(!missing(name)){
+    #cat("updateSelected::name=",name,"\n")
     selectedTibble$name=name
   }
   if(!missing(ptColName)){
+    #cat("updateSelected::ptColName=",ptColName,"\n")
     selectedTibble$ptColName=ptColName
   }
   if(!missing(row)){ # !!! may want to provide a check here
+    #cat("updateSelected::row=",row,"\n")
     selectedTibble$row=row
   }
   if(!missing(matCol)){
+    #cat("updateSelected::matCol=",matCol,"\n")
     if(matCol=='end'){
       mc<-ncol(getTibPts()[[selectedTibble$row]])
       selectedTibble$matCol = ifelse(is.integer(mc), mc, 0)
@@ -65,14 +76,19 @@ updateSelected<-function( name, row, columnName, matCol,  ptColName ){
   }
   
   if(!missing(columnName)){
+    #cat("updateSelected::columnName=",columnName,"\n")
     selectedTibble$columnName=columnName
   }
 }
 
 getCode<-reactive({request$code})
-getTibName<-reactive({selectedTibble$name}) #allow to be null only if tib is null
+getTibName<-reactive({selectedTibble$name}) #allow to be null only if tib is null  
 getTibNameChoices<-reactive({
   ptDefs<-getPtDefs()
+  choices<-names(getPtDefs()$tib)
+  if( usingTransformDraggable() ){
+    choices<-c(choices, TransformTag)
+  }
   # if(is.null(ptDefs)){
   #   cat('\n===============getTibNameChoices:: ptDefs is NULL tib')
   # } else {
@@ -82,13 +98,15 @@ getTibNameChoices<-reactive({
   # }
   # rtv<-names(getPtDefs()$tib)
   
-  #browser()
-  names(getPtDefs()$tib)
+  # browser()
+  
+  choices
 }) #allow to be null only if tib is null
 
 getTibColumnName<-reactive({
   selectedTibble$columnName
 })
+
 getTibColumnNameChoices<-reactive({ 
   tib<-getTib()
   choices<-tib %AND% names(tib)

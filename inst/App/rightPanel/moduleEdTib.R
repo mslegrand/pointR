@@ -27,35 +27,50 @@ moduleEdTibUI<-function(id, input, output) {
     ),
     #end footer panel
     #begin headerPanel
-    absolutePanel( id='header',
+    absolutePanel( id=ns('header'),
         top=50, left=0, width="100%", "class"="headerPanel", draggable=FALSE, height="80px"
     ),
         #bottom=0, #height="200px",
         #div(style="display:inline-block",
         absolutePanel( top=50, left=15 ,style="display:inline-block",
           selectizeInput( ns("name"), "Data", choices=list(),  selected=NULL, 
-            width= '100px' 
-          )
-        ),
-        absolutePanel( top=50, left=125 ,
-          numericInput( ns("rowIndex"), "Row", 1, min=1, max=10, step=1, 
-             width= '70px' 
-          )
-        ), 
-        absolutePanel( top=50, left=200 ,
-          selectizeInput(ns("columnName"), label="Column",
-            choices=list(),  selected=NULL, 
             width= '120px' 
           )
         ),
-        absolutePanel( top=50, left=325 ,
-          selectizeInput(ns("entryValue"), "Value", 
-            options = list(create = TRUE),
-            choices=list(),  selected=NULL, 
-            width= '200px' 
+        conditionalPanel( condition = sprintf("input['%s'] == '%s'", ns("name"),TransformTag),
+          absolutePanel( 
+            top=50+25, left=145, width="100%", 
+            "class"="headerPanel", draggable=FALSE, "background-color"='#666688',
+            tabsetPanel( id=ns("transformType"),  
+                         tabPanel("Translate"), 
+                         tabPanel("Rotate"), 
+                         tabPanel("Scale"),
+                         
+                         type="pills"
+            ) 
+          )    
+        ),
+        conditionalPanel( condition = sprintf("input['%s'] != '%s'", ns("name"), TransformTag),
+          absolutePanel( top=50, left=145 ,
+            numericInput( ns("rowIndex"), "Row", 1, min=1, max=10, step=1, 
+               width= '70px' 
+            )
+          ), 
+          absolutePanel( top=50, left=220 ,
+            selectizeInput(ns("columnName"), label="Column",
+              choices=list(),  selected=NULL, 
+              width= '120px' 
+            )
+          ),
+          absolutePanel( top=50, left=345 ,
+            selectizeInput(ns("entryValue"), "Value", 
+              options = list(create = TRUE),
+              choices=list(),  selected=NULL, 
+              width= '200px' 
+            )
           )
         ),
-        absolutePanel(top=50, left=530,
+        absolutePanel(top=50, left=550,
           conditionalPanel( condition = sprintf("input['%s'] == 'point'", ns("entryValue")),
             numericInput(ns("matColIndex"), label="Mat Col", value=0,
                          min=0, max=0, step=1,
@@ -96,6 +111,7 @@ moduleEdTib<-function(input, output, session,
   updateEntry<-function(){
     #cat("\nentering----moduleEdTib----------updateEntry-------------------\n")
     entry=getTibEntry()
+    if(is.null(entry)){return(NULL)}
     if(is(entry,'matrix')){
       #cat("----------updateEntry::matrix-------------------\n")
       entry='matrix'
@@ -122,6 +138,8 @@ moduleEdTib<-function(input, output, session,
     }
     # cat("\nexiting----moduleEdTib----------updateEntry-------------------\n")
   }
+  
+  
   
   # updateMatCol<-function(){
   #   # if(!is.null(input$entryValue) && input$entryValue=='point'){
@@ -175,6 +193,8 @@ moduleEdTib<-function(input, output, session,
   observeEvent(c(barName(),name(), nameChoices() ), { #update the name 
     if(identical( barName(), 'tibEditor')){
       #cat('\n-----Entering----barName initialization for tibEditor (XX) \n')
+      
+      #cat("length(nameChoices())=",length(nameChoices()),"\n" )
       if(length(nameChoices())==0){ #name choices
         #cat("\n------------------hiding header")
         #hideElement( headerId ) 
@@ -197,6 +217,7 @@ moduleEdTib<-function(input, output, session,
         #   cat('name=',name(), "\n\n")
         #   cat('nameChoices=',paste(nameChoices(), collapse=", "), "\n\n")
         # }
+        #cat('name=',name(),'\n')
         updateSelectizeInput(session, "name", 
                           choices=nameChoices(), 
                           selected=name())
@@ -210,8 +231,8 @@ moduleEdTib<-function(input, output, session,
   
   
   observeEvent( c(barName(), rowIndex(), rowIndexChoices() ),  { #update index
-    if(identical( barName(), 'tibEditor')){
-      # cat('\n-----Entering----update rowIndex, rowIndexChoices \n')
+    if(identical( barName(), 'tibEditor') && !is.null(rowIndex()) && !is.null(rowIndexChoices() )){
+       #cat('\n-----Entering----update rowIndex, rowIndexChoices \n')
       # cat('\n---------entering--------oE 1-124\n')
       updateNumericInput(
         session, 
@@ -230,7 +251,7 @@ moduleEdTib<-function(input, output, session,
   
   
   observeEvent( c(columnName(), columnNameChoices()) , {
-    # cat('\n-----Entering----update columnName \n')
+     #cat('\n-----Entering----update columnName \n')
     # cat("\n---------entering------oE1-125.1\n")
     if(identical( barName(), 'tibEditor')){
       # cat('oE update 1-125.2\n')
@@ -259,7 +280,7 @@ moduleEdTib<-function(input, output, session,
   
   observeEvent( c(getTibEntry(), getTibEntryChoices()) , { 
     if(identical( barName(), 'tibEditor')){
-      # cat('\n-----Entering----update tibEntry \n')
+       #cat('\n-----Entering----update tibEntry \n')
       # cat('oE 1-126\n')
       # # updateSelectInput(session, "columnName", 
       #                   choices=columnNameChoices(), 
@@ -289,6 +310,7 @@ moduleEdTib<-function(input, output, session,
     backwardPt   = reactive(input$backwardPt),
     forwardPt    = reactive(input$forwardPt),
     removePt     =reactive({input$removePt}),
-    tagPt        =reactive({input$tagPt})
+    tagPt        =reactive({input$tagPt}),
+    transformType =reactive({input$transformType})
   )
 }

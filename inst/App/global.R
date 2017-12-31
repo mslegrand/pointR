@@ -75,6 +75,7 @@ source("leftPanel/shinyAce4Ptr.R")
 
 #some consts
 defTag<-"ptR"
+TransformTag<-"Transforms"
 #this should be ultimately place in another file
 getSVGWH<-function(){ c(650,620)}
 
