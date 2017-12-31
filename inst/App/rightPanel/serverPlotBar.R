@@ -96,15 +96,13 @@ output$MidRightPanel<-renderUI({
   #cat('output$MidRightPanel:: chosenRightPanel=',chosenRightMidPanel,"\n")
   if(chosenRightMidPanel=="Points"){
     modulePlotSVGrUI("svgPointsMod")
-  } else if (chosenRightMidPanel=='tibEditor.point'){
+  } else 
+  if (chosenRightMidPanel=='tibEditor.point'){
         modulePlotSVGrUI("svgPointsMod")
   } else if (chosenRightMidPanel=='tibEditor.value'){
         modulePlotSVGrUI("svgTagValsMod")
   } else if (chosenRightMidPanel=='tibEditor.matrix'){
         modulePlotSVGrUI("svgTagDragMod")
-  } else if (chosenRightMidPanel=='Transforms'){
-    modulePlotSVGrUI("svgTransformMod")
-  #} else if (chosenRightMidPanel %in% c( "tibEditor.transform.Translate", "tibEditor.transform.Rotate","tibEditor.transform.Scale") ){
   } else if (chosenRightMidPanel == "tibEditor.transform" ){
     modulePlotSVGrUI("svgTransformMod")
   } else if (chosenRightMidPanel=="logPanel"){
