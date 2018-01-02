@@ -32,11 +32,13 @@ moduleEdTibUI<-function(id, input, output) {
     ),
         #bottom=0, #height="200px",
         #div(style="display:inline-block",
+        # display always
         absolutePanel( top=50, left=15 ,style="display:inline-block",
           selectizeInput( ns("name"), "Data", choices=list(),  selected=NULL, 
             width= '120px' 
           )
         ),
+        #display if selected is transform
         conditionalPanel( condition = sprintf("input['%s'] == '%s'", ns("name"),TransformTag),
           absolutePanel( 
             top=50+25, left=145, width="100%", 
@@ -50,6 +52,8 @@ moduleEdTibUI<-function(id, input, output) {
             ) 
           )    
         ),
+        # display only if input name is a tibble
+        # !!!TODO: add input[name]!=LogTag
         conditionalPanel( condition = sprintf("input['%s'] != '%s'", ns("name"), TransformTag),
           absolutePanel( top=50, left=145 ,
             numericInput( ns("rowIndex"), "Row", 1, min=1, max=10, step=1, 
@@ -68,15 +72,16 @@ moduleEdTibUI<-function(id, input, output) {
               choices=list(),  selected=NULL, 
               width= '200px' 
             )
-          )
-        ),
-        absolutePanel(top=50, left=550,
-          conditionalPanel( condition = sprintf("input['%s'] == 'point'", ns("entryValue")),
-            numericInput(ns("matColIndex"), label="Mat Col", value=0,
-                         min=0, max=0, step=1,
-                         width= '80px' 
+          ), 
+          # display if state is  point
+          absolutePanel(top=50, left=550,
+            conditionalPanel( condition = sprintf("input['%s'] == 'point'", ns("entryValue")),
+              numericInput(ns("matColIndex"), label="Mat Col", value=0,
+                           min=0, max=0, step=1,
+                           width= '80px' 
+              )
             )
-        )
+          )
         )
         # ,
         # absolutePanel(top=0, left=530, 
@@ -108,21 +113,41 @@ moduleEdTib<-function(input, output, session,
     ptDefs=NULL
   ) # note we add name post mortem!!!
   
+  
+  #updateEntry is called by observer of c(getTibEntry(), getTibEntryChoices())
   updateEntry<-function(){
     #cat("\nentering----moduleEdTib----------updateEntry-------------------\n")
     entry=getTibEntry()
     if(is.null(entry)){return(NULL)}
     if(is(entry,'matrix')){
       #cat("----------updateEntry::matrix-------------------\n")
-      entry='matrix'
+      #entry='matrix'
       #cat('---------attn: class(entry)=',class(entry),"\n")
       entryChoices=c('point','matrix')
+      lastEntry<-input$entryValue 
       if(length(input$entryValue)==0 || !(input$entryValue %in% entryChoices ) ){
         #"cat updating entryValue"
         updateSelectizeInput(session, "entryValue", 
                           choices=entryChoices, 
-                          selected=entry )
+                          selected='point' )
       }
+      if( !is.null(input$entryValue)=='point' && 
+         ( is.null(lastEntry) || lastEntry !='point' )){
+        matColIndex=ncol(entry)
+        if(matColIndex>0){
+          minChoice=1
+        } else {
+          minChoice=0
+        }
+        updateNumericInput(session, "matColIndex", 
+                           min=minChoice,
+                           max=matColIndex,
+                           value=matColIndex
+        ) 
+      }
+      
+      
+        
     } else {
       #cat("----------updateEntry::else-------------------\n")
       entryChoices=getTibEntryChoices()
@@ -174,7 +199,7 @@ moduleEdTib<-function(input, output, session,
           ) 
     }
   })
-  
+   
   # updateColumnName<-function(){
   #   #if(!is.null(columnName()) && ( is.null( input$columnName ) || !(input$columnName %in% columnNameChoices()))){
   #   
@@ -301,7 +326,7 @@ moduleEdTib<-function(input, output, session,
     rowIndex     = reactive({input$rowIndex}),
     columnName    =reactive({input$columnName}),
     entryValue   =reactive(input$entryValue),
-    applyTibEdit = reactive({input$applyTibEdit}),
+    #applyTibEdit = reactive({input$applyTibEdit}),
     tagClone    =reactive({input$tagClone}),
     tagDelete   =reactive({input$tagDelete}),
     tagMoveUp   =reactive({input$tagMoveUp}),

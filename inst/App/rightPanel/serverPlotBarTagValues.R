@@ -95,7 +95,7 @@ statusPlotTagVal<-callModule(
       ptName=getTibName(), 
       pts=getTibPts(), 
       rowIndex=getTibRow(),
-      ptDisplayMode=getDisplayModeTag() #, 
+      ptDisplayMode=getDisplayMode() #, 
     )
   }),
   ptrDisplayScript = reactive({ svgToolsScript( "TagVal") }), #ptrDisplayScript = reactive({ js.scripts[[ "TagVal"]]}),

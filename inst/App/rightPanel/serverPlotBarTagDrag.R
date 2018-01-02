@@ -90,7 +90,7 @@ statusPlotTagDrag<-callModule(
       ptName=getTibName(), 
       pts=getTibPts(), 
       rowIndex=getTibRow(),
-      ptDisplayMode=getDisplayModeTag()  
+      ptDisplayMode=getDisplayMode()  
     )
   }),
   ptrDisplayScript = reactive({ svgToolsScript( "TagDrag") }), # reactive({ js.scripts[[ "TagDrag"]] }),

@@ -23,4 +23,10 @@ getDisplayModeTag<-reactive({
     displayMode()
 })
 
+getDisplayMode<-reactive({
+  cat("displayOptions$ptMode=",displayOptions$ptMode,"\n")
+  displayOptions$ptMode
+})
+
+
 getInsertMode<-reactive({displayOptions$insertMode })

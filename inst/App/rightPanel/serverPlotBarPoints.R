@@ -115,7 +115,7 @@ statusPlotPoint<-callModule(
         pts=getTibPts(), #getPtDefs()$pts[[getPtName()]],
         rowIndex=getTibRow(),
         matColIndex=getTibMatCol(),
-        ptDisplayMode=getDisplayModeTag()
+        ptDisplayMode=getDisplayMode()
       )
     )
   }),

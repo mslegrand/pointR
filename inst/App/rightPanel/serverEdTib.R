@@ -36,6 +36,7 @@ observeEvent(returnValue4ModuleEdTib$name(),{
       setPlotState('transform')
       updateSelected(name=TransformTag)
     } else {
+      setPlotState(NULL)
       tibs<-getPtDefs()$tib
       #cat( sprintf("resetSelectedTibbleName(%s, %s)\n", name, tibs))
       resetSelectedTibbleName(name, tibs)
@@ -123,7 +124,7 @@ observeEvent(returnValue4ModuleEdTib$entryValue(),{
       # !!! TODO: type check if numeric
       rP<-rightPanel()
       if(is.null(rP))rP<-'NULL'
-      setPlotState(entry)
+      setPlotState(entry) # this is where we handle points/matrix
       if(!(entry %in% c('matrix','point'))){
         name<-getTibName()
         newPtDefs<-getPtDefs()

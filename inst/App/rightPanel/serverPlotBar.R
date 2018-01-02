@@ -4,12 +4,10 @@
 observeEvent(input$plotNavBar, {
   cmd<-getRightMenuCmd()
   if('character' %in% class(cmd)){
+    cat('cmd=',cmd,'\n')
   }
   if(is.null(cmd)){
     cmd<-"tibEditor" 
-  }
-  if(cmd %in% c( "Points", 'tibEditor', 'tagDrag', 'Transforms', 'log')){
-    updateRightPanel(cmd)
   }
   if(cmd == 'cmdShowGrid'){
     renameDMDM(session,  "plotNavBar", "cmdShowGrid", "Hide Grid", newValue="cmdHideGrid")
@@ -63,25 +61,28 @@ observeEvent(input$useTribble,{
 output$TopRightPanel<-renderUI({
   chosenRightPanel<-rightPanel() 
   # cat('output$TopRightPanel:: chosenRightPanel=',chosenRightPanel,"\n")
-  if(chosenRightPanel=="Points"){
-    modulePointsBarUI("pointsBar")
-  } else if (chosenRightPanel=='tibEditor'){
+  # if(chosenRightPanel=="Points"){
+  #   modulePointsBarUI("pointsBar")
+  # } else 
+  if (chosenRightPanel=='tibEditor'){
     moduleEdTibUI("tagValBar", input, output)
-  } else if (chosenRightPanel=='tagDrag'){
-    moduleTagDragUI("tagDragBar")
-  } else if (chosenRightPanel=='Transforms'){
-    absolutePanel( 
-      top=50, left=0, width="100%", 
-      "class"="headerPanel", draggable=FALSE,
-        tabsetPanel( id="transformOption", 
-          tabPanel("Translate"), 
-          tabPanel("Rotate"), 
-          tabPanel("Scale"),
-          
-          type="pills"
-        ) 
-    )
-  } else if (chosenRightPanel=="log"){
+  } 
+  # else if (chosenRightPanel=='tagDrag'){
+  #   moduleTagDragUI("tagDragBar")
+  # } else if (chosenRightPanel=='Transforms'){
+  #   absolutePanel( 
+  #     top=50, left=0, width="100%", 
+  #     "class"="headerPanel", draggable=FALSE,
+  #       tabsetPanel( id="transformOption", 
+  #         tabPanel("Translate"), 
+  #         tabPanel("Rotate"), 
+  #         tabPanel("Scale"),
+  #         
+  #         type="pills"
+  #       ) 
+  #   )
+  # } 
+  else if (chosenRightPanel=="log"){
     absolutePanel(  draggable=FALSE,
                     "class"="cLogText",
                     verbatimTextOutput("out_log"))
@@ -93,7 +94,7 @@ output$TopRightPanel<-renderUI({
 output$MidRightPanel<-renderUI({
  
   chosenRightMidPanel<-rightMidPanel()
-  #cat('output$MidRightPanel:: chosenRightPanel=',chosenRightMidPanel,"\n")
+  cat('output$MidRightPanel:: chosenRightPanel=',chosenRightMidPanel,"\n")
   if(chosenRightMidPanel=="Points"){
     modulePlotSVGrUI("svgPointsMod")
   } else 

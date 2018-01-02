@@ -21,7 +21,7 @@ resetSelectedTibbleName<-function(name, tibs){
   if(is.null(tibs) || is.null(names(tibs)) || length(names(tibs))==0){ return(NULL)}
   if(!(name %in% names(tibs))){ name=tibs[[1]]}
   
-  
+#  cat('resetSelectedTibbleName:: name=', name, '\n')
   #set name
   selectedTibble$name=name
   tib<-tibs[[name]]
@@ -46,10 +46,12 @@ resetSelectedTibbleName<-function(name, tibs){
     entry<-tib[[indices$rowIndex, indices$colIndex]]
     if( is.matrix(entry) && dim(entry)[1]==2 ){ 
       matColIndex<-ncol(entry)
+      setPlotState('point') # set to plot state
     } 
+    
   }
   selectedTibble$matCol<-matColIndex
-  pts<-tibs[[selectedTibble$name]][[selectedTibble$ptColName]] 
+  #pts<-tibs[[selectedTibble$name]][[selectedTibble$ptColName]] 
 }
 
 updateSelected<-function( name, row, columnName, matCol,  ptColName ){
@@ -89,6 +91,7 @@ getTibNameChoices<-reactive({
   if( usingTransformDraggable() ){
     choices<-c(choices, TransformTag)
   }
+  choices<-c(choices,'log')
   # if(is.null(ptDefs)){
   #   cat('\n===============getTibNameChoices:: ptDefs is NULL tib')
   # } else {

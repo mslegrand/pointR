@@ -181,11 +181,11 @@ shinyUI(
                                        menuItem('Hide', value='cmdHideBack'),
                                        menuItem('Color', value='cmdBackDropColor')
                          )
-            ) ,
+            ) #,
             
             #---------------plotNavBar:points  ------------------------------------
-            menuItem("Points", value="tibEditor"),
-            menuItem("Log", value="logPanel")
+            #menuItem("Points", value="tibEditor"),
+            #menuItem("Log", value="logPanel")
           ), 
           #----------end right menu
           #--------begin right content

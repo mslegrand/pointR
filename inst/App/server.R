@@ -50,7 +50,17 @@ shinyServer(function(input, output,session) {
   
   setPlotState<-function(state){
     #cat('setPlotstate=',state,"\n")
-    if(!is.null(state) && state %in% c('matrix','point', 'transform')){
+    if(!is.null(state) && (state %in% c('matrix','point', 'transform'))){
+      if(state=='point' && panels$state!='point'){ 
+        # get the number of columns of the entry
+        entry=getTibEntry()
+        if(!is.null(entry) && is.matrix(entry)){
+          nc<-ncol(entry)
+        } else {
+          nc<-0
+        }
+        updateSelected(matCol=nc)
+      }
       panels$state<-state
     } else {
       panels$state<-'value'
