@@ -19,7 +19,7 @@ deleteColumnModal <- function(columnName = NULL) {
 
 
 observeEvent(input$deleteColumnButton, {
-  if(rightPanel()=='tibEditor'){
+  if(tibEditState()==TRUE){
     indx<-getTibColumn()
     newPtDefs<-getPtDefs()
     newPtDefs$tib[[getTibName()]]<-newPtDefs$tib[[getTibName()]][,-indx]

@@ -8,17 +8,18 @@ observe({input$messageFromAce
       request$code<-input$messageFromAce$code
       request$sender<-input$messageFromAce$sender
       cat('input$messageFromAce::sender=',request$sender,"\n")
-      cat('nchar(code)=',nchar(request$code),"\n")
+      # cat('nchar(code)=',nchar(request$code),"\n")
       
       if(length(input$messageFromAce$dirty)>0){
         editOption$.saved <- !(as.numeric(input$messageFromAce$dirty) > 0)
       }
-      if(request$sender %in% c('cmd.commit','cmd.openFileNow', 'cmd.saveFileNow' )){
+      if(request$sender %in% c('cmd.commit','cmd.openFileNow', 'cmd.saveFileNow', 'cmd.file.new' )){
         processCommit()
       } 
       if( request$sender %in% 'cmd.openFileNow'){
         # !!! TODO: set point.index to end of points (if points)
       }
+      
       if(request$sender %in% 'cmd.saveFileNow'){
         datapath<-input$messageFromAce$auxValue
         txt<-input$messageFromAce$code

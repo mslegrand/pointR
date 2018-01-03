@@ -7,7 +7,8 @@ observeEvent(input$plotNavBar, {
     cat('cmd=',cmd,'\n')
   }
   if(is.null(cmd)){
-    cmd<-"tibEditor" 
+    cat('cmd=NULL\n')
+    return(NULL)
   }
   if(cmd == 'cmdShowGrid'){
     renameDMDM(session,  "plotNavBar", "cmdShowGrid", "Hide Grid", newValue="cmdHideGrid")
@@ -64,9 +65,9 @@ output$TopRightPanel<-renderUI({
   # if(chosenRightPanel=="Points"){
   #   modulePointsBarUI("pointsBar")
   # } else 
-  if (chosenRightPanel=='tibEditor'){
+  #if (chosenRightPanel=='tibEditor'){
     moduleEdTibUI("tagValBar", input, output)
-  } 
+  #} 
   # else if (chosenRightPanel=='tagDrag'){
   #   moduleTagDragUI("tagDragBar")
   # } else if (chosenRightPanel=='Transforms'){
@@ -82,29 +83,30 @@ output$TopRightPanel<-renderUI({
   #       ) 
   #   )
   # } 
-  else if (chosenRightPanel=="log"){
-    absolutePanel(  draggable=FALSE,
-                    "class"="cLogText",
-                    verbatimTextOutput("out_log"))
-  } 
+  # else if (chosenRightPanel=="log"){
+  #   absolutePanel(  draggable=FALSE,
+  #                   "class"="cLogText",
+  #                   verbatimTextOutput("out_log"))
+  # }
 })
 
 
 
 output$MidRightPanel<-renderUI({
  
-  chosenRightMidPanel<-rightMidPanel()
+  #chosenRightMidPanel<-rightMidPanel()
+  chosenRightMidPanel<-getRightMidPanel2()
   cat('output$MidRightPanel:: chosenRightPanel=',chosenRightMidPanel,"\n")
   if(chosenRightMidPanel=="Points"){
     modulePlotSVGrUI("svgPointsMod")
   } else 
-  if (chosenRightMidPanel=='tibEditor.point'){
+  if (chosenRightMidPanel=='point'){
         modulePlotSVGrUI("svgPointsMod")
-  } else if (chosenRightMidPanel=='tibEditor.value'){
+  } else if (chosenRightMidPanel=='value'){
         modulePlotSVGrUI("svgTagValsMod")
-  } else if (chosenRightMidPanel=='tibEditor.matrix'){
+  } else if (chosenRightMidPanel=='matrix'){
         modulePlotSVGrUI("svgTagDragMod")
-  } else if (chosenRightMidPanel == "tibEditor.transform" ){
+  } else if (chosenRightMidPanel == "transform" ){
     modulePlotSVGrUI("svgTransformMod")
   } else if (chosenRightMidPanel=="logPanel"){
     moduleLogUI("errLogMod")

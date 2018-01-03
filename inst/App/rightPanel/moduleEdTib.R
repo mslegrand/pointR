@@ -39,7 +39,7 @@ moduleEdTibUI<-function(id, input, output) {
           )
         ),
         #display if selected is transform
-        conditionalPanel( condition = sprintf("input['%s'] == '%s'", ns("name"),TransformTag),
+        conditionalPanel( condition = sprintf("input['%s'] == '%s'", ns("name"), transformTag),
           absolutePanel( 
             top=50+25, left=145, width="100%", 
             "class"="headerPanel", draggable=FALSE, "background-color"='#666688',
@@ -54,7 +54,7 @@ moduleEdTibUI<-function(id, input, output) {
         ),
         # display only if input name is a tibble
         # !!!TODO: add input[name]!=LogTag
-        conditionalPanel( condition = sprintf("input['%s'] != '%s'", ns("name"), TransformTag),
+        conditionalPanel( condition = sprintf("input['%s'] != '%s' ", ns("name"), transformTag, ns("name"), logTag),
           absolutePanel( top=50, left=145 ,
             numericInput( ns("rowIndex"), "Row", 1, min=1, max=10, step=1, 
                width= '70px' 
@@ -106,6 +106,7 @@ moduleEdTib<-function(input, output, session,
   columnNameChoices,
   getTibEntry,
   getTibEntryChoices, 
+  tibEditState,
   headerId
 ){
   ns<-NS(id2)
@@ -215,8 +216,8 @@ moduleEdTib<-function(input, output, session,
   # }
   
   #ToDo!!! 
-  observeEvent(c(barName(),name(), nameChoices() ), { #update the name 
-    if(identical( barName(), 'tibEditor')){
+  observeEvent(c( name(), nameChoices() ), { #update the name 
+    #if(identical( barName(), 'tibEditor')){
       #cat('\n-----Entering----barName initialization for tibEditor (XX) \n')
       
       #cat("length(nameChoices())=",length(nameChoices()),"\n" )
@@ -250,13 +251,14 @@ moduleEdTib<-function(input, output, session,
       #cat('\n-----Exiting----oE 1-123\n')
       #cat('\n***********************\n-----Leaving----barName initialization for tibEditor \n')
       }
-    }
+    #}
   }) 
   
   
   
   observeEvent( c(barName(), rowIndex(), rowIndexChoices() ),  { #update index
-    if(identical( barName(), 'tibEditor') && !is.null(rowIndex()) && !is.null(rowIndexChoices() )){
+    if( tibEditState()==TRUE && 
+       !is.null(rowIndex()) && !is.null(rowIndexChoices() )){
        #cat('\n-----Entering----update rowIndex, rowIndexChoices \n')
       # cat('\n---------entering--------oE 1-124\n')
       updateNumericInput(
@@ -278,7 +280,7 @@ moduleEdTib<-function(input, output, session,
   observeEvent( c(columnName(), columnNameChoices()) , {
      #cat('\n-----Entering----update columnName \n')
     # cat("\n---------entering------oE1-125.1\n")
-    if(identical( barName(), 'tibEditor')){
+    if( tibEditState()==TRUE ){
       # cat('oE update 1-125.2\n')
       #updateColumnName()
       
@@ -304,7 +306,7 @@ moduleEdTib<-function(input, output, session,
   })
   
   observeEvent( c(getTibEntry(), getTibEntryChoices()) , { 
-    if(identical( barName(), 'tibEditor')){
+    if( tibEditState()==TRUE ){
        #cat('\n-----Entering----update tibEntry \n')
       # cat('oE 1-126\n')
       # # updateSelectInput(session, "columnName", 

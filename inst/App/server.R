@@ -29,21 +29,18 @@ shinyServer(function(input, output,session) {
   panels<-reactiveValues(
     left='source',   #to be used as editor name later, for connecting to right graphics
     right="tibEditor",
-    state='point'
+    state='point',
+    right2='point'
   )
   
-  rightPanel<-reactive({panels$right})
+  rightPanel<-reactive({
+    panels$right
+  })
   
-  rightMidPanel<-reactive({
-    right<-panels$right
-    state<-panels$state  
-    if(!is.null(right) && right=="tibEditor"){
-      if(is.null(state)){ state='point'}
-      rtv<-paste0(right,".",state)
-    } else {
-      rtv<-panels$right
-    }
-    rtv
+  
+  getRightMidPanel2<-reactive({
+    cat( "getRightMidPanel2=",panels$right2,"\n")
+    panels$right2
   })
   
   getPlotState<-reactive({panels$state})
@@ -65,9 +62,34 @@ shinyServer(function(input, output,session) {
     } else {
       panels$state<-'value'
     }
+    panels$right2<-panels$state
   }
   
-  updateRightPanel<-function(panel){ panels$right<-panel}
+  updateRightPanel<-function(panel){ 
+    panels$right<-panel
+    cat("updateRightPanel::panel=",panel,"\n")
+    if(panel!='logPanel'){
+      panels$right2<-panel
+    } else {
+      panels$right2<-panels$state
+    }
+  }
+  
+  getRightPanelChoices<-reactive({ #identical to getTibNameChoices
+    ptDefs<-getPtDefs()
+    choices<-names(getPtDefs()$tib)
+    if( usingTransformDraggable() ){
+      choices<-c(choices, transformTag)
+    }
+    choices<-c(choices,logTag)
+  })
+  
+  is.tibName<-function(x){ !is.null(x) || x==logTag || x==transformTag}
+  
+  tibEditState<-reactive({
+    cat("panels$right2=",panels$right2,"\n")
+    panels$right2 %in% c("point", "value", "matrix")
+  })
 
   getLeftMenuCmd<-reactive({input$editNavBar$item})
   getRightMenuCmd<-reactive({input$plotNavBar$item})
@@ -106,18 +128,19 @@ shinyServer(function(input, output,session) {
 
   
   ptrDisplayScript =reactive({ 
-    type=rightMidPanel()
-    if(type=='tibEditor.transform'){
+    type=getRightMidPanel2()
+    if(type=='transform'){
       type=  paste0(type,".",getTransformType() )
-      cat("type=",type,"\n")
+      
     }
+    cat("type=",type,"\n")
     scripts<-list(
-      tibEditor.point=    'var ptRPlotter_ptR_SVG_Point = new PtRPanelPoints("ptR_SVG_Point");',
-      tibEditor.value=    'var ptRPlotter_ptR_SVG_TagVal = new PtRPanelTagVal("ptR_SVG_TagVal");',
-      tibEditor.transform.Translate= 'var ptRPlotter_ptR_SVG_TRANSFORM_TRANSLATE = new PtRPanelTranslate("ptR_SVG_TRANSFORM");',
-      tibEditor.transform.Rotate=    'var ptRPlotter_ptR_SVG_TRANSFORM_ROTATE = new PtRPanelRotate("ptR_SVG_TRANSFORM");',
-      tibEditor.transform.Scale=     'var ptRPlotter_ptR_SVG_TRANSFORM_SCALE = new PtRPanelScale("ptR_SVG_TRANSFORM");',
-      tibEditor.matrix=    'var ptRPlotter_ptR_SVG_TagDrag = new PtRPanelTagDrag("ptR_SVG_TagDrag");'
+      point=    'var ptRPlotter_ptR_SVG_Point = new PtRPanelPoints("ptR_SVG_Point");',
+      value=    'var ptRPlotter_ptR_SVG_TagVal = new PtRPanelTagVal("ptR_SVG_TagVal");',
+      transform.Translate= 'var ptRPlotter_ptR_SVG_TRANSFORM_TRANSLATE = new PtRPanelTranslate("ptR_SVG_TRANSFORM");',
+      transform.Rotate=    'var ptRPlotter_ptR_SVG_TRANSFORM_ROTATE = new PtRPanelRotate("ptR_SVG_TRANSFORM");',
+      transform.Scale=     'var ptRPlotter_ptR_SVG_TRANSFORM_SCALE = new PtRPanelScale("ptR_SVG_TRANSFORM");',
+      matrix=    'var ptRPlotter_ptR_SVG_TagDrag = new PtRPanelTagDrag("ptR_SVG_TagDrag");'
     )
     scripts[type]
   })

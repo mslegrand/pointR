@@ -1,5 +1,6 @@
 
-
+# todo!!! rename selectedTibble to something else, like selection 
+# add svg as a name when needed.
 selectedTibble <- reactiveValues(
   name="x",        # name of current point array
   row=1,
@@ -85,26 +86,7 @@ updateSelected<-function( name, row, columnName, matCol,  ptColName ){
 
 getCode<-reactive({request$code})
 getTibName<-reactive({selectedTibble$name}) #allow to be null only if tib is null  
-getTibNameChoices<-reactive({
-  ptDefs<-getPtDefs()
-  choices<-names(getPtDefs()$tib)
-  if( usingTransformDraggable() ){
-    choices<-c(choices, TransformTag)
-  }
-  choices<-c(choices,'log')
-  # if(is.null(ptDefs)){
-  #   cat('\n===============getTibNameChoices:: ptDefs is NULL tib')
-  # } else {
-  #   cat('\n==============getTibNameChoices:: ptDefs is NOT NULL tib\n')
-  #   cat('\ngetTibNameChoices:: length(choices)=', length(names(getPtDefs()$tib)),"\n")
-  #   cat('\ngetTibNameChoices:: choices=', paste(names(getPtDefs()$tib),collapse=", "),"\n")
-  # }
-  # rtv<-names(getPtDefs()$tib)
-  
-  # browser()
-  
-  choices
-}) #allow to be null only if tib is null
+
 
 getTibColumnName<-reactive({
   selectedTibble$columnName
@@ -212,7 +194,7 @@ getTibRowChoices<-reactive({
 
 
 getTibMatCol<-reactive({ 
-  cat( "selectedTibble$matCol=", selectedTibble$matCol ,"\n" )
+  #cat( "selectedTibble$matCol=", selectedTibble$matCol ,"\n" )
   selectedTibble$matCol 
 })
 

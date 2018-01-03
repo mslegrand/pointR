@@ -1,6 +1,10 @@
 cmdFileNew<-function(){
-  
-  updateRightPanel("tibEditor")
+  # panels$state<-'point'  # !!! crude kludge!!! panels$right2 
+  # cat("filenew\n")
+  # panels$right2<-"point"
+  # #updateRightPanel("tibEditor") #shows header (but not footer)
+  # updateRightPanel("point") #shows mid (but not header)
+ 
   src<-codeTemplate
   session$sendCustomMessage(
     type = "shinyAceExt",

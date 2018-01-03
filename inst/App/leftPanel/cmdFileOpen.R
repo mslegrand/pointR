@@ -91,8 +91,8 @@ openFileNow<-function(fileName){
       
     }
   }
-  updateRightPanel("tibEditor")
-  updateNavbarPage(session, "tagFreq", selected ="Off") 
+  #updateRightPanel("tibEditor")
+  #updateNavbarPage(session, "tagFreq", selected ="Off") 
   
 }
 
