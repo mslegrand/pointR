@@ -45,12 +45,12 @@ processCommit<-reactive({
         if(length(ptRPos)>=1 && length(svgRPos)>=1 && !(ptRPos[1]<svgRPos[1])){
           base::stop("Bad File: ptR list must come prior to svgR call")
         }
-        if(length(svgRPos)==1){
-          if(length(ptRPos)==0){
-            # switch to tibEditor
-            updateRightPanel("tibEditor")
-          }
-        }
+        # if(length(svgRPos)==1){
+        #   if(length(ptRPos)==0){
+        #     # switch to tibEditor
+        #     updateRightPanel("tibEditor")
+        #   }
+        # }
         if(length(svgRPos)==0){ # just R code I guess
           # capture capture output as mssg
           output<-captureOutput(eval(parse(text=src)))

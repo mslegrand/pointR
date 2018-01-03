@@ -33,7 +33,7 @@ shinyServer(function(input, output,session) {
     right2='point'
   )
   
-  rightPanel<-reactive({
+  rightPanel<-reactive({ #used by errLogModuleList in serverLog.R
     panels$right
   })
   
@@ -75,7 +75,7 @@ shinyServer(function(input, output,session) {
     }
   }
   
-  getRightPanelChoices<-reactive({ #identical to getTibNameChoices
+  getRightPanelChoices<-reactive({ # includes names of tibs
     ptDefs<-getPtDefs()
     choices<-names(getPtDefs()$tib)
     if( usingTransformDraggable() ){
