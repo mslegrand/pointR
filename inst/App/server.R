@@ -28,9 +28,8 @@ shinyServer(function(input, output,session) {
   
   panels<-reactiveValues(
     left='source',   #to be used as editor name later, for connecting to right graphics
-    #right="tibEditor",
     state='point',
-    right2='point',
+    #right2='point',
     sourceType='svgPanel' #  sourceType = 'svgPanel'  means svgR code
                           #  sourceType = 'logPanel' means plain R code or error
                           #  sourceType is set from processCommit
@@ -47,7 +46,8 @@ shinyServer(function(input, output,session) {
     if(panels$sourceType=='logPanel'){
       rtv<-"logPanel"
     } else {
-      rtv<-panels$right2
+      #rtv<-panels$right2
+      rtv<-panels$state
     }
     cat( "getRightMidPanel2=",rtv,"\n")
     rtv
@@ -55,7 +55,7 @@ shinyServer(function(input, output,session) {
   
   getPlotState<-reactive({panels$state})
   
-  setPlotState<-function(state){
+  setPlotState<-function(state){ 
     #cat('setPlotstate=',state,"\n")
     if(!is.null(state) && (state %in% c('matrix','point', 'transform', 'logPanel'))){
       if(state=='point' && panels$state!='point'){ 
@@ -72,7 +72,7 @@ shinyServer(function(input, output,session) {
     } else {
       panels$state<-'value'
     }
-    panels$right2<-panels$state
+    #panels$right2<-panels$state
   }
   
   getRightPanelChoices<-reactive({ # includes names of tibs
@@ -101,8 +101,8 @@ shinyServer(function(input, output,session) {
   is.tibName<-function(x){ !is.null(x) || x==logTag || x==transformTag}
   
   tibEditState<-reactive({
-    cat("panels$right2=",panels$right2,"\n")
-    (panels$sourceType)=='svgPanel' && (panels$right2 %in% c("point", "value", "matrix"))
+    #cat("panels$right2=",panels$right2,"\n")
+    (panels$sourceType)=='svgPanel' && (panels$state %in% c("point", "value", "matrix"))
   })
 
   getLeftMenuCmd<-reactive({input$editNavBar$item})
