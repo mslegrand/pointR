@@ -41,7 +41,7 @@ moduleLog<-function(
 errLogModuleList<-callModule( #auto  input, output, session 
   module=moduleLog, 
   id="errLogMod", 
-  barName=rightPanel,
+  barName=getRightMidPanel2,
   logMssgs=getErrorMssg
 )
 

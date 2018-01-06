@@ -30,24 +30,44 @@ shinyServer(function(input, output,session) {
     left='source',   #to be used as editor name later, for connecting to right graphics
     right="tibEditor",
     state='point',
-    right2='point'
+    right2='point',
+    sourceType='svgPanel' #  sourceType = 'svgPanel'  means svgR code
+                          #  sourceType = 'logPanel' means plain R code or error
+                          #  sourceType is set from processCommit
   )
+  
+  setPanelValues<-function( sourceType ){
+    if(!missing(sourceType)){
+      cat('setPanelValues:: sourceType=',sourceType,"\n")
+      panels$sourceType=sourceType
+    }
+  }
+  
+  # observeEvent(panels$right,{
+  #   if(!is.null(panels$right)){
+  #     cat("\n\n***************panels$right=",panels$right,"\n\n\n")
+  #   }
+  # })
   
   rightPanel<-reactive({ #used by errLogModuleList in serverLog.R
     panels$right
   })
   
-  
   getRightMidPanel2<-reactive({
-    cat( "getRightMidPanel2=",panels$right2,"\n")
-    panels$right2
+    if(panels$sourceType=='logPanel'){
+      rtv<-"logPanel"
+    } else {
+      rtv<-panels$right2
+    }
+    cat( "getRightMidPanel2=",rtv,"\n")
+    rtv
   })
   
   getPlotState<-reactive({panels$state})
   
   setPlotState<-function(state){
     #cat('setPlotstate=',state,"\n")
-    if(!is.null(state) && (state %in% c('matrix','point', 'transform'))){
+    if(!is.null(state) && (state %in% c('matrix','point', 'transform', 'logPanel'))){
       if(state=='point' && panels$state!='point'){ 
         # get the number of columns of the entry
         entry=getTibEntry()
@@ -65,30 +85,45 @@ shinyServer(function(input, output,session) {
     panels$right2<-panels$state
   }
   
-  updateRightPanel<-function(panel){ 
-    panels$right<-panel
-    cat("updateRightPanel::panel=",panel,"\n")
-    if(panel!='logPanel'){
-      panels$right2<-panel
-    } else {
-      panels$right2<-panels$state
-    }
-  }
+  # updateRightPanel<-function(panel){ 
+  #   panels$right<-panel
+  #   cat("\n\n****updateRightPanel::panel=",panel,"\n\n")
+  #   if(panel!='logPanel'){
+  #     panels$right2<-panel
+  #   } else {
+  #     panels$right2<-panels$state
+  #   }
+  # }
   
   getRightPanelChoices<-reactive({ # includes names of tibs
-    ptDefs<-getPtDefs()
-    choices<-names(getPtDefs()$tib)
-    if( usingTransformDraggable() ){
-      choices<-c(choices, transformTag)
+    if(panels$sourceType=='logPanel'){
+      choices='logPanel'
+    } else {
+      ptDefs<-getPtDefs()
+      choices<-names(getPtDefs()$tib)
+      if( usingTransformDraggable() ){
+        choices<-c(choices, transformTag)
+      }
+      choices<-c(choices,logTag)
     }
-    choices<-c(choices,logTag)
+    cat("getRightPanelChoices\n" )
+    print(choices)
+    choices
+  })
+  
+  getRightPanelName<-reactive({
+    if(panels$sourceType=='logPanel'){
+      return('logPanel')
+    } else {
+      return(selectedTibble$name)
+    }
   })
   
   is.tibName<-function(x){ !is.null(x) || x==logTag || x==transformTag}
   
   tibEditState<-reactive({
     cat("panels$right2=",panels$right2,"\n")
-    panels$right2 %in% c("point", "value", "matrix")
+    (panels$sourceType)=='svgPanel' && (panels$right2 %in% c("point", "value", "matrix"))
   })
 
   getLeftMenuCmd<-reactive({input$editNavBar$item})
@@ -131,7 +166,6 @@ shinyServer(function(input, output,session) {
     type=getRightMidPanel2()
     if(type=='transform'){
       type=  paste0(type,".",getTransformType() )
-      
     }
     cat("type=",type,"\n")
     scripts<-list(
@@ -155,16 +189,16 @@ shinyServer(function(input, output,session) {
   source("leftPanel/helpSVG.R", local=TRUE) 
   
 #---navbar disable /enabler controls
-  observe({
-    isTibble<-TRUE # !!!TODO implement simple matrices  
-    isolate({
-      if(isTibble){
-        enableDMDM(session, "plotNavBar", "Tags")
-      } else {
-        disableDMDM(session, "plotNavBar", "Tags")
-      }
-    })
-  })
+  # observe({
+  #   isTibble<-TRUE # !!!TODO implement simple matrices  
+  #   isolate({
+  #     if(isTibble){
+  #       enableDMDM(session, "plotNavBar", "Tags")
+  #     } else {
+  #       disableDMDM(session, "plotNavBar", "Tags")
+  #     }
+  #   })
+  # })
   
   # observe({
   #   using<-usingTransformDraggable()

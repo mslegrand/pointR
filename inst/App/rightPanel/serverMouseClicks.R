@@ -40,7 +40,7 @@ observe({
       }
       src<-getCode()
       replacementList<-list()
-      ptDefs<-getPtDefs() #!!!  to do: replace with getTib
+      ptDefs<-getPtDefs() 
       #barName=rightMidPanel()
       barName=getRightMidPanel2()
       if(barName=="Points" || (barName=='point' ) ){

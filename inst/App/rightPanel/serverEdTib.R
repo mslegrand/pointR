@@ -7,16 +7,16 @@ returnValue4ModuleEdTib<-callModule(
   id="tagValBar",
   id2="tagValBar", # !!! DO  WE STILL NEED THIS???? 
   barName=rightPanel ,
-  name=getTibName,
+  name=getRightPanelName,
   nameChoices=getRightPanelChoices,
-  rowIndex=reactive({  if( getPlotState()!="transform" ){ getTibRow() } else { NULL } }),
-  rowIndexChoices=reactive({  if( getPlotState()!="transform" ){ getTibRowChoices() } else { NULL } }),
-  matColIndex=reactive({  if( getPlotState()!="transform" ){ getTibMatCol() } else { NULL } }),
-  matColIndexChoices=reactive({  if( getPlotState()!="transform" ){ getTibMatColChoices() } else { NULL } }),
-  columnName= reactive({  if( getPlotState()!="transform" ){ getTibColumnName() } else { NULL } }),
-  columnNameChoices=reactive({  if( getPlotState()!="transform" ){ getTibColumnNameChoices() } else { NULL } }),
-  getTibEntry=reactive({  if( getPlotState()!="transform" ){ getTibEntry() } else { NULL } }),
-  getTibEntryChoices=reactive({  if( getPlotState()!="transform" ){ getTibEntryChoices() } else { NULL } }),
+  rowIndex=reactive({            if( tibEditState()==TRUE ){ getTibRow() } else { NULL } }),
+  rowIndexChoices=reactive({     if( tibEditState()==TRUE ){ getTibRowChoices() } else { NULL } }),
+  matColIndex=reactive({         if( tibEditState()==TRUE ){ getTibMatCol() } else { NULL } }),
+  matColIndexChoices=reactive({  if( tibEditState()==TRUE ){ getTibMatColChoices() } else { NULL } }),
+  columnName= reactive({         if( tibEditState()==TRUE ){ getTibColumnName() } else { NULL } }),
+  columnNameChoices=reactive({   if( tibEditState()==TRUE ){ getTibColumnNameChoices() } else { NULL } }),
+  getTibEntry=reactive({         if( tibEditState()==TRUE ){ getTibEntry() } else { NULL } }),
+  getTibEntryChoices=reactive({  if( tibEditState()==TRUE ){ getTibEntryChoices() } else { NULL } }),
   tibEditState=tibEditState,
   headerId=NS("tagValBar", 'header')
 )
@@ -48,7 +48,7 @@ observeEvent(returnValue4ModuleEdTib$name(),{
       setPlotState(NULL)
       tibs<-getPtDefs()$tib
       #cat( sprintf("resetSelectedTibbleName(%s, %s)\n", name, tibs))
-      resetSelectedTibbleName(name, tibs)
+      resetSelectedTibbleName(tibs=tibs, name=name)
     }
   #}
 })
@@ -67,7 +67,7 @@ observeEvent(returnValue4ModuleEdTib$transformType(),{
 # rowIndex
 # if moduleEdTib changes the rowIndex,  matCol in selectedTibble needs to be updated
 observeEvent(returnValue4ModuleEdTib$rowIndex(),{
-  if(getPlotState()!=logTag && getPlotState()!='transform' ){
+  if( tibEditState()==TRUE ){
     #cat("returnValue4ModuleEdTib$rowIndex()\n")
     rowIndex<-returnValue4ModuleEdTib$rowIndex()
     if(rowIndex==getTibRow()){ return(NULL) } #bail if moduleEdTib did not change rowIndex 
@@ -94,7 +94,7 @@ observeEvent(returnValue4ModuleEdTib$rowIndex(),{
 
 # matColIndex
 observeEvent( returnValue4ModuleEdTib$matColIndex() ,{
-  if(getPlotState()!=logTag &&   getPlotState()!='transform' ){
+  if( tibEditState()==TRUE ){
     #cat("returnValue4ModuleEdTib$matColIndex()\n")
     matColIndex<-returnValue4ModuleEdTib$matColIndex()
     if( !is.null(matColIndex) ){ #add check for range
@@ -105,7 +105,7 @@ observeEvent( returnValue4ModuleEdTib$matColIndex() ,{
 
 #  columnName
 observeEvent(returnValue4ModuleEdTib$columnName(),{
-  if(getPlotState()!=logTag &&   getPlotState()!='transform' ){
+  if( tibEditState()==TRUE ){
     colName<-returnValue4ModuleEdTib$columnName()
     if(!is.null(colName) && nchar(colName)>0 ){
       #cat("updating columnName=", colName, "\n")
@@ -118,7 +118,7 @@ observeEvent(returnValue4ModuleEdTib$columnName(),{
 
 #--------EDIT VALUE------------------------------
 observeEvent(returnValue4ModuleEdTib$entryValue(),{
-  if(getPlotState()!=logTag &&  getPlotState()!='transform'){
+  if( tibEditState()==TRUE ){
     #cat("returnValue4ModuleEdTib$entryValue()\n")
     # assuming tib is uptodate, simply work on the existing tib
     name<- returnValue4ModuleEdTib$name() 

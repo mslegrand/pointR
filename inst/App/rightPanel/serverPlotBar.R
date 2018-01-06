@@ -96,10 +96,10 @@ output$MidRightPanel<-renderUI({
  
   #chosenRightMidPanel<-rightMidPanel()
   chosenRightMidPanel<-getRightMidPanel2()
-  cat('output$MidRightPanel:: chosenRightPanel=',chosenRightMidPanel,"\n")
-  if(chosenRightMidPanel=="Points"){
-    modulePlotSVGrUI("svgPointsMod")
-  } else 
+  cat('output$MidRightPanel:: chosenRightMidPanel=',chosenRightMidPanel,"\n")
+  # if(chosenRightMidPanel=="Points"){
+  #   modulePlotSVGrUI("svgPointsMod")
+  # } else 
   if (chosenRightMidPanel=='point'){
         modulePlotSVGrUI("svgPointsMod")
   } else if (chosenRightMidPanel=='value'){

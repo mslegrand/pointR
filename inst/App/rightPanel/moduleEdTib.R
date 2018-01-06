@@ -53,8 +53,7 @@ moduleEdTibUI<-function(id, input, output) {
           )    
         ),
         # display only if input name is a tibble
-        # !!!TODO: add input[name]!=LogTag
-        conditionalPanel( condition = sprintf("input['%s'] != '%s' ", ns("name"), transformTag, ns("name"), logTag),
+        conditionalPanel( condition = sprintf("input['%s'] != '%s' && input['%s'] != '%s' ", ns("name"), transformTag, ns("name"), logTag),
           absolutePanel( top=50, left=145 ,
             numericInput( ns("rowIndex"), "Row", 1, min=1, max=10, step=1, 
                width= '70px' 
@@ -193,6 +192,7 @@ moduleEdTib<-function(input, output, session,
     if(!is.null(input$entryValue) && input$entryValue=='point' &&
        !is.null(matColIndex() && !is.null(matColIndexChoices() ))){
           mcChoices<-matColIndexChoices()
+          print(mcChoices)
           updateNumericInput(session, "matColIndex", 
                              min=min(mcChoices),
                              max=max(mcChoices),

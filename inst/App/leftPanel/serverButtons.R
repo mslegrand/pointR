@@ -53,11 +53,17 @@ processCommit<-reactive({
         # }
         if(length(svgRPos)==0){ # just R code I guess
           # capture capture output as mssg
+          
           output<-captureOutput(eval(parse(text=src)))
           output<-paste( output, collapse="\n" )
           output<-paste("Output:",output,sep="\n")
-          updateRightPanel("logPanel")
+          
+          #updateRightPanel("logPanel")
+          setPanelValues(sourceType='logPanel')
+          
           base::stop(output , call.=FALSE, domain=NA);
+        } else {
+          setPanelValues(sourceType='svgPanel')
         }
         # passed so far
         # next check if it can be run
@@ -67,16 +73,18 @@ processCommit<-reactive({
         mssg$error<-""
 
         #if in log page move to points
-        if(rightPanel()=="logPanel"){
-          updateRightPanel("tibEditor")
-        } 
+        # if(rightPanel()=="logPanel"){
+        #   updateRightPanel("tibEditor")
+        # }
+       
+        
         #remove all removeAllMarkers from ace since all sys go.
        
         session$sendCustomMessage(
           type = "shinyAceExt",
           list(id= "source", removeAllMarkers='removeAllMarkers', sender='commit.removeMarkers', setOk=TRUE)
         )
-        #editOption$.saved<-FALSE # !!! soon to be obsolete!!!
+       
       }, #end of try
       error=function(e){ 
         #Error handler for commit
@@ -110,8 +118,9 @@ processCommit<-reactive({
           }
         }
         mssg$error<-err
-        cat("commit got an error\n")
-        updateRightPanel("logPanel")
+        cat("commit got an error\n",mssg$error,"\n")
+        setPanelValues(sourceType='logPanel')
+        #updateRightPanel("logPanel")
       }) 
     }
 })

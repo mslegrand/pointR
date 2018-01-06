@@ -12,7 +12,7 @@ cmdFileNew<-function(){
   )
 
   
-  reactiveTag$freq<-list()
+  #reactiveTag$freq<-list()
   
   # displayOptions$insertMode=TRUE
   # displayOptions$showGrid=FALSE

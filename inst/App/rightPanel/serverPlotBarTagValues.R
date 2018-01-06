@@ -111,7 +111,8 @@ observeEvent(statusPlotTagVal$status(), {
   status<-statusPlotTagVal$status()
   if(status$state!="PASS"){
     # cat("statusPlotTagVal$status() ERRUR\n")
-    updateRightPanel('logPanel')
+    setPanelValues(sourceType='logPanel')
+    #updateRightPanel('logPanel')
     mssg$err<-status$message    # send mssg to log
     #mssg$err<-'TagValGraphErr'
     # switch to log 

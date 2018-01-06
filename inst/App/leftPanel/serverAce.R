@@ -14,11 +14,23 @@ observe({input$messageFromAce
         editOption$.saved <- !(as.numeric(input$messageFromAce$dirty) > 0)
       }
       if(request$sender %in% c('cmd.commit','cmd.openFileNow', 'cmd.saveFileNow', 'cmd.file.new' )){
+        #note, request$code now contains the code from ace
+        # and getPtDefs depends on getCode depends on request$code
+        # we should now get the tibs and reset the name, namechoices ... of tibEd
+        #browser()
+        if(request$sender=='cmd.commit' && !is.null(getTibName())){ 
+          name=getTibName()
+        } else { 
+          name=NULL
+        }
+        tibs<-getPtDefs()$tib
+        resetSelectedTibbleName(tibs=tibs, name=name)
+        
         processCommit()
       } 
-      if( request$sender %in% 'cmd.openFileNow'){
-        # !!! TODO: set point.index to end of points (if points)
-      }
+      # if( request$sender %in% 'cmd.openFileNow'){
+      #   # !!! TODO: set point.index to end of points (if points)
+      # }
       
       if(request$sender %in% 'cmd.saveFileNow'){
         datapath<-input$messageFromAce$auxValue
@@ -67,15 +79,14 @@ observe({
     if(request$sender=='startup'){
       cmdFileNew()
     }
-    if(request$sender %in% c( "cmd.openFileNow", "cmd.newFile")){ #!!! check these names
-      # get valid point name, then set index to last valid index. (length of points?)
-      pd<-getPtDefs()
-      if(length(pd)>0){
-        tibs<-pd$tib #!!! check this
-        name<-tail(names(tibs),1) # !!! KLUDGE, last name 
-        resetSelectedTibbleName(name, tibs)
-      }
-    } 
-    
+    # if(request$sender %in% c( "cmd.openFileNow", "cmd.newFile")){ #!!! check these names
+    #   # get valid point name, then set index to last valid index. (length of points?)
+    #   pd<-getPtDefs()
+    #   if(length(pd)>0){
+    #     tibs<-pd$tib #!!! check this
+    #     #name<-tail(names(tibs),1) # !!! KLUDGE, last name 
+    #     resetSelectedTibbleName(tibs=tibs, name=NULL)
+    #   }
+    # } 
   })
 })
