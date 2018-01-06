@@ -12,6 +12,7 @@ moduleEdTibUI<-function(id, input, output) {
   #useShinyjs()
   tagList(# beginfooter panel
     absolutePanel( "class"="footerPanel", draggable=FALSE,
+      conditionalPanel( condition = sprintf("input['%s'] != '%s' && input['%s'] != '%s' ", ns("name"), transformTag, ns("name"), logTag),
         conditionalPanel(condition = sprintf("input['%s'] == 'matrix'", ns("entryValue")),
            actionButton(ns("tagClone"),   label = "Clone"   ),
            actionButton(ns("tagDelete"),  label = "Delete"),
@@ -24,6 +25,7 @@ moduleEdTibUI<-function(id, input, output) {
           actionButton(ns("removePt"), label = "Delete Pt"),
           actionButton(ns("tagPt"), label = "Tag Pt") 
         )
+      )
     ),
     #end footer panel
     #begin headerPanel
