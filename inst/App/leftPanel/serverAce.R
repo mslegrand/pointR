@@ -51,6 +51,9 @@ observe({input$messageFromAce
 
 updateAceExtDef<-function(newPtDef, sender ){
   #cat('sender=',sender,"\n")
+  # cat("-----newPtDefs$tib\n")
+  # browser()
+  # print(newPtDef$tib)
   newPtDef$tib<-pts2Integers(newPtDef$tib )
   
   replacementList<-ptDef2ReplacementList(name, newPtDef, getCode() )

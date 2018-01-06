@@ -352,20 +352,20 @@ olde2newFmtPtDef2ListOfLists<-function(newPtDef){
   newPtDef
 }
 
-#!!! kludge to convert output to ints
+
+#!!!REDO KLUDGE to convert output to ints
 pts2Integers<-function(newtib){
-  #ptsCol<-'pts' #!!!kludge: must change shortly CHANGED: REPLACED ptsCol with mn
-  
   for(nm in names(newtib)){
-    ptsll<-newtib[[nm]][[nm]] #  !!!KLUDGE  ptsll is a list of matrices
-    newtib[[nm]][[nm]]<-sapply(ptsll, function(mm){
-      matrix(as.integer(mm),2)
-    }, 
-    simplify=FALSE)
+    for( j in ncol( newtib[[nm]] )){
+      if( is.matrix(newtib[[nm]][[1,j]]) &&  dim(newtib[[nm]][[1,j]])[1]==2){
+        for( i in nrow(  newtib[[nm]] )){
+          newtib[[nm]][[i,j]]<-matrix( as.integer(newtib[[nm]][[i,j]] ), 2)
+        }
+      }
+    }
   }
   newtib
 }
-
 
 
 ## looks at the class of the last entry to return selectorType
