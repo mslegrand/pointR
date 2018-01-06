@@ -51,10 +51,13 @@ stop.unless<-function(expr, mssg){
 # detects transforms with draggable and 
 # returns a modified copy of txt with
 # tid for the Draggable
-usingDraggable<-function(txt, transformOption){
-  if(transformOption=='Scale'){
+usingDraggable<-function(txt, transformType){
+  if(is.null(transformType)){
+    return(txt)
+  }
+  if(transformType=='Scale'){
     onMouseDownTxt = "', onmousedown='ptRPlotter_ptR_SVG_TRANSFORM_SCALE.selectElement(evt)'"
-  } else if(transformOption=='Rotate'){
+  } else if(transformType=='Rotate'){
     onMouseDownTxt = "', onmousedown='ptRPlotter_ptR_SVG_TRANSFORM_ROTATE.selectElement(evt)'"
   }else{
     onMouseDownTxt = "', onmousedown='ptRPlotter_ptR_SVG_TRANSFORM_TRANSLATE.selectElement(evt)'"

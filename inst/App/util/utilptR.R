@@ -296,27 +296,27 @@ panel2svgid<-function(panelName){
   paste0(prefix2, "_", toupper(paneName))
 }
 
-panel2onmousedown<-function(panelName, transformOption=NULL){
+panel2onmousedown<-function(panelName, transformType=NULL){
   prefix1<-'ptRPlotter_'
   mid=''
-  if(!is.null(transformOption)){
-    mid=paste('_',toupper(transformOption))
+  if(!is.null(transformType)){
+    mid=paste('_',toupper(transformType))
   }
   paste0(prefix1,panel2svgid,mid,".selectElement(evt)")
 }
 
-panel2var<-function(panelName, transformOption=NULL){
+panel2var<-function(panelName, transformType=NULL){
   prefix1<-'ptRPlotter_'
   mid=''
-  if(!is.null(transformOption)){
-    mid=paste('_',toupper(transformOption))
+  if(!is.null(transformType)){
+    mid=paste('_',toupper(transformType))
   }
   paste0(prefix1,panel2svgid,mid)
 }
 
-panel2script<-function(panelName, transformOption=NULL){
+panel2script<-function(panelName, transformType=NULL){
   #'var ptRPlotter_ptR_SVG_TRANSFORM_TRANSLATE = new PtRPanelTranslate("ptR_SVG_TRANSFORM");'
-  paste0( 'var ', panel2var(panelName, transformOption), ' = new ', jsConstr, "(\"", panel2svgid, "\");" )
+  paste0( 'var ', panel2var(panelName, transformType), ' = new ', jsConstr, "(\"", panel2svgid, "\");" )
 }
 
 tags2listmatrices<-function( matrixPts, tags){

@@ -6,7 +6,7 @@ returnValue4ModuleEdTib<-callModule(
   module=moduleEdTib,
   id="tagValBar",
   id2="tagValBar", # !!! DO  WE STILL NEED THIS???? 
-  barName=rightPanel ,
+  
   name=getRightPanelName,
   nameChoices=getRightPanelChoices,
   rowIndex=reactive({            if( tibEditState()==TRUE ){ getTibRow() } else { NULL } }),
@@ -24,25 +24,13 @@ returnValue4ModuleEdTib<-callModule(
 
 #name
 observeEvent(returnValue4ModuleEdTib$name(),{
-  #if(rightPanel()=='tibEditor'){
+  
     name<-returnValue4ModuleEdTib$name()
     if(name==getTibName()){ return(NULL) } #bail if moduleEdTib did not change name
-    # name was changed by moduleEdTib
-    # this invalidates all entries in selectedTibble
-    #if(!is.null(name)){cat('name=',name,'\n')} else{ cat('name is NULL')}
     if(name==transformTag){
-      # setPlotState  to EdTib.transform
-      #cat("setPlotState('transform')\n")
-      #update selected Transform
-      setPlotState('transform')
-      #triggerRefresh(sender='update.tibEd', rollBack=FALSE, auxValue=FALSE)
-      #tibs<-getPtDefs()$tib
-      #resetSelectedTibbleName(tibs=tibs, name=name)
+     setPlotState('transform')
       updateSelected(name=transformTag)
     } else if(name==logTag){
-        # setPlotState  to EdTib.transform
-        # cat("setPlotState('transform')\n")
-        # update selected Transform
         setPlotState(logTag)
         updateSelected(name=logTag)
       } 
@@ -50,10 +38,8 @@ observeEvent(returnValue4ModuleEdTib$name(),{
     else {
       setPlotState(NULL)
       tibs<-getPtDefs()$tib
-      #cat( sprintf("resetSelectedTibbleName(%s, %s)\n", name, tibs))
       resetSelectedTibbleName(tibs=tibs, name=name)
     }
-  #}
 })
 
 observeEvent(returnValue4ModuleEdTib$transformType(),{
@@ -62,7 +48,6 @@ observeEvent(returnValue4ModuleEdTib$transformType(),{
       if(!is.null(tt)){ cat('tt=',tt,'\n') } else{ cat('tt in NULL\n') }
       if(!is.null(tt) && tt!=selectedTibble$transformType){
         selectedTibble$transformType<-tt
-        #cat("selectedTibble$transformType=",  selectedTibble$transformType,"\n")
       }
   }
 })
@@ -98,7 +83,6 @@ observeEvent(returnValue4ModuleEdTib$rowIndex(),{
 # matColIndex
 observeEvent( returnValue4ModuleEdTib$matColIndex() ,{
   if( tibEditState()==TRUE ){
-    #cat("returnValue4ModuleEdTib$matColIndex()\n")
     matColIndex<-returnValue4ModuleEdTib$matColIndex()
     if( !is.null(matColIndex) ){ #add check for range
       updateSelected( matCol=matColIndex )
@@ -111,7 +95,6 @@ observeEvent(returnValue4ModuleEdTib$columnName(),{
   if( tibEditState()==TRUE ){
     colName<-returnValue4ModuleEdTib$columnName()
     if(!is.null(colName) && nchar(colName)>0 ){
-      #cat("updating columnName=", colName, "\n")
       updateSelected(columnName=colName)
     }
   }
@@ -133,8 +116,7 @@ observeEvent(returnValue4ModuleEdTib$entryValue(),{
     
     if(!is.null(columnName) && nchar(entry)>0   ){
       # !!! TODO: type check if numeric
-      rP<-rightPanel()
-      if(is.null(rP))rP<-'NULL'
+      
       setPlotState(entry) # this is where we handle points/matrix
       if(!(entry %in% c('matrix','point'))){
         name<-getTibName()
@@ -195,7 +177,6 @@ observeEvent(
     updateAceExtDef(newPtDefs, sender=sender)
     updateSelected(row=rowIndex, matCol=matCol)
   }
-  #}
 )
 
 observeEvent( returnValue4ModuleEdTib$tagMoveUp(),{ 
@@ -250,7 +231,6 @@ observeEvent( returnValue4ModuleEdTib$tagMoveDown(),{
 #---BUTTON: remove selected point  -----
 observeEvent( returnValue4ModuleEdTib$removePt(), {
   selection<-getTibName() 
-  # cat('Enter removePt\n')  
   if(selection!=""){
     ptDefs<-getPtDefs()
     if(length(ptDefs$tib)==0){return(NULL)}

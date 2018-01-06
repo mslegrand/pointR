@@ -60,46 +60,16 @@ observeEvent(input$useTribble,{
 })
 
 output$TopRightPanel<-renderUI({
-  chosenRightPanel<-rightPanel() 
-  # cat('output$TopRightPanel:: chosenRightPanel=',chosenRightPanel,"\n")
-  # if(chosenRightPanel=="Points"){
-  #   modulePointsBarUI("pointsBar")
-  # } else 
-  #if (chosenRightPanel=='tibEditor'){
     moduleEdTibUI("tagValBar", input, output)
-  #} 
-  # else if (chosenRightPanel=='tagDrag'){
-  #   moduleTagDragUI("tagDragBar")
-  # } else if (chosenRightPanel=='Transforms'){
-  #   absolutePanel( 
-  #     top=50, left=0, width="100%", 
-  #     "class"="headerPanel", draggable=FALSE,
-  #       tabsetPanel( id="transformOption", 
-  #         tabPanel("Translate"), 
-  #         tabPanel("Rotate"), 
-  #         tabPanel("Scale"),
-  #         
-  #         type="pills"
-  #       ) 
-  #   )
-  # } 
-  # else if (chosenRightPanel=="log"){
-  #   absolutePanel(  draggable=FALSE,
-  #                   "class"="cLogText",
-  #                   verbatimTextOutput("out_log"))
-  # }
 })
 
 
 
 output$MidRightPanel<-renderUI({
  
-  #chosenRightMidPanel<-rightMidPanel()
+  
   chosenRightMidPanel<-getRightMidPanel2()
-  cat('output$MidRightPanel:: chosenRightMidPanel=',chosenRightMidPanel,"\n")
-  # if(chosenRightMidPanel=="Points"){
-  #   modulePlotSVGrUI("svgPointsMod")
-  # } else 
+  
   if (chosenRightMidPanel=='point'){
       modulePlotSVGrUI("svgPointsMod")
   } else if (chosenRightMidPanel=='value'){

@@ -45,12 +45,7 @@ processCommit<-reactive({
         if(length(ptRPos)>=1 && length(svgRPos)>=1 && !(ptRPos[1]<svgRPos[1])){
           base::stop("Bad File: ptR list must come prior to svgR call")
         }
-        # if(length(svgRPos)==1){
-        #   if(length(ptRPos)==0){
-        #     # switch to tibEditor
-        #     updateRightPanel("tibEditor")
-        #   }
-        # }
+        
         if(length(svgRPos)==0){ # just R code I guess
           # capture capture output as mssg
           
@@ -58,7 +53,7 @@ processCommit<-reactive({
           output<-paste( output, collapse="\n" )
           output<-paste("Output:",output,sep="\n")
           
-          #updateRightPanel("logPanel")
+          
           setPanelValues(sourceType='logPanel')
           
           base::stop(output , call.=FALSE, domain=NA);
@@ -72,11 +67,7 @@ processCommit<-reactive({
         # no error occured so all systems go!!!!
         mssg$error<-""
 
-        #if in log page move to points
-        # if(rightPanel()=="logPanel"){
-        #   updateRightPanel("tibEditor")
-        # }
-       
+        
         
         #remove all removeAllMarkers from ace since all sys go.
        
@@ -120,7 +111,7 @@ processCommit<-reactive({
         mssg$error<-err
         cat("commit got an error\n",mssg$error,"\n")
         setPanelValues(sourceType='logPanel')
-        #updateRightPanel("logPanel")
+        
       }) 
     }
 })

@@ -28,7 +28,7 @@ shinyServer(function(input, output,session) {
   
   panels<-reactiveValues(
     left='source',   #to be used as editor name later, for connecting to right graphics
-    right="tibEditor",
+    #right="tibEditor",
     state='point',
     right2='point',
     sourceType='svgPanel' #  sourceType = 'svgPanel'  means svgR code
@@ -42,16 +42,6 @@ shinyServer(function(input, output,session) {
       panels$sourceType=sourceType
     }
   }
-  
-  # observeEvent(panels$right,{
-  #   if(!is.null(panels$right)){
-  #     cat("\n\n***************panels$right=",panels$right,"\n\n\n")
-  #   }
-  # })
-  
-  rightPanel<-reactive({ #used by errLogModuleList in serverLog.R
-    panels$right
-  })
   
   getRightMidPanel2<-reactive({
     if(panels$sourceType=='logPanel'){
@@ -85,16 +75,6 @@ shinyServer(function(input, output,session) {
     panels$right2<-panels$state
   }
   
-  # updateRightPanel<-function(panel){ 
-  #   panels$right<-panel
-  #   cat("\n\n****updateRightPanel::panel=",panel,"\n\n")
-  #   if(panel!='logPanel'){
-  #     panels$right2<-panel
-  #   } else {
-  #     panels$right2<-panels$state
-  #   }
-  # }
-  
   getRightPanelChoices<-reactive({ # includes names of tibs
     if(panels$sourceType=='logPanel'){
       choices='logPanel'
@@ -106,8 +86,7 @@ shinyServer(function(input, output,session) {
       }
       choices<-c(choices,logTag)
     }
-    cat("getRightPanelChoices\n" )
-    print(choices)
+   
     choices
   })
   
