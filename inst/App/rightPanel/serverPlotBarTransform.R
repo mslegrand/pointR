@@ -19,7 +19,11 @@ statusPlotTransform<-callModule(
   id="svgTransformMod",
   svgID='ptR_SVG_TRANSFORM',
   showPts.compound=NULL,
-  ptrDisplayScript = ptrDisplayScript, #reactive({ svgToolsScript(input$transformOption ) }), #reactive({ js.scripts[[ input$transformOption ]] }),
+  ptrDisplayScript = reactive({ 
+    type=getTransformType()
+    svgToolsScript(type) 
+  }), #reactive({ js.scripts[[ input$transformOption ]] }),
+  #ptrDisplayScript, #
   getSVGWH,
   showGrid,
   getCode,

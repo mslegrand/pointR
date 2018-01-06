@@ -101,15 +101,15 @@ output$MidRightPanel<-renderUI({
   #   modulePlotSVGrUI("svgPointsMod")
   # } else 
   if (chosenRightMidPanel=='point'){
-        modulePlotSVGrUI("svgPointsMod")
+      modulePlotSVGrUI("svgPointsMod")
   } else if (chosenRightMidPanel=='value'){
-        modulePlotSVGrUI("svgTagValsMod")
+      modulePlotSVGrUI("svgTagValsMod")
   } else if (chosenRightMidPanel=='matrix'){
-        modulePlotSVGrUI("svgTagDragMod")
+      modulePlotSVGrUI("svgTagDragMod")
   } else if (chosenRightMidPanel == "transform" ){
-    modulePlotSVGrUI("svgTransformMod")
+      modulePlotSVGrUI("svgTransformMod")
   } else if (chosenRightMidPanel=="logPanel"){
-    moduleLogUI("errLogMod")
+     moduleLogUI("errLogMod")
   }
 })
 

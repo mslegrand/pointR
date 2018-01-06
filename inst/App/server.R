@@ -164,10 +164,12 @@ shinyServer(function(input, output,session) {
   
   ptrDisplayScript =reactive({ 
     type=getRightMidPanel2()
+    cat("\n-------------type1=",type,"\n")
     if(type=='transform'){
       type=  paste0(type,".",getTransformType() )
+      cat("\n-------------type2=",type,"\n")
     }
-    cat("type=",type,"\n")
+    
     scripts<-list(
       point=    'var ptRPlotter_ptR_SVG_Point = new PtRPanelPoints("ptR_SVG_Point");',
       value=    'var ptRPlotter_ptR_SVG_TagVal = new PtRPanelTagVal("ptR_SVG_TagVal");',

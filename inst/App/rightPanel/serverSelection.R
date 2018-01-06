@@ -14,6 +14,7 @@ getTransformType<-reactive({
   if(is.null(selectedTibble$transformType)){
     selectedTibble$transformType ='Translate'
   }
+  cat('getTransformType=',selectedTibble$transformType,"\n")
   selectedTibble$transformType
 })
 
@@ -30,6 +31,7 @@ resetSelectedTibbleName<-function(tibs, name){
     selectedTibble$ptColName=NULL
     selectedTibble$columnName=NULL
     selectedTibble$matCol=NULL
+    selectedTibble$transformType=NULL
     if(usingTransformDraggable()){
       selectedTibble$name=transformTag
     } else {

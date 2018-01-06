@@ -35,6 +35,9 @@ observeEvent(returnValue4ModuleEdTib$name(),{
       #cat("setPlotState('transform')\n")
       #update selected Transform
       setPlotState('transform')
+      #triggerRefresh(sender='update.tibEd', rollBack=FALSE, auxValue=FALSE)
+      #tibs<-getPtDefs()$tib
+      #resetSelectedTibbleName(tibs=tibs, name=name)
       updateSelected(name=transformTag)
     } else if(name==logTag){
         # setPlotState  to EdTib.transform
