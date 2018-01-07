@@ -66,6 +66,12 @@ shinyUI(
               menuDivider(),
               menuItem("Quit", value="quit")
             ),
+            menuDropdown('Tibble',
+                         menuItem('New Tibble', value='cmdNewTibble'),
+                         menuItem('Rename Tibble', value='cmdRenameTibble'),
+                         menuItem('Delete Tibble', value='cmdDeleteTibble'),
+                         menuItem(NULL, value='cmdTibbleFormat', checkboxInput('useTribble', 'display as tribble', value = TRUE, width = NULL) )
+            ),
             menuDropdown(
               'Configure',
               menuDropdown(
@@ -81,10 +87,6 @@ shinyUI(
                 menuItem("Import", value="importSnippetFile"),
                 menuItem("Disable")
               )
-            ),
-            menuDropdown(
-              "Tools", 
-              menuItem("PointFiltering (Not implemented)" )
             ),
             menuDropdown(
               "Help",
@@ -151,19 +153,14 @@ shinyUI(
             menuBarId="plotNavBar",
             #---------------DisplayOptions----------------------------------------
            
-            menuDropdown('Tibble',
-              menuItem('New Tibble', value='cmdNewTibble'),
-              menuItem('Rename Tibble', value='cmdRenameTibble'),
-              menuItem('Delete Tibble', value='cmdDeleteTibble'),
-              menuItem(NULL, value='cmdTibbleFormat', checkboxInput('useTribble', 'display as tribble', value = TRUE, width = NULL))
-            ),
-            menuDropdown('Column',
-              menuItem('Add Column', value='cmdNewColumn'),
-              menuItem('Delete Column', value='cmdDeleteColumn'),
-              menuItem('Rename Column', value='cmdRenameColumn'),
-              menuItem('Clone Column', value='cmdCloneColumn'),
-              menuItem('Input Using', value='cmdInputUsingColumn')
-            ),
+            
+            # menuDropdown('Column',
+            #   menuItem('Add Column', value='cmdNewColumn'),
+            #   menuItem('Delete Column', value='cmdDeleteColumn'),
+            #   menuItem('Rename Column', value='cmdRenameColumn'),
+            #   menuItem('Clone Column', value='cmdCloneColumn'),
+            #   menuItem('Input Using', value='cmdInputUsingColumn')
+            # ),
             
             menuDropdown('Display', 
                          menuDropdown('Points',
@@ -181,8 +178,13 @@ shinyUI(
                                        menuItem('Hide', value='cmdHideBack'),
                                        menuItem('Color', value='cmdBackDropColor')
                          )
-            ) 
-          ), 
+            ),
+            menuDropdown(
+              "Tools", 
+              menuItem("PointFiltering (Not implemented)" )
+            )
+          ), #menubar end 
+          
           #----------end right menu
           #--------begin right content
           uiOutput("TopRightPanel"),

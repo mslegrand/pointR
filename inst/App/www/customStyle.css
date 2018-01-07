@@ -22,7 +22,7 @@ border-radius: 24px;
 font-size: 12px;
 }
 .backPanel{
-background-color: #B8D8FF; 
+background-color: #4f6a8c; 
 padding-top: 0;
 padding-bottom: 0;
 margin-top: 0; 
@@ -35,6 +35,9 @@ right:10px;
 left:10px;
 overflow: hidden;
 }
+.checkbox{
+  margin: 0;
+}
 .cSvgHtml{
   top:135px; 
   left:5px; 
@@ -45,7 +48,7 @@ overflow: hidden;
   margin-right:0;
   margin-bottom:0;
   border: 3px solid blue;
-  background-color: #FFBBBB;
+  background-color: #DDBBFF;
   overflow: auto;
 }
 .cLogText{
