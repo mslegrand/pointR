@@ -154,13 +154,13 @@ shinyUI(
             #---------------DisplayOptions----------------------------------------
            
             
-            # menuDropdown('Column',
-            #   menuItem('Add Column', value='cmdNewColumn'),
+             menuDropdown('Column',
+               menuItem('Add Column', value='cmdNewColumn') #,
             #   menuItem('Delete Column', value='cmdDeleteColumn'),
             #   menuItem('Rename Column', value='cmdRenameColumn'),
             #   menuItem('Clone Column', value='cmdCloneColumn'),
             #   menuItem('Input Using', value='cmdInputUsingColumn')
-            # ),
+             ),
             
             menuDropdown('Display', 
                          menuDropdown('Points',
