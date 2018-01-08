@@ -21,23 +21,25 @@ extractSafeRowColIndex<-function(tib, rowIndex, colName){
   list(rowIndex=rowIndex, colIndex=colIndex)
 }
 
-extractTibColumnValuesAsList<-function(tib, colName){
-  if(!is.null(colName) && !is.null(tib)){
-    as.list(tib[[colName]])
-  } else {
-    NULL
-  }
-}
 
-extractTibColumnEntry<-function(tib, colName, rowIndex){
-  values<-colName2columnValues(tib,colName)
-  if(!is.null(values) && !is.null(rowIndex) && 0<rowIndex && rowIndex<=nrow(tib)){
-    entry<-values[[rowIndex]]
-  } else {
-    entry<-NULL
-  }
-  entry
-}
+# 
+# extractTibColumnValuesAsList<-function(tib, colName){
+#   if(!is.null(colName) && !is.null(tib)){
+#     as.list(tib[[colName]])
+#   } else {
+#     NULL
+#   }
+# }
+# 
+# extractTibColumnEntry<-function(tib, colName, rowIndex){
+#   values<-colName2columnValues(tib,colName)
+#   if(!is.null(values) && !is.null(rowIndex) && 0<rowIndex && rowIndex<=nrow(tib)){
+#     entry<-values[[rowIndex]]
+#   } else {
+#     entry<-NULL
+#   }
+#   entry
+# }
 
 
 
@@ -104,25 +106,25 @@ extractTibColumnEntry<-function(tib, colName, rowIndex){
 # 
 
 #tib<- ptR$x
-
-
-#returns TRUE if all numeric
-isNumericString<-function(x){
-  all(grepl("[-]?[0-9]+[.]?[0-9]*|[-]?[0-9]+[L]?|[-]?[0-9]+[.]?[0-9]*[eE][0-9]+",x))
-}
+# 
+# 
+# #returns TRUE if all numeric
+# isNumericString<-function(x){
+#   all(grepl("[-]?[0-9]+[.]?[0-9]*|[-]?[0-9]+[L]?|[-]?[0-9]+[.]?[0-9]*[eE][0-9]+",x))
+# }
 
 #clones rowIndex and places new row at end
-
-cloneTib<-function(tib, rowIndex=nrow(tib)){
-  bind_rows(tib, tib[rowIndex,])
-}
-
-
-#clones rowIndex and places new row at immediately after rowIndex
-# todo: inc rowIndex
-cloneTibAtRow<-function(tib, rowIndex=nrow(tib)){
-  bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
-}
+# 
+# cloneTib<-function(tib, rowIndex=nrow(tib)){
+#   bind_rows(tib, tib[rowIndex,])
+# }
+# 
+# 
+# #clones rowIndex and places new row at immediately after rowIndex
+# # todo: inc rowIndex
+# cloneTibAtRow<-function(tib, rowIndex=nrow(tib)){
+#   bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
+# }
 
 # splits tib at point given by rowIndex, ptIndex
 # tagTib<-function(tib, ptCol,  rowIndex=nrow(tib), ptIndx){
@@ -145,90 +147,91 @@ tagTib<-function(tib, ptColIndex,  rowIndex=nrow(tib), matCol){
   tmp
 }
 
-extendTib<-function(tib){
-  rowIndex<-nrow(tib)
-  if(rowIndex>0){
-    tib<-bind_rows(tib, tib[rowIndex,])
-    sapply(tib, function(x)class(x[[1]])=='matrix')->indx
-    tib[rowIndex+1,indx]<-c()
-  }
-  tib
-}
+# 
+# extendTib<-function(tib){
+#   rowIndex<-nrow(tib)
+#   if(rowIndex>0){
+#     tib<-bind_rows(tib, tib[rowIndex,])
+#     sapply(tib, function(x)class(x[[1]])=='matrix')->indx
+#     tib[rowIndex+1,indx]<-c()
+#   }
+#   tib
+# }
 
-ptColTib<-function(tib){
-  rowIndex<-nrow(tib)
-  colIndx<-c()
-  if(rowIndex>0){
-    sapply(tib, function(x)class(x[[1]])=='matrix')->indx
-    colIndx<-which(indx)
-  }
-  colIndx
-}
-
-
-# extract the given tib column
-getColTib<-function(tib, indx){
-  tib[[indx]]
-}
+# ptColTib<-function(tib){
+#   rowIndex<-nrow(tib)
+#   colIndx<-c()
+#   if(rowIndex>0){
+#     sapply(tib, function(x)class(x[[1]])=='matrix')->indx
+#     colIndx<-which(indx)
+#   }
+#   colIndx
+# }
+# 
+# 
+# # extract the given tib column
+# getColTib<-function(tib, indx){
+#   tib[[indx]]
+# }
 
 
 # set the given tib column with the given value
+# 
+# setColTib<-function(tib, indx, value){
+#   tib[[indx]]<-value
+# }
 
-setColTib<-function(tib, indx, value){
-  tib[[indx]]<-value
-}
-
-
-# remove a row from the tib
-
-removeRowTib<-function(tib, rowIndex){
-  tib[-rowIndex,]
-}
-
-
-# swap rows of a tib
-swapRowsTib<-function(tib, i, j){
-  tib[c(i,j),]<-tib[c(j,i),]
-  tib
-}
-
+# 
+# # remove a row from the tib
+# 
+# removeRowTib<-function(tib, rowIndex){
+#   tib[-rowIndex,]
+# }
+# 
+# 
+# # swap rows of a tib
+# swapRowsTib<-function(tib, i, j){
+#   tib[c(i,j),]<-tib[c(j,i),]
+#   tib
+# }
+# 
 
 
 # step selected point forward
-
-stepPtForward<-function(tib, row, ptCol, ptNo){
-  if(ptNo<dim(tib[[row,ptCol]])[2]){
-      ptNo=ptNo+1
-  } else {
-    if(row<nrow(tib)){
-          row=row+1
-          ptNo=1
-    }
-  }
-  return(
-    list( row=row, ptNo= ptNo)
-  )
-}
-
+# 
+# stepPtForward<-function(tib, row, ptCol, ptNo){
+#   if(ptNo<dim(tib[[row,ptCol]])[2]){
+#       ptNo=ptNo+1
+#   } else {
+#     if(row<nrow(tib)){
+#           row=row+1
+#           ptNo=1
+#     }
+#   }
+#   return(
+#     list( row=row, ptNo= ptNo)
+#   )
+# }
+# 
 
 
 # step selected point backward
 
 
-
-stepPtBackward<-function(tib, row, ptCol, ptNo){
-  if(ptNo>1){
-    ptNo=ptNo-1
-  } else {
-    if(row>1){
-      row=row+1
-      ptNo=dim(tib[[row,ptCol]])[2]
-    }
-  }
-  return(
-    list( row=row, ptNo= ptNo)
-  )
-}
+# 
+# stepPtBackward<-function(tib, row, ptCol, ptNo){
+#   if(ptNo>1){
+#     ptNo=ptNo-1
+#   } else {
+#     if(row>1){
+#       row=row+1
+#       ptNo=dim(tib[[row,ptCol]])[2]
+#     }
+#   }
+#   return(
+#     list( row=row, ptNo= ptNo)
+#   )
+# }
 
 # Should we require that pt col is always a matrix?
 # empty matrix is produced by 
@@ -240,17 +243,17 @@ stepPtBackward<-function(tib, row, ptCol, ptNo){
 
 
 # add pt immediately after selected point
-
-addPoint<-function(tib, row, ptCol, ptIndx, pt){
-  ptMat<-tib[[row,ptCol]]
-  if(length(ptMat)>0){
-    ptMat<-cbind( ptMat[,1:(ptIndx)], pt, ptMat[,(ptIndx+1):dim(ptMat)[2]] )
-  } else {
-    ptMat<-matrix(pt,2)
-  }
-  tib[[row,ptCol]]<-ptMat
-  tib
-}
+# 
+# addPoint<-function(tib, row, ptCol, ptIndx, pt){
+#   ptMat<-tib[[row,ptCol]]
+#   if(length(ptMat)>0){
+#     ptMat<-cbind( ptMat[,1:(ptIndx)], pt, ptMat[,(ptIndx+1):dim(ptMat)[2]] )
+#   } else {
+#     ptMat<-matrix(pt,2)
+#   }
+#   tib[[row,ptCol]]<-ptMat
+#   tib
+# }
 
 # must rethink!
 
@@ -268,32 +271,32 @@ addPoint<-function(tib, row, ptCol, ptIndx, pt){
 # 3) if after removing row is empty ptIndx=0, ow ptIndx=oldptIndx?
 # 4) if remove row, should reset pointIndex to length of row?
 
-removePoint<-function(tib, row, ptCol, ptIndx){
-  ptMat<-tib[[row,ptCol]]
-  if(length(ptMat)>1){
-    ptMat<- ptMat[,- ptIndx ]
-  } else {
-    ptMat<- matrix[list(),2]
-  }
-  tib[[row,ptCol]]<-ptMat
-  tib
-}
+# removePoint<-function(tib, row, ptCol, ptIndx){
+#   ptMat<-tib[[row,ptCol]]
+#   if(length(ptMat)>1){
+#     ptMat<- ptMat[,- ptIndx ]
+#   } else {
+#     ptMat<- matrix[list(),2]
+#   }
+#   tib[[row,ptCol]]<-ptMat
+#   tib
+# }
 
-
-replacePoint<-function(tib, row, ptCol, ptIndx, pt){
-  ptMat<-tib[[row,ptCol]]
-  ptMat[,ptIndx ]<-pt
-  tib[[row,ptCol]]<-ptMat
-  tib
-}
+# 
+# replacePoint<-function(tib, row, ptCol, ptIndx, pt){
+#   ptMat<-tib[[row,ptCol]]
+#   ptMat[,ptIndx ]<-pt
+#   tib[[row,ptCol]]<-ptMat
+#   tib
+# }
 
 # temp utils to merge back the pts and df 
 
- 
-getTibPointId<-function(name, pts ){ #pts are to be a list of matrices
-  tmp<-sapply(pts, ncol)
-  id<-sapply(1:length(tmp), function(i)paste0('pd-',name,'-',i,'-',1:tmp[[i]]))
-}
+#  
+# getTibPointId<-function(name, pts ){ #pts are to be a list of matrices
+#   tmp<-sapply(pts, ncol)
+#   id<-sapply(1:length(tmp), function(i)paste0('pd-',name,'-',i,'-',1:tmp[[i]]))
+# }
 
 
 # Should we have the same for matrix??? (but ignore row unless tagged?)
