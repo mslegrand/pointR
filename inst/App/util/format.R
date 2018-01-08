@@ -1,48 +1,52 @@
 
 
 
-getTibColClass<-function(tib){
-  sapply(tib, function(j)class(tib[[1,j]]))
-}
-
-formatMatrix<-function(pts){
-  if(length(pts)==0 ){
-    fpts<-'list()'
-  } else{
-    tmp<-as.integer(unlist(pts)) #force to have only integers numbers as points
-    tmp<-matrix(tmp,2)
-    fpts<-apply(tmp, 2, function(x)paste(x,collapse=","))
-    fpts<-paste0("c(",fpts,")")
-    fpts<-paste(fpts, collapse=",")
-  }
-  sp<-"  "
-  fpts<-paste0("matrix( ","c( ", fpts, " ), 2",")")
-  return(fpts)
+# getTibColClass<-function(tib){
+#   sapply(tib, function(j)class(tib[[1,j]]))
+# }
+getTibColClass<-function(tib){ #used by fmtTribble
+  sapply(1:ncol(tib), function(j)class(tib[[1,j]]))
 }
 
 
+# formatMatrix<-function(pts){
+#   if(length(pts)==0 ){
+#     fpts<-'list()'
+#   } else{
+#     tmp<-as.integer(unlist(pts)) #force to have only integers numbers as points
+#     tmp<-matrix(tmp,2)
+#     fpts<-apply(tmp, 2, function(x)paste(x,collapse=","))
+#     fpts<-paste0("c(",fpts,")")
+#     fpts<-paste(fpts, collapse=",")
+#   }
+#   sp<-"  "
+#   fpts<-paste0("matrix( ","c( ", fpts, " ), 2",")")
+#   return(fpts)
+# }
 
 
 
-toStrPtR<-function(x,...){ UseMethod("toStrPtR") }
 
-toStrPtR.default<-function(x,...){ toString(x,...) }
-toStrPtR.character<-function(x, ...){
-  toString(shQuote(x), ...)
-}
-toStrPtR.matrix<-function(x, digits=0, ...){
-  if(length(x)==0){
-    "matrix(0,2,0)"
-  } else {
-    tmp<-as.numeric(format(x, digits, ...))
-    tmp<-matrix(tmp,2)
-    fpts<-apply(tmp, 2, function(x)paste(x,collapse=","))
-    fpts<-paste0("c(",fpts,")")
-    fpts<-paste(fpts, collapse=",")
-    paste0("matrix( c(",fpts,"), 2)")
-  }
-
-}
+# 
+# toStrPtR<-function(x,...){ UseMethod("toStrPtR") }
+# 
+# toStrPtR.default<-function(x,...){ toString(x,...) }
+# toStrPtR.character<-function(x, ...){
+#   toString(shQuote(x), ...)
+# }
+# toStrPtR.matrix<-function(x, digits=0, ...){
+#   if(length(x)==0){
+#     "matrix(0,2,0)"
+#   } else {
+#     tmp<-as.numeric(format(x, digits, ...))
+#     tmp<-matrix(tmp,2)
+#     fpts<-apply(tmp, 2, function(x)paste(x,collapse=","))
+#     fpts<-paste0("c(",fpts,")")
+#     fpts<-paste(fpts, collapse=",")
+#     paste0("matrix( c(",fpts,"), 2)")
+#   }
+# 
+# }
 
 
 toStrPtR0<-function(x,...){ UseMethod("toStrPtR0") }
@@ -70,30 +74,27 @@ toStrPtR0.matrix<-function(x, digits=0, ...){
 }
 
 
+# 
+# pfmt<-function(x){
+#   UseMethod("pfmt")
+# }
+# 
+# pfmt.default<-function(x, ...){
+#   paste("c(", toStrPtR(x, ...), ")" )
+# }
+# 
+# pfmt.list<-function(x, digits=0, ...){
+#   temp<-sapply(x, function(y) pfmt(y,  ...))
+#   temp<-paste0(temp, collapse=", ")
+#   paste0("list(", temp, ")")
+# }
+# 
+# pfmt.matrix<-function(x, digits=0, ...){
+#   toStrPtR0.matrix(x,digits, ...)
+# }
+# 
 
-pfmt<-function(x){
-  UseMethod("pfmt")
-}
 
-pfmt.default<-function(x, ...){
-  paste("c(", toStrPtR(x, ...), ")" )
-}
-
-pfmt.list<-function(x, digits=0, ...){
-  temp<-sapply(x, function(y) pfmt(y,  ...))
-  temp<-paste0(temp, collapse=", ")
-  paste0("list(", temp, ")")
-}
-
-pfmt.matrix<-function(x, digits=0, ...){
-  toStrPtR0.matrix(x,digits, ...)
-}
-
-
-
-getTibColClass<-function(tib){
-  sapply(1:ncol(tib), function(j)class(tib[[1,j]]))
-}
 
 toStrPtR0.list<-function(x, digits=0, ...){
   temp<-sapply(x, function(y) toStrPtR0(y,  ...))
@@ -101,15 +102,15 @@ toStrPtR0.list<-function(x, digits=0, ...){
   paste0("list(", temp, ")")
 }
 
-fmtPtR<-function( pts,  indent="  ", digits=0, ...){
-  n<-names(pts)
-  tmp<-sapply(n, function(x){
-    paste0(indent, x , '=', pfmt( pts[[x]] ) )
-  })
-  tmp<-paste0(tmp, collapse=",\n")
-  tmp<-paste("ptR<-list(",tmp,")", sep="\n")
-  tmp
-}
+# fmtPtR<-function( pts,  indent="  ", digits=0, ...){
+#   n<-names(pts)
+#   tmp<-sapply(n, function(x){
+#     paste0(indent, x , '=', pfmt( pts[[x]] ) )
+#   })
+#   tmp<-paste0(tmp, collapse=",\n")
+#   tmp<-paste("ptR<-list(",tmp,")", sep="\n")
+#   tmp
+# }
 
 #to do detect the points and place at the end
 # get colclasses
