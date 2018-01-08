@@ -4,7 +4,6 @@ This inherits from the default bootstrap style
  an existing style and modify it.
 */
 
-
 .navbar-default .navbar-brand:hover,
 .navbar-default .navbar-brand:focus {
   color: #5E5E5E;
@@ -38,6 +37,7 @@ This inherits from the default bootstrap style
   opacity: 0.5;
 }
 .navbar {
+  overflow: hidden;
   color: #BBBBBB;
   border-color: black;
   font-weight: bold;
