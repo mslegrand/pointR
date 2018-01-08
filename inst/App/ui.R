@@ -69,8 +69,7 @@ shinyUI(
             menuDropdown('Tibble',
                          menuItem('New Tibble', value='cmdNewTibble'),
                          menuItem('Rename Tibble', value='cmdRenameTibble'),
-                         menuItem('Delete Tibble', value='cmdDeleteTibble'),
-                         menuItem(NULL, value='cmdTibbleFormat', checkboxInput('useTribble', 'display as tribble', value = TRUE, width = NULL) )
+                         menuItem('Delete Tibble', value='cmdDeleteTibble')
             ),
             menuDropdown(
               'Configure',
@@ -131,10 +130,13 @@ shinyUI(
             ), 
             inline=FALSE
           ),
-          absolutePanel( 
-            "class"="footerPanel", 
-            draggable=FALSE,
-            actionButton("commit", label = "COMMIT EDIT") 
+          absolutePanel( "class"="footerPanel", draggable=FALSE, style="display:inline-block",
+             absolutePanel( left=5, bottom=0,
+               actionButton("commit", label = "COMMIT EDIT")
+             ),
+             absolutePanel( left=150, bottom=-10,
+               checkboxInput('useTribble', 'display as tribble', value = TRUE, width = NULL)
+             )
           )
           #-------left content end--------
         ) #----end of bootstrapPage
