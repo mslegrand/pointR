@@ -27,20 +27,20 @@ getParseDataFrame<-function(txt){
 }
 
 
-# getNCharLines<-function(txt){
-#   lines<-strsplit(txt,"\n")
-#   nCharLines<-sapply(lines, nchar)
-#   nn<-length(nCharLines)
-#   nCharLines<-nCharLines+1
-#   nCharLines[nn]<-nCharLines[nn]-1
-#   nCharLines
-# }
+getNCharLines<-function(txt){
+  lines<-strsplit(txt,"\n")
+  nCharLines<-sapply(lines, nchar)
+  nn<-length(nCharLines)
+  nCharLines<-nCharLines+1
+  nCharLines[nn]<-nCharLines[nn]-1
+  nCharLines
+}
 
 #todo?? make reactive expr: codeLineCnt<-reactive({getNCharLines(user$code)})
-# getcumCharLines<-function(txt){
-#   nCharLines<-getNCharLines(txt)
-#   csnCharLines<-cumsum(c(0,nCharLines))
-# }
+getcumCharLines<-function(txt){
+  nCharLines<-getNCharLines(txt)
+  csnCharLines<-cumsum(c(0,nCharLines))
+}
 
 
 
@@ -63,11 +63,11 @@ extractTagDF<-function(p.df, tag="ptR"){
   g.df<-subset(p.df, id==tag.gid)
 }
 
-# extractPositions<-function(csnCharLines, df){
-#   pos1<-colLine2charPositions(csnCharLines, df$line1, df$col1)
-#   pos2<-colLine2charPositions(csnCharLines, df$line2, df$col2)
-#   rbind(pos1=pos1, pos2=pos2)  
-# }
+extractPositions<-function(csnCharLines, df){
+  pos1<-colLine2charPositions(csnCharLines, df$line1, df$col1)
+  pos2<-colLine2charPositions(csnCharLines, df$line2, df$col2)
+  rbind(pos1=pos1, pos2=pos2)
+}
 
 # # returns all parse ids of attributes of given name and
 # # given value. 
