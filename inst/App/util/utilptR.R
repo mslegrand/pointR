@@ -134,16 +134,16 @@ NULL
 #   paste0(readLines(fileName),collapse="\n")
 # }
 
-# getDefPos<-function(txt, defTag){
-#   p.df<-getParseDataFrame(txt)
-#   cumCharLines<-getcumCharLines(txt)
-#   tag.df<-extractTagDF(p.df, tag=defTag)
-#   if( !is.null(tag.df) ){
-#     pos<-extractPositions(cumCharLines, tag.df)
-#   } else {
-#     pos<-NULL
-#   }
-# }
+getDefPos<-function(txt, defTag){
+  p.df<-getParseDataFrame(txt)
+  cumCharLines<-getcumCharLines(txt)
+  tag.df<-extractTagDF(p.df, tag=defTag)
+  if( !is.null(tag.df) ){
+    pos<-extractPositions(cumCharLines, tag.df)
+  } else {
+    pos<-NULL
+  }
+}
 
 
 # replaceDef<-function(txt, replacement, defTag){
@@ -178,13 +178,13 @@ NULL
 #   replaceTxt(txt, replacements, defTags)
 # }
   
-# getDef<-function(txt, defTag ){
-#   pos<-getDefPos(txt, defTag)
-#   if(is.null(pos)){
-#     return(NULL)
-#   }
-#   return(substr(txt, pos[1], pos[2]))
-# }
+getDef<-function(txt, defTag ){
+  pos<-getDefPos(txt, defTag)
+  if(is.null(pos)){
+    return(NULL)
+  }
+  return(substr(txt, pos[1], pos[2]))
+}
 
 
 # matrices2tags<-function(mats){
