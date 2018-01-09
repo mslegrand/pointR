@@ -31,13 +31,18 @@ observeEvent(input$commitNewCol, {
       newPtDefs<-getPtDefs()
       newColName<-input$modalAttrName
       
+      newVal<-input$modalAttrValue
+      if(isNumericString(newVal)){
+        newVal<-as.numeric(newVal)
+      }
       newPtDefs$tib[[getTibName()]]<-add_column(newPtDefs$tib[[getTibName()]], 
-                                                !!(newColName):=input$modalAttrValue   )     
+                                                !!(newColName):=newVal   )     
       # updateAce
-      
+      # set selection to this column?
       sender<-'addNewColumn'
       updateAceExtDef(newPtDefs, sender=sender)
-      # set selection to this column?
+      updateSelected( columnName = newColName)
+      
       removeModal() #close dialog
     }
 })

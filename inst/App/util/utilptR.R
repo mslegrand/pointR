@@ -347,7 +347,7 @@ pts2Integers<-function(newtib){
 #   cv
 # }
 
-#this would be used when opening a file
+#this could be used when opening a file
 ## choices 
 choices2ColType<-function( choices, column){
   ct<-NULL

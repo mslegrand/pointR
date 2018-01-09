@@ -115,14 +115,18 @@ observeEvent(returnValue4ModuleEdTib$entryValue(),{
     
     
     if(!is.null(columnName) && nchar(entry)>0   ){
-      # !!! TODO: type check if numeric
-      
       setPlotState(entry) # this is where we handle points/matrix
       if(!(entry %in% c('matrix','point'))){
         name<-getTibName()
         newPtDefs<-getPtDefs()
-        column<-getTibColumnName()
+        column<-getTibColumnName() 
+        # !!! todo: refactor
+        #should be exactly the same as returnValue4ModuleEdTib$columnName()
+        # so column and columnName are redundent
         row<-newPtDefs$tib[[name]] %AND% getTibRow()
+        if(isNumericString(entry)){
+          entry<-as.numeric(entry)
+        }
         if(!is.null(row) && row>=1 && row<=nrow(newPtDefs$tib[[name]]) ){
           sender='applyTibEdit'
           newPtDefs$tib[[getTibName()]][[row,column ]]<-entry
