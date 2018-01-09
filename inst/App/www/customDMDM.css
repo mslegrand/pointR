@@ -37,7 +37,6 @@ This inherits from the default bootstrap style
   opacity: 0.5;
 }
 .navbar {
-  overflow: hidden;
   color: #BBBBBB;
   border-color: black;
   font-weight: bold;
