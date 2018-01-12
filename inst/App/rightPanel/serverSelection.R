@@ -18,6 +18,120 @@ getTransformType<-reactive({
   selectedTibble$transformType
 })
 
+getHandlerValue<-reactive({ 
+  handler<-getHandler()
+  if(is.null(handler)){ #NULL is default
+    return(NULL)
+  }
+  name<-getTibName()
+  columnName<-getTibColumnName()
+  
+  hv<-request$inputHandler[[name]][[columnName]]
+  
+  if( !is.null(hv) && hv==handler){
+    return(handler)
+  } else {
+    return(NULL)
+  }
+})
+
+getHandler<-reactive({
+  colName<-getTibColumnName()
+  columnValues<-getTib()[[colName]]
+  if(!is.null(columnValues)){
+    if(is.character(columnValues) && isColorString(columnValues)){
+      return('colourable')
+    }
+  }
+  NULL
+})
+
+setHandlerValue<-function(hValue){ # hValue==NULL iff is 'default'
+  handler<-getHandler()
+  # if(handler=='default') bail
+  if(is.null(handler)) {
+    return(NULL)
+  }
+  if(!is.null(hValue) && hValue!=handler){
+    return(NULL)
+  }
+  if(is.null(request$inputHandler)){
+    request$inputHandle<-list()
+  }
+  name<-getTibName()
+  colName<-getTibColumnName()
+  # if tibName not in request$inputHandler list, add it with vector as arg
+  if(is.null(request$inputHandler[[name]])){ 
+      request$inputHandler[[name]]<- list()
+  }
+  request$inputHandler[[name]][[colName]]<-hValue
+}
+
+# observeEvent( getHandler(),{
+#   hcs<-getHandler()
+#   id<-"tagValBar"
+#   ns <- NS(id)
+#   if(hcs=='colourable'){
+#     showElement(ns("useColourPalette"))
+#   } else {
+#     hideElement(ns("useColourPalette"))
+#   }
+# })
+# 
+# observeEvent( getHandlerValue(),{
+#   hv<-getHandlerValue()
+#   if(!is.null(hv)){
+#       id<-"tagValBar"
+#       ns <- NS(id)
+#       if(hv=='colourable'){
+#         showElement(ns("entryColour"))
+#         showElement(ns("entryValue"))
+#       } else {
+#         showElement(ns("entryValue"))
+#       }    
+#   } else {
+#     showElement(ns("entryValue"))
+#   }
+# 
+# })
+
+# # observer to update moduleTibEd for columntype
+# observeEvent(getTibColumnName(),{
+#   # get the columnValues
+#   name<-getTibName()
+#   if(!name %in% names(request$inputHandlers) ){
+#     request$inputHandlers<-c(request$inputHandlers, list(name=c() ))
+#   }
+#   # if(!(colName %in% request$inputHandler[[name]])){
+#   #   request$inputHandler[[name]]<-c( request$inputHandler[[name]], list(colName=list()))
+#   # }
+#   id<-"tagValBar"
+#   ns <- NS(id)
+#   colName<-getTibColumnName()
+#   columnValues<-getTib()[[colName]]
+#   if(!is.null(columnValues)){
+#      if(is.character(columnValues) && isColorString(columnValues)){
+#        showElement(ns("useColourPalette"))
+#        #set to current value ???
+#        # getValue from request$inputHandler
+#        handler<-request$inputHandler[[name]][[colName]]
+#        if( !is.null(handler) && handler=="useColourPalette"){
+#          # set to use palette
+#          selectedTibble$handler<-"useColourPalette"
+#          showElement(ns("useColourPalette"))
+#        } else {
+#          # set to not use palette
+#          selectedTibble$handler<-"donotUseColourPalette"
+#          hideElement(ns("useColourPalette"))
+#        }
+#      } else {
+#        hideElement(ns("useColourPalette"))
+#        hideElement(ns("entryColour"))
+#        showElement(ns("entryValue"))
+#      }
+#   }
+# })
+# 
 
 
 

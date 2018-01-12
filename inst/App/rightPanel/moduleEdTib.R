@@ -1,79 +1,94 @@
 
-
-#currently update triggers value from choice to ace
-# propose
-# tagValHeadWidth<-c(100,70,120,200)
-# tagValHeadLeft<-cumsum(c(10,tagValHeadWidth)+5)
-# tagValHeadWidth<-paste0(tagValHeadWidth,"px")
-# tagValHeadLeft<-paste0(tagValHeadLeft,"px")
-
 moduleEdTibUI<-function(id, input, output) { 
   ns <- NS(id)
-  #useShinyjs()
-  tagList(# beginfooter panel
+  tagList(
+    
+    # -------------beginfooter panel
     absolutePanel( "class"="footerPanel", draggable=FALSE,
+      #if neither transform or log
       conditionalPanel( condition = sprintf("input['%s'] != '%s' && input['%s'] != '%s' ", ns("name"), transformTag, ns("name"), logTag),
+        # if matrix                
         conditionalPanel(condition = sprintf("input['%s'] == 'matrix'", ns("entryValue")),
            actionButton(ns("tagClone"),   label = "Clone"   ),
            actionButton(ns("tagDelete"),  label = "Delete"),
            actionButton(ns("tagMoveUp"), label = "Send Up"),
            actionButton(ns("tagMoveDown"), label = "Send  Down")
         ),
+        # if point
         conditionalPanel(condition = sprintf("input['%s'] == 'point'", ns("entryValue")),
           actionButton(ns("forwardPt" ), label = "Forward Pt"),
           actionButton(ns("backwardPt"), label = "Backward Pt"),
           actionButton(ns("removePt"), label = "Delete Pt"),
           actionButton(ns("tagPt"), label = "Tag Pt") 
+        ),
+        # if value
+        conditionalPanel(condition = "output.handler == 'colourable'",
+                         checkboxInput(ns("useColourPalette"), label = "Use colour palette", value=FALSE) 
+          # if all colors:  use color pallete
+          # if all integers: use scroller
+          # if all numeric:
         )
       )
     ),
-    #end footer panel
-    #begin headerPanel
-    absolutePanel( id=ns('header'),
+    #----------------end footer panel
+    #begin-----------headerPanel
+    # ---header backdrop
+    absolutePanel( id=ns('header'), 
         top=50, left=0, width="100%", "class"="headerPanel", draggable=FALSE, height="80px"
     ),
-        #bottom=0, #height="200px",
-        #div(style="display:inline-block",
-        # display always
-        absolutePanel( top=50, left=15 ,style="display:inline-block",
-          selectizeInput( ns("name"), "Data", choices=list(),  selected=NULL, 
-            width= '120px' 
-          )
-        ),
-        #display if selected is transform
-        conditionalPanel( condition = sprintf("input['%s'] == '%s'", ns("name"), transformTag),
-          absolutePanel( 
-            top=50+25, left=145, width="100%", 
-            "class"="headerPanel", draggable=FALSE, "background-color"='#666688',
-            tabsetPanel( id=ns("transformType"),  
-                         tabPanel("Translate"), 
-                         tabPanel("Rotate"), 
-                         tabPanel("Scale"),
-                         
-                         type="pills"
-            ) 
-          )    
-        ),
-        # display only if input name is a tibble
-        conditionalPanel( condition = sprintf("input['%s'] != '%s' && input['%s'] != '%s' ", ns("name"), transformTag, ns("name"), logTag),
+    # ---name input ---
+    #(always visible) 
+    absolutePanel( top=50, left=15 ,style="display:inline-block",
+      selectizeInput( ns("name"), "Data", choices=list(),  selected=NULL, 
+        width= '120px' 
+      )
+    ),
+    #---ransform content---
+    #   display only if selected name is transform
+    conditionalPanel( condition = sprintf("input['%s'] == '%s'", ns("name"), transformTag),
+      absolutePanel( 
+        top=50+25, left=145, width="100%", 
+        "class"="headerPanel", draggable=FALSE, "background-color"='#666688',
+        tabsetPanel( id=ns("transformType"),  
+                     tabPanel("Translate"), 
+                     tabPanel("Rotate"), 
+                     tabPanel("Scale"),
+                     
+                     type="pills"
+        ) 
+      )    
+    ),
+    #---tibble content---
+    # display only if input name is a tibble
+    conditionalPanel( condition = sprintf("input['%s'] != '%s' && input['%s'] != '%s' ", ns("name"), transformTag, ns("name"), logTag),
+          #---row---
           absolutePanel( top=50, left=145 ,
             numericInput( ns("rowIndex"), "Row", 1, min=1, max=10, step=1, 
                width= '70px' 
             )
           ), 
+          #---column---
           absolutePanel( top=50, left=220 ,
             selectizeInput(ns("columnName"), label="Column",
               choices=list(),  selected=NULL, 
               width= '120px' 
             )
           ),
-          absolutePanel( top=50, left=345 ,
-            selectizeInput(ns("entryValue"), "Value", 
-              options = list(create = TRUE),
-              choices=list(),  selected=NULL, 
-              width= '200px' 
-            )
-          ), 
+          # ---Entry Input Handlers ---
+          absolutePanel( top=50, left=345,
+             conditionalPanel(condition = "output.handlerValue=='colourable'",
+                              colourInput(ns("entryColour"), label='Choose Colour', value='green' )
+             )
+          ),
+          absolutePanel( top=50, left=345,
+             conditionalPanel( condition = "output.handlerValue=='default'",
+                               selectizeInput(ns("entryValue"), "Value",
+                               options = list(create = TRUE),
+                               choices=list(),  selected=NULL, width="200px"
+                )
+             )
+          ),
+          # ---point column----
           # display if state is  point
           absolutePanel(top=50, left=550,
             conditionalPanel( condition = sprintf("input['%s'] == 'point'", ns("entryValue")),
@@ -107,11 +122,16 @@ moduleEdTib<-function(input, output, session,
   getTibEntry,
   getTibEntryChoices, 
   tibEditState,
-  headerId
+  getHandler,
+  getHandlerValue
+  
 ){
   ns<-NS(id2)
   result <- reactiveValues(
-    ptDefs=NULL
+    ptDefs=NULL,
+    
+    entryValue=NULL,
+    colInput='default'
   ) # note we add name post mortem!!!
   
   
@@ -120,9 +140,9 @@ moduleEdTib<-function(input, output, session,
     #cat("\nentering----moduleEdTib----------updateEntry-------------------\n")
     entry=getTibEntry()
     if(is.null(entry)){return(NULL)}
-    if(is(entry,'matrix')){
+    if(is(entry,'matrix')){ #entry='matrix'
       #cat("----------updateEntry::matrix-------------------\n")
-      #entry='matrix'
+      
       #cat('---------attn: class(entry)=',class(entry),"\n")
       entryChoices=c('point','matrix')
       lastEntry<-input$entryValue 
@@ -150,6 +170,10 @@ moduleEdTib<-function(input, output, session,
       #cat("----------updateEntry::else-------------------\n")
       entryChoices=getTibEntryChoices()
       if(length(entry)>0 && length(entryChoices)>0 ){
+        if(!is.null(getHandlerValue()) && getHandlerValue()=='colorable'){
+          cat("\nupdate entryColour=",entry,"\n")
+          updateColourInput(session, "entryColour", entry)
+        }  
         updateSelectizeInput(session, "entryValue", 
                         choices=entryChoices, 
                         selected=entry )
@@ -158,23 +182,8 @@ moduleEdTib<-function(input, output, session,
     # cat("\nexiting----moduleEdTib----------updateEntry-------------------\n")
   }
   
-
-  
-  observeEvent( c(matColIndex(), matColIndexChoices()),{
-    if(!is.null(input$entryValue) && input$entryValue=='point' &&
-       !is.null(matColIndex() && !is.null(matColIndexChoices() ))){
-          mcChoices<-matColIndexChoices()
-          print(mcChoices)
-          updateNumericInput(session, "matColIndex", 
-                             min=min(mcChoices),
-                             max=max(mcChoices),
-                             value=matColIndex()
-          ) 
-    }
-  })
-   
-  
   #ToDo!!! 
+  #---name---
   observeEvent(c( name(), nameChoices() ), { #update the name 
     #if(identical( barName(), 'tibEditor')){
       #cat('\n-----Entering----barName initialization for tibEditor (XX) \n')
@@ -190,6 +199,7 @@ moduleEdTib<-function(input, output, session,
     #}
   }) 
   
+  #---row---
   observeEvent( c( rowIndex(), rowIndexChoices() ),  { #update index
     if( tibEditState()==TRUE && 
        !is.null(rowIndex()) && !is.null(rowIndexChoices() )){
@@ -204,7 +214,7 @@ moduleEdTib<-function(input, output, session,
   }) 
   
   
-  
+  #---column---
   observeEvent( c(columnName(), columnNameChoices()) , {
      #cat('\n-----Entering----update columnName \n')
     # cat("\n---------entering------oE1-125.1\n")
@@ -219,20 +229,52 @@ moduleEdTib<-function(input, output, session,
     } 
   })
   
-  observeEvent( c(getTibEntry(), getTibEntryChoices()) , { 
+  #---entry---
+  observeEvent( c(columnName(), getTibEntry(), getTibEntryChoices()) , { 
     if( tibEditState()==TRUE ){
       updateEntry()
     } 
   })
   
+  #---matColIndex
+  observeEvent( c(matColIndex(), matColIndexChoices()),{
+    if(!is.null(input$entryValue) && input$entryValue=='point' &&
+       !is.null(matColIndex() && !is.null(matColIndexChoices() ))){
+      mcChoices<-matColIndexChoices()
+      print(mcChoices)
+      updateNumericInput(session, "matColIndex", 
+                         min=min(mcChoices),
+                         max=max(mcChoices),
+                         value=matColIndex()
+      ) 
+    }
+  })
+  
+                
+  observeEvent( getHandlerValue() ,{
+    val<-getHandlerValue()
+    if(!is.null(val) && val=='colourable'){
+      cat('\n\nobserveEvent( input$useColourPalette\n\n')
+      updateEntry()
+    }
+  })
 
+  #---the next pair of observers are used to return for the entry value---
+  observeEvent( input$entryValue ,{
+    result$entryValue<-input$entryValue
+  })
+  observeEvent( input$entryColour ,{
+    cat("----------entryColour=",input$entryColour,"\n")
+    result$entryValue<-input$entryColour
+  })
+  
   
   #when name, index, attrName valid, and attrVal changes, update the ptDefs and code
   list( 
     name         =reactive({input$name}),
     rowIndex     = reactive({input$rowIndex}),
     columnName    =reactive({input$columnName}),
-    entryValue   =reactive(input$entryValue),
+    entryValue   =reactive(result$entryValue),
     tagClone    =reactive({input$tagClone}),
     tagDelete   =reactive({input$tagDelete}),
     tagMoveUp   =reactive({input$tagMoveUp}),
@@ -242,6 +284,7 @@ moduleEdTib<-function(input, output, session,
     forwardPt    = reactive(input$forwardPt),
     removePt     =reactive({input$removePt}),
     tagPt        =reactive({input$tagPt}),
-    transformType =reactive({input$transformType})
+    transformType =reactive({input$transformType}),
+    useColourPalette = reactive({input$useColourPalette})
   )
 }

@@ -38,7 +38,7 @@ observeEvent(input$commitNewCol, {
       newPtDefs$tib[[getTibName()]]<-add_column(newPtDefs$tib[[getTibName()]], 
                                                 !!(newColName):=newVal   )     
       # updateAce
-      # set selection to this column?
+      # and set selection to this column
       sender<-'addNewColumn'
       updateAceExtDef(newPtDefs, sender=sender)
       updateSelected( columnName = newColName)

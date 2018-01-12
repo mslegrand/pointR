@@ -2,7 +2,7 @@
 
 #returns TRUE if all numeric
 isNumericString<-function(x){
-  all(grepl("[-]?[0-9]+[.]?[0-9]*|[-]?[0-9]+[L]?|[-]?[0-9]+[.]?[0-9]*[eE][0-9]+",x))
+  all(grepl("^([-]?[0-9]+[.]?[0-9]*|[-]?[0-9]+[L]?|[-]?[0-9]+[.]?[0-9]*[eE][0-9]+)$",x))
 }
 
 isIntegerString<-function(x){
@@ -11,7 +11,7 @@ isIntegerString<-function(x){
 
 isColorString <- function(x) {
   all(sapply(x, function(X) {
-    if (!is.logical(X)) tryCatch(is.matrix(col2rgb(X)), 
+    if (!is.logical(X)) tryCatch(is.matrix(col2rgb(X)),
                                  error = function(e) FALSE) else FALSE
   }))
 }

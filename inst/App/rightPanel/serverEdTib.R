@@ -6,7 +6,6 @@ returnValue4ModuleEdTib<-callModule(
   module=moduleEdTib,
   id="tagValBar",
   id2="tagValBar", # !!! DO  WE STILL NEED THIS???? 
-  
   name=getRightPanelName,
   nameChoices=getRightPanelChoices,
   rowIndex=reactive({            if( tibEditState()==TRUE ){ getTibRow() } else { NULL } }),
@@ -18,7 +17,8 @@ returnValue4ModuleEdTib<-callModule(
   getTibEntry=reactive({         if( tibEditState()==TRUE ){ getTibEntry() } else { NULL } }),
   getTibEntryChoices=reactive({  if( tibEditState()==TRUE ){ getTibEntryChoices() } else { NULL } }),
   tibEditState=tibEditState,
-  headerId=NS("tagValBar", 'header')
+  getHandler=reactive({  if( tibEditState()==TRUE ){ getHandler() } else { NULL } }),
+  getHandlerValue=getHandlerValue #reactive({  if( tibEditState()==TRUE ){ getHandlerValue() } else { NULL } })
 )
 
 
@@ -103,6 +103,22 @@ observeEvent(returnValue4ModuleEdTib$columnName(),{
 
 
 #--------EDIT VALUE------------------------------
+
+observeEvent(returnValue4ModuleEdTib$useColourPalette(), {
+  hv<-returnValue4ModuleEdTib$useColourPalette()
+  if(is.null(hv) || is.null(getHandler())){
+    return(NULL)
+  }
+  if(hv=='FALSE'){
+    hv<-NULL
+  } else {
+    hv<-'colourable'
+    # should update the colourInput???
+  }
+  cat('\n\n===observeEvent(returnValue4ModuleEdTib$useColourPalette()=== ')
+  setHandlerValue(hv)
+})
+
 observeEvent(returnValue4ModuleEdTib$entryValue(),{
   if( tibEditState()==TRUE ){
     #cat("returnValue4ModuleEdTib$entryValue()\n")
@@ -112,7 +128,6 @@ observeEvent(returnValue4ModuleEdTib$entryValue(),{
  
     row= entry %AND% returnValue4ModuleEdTib$rowIndex()
     columnName<-row %AND% returnValue4ModuleEdTib$columnName()
-    
     
     if(!is.null(columnName) && nchar(entry)>0   ){
       setPlotState(entry) # this is where we handle points/matrix
@@ -137,6 +152,8 @@ observeEvent(returnValue4ModuleEdTib$entryValue(),{
     }
   }
 })
+
+
 
 observeEvent(
   returnValue4ModuleEdTib$tagClone(),
@@ -302,4 +319,19 @@ observeEvent( returnValue4ModuleEdTib$backwardPt(), {
     updateSelected(  matCol=matColIndex  )
   }
 })
+
+# observeEvent( returnValue4ModuleEdTib$input$resetColInput(), {
+#   # here we get the colName and the column type
+#   colName<-getTibColumnName()
+#   tib<-getTib()
+#   colValues<-tib[[colName]]
+#   if(isColorString(colValues)){ # if column is colors , colorOption dialog
+#     # bring up color modal    
+#     # user selects where or not to use color palette
+#     # set ptR$widget[[name]][colName]='colorpalette' 
+#   }
+#   
+#   # if col is ints, int dialog
+#   # if col is ...
+# })
 

@@ -12,12 +12,33 @@ shinyServer(function(input, output,session) {
   
 # Reactive values----------
 
+  #-- hidden output
+  output$handler<-reactive({
+    rtv<-getHandler()
+    if(is.null(rtv)){
+      rtv<-'default'
+    }
+    rtv
+  })
+  outputOptions(output, "handler", suspendWhenHidden=FALSE)
+  output$handlerValue<-reactive({
+    rtv<-getHandlerValue()
+    if(is.null(rtv)){
+      rtv<-'default'
+    }
+    rtv
+  })
+  outputOptions(output, "handlerValue", suspendWhenHidden=FALSE)
+  
+  
   
   request<-reactiveValues(
     code=NULL,
     sender='startup',
-    refresh=NULL # to be used to force a code refresh???
+    refresh=NULL, # to be used to force a code refresh???
+    inputHandlers=NULL
   )
+  
   
   triggerRefresh<-function(sender, rollBack=TRUE, auxValue=FALSE){ # to be used to force a code refresh???
     session$sendCustomMessage(
@@ -46,7 +67,7 @@ shinyServer(function(input, output,session) {
     if(panels$sourceType=='logPanel'){
       rtv<-"logPanel"
     } else {
-      #rtv<-panels$right2
+      # rtv<-panels$right2
       rtv<-panels$state
     }
     cat( "getRightMidPanel2=",rtv,"\n")
@@ -56,7 +77,7 @@ shinyServer(function(input, output,session) {
   getPlotState<-reactive({panels$state})
   
   setPlotState<-function(state){ 
-    #cat('setPlotstate=',state,"\n")
+    # cat('setPlotstate=',state,"\n")
     if(!is.null(state) && (state %in% c('matrix','point', 'transform', 'logPanel'))){
       if(state=='point' && panels$state!='point'){ 
         # get the number of columns of the entry
@@ -72,7 +93,7 @@ shinyServer(function(input, output,session) {
     } else {
       panels$state<-'value'
     }
-    #panels$right2<-panels$state
+    # panels$right2<-panels$state
   }
   
   getRightPanelChoices<-reactive({ # includes names of tibs
@@ -101,7 +122,7 @@ shinyServer(function(input, output,session) {
   is.tibName<-function(x){ !is.null(x) || x==logTag || x==transformTag}
   
   tibEditState<-reactive({
-    #cat("panels$right2=",panels$right2,"\n")
+    # cat("panels$right2=",panels$right2,"\n")
     (panels$sourceType)=='svgPanel' && (panels$state %in% c("point", "value", "matrix"))
   })
 
@@ -115,8 +136,9 @@ shinyServer(function(input, output,session) {
   
   getPtDefs<- reactive({ 
     ptDefs<-ex.getPtDefs(getCode(), useTribbleFormat=editOption$useTribbleFormat ) 
+    # we kludge here and assign input handlers to ptDefs
     ptDefs
-  })  #extract points from user code
+  })  # extract points from user code
   
   mssg<-reactiveValues(error="") 
   getErrorMssg<-reactive({ mssg$error })
