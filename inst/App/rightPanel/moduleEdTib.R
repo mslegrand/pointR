@@ -75,19 +75,20 @@ moduleEdTibUI<-function(id, input, output) {
             )
           ),
           # ---Entry Input Handlers ---
-          absolutePanel( top=50, left=345,
-             conditionalPanel(condition = "output.handlerValue=='colourable'",
-                              colourInput(ns("entryColour"), label='Choose Colour', value='green' )
-             )
-          ),
-          absolutePanel( top=50, left=345,
-             conditionalPanel( condition = "output.handlerValue=='default'",
-                               selectizeInput(ns("entryValue"), "Value",
-                               options = list(create = TRUE),
-                               choices=list(),  selected=NULL, width="200px"
-                )
-             )
-          ),
+          absolutePanel( top=50, left=345, uiOutput(ns("editEntryUI"))),
+          # absolutePanel( top=50, left=345,
+          #    conditionalPanel(condition = "output.handlerValue=='colourable'",
+          #                     colourInput(ns("entryColour"), label='Choose Colour', value='green' )
+          #    )
+          # ),
+          # absolutePanel( top=50, left=345,
+          #    conditionalPanel( condition = "output.handlerValue=='default'",
+          #                      selectizeInput(ns("entryValue"), "Value",
+          #                      options = list(create = TRUE),
+          #                      choices=list(),  selected=NULL, width="200px"
+          #       )
+          #    )
+          # ),
           # ---point column----
           # display if state is  point
           absolutePanel(top=50, left=550,
@@ -133,6 +134,39 @@ moduleEdTib<-function(input, output, session,
     entryValue=NULL,
     colInput='default'
   ) # note we add name post mortem!!!
+  
+  
+  output$editEntryUI<-renderUI({
+    handlerValue<-getHandlerValue()
+    entry<-getTibEntry()
+    if(is(entry,'matrix')){ 
+      entryChoices=c('point','matrix')
+      lastEntry<-input$entryValue 
+      #browser()
+      if(length(input$entryValue)==0 || !(input$entryValue %in% entryChoices ) ){
+        entry='point'
+      }
+      if(entry=='point' && (is.null(lastEntry)|| lastEntry!='point')){ #we need to set matColIndex=ncol(entry)
+        matColIndex<-ncol(entry)
+        minColIndex<-ifelse(matColIndex>0, 1, 0)
+        updateNumericInput(session, "matColIndex",  min=minColIndex, max=matColIndex,value=matColIndex) 
+      }
+    } else {
+      entryChoices=getTibEntryChoices()
+    }
+    # cat('tibEntryChoices\n')
+    # print(getTibEntryChoices())
+    if(!is.null(handlerValue) && handlerValue=='colourable'){
+      colourInput(
+        ns("entryColour"), label='Choose Colour', value=entry
+      )
+    } else {
+      selectizeInput(ns("entryValue"), "Value",
+                     options = list(create = TRUE),
+                     choices=entryChoices,  selected=entry, width="200px")
+    }
+  })
+  
   
   
   #updateEntry is called by observer of c(getTibEntry(), getTibEntryChoices())
@@ -261,6 +295,7 @@ moduleEdTib<-function(input, output, session,
 
   #---the next pair of observers are used to return for the entry value---
   observeEvent( input$entryValue ,{
+    cat("----------entryValue=",input$entryValue,"\n")
     result$entryValue<-input$entryValue
   })
   observeEvent( input$entryColour ,{

@@ -249,7 +249,7 @@ getTibEntry<-reactive({
   name<-getTibName()
   rowNum<-getTibRow()
   columnName<-getTibColumnName()
-  # cat("\n-----Entering-----getTibEntry::----------------\n")
+  cat("\n-----Entering-----getTibEntry::----------------\n")
   tib<-name %AND% getPtDefs()$tib[[name]]
   
   columnValues<- columnName %AND% tib[[columnName]]
@@ -262,8 +262,16 @@ getTibEntry<-reactive({
   } else {
     entry<-NULL
   }
-   
-  #cat("\n-----Exiting-----getTibEntry::----------------\n")
+  if(is.null(entry)){
+    cat('tibEntry is NULL\n')
+  } 
+  else if(is.matrix(entry)){
+    cat('tibEntry is matrix\n')
+  }
+  else if( is.character(entry)){
+    cat('tibEntry=',entry,'\n')
+  }
+  cat("\n-----Exiting-----getTibEntry::----------------\n")
   entry
 })
 

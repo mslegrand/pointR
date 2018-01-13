@@ -56,10 +56,10 @@ observeEvent(returnValue4ModuleEdTib$transformType(),{
 # if moduleEdTib changes the rowIndex,  matCol in selectedTibble needs to be updated
 observeEvent(returnValue4ModuleEdTib$rowIndex(),{
   if( tibEditState()==TRUE ){
-    #cat("returnValue4ModuleEdTib$rowIndex()\n")
+    cat("returnValue4ModuleEdTib$rowIndex()\n")
     rowIndex<-returnValue4ModuleEdTib$rowIndex()
     if(rowIndex==getTibRow()){ return(NULL) } #bail if moduleEdTib did not change rowIndex 
-    
+    cat("rowIndex=",rowIndex,"\n")
     # moduleEdTib changed rowIndex
     # extract row, column entry from tib
     name<-returnValue4ModuleEdTib$name()
