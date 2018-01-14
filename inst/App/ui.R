@@ -66,11 +66,11 @@ shinyUI(
               menuDivider(),
               menuItem("Quit", value="quit")
             ),
-            menuDropdown('Tibble',
-                         menuItem('New Tibble', value='cmdNewTibble'),
-                         menuItem('Rename Tibble', value='cmdRenameTibble'),
-                         menuItem('Delete Tibble', value='cmdDeleteTibble')
-            ),
+            # menuDropdown('Tibble',
+            #              menuItem('New Tibble', value='cmdNewTibble'),
+            #              menuItem('Rename Tibble', value='cmdRenameTibble'),
+            #              menuItem('Delete Tibble', value='cmdDeleteTibble')
+            # ),
             menuDropdown(
               'Configure',
               menuDropdown(
@@ -170,16 +170,18 @@ shinyUI(
                                       menuItem('Show Points with Labels', value='cmdShowPointLabels')
                          ),
                          menuDropdown( 'Grid',
-                                       menuItem('Show Grid', value='cmdShowGrid'),
-                                       menuDropdown('lines',
-                                                    menuItem('Width', value='cmdGridLineWidh'), 
-                                                    menuItem('Color', value='cmdGridLineColor')
-                                       )
-                         ),
-                         menuDropdown( 'Backdrop',
-                                       menuItem('Hide', value='cmdHideBack'),
-                                       menuItem('Color', value='cmdBackDropColor')
+                                       menuItem('Show Grid', value='cmdShowGrid')
+                                       # ,
+                                       # menuDropdown('lines',
+                                       #              menuItem('Width', value='cmdGridLineWidh'), 
+                                       #              menuItem('Color', value='cmdGridLineColor')
+                                       # )
                          )
+                         # ,
+                         # menuDropdown( 'Backdrop',
+                         #               menuItem('Hide', value='cmdHideBack'),
+                         #               menuItem('Color', value='cmdBackDropColor')
+                         # )
             ),
             menuDropdown(
               "Tools", 

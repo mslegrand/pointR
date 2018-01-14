@@ -66,10 +66,7 @@ output$TopRightPanel<-renderUI({
 
 
 output$MidRightPanel<-renderUI({
- 
-  
   chosenRightMidPanel<-getRightMidPanel2()
-  
   if (chosenRightMidPanel=='point'){
       modulePlotSVGrUI("svgPointsMod")
   } else if (chosenRightMidPanel=='value'){

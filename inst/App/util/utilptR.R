@@ -34,7 +34,7 @@ WH<-c(600,400)
 # Defined by mouse: edit with care!
 ptR<-list(
   x=tribble(
-   ~pts,
+   ~points,
    matrix(NA,2,0)
   )
 )
@@ -48,33 +48,33 @@ NULL
 # defines
 #-------------------------------
 
-"library(svgR)
-library(tidyverse)
-WH<-c(600,400)
-
-# Defined by mouse: edit with care!
-ptR<-list(
-  x=tribble(
-   ~x,             ~fill,
-   matrix(c(100,200,300,200),2), 'red',
-   matrix(c(100,300,300,300),2), 'red',
-   matrix(0,2,0), 'blue'
-  ),
-  y=tribble(
-   ~y,             ~stroke,
-   matrix(0,2,0), 'black'
-  ),
-  z=matrix(c(100,100,100,200,300,200),2)
-)
-
-
-
-svgR(wh=WH,
-#your custom code goes here
-NULL
-)
-"->codeTemplate
-
+# "library(svgR)
+# library(tidyverse)
+# WH<-c(600,400)
+# 
+# # Defined by mouse: edit with care!
+# ptR<-list(
+#   x=tribble(
+#    ~x,             ~fill,
+#    matrix(c(100,200,300,200),2), 'red',
+#    matrix(c(100,300,300,300),2), 'red',
+#    matrix(0,2,0), 'blue'
+#   ),
+#   y=tribble(
+#    ~y,             ~stroke,
+#    matrix(0,2,0), 'black'
+#   ),
+#   z=matrix(c(100,100,100,200,300,200),2)
+# )
+# 
+# 
+# 
+# svgR(wh=WH,
+# #your custom code goes here
+# NULL
+# )
+# "->codeTemplate
+# 
 
 
 

@@ -2,7 +2,6 @@
 moduleEdTibUI<-function(id, input, output) { 
   ns <- NS(id)
   tagList(
-    
     # -------------beginfooter panel
     absolutePanel( "class"="footerPanel", draggable=FALSE,
       #if neither transform or log
@@ -53,7 +52,6 @@ moduleEdTibUI<-function(id, input, output) {
                      tabPanel("Translate"), 
                      tabPanel("Rotate"), 
                      tabPanel("Scale"),
-                     
                      type="pills"
         ) 
       )    
@@ -76,19 +74,6 @@ moduleEdTibUI<-function(id, input, output) {
           ),
           # ---Entry Input Handlers ---
           absolutePanel( top=50, left=345, uiOutput(ns("editEntryUI"))),
-          # absolutePanel( top=50, left=345,
-          #    conditionalPanel(condition = "output.handlerValue=='colourable'",
-          #                     colourInput(ns("entryColour"), label='Choose Colour', value='green' )
-          #    )
-          # ),
-          # absolutePanel( top=50, left=345,
-          #    conditionalPanel( condition = "output.handlerValue=='default'",
-          #                      selectizeInput(ns("entryValue"), "Value",
-          #                      options = list(create = TRUE),
-          #                      choices=list(),  selected=NULL, width="200px"
-          #       )
-          #    )
-          # ),
           # ---point column----
           # display if state is  point
           absolutePanel(top=50, left=550,
@@ -139,7 +124,7 @@ moduleEdTib<-function(input, output, session,
   output$editEntryUI<-renderUI({
     handlerValue<-getHandlerValue()
     entry<-getTibEntry()
-    if(is(entry,'matrix')){ 
+    if(is(entry,'matrix')){ #untidyness due to matrix value
       entryChoices=c('point','matrix')
       lastEntry<-input$entryValue 
       #browser()
@@ -154,8 +139,6 @@ moduleEdTib<-function(input, output, session,
     } else {
       entryChoices=getTibEntryChoices()
     }
-    # cat('tibEntryChoices\n')
-    # print(getTibEntryChoices())
     if(!is.null(handlerValue) && handlerValue=='colourable'){
       colourInput(
         ns("entryColour"), label='Choose Colour', value=entry
