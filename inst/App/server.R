@@ -76,8 +76,10 @@ shinyServer(function(input, output,session) {
   
   getPlotState<-reactive({panels$state})
   
+  # if the arg state is anything other  than 'matrix','point', 'transform', 'logPanel' 
+  # this results with the state is set to 'value'
   setPlotState<-function(state){ 
-    # cat('setPlotstate=',state,"\n")
+    cat('setPlotstate=',state,"\n")
     if(!is.null(state) && (state %in% c('matrix','point', 'transform', 'logPanel'))){
       if(state=='point' && panels$state!='point'){ 
         # get the number of columns of the entry
@@ -89,8 +91,10 @@ shinyServer(function(input, output,session) {
         }
         updateSelected(matCol=nc)
       }
+      cat("setting panels$state=",state,"\n")
       panels$state<-state
     } else {
+      cat("setting panels$state=value\n")
       panels$state<-'value'
     }
     # panels$right2<-panels$state
@@ -122,7 +126,7 @@ shinyServer(function(input, output,session) {
   is.tibName<-function(x){ !is.null(x) || x==logTag || x==transformTag}
   
   tibEditState<-reactive({
-    # cat("panels$right2=",panels$right2,"\n")
+    cat("panels$state=",panels$state,"\n")
     (panels$sourceType)=='svgPanel' && (panels$state %in% c("point", "value", "matrix"))
   })
 
@@ -220,6 +224,7 @@ source("rightPanel/serverDisplayOptions.R", local=TRUE)
 source("rightPanel/serverSelection.R", local=TRUE) 
 source("rightPanel/cmdNewColumn.R", local=TRUE)
 source("rightPanel/cmdDeleteColumn.R", local=TRUE)
+source("rightPanel/footer/serverFooterRight.R", local=TRUE) 
 source("rightPanel/serverEdTib.R", local=TRUE) 
 source("rightPanel/serverPlotBarPoints.R", local=TRUE) 
 source("rightPanel/serverPlotBarTagValues.R", local=TRUE)  

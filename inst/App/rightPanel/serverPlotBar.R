@@ -4,7 +4,7 @@
 observeEvent(input$plotNavBar, {
   cmd<-getRightMenuCmd()
   if('character' %in% class(cmd)){
-    cat('cmd=',cmd,'\n')
+    cat('serverPlotBar::  inut$plotBar  cmd=',cmd,'\n')
   }
   if(is.null(cmd)){
     cat('cmd=NULL\n')
@@ -63,6 +63,9 @@ output$TopRightPanel<-renderUI({
     moduleEdTibUI("tagValBar", input, output)
 })
 
+output$BottomRightPanel<-renderUI({
+  moduleFooterRightUI("footerRight", input, output)
+})
 
 
 output$MidRightPanel<-renderUI({

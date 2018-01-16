@@ -38,8 +38,21 @@ getHandlerValue<-reactive({
 getHandler<-reactive({
   colName<-getTibColumnName()
   columnValues<-getTib()[[colName]]
+  if(!is.null(colName)){
+    cat("serverSelection.R:: getHandler: colName=",colName,"\n")
+    if(is.null(columnValues)){
+      cat("columnValues is NULL")
+      print(getTib())
+    }
+    print(columnValues)
+  }
+  else{
+    cat("colName is NULL\n")
+  }
+  
   if(!is.null(columnValues)){
     if(is.character(columnValues) && isColorString(columnValues)){
+      cat('column is colourable\n\n')
       return('colourable')
     }
   }
@@ -249,13 +262,14 @@ getTibEntry<-reactive({
   name<-getTibName()
   rowNum<-getTibRow()
   columnName<-getTibColumnName()
-  cat("\n-----Entering-----getTibEntry::----------------\n")
+  cat("serverSelection:: -----Entering-----getTibEntry::----------------\n")
   tib<-name %AND% getPtDefs()$tib[[name]]
-  
+  cat("serverSelection:: names(tib)=",names(tib),"\n")
   columnValues<- columnName %AND% tib[[columnName]]
   
   trows<-columnValues %AND% length(columnValues)
-  
+  cat("serverSelection:: columnName",columnName,"\n")
+  cat("serverSelection:: class(columnValues)=",class(columnValues),"\n")
   entryOk<-trows %AND% rowNum %AND% (if(1<=rowNum && rowNum<=trows){ TRUE } else { NULL})
   if(!is.null(entryOk)){
      entry<- as.list(tib[[columnName]])[[rowNum]]
@@ -263,15 +277,15 @@ getTibEntry<-reactive({
     entry<-NULL
   }
   if(is.null(entry)){
-    cat('tibEntry is NULL\n')
+    cat('serverSelection:: tibEntry is NULL\n')
   } 
   else if(is.matrix(entry)){
     cat('tibEntry is matrix\n')
   }
   else if( is.character(entry)){
-    cat('tibEntry=',entry,'\n')
+    cat('serverSelection:: tibEntry=',entry,'\n')
   }
-  cat("\n-----Exiting-----getTibEntry::----------------\n")
+  cat("serverSelection:: -----Exiting-----getTibEntry::----------------\n")
   entry
 })
 

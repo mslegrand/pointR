@@ -56,10 +56,10 @@ observeEvent(returnValue4ModuleEdTib$transformType(),{
 # if moduleEdTib changes the rowIndex,  matCol in selectedTibble needs to be updated
 observeEvent(returnValue4ModuleEdTib$rowIndex(),{
   if( tibEditState()==TRUE ){
-    cat("returnValue4ModuleEdTib$rowIndex()\n")
+    cat("serverEdTib::...Entering----- returnValue4ModuleEdTib$rowIndex()\n")
     rowIndex<-returnValue4ModuleEdTib$rowIndex()
     if(rowIndex==getTibRow()){ return(NULL) } #bail if moduleEdTib did not change rowIndex 
-    cat("rowIndex=",rowIndex,"\n")
+    cat("serverEdTib::...rowIndex=",rowIndex,"\n")
     # moduleEdTib changed rowIndex
     # extract row, column entry from tib
     name<-returnValue4ModuleEdTib$name()
@@ -75,6 +75,7 @@ observeEvent(returnValue4ModuleEdTib$rowIndex(),{
         updateSelected(name=name, row=rowIndex)
       }
     }
+    cat("serverEdTib::...Exiting----- returnValue4ModuleEdTib$rowIndex()\n")
   }
 })
 
@@ -93,10 +94,13 @@ observeEvent( returnValue4ModuleEdTib$matColIndex() ,{
 #  columnName
 observeEvent(returnValue4ModuleEdTib$columnName(),{
   if( tibEditState()==TRUE ){
+    cat('serverEdTib::...Entering-----returnValue4ModuleEdTib$columnName()\n')
     colName<-returnValue4ModuleEdTib$columnName()
+    cat('serverEdTib::...colName=',colName,".\n")
     if(!is.null(colName) && nchar(colName)>0 ){
       updateSelected(columnName=colName)
     }
+    cat('serverEdTib::...Exiting-----returnValue4ModuleEdTib$columnName()\n')
   }
 })
 
@@ -104,33 +108,22 @@ observeEvent(returnValue4ModuleEdTib$columnName(),{
 
 #--------EDIT VALUE------------------------------
 
-observeEvent(returnValue4ModuleEdTib$useColourPalette(), {
-  hv<-returnValue4ModuleEdTib$useColourPalette()
-  if(is.null(hv) || is.null(getHandler())){
-    return(NULL)
-  }
-  if(hv=='FALSE'){
-    hv<-NULL
-  } else {
-    hv<-'colourable'
-    # should update the colourInput???
-  }
-  cat('\n\n===observeEvent(returnValue4ModuleEdTib$useColourPalette()=== ')
-  setHandlerValue(hv)
-})
+
 
 observeEvent(returnValue4ModuleEdTib$entryValue(),{
   if( tibEditState()==TRUE ){
-    #cat("returnValue4ModuleEdTib$entryValue()\n")
+    cat("serverEdTib::...Entering----- returnValue4ModuleEdTib$entryValue()\n")
     # assuming tib is uptodate, simply work on the existing tib
-    name<- returnValue4ModuleEdTib$name() 
+    name<- returnValue4ModuleEdTib$name()
+    cat('serverEdTib::...name=', name,"\n")
     entry<-name %AND% returnValue4ModuleEdTib$entryValue()
- 
+    cat('serverEdTib::...entry=', entry,"\n")
     row= entry %AND% returnValue4ModuleEdTib$rowIndex()
     columnName<-row %AND% returnValue4ModuleEdTib$columnName()
-    
+    cat('serverEdTib::...columnName=', columnName,"\n")
     if(!is.null(columnName) && nchar(entry)>0   ){
-      setPlotState(entry) # this is where we handle points/matrix
+      setPlotState(entry) 
+      # this is where we handle points/matrix
       if(!(entry %in% c('matrix','point'))){
         name<-getTibName()
         newPtDefs<-getPtDefs()
@@ -150,99 +143,8 @@ observeEvent(returnValue4ModuleEdTib$entryValue(),{
         }
       } 
     }
+    cat("serverEdTib::...Exiting:    returnValue4ModuleEdTib$entryValue()\n")
   }
-})
-
-
-
-observeEvent(
-  returnValue4ModuleEdTib$tagClone(),
-  {
-    sender='cloneRow'
-    ptDefs<-getPtDefs()
-    name<-getTibName()
-    tib<-ptDefs$tib[[name]]
-    rowIndex<-getTibRow()
-    newTib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
-    rowIndx=rowIndex+1
-    matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
-    
-    pts<-newTib[[getTibPtColPos()]]
-    
-    ptDefs$tib[[name]]<-newTib
-    newPtDefs<-ptDefs
-    updateAceExtDef(newPtDefs, sender=sender)
-    updateSelected(row=rowIndex, matCol=matCol)
-  }
-)
-
-observeEvent(
-  returnValue4ModuleEdTib$tagDelete(),
-  {
-    sender='deleteRow'
-    ptDefs<-getPtDefs()
-    name<-getTibName()
-    newTib<-ptDefs$tib[[name]]
-    rowIndex<-getTibRow()
-    # !!!TODO handle case where this would be last existing row. What to do???
-    # for now we ignore
-    if(is.null(newTib) || nrow(newTib)<2){ return(NULL) }
-    newTib<-newTib[-rowIndex,]
-    ptDefs$tib[[name]]<-newTib
-    newPtDefs<-ptDefs
-    
-    #adjust position
-    rowIndex<-min(rowIndex, nrow(newTib))
-    matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
-    if(length(matCol)==0){matCol=0}
-    updateAceExtDef(newPtDefs, sender=sender)
-    updateSelected(row=rowIndex, matCol=matCol)
-  }
-)
-
-observeEvent( returnValue4ModuleEdTib$tagMoveUp(),{ 
-  
-  rowIndex<-getTibRow()
-  if(rowIndex>1){
-    sender='tagMoveUp'
-    ptDefs<-getPtDefs()
-    name<-    getTibName()
-    newTib<-ptDefs$tib[[name]]
-    
-    newTib[c(rowIndex,rowIndex-1),]<-newTib[c(rowIndex-1,rowIndex),]
-    ptDefs$tib[[name]]<-newTib
-    newPtDefs<-ptDefs
-    
-    #adjust position
-    rowIndex<-rowIndex-1
-    matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
-    if(length(matCol)==0){matCol=0}
-    updateAceExtDef(newPtDefs, sender=sender)
-    updateSelected(row=rowIndex, matCol=matCol)   
-  }
-  
-})
-
-observeEvent( returnValue4ModuleEdTib$tagMoveDown(),{ 
-  rowIndex<-getTibRow()
-  ptDefs<-getPtDefs()
-  name<-    getTibName()
-  newTib<-ptDefs$tib[[name]]
-  if(rowIndex<nrow(newTib)){
-    sender='tagMoveDown'
-    
-    newTib[c(rowIndex,rowIndex+1),]<-newTib[c(rowIndex+1,rowIndex),]
-    ptDefs$tib[[name]]<-newTib
-    newPtDefs<-ptDefs
-    
-    #adjust position
-    rowIndex<-rowIndex+1
-    matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
-    if(length(matCol)==0){matCol=0}
-    updateAceExtDef(newPtDefs, sender=sender)
-    updateSelected(row=rowIndex, matCol=matCol)   
-  }
-
 })
 
 
@@ -250,75 +152,13 @@ observeEvent( returnValue4ModuleEdTib$tagMoveDown(),{
 
 #-----------BUTTON EVENTS--------------------
 #---BUTTON: remove selected point  -----
-observeEvent( returnValue4ModuleEdTib$removePt(), {
-  selection<-getTibName() 
-  if(selection!=""){
-    ptDefs<-getPtDefs()
-    if(length(ptDefs$tib)==0){return(NULL)}
-    matCol<-getTibMatCol()
-    #get row, col
-    if(matCol>=1){ 
-      row<-getTibRow()
-      m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]][,-matCol] 
-      #!!! probably need some checking here
-      ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]<-m
-      matCol<-min(matCol, length(m)/2)
-      newPtDefs<-ptDefs
-      sender='points.deletePoint'
-      updateAceExtDef(newPtDefs, sender=sender)
-      updateSelected(matCol=matCol)
-    }
-  }
-}) #end remove point observer
 
 #----begin for Tagging-------------------------------------
 
 
 
 #---TAG THIS POINT button-----
-observeEvent( returnValue4ModuleEdTib$tagPt(), {
 
-  src<-getCode() 
-  selection<-getTibName()
-  ptDefs<-getPtDefs()
-  
-  row=getTibRow() 
-  matCol=getTibMatCol() 
-  
-  m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]
-  if(ncol(m)<1){ 
-    return(NULL) # bail if matrix of points is empty
-  }
-  ptDefs$mats[selection]<-FALSE # no longer a matrix input!
-  tib<-ptDefs$tib[[selection]] #get the tib
-  tib<-tagTib(tib, getTibPtColPos(), row, matCol)
-  row<-row+1
-  matCol<-length(tib[[row, getTibPtColPos()]])/2
-  ptDefs$tib[[selection]]<-tib 
-  sender='tagPt'
-  updateAceExtDef(ptDefs, sender=sender)
-  updateSelected(row=row, matCol=matCol)
-}) #end of point InfoList Tag Point, 
-
-
-# forward point
-observeEvent( returnValue4ModuleEdTib$forwardPt(), {
-  matColIndex<-getTibMatCol()
-  matColChoices<-getTibMatColChoices()
-  if(length( matColIndex)>0 && length(matColChoices)>0){
-    matColIndex=min(matColIndex+1, max(matColChoices) )
-    updateSelected(  matCol=matColIndex )
-  }
-})
-# backward point
-observeEvent( returnValue4ModuleEdTib$backwardPt(), {
-  matColIndex<-getTibMatCol()
-  matColChoices<-getTibMatColChoices()
-  if(length(matColIndex)>0 && length(matColChoices)>0){
-    matColIndex=max(matColIndex-1, min(matColChoices) )
-    updateSelected(  matCol=matColIndex  )
-  }
-})
 
 # observeEvent( returnValue4ModuleEdTib$input$resetColInput(), {
 #   # here we get the colName and the column type

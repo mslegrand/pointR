@@ -191,7 +191,9 @@ shinyUI(
           
           #----------end right menu
           #--------begin right content
+          uiOutput("BottomRightPanel"),
           uiOutput("TopRightPanel"),
+          
           br(),
           uiOutput("MidRightPanel")
         ) #-----right bootstrap page end----------
