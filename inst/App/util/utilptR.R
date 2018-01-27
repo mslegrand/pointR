@@ -192,7 +192,7 @@ getDef<-function(txt, defTag ){
 #   c(1,tmp[-length(tmp)])
 # }
 
-
+# TODO: move useTribbleFormat out
 ex.getPtDefs<-function(src, useTribbleFormat, ptTag="ptR"  ){
   if(is.null(useTribbleFormat)){
     useTribbleFormat=FALSE

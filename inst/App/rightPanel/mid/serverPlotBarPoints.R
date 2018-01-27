@@ -133,7 +133,7 @@ observeEvent(statusPlotPoint$status(), {
   status<-statusPlotPoint$status()
   if( status$state!="PASS"){ 
     # cat("statusPlotPoint$status() error\n")
-    setPanelValues(sourceType='logPanel')
+    setSourceType(sourceType='logPanel')
     #updateRightPanel('logPanel')
     mssg$err<-status$message
   }

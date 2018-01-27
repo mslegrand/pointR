@@ -8,17 +8,17 @@ returnValue4ModuleEdTib<-callModule(
   id2="tagValBar", # !!! DO  WE STILL NEED THIS???? 
   name=getRightPanelName,
   nameChoices=getRightPanelChoices,
-  rowIndex=reactive({            if( tibEditState()==TRUE ){ getTibRow() } else { NULL } }),
-  rowIndexChoices=reactive({     if( tibEditState()==TRUE ){ getTibRowChoices() } else { NULL } }),
-  matColIndex=reactive({         if( tibEditState()==TRUE ){ getTibMatCol() } else { NULL } }),
-  matColIndexChoices=reactive({  if( tibEditState()==TRUE ){ getTibMatColChoices() } else { NULL } }),
-  columnName= reactive({         if( tibEditState()==TRUE ){ getTibColumnName() } else { NULL } }),
-  columnNameChoices=reactive({   if( tibEditState()==TRUE ){ getTibColumnNameChoices() } else { NULL } }),
-  getTibEntry=reactive({         if( tibEditState()==TRUE ){ getTibEntry() } else { NULL } }),
-  getTibEntryChoices=reactive({  if( tibEditState()==TRUE ){ getTibEntryChoices() } else { NULL } }),
-  tibEditState=tibEditState,
-  getHandler=reactive({  if( tibEditState()==TRUE ){ getHandler() } else { NULL } }),
-  getHandlerValue=getHandlerValue #reactive({  if( tibEditState()==TRUE ){ getHandlerValue() } else { NULL } })
+  rowIndex=reactive({            if( getTibEditState()==TRUE ){ getTibRow() } else { NULL } }),
+  getTibNRow=reactive({     if( getTibEditState()==TRUE ){ getTibNRow() } else { NULL } }),
+  matColIndex=reactive({         if( getTibEditState()==TRUE ){ getTibMatCol() } else { NULL } }),
+  matColIndexChoices=reactive({  if( getTibEditState()==TRUE ){ getTibMatColChoices() } else { NULL } }),
+  getColumnName= reactive({         if( getTibEditState()==TRUE ){ getTibColumnName() } else { NULL } }),
+  getColumnNameChoices=reactive({   if( getTibEditState()==TRUE ){ getTibColumnNameChoices() } else { NULL } }),
+  getTibEntry=reactive({         if( getTibEditState()==TRUE ){ getTibEntry() } else { NULL } }),
+  getTibEntryChoices=reactive({  if( getTibEditState()==TRUE ){ getTibEntryChoices() } else { NULL } }),
+  getTibEditState=getTibEditState,
+  getHandler=reactive({  if( getTibEditState()==TRUE ){ getHandler() } else { NULL } }),
+  getHandlerValue=getHandlerValue #reactive({  if( getTibEditState()==TRUE ){ getHandlerValue() } else { NULL } })
 )
 
 
@@ -28,15 +28,15 @@ observeEvent(returnValue4ModuleEdTib$name(),{
     name<-returnValue4ModuleEdTib$name()
     if(name==getTibName()){ return(NULL) } #bail if moduleEdTib did not change name
     if(name==transformTag){
-     setPlotState('transform')
+     #setPlotState('transform')
       updateSelected(name=transformTag)
     } else if(name==logTag){
-        setPlotState(logTag)
+        #setPlotState(logTag)
         updateSelected(name=logTag)
       } 
 
     else {
-      setPlotState(NULL)
+      #setPlotState(NULL)
       tibs<-getPtDefs()$tib
       resetSelectedTibbleName(tibs=tibs, name=name)
     }
@@ -55,7 +55,7 @@ observeEvent(returnValue4ModuleEdTib$transformType(),{
 # rowIndex
 # if moduleEdTib changes the rowIndex,  matCol in selectedTibble needs to be updated
 observeEvent(returnValue4ModuleEdTib$rowIndex(),{
-  if( tibEditState()==TRUE ){
+  if( getTibEditState()==TRUE && !is.null(getTibRow()) ){
     cat("serverEdTib::...Entering----- returnValue4ModuleEdTib$rowIndex()\n")
     rowIndex<-returnValue4ModuleEdTib$rowIndex()
     if(rowIndex==getTibRow()){ return(NULL) } #bail if moduleEdTib did not change rowIndex 
@@ -83,7 +83,7 @@ observeEvent(returnValue4ModuleEdTib$rowIndex(),{
 
 # matColIndex
 observeEvent( returnValue4ModuleEdTib$matColIndex() ,{
-  if( tibEditState()==TRUE ){
+  if( getTibEditState()==TRUE ){
     matColIndex<-returnValue4ModuleEdTib$matColIndex()
     if( !is.null(matColIndex) ){ #add check for range
       updateSelected( matCol=matColIndex )
@@ -93,7 +93,7 @@ observeEvent( returnValue4ModuleEdTib$matColIndex() ,{
 
 #  columnName
 observeEvent(returnValue4ModuleEdTib$columnName(),{
-  if( tibEditState()==TRUE ){
+  if( getTibEditState()==TRUE ){
     cat('serverEdTib::...Entering-----returnValue4ModuleEdTib$columnName()\n')
     colName<-returnValue4ModuleEdTib$columnName()
     cat('serverEdTib::...colName=',colName,".\n")
@@ -111,37 +111,45 @@ observeEvent(returnValue4ModuleEdTib$columnName(),{
 
 
 observeEvent(returnValue4ModuleEdTib$entryValue(),{
-  if( tibEditState()==TRUE ){
+  if( getTibEditState()==TRUE ){
     cat("serverEdTib::...Entering----- returnValue4ModuleEdTib$entryValue()\n")
     # assuming tib is uptodate, simply work on the existing tib
     name<- returnValue4ModuleEdTib$name()
     cat('serverEdTib::...name=', name,"\n")
     entry<-name %AND% returnValue4ModuleEdTib$entryValue()
     cat('serverEdTib::...entry=', entry,"\n")
+    print(returnValue4ModuleEdTib$entryValue())
     row= entry %AND% returnValue4ModuleEdTib$rowIndex()
+    cat('serverEdTib::row=', row,"\n")
     columnName<-row %AND% returnValue4ModuleEdTib$columnName()
     cat('serverEdTib::...columnName=', columnName,"\n")
-    if(!is.null(columnName) && nchar(entry)>0   ){
-      setPlotState(entry) 
+    if(!is.null(columnName) && nchar(entry) ){
+      #setPlotState(entry) 
       # this is where we handle points/matrix
       if(!(entry %in% c('matrix','point'))){
-        name<-getTibName()
+        #name<-getTibName()
         newPtDefs<-getPtDefs()
-        column<-getTibColumnName() 
+        #column<-getTibColumnName() 
+        column<-columnName
         # !!! todo: refactor
         #should be exactly the same as returnValue4ModuleEdTib$columnName()
         # so column and columnName are redundent
-        row<-newPtDefs$tib[[name]] %AND% getTibRow()
+        #row<-newPtDefs$tib[[name]] %AND% getTibRow()
+        row<-newPtDefs$tib[[name]] %AND% row
         if(isNumericString(entry)){
           entry<-as.numeric(entry)
         }
-        if(!is.null(row) && row>=1 && row<=nrow(newPtDefs$tib[[name]]) ){
+        if(!is.null(row) && row>=1 && row<=nrow(newPtDefs$tib[[name]])
+           ){
           sender='applyTibEdit'
           newPtDefs$tib[[getTibName()]][[row,column ]]<-entry
-          updateAceExtDef(newPtDefs, sender=sender)
-          updateSelected( name=name, columnName=columnName, row=row)
+          # updateAceExtDef(newPtDefs, sender=sender)
+          # updateSelected( name=name, columnName=column, row=row)
+          updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=row, columnName=columnName   ) )
         }
-      } 
+      } else {
+        updateSelected( selIndex= which(entry==c('point','matrix')))
+      }
     }
     cat("serverEdTib::...Exiting:    returnValue4ModuleEdTib$entryValue()\n")
   }

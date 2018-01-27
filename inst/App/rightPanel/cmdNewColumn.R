@@ -40,8 +40,9 @@ observeEvent(input$commitNewCol, {
       # updateAce
       # and set selection to this column
       sender<-'addNewColumn'
-      updateAceExtDef(newPtDefs, sender=sender)
-      updateSelected( columnName = newColName)
+      # updateAceExtDef(newPtDefs, sender=sender)
+      # updateSelected( columnName = newColName)
+      updateAceExtDef(newPtDefs, sender=sender, selector=list( columnName = newColName   ) )
       
       removeModal() #close dialog
     }

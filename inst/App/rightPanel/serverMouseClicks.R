@@ -66,8 +66,8 @@ observe({
               newPt 
             )
             if(!is.null(newPtDefs)){ #update only upon success
-                updateAceExtDef(newPtDefs, sender=sender)
-                updateSelected(row=rowIndex, matCol=matColIndx+1 )
+                updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx+1))
+                #updateSelected(row=rowIndex, matCol=matColIndx+1 )
                 # cat('mouse add:: updateSelected')
             }
           }
@@ -87,8 +87,10 @@ observe({
           matColIndx<-as.numeric(vid[4])
           ptDefs$tib[[selection]][[ rowIndex, getTibPtColPos() ]][,matColIndx]<-newPt
           newPtDefs<-ptDefs
-          updateAceExtDef(newPtDefs, sender=sender)
-          updateSelected( row=rowIndex, matCol=matColIndx)
+          # updateAceExtDef(newPtDefs, sender=sender)
+          # updateSelected( row=rowIndex, matCol=matColIndx)
+          updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx))
+          
         }        
       }
 
@@ -107,8 +109,9 @@ observe({
           ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]<-m+vec
           matCol<-ncol(m)
           newPtDefs<-ptDefs
-          updateAceExtDef(newPtDefs, sender=sender)
-          updateSelected(row=row, matCol=matCol)
+          # updateAceExtDef(newPtDefs, sender=sender)
+          # updateSelected(row=row, matCol=matCol)
+          updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=row, matCol=matCol))
         }
       }
       
@@ -116,17 +119,16 @@ observe({
       if(barName=='value'){
         sender='tagVal.mouse'
         if(cmd=='tagValSelect'){ # -- move tagged group (from tagDrag)
+          sender='tagDrag.mouse'
           tid<-input$mouseMssg$id
           tmp<-unlist(str_split(tid,"_"))
           row<-as.numeric(tail(tmp,1))
           selection<-getTibName() 
           m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]
           matCol<-ncol(m)
-          m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]
-          pts<-ptDefs$tib[[selection]][[getTibPtColPos()]]
-          
-          
-          updateSelected(row=row, matCol=matCol)
+        
+          updateAceExtDef(ptDefs, sender=sender, selector=list( rowIndex=row, matCol=matCol))
+
         }
       }
       

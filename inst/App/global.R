@@ -85,6 +85,6 @@ getSVGWH<-function(){ c(650,620)} #this should be ultimately place in another fi
 #---load modules source -------------
 
 source("rightPanel/footer/moduleFooterRight.R")
-source("rightPanel/moduleEdTib.R")
-source("rightPanel/moduleSVGR.R")
+source("rightPanel/header/moduleEdTib.R")
+source("rightPanel/mid/moduleSVGR.R")
 

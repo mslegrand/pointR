@@ -105,7 +105,7 @@ statusPlotTagDrag<-callModule(
 observeEvent(statusPlotTagDrag$status(), {
   status<-statusPlotTagDrag$status()
   if(status$state!="PASS"){
-    setPanelValues(sourceType='logPanel')
+    setSourceType(sourceType='logPanel')
     #updateRightPanel('logPanel')
     mssg$err<-status$message    # send mssg to log
     # switch to log 

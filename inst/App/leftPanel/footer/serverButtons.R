@@ -53,12 +53,11 @@ processCommit<-reactive({
           output<-paste( output, collapse="\n" )
           output<-paste("Output:",output,sep="\n")
           
-          
-          setPanelValues(sourceType='logPanel')
+          setSourceType(sourceType='logPanel') #no error, just R code
           
           base::stop(output , call.=FALSE, domain=NA);
         } else {
-          setPanelValues(sourceType='svgPanel')
+          setSourceType(sourceType='svgPanel') #SVG code
         }
         # passed so far
         # next check if it can be run
@@ -110,7 +109,7 @@ processCommit<-reactive({
         }
         mssg$error<-err
         cat("commit got an error\n",mssg$error,"\n")
-        setPanelValues(sourceType='logPanel')
+        setSourceType(sourceType='logPanel')
         
       }) 
     }

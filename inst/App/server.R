@@ -34,10 +34,19 @@ shinyServer(function(input, output,session) {
   
   request<-reactiveValues(
     code=NULL,
+    name=NULL,
+    selector=list( name=NULL, selTib=NULL), # used by rightPanel
     sender='startup',
     refresh=NULL, # to be used to force a code refresh???
     inputHandlers=NULL
   )
+  
+  # control<-reactiveValues(
+  #   selector=list( ptDefs=NULL,  name=NULL, selTib=NULL)
+  # )
+  
+  getCode<-reactive({request$code})
+  
   
   
   triggerRefresh<-function(sender, rollBack=TRUE, auxValue=FALSE){ # to be used to force a code refresh???
@@ -47,58 +56,138 @@ shinyServer(function(input, output,session) {
     )
   }
   
+  # get CntrlSelector reactive
+  # getSelection<- reactive({ control$selector })
+ 
+  # observe request, ptDefs, update cntrl selector
+  # potential issue: 
+  #      if request comes prior to ptDefs
+  #      a row/col request change may be discarded by old existing ptDefs
+  # solution:
+  #      1. possibly need to add a delay or use a getCode and instead
+  #      2.  
+  #            a.  have ace do the update when recieving new code+request
+  #            b.  Other request go through here, with modifications
+  #                  i observer only on request$selector (since ptDefs change only for ace)
+  # observeEvent( c( request$selector  ),{  
+  #   ptDefs<-getPtDefs()
+  #   tibs<-ptDefs$tib
+  #   reqSelector<-request$selector
+  #   cntrlSelector<-control$selector
+  #   cntrlSelector<-selectorUpdate(tibs,  reqSelector, cntrlSelector )
+  #   cntrlSelector$ptDefs<-ptDefs
+  #   cntrlSelector$selector<-cntrlSelector
+  # })
+  
   panels<-reactiveValues(
     left='source',   #to be used as editor name later, for connecting to right graphics
     state='point',
-    #right2='point',
     sourceType='svgPanel' #  sourceType = 'svgPanel'  means svgR code
                           #  sourceType = 'logPanel' means plain R code or error
                           #  sourceType is set from processCommit
   )
   
-  setPanelValues<-function( sourceType ){
+  setSourceType<-function( sourceType ){
     if(!missing(sourceType)){
-      cat('setPanelValues:: sourceType=',sourceType,"\n")
+      cat('setSourceType:: sourceType=',sourceType,"\n")
       panels$sourceType=sourceType
     }
   }
   
+  getNameType<-reactive({
+    if(!is.null(getTibName())){
+      if (getTibName() %in% names(getPtDefs()$tib)){
+        'tib'
+      } else {
+        getTibName()
+      }
+    } else {
+      logTag
+    }
+  })
+  
+  
+  getColumnType<-reactive({
+    colName<-getTibColumnName()
+    columnValues<-getTib()[[colName]]
+    if(!is.null(columnValues)){
+      if( is.list(columnValues) ){
+        if(all(sapply(columnValues, function(m){ is.matrix(m) && dim(m)[1]==2}))){
+          return('point')
+        } else {
+          return('list')
+        }
+      }
+      if(is.numeric(columnValues)){
+        return('numeric')
+      }
+      if(is.character(columnValues)){
+        if( isColorString(columnValues)){
+          cat('column is colourable\n\n')
+          return('colourable')
+        } else {
+          return('character')
+        }
+      } else {
+        return('value')
+      }
+    }
+    return(NULL)
+  })
+  
+  getPlotState<-reactive({
+    nameType<-getNameType()
+    cat('... getPlotState:  nameType=', nameType,"\n")
+    if(nameType=='tib'){
+      colType<-getColumnType()
+      cat('... getPlotState:  colType=', colType,"\n")
+      if(colType=='point'){
+        cat( "getSelIndex()=",getSelIndex(),"\n")
+        c('point', 'matrix')[ getSelIndex() ]
+      } else {
+        'value'
+      }
+    } else {
+      nameType
+    }
+  })
+  
   getRightMidPanel2<-reactive({
-    if(panels$sourceType=='logPanel'){
+    if(panels$sourceType=='logPanel' || is.null(getPlotState() )){
       rtv<-"logPanel"
     } else {
       # rtv<-panels$right2
-      rtv<-panels$state
+      rtv<-getPlotState()
     }
     cat( "getRightMidPanel2=",rtv,"\n")
     rtv
   })
   
-  getPlotState<-reactive({panels$state})
+  # getPlotState<-reactive({panels$state})
   
   # if the arg state is anything other  than 'matrix','point', 'transform', 'logPanel' 
   # this results with the state is set to 'value'
-  setPlotState<-function(state){ 
-    cat('setPlotstate=',state,"\n")
-    if(!is.null(state) && (state %in% c('matrix','point', 'transform', 'logPanel'))){
-      if(state=='point' && panels$state!='point'){ 
-        # get the number of columns of the entry
-        entry=getTibEntry()
-        if(!is.null(entry) && is.matrix(entry)){
-          nc<-ncol(entry)
-        } else {
-          nc<-0
-        }
-        updateSelected(matCol=nc)
-      }
-      cat("setting panels$state=",state,"\n")
-      panels$state<-state
-    } else {
-      cat("setting panels$state=value\n")
-      panels$state<-'value'
-    }
-    # panels$right2<-panels$state
-  }
+  # setPlotState<-function(state){ 
+  #   cat('setPlotstate=',state,"\n")
+  #   if(!is.null(state) && (state %in% c('matrix','point', 'transform', 'logPanel'))){
+  #     if(state=='point' && panels$state!='point'){ 
+  #       # get the number of columns of the entry
+  #       entry=getTibEntry()
+  #       if(!is.null(entry) && is.matrix(entry)){
+  #         nc<-ncol(entry)
+  #       } else {
+  #         nc<-0
+  #       }
+  #       updateSelected(matCol=nc)
+  #     }
+  #     cat("setting panels$state=",state,"\n")
+  #     panels$state<-state
+  #   } else {
+  #     cat("setting panels$state=value\n")
+  #     panels$state<-'value'
+  #   }
+  #   # panels$right2<-panels$state
+  # }
   
   getRightPanelChoices<-reactive({ # includes names of tibs
     if(panels$sourceType=='logPanel'){
@@ -111,11 +200,10 @@ shinyServer(function(input, output,session) {
       }
       choices<-c(choices,logTag)
     }
-   
     choices
   })
   
-  getRightPanelName<-reactive({
+  getRightPanelName<-reactive({  #used only by editTib
     if(panels$sourceType=='logPanel'){
       return('logPanel')
     } else {
@@ -125,15 +213,15 @@ shinyServer(function(input, output,session) {
   
   is.tibName<-function(x){ !is.null(x) || x==logTag || x==transformTag}
   
-  tibEditState<-reactive({
-    cat("panels$state=",panels$state,"\n")
+  getTibEditState<-reactive({
+    #cat("panels$state=",panels$state,"\n")
     (panels$sourceType)=='svgPanel' && (panels$state %in% c("point", "value", "matrix"))
   })
 
   getLeftMenuCmd<-reactive({input$editNavBar$item})
   getRightMenuCmd<-reactive({input$plotNavBar$item})
   
-  reactiveTag<-reactiveValues(freq=list())
+  
   
   
   
@@ -220,16 +308,17 @@ shinyServer(function(input, output,session) {
 
 
 #------------------rightPanel--------------------------------
+source("rightPanel/serverHandler.R", local=TRUE)
 source("rightPanel/serverDisplayOptions.R", local=TRUE)
 source("rightPanel/serverSelection.R", local=TRUE) 
 source("rightPanel/cmdNewColumn.R", local=TRUE)
 source("rightPanel/cmdDeleteColumn.R", local=TRUE)
 source("rightPanel/footer/serverFooterRight.R", local=TRUE) 
-source("rightPanel/serverEdTib.R", local=TRUE) 
-source("rightPanel/serverPlotBarPoints.R", local=TRUE) 
-source("rightPanel/serverPlotBarTagValues.R", local=TRUE)  
-source("rightPanel/serverPlotBarTagDrag.R", local=TRUE)  
-source("rightPanel/serverPlotBarTransform.R", local=TRUE) 
+source("rightPanel/header/serverEdTib.R", local=TRUE) 
+source("rightPanel/mid/serverPlotBarPoints.R", local=TRUE) 
+source("rightPanel/mid/serverPlotBarTagValues.R", local=TRUE)  
+source("rightPanel/mid/serverPlotBarTagDrag.R", local=TRUE)  
+source("rightPanel/mid/serverPlotBarTransform.R", local=TRUE) 
 
 source("rightPanel/serverLog.R", local=TRUE) 
 source("rightPanel/serverPlotBar.R", local=TRUE)
@@ -240,8 +329,9 @@ source("rightPanel/serverPlotBar.R", local=TRUE)
   
   
 #---------------leftPanel--------------------------
+
 #------buttons
-source("leftPanel/serverButtons.R",local = TRUE)
+source("leftPanel/footer/serverButtons.R",local = TRUE)
 #------menu
 source("leftPanel/cmdFileSaveAs.R", local=TRUE)  
 source("leftPanel/cmdFileSave.R", local=TRUE)  

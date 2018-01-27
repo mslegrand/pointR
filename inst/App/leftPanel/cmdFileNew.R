@@ -1,5 +1,5 @@
 cmdFileNew<-function(){
-
+  cat("\n Entering cmdFileNew")
   src<-codeTemplate
   session$sendCustomMessage(
     type = "shinyAceExt",

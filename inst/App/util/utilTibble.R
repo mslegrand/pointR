@@ -142,8 +142,8 @@ tagTib<-function(tib, ptColIndex,  rowIndex=nrow(tib), matCol){
   pts<-tmp[[rowIndex, ptColIndex]]
   # tmp[[rowIndex,ptColIndex]]<-pts[,1:(matCol-1)]
   # tmp[[(rowIndex+1),ptColIndex]]<-pts[,-(1:(matCol-1))]
-  tmp[[rowIndex,ptColIndex]]<-pts[,1:(matCol)]
-  tmp[[(rowIndex+1),ptColIndex]]<-pts[,-(1:(matCol))]
+  tmp[[rowIndex,ptColIndex]]<-matrix(pts[,1:(matCol)],2)
+  tmp[[(rowIndex+1),ptColIndex]]<-matrix(pts[,-(1:(matCol))],2)
   tmp
 }
 
