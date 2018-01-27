@@ -37,11 +37,8 @@ observeEvent(input$commitNewCol, {
       }
       newPtDefs$tib[[getTibName()]]<-add_column(newPtDefs$tib[[getTibName()]], 
                                                 !!(newColName):=newVal   )     
-      # updateAce
-      # and set selection to this column
+      # updateAce and set selection to this column
       sender<-'addNewColumn'
-      # updateAceExtDef(newPtDefs, sender=sender)
-      # updateSelected( columnName = newColName)
       updateAceExtDef(newPtDefs, sender=sender, selector=list( columnName = newColName   ) )
       
       removeModal() #close dialog

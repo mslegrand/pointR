@@ -72,7 +72,7 @@ source("util/utilptR.R")
 source("util/utilTibble.R")
 source("util/utilColumnType.R")
 source("util/utilTransform.R")
-source("leftPanel/shinyAce4Ptr.R")
+source("leftPanel/mid/shinyAce4Ptr.R")
 
 #some consts
 defTag<-"ptR"

@@ -41,7 +41,6 @@ observe({
       src<-getCode()
       replacementList<-list()
       ptDefs<-getPtDefs() 
-      #barName=rightMidPanel()
       barName=getRightMidPanel2()
       if(barName=="Points" || (barName=='point' ) ){
         sender='PointsBar.mouse'
@@ -67,8 +66,6 @@ observe({
             )
             if(!is.null(newPtDefs)){ #update only upon success
                 updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx+1))
-                #updateSelected(row=rowIndex, matCol=matColIndx+1 )
-                # cat('mouse add:: updateSelected')
             }
           }
          }
@@ -87,8 +84,6 @@ observe({
           matColIndx<-as.numeric(vid[4])
           ptDefs$tib[[selection]][[ rowIndex, getTibPtColPos() ]][,matColIndx]<-newPt
           newPtDefs<-ptDefs
-          # updateAceExtDef(newPtDefs, sender=sender)
-          # updateSelected( row=rowIndex, matCol=matColIndx)
           updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx))
           
         }        
@@ -99,8 +94,7 @@ observe({
         if(cmd=='transGrp'){ # -- move tagged group (from tagDrag)
           
           tid<-input$mouseMssg$id
-          #vec<- as.numeric(input$mouseMssg$vec)
-          dxy<-vec #eval(parse(text=tmp))
+          dxy<-vec 
           tmp<-unlist(str_split(tid,"_"))
           row<-as.numeric(tail(tmp,1))
           
@@ -109,8 +103,6 @@ observe({
           ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]<-m+vec
           matCol<-ncol(m)
           newPtDefs<-ptDefs
-          # updateAceExtDef(newPtDefs, sender=sender)
-          # updateSelected(row=row, matCol=matCol)
           updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=row, matCol=matCol))
         }
       }

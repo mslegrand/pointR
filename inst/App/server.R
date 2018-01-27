@@ -8,7 +8,7 @@
 #---begin server--------------
 shinyServer(function(input, output,session) {
   
-  source("util/exGetTag.R", local=TRUE) # some ordinary functions :)
+source("util/exGetTag.R",               local=TRUE) # some ordinary functions :)
   
 # Reactive values----------
 
@@ -31,22 +31,15 @@ shinyServer(function(input, output,session) {
   outputOptions(output, "handlerValue", suspendWhenHidden=FALSE)
   
   
-  
   request<-reactiveValues(
     code=NULL,
     name=NULL,
-    selector=list( name=NULL, selTib=NULL), # used by rightPanel
     sender='startup',
     refresh=NULL, # to be used to force a code refresh???
     inputHandlers=NULL
   )
   
-  # control<-reactiveValues(
-  #   selector=list( ptDefs=NULL,  name=NULL, selTib=NULL)
-  # )
-  
   getCode<-reactive({request$code})
-  
   
   
   triggerRefresh<-function(sender, rollBack=TRUE, auxValue=FALSE){ # to be used to force a code refresh???
@@ -56,29 +49,7 @@ shinyServer(function(input, output,session) {
     )
   }
   
-  # get CntrlSelector reactive
-  # getSelection<- reactive({ control$selector })
  
-  # observe request, ptDefs, update cntrl selector
-  # potential issue: 
-  #      if request comes prior to ptDefs
-  #      a row/col request change may be discarded by old existing ptDefs
-  # solution:
-  #      1. possibly need to add a delay or use a getCode and instead
-  #      2.  
-  #            a.  have ace do the update when recieving new code+request
-  #            b.  Other request go through here, with modifications
-  #                  i observer only on request$selector (since ptDefs change only for ace)
-  # observeEvent( c( request$selector  ),{  
-  #   ptDefs<-getPtDefs()
-  #   tibs<-ptDefs$tib
-  #   reqSelector<-request$selector
-  #   cntrlSelector<-control$selector
-  #   cntrlSelector<-selectorUpdate(tibs,  reqSelector, cntrlSelector )
-  #   cntrlSelector$ptDefs<-ptDefs
-  #   cntrlSelector$selector<-cntrlSelector
-  # })
-  
   panels<-reactiveValues(
     left='source',   #to be used as editor name later, for connecting to right graphics
     state='point',
@@ -105,7 +76,6 @@ shinyServer(function(input, output,session) {
       logTag
     }
   })
-  
   
   getColumnType<-reactive({
     colName<-getTibColumnName()
@@ -163,31 +133,6 @@ shinyServer(function(input, output,session) {
     rtv
   })
   
-  # getPlotState<-reactive({panels$state})
-  
-  # if the arg state is anything other  than 'matrix','point', 'transform', 'logPanel' 
-  # this results with the state is set to 'value'
-  # setPlotState<-function(state){ 
-  #   cat('setPlotstate=',state,"\n")
-  #   if(!is.null(state) && (state %in% c('matrix','point', 'transform', 'logPanel'))){
-  #     if(state=='point' && panels$state!='point'){ 
-  #       # get the number of columns of the entry
-  #       entry=getTibEntry()
-  #       if(!is.null(entry) && is.matrix(entry)){
-  #         nc<-ncol(entry)
-  #       } else {
-  #         nc<-0
-  #       }
-  #       updateSelected(matCol=nc)
-  #     }
-  #     cat("setting panels$state=",state,"\n")
-  #     panels$state<-state
-  #   } else {
-  #     cat("setting panels$state=value\n")
-  #     panels$state<-'value'
-  #   }
-  #   # panels$right2<-panels$state
-  # }
   
   getRightPanelChoices<-reactive({ # includes names of tibs
     if(panels$sourceType=='logPanel'){
@@ -214,7 +159,6 @@ shinyServer(function(input, output,session) {
   is.tibName<-function(x){ !is.null(x) || x==logTag || x==transformTag}
   
   getTibEditState<-reactive({
-    #cat("panels$state=",panels$state,"\n")
     (panels$sourceType)=='svgPanel' && (panels$state %in% c("point", "value", "matrix"))
   })
 
@@ -276,12 +220,10 @@ shinyServer(function(input, output,session) {
   
 
 # Event Observers-------------------------------- 
-  source("leftPanel/serverAce.R", local=TRUE) 
   
 
   
 #help
-  source("leftPanel/helpSVG.R", local=TRUE) 
   
 #---navbar disable /enabler controls
   # observe({
@@ -306,48 +248,40 @@ shinyServer(function(input, output,session) {
   #   })}
   # )
 
+source("leftPanel/mid/serverAce.R",                local=TRUE) 
+source("leftPanel/helpSVG.R",                      local=TRUE) 
 
 #------------------rightPanel--------------------------------
-source("rightPanel/serverHandler.R", local=TRUE)
-source("rightPanel/serverDisplayOptions.R", local=TRUE)
-source("rightPanel/serverSelection.R", local=TRUE) 
-source("rightPanel/cmdNewColumn.R", local=TRUE)
-source("rightPanel/cmdDeleteColumn.R", local=TRUE)
-source("rightPanel/footer/serverFooterRight.R", local=TRUE) 
-source("rightPanel/header/serverEdTib.R", local=TRUE) 
-source("rightPanel/mid/serverPlotBarPoints.R", local=TRUE) 
-source("rightPanel/mid/serverPlotBarTagValues.R", local=TRUE)  
-source("rightPanel/mid/serverPlotBarTagDrag.R", local=TRUE)  
-source("rightPanel/mid/serverPlotBarTransform.R", local=TRUE) 
-
-source("rightPanel/serverLog.R", local=TRUE) 
-source("rightPanel/serverPlotBar.R", local=TRUE)
-source("rightPanel/serverOptions.R", local=TRUE) 
-#-----MOUSE CLICKS---------------------------------
-source("rightPanel/serverMouseClicks.R", local=TRUE)
-source("rightPanel/serverPlotBar.R", local=TRUE)  
-  
+source("rightPanel/serverHandler.R",               local=TRUE)
+source("rightPanel/serverDisplayOptions.R",        local=TRUE)
+source("rightPanel/serverSelection.R",             local=TRUE) 
+source("rightPanel/menu/cmdNewColumn.R",           local=TRUE)
+source("rightPanel/menu/cmdDeleteColumn.R",        local=TRUE)
+source("rightPanel/footer/serverFooterRight.R",    local=TRUE) 
+source("rightPanel/header/serverEdTib.R",          local=TRUE) 
+source("rightPanel/mid/serverPlotBarPoints.R",     local=TRUE) 
+source("rightPanel/mid/serverPlotBarTagValues.R",  local=TRUE)  
+source("rightPanel/mid/serverPlotBarTagDrag.R",    local=TRUE)  
+source("rightPanel/mid/serverPlotBarTransform.R",  local=TRUE) 
+source("rightPanel/mid/serverLog.R",               local=TRUE) 
+source("rightPanel/serverPlotBar.R",               local=TRUE)
+source("rightPanel/serverOptions.R",               local=TRUE) 
+source("rightPanel/mid/serverMouseClicks.R",       local=TRUE)
+source("rightPanel/serverPlotBar.R",               local=TRUE)  
   
 #---------------leftPanel--------------------------
-
-#------buttons
-source("leftPanel/footer/serverButtons.R",local = TRUE)
-#------menu
-source("leftPanel/cmdFileSaveAs.R", local=TRUE)  
-source("leftPanel/cmdFileSave.R", local=TRUE)  
-source("leftPanel/cmdFileNew.R", local=TRUE)  
-source("leftPanel/cmdFileOpen.R", local=TRUE)  
-source("leftPanel/cmdFileQuit.R", local=TRUE)  
-source("leftPanel/cmdFileExportSvg.R", local=TRUE) 
-source("leftPanel/cmdOptionsTheme.R",local=TRUE)
-source("leftPanel/cmdOptionsFontSize.R", local=TRUE)  
-source("leftPanel/cmdFileSnippet.R",local=TRUE)
-source("leftPanel/cmdAbout.R",local=TRUE)
-source("leftPanel/serverEditBar.R",local=TRUE)
+source("leftPanel/footer/serverButtons.R",        local=TRUE)
+source("leftPanel/menu/cmdFileSaveAs.R",          local=TRUE)  
+source("leftPanel/menu/cmdFileSave.R",            local=TRUE)  
+source("leftPanel/menu/cmdFileNew.R",             local=TRUE)  
+source("leftPanel/menu/cmdFileOpen.R",            local=TRUE)  
+source("leftPanel/menu/cmdFileQuit.R",            local=TRUE)  
+source("leftPanel/menu/cmdFileExportSvg.R",       local=TRUE) 
+source("leftPanel/menu/cmdOptionsTheme.R",        local=TRUE)
+source("leftPanel/menu/cmdOptionsFontSize.R",     local=TRUE)  
+source("leftPanel/menu/cmdFileSnippet.R",         local=TRUE)
+source("leftPanel/menu/cmdAbout.R",               local=TRUE)
+source("leftPanel/serverEditBar.R",               local=TRUE)
   
 
-  
-
-
- 
 })

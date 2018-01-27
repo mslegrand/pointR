@@ -5,7 +5,7 @@ returnValue4ModuleRtFtr<-callModule(
   getTibEditState= getTibEditState,
   getPanelState=getRightMidPanel2,
   getHandler=getHandler,
-  getHandlerValue=getHandlerValue #reactive({  if( getTibEditState()==TRUE ){ getHandlerValue() } else { NULL } })
+  getHandlerValue=getHandlerValue 
 )
 
 #-----------BUTTON EVENTS--------------------
@@ -27,8 +27,6 @@ observeEvent(
 
     ptDefs$tib[[name]]<-newTib
     newPtDefs<-ptDefs
-    # updateAceExtDef(newPtDefs, sender=sender)
-    # updateSelected(row=rowIndex, matCol=matCol)
     updateAceExtDef(newPtDefs, sender=sender, selector=list(rowIndex=rowIndex, matCol=matCol  ) )
   }
 )
@@ -52,8 +50,6 @@ observeEvent(
     rowIndex<-min(rowIndex, nrow(newTib))
     matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
     if(length(matCol)==0){matCol=0}
-    # updateAceExtDef(newPtDefs, sender=sender)
-    # updateSelected(row=rowIndex, matCol=matCol)
     updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matCol   ) )
   }
 )
@@ -75,8 +71,6 @@ observeEvent( returnValue4ModuleRtFtr$tagMoveUp(),{
     rowIndex<-rowIndex-1
     matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
     if(length(matCol)==0){matCol=0}
-    # updateAceExtDef(newPtDefs, sender=sender)
-    # updateSelected(row=rowIndex, matCol=matCol)
     updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matCol   ) )
   }
 
@@ -98,8 +92,6 @@ observeEvent( returnValue4ModuleRtFtr$tagMoveDown(),{
     rowIndex<-rowIndex+1
     matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
     if(length(matCol)==0){matCol=0}
-    # updateAceExtDef(newPtDefs, sender=sender)
-    # updateSelected(row=rowIndex, matCol=matCol)
     updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matCol   ) )
   }
 
@@ -123,8 +115,6 @@ observeEvent( returnValue4ModuleRtFtr$removePt(), {
       matCol<-min(matCol, length(m)/2)
       newPtDefs<-ptDefs
       sender='points.deletePoint'
-      # updateAceExtDef(newPtDefs, sender=sender)
-      # updateSelected(matCol=matCol)
       updateAceExtDef(newPtDefs, sender=sender, selector=list( matCol=matCol )   )
     }
   }
@@ -155,8 +145,6 @@ observeEvent( returnValue4ModuleRtFtr$tagPt(), {
   matCol<-length(tib[[row, getTibPtColPos()]])/2
   ptDefs$tib[[selection]]<-tib
   sender='tagPt'
-  # updateAceExtDef(ptDefs, sender=sender)
-  # updateSelected(row=row, matCol=matCol)
   updateAceExtDef(ptDefs, sender=sender, selector=list(rowIndex=row, matCol=matCol   ) )
 }) #end of point InfoList Tag Point,
 

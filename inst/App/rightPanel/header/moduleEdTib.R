@@ -114,7 +114,9 @@ moduleEdTib<-function(input, output, session,
    # 
   
   output$matColIndexUI<-renderUI({
-    selected<-entry$value$matColMax%AND% entry$value$matColMax %AND% entry$value$selected
+    selected<-entry$value$matColMax %AND% 
+              entry$value$matColMax %AND%  
+              entry$value$selected
     if(!is.null(selected) && selected=='point'){
       matColIndex=entry$value$matColIndex
       matColMax=entry$value$matColMax
