@@ -73,11 +73,10 @@ moduleEdTibUI<-function(id, input, output) {
 }
 
 moduleEdTib<-function(input, output, session, 
-  id2,
   name, 
   nameChoices,
-  rowIndex,
-  rowIndexChoices,
+  getRowIndex,
+  getRowIndexChoices,
   getTibNRow,
   matColIndex,
   matColIndexChoices, 
@@ -86,28 +85,18 @@ moduleEdTib<-function(input, output, session,
   getTibEntry,
   getTibEntryChoices, 
   getTibEditState,
+  getTransformType,
   getHandler,
   getHandlerValue
-  
 ){
-  #ns<-NS(id2) #can get this from session!!!!!
   ns <- session$ns
-  # result <- reactiveValues(
-  #   #ptDefs=NULL,
-  #   
-  #   entryValue=NULL # used to return an updated entryValue
-  #   #colInput='default'
-  # ) # note we add name post mortem!!!
-  # 
-  
+
   entry<-reactiveValues(
     value=list(selected=NULL, choices=NULL, matColIndex=NULL, matColMax=NULL),
     result=NULL
   )
   
-  getValue<-reactive({
-    entry$value
-  })
+  getValue<-reactive({entry$value})
   
    # output$selected<-reactive(entry$value$selected)
    # outputOptions(output, "selected", suspendWhenHidden=FALSE)
@@ -133,23 +122,25 @@ moduleEdTib<-function(input, output, session,
   output$editEntryUI<-renderUI({
     cat("ModuleEdTib::...Entering--------------output$editEntryUI-------------------\n")
     handlerValue<-getHandlerValue()
-    if(is.null(handlerValue)){
-      cat('ModuleEdTib::...handlerValue is NULL\n')
-    } else {
-      cat('ModuleEdTib::...handlerValue=',handlerValue,"\n")
-    }
-    val<-getValue()
-    selected<-val$selected
-    choices<- val$choices
-    cat("\n****************selectize*****************************************************\n")
-    cat("ModuleEdTib::...selected=",selected,"\n")
-    cat("ModuleEdTib::...class(selected)=",class(selected),"\n")
-    cat("ModuleEdTib::...choices=",paste(choices,collapse=", ", sep=": "),"\n")
-    cat("ModuleEdTib::rowIndex()=",rowIndex(),"\n")
-    cat("ModuleEdTib::...class(choices)=",class(choices),"\n")
-    cat("\n*********************************************************************\n")
+    # if(is.null(handlerValue)){
+    #   cat('ModuleEdTib::...handlerValue is NULL\n')
+    # } else {
+    #   cat('ModuleEdTib::...handlerValue=',handlerValue,"\n")
+    # }
+    # val<-getValue()
+    # selected<-val$selected
+    # choices<- val$choices
+    # cat("\n****************selectize*****************************************************\n")
+    # cat("ModuleEdTib::...selected=",selected,"\n")
+    # cat("ModuleEdTib::...class(selected)=",class(selected),"\n")
+    # cat("ModuleEdTib::...choices=",paste(choices,collapse=", ", sep=": "),"\n")
+    # cat("ModuleEdTib::getRowIndex()=",getRowIndex(),"\n")
+    # cat("ModuleEdTib::...class(choices)=",class(choices),"\n")
+    # cat("\n*********************************************************************\n")
+    selected<-getTibEntry()
+    choices<-getTibEntryChoices()
     if(!is.null(handlerValue) && handlerValue=='colourable'){
-      colourInput(
+       colourInput(
         ns("entryColour"), label='Choose Colour', value=selected
       )
     } else {
@@ -157,73 +148,43 @@ moduleEdTib<-function(input, output, session,
                      choices=choices, selected=selected, width="200px",
                      options = list(create = TRUE, allowEmptyOption=FALSE, maxItems=1)
                      )
-      # selectInput(ns("entryValue"), label='Value',
-      #               choices=choices, selected=rowIndex(), width="200px"
-      #               #$options = list(create = TRUE, allowEmptyOption=FALSE, maxItems=1
-      # 
-      # )
     }
   })
   
   
   
-  #updateEntry is called by observer of c(getTibEntry(), getTibEntryChoices())
+  # updateEntry is called by one of 2 observers 
+  #  i c(getTibEntry(), getTibEntryChoices())
+  #  ii getHandlerValue()
   # computes and assigns values for:
-  #   - entryValue
-  #   - entryChoices
-  #   - matColIndex, matColChoices
+  #   - entryValue, entryChoices, matColIndex, matColChoices
   updateEntry<-function(){
     cat("ModuleEdTib::...entering--------------updateEntry-------------------\n")
     tibEntry=getTibEntry()
-    entryValue<-entry$value
-    if(is.null(tibEntry)){
-      cat("ModuleEdTib::...Quick Exit of updateEntry------------------tibEntry is NULL\n")
-      return(NULL)
-    }
-    # if(is(tibEntry,'matrix')){ 
-    #   cat("ModuleEdTib::...enter:ismatrix----------updateEntry::isMatrix-------------------\n")
-    #   entryValue$choices=c('point','matrix')
-    #   lastEntry<-input$entryValue 
-    #   #lastEntry<-entryValue$selected
-    #   if(is.null(lastEntry)){ lastEntry<-'NULL'}
-    #   if( !(lastEntry %in% entryValue$choices ) ){ 
-    #     entryValue$selected='point' 
-    #   }
-    #   if( entryValue$selected=='point' &&  entryValue$selected!=lastEntry){
-    #     entryValue$matColIndex=ncol(entry)
-    #     entryValue$matColMax=ncol(entry)
-    #   }
-    #   
-    # } else {
-      cat("ModuleEdTib::...enter----------updateEntry::else-------------------\n")
-      entryChoices=getTibEntryChoices()
-      entryValue<-list(selected=tibEntry, choices=as.list(entryChoices), matColIndex=NULL, matColMax=NULL)
-    #}
+    if(is.null(tibEntry)){cat("ModuleEdTib::...Quick Exit of updateEntry------------------tibEntry is NULL\n")
+      return(NULL)}
+    entryChoices=getTibEntryChoices()
+    entryValue<-list(selected=tibEntry, choices=as.list(entryChoices), matColIndex=NULL, matColMax=NULL)
     entry$value<-entryValue
-    #entry$result<-entryValue$selected
     cat("Exiting----moduleEdTib----------updateEntry-------------------\n")
   }
   
-  #ToDo!!! 
+  
   #---name---
   observeEvent(c( name(), nameChoices() ), { #update the name 
-    #if(identical( barName(), 'tibEditor')){
-      #cat('\n-----Entering----barName initialization for tibEditor (XX) \n')
-      if(length(nameChoices())==0){ #name choices
-      } else {
-        updateSelectizeInput(session, "name", 
-                          choices=nameChoices(), 
-                          selected=name())
-      #cat('\n***********************\n-----Leaving----barName initialization for tibEditor \n')
-      }
-    #}
+    if(length(nameChoices())==0){ #name choices
+    } else {
+      updateSelectizeInput(session, "name", 
+                        choices=nameChoices(), 
+                        selected=name())
+    }
   }) 
   
-  #---row---
-  observeEvent( c( rowIndex(), getTibNRow() ),  { #update index
+  #---update getRowIndex selection
+  observeEvent( c( getRowIndex(), getTibNRow() ),  { #update index
     if( 
       getTibEditState()==TRUE && 
-      !is.null(rowIndex())    && 
+      !is.null(getRowIndex())    && 
       !is.null(getTibNRow())  &&
       getTibNRow()>0 
     ){
@@ -232,17 +193,16 @@ moduleEdTib<-function(input, output, session,
         "rowIndex", 
         min=1,
         max=getTibNRow(),
-        value=rowIndex()
+        value=getRowIndex()
       )
     } 
   }) 
   
-  #--row--- change
-  
-  observeEvent( c( rowIndex(), getTibNRow() ),  { #update entry 
+  #--row--- changed, update entryValue choices
+  observeEvent( c( getRowIndex(), getTibNRow() ),  { #update entry 
     if( 
       getTibEditState()==TRUE && 
-      !is.null(rowIndex())    && 
+      !is.null(getRowIndex())    && 
       !is.null(getTibNRow())  &&
                getTibNRow()>0 
     ){
@@ -257,11 +217,8 @@ moduleEdTib<-function(input, output, session,
       } 
     }
   })   
-  
-  
-  
-  
-  #---column---
+
+  #---column Name change, update ColumnName choice---
   observeEvent( c(getColumnName(), getColumnNameChoices()) , {
     if( getTibEditState()==TRUE ){
       cat('ModuleEdTib::...-----Entering---- observeEvent( c(getColumnName(), getColumnNameChoices()) \n')
@@ -275,27 +232,34 @@ moduleEdTib<-function(input, output, session,
     } 
   })
   
-  #---entry---
-  observeEvent( c(getColumnName(), getTibEntry(), getTibEntryChoices()) , { 
-    if( getTibEditState()==TRUE ){
-      cat('ModuleEdTib::...-----Entering---- observeEvent( c(getColumnName(), getTibEntry(), getTibEntryChoices()) \n')
-      updateEntry()
-      cat('ModuleEdTib::...-----Exiting---- observeEvent( c(getColumnName(), getTibEntry(), getTibEntryChoices()) \n')
-    } 
-  })
-  
-  observeEvent( getHandlerValue() ,{
-    if( getTibEditState()==TRUE ){
-      val<-getHandlerValue()
-      if(!is.null(val) && val=='colourable'){
-        cat('ModuleEdTib::... Entering getHandlerValue()\n')
-        cat('ModuleEdTib::...getHandlerValue()= ', val,"\n")
-        cat('ModuleEdTib::...getHandlerValue() calling updateEntry()\n')
-        cat('ModuleEdTib::... Exiting getHandlerValue()\n')
-        updateEntry()
-      }
+  observeEvent(getTransformType(), {
+    if(!is.null(input$name) && input$name==transformTag){
+      updateTabsetPanel(session, input$transformType, selected=getTransformType() )
     }
-  })
+  }, ignoreNULL = TRUE)
+  
+  #---entry---
+  #observeEvent( c(getColumnName(), getTibEntry(), getTibEntryChoices()) , { 
+  # observeEvent( c( getTibEntry(), getTibEntryChoices()) , { 
+  #   if( getTibEditState()==TRUE ){
+  #     cat('ModuleEdTib::...-----Entering---- observeEvent( c(getColumnName(), getTibEntry(), getTibEntryChoices()) \n')
+  #     updateEntry()
+  #     cat('ModuleEdTib::...-----Exiting---- observeEvent( c(getColumnName(), getTibEntry(), getTibEntryChoices()) \n')
+  #   } 
+  # })
+  
+  # observeEvent( getHandlerValue() ,{
+  #   if( getTibEditState()==TRUE ){
+  #     val<-getHandlerValue()
+  #     if(!is.null(val) && val=='colourable'){
+  #       cat('ModuleEdTib::... Entering getHandlerValue()\n')
+  #       cat('ModuleEdTib::...getHandlerValue()= ', val,"\n")
+  #       cat('ModuleEdTib::...getHandlerValue() calling updateEntry()\n')
+  #       cat('ModuleEdTib::... Exiting getHandlerValue()\n')
+  #       updateEntry()
+  #     }
+  #   }
+  # })
   
   
   #---matColIndex

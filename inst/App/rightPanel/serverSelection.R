@@ -9,17 +9,24 @@ selectedTibble <- reactiveValues(
   matCol=0,
   ptColName=NULL,      # !!! KLUDGE for now. should this default to last col?
   selIndex=1,
-  transformType='Translate' #replace this with selIndex
+  transformType='Translate' # TODO!!! replace this with selIndex
 )
 
 getSelIndex<-reactive({selectedTibble$selIndex})
+getTibName<-reactive({selectedTibble$name}) #allow to be null only if tib is null  
+getTibColumnName<-reactive({ selectedTibble$columnName })
+getTib<-reactive({ getTibName() %AND% getPtDefs()$tib[[ getTibName() ]] })
+getTibPtColPos<-reactive({ which(names(getTib())==selectedTibble$ptColName )})
+getTibNRow<-reactive({nrow(getPtDefs()$tib[[getTibName()]])})
+getTibRow<-reactive({selectedTibble$rowIndex})
+getTibMatCol<-reactive({ selectedTibble$matCol })
 
 getTransformType<-reactive({ 
   if(is.null(selectedTibble$transformType)){
-    selectedTibble$transformType ='Translate'
+    'Translate'
+  } else {
+    selectedTibble$transformType
   }
-  cat('getTransformType=',selectedTibble$transformType,"\n")
-  selectedTibble$transformType
 })
 
 
@@ -37,6 +44,7 @@ resetSelectedTibbleName<-function(tibs, name){
     selectedTibble$transformType=NULL
     if(usingTransformDraggable()){
       selectedTibble$name=transformTag
+      selectedTibble$transformType='translate'
     } else {
       selectedTibble$name=logTag
     }
@@ -76,7 +84,7 @@ resetSelectedTibbleName<-function(tibs, name){
   
 }
 
-updateSelected<-function( name, rowIndex, columnName, matCol,  ptColName, selIndex ){
+updateSelected<-function( name, rowIndex, columnName, matCol,  ptColName, selIndex, transformType ){
   if(!missing(name)){
     selectedTibble$name=name
   }
@@ -98,11 +106,10 @@ updateSelected<-function( name, rowIndex, columnName, matCol,  ptColName, selInd
       selectedTibble$ptColName<-columnName
     }
   }
+  if(!missing(transformType)){
+    selectedTibble$transformType=transformType
+  }
 } 
-
-
-getTibName<-reactive({selectedTibble$name}) #allow to be null only if tib is null  
-getTibColumnName<-reactive({ selectedTibble$columnName })
 
 getTibColumnNameChoices<-reactive({
   tib<-getTib()
@@ -144,8 +151,6 @@ getTibEntryChoices<-reactive({
   columnValues
 })
 
-getTib<-reactive({ getTibName() %AND% getPtDefs()$tib[[ getTibName() ]] })
-getTibPtColPos<-reactive({ which(names(getTib())==selectedTibble$ptColName )})
 
 getTibPts<-reactive({ 
   ptCol<-selectedTibble$ptColName
@@ -153,11 +158,6 @@ getTibPts<-reactive({
   pts <- tib %AND% ptCol %AND% tib[[ptCol]]
   pts
 })
-
-
-getTibNRow<-reactive({nrow(getPtDefs()$tib[[getTibName()]])})
-getTibRow<-reactive({selectedTibble$rowIndex})
-getTibMatCol<-reactive({ selectedTibble$matCol })
 
 
 

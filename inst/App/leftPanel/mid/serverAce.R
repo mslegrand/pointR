@@ -111,5 +111,8 @@ updateSelected4Ace<-function( reqSelector){
   if(!is.null(reqSelector[['columnName']])){
     selectedTibble$columnName=reqSelector[['columnName']]
   }
+  # if(!is.null(reqSelector[['transformType']])){
+  #   selectedTibble$columnName=reqSelector[['transformType']]
+  # }
 } 
 

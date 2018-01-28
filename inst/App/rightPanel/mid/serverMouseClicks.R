@@ -124,7 +124,7 @@ observe({
         }
       }
       
-      if(barName=='transform'){
+      if(barName==transformTag){
         #-------transformations of nodes marked as class 'movable' (or 'transFormR' or 'dragR' )
         sender=paste0(barName, '.mouse')
         if(cmd=='trans'){ # -- translate the object by id

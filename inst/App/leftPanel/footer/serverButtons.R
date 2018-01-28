@@ -1,13 +1,15 @@
-#----BUTTON EVENTS BEGIN-----------------
-#-----POINTS--------------------------
-# #---Insert Value-------------------
 
-
+#--tibble box
+observeEvent(input$useTribble,{
+  if(editOption$useTribbleFormat!=input$useTribble){
+    editOption$useTribbleFormat=input$useTribble
+    newPtDefs<-getPtDefs()
+    sender='useTibble'
+    updateAceExtDef(newPtDefs, sender=sender)
+  }
+})
 
 #---commit  button----- 
-
-
-
 observe({
   c(input$commit,input$commitMssg )
   isolate(
@@ -115,4 +117,3 @@ processCommit<-reactive({
     }
 })
 
-#----BUTTON EVENTS END-----------------

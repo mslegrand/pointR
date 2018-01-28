@@ -49,37 +49,3 @@ observeEvent(input$plotNavBar, {
 })
 
 
-observeEvent(input$useTribble,{
-  if(editOption$useTribbleFormat!=input$useTribble){
-    editOption$useTribbleFormat=input$useTribble
-    newPtDefs<-getPtDefs()
-    sender='useTibble'
-    updateAceExtDef(newPtDefs, sender=sender)
-  }
-
-})
-
-output$TopRightPanel<-renderUI({
-    moduleEdTibUI("tagValBar", input, output)
-})
-
-output$BottomRightPanel<-renderUI({
-  moduleFooterRightUI("footerRight", input, output)
-})
-
-
-output$MidRightPanel<-renderUI({
-  chosenRightMidPanel<-getRightMidPanel2()
-  if (chosenRightMidPanel=='point'){
-      modulePlotSVGrUI("svgPointsMod")
-  } else if (chosenRightMidPanel=='value'){
-      modulePlotSVGrUI("svgTagValsMod")
-  } else if (chosenRightMidPanel=='matrix'){
-      modulePlotSVGrUI("svgTagDragMod")
-  } else if (chosenRightMidPanel == "transform" ){
-      modulePlotSVGrUI("svgTransformMod")
-  } else if (chosenRightMidPanel=="logPanel"){
-     moduleLogUI("errLogMod")
-  }
-})
-
