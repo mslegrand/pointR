@@ -8,7 +8,7 @@ observe({input$messageFromAce
       
       request$code<-input$messageFromAce$code
       request$sender<-input$messageFromAce$sender
-      #cat('serverAce:...input$messageFromAce::sender=',request$sender,"\n")
+      
       if(!is.null(input$messageFromAce$selector) && !is.null(input$messageFromAce$code) ){
         reqSelector<-input$messageFromAce$selector
         updateSelected4Ace(reqSelector)
@@ -50,9 +50,7 @@ observe({input$messageFromAce
 })
 
 updateAceExtDef<-function(newPtDef, sender, selector=list() ){
-  # cat('serverAce:...sender=',sender,"\n")
-  # cat("serverAce:...-----newPtDefs$tib\n")
-  
+
   newPtDef$tib<-pts2Integers(newPtDef$tib )
   
   replacementList<-ptDef2ReplacementList(name, newPtDef, getCode() )
@@ -82,18 +80,10 @@ observe({
       cat("request: startup cmdFileNew")
       cmdFileNew()
     }
-    # if(request$sender %in% c( "cmd.openFileNow", "cmd.newFile")){ #!!! check these names
-    #   # get valid point name, then set index to last valid index. (length of points?)
-    #   pd<-getPtDefs()
-    #   if(length(pd)>0){
-    #     tibs<-pd$tib #!!! check this
-    #     #name<-tail(names(tibs),1) # !!! KLUDGE, last name 
-    #     resetSelectedTibbleName(tibs=tibs, name=NULL)
-    #   }
-    # } 
   })
 })
 
+# TODO!!!: rewrite
 updateSelected4Ace<-function( reqSelector){
   if(!is.null(reqSelector[['name']])){
     selectedTibble$name=reqSelector[['name']]
@@ -111,8 +101,6 @@ updateSelected4Ace<-function( reqSelector){
   if(!is.null(reqSelector[['columnName']])){
     selectedTibble$columnName=reqSelector[['columnName']]
   }
-  # if(!is.null(reqSelector[['transformType']])){
-  #   selectedTibble$columnName=reqSelector[['transformType']]
-  # }
+  
 } 
 
