@@ -20,6 +20,7 @@ getTibPtColPos<-reactive({ which(names(getTib())==selectedTibble$ptColName )})
 getTibNRow<-reactive({nrow(getPtDefs()$tib[[getTibName()]])})
 getTibRow<-reactive({selectedTibble$rowIndex})
 getTibMatCol<-reactive({ selectedTibble$matCol })
+getTibPtsNCol<-reactive({ sapply(getTibPts(),ncol)}  )
 
 getTransformType<-reactive({ 
   if(is.null(selectedTibble$transformType)){
@@ -29,6 +30,25 @@ getTransformType<-reactive({
   }
 })
 
+# getTibMatColMax<-reactive({ 
+#   rowNum<-getTibRow()
+#   colMax<-getTibPtsNCol()
+#   if(is.null(pts) || is.null(rowNum) || rowNum<1 || rowNum>length(colMax)){
+#     NULL
+#   } else {
+#     ncol(pts[[rowNum]])
+#   }
+# })
+
+getTibMatColMax<-reactive({
+    rowNum<-getTibRow()
+    pts<-getTibPts()
+    if(is.null(pts) || is.null(rowNum) || rowNum<1 || rowNum>length(pts)){
+      NULL
+    } else {
+      ncol(pts[[rowNum]])
+    }
+})
 
 # this is called to reset the tib name when possible 
 # used by 
@@ -36,51 +56,66 @@ getTransformType<-reactive({
 #    2. serveAce to reset name when we have a file->New or file->Open
 resetSelectedTibbleName<-function(tibs, name){
   #cat("serverSelection...Entering  resetSelectedTibbleName\n")
-  if(is.null(tibs) || is.null(names(tibs)) || length(names(tibs))==0){ 
-    selectedTibble$rowIndex=NULL
-    selectedTibble$ptColName=NULL
-    selectedTibble$columnName=NULL
-    selectedTibble$matCol=NULL
-    selectedTibble$transformType=NULL
-    if(usingTransformDraggable()){
-      selectedTibble$name=transformTag
-      selectedTibble$transformType='translate'
-    } else {
-      selectedTibble$name=logTag
-    }
-    return(NULL)
-  }
+      choices<-getRightPanelChoices()
+      if(is.null(getTibName()) || !(getTibName() %in% choices)){
+        selectedTibble$name=choices[1]
+      }
+      if(is.null(tibs) ){
+        selectedTibble$rowIndex=NULL
+        selectedTibble$ptColName=NULL
+        selectedTibble$columnName=NULL
+        selectedTibble$matCol=NULL
+      } else {
+        tib<-getPtDefs()$tib[[selectedTibble$name]]
+        # set row
+        rowIndex=nrow( tib )
+        selectedTibble$rowIndex=rowIndex
+        # next we try to extract a pt column for the selected tib
+        ptIndxs<-sapply(seq_along(names(tib)),function(j) is.matrix(tib[[rowIndex,j]]) && dim(tib[[rowIndex,j]])[1]==2)
+        ptIndxs<-which(ptIndxs==T)
+        if(length(ptIndxs)>0){
+          ptColIndex<-ptIndxs[1]
+          entry<-tib[[rowIndex,ptColIndex]]
+          matColIndex<-ncol(entry)
+          selectedTibble$matCol<-matColIndex
+          ptColName<- names(tib)[ptColIndex]
+          selectedTibble$ptColName=ptColName 
+          selectedTibble$columnName=ptColName
+          if(is.null(selectedTibble$selIndex) || selectedTibble$selIndex!=2){
+            updateSelected( selIndex=1)
+          }
+        } else {
+          ptColName<-NULL
+          matColIndex<-0
+          selectedTibble$ptColName=ptColName 
+          selectedTibble$columnName=names(tib[1])
+        }
+      }
+      if( selectedTibble$name==transformTag){
+        selectedTibble$transformType='translate'
+      }
+        
+      # if(is.null(tibs) || is.null(names(tibs)) || length(names(tibs))==0){ 
+      #   selectedTibble$rowIndex=NULL
+      #   selectedTibble$ptColName=NULL
+      #   selectedTibble$columnName=NULL
+      #   selectedTibble$matCol=NULL
+      #   selectedTibble$transformType=NULL
+      #   if(usingTransformDraggable()){
+      #     selectedTibble$name=transformTag
+      #     selectedTibble$transformType='translate'
+      #   } else {
+      #     selectedTibble$name=logTag
+      #   }
+      #   return(NULL)
+      #}
   
-  if(is.null(name) || nchar(name)==0 || !(name %in% names(tibs))){ 
-    name=names(tibs)[1]
-  }
-  selectedTibble$name=name
-  tib<-tibs[[name]]
+  # if(is.null(name) || nchar(name)==0 || !(name %in% names(tibs))){ 
+  #   name=names(tibs)[1]
+  # }
+  # selectedTibble$name=name
+  # tib<-tibs[[name]]
   
-  # set row
-  rowIndex=nrow( tib )
-  selectedTibble$rowIndex=rowIndex
-  
-  # next we try to extract a pt column for the selected tib
-  ptIndxs<-sapply(seq_along(names(tib)),function(j) is.matrix(tib[[rowIndex,j]]) && dim(tib[[rowIndex,j]])[1]==2)
-  ptIndxs<-which(ptIndxs==T)
-  if(length(ptIndxs)>0){
-    ptColIndex<-ptIndxs[1]
-    entry<-tib[[rowIndex,ptColIndex]]
-    matColIndex<-ncol(entry)
-    selectedTibble$matCol<-matColIndex
-    ptColName<- names(tib)[ptColIndex]
-    selectedTibble$ptColName=ptColName 
-    selectedTibble$columnName=ptColName
-    if(is.null(selectedTibble$selIndex) || selectedTibble$selIndex!=2){
-       updateSelected( selIndex=1)
-    }
-  } else {
-    ptColName<-NULL
-    matColIndex<-0
-    selectedTibble$ptColName=ptColName 
-    selectedTibble$columnName=names(tib[1])
-  }
   
 }
 
@@ -164,9 +199,9 @@ getTibPts<-reactive({
 getTibMatColChoices<-reactive({ 
   rowNum<-getTibRow()
   pts<-getTibPts()
-  cat('rowNum=',rowNum,'\n')
-  print(pts)
-  cat('length(pts)=',length(pts),"\n")
+  #cat('rowNum=',rowNum,'\n')
+  #print(pts)
+  #cat('length(pts)=',length(pts),"\n")
   if(is.null(pts) || is.null(rowNum) || rowNum<1 || rowNum>length(pts)){
     rtv<-NULL
   } else {1
@@ -196,6 +231,5 @@ getTibMatColChoices<-reactive({
 #   }
 #   column
 # })
-# getTibPtsNCol<-reactive({ sapply(getTibPts(),ncol)}  )
 
 

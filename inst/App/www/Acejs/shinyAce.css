@@ -44,7 +44,10 @@
    background-color: #F00; 
    z-index: 1000; 
 }
-
+#source {
+  width: 100%;
+  height: 100%;
+}
 .ace_svgRAN {color:  rgb(255,140,0); }
 .ace_svgRME {color:  rgb(112,128,144); }
 .ace_svgRFE {color:  rgb(0,255,255); }
@@ -55,10 +58,6 @@
 .ace_svgRFI {color:  rgb(0,128,0); }
 .ace_svgRMM {color:  rgb(240,82,45); }
 
-#source { /* kludge: should use class  */
-  position: absolute; /* Added */
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-}
+
+
+
