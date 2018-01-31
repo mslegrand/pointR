@@ -4,7 +4,7 @@
 observeEvent(input$plotNavBar, {
   cmd<-getRightMenuCmd()
   if('character' %in% class(cmd)){
-    cat('serverPlotBar::  inut$plotBar  cmd=',cmd,'\n')
+    cat('serverPlotBar::  input$plotBar  cmd=',cmd,'\n')
   }
   if(is.null(cmd)){
     cat('cmd=NULL\n')
@@ -37,6 +37,11 @@ observeEvent(input$plotNavBar, {
   }
   if(cmd == 'cmdNewColumn'){
     showModal( addNewColModal() )
+  }
+  if(cmd == 'cmdSetMatColMax'){
+    columnName<-getTibColumnName()
+    currentValue<-getHandlerValue()
+    showModal( setMatColMaxModal(columnName, currentValue) )
   }
   if(cmd == 'cmdDeleteColumn'){
     columnName<-getTibColumnName()

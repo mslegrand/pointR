@@ -48,17 +48,29 @@ observe({
           sender='PointsBar.mouse.add'
           #cat('Enter: mouse cmd add')
           newPt<-vec
-          #get selection
-          
           selection<-getTibName() 
-          rowIndex<-row<-getTibRow()
+          rowIndex<-getTibRow()
           matColIndx<-getTibMatCol()
-
-          if(is.null(matColIndx)){
-            cat('matColIndx is null\n') #should never happen???
+          # if matColMax==matColIndx, first insert new row
+          cat("getHandler()=",format( getHandler() ),"\n")
+          cat("getHandlerValue()=",format( getHandlerValue() ),"\n")
+          if(matColIndx==2){
+            #browser()
+            v<-getHandlerValue()
+            print(format(v))
+          }
+          #if(!is.null(getHandlerValue())) { browser()}
+          if(!is.null(getHandlerValue()) && matColIndx==getHandlerValue()){
+            # tag here
+            tib<-ptDefs$tib[[selection]]
+            tib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
+            rowIndex<-rowIndex+1
+            tib[[getTibColumnName()]][[rowIndex]]<-matrix(newPt,2)
+            ptDefs$tib[[selection]]<-tib
+            updateAceExtDef(ptDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=1))
           } else {
             newPtDefs<-addPt2ptDefs(
-              getTibName(),
+              selection,
               rowIndex,
               matColIndx,
               ptDefs, 

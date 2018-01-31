@@ -24,6 +24,12 @@ isBooleanString<-function(x){
   all(x %in% c('T','F','TRUE','FALSE'))
 }
 
+isPoints<-function(x){
+  !is.null(x) && all(unlist(lapply(x, function(m){
+    is.matrix(m) && dim(m)[1]==2
+  })))
+}
+
 
 
 #installr package

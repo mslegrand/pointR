@@ -109,7 +109,7 @@ observeEvent( returnValue4ModuleRtFtr$removePt(), {
     #get row, col
     if(matCol>=1){
       row<-getTibRow()
-      m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]][,-matCol]
+      m<-matrix(ptDefs$tib[[selection]][[ row, getTibPtColPos() ]][,-matCol],2)
       #!!! probably need some checking here
       ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]<-m
       matCol<-min(matCol, length(m)/2)

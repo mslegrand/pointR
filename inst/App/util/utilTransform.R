@@ -91,7 +91,6 @@ usingDraggable<-function(txt, transformType){
   #get end pos of parent Nodes of tr ( or sib nodes) for insertion of tid and mousedown
   # form list in increasing order of names of sib nodes and endPos of parent Nodes
   insertions<-lapply(tr$id, function(i){ 
-    #x<-parent(i) 
     parent.id<-subset(df, id==i)$parent
     x<-subset(df, id==parent.id)
     list(id=i, 

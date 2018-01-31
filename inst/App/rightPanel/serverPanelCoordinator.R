@@ -19,6 +19,8 @@ output$MidRightPanel<-renderUI({
     modulePlotSVGrUI("svgTagDragMod")
   } else if (chosenRightMidPanel == transformTag ){
     modulePlotSVGrUI("svgTransformMod")
+  } else if( chosenRightMidPanel == svgPanelTag ){
+    modulePlotSVGrUI("svgPointsMod")
   } else if (chosenRightMidPanel==logTag){
     moduleLogUI("errLogMod")
   }
@@ -29,7 +31,8 @@ svgPanelTag<-'svgPanel'
 
 panels<-reactiveValues(
   left='source',   #to be used as editor name later, for connecting to right graphics
-  sourceType=svgPanelTag #  sourceType = 'svgPanel'  means svgR code
+  sourceType=svgPanelTag 
+  #  sourceType = 'svgPanel'  means svgR code
   #  sourceType = 'logPanel' means plain R code or error
   #  sourceType is set from processCommit
 )
@@ -116,7 +119,7 @@ getRightPanelChoices<-reactive({ # includes names of tibs
     if( usingTransformDraggable() ){
       choices<-c(choices, transformTag)
     }
-    choices<-c(choices,logTag)
+    choices<-c(choices, svgPanelTag, logTag)
   }
   choices
 })
@@ -132,7 +135,7 @@ getRightPanelName<-reactive({  #used only by editTib
 is.tibName<-function(x){ !is.null(x) || x==logTag || x==transformTag}
 
 getTibEditState<-reactive({
-  (panels$sourceType)=='svgPanel' && !is.null(getPlotState())
+  (panels$sourceType)==svgPanelTag && !is.null(getPlotState())
     getPlotState() %in%  c("point", "value", "matrix")
     #(panels$state %in% c("point", "value", "matrix"))
 })

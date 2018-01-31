@@ -59,7 +59,7 @@ processCommit<-reactive({
           
           base::stop(output , call.=FALSE, domain=NA);
         } else {
-          setSourceType(sourceType='svgPanel') #SVG code
+          setSourceType(sourceType=svgPanelTag) #SVG code
         }
         # passed so far
         # next check if it can be run
