@@ -61,9 +61,16 @@ sapply(r_pkgs, library, character.only=TRUE)
 
 # options(shiny.error = recover)
 # options(shiny.trace=TRUE)
+#some consts
+defTag<-"ptR"
+transformTag<-"Transforms"
+logTag<-"logPanel"
+
+getSVGWH<-function(){ c(650,620)} #this should be ultimately place in another file
 
 #----begin external resources loaded prior to server------------
 #source("utilStyle.R")
+
 source("util/configIO.R") # must be loaded prior
 source("util/utilFormat.R") 
 source("util/format.R") 
@@ -72,14 +79,10 @@ source("util/utilptR.R")
 source("util/utilTibble.R")
 source("util/utilColumnType.R")
 source("util/utilTransform.R")
+source("leftPanel/menu/buildLeftMenuUI.R")
+source("rightPanel/menu/buildRightMenuUI.R")
 source("leftPanel/mid/shinyAce4Ptr.R")
 
-#some consts
-defTag<-"ptR"
-transformTag<-"Transforms"
-logTag<-"logPanel"
-
-getSVGWH<-function(){ c(650,620)} #this should be ultimately place in another file
 
 
 #---load modules source -------------

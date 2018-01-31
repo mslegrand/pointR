@@ -49,57 +49,7 @@ shinyUI(
         #-------left bootstrapPage begin ---------
         bootstrapPage(
           #-----left menu begin---------------
-          
-          dmdMenuBarPage( 
-            title=version, 
-            # theme=shinytheme("cerulean"),
-            menuBarId="editNavBar",
-            menuDropdown(
-              "File", 
-              menuItem("New"),
-              menuItem("Open"),
-              menuDropdown("Recent Files"),
-              menuDivider(),
-              menuItem("Save"),
-              menuItem("Save As...", value="saveAs"),
-              menuItem("Export as SVG"),
-              menuDivider(),
-              menuItem("Quit", value="quit")
-            ),
-            # menuDropdown('Tibble',
-            #              menuItem('New Tibble', value='cmdNewTibble'),
-            #              menuItem('Rename Tibble', value='cmdRenameTibble'),
-            #              menuItem('Delete Tibble', value='cmdDeleteTibble')
-            # ),
-            menuDropdown(
-              'Configure',
-              menuDropdown(
-                "Editor Options", 
-                menuItem("Theme" ),
-                menuItem("Font Size"), 
-                menuItem("Adjust Tabs",       value="adjustTabs"),
-                menuItem("Show White Space"),
-                menuItem(defaultOpts$tabType)
-              ),
-              menuDropdown(
-                "Snippets",
-                menuItem("Import", value="importSnippetFile"),
-                menuItem("Disable")
-              )
-            ),
-            menuDropdown(
-              "Help",
-              menuItem("Editor ShortCuts"),
-              menuItem("Element Reference"),
-              menuDropdown(
-                "Useful Links", 
-                menuItem(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/User_Guide.html\"  target=\"_blank\" >svgR User Guide </a></li>")),
-                menuItem(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/\"  target=\"_blank\" >io.svgR</a></li>")),
-                menuItem(HTML("<li><a  href=\"https://www.w3.org/TR/SVG/intro.html\"  target=\"_blank\" >W3C SVG reference</a></li>"))
-              ),
-              menuItem("About", value="aboutCmd")
-            )
-          ), 
+          buildLeftMenu(version),
           #-------left menu end------------
           #-------left content begin--------
           shinyFilesButton("buttonFileOpenHidden", label="", 
@@ -142,58 +92,24 @@ shinyUI(
         ) #----end of bootstrapPage
       ), #---end of left-component
       #-------------left panel end--------------------------------------------------
+      
       #-------------divider begin--------------------------------------------------
       div( class="split-pane-divider", id="my-divider"),
       #-------------divider   end--------------------------------------------------
+      
       #-------------right panel begin--------------------------------------------------
       div( #-----right component begin
         id='right-component', 
         class="split-pane-component",  #right panel
         #---right bootstrap page begin--------------
         bootstrapPage(
-          dmdMenuBarPage(
-            menuBarId="plotNavBar",
-            #---------------DisplayOptions----------------------------------------
-           
-            
-             menuDropdown('Column',
-               menuItem('Add Column', value='cmdNewColumn') #,
-            #   menuItem('Delete Column', value='cmdDeleteColumn'),
-            #   menuItem('Rename Column', value='cmdRenameColumn'),
-            #   menuItem('Clone Column', value='cmdCloneColumn'),
-            #   menuItem('Input Using', value='cmdInputUsingColumn')
-             ),
-            
-            menuDropdown('Display', 
-                         menuDropdown('Points',
-                                      menuItem('Hide Points', value='cmdHidePoints'), 
-                                      menuItem('Show Points with Labels', value='cmdShowPointLabels')
-                         ),
-                         menuDropdown( 'Grid',
-                                       menuItem('Show Grid', value='cmdShowGrid')
-                                       # ,
-                                       # menuDropdown('lines',
-                                       #              menuItem('Width', value='cmdGridLineWidh'), 
-                                       #              menuItem('Color', value='cmdGridLineColor')
-                                       # )
-                         )
-                         # ,
-                         # menuDropdown( 'Backdrop',
-                         #               menuItem('Hide', value='cmdHideBack'),
-                         #               menuItem('Color', value='cmdBackDropColor')
-                         # )
-            ),
-            menuDropdown(
-              "Tools", 
-              menuItem("PointFiltering (Not implemented)" )
-            )
-          ), #menubar end 
-          
+          #----------begin right menu
+          buildRightMenu(),
           #----------end right menu
+          
           #--------begin right content
           uiOutput("BottomRightPanel"),
           uiOutput("TopRightPanel"),
-          
           br(),
           uiOutput("MidRightPanel")
         ) #-----right bootstrap page end----------
