@@ -12,17 +12,3 @@ exGetTagName<-function(tagNameChoices, ptChosen){
   tagChosen
 }
 
-exGetTagIndx<-function(tagIndxChoices, point.indx){
-  if(length(tagIndxChoices)<1 ){
-    return(NULL)
-  }
-  if(  length(point.indx)<1){
-    point.index<-max(tagIndxChoices)
-  } else {
-    if( point.indx>0 ){
-      t.point.indx<-max(tagIndxChoices[ tagIndxChoices<= point.indx] )
-    } else {
-      0
-    }    
-  }
-}  

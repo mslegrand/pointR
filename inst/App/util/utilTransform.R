@@ -51,10 +51,13 @@ stop.unless<-function(expr, mssg){
 # detects transforms with draggable and 
 # returns a modified copy of txt with
 # tid for the Draggable
-usingDraggable<-function(txt, transformOption){
-  if(transformOption=='Scale'){
+usingDraggable<-function(txt, transformType){
+  if(is.null(transformType)){
+    return(txt)
+  }
+  if(transformType=='Scale'){
     onMouseDownTxt = "', onmousedown='ptRPlotter_ptR_SVG_TRANSFORM_SCALE.selectElement(evt)'"
-  } else if(transformOption=='Rotate'){
+  } else if(transformType=='Rotate'){
     onMouseDownTxt = "', onmousedown='ptRPlotter_ptR_SVG_TRANSFORM_ROTATE.selectElement(evt)'"
   }else{
     onMouseDownTxt = "', onmousedown='ptRPlotter_ptR_SVG_TRANSFORM_TRANSLATE.selectElement(evt)'"
@@ -88,7 +91,6 @@ usingDraggable<-function(txt, transformOption){
   #get end pos of parent Nodes of tr ( or sib nodes) for insertion of tid and mousedown
   # form list in increasing order of names of sib nodes and endPos of parent Nodes
   insertions<-lapply(tr$id, function(i){ 
-    #x<-parent(i) 
     parent.id<-subset(df, id==i)$parent
     x<-subset(df, id==parent.id)
     list(id=i, 
@@ -127,19 +129,19 @@ usingDraggable<-function(txt, transformOption){
 #
 # tr2src finds the location in src and replaces everthing
 # between the 2 boundries with trDefDelta
-tr2src<-function( src, tid, trDefDelta ){
-  strsplit(tid,'-')[[1]]->coords
-  as.numeric(coords[2])->row
-  as.numeric(coords[3])->start
-  as.numeric(coords[4])->end
-  lines<-strsplit(src,"\n")[[1]]
-  line<-lines[[row]]
-  pre<-substr(line,1,start-1)
-  post<-substr(line, end+1, nchar(line))
-  line<-paste0(pre, trDefDelta, post)
-  lines[row]<-line
-  paste(lines, collapse="\n")
-}
+# tr2src<-function( src, tid, trDefDelta ){
+#   strsplit(tid,'-')[[1]]->coords
+#   as.numeric(coords[2])->row
+#   as.numeric(coords[3])->start
+#   as.numeric(coords[4])->end
+#   lines<-strsplit(src,"\n")[[1]]
+#   line<-lines[[row]]
+#   pre<-substr(line,1,start-1)
+#   post<-substr(line, end+1, nchar(line))
+#   line<-paste0(pre, trDefDelta, post)
+#   lines[row]<-line
+#   paste(lines, collapse="\n")
+# }
 
 tid2replacementCoord<-function(tid, trDefDelta){
   strsplit(tid,'-')[[1]]->coords
@@ -155,19 +157,19 @@ tid2replacementCoord<-function(tid, trDefDelta){
   pos  
 }
 
-getDefPos2<-function(lines, df, defTag){  
-  df.def<-subset(df, text==defTag)
-  parent(parent(df.def))[1,]->info
-  cnt<-cumsum(1+nchar(lines))
-  c(cnt[max(1,info$line1-1)]+info$col1, cnt[max(1,info$line2-1)]+info$col2)
-}
+# getDefPos2<-function(lines, df, defTag){  
+#   df.def<-subset(df, text==defTag)
+#   parent(parent(df.def))[1,]->info
+#   cnt<-cumsum(1+nchar(lines))
+#   c(cnt[max(1,info$line1-1)]+info$col1, cnt[max(1,info$line2-1)]+info$col2)
+# }
 
-txt2def<-function(txt, df, defTag){
-  lines<-strsplit(txt,"\n")[[1]]
-  pos<-getDefPos2(lines, df, defTag)
-  str<-substr(txt, pos[1], pos[2])
-  str
-}
+# txt2def<-function(txt, df, defTag){
+#   lines<-strsplit(txt,"\n")[[1]]
+#   pos<-getDefPos2(lines, df, defTag)
+#   str<-substr(txt, pos[1], pos[2])
+#   str
+# }
 
 #used by extractWH
 rng2txt<-function(lines, ssdf){ 

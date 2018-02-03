@@ -1,46 +1,15 @@
-#----BUTTON EVENTS BEGIN-----------------
-#-----POINTS--------------------------
-# #---Insert Value-------------------
 
-
-#------TAG BUTTONS
-# if moveTag 
-# load tagmove script and reload svgR, wait for movement
-# and update ptR
-
-observeEvent(
-  input$insertVal2Col, {
-    tagIndx<-as.numeric(input$tagIndx)
-    tagCol<- input$tagCol
-    if(length(tagCol)>0){ #or not NULL
-      value<-input$tagValEd
-      newPtDefs<-ptDefs()
-      tagRList<-newPtDefs()$df
-      tagPtName<-input$tagPts
-      df<-tagRList[[tagPtName]]
-      df[df$tag==tagIndx,tagCol]<-value
-      tagRList[[tagPtName]]<-df
-      newPtDefs$df<-tagRList
-      updateAceExtDef(newPtDefs, "tagButtons")
-      #src<-getCode() # !!!
-      #src<-df2Source(src, tagRList) !!!
-      #setCode(src) # !!!
-    }
+#--tibble box
+observeEvent(input$useTribble,{
+  if(editOption$useTribbleFormat!=input$useTribble){
+    editOption$useTribbleFormat=input$useTribble
+    newPtDefs<-getPtDefs()
+    sender='useTibble'
+    updateAceExtDef(newPtDefs, sender=sender)
+  }
 })
+
 #---commit  button----- 
-
-#(updates src with editor contents)
-# alternatively can use observeEvent( input$commit, { ... })
-# observe({
-#   c(input$commit, input$commitMssg )
-#   isolate({
-#     if(request$refresh>0){
-#       
-#     }
-#     
-#   })
-# })
-
 observe({
   c(input$commit,input$commitMssg )
   isolate(
@@ -50,22 +19,22 @@ observe({
   })
 })
 
-#!!!  unused?
-checkPtrSyntax<-function(src){
-  lines<-strsplit(src,"\n") 
-  lines<-lines[[1]]
-  ptRPos<-grep("^\\s*ptR<-",lines)
-  svgRPos<-grep("^\\s*svgR\\(",lines)
-  if(length(ptRPos)>1 )
-    base::stop("Bad File: Multiple  ptR lists")
-  if(length(svgRPos)>1) 
-    base::stop("Bad File: Multiple  ptR lists or svgR calls")
-}
+# #!!!  unused?
+# checkPtrSyntax<-function(src){
+#   lines<-strsplit(src,"\n") 
+#   lines<-lines[[1]]
+#   ptRPos<-grep("^\\s*ptR<-",lines)
+#   svgRPos<-grep("^\\s*svgR\\(",lines)
+#   if(length(ptRPos)>1 )
+#     base::stop("Bad File: Multiple  ptR lists")
+#   if(length(svgRPos)>1) 
+#     base::stop("Bad File: Multiple  ptR lists or svgR calls")
+# }
 
 processCommit<-reactive({
     src<-getCode() #input$source #------ace editor
     if(length(src)==1 && nchar(src)>0){
-      ptRList<-getPtDefs()$pts
+      ptRList<-getPtDefs()$tib
       tryCatch({
         lines<-strsplit(src,"\n") 
         lines<-lines[[1]]
@@ -78,19 +47,19 @@ processCommit<-reactive({
         if(length(ptRPos)>=1 && length(svgRPos)>=1 && !(ptRPos[1]<svgRPos[1])){
           base::stop("Bad File: ptR list must come prior to svgR call")
         }
-        if(length(svgRPos)==1){
-          if(length(ptRPos)==0){
-            # switch to Points
-            updateRightPanel("Points")
-          }
-        }
+        
         if(length(svgRPos)==0){ # just R code I guess
           # capture capture output as mssg
+          
           output<-captureOutput(eval(parse(text=src)))
           output<-paste( output, collapse="\n" )
           output<-paste("Output:",output,sep="\n")
-          updateRightPanel("logPanel")
+          
+          setSourceType(sourceType='logPanel') #no error, just R code
+          
           base::stop(output , call.=FALSE, domain=NA);
+        } else {
+          setSourceType(sourceType=svgPanelTag) #SVG code
         }
         # passed so far
         # next check if it can be run
@@ -99,17 +68,15 @@ processCommit<-reactive({
         # no error occured so all systems go!!!!
         mssg$error<-""
 
-        #if in log page move to points
-        if(rightPanel()=="logPanel"){
-          updateRightPanel("Points")
-        } 
+        
+        
         #remove all removeAllMarkers from ace since all sys go.
        
         session$sendCustomMessage(
           type = "shinyAceExt",
           list(id= "source", removeAllMarkers='removeAllMarkers', sender='commit.removeMarkers', setOk=TRUE)
         )
-        #editOption$.saved<-FALSE # !!! soon to be obsolete!!!
+       
       }, #end of try
       error=function(e){ 
         #Error handler for commit
@@ -143,9 +110,10 @@ processCommit<-reactive({
           }
         }
         mssg$error<-err
-        updateRightPanel("logPanel")
+        cat("commit got an error\n",mssg$error,"\n")
+        setSourceType(sourceType='logPanel')
+        
       }) 
     }
 })
 
-#----BUTTON EVENTS END-----------------

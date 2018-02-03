@@ -4,16 +4,20 @@ This inherits from the default bootstrap style
  an existing style and modify it.
 */
 
-
 .navbar-default .navbar-brand:hover,
 .navbar-default .navbar-brand:focus {
   color: #5E5E5E;
 }
 .navbar-default .navbar-brand {
   color: #BBBBFF;
+  font-size: 14px;
+  padding: 7px 7px;
+  
 }
 .navbar .nav > li > a {
   color: #BBBBFF;
+  padding-top: 7px;
+  padding-bottom: 7px;
 }
 .navbar .nav > li > a:hover {
   float: none;
@@ -36,13 +40,14 @@ This inherits from the default bootstrap style
   color: #BBBBBB;
   border-color: black;
   font-weight: bold;
+  min-height:25px !important;
   padding-left: 10px;
   padding-right: 10px;
   /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#4c4c4c+0,595959+12,666666+25,474747+39,2c2c2c+50,000000+51,111111+60,2b2b2b+76,1c1c1c+91,131313+100;Black+Gloss+%231 */
 background: #4c4c4c; /* Old browsers */
-background: -moz-linear-gradient(top, #4c4c4c 0%, #595959 12%, #666666 25%, #474747 39%, #2c2c2c 50%, #000000 51%, #111111 60%, #2b2b2b 76%, #1c1c1c 91%, #131313 100%); /* FF3.6-15 */
-background: -webkit-linear-gradient(top, #4c4c4c 0%,#595959 12%,#666666 25%,#474747 39%,#2c2c2c 50%,#000000 51%,#111111 60%,#2b2b2b 76%,#1c1c1c 91%,#131313 100%); /* Chrome10-25,Safari5.1-6 */
-background: linear-gradient(to bottom, #4c4c4c 0%,#595959 12%,#666666 25%,#474747 39%,#2c2c2c 50%,#000000 51%,#111111 60%,#2b2b2b 76%,#1c1c1c 91%,#131313 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+background: -moz-linear-gradient(top, #2c2c2c 0%, #595959 12%, #666666 25%, #272747 39%, #1c1c1c 60%, #101010 61%, #111111 70%, #3b3b1b 86%, #1c1c1c 91%, #131313 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top, #2c2c2c 0%,#595959 12%,#666666 25%,#272747 39%,#1c1c1c 60%,#101010 61%,#111111 60%,#3b3b1b 86%,#1c1c1c 91%,#131313 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom, #2c2c2c 0%,#595959 12%,#666666 25%,#272747 39%,#1c1c1c 60%,#101010 61%,#111111 70%,#3b3b1b 86%,#1c1c1c 91%,#131313 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4c4c', endColorstr='#131313',GradientType=0 ); /* IE6-9 */
 
                                                                                                      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#6199c7', endColorstr='#26558b',GradientType=0 ); /* IE6-9 */      }

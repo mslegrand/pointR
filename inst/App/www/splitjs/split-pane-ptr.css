@@ -8,7 +8,7 @@ html, body {
 #left-component {
 right: 50%;
 margin-right: 5px;
-background-color: #B8D8FF;
+background-color: #486990;
 overflow-y: hidden; 
 overflow-x: hidden; 
 }
@@ -21,7 +21,7 @@ width: 5px;
 #right-component {
 width: 50%;
 margin-left: 5px;
-background-color: #B8D8FF;
+background-color: #486990;
 overflow-y: hidden; 
 overflow-x: hidden; 
 }

@@ -235,6 +235,7 @@ Shiny.addCustomMessageHandler(
                  code : editor.getSession().getValue(),
                  sender : data.sender,
                  dirty: editor.getSession().getUndoManager().dirtyCounter,
+                 selector: data.selector,
                  rnd : randomString(5)
               } );   
           }, 5 );

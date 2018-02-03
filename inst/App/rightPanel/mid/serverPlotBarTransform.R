@@ -10,7 +10,7 @@
 
 getCodeTransform<-reactive({
   src<-getCode()
-  src<-usingDraggable(src, input$transformOption)
+  src<-usingDraggable(src, selectedTibble$transformType)
 })
 
 
@@ -19,7 +19,11 @@ statusPlotTransform<-callModule(
   id="svgTransformMod",
   svgID='ptR_SVG_TRANSFORM',
   showPts.compound=NULL,
-  ptrDisplayScript =reactive({ svgToolsScript(input$transformOption ) }), #reactive({ js.scripts[[ input$transformOption ]] }),
+  ptrDisplayScript = reactive({ 
+    type=getTransformType()
+    svgToolsScript(type) 
+  }),
+  #ptrDisplayScript, #
   getSVGWH,
   showGrid,
   getCode,
@@ -32,7 +36,9 @@ statusPlotTransform<-callModule(
 observeEvent(statusPlotTransform$status(), { 
   status<-statusPlotTransform$status()
   if(status$state!="PASS"){
-    updateRightPanel('logPanel')
+    cat("statusPlotTransform$status error\n")
+    setSourceType(sourceType='logPanel')
+    #updateRightPanel('logPanel')
     mssg$err<-status$messages
   }
 })

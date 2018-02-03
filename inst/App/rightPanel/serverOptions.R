@@ -7,9 +7,11 @@ editOption<-reactiveValues(
   currentFilePath=defaultOpts [['currentFilePath']],
   #currentFile=defaultOpts ['currentFile'],
   #currentDirectory=defaultOpts ['currentDirectory'],
+  useTribbleFormat= defaultOpts[['useTribbleFormat']],
   recentFiles=defaultOpts [['recentFiles']], 
   .saved=TRUE
 )
+
 
 history<-reactiveValues(
   #currentFilePath = defaultOpts [['currentFilePath']],
@@ -114,39 +116,6 @@ observeEvent( editOption$currentFilePath,{
     editOption$recentFiles<-files
   }
   
-  # fileSplit<-str_split(files,"/")
-  # shortNames<-sapply(fileSplit,tail,n=1)
-  # longNames<-lapply(fileSplit, tail, n=2)
-  # menuNames<-sapply( longNames, function(ln){
-  #   if(sum(ln[2]==shortNames)>1){
-  #     paste(ln[2],"~",ln[1])
-  #   } else {
-  #     ln[2]
-  #   }
-  # })
-  # entryVal<-function(i)entry=paste("recent",i,sep="-")
-  # for(i in 1:length(menuNames)){
-  #   if(i<=N){ #reset the menuItem name
-  #     renameDMDM(
-  #       session, 
-  #       menuBarId="editNavBar",
-  #       entry=entryVal(i), 
-  #       newLabel=menuNames[i],
-  #       newValue = NULL,
-  #       type = "menuItem")
-  #   } else { # append child
-  #     appendDMDM(
-  #       session, 
-  #       menuBarId="editNavBar", 
-  #       entry="Recent Files", 
-  #       submenu=menuItem(
-  #         label=menuNames[i],
-  #         value=entryVal(i)
-  #       )
-  #     )
-  #   }
-  #}
-  #history$recentFileMenuCount<-length(menuNames)
   editOption$recentFiles<-files
 })
               

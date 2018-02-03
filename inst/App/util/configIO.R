@@ -37,12 +37,13 @@ writeOptionsJSON<-function(opts){
 readOptionsJSON<-function(){
   defaultOpts<-list(
     fontSize=16,
-    theme="katzenmilch",
+    theme="chrome",
     tabSize=2,
     currentFile="",
     currentDirectory=".",
     currentFilePath="./",
     tabType="Use Soft Tabs",
+    useTribbleFormat=TRUE,
     recentFiles=NULL
   )
   

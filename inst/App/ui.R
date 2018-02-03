@@ -8,7 +8,7 @@
 library(shiny)
 
 
-version="ptR:v.0.3.5.6.10"
+version="ptR:v.0.3.6.0"
 
 # style="position: fixed; top: -100em" to keep hidden
 shinyUI(  
@@ -49,77 +49,9 @@ shinyUI(
         #-------left bootstrapPage begin ---------
         bootstrapPage(
           #-----left menu begin---------------
-          
-          dmdMenuBarPage( 
-            title=version, 
-            # theme=shinytheme("cerulean"),
-            menuBarId="editNavBar",
-            menuDropdown(
-              "File", 
-              menuItem("New"),
-              menuItem("Open"),
-              menuDropdown("Recent Files"),
-              menuDivider(),
-              menuItem("Save"),
-              menuItem("Save As...", value="saveAs"),
-              menuItem("Export as SVG"),
-              menuDivider(),
-              menuItem("Quit", value="quit")
-            ),
-            menuDropdown(
-              'Configure',
-              menuDropdown(
-                "Editor Options", 
-                menuItem("Theme" ),
-                menuItem("Font Size"), 
-                menuItem("Adjust Tabs",       value="adjustTabs"),
-                menuItem("Show White Space"),
-                menuItem(defaultOpts$tabType)
-              ),
-              menuDropdown(
-                "Snippets",
-                menuItem("Import", value="importSnippetFile"),
-                menuItem("Disable")
-              )
-            ),
-            menuDropdown(
-              "Tools", 
-              menuItem("PointFiltering (Not implemented)" )
-            ),
-            menuDropdown(
-              "Help",
-              menuItem("Editor ShortCuts"),
-              #menuItem("Editor ShortCuts2"),
-              menuItem("Element Reference"),
-              #menuItem("svgR User Guide"),
-              menuDropdown(
-                "Useful Links", 
-                menuItem(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/User_Guide.html\"  target=\"_blank\" >svgR User Guide </a></li>")),
-                menuItem(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/\"  target=\"_blank\" >io.svgR</a></li>")),
-                menuItem(HTML("<li><a  href=\"https://www.w3.org/TR/SVG/intro.html\"  target=\"_blank\" >W3C SVG reference</a></li>"))
-              ),
-              menuItem("About", value="aboutCmd")
-            )
-          ), 
+          buildLeftMenu(version),
           #-------left menu end------------
           #-------left content begin--------
-          # tagList(
-          #   tags$button(
-          #     id='buttonFileOpenHidden', type='button', class='shinyFiles btn btn-default',
-          #     `data-title`='Open svgR file', `data-selecttype`='single', 'Open',
-          #     #style= "position: fixed; top: -200em" #style="display: none"
-          #     style="display: none"
-          #     #style="height: 1px; width: 1px;"
-          #   ),
-          #   tags$button(
-          #     id='buttonFileSaveHidden', type='button', class='shinySave btn btn-default',
-          #     `data-title`='Save As ...',
-          #     #`data-filetype`=shinyFiles:::formatFiletype(list(R='R', javascript='js')),
-          #     #`data-filetype`=shinyFiles:::formatFiletype(NA),
-          #     `data-filetype`=shinyFiles:::formatFiletype(list(R='R', svgR='svgR')),
-          #     'Save This File', style= "display: none;"
-          #   ) 
-          # ),
           shinyFilesButton("buttonFileOpenHidden", label="", 
                            title="Open File", multiple=FALSE, 
                            class='hiddenButton'),
@@ -129,8 +61,11 @@ shinyUI(
           shinyFilesButton("buttonSnippetOpen", label="", 
                            title="Import Snippet", multiple=FALSE, 
                            class='hiddenButton'),
+          shinySaveButton("buttonExportSVGHidden", label="", 
+                          title="Save as ...",  list('hidden_mime_type'=c("")) , 
+                          class='hiddenButton'),
           h3(
-            textOutput( "fileName"), 
+            textOutput( "fileName"),
             style="white-space:nowrap;"
           ),
           absolutePanel( 
@@ -148,39 +83,35 @@ shinyUI(
             ), 
             inline=FALSE
           ),
-          absolutePanel( 
-            "class"="footerPanel", 
-            draggable=FALSE,
-            actionButton("commit", label = "COMMIT EDIT") #,
+          absolutePanel( "class"="footerPanel", draggable=FALSE, style="display:inline-block",
+             absolutePanel( left=5, bottom=0,
+               actionButton("commit", label = "COMMIT EDIT")
+             ),
+             absolutePanel( left=150, bottom=-10,
+               checkboxInput('useTribble', 'display as tribble', value = TRUE, width = NULL)
+             )
           )
           #-------left content end--------
         ) #----end of bootstrapPage
       ), #---end of left-component
       #-------------left panel end--------------------------------------------------
+      
       #-------------divider begin--------------------------------------------------
       div( class="split-pane-divider", id="my-divider"),
       #-------------divider   end--------------------------------------------------
+      
       #-------------right panel begin--------------------------------------------------
       div( #-----right component begin
         id='right-component', 
         class="split-pane-component",  #right panel
         #---right bootstrap page begin--------------
         bootstrapPage(
-          dmdMenuBarPage(
-            menuBarId="plotNavBar",
-            #---------------plotNavBar:points  ------------------------------------
-            menuItem("Points" ), #end of tab panel "Points"
-            #---------------plotNavBar:TAGS  ------------------------------------
-            menuDropdown(
-              "Tags",
-              menuItem("Value", value="tagValues"),
-              menuItem("Drag",  value="tagDrag")  # tabPanel("Wag"), # tabPanel("Mag")
-            ),
-            menuItem("Transforms"),
-            menuItem("Log", value="logPanel")
-          ), 
+          #----------begin right menu
+          buildRightMenu(),
           #----------end right menu
+          
           #--------begin right content
+          uiOutput("BottomRightPanel"),
           uiOutput("TopRightPanel"),
           br(),
           uiOutput("MidRightPanel")

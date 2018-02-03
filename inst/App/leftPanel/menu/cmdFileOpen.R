@@ -76,12 +76,6 @@ openFileNow<-function(fileName){
     setCurrentFilePath(fileName) # should this be replaced by shinyFiles???
     setwd(dirname(fileName))  # should this be replaced by shinyFiles???
     if(nchar(src)>0){
-      reactiveTag$freq<-list()
-      # may want to just leave  displayOptions unchanged???
-      # displayOptions$insertMode=TRUE
-      # displayOptions$showGrid=FALSE
-      # displayOptions$ptMode="Normal"
-      
       mssg$error<-""
       #here we set the value, 
       session$sendCustomMessage(
@@ -91,9 +85,7 @@ openFileNow<-function(fileName){
       
     }
   }
-  updateRightPanel("Points")
-  updateNavbarPage(session, "tagFreq", selected ="Off") 
-  
+ 
 }
 
 

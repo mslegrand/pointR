@@ -21,6 +21,10 @@ Shiny.addCustomMessageHandler(
       console.log('about to trigger save\n');
       $('#buttonFileSaveHidden').trigger('click');
     }
+    if(!!data.exportSVG){
+      console.log('about to trigger svg export\n');
+      $('#buttonExportSVGHidden').trigger('click');
+    }
   }
 );
 
@@ -31,7 +35,8 @@ $('#buttonFileOpenHidden').on('selection', function(event, path){
 $('document').ready(function()
 {
   $('.hiddenButton').hide();
-                
 });
+
+
 
 

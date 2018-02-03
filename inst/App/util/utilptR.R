@@ -3,6 +3,7 @@
 #-------------------------------
 
 "library(svgR)
+library(tidyverse)
 WH<-c(600,400)
 
 #Defined by mouse: edit with care!
@@ -21,6 +22,63 @@ svgR(wh=WH,
 
 )
 "->codeTemplate
+
+
+# defines
+#-------------------------------
+
+"library(svgR)
+library(tidyverse)
+WH<-c(600,400)
+
+# Defined by mouse: edit with care!
+ptR<-list(
+  x=tribble(
+   ~points,
+   matrix(NA,2,0)
+  )
+)
+
+svgR(wh=WH,
+#your custom code goes here
+NULL
+)
+"->codeTemplate
+
+# defines
+#-------------------------------
+
+# "library(svgR)
+# library(tidyverse)
+# WH<-c(600,400)
+# 
+# # Defined by mouse: edit with care!
+# ptR<-list(
+#   x=tribble(
+#    ~x,             ~fill,
+#    matrix(c(100,200,300,200),2), 'red',
+#    matrix(c(100,300,300,300),2), 'red',
+#    matrix(0,2,0), 'blue'
+#   ),
+#   y=tribble(
+#    ~y,             ~stroke,
+#    matrix(0,2,0), 'black'
+#   ),
+#   z=matrix(c(100,100,100,200,300,200),2)
+# )
+# 
+# 
+# 
+# svgR(wh=WH,
+# #your custom code goes here
+# NULL
+# )
+# "->codeTemplate
+# 
+
+
+
+
 
 # "library(svgR)
 # WH<-c(1500,1500)
@@ -44,37 +102,37 @@ svgR(wh=WH,
 #------------------------
 
 #---external fns----
-pts2Source<-function(txt,ptRList){
-  if(length(ptRList)>0){
-    replacement<-formatPtDefs(defTag=defTag, ptRList=ptRList)
-    txt<-replaceDef(txt, replacement, defTag=defTag) 
-  } else {
-    txt
-  }
-}
+# pts2Source<-function(txt,ptRList){
+#   if(length(ptRList)>0){
+#     replacement<-formatPtDefs(defTag=defTag, ptRList=ptRList)
+#     txt<-replaceDef(txt, replacement, defTag=defTag) 
+#   } else {
+#     txt
+#   }
+# }
 
-df2Source<-function(txt, dfList){
-  if(length(dfList)>0){
-    replacement<-formatDFDefs(dfList)
-  } else {
-    replacement<-""
-  }
-  txt<-replaceDef(txt, replacement, defTag="tagR") 
-}
+# df2Source<-function(txt, dfList){
+#   if(length(dfList)>0){
+#     replacement<-formatDFDefs(dfList)
+#   } else {
+#     replacement<-""
+#   }
+#   txt<-replaceDef(txt, replacement, defTag="tagR") 
+# }
 
 
+# 
+# as.text<-function(q){
+#   paste(deparse(q), collapse="\n")
+# }
 
-as.text<-function(q){
-  paste(deparse(q), collapse="\n")
-}
+# getScript<-function(file){
+#   paste0(readLines(file),collapse="\n")
+# }
 
-getScript<-function(file){
-  paste0(readLines(file),collapse="\n")
-}
-
-readFile<-function(fileName){
-  paste0(readLines(fileName),collapse="\n")
-}
+# readFile<-function(fileName){
+#   paste0(readLines(fileName),collapse="\n")
+# }
 
 getDefPos<-function(txt, defTag){
   p.df<-getParseDataFrame(txt)
@@ -88,37 +146,37 @@ getDefPos<-function(txt, defTag){
 }
 
 
-replaceDef<-function(txt, replacement, defTag){
-  pos<-getDefPos(txt, defTag)
-  if(is.null(pos)){
-    return(txt)
-  }
-  if(length(replacement)==0){
-    replacement=" "
-  }
-  s<-paste0(
-    substr(txt, 1, pos[1]-1),
-    replacement,
-    substr(txt,pos[2]+1, nchar(txt) ),
-    sep=""
-  )
-  return(s)
-}
+# replaceDef<-function(txt, replacement, defTag){
+#   pos<-getDefPos(txt, defTag)
+#   if(is.null(pos)){
+#     return(txt)
+#   }
+#   if(length(replacement)==0){
+#     replacement=" "
+#   }
+#   s<-paste0(
+#     substr(txt, 1, pos[1]-1),
+#     replacement,
+#     substr(txt,pos[2]+1, nchar(txt) ),
+#     sep=""
+#   )
+#   return(s)
+# }
 
-replaceTxt<-function(txt, replacements, positions){
-  stopifnot(length(replacments)+1==ncol(positions))
-  txtKeep<-textOutsidePos(txt, positions)
-  replacements<-c(replacements,"")
-  newtxt<-rbind(txtKeep,replacements)
-  newtxt<-paste0(nextxt, collapse="")
-}
+# replaceTxt<-function(txt, replacements, positions){
+#   stopifnot(length(replacments)+1==ncol(positions))
+#   txtKeep<-textOutsidePos(txt, positions)
+#   replacements<-c(replacements,"")
+#   newtxt<-rbind(txtKeep,replacements)
+#   newtxt<-paste0(nextxt, collapse="")
+# }
 
-replaceDefs<-function(txt, replacements, defTags){
-  positions<-sapply(defTags, function(defTag)
-    getDefPos(txt, defTag)
-  )
-  replaceTxt(txt, replacements, defTags)
-}
+# replaceDefs<-function(txt, replacements, defTags){
+#   positions<-sapply(defTags, function(defTag)
+#     getDefPos(txt, defTag)
+#   )
+#   replaceTxt(txt, replacements, defTags)
+# }
   
 getDef<-function(txt, defTag ){
   pos<-getDefPos(txt, defTag)
@@ -129,102 +187,65 @@ getDef<-function(txt, defTag ){
 }
 
 
-ex.getPtDefs<-function(src, ptTag="ptR", dfTag="tagR"){
-  ptDefs<-list(pts=NULL, df=NULL)
+# matrices2tags<-function(mats){
+#   tmp<-cumsum(sapply(mats,ncol))+1
+#   c(1,tmp[-length(tmp)])
+# }
+
+# TODO: move useTribbleFormat out
+ex.getPtDefs<-function(src, useTribbleFormat, ptTag="ptR"  ){
+  if(is.null(useTribbleFormat)){
+    useTribbleFormat=FALSE
+  }
+  ptDefs<-list(tib=NULL, useTribbleFormat=useTribbleFormat)
   if(length(ptDefs)==0){
-    return(list(pts=c(), df=c()))
+    return(list( tib=list(), useTribbleFormat=useTribbleFormat))
   }
   if( any(grepl(ptTag,src) ) ){
     try({
       ptDefTxt1<-getDef(src, defTag=ptTag)
       if( is.null(ptDefTxt1)){
+        #cat('\n===========ptDefTxt1 is NULL\n')
         #stop("failed to fint ptR")
-        # WITH DISABLE GRAPH BAR PTR CONTROLS
-        # PTR SELECTION, GROUPS, EDITS, ...
-        # KEEP TRANSFORMATIONS FOR THE TIME BEING
-        ptDefs$pts<-list()
-      } else {
-        eval(parse(text=ptDefTxt1))
-        ptDefs$pts<-get(ptTag)
-      }
-      
-            
-      ptDefTxt2<-getDef(src, defTag=dfTag)
-      if(length(ptDefTxt2)>0){ # ptR.df is optional!
-        #1. replace data.frame with list
-        dfListText<-sub("data.frame","list",ptDefTxt2)
-        eval(parse(text=dfListText))
-        #2 dfList<-get(dfTag)
-        dfList<-get(dfTag)
-        #3 pad list back as data.frame
-        df<-sapply(dfList, list2DF,
-          simplify = FALSE
-        )
-        # 4 set ptDefs to tmp.df
-        ptDefs$df<-df
         
+        ptDefs$tib<-list()
+      } else {
+       # cat('\n===========ptDefTxt1 is NOT NULL\n')
+        eval(parse(text=ptDefTxt1)) #stupid eval to obtain the points
+        
+        #!!!KLUDGE first kludge (undo later)
+        
+        
+        ptDefs$tib<-get(ptTag) #at this stage we have ptR as a list of tibbles, each tibble containings points with name same as tib
+        ptDefs$mats<-sapply(ptDefs$tib,is.matrix) #record what is a matrix
+        nms<-names(ptDefs$tib)
+        for(n in nms){ #convert matrics to tibbles
+          v<-ptDefs$tib[[n]]
+          if(is.matrix(v)){
+            tt<-tibble(key=list(v))
+            names(tt)=n
+            ptDefs$tib[[n]]<-tt
+          }
+        }
+        ptDefs$useTribbleFormat=useTribbleFormat
       }
     })
   }
+  ptDefs$useTribbleFormat=useTribbleFormat
   return(ptDefs)
 }
 
-#used by open and commit
-# inserts ptDefs into src code 
-# !!! to be obsolete soon
-# preProcCode<-function(src){
-#   ptDefs<-ex.getPtDefs(src)
-#   ptRList<-ptDefs$pts
-#   dfList<-ptDefs$df
-#   src<-pts2Source(src,ptRList)
-#   if(!is.null(dfList)){
-#     src<-df2Source(src, dfList)
-#   }
-#   return(src)
-# } 
+
+# formatTrs<-function(tr){ #not used
+#   paste0('"',tr,'"')
+# }
 
 
-
-formatTrs<-function(tr){ #not used
-  paste0('"',tr,'"')
-}
-
-
-## proposed replacement for point2src
-defTag2replace<-function(defTag, defList, txt){
-  if(defTag=='ptR'){
-    replacement<-formatPtDefs(defTag=defTag, ptRList=defList)
-  } else {
-    replacement<-formatDFDefs(defTag=defTag, dfDefsTag=defList)
-  }
-  p.df<-getParseDataFrame(txt)
-  tag.df<-extractTagDF(p.df, tag=defTag)
-  if( !is.null(tag.df) ){
-    pos<- list(
-      startRow= tag.df$line1 -1,
-      startColumn=tag.df$col1 -1 ,
-      endRow= tag.df$line2 -1,
-      endColumn=tag.df$col2 
-    )
-  } else {
-    pos<-NULL # !!! To rewrite, if defTag=='tagR' and tagR not in txt, place after ptR and add some empty lines
-  }
-  if(!is.null(pos)){
-    replacementList<-list(
-      list(
-        rng=pos,
-        txt= replacement
-      )
-    )
-  } else {
-    replacementList<-NULL
-  }
-  replacementList
-}
-
-ptDef2ReplacementList<-function(newPtDef, txt){
+ptDef2ReplacementList<-function(name, newPtDef, txt){
   replacementList<-list()
-  pt.repl<-formatPtDefs(defTag='ptR', ptRList=newPtDef$pts)
+  # get the text for the point replacement  
+  pt.repl<-fmtTibbleList(newPtDef$tib, newPtDef$mats, as.Tribble=newPtDef$useTribbleFormat)
+  
   p.df<-getParseDataFrame(txt)
   ptR.df<-extractTagDF(p.df, tag='ptR')
   pt.Pos<-list(
@@ -233,119 +254,181 @@ ptDef2ReplacementList<-function(newPtDef, txt){
     endRow= ptR.df$line2 -1,
     endColumn=ptR.df$col2 
   )
-  
-  if(length(newPtDef$df)>0){
-    tag.repl<-formatDFDefs(newPtDef$df)
-    tagR.df<-extractTagDF(p.df, tag='tagR')
-    if( !is.null(tagR.df) ){
-      tag.Pos<-list(
-        startRow= tagR.df$line1 -1,
-        startColumn=tagR.df$col1 -1 ,
-        endRow= tagR.df$line2 -1,
-        endColumn=tagR.df$col2 
-      )
-      }else{
-        tag.Pos<-list(
-          startRow= ptR.df$line2,
-          startColumn=ptR.df$col2+1 ,
-          endRow= ptR.df$line2,
-          endColumn=ptR.df$col2+1 
-        )
-        tag.repl<-paste0("\n",tag.repl,"\n")
-      }
-    replacementList<-c(replacementList, list(list(rng=tag.Pos, txt= tag.repl)))
-  }
   replacementList<-c(replacementList, list(list(rng=pt.Pos, txt= pt.repl)))
   replacementList
 }
 
 
-panel2svgid<-function(panelName){
-  prefix2<-'ptR_SVG_'
-  paste0(prefix2, "_", toupper(paneName))
-}
+# panel2svgid<-function(panelName){
+#   prefix2<-'ptR_SVG_'
+#   paste0(prefix2, "_", toupper(paneName))
+# }
 
-panel2onmousedown<-function(panelName, transformOption=NULL){
-  prefix1<-'ptRPlotter_'
-  mid=''
-  if(!is.null(transformOption)){
-    mid=paste('_',toupper(transformOption))
+# panel2onmousedown<-function(panelName, transformType=NULL){
+#   prefix1<-'ptRPlotter_'
+#   mid=''
+#   if(!is.null(transformType)){
+#     mid=paste('_',toupper(transformType))
+#   }
+#   paste0(prefix1,panel2svgid,mid,".selectElement(evt)")
+# }
+
+# panel2var<-function(panelName, transformType=NULL){
+#   prefix1<-'ptRPlotter_'
+#   mid=''
+#   if(!is.null(transformType)){
+#     mid=paste('_',toupper(transformType))
+#   }
+#   paste0(prefix1,panel2svgid,mid)
+# }
+
+#' panel2script<-function(panelName, transformType=NULL){
+#'   #'var ptRPlotter_ptR_SVG_TRANSFORM_TRANSLATE = new PtRPanelTranslate("ptR_SVG_TRANSFORM");'
+#'   paste0( 'var ', panel2var(panelName, transformType), ' = new ', jsConstr, "(\"", panel2svgid, "\");" )
+#' }
+
+# tags2listmatrices<-function( matrixPts, tags){
+#   # assume tags start with 1
+#   
+#   if(length(matrixPts)==0){
+#     matrixPts=matrix(0,2,0)
+#   } else {
+#     matrixPts<-matrix(matrixPts,2)
+#   }
+#   if(length(tags)>0){
+#     tags<-c(tags, (ncol(matrixPts)+1))
+#     indx<-lapply(1:(length(tags)-1), function(x){tags[x]:(tags[x+1]-1) })
+#     tmp<-lapply(indx, function(i) matrixPts[,i])
+#     tmp<-lapply(tmp, function(x)as.matrix(x,2))
+#   } else {
+#     tmp<-list(matrixPts)
+#   }
+#   tmp
+# }
+
+# #!!! TODO this is temp: refactor or remove
+# # Replaces pts by indexed set
+# olde2newFmtPtDef2ListOfLists<-function(newPtDef){
+#   pts<-newPtDef$pts # should be a list of list of matrices!!!
+#   
+#   newPtDef$pts<-sapply(names(pts), function(nm){
+# 
+#     pts<-as.integer(unlist(newPtDef$pts[[nm]]))
+#     tags<-newPtDef$df[[nm]]$tag
+#     ptsL<-tags2listmatrices(pts,tags)
+#   }, simplify=FALSE)
+#   newPtDef
+# }
+
+
+#!!!REDO KLUDGE to convert output to ints
+pts2Integers<-function(newtib){
+  for(nm in names(newtib)){
+    for( j in ncol( newtib[[nm]] )){
+      if( is.matrix(newtib[[nm]][[1,j]]) &&  dim(newtib[[nm]][[1,j]])[1]==2){
+        for( i in nrow(  newtib[[nm]] )){
+          newtib[[nm]][[i,j]]<-matrix( as.integer(newtib[[nm]][[i,j]] ), 2)
+        }
+      }
+    }
   }
-  paste0(prefix1,panel2svgid,mid,".selectElement(evt)")
+  newtib
 }
 
-panel2var<-function(panelName, transformOption=NULL){
-  prefix1<-'ptRPlotter_'
-  mid=''
-  if(!is.null(transformOption)){
-    mid=paste('_',toupper(transformOption))
+
+## looks at the class of the last entry to return selectorType
+# tib2ColType<-function( tib, column){
+#   lastVal<-last(tib[[column]])
+#   cv=class(lastVal)
+#   if(is.character(cv) && isColor(lastVal)){
+#     cv<-'color'
+#   }
+#   if(cv)
+#   cv
+# }
+
+#this could be used when opening a file
+## choices 
+choices2ColType<-function( choices, column){
+  ct<-NULL
+  lastVal<-last(choices)
+  cv=class(lastVal)
+  ct<-list(cv)
+  if(is.character(cv) && isColor(lastVal)){
+    ct<-list('colorPicker')
   }
-  paste0(prefix1,panel2svgid,mid)
+  if(column %in% c('opacity' )){
+    ct<-list('slider','decimal',0,1)
+  }
+  ct
 }
 
-panel2script<-function(panelName, transformOption=NULL){
-  #'var ptRPlotter_ptR_SVG_TRANSFORM_TRANSLATE = new PtRPanelTranslate("ptR_SVG_TRANSFORM");'
-  paste0( 'var ', panel2var(panelName, transformOption), ' = new ', jsConstr, "(\"", panel2svgid, "\");" )
+#this would be used when adding an new column
+val2ColType<-function(val, column){
+  tmp<-type.convert(val)
+  cv=class(lastVal)
+  ct<-list(cv)
+  if(is.character(cv) && isColor(lastVal)){
+    ct<-list('colorPicker')
+  }
+  if(column %in% c('opacity' )){
+    ct<-list('slider','decimal',0,1)
+  }
+  ct
 }
 
-
-
-# Testing code
-
-# txt<-codeTemplate
+ # #to test
+# ptDef2PtTibList<-function(newPtDef){
+#   ptTibList<-sapply( names(newPtDef$tib), function(nm){
+#     pts<-as.integer(unlist(newPtDef$pts[[nm]]))
+#     tags<-newPtDef$df[[nm]]$tag
+#     tibble(pts=list(tags2listmatrices(pts,tags)))
+#   }, simplify=FALSE)
+#   ptTibList
+# }
 # 
+# #to test
+# ptDefs2DfTibList<-function(newPtDef){
+#   dfTibList<-sapply(names(newPtDef$df),function(nm){
+#       df<-newPtDef[[nm]]$df
+#       df[-which(names(df=='tag'))]
+#   },simplify=FALSE)
+#   newPtDef
+# }
+
 # newPtDef<-list(
-#   pts=list(x=matrix(1:8,2))
-# )
-# 
-# t1<-ptDef2ReplacementList(newPtDef, txt )
-# t1
-# 
-# newPtDef<-list(
-#   pts=list(x=matrix(1:8,2)),
-#   df=list(x=data.frame(tag=c(1,3), stringsAsFactors = FALSE))
-# )
-# 
-# t2<-ptDef2ReplacementList(newPtDef, txt )
-# t2
-# 
-
-# "library(svgR)
-# WH<-c(600,400)
-# 
-# #Defined by mouse: edit with care!
-# ptR<-list(
-#   x=matrix(c(1,2,3,4),2)
-# )
-# 
-# tagR<-list(
-#   x=data.frame(
-#     tag=c(1),
-#     stringsAsFactors = FALSE
-#   )
-# )
-# 
-# svgR(wh=WH,
-# #your custom code goes here
-# 
-#   NULL
-# 
-# 
-# 
-# )
-# "->txt3
-# 
-# newPtDef<-list(
-#   pts=list(
-#     x=matrix(c(1,2,3,4,5,6),2)
+#   tib=list(
+#     x=tribble(
+#     ~fill, ~pts,
+#     'red', matrix((1:6+.01),2)
+#     ),
+#     y=tribble(
+#       ~stroke, ~pts,
+#       'blue', matrix(1:4,2)
+#     )
 #   ),
-#   tagR=list(
-#     x=data.frame(
-#       tag=c(1),
-#       stringAsFactors=FALSE
+#   pts=list(
+#     x=matrix(1:6,2),
+#     y=matrix(1:4,2)
+#   ),
+#   df=list(
+#     x=tribble(
+#       ~fill, ~tag,
+#       'red',   1,
+#       'green', 2
+#     ),
+#     y=tribble(
+#         ~stroke, ~tag,
+#         'blue', 1
 #     )
 #   )
+#   
 # )
 # 
-# t3<-ptDef2ReplacementList(newPtDef, txt3 )
-# t3
+# 
+# ptDefs_pts2tib(newPtDef)->temp
+# 
+# 
+# tibb<-newPtDef$tib
+# 
+# tibb2<-pts2Integers(tibb)

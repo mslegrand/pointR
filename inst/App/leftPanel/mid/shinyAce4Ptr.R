@@ -18,7 +18,7 @@ versionCheck<-function(){
 initialPtrAceOptions<-function(
   outputId="source", #editor 
   value="",
-  theme="katzenmilch",
+  theme="chrome",
   fontSize=16,
   mode="ptr",
   autoComplete=c("disabled", "enabled", "live"),
@@ -51,8 +51,8 @@ initialPtrAceOptions<-function(
 shinyAce4Ptr <- function(
     outputId="source", #editor 
     value="",
-    height="990px",
-    theme="katzenmilch",
+    height="100%",
+    theme="chrome",
     fontSize=16,
     mode="ptr",
     autoComplete=c("disabled", "enabled", "live"),
@@ -66,7 +66,8 @@ shinyAce4Ptr <- function(
       outputId,
       value,
       'text',
-      theme=theme
+      theme=theme,
+      height='100%'
     )
     
     js2<-initialPtrAceOptions(
