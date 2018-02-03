@@ -23,7 +23,7 @@ moduleFooterRight<-function(input, output, session,
             actionButton(session$ns("forwardPt" ), label = "Forward Pt"),
             actionButton(session$ns("backwardPt"), label = "Backward Pt"),
             actionButton(session$ns("removePt"), label = "Delete Pt"),
-          actionButton(session$ns("tagPt"), label = "Tag Pt")
+            actionButton(session$ns("tagPt"), label = "Tag Pt")
           )
         } else if (footerPanelState=='matrix'){
           tagList(

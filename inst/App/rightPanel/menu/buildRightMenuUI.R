@@ -3,7 +3,8 @@ buildRightMenu<-function(){
     menuBarId="plotNavBar",
     menuDropdown('Column',
                  menuItem('Add Column', value='cmdNewColumn') ,
-                 menuItem('Set Max ncol', value='cmdSetMatColMax') 
+                 menuItem('Set Max ncol', value='cmdSetMatColMax')
+                 
                  #   menuItem('Delete Column', value='cmdDeleteColumn'),
                  #   menuItem('Rename Column', value='cmdRenameColumn'),
                  #   menuItem('Clone Column', value='cmdCloneColumn'),

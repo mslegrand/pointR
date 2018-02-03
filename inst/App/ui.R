@@ -8,7 +8,7 @@
 library(shiny)
 
 
-version="ptR:v.0.3.5.6.10"
+version="ptR:v.0.3.6.0"
 
 # style="position: fixed; top: -100em" to keep hidden
 shinyUI(  
