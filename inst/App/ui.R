@@ -61,6 +61,9 @@ shinyUI(
           shinyFilesButton("buttonSnippetOpen", label="", 
                            title="Import Snippet", multiple=FALSE, 
                            class='hiddenButton'),
+          shinySaveButton("buttonExportSVGHidden", label="", 
+                          title="Save as ...",  list('hidden_mime_type'=c("")) , 
+                          class='hiddenButton'),
           h3(
             textOutput( "fileName"),
             style="white-space:nowrap;"
