@@ -58,6 +58,10 @@
 .ace_svgRFI {color:  rgb(0,128,0); }
 .ace_svgRMM {color:  rgb(240,82,45); }
 
-
+.ace_gutter-cell.ace_breakpoint{ 
+    background: url(bookmark.svg); 
+    background-size: 10px 10px;
+    background-repeat: no-repeat;
+}
 
 

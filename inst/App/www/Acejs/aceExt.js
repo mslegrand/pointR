@@ -96,10 +96,88 @@ Shiny.addCustomMessageHandler(
           );
           ptr_HighlightedLines.push(mid); 
         }
+        
+        if(!!data.toggleComment){
+          editor.toggleCommentLines();
+          editor.focus();
+        }
+        if(!!data.indentSelection){
+          editor.indent();
+          editor.focus();
+        }
+        
+        if(!!data.outdentSelection){
+          editor.getSession().outdentRows( editor.getSession().getSelection().getRange() );
+          editor.focus();
+        }
+        
+        if(!!data.tbDeleteAllBookMarks){
+          editor.getSession().clearBreakpoints();
+        }
+        
+        if(!!data.nextBookMark){
+            //check out https://github.com/ajaxorg/ace/issues/3351
+              // get the current cursor pos
+              var curRow=editor.getCursorPosition().row;// getCursorPosition().row
+              var breakpoints=editor.getSession().getBreakpoints().slice(curRow+1);
+              // iterate over breakpoints starting at curRow+1 and 
+              // stop and process if any
+              var nextRow=breakpoints.indexOf('ace_breakpoint');
+              if(nextRow>=0){
+                var rng=new Range(curRow,0,curRow+1+nextRow,0);
+                editor.revealRange(rng, true);
+              }
+              editor.focus();
+        }
+        
+        if(!!data.previousBookMark){
+            //check out https://github.com/ajaxorg/ace/issues/3351
+              // get the current cursor pos
+              function previousBookMark(){
+                var curRow=editor.getCursorPosition().row;// getCursorPosition().row
+                if(curRow>0){
+                    var breakpoints=editor.getSession().getBreakpoints().slice(0,curRow-1);
+                    var nextRow=breakpoints.lastIndexOf('ace_breakpoint');
+                    if(nextRow>=0){
+                      var rng=new Range(curRow,0, nextRow,0);
+                      editor.revealRange(rng, true);
+                    }
+                }
+              }
+              previousBookMark();
+              editor.focus();
+        }
+        
+        if(!!data.findNext){
+          //data.findNext
+          // checkout /home/sup/svgRHabitat/ptRAceBldr/TrestleTech/ace/lib/ace/search_test.js:50:
+        }
+        
+        if(!!data.print){
+          console.log('starting print');
+          function Print(){
+            try{
+              var printWindow=window.open("","",height=400,width=800);
+              printWindow.document.write("<html><head><title>Script Editor Print Window</title>");
+              printWindow.document.write("</head><body><span><h4>");
+              printWindow.document.write(editor.getSession().getDocument().getValue().split("\n").join("<br/>"));
+              printWindow.document.write(editor.getSession().getDocument().getValue().split("\n").join("<br/>"));
+              printWindow.document.close();
+              printWindow.print();
+            }
+            catch(ex){
+              console.error("Error: " + ex.message);
+            }
+          }
+          Print();
+          editor.focus();
+        }
+        
         if(!!data.removeAllMarkers){
           while(ptr_HighlightedLines.length>0){
             var highlightedLine = ptr_HighlightedLines.pop();
             editor.getSession().removeMarker(highlightedLine);
+            editor.focus();
           }      
         }
         if(!!data.tabSize){
@@ -176,6 +254,21 @@ Shiny.addCustomMessageHandler(
              dirty: editor.getSession().getUndoManager().dirtyCounter,
              rnd : randomString(5)
           });
+       }
+       
+       
+       if(!!data.undo){
+          editor.getSession().getUndoManager().undo(true);
+       }
+       if(!!data.redo){
+          editor.getSession().getUndoManager().redo(true);
+       }
+       
+       if(!!data.foldAll){
+         editor.getSession().foldAll();
+       }
+       if(!!data.unfoldAll){
+         editor.getSession().unfold();
        }
        
        //---------------------------------

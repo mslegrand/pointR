@@ -130,9 +130,32 @@ function ptRaceInit(data){
           Shiny.onInputChange('helpMssg', {query:text, num:Math.random(), editorId: editorVar} );
         } //TODO: remove editorVar; appears not to be used
       });
+      
+      theEditor.on("guttermousedown", function(e) {
+       // derived from the following link
+       //https://stackoverflow.com/questions/16864236/how-to-mark-line-numbers-in-javascript-ace-editor
+        var target = e.domEvent.target; 
+        if (target.className.indexOf("ace_gutter-cell") == -1)
+            return; 
+        if (!theEditor.isFocused()) 
+            return; 
+        if (e.clientX > 25 + target.getBoundingClientRect().left) 
+            return; 
+    
+        var breakpoints = e.editor.session.getBreakpoints(row, 0);
+        var row = e.getDocumentPosition().row;
+        if(typeof breakpoints[row] === typeof undefined)
+            e.editor.session.setBreakpoint(row);
+        else
+            e.editor.session.clearBreakpoint(row);
+        e.stop();
+     });
+      
     } else {
       theEditor.getSession().setMode('ace/mode/' + data.mode);  // shinyAce init
     }
+    
+ 
     
 }
 
