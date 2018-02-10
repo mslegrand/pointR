@@ -175,6 +175,7 @@ fmtMat<-function(tib, tibName, indent="  ", ...){
 
 
 fmtTibbleList<-function(tibList, mats, as.Tribble){
+  as.Tribble<-unlist(as.Tribble)
   tmp<-sapply(names(tibList), function(nm){
     if(mats[nm]==TRUE){
       fmtMat(tibList[[nm]],nm)

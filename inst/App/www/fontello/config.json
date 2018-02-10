@@ -869,15 +869,29 @@
     {
       "uid": "17e73dd44b22cc4da8b840c5a1c192ec",
       "css": "pm",
-      "code": 59393,
+      "code": 59449,
       "src": "custom_icons",
-      "selected": false,
+      "selected": true,
       "svg": {
         "path": "M200 740V840H800V760H200ZM700 540H540V700H460V540H300V460H460V300H540V460H700V540Z",
         "width": 1000
       },
       "search": [
         "pm"
+      ]
+    },
+    {
+      "uid": "03b9f9ad61cfbd58dea09212715c8306",
+      "css": "bookmark20",
+      "code": 59395,
+      "src": "custom_icons",
+      "selected": false,
+      "svg": {
+        "path": "M185 260L885 260 885 710 185 710 435 485Z",
+        "width": 1000
+      },
+      "search": [
+        "bookmark20"
       ]
     }
   ]

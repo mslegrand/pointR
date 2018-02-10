@@ -60,7 +60,7 @@
 
 .ace_gutter-cell.ace_breakpoint{ 
     background: url(bookmark.svg); 
-    background-size: 10px 10px;
+    background-size: 20px 20px;
     background-repeat: no-repeat;
 }
 

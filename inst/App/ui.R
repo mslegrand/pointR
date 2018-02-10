@@ -117,8 +117,9 @@ shinyUI(
                                                   span("class"="icon-zoom-in")  %>% bs_embed_tooltip(title = "Find and Replace All"),
                                                   span(span("class"="icon-zoom-in"), span("class"="icon-level-down") )  %>% bs_embed_tooltip(title = "Find and Replace Down"), 
                                                   span(span("class"="icon-zoom-in"), span("class"="icon-level-up") )  %>% bs_embed_tooltip(title = "Find and Replace Up"), 
-                                                  span("class"="icon-help")  %>% bs_embed_tooltip(title = "Help"), 
-                                                  span("class"="icon-print-1")  %>% bs_embed_tooltip(title = "Print")
+                                                  span("class"="icon-print-1")  %>% bs_embed_tooltip(title = "Print"),                
+                                                  span("class"="icon-help")  %>% bs_embed_tooltip(title = "Help") 
+                                                  
                                                 ),
                                                 status = "primary"
                              )
@@ -146,7 +147,7 @@ shinyUI(
           ),
           absolutePanel( "class"="footerPanel", draggable=FALSE, style="display:inline-block",
              absolutePanel( left=5, bottom=0,
-               actionButton("commit", label = "COMMIT EDIT")
+               actionButton("commit", label = "COMMIT EDIT") %>% bs_embed_tooltip(title = "Commit code changes")
              ),
              absolutePanel( left=150, bottom=-10,
                checkboxInput('useTribble', 'display as tribble', value = TRUE, width = NULL)

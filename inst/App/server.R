@@ -53,6 +53,9 @@ source("util/exGetTag.R",               local=TRUE) # some ordinary functions :)
   getRightMenuCmd<-reactive({input$plotNavBar$item})
   
   getPtDefs<- reactive({ 
+    if(is.null(getCode()) || nchar(getCode())==0){
+      return(NULL)
+    }
     ptDefs<-ex.getPtDefs(getCode(), useTribbleFormat=editOption$useTribbleFormat ) 
     # we kludge here and assign input handlers to ptDefs
     ptDefs
@@ -67,9 +70,7 @@ source("util/exGetTag.R",               local=TRUE) # some ordinary functions :)
   shinyFileChoose(input, "buttonSnippetOpen", session=session, roots=c(wd="~"),  filetypes=c('', 'snp') ) #hidden
   shinyFileSave(input, "buttonFileSaveHidden", session=session, roots=c(wd="~") ) #hidden
   shinyFileSave(input, "buttonExportSVGHidden", session=session, roots=c(wd="~") ) #hidden
-  addTooltip(session, "btn1", "Open file", placement = "right", trigger = "hover", options = NULL)
-  addTooltip(session, "commit", "Commit code changes", placement = "right", trigger = "hover", options = NULL)
-  
+
   # Reactive expressions------------- 
   showGrid<-reactive({displayOptions$showGrid})
 

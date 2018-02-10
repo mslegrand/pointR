@@ -1,6 +1,5 @@
-observe({input$messageFromAce
-  isolate({
-    #cat('serverAce:...observe input$messageFromAce:: entering\n')
+observeEvent(input$messageFromAce, {
+    cat('serverAce:...observe input$messageFromAce:: entering\n')
     if(
       length(input$messageFromAce$code)>0 &&
       length(input$messageFromAce$sender)>0
@@ -8,7 +7,7 @@ observe({input$messageFromAce
       
       request$code<-input$messageFromAce$code
       request$sender<-input$messageFromAce$sender
-      
+     
       if(!is.null(input$messageFromAce$selector) && !is.null(input$messageFromAce$code) ){
         reqSelector<-input$messageFromAce$selector
         updateSelected4Ace(reqSelector)
@@ -18,12 +17,13 @@ observe({input$messageFromAce
         editOption$.saved <- !(as.numeric(input$messageFromAce$dirty) > 0)
       }
       if(request$sender %in% c('cmd.commit','cmd.openFileNow', 'cmd.saveFileNow', 'cmd.file.new' )){
-        
+          
         if(request$sender=='cmd.commit' && !is.null(getTibName())){ 
           name=getTibName()
         } else { 
           name=NULL
         }
+      
         tibs<-getPtDefs()$tib
         resetSelectedTibbleName(tibs=tibs, name=name)
         processCommit()
@@ -46,8 +46,7 @@ observe({input$messageFromAce
         
       }
     }
-  })
-})
+}, priority = 90, ignoreNULL = TRUE, ignoreInit = TRUE)
 
 updateAceExtDef<-function(newPtDef, sender, selector=list() ){
 
@@ -73,15 +72,11 @@ updateAceExt<-function(sender, ...){
   }
 }
 
-observe({
-  request$sender
-  isolate({
+observeEvent(request$sender,{
     if(request$sender=='startup'){
-      cat("request: startup cmdFileNew")
       cmdFileNew()
     }
-  })
-})
+}, priority=100)
 
 # TODO!!!: rewrite
 updateSelected4Ace<-function( reqSelector){

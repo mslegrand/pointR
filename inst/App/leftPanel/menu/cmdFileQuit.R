@@ -15,6 +15,7 @@ cmdFileQuit<-reactive({
   if(getFileSavedStatus()==FALSE){
     showModal( modalSaveOrQuit() )
   } else {
+    opts<-sapply(opts,unlist, USE.NAMES = T, simplify = F )
     writeOptionsJSON(opts)
     js$closeWindow()
     Sys.sleep(1)

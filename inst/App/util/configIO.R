@@ -26,7 +26,7 @@ optionFile<-paste(path.expand("~"),".ptRProfile.csv",sep="/")
 
 writeOptionsJSON<-function(opts){
   file<-paste(optionDirPath(),"ptRProfile.json", sep="/")
-  write_json(opts,file, pretty=4)
+  write_json(opts, file, pretty=4)
 }
 
 
@@ -49,11 +49,12 @@ readOptionsJSON<-function(){
   
   try({
     file<-paste(optionDirPath(),"ptRProfile.json", sep="/")
-    tmp<-read_json(file)  
+    tmp<-read_json(file)
     defaultOpts[names(tmp)]<-tmp
     defaultOpts[["currentFilePath"]]<-""
   })
-  defaultOpts
+  opts<-sapply(defaultOpts,unlist, USE.NAMES = T, simplify = F )
+  opts
 } #execute now!
 
 defaultOpts<-readOptionsJSON()

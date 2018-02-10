@@ -3,13 +3,14 @@
 
 observeEvent(input$plotNavBar, {
   cmd<-getRightMenuCmd()
-  if('character' %in% class(cmd)){
-    cat('serverPlotBar::  input$plotBar  cmd=',cmd,'\n')
-  }
   if(is.null(cmd)){
-    cat('cmd=NULL\n')
+    # cat('input$plotNavBar:: getRightMenuCmd()=NULL\n')
     return(NULL)
   }
+  # if('character' %in% class(cmd)){
+  #   cat('serverPlotBar::  input$plotBar  cmd=',cmd,'\n')
+  # }
+  
   if(cmd == 'cmdShowGrid'){
     renameDMDM(session,  "plotNavBar", "cmdShowGrid", "Hide Grid", newValue="cmdHideGrid")
     setDisplayOption(showGrid=TRUE)

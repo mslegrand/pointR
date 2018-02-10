@@ -63,6 +63,28 @@ function getStyleRule(name) {
 }
 
 
+function PrintR(editoR){
+  ace.require("ace/config").loadModule("ace/ext/static_highlight", function(m) {
+    var result = m.renderSync(
+        editoR.getValue(), editoR.session.getMode(), editoR.renderer.theme
+    );
+    document.body.style.display="none";
+    var d = document.createElement("div");
+    d.innerHTML=result.html;
+    document.documentElement.appendChild(d);
+    ace.require("ace/lib/dom").importCssString(result.css);
+
+    setTimeout(function() {window.print()}, 10);
+
+    window.addEventListener("focus", function restore() {
+       window.removeEventListener("focus", restore, false);
+       d.parentNode.removeChild(d);
+       document.body.style.display= "";
+       editoR.resize(true);
+    }, false);
+  });
+}
+
 
 
 Shiny.addCustomMessageHandler(
@@ -153,23 +175,24 @@ Shiny.addCustomMessageHandler(
           // checkout /home/sup/svgRHabitat/ptRAceBldr/TrestleTech/ace/lib/ace/search_test.js:50:
         }
         
+       if(!!data.undo){
+          editor.getSession().getUndoManager().undo(true);
+       }
+       if(!!data.redo){
+          editor.getSession().getUndoManager().redo(true);
+       }
+       
+       if(!!data.foldAll){
+         editor.getSession().foldAll();
+       }
+       if(!!data.unfoldAll){
+         editor.getSession().unfold();
+       }
+       
+        
         if(!!data.print){
           console.log('starting print');
-          function Print(){
-            try{
-              var printWindow=window.open("","",height=400,width=800);
-              printWindow.document.write("<html><head><title>Script Editor Print Window</title>");
-              printWindow.document.write("</head><body><span><h4>");
-              printWindow.document.write(editor.getSession().getDocument().getValue().split("\n").join("<br/>"));
-              printWindow.document.write(editor.getSession().getDocument().getValue().split("\n").join("<br/>"));
-              printWindow.document.close();
-              printWindow.print();
-            }
-            catch(ex){
-              console.error("Error: " + ex.message);
-            }
-          }
-          Print();
+          PrintR(editor);
           editor.focus();
         }
         
@@ -256,21 +279,6 @@ Shiny.addCustomMessageHandler(
           });
        }
        
-       
-       if(!!data.undo){
-          editor.getSession().getUndoManager().undo(true);
-       }
-       if(!!data.redo){
-          editor.getSession().getUndoManager().redo(true);
-       }
-       
-       if(!!data.foldAll){
-         editor.getSession().foldAll();
-       }
-       if(!!data.unfoldAll){
-         editor.getSession().unfold();
-       }
-       
        //---------------------------------
         if(!!data.replacement){
           //console.log("\n\nEntering data.replacement");
@@ -353,6 +361,8 @@ Shiny.addCustomMessageHandler(
         //----------------------------
         
         if(!!data.setValue){
+          console.log('data.setValue');
+          console.log(JSON.stringify(data.setValue));
           /*
           console.log('getValue fin: editor.getSession().getUndoManager()$undoStack.length=' + 
                 editor.getSession().getUndoManager().$undoStack.length);
@@ -365,14 +375,19 @@ Shiny.addCustomMessageHandler(
             //console.log('!!data.ok==TRUE');
             editor.getSession().getUndoManager().setOk();
           }
+          
           /*
           console.log('setValue fin: editor.getSession().getUndoManager()$undoStack.length=' + 
                 editor.getSession().getUndoManager().$undoStack.length);
           console.log('setValue fin: editor.getUndoManager()getSession().$ok=' + 
                 JSON.stringify(editor.getSession().getUndoManager().$ok));
-          //console.log('value set = ' + JSON.stringify(editor.getSession().getValue()));
+          console.log('editor.getSession().getUndoManager().dirtyCounter=' + 
+                JSON.stringify(editor.getSession().getUndoManager().dirtyCounter));
+          console.log('value set = ' + JSON.stringify(editor.getSession().getValue()));
           console.log('setValue fin: sender=' + data.sender); 
+          console.log(data.sender);
           */
+          
           Shiny.onInputChange('messageFromAce', 
           {
              code : editor.getSession().getValue(),

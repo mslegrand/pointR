@@ -12,6 +12,7 @@ selectedTibble <- reactiveValues(
   transformType='Translate' # TODO!!! replace this with selIndex
 )
 
+
 getSelIndex<-reactive({selectedTibble$selIndex})
 getTibName<-reactive({selectedTibble$name}) #allow to be null only if tib is null  
 getTibColumnName<-reactive({ selectedTibble$columnName })

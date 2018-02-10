@@ -43,6 +43,13 @@ observeEvent( input$tbPreviousBookMark ,{
 }, ignoreInit = TRUE)
 
 
+observeEvent( input$tbNewFile ,{
+  cmdFileNew()
+}, ignoreInit = TRUE)
+
+observeEvent( input$tbSaveFile ,{
+  cmdFileSave()
+}, ignoreInit = TRUE)
 
 
 observeEvent( input$tbPrint ,{
