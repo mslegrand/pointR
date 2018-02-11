@@ -102,21 +102,25 @@ shinyUI(
               absolutePanel( id='aceToobarTop2', 
                              top=105, left=0, width="100%", "class"="headerPanel", draggable=FALSE, height="30px",
                              actionGroupButtons(inputIds = c(
-                                                             "tbFindAndBookMark",
+                                                             "tbFind",
                                                              "tbFindNext", "tbFindPrevious",
-                                                             "tbSearchNReplaceAll",
-                                                             "tbFindAndReplaceNext", "tbFindAndReplacePrevius",
+                                                             "tbFindNReplace",
+                                                             "tbNextError", "tbPreviousError",
+                                                             "tbMacroRecord", "tbMacroPlay",
                                                              "tbPrint", "tbHelp"), 
                                                 labels = list(
                                                    # tags$img(src = "http://images.all-free-download.com/images/graphicthumb/button_play_89677.jpg",
                                                   #          height = "20px"),
                                                   # icon("bookmark", lib = "glyphicon") %>% bs_embed_tooltip(title = "Place a bookmark on the line containing the cursor"), 
-                                                  span(span("class"="icon-search"),span("class"="icon-bookmark") )  %>% bs_embed_tooltip(title = "Find and Bookmark All"), 
+                                                  span(span("class"="icon-search") )  %>% bs_embed_tooltip(title = "Find"), 
                                                   span(span("class"="icon-search"), span("class"="icon-level-down") )  %>% bs_embed_tooltip(title = "Find  Down"), 
                                                   span(span("class"="icon-search"), span("class"="icon-level-up") )  %>% bs_embed_tooltip(title = "Find  Up"), 
-                                                  span("class"="icon-zoom-in")  %>% bs_embed_tooltip(title = "Find and Replace All"),
-                                                  span(span("class"="icon-zoom-in"), span("class"="icon-level-down") )  %>% bs_embed_tooltip(title = "Find and Replace Down"), 
-                                                  span(span("class"="icon-zoom-in"), span("class"="icon-level-up") )  %>% bs_embed_tooltip(title = "Find and Replace Up"), 
+                                                  span("class"="icon-zoom-in")  %>% bs_embed_tooltip(title = "Find and Replace"),
+                                                  span(span("class"="icon-attention"), span("class"="icon-level-down") )  %>% bs_embed_tooltip(title = "Goto Next Error"), 
+                                                  span(span("class"="icon-bug"), span("class"="icon-level-up") )  %>% bs_embed_tooltip(title = "Got Previous Error"), 
+                                                  span(span("class"="icon-cog"), span("class"="icon-toggle-on") )  %>% bs_embed_tooltip(title = "Toggle Macro Recording"), 
+                                                  span(span("class"="icon-cog"), span("class"="icon-play") )  %>% bs_embed_tooltip(title = "Replay Macro Recording"), 
+                                                  
                                                   span("class"="icon-print-1")  %>% bs_embed_tooltip(title = "Print"),                
                                                   span("class"="icon-help")  %>% bs_embed_tooltip(title = "Help") 
                                                   

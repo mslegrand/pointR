@@ -51,6 +51,64 @@ observeEvent( input$tbSaveFile ,{
   cmdFileSave()
 }, ignoreInit = TRUE)
 
+observeEvent( input$tbFind ,{
+  session$sendCustomMessage(
+    type = "shinyAceExt",    
+    list(id= "source", find=TRUE)
+  )
+}, ignoreInit = TRUE)
+
+
+observeEvent( input$tbFindNext ,{
+  session$sendCustomMessage(
+    type = "shinyAceExt",    
+    list(id= "source", selectOrFindNext=TRUE)
+  )
+}, ignoreInit = TRUE)
+
+
+observeEvent( input$tbFindPrevious ,{
+  session$sendCustomMessage(
+    type = "shinyAceExt",    
+    list(id= "source", selectOrFindPrevious=TRUE)
+  )
+}, ignoreInit = TRUE)
+
+observeEvent( input$tbFindNReplace ,{
+  session$sendCustomMessage(
+    type = "shinyAceExt",    
+    list(id= "source", replace=TRUE)
+  )
+}, ignoreInit = TRUE)
+
+observeEvent( input$tbPreviousError ,{
+  session$sendCustomMessage(
+    type = "shinyAceExt",    
+    list(id= "source", goToPreviousError=TRUE)
+  )
+}, ignoreInit = TRUE)
+
+observeEvent( input$tbNextError ,{
+  session$sendCustomMessage(
+    type = "shinyAceExt",    
+    list(id= "source", goToNextError=TRUE)
+  )
+}, ignoreInit = TRUE)
+
+observeEvent( input$tbMacroRecord ,{
+  session$sendCustomMessage(
+    type = "shinyAceExt",    
+    list(id= "source", togglerecording=TRUE)
+  )
+}, ignoreInit = TRUE)
+
+observeEvent( input$tbMacroPlay ,{
+  session$sendCustomMessage(
+    type = "shinyAceExt",    
+    list(id= "source", replaymacro=TRUE)
+  )
+}, ignoreInit = TRUE)
+
 
 observeEvent( input$tbPrint ,{
   session$sendCustomMessage(
@@ -58,6 +116,7 @@ observeEvent( input$tbPrint ,{
     list(id= "source", print=TRUE)
   )
 }, ignoreInit = TRUE)
+
 
 
 observeEvent( input$tbIndentRight ,{

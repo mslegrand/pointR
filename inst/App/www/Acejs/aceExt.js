@@ -189,6 +189,44 @@ Shiny.addCustomMessageHandler(
          editor.getSession().unfold();
        }
        
+       if(!!data.find){
+         editor.execCommand("find");
+       }
+       
+       if(!!data.replace){
+         editor.execCommand("replace");
+       }
+       
+       if(!!data.goToPreviousError){
+         editor.execCommand("goToPreviousError");
+       }
+
+       if(!!data.goToNextError){
+         editor.execCommand("goToNextError");
+       }
+       if(!!data.togglerecording){
+         editor.execCommand("togglerecording");
+       }
+       if(!!data.replaymacro){
+         editor.execCommand("replaymacro");
+       }
+
+       
+       if(!!data.selectOrFindNext){
+         if (editor.selection.isEmpty())
+            editor.selection.selectWord();
+          else
+            editor.findNext(); 
+          editor.focus();
+       }
+       
+      if(!!data.selectOrFindPrevious){
+         if (editor.selection.isEmpty())
+            editor.selection.selectWord();
+          else
+            editor.findPrevious(); 
+          editor.focus();
+       }
         
         if(!!data.print){
           console.log('starting print');
