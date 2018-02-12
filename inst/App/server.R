@@ -8,7 +8,7 @@
 #---begin server--------------
 shinyServer(function(input, output,session) {
   
-source("util/exGetTag.R",               local=TRUE) # some ordinary functions :)
+source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   
 # Reactive values----------
 
@@ -126,7 +126,8 @@ source("util/exGetTag.R",               local=TRUE) # some ordinary functions :)
 
 source("leftPanel/mid/serverAce.R",                local=TRUE) 
 source("leftPanel/helpSVG.R",                      local=TRUE) 
-
+source("leftPanel/tabs/serverFileTabs.R",          local=TRUE) 
+  
 #------------------rightPanel--------------------------------
   
 

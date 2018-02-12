@@ -54,6 +54,7 @@ shinyUI(
           #-------left menu end------------
           #-------left content begin--------
           shinyFilesButton("buttonFileOpenHidden", label="", title="Open File", multiple=FALSE, 
+                           class='hiddenButton'),
           shinySaveButton("buttonFileSaveHidden", label="", 
                            title="Save as ...",  list('hidden_mime_type'=c("")) , 
                            class='hiddenButton'),
@@ -64,7 +65,7 @@ shinyUI(
                           title="Save as ...",  list('hidden_mime_type'=c("")) , 
                           class='hiddenButton'),
           absolutePanel( id='aceTabSet', top=45, left=20, width="100%", 
-              tabsetPanel( tabPanel('Unnamed'))
+              uiOutput("TopLeftTabPanel")
           ),
           absolutePanel( id='aceToobarTop1', 
               top=75, left=0, width="100%", "class"="headerPanel", draggable=FALSE, height="30px",
