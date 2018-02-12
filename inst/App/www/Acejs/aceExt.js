@@ -85,7 +85,32 @@ function PrintR(editoR){
   });
 }
 
+function previousBookMark(ed){
+                var curRow=ed.getCursorPosition().row;// getCursorPosition().row
+                if(curRow>0){
+                    var breakpoints=ed.getSession().getBreakpoints().slice(0,curRow-1);
+                    var nextRow=breakpoints.lastIndexOf('ace_breakpoint');
+                    if(nextRow>=0){
+                      //var rng=new Range(curRow,0, nextRow,0);
+                      //ed.revealRange(rng, true);
+                      ed.gotoLine(nextRow);
+                    }
+                }
+}
 
+function nextBookMark(ed){
+    var curRow=ed.getCursorPosition().row;// getCursorPosition().row
+              var breakpoints=ed.getSession().getBreakpoints().slice(curRow+1);
+              // iterate over breakpoints starting at curRow+1 and 
+              // stop and process if any
+              var nextRow=breakpoints.indexOf('ace_breakpoint');
+              if(nextRow>=0){
+                //var rng=new Range(curRow,0,curRow+1+nextRow,0);
+                //editor.revealRange(rng, true);
+                
+                ed.gotoLine(nextRow);
+              }
+}            
 
 Shiny.addCustomMessageHandler(
   "shinyAceExt",
@@ -119,17 +144,19 @@ Shiny.addCustomMessageHandler(
           ptr_HighlightedLines.push(mid); 
         }
         
-        if(!!data.toggleComment){
-          editor.toggleCommentLines();
-          editor.focus();
-        }
-        if(!!data.indentSelection){
-          editor.indent();
-          editor.focus();
-        }
-        
-        if(!!data.outdentSelection){
-          editor.getSession().outdentRows( editor.getSession().getSelection().getRange() );
+        if(!!data.tbMssg){
+          console.log('!!data.tbMssg=' + data.tbMssg);
+          if(data.tbMssg==='print'){
+             PrintR(editor);
+          }else if(data.tbMssg==='deleteAllBookMarks' ){
+            editor.getSession().clearBreakpoints();
+          }else if(data.tbMssg==='nextBookMark' ){
+            nextBookMark(editor);
+          }else if(data.tbMssg==='previousBookMark' ){
+            previousBookMark(editor);
+          } else {
+            editor.execCommand(data.tbMssg);
+          }
           editor.focus();
         }
         
@@ -152,99 +179,11 @@ Shiny.addCustomMessageHandler(
               editor.focus();
         }
         
-        if(!!data.previousBookMark){
-            //check out https://github.com/ajaxorg/ace/issues/3351
-              // get the current cursor pos
-              function previousBookMark(){
-                var curRow=editor.getCursorPosition().row;// getCursorPosition().row
-                if(curRow>0){
-                    var breakpoints=editor.getSession().getBreakpoints().slice(0,curRow-1);
-                    var nextRow=breakpoints.lastIndexOf('ace_breakpoint');
-                    if(nextRow>=0){
-                      var rng=new Range(curRow,0, nextRow,0);
-                      editor.revealRange(rng, true);
-                    }
-                }
-              }
-              previousBookMark();
-              editor.focus();
-        }
-        
-        if(!!data.findNext){
-          //data.findNext
-          // checkout /home/sup/svgRHabitat/ptRAceBldr/TrestleTech/ace/lib/ace/search_test.js:50:
-        }
-        
-       if(!!data.undo){
-          editor.getSession().getUndoManager().undo(true);
-       }
-       if(!!data.redo){
-          editor.getSession().getUndoManager().redo(true);
-       }
-       
-       if(!!data.foldAll){
-         editor.getSession().foldAll();
-       }
-       if(!!data.unfoldAll){
-         editor.getSession().unfold();
-       }
-       
-       if(!!data.find){
-         editor.execCommand("find");
-       }
-       
-       if(!!data.replace){
-         editor.execCommand("replace");
-       }
-       
-       if(!!data.goToPreviousError){
-         editor.execCommand("goToPreviousError");
-       }
-
-       if(!!data.goToNextError){
-         editor.execCommand("goToNextError");
-       }
-       if(!!data.togglerecording){
-         editor.execCommand("togglerecording");
-       }
-       if(!!data.replaymacro){
-         editor.execCommand("replaymacro");
-       }
-
-       
-       if(!!data.selectOrFindNext){
-         if (editor.selection.isEmpty())
-            editor.selection.selectWord();
-          else
-            editor.findNext(); 
-          editor.focus();
-       }
-       
-      if(!!data.selectOrFindPrevious){
-         if (editor.selection.isEmpty())
-            editor.selection.selectWord();
-          else
-            editor.findPrevious(); 
-          editor.focus();
-       }
-        
-        if(!!data.print){
-          console.log('starting print');
-          PrintR(editor);
-          editor.focus();
-        }
-        
-        if(!!data.removeAllMarkers){
-          while(ptr_HighlightedLines.length>0){
-            var highlightedLine = ptr_HighlightedLines.pop();
-            editor.getSession().removeMarker(highlightedLine);
-            editor.focus();
-          }      
-        }
         if(!!data.tabSize){
           //editor.getSession().setUseSoftTabs(true);
           editor.getSession().setTabSize( data.tabSize );
         }
+        
         if(!!data.resetElementColor){
           $.each(data.resetElementColor, function(key,element){
             var rule=getStyleRule(key);

@@ -80,6 +80,7 @@ source("util/utilTibble.R")
 source("util/utilColumnType.R")
 source("util/utilTransform.R")
 source("leftPanel/menu/buildLeftMenuUI.R")
+source("leftPanel/toolbar/buildLeftHToolBarUI.R")
 source("rightPanel/menu/buildRightMenuUI.R")
 source("leftPanel/mid/shinyAce4Ptr.R")
 
