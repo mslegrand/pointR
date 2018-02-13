@@ -56,7 +56,7 @@ getTibMatColMax<-reactive({
 #    1. serverEdtib to reset the name when the selection changes
 #    2. serveAce to reset name when we have a file->New or file->Open
 resetSelectedTibbleName<-function(tibs, name){
-  #cat("serverSelection...Entering  resetSelectedTibbleName\n")
+  cat("serverSelection...Entering  resetSelectedTibbleName\n")
       choices<-getRightPanelChoices()
       if(is.null(getTibName()) || !(getTibName() %in% choices)){
         selectedTibble$name=choices[1]
@@ -81,7 +81,7 @@ resetSelectedTibbleName<-function(tibs, name){
           selectedTibble$matCol<-matColIndex
           ptColName<- names(tib)[ptColIndex]
           selectedTibble$ptColName=ptColName 
-          selectedTibble$columnName=ptColName
+          #selectedTibble$columnName=ptColName #this is the problem!!! should not reset if newColumn,
           if(is.null(selectedTibble$selIndex) || selectedTibble$selIndex!=2){
             updateSelected( selIndex=1)
           }
@@ -89,7 +89,14 @@ resetSelectedTibbleName<-function(tibs, name){
           ptColName<-NULL
           matColIndex<-0
           selectedTibble$ptColName=ptColName 
-          selectedTibble$columnName=names(tib[1])
+          #selectedTibble$columnName=names(tib[1])
+        }
+        if(is.null(selectedTibble$columnName) || !( selectedTibble$columnName %in% names(tib) )){
+          if(!is.null(selectedTibble$ptColName)){
+            selectedTibble$columnName<-selectedTibble$ptColName
+          } else {
+            selectedTibble$columnName=names(tib[1])
+          }
         }
       }
       if( selectedTibble$name==transformTag){
@@ -137,6 +144,7 @@ updateSelected<-function( name, rowIndex, columnName, matCol,  ptColName, selInd
     selectedTibble$selIndex=selIndex
   }
   if(!missing(columnName)){
+    cat('setting columnName to ', columnName,"\n")
     selectedTibble$columnName=columnName
     if(!is.null(getColumnType()) && getColumnType()=='point'){
       selectedTibble$ptColName<-columnName
