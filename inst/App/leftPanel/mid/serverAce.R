@@ -1,5 +1,5 @@
 observeEvent(input$messageFromAce, {
-    cat('serverAce:...observe input$messageFromAce:: entering\n')
+    # cat('serverAce:...observe input$messageFromAce:: entering\n')
     if(
       length(input$messageFromAce$code)>0 &&
       length(input$messageFromAce$sender)>0
@@ -17,13 +17,11 @@ observeEvent(input$messageFromAce, {
         editOption$.saved <- !(as.numeric(input$messageFromAce$dirty) > 0)
       }
       if(request$sender %in% c('cmd.commit','cmd.openFileNow', 'cmd.saveFileNow', 'cmd.file.new', 'cmd.add.column')){
-        cat(request$sender,"\n")  
         if(request$sender %in% c('cmd.commit', 'cmd.add.column') && !is.null(getTibName())){ 
           name=getTibName()
         } else { 
           name=NULL
         }
-        cat("name=",name,"\n") 
         tibs<-getPtDefs()$tib
         resetSelectedTibbleName(tibs=tibs, name=name)
         processCommit()
@@ -80,8 +78,6 @@ observeEvent(request$sender,{
 
 # TODO!!!: rewrite
 updateSelected4Ace<-function( reqSelector){
-  cat(" reqSelector\n")
-  print(reqSelector)
   if(!is.null(reqSelector[['name']])){
     selectedTibble$name=reqSelector[['name']]
   }
@@ -96,7 +92,6 @@ updateSelected4Ace<-function( reqSelector){
 
   }
   if(!is.null(reqSelector[['columnName']])){
-    cat(" setting columnName to", reqSelector[['columnName']], "\n")
     selectedTibble$columnName=reqSelector[['columnName']]
   }
   

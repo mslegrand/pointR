@@ -46,7 +46,6 @@ getDisplayModeTag<-reactive({
 })
 
 getDisplayMode<-reactive({
-  cat("displayOptions$ptMode=",displayOptions$ptMode,"\n")
   displayOptions$ptMode
 })
 

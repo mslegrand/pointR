@@ -39,7 +39,7 @@ showPts.valTag %<c-% function(
     lapply(offRows, function(i){
       m<-pts[[i]]
       if(length(m)==0){
-        cat('m is null\n')
+        # cat('m is null\n')
         NULL
       } else {
         g( opacity=opacity[i], 
@@ -61,7 +61,7 @@ showPts.valTag %<c-% function(
       }
     }),
     if(length(mRow)==0){
-      cat('length(mRow)=0\n')
+      # cat('length(mRow)=0\n')
       NULL
     } else {
           g( opacity=opacity[rowIndex], 

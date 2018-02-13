@@ -12,8 +12,9 @@ buildRightMenu<-function(){
     ),
     menuDropdown('Display', 
                  menuDropdown('Points',
-                              menuItem('Hide Points', value='cmdHidePoints'), 
-                              menuItem('Show Points with Labels', value='cmdShowPointLabels')
+                              menuItem('Show Points without Labels', value='cmdShowPointsNoLabels'),
+                              menuItem('Show Points with Labels', value='cmdShowPointLabels'),
+                              menuItem('Hide Points', value='cmdHidePoints') 
                  ),
                  menuDropdown( 'Grid',
                                menuItem('Show Grid', value='cmdShowGrid')

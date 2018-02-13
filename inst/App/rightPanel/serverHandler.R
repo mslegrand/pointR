@@ -2,7 +2,7 @@
 getHandlerValue<-reactive({ 
   handler<-getHandler()
   if(is.null(handler)){ #NULL is default
-    cat('for column',format(getTibColumnName()),  'handler is NULL\n')
+    # cat('for column',format(getTibColumnName()),  'handler is NULL\n')
     return(NULL)
   }
   name<-getTibName()
@@ -11,7 +11,7 @@ getHandlerValue<-reactive({
   #   browser()
   # }
   hv<-request$inputHandler[[name]][[columnName]]
-  cat("handlerValue is",format(hv),"\n")
+  # cat("handlerValue is",format(hv),"\n")
   if( !is.null(hv) ){
     #return(handler)
     return(hv)
@@ -37,10 +37,10 @@ getHandler<-reactive({
   
   if(!is.null(columnValues)){
     if(is.character(columnValues) && isColorString(columnValues)){
-      cat('column is colourable\n\n')
+      # cat('column is colourable\n\n')
       return('colourable')
     } else if (isPoints(columnValues)){
-      cat('Column',colName,' is Points\n')
+      # cat('Column',colName,' is Points\n')
       return('points')
     }
   }

@@ -52,15 +52,12 @@ observe({
           rowIndex<-getTibRow()
           matColIndx<-getTibMatCol()
           # if matColMax==matColIndx, first insert new row
-          cat("getHandler()=",format( getHandler() ),"\n")
-          cat("getHandlerValue()=",format( getHandlerValue() ),"\n")
-          if(matColIndx==2){
-            #browser()
-            v<-getHandlerValue()
-            print(format(v))
-          }
-          #if(!is.null(getHandlerValue())) { browser()}
-          if(!is.null(getHandlerValue()) && matColIndx==getHandlerValue()){
+          # cat("getHandler()=",format( getHandler() ),"\n")
+          # cat("getHandlerValue()=",format( getHandlerValue() ),"\n")
+          # if(matColIndx==2){
+          #   v<-getHandlerValue()
+          # }
+          if(!is.null(getHandlerValue()) && matColIndx>=getHandlerValue()){
             # tag here
             tib<-ptDefs$tib[[selection]]
             tib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])

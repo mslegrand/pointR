@@ -77,10 +77,10 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   
   ptrDisplayScript =reactive({ 
     type=getRightMidPanel2()
-    cat("\n-------------type1=",type,"\n")
+    # cat("\n-------------type1=",type,"\n")
     if(type=='transform'){
       type=  paste0(type,".",getTransformType() )
-      cat("\n-------------type2=",type,"\n")
+      # cat("\n-------------type2=",type,"\n")
     }
     
     scripts<-list(

@@ -21,21 +21,26 @@ observeEvent(input$plotNavBar, {
   }
   
   if(cmd == 'cmdHidePoints'){
-    renameDMDM(session,  "plotNavBar", "cmdHidePoints", "Hide Points", newValue="cmdShowPoints")
+    enableDMDM(session,  menuBarId="plotNavBar", entry="cmdShowPointsNoLabels")
+    enableDMDM(session,  menuBarId="plotNavBar",  entry="cmdShowPointLabels")
+    disableDMDM(session,  menuBarId="plotNavBar",  entry="cmdHidePoints")
     setDisplayOption(ptMode='Hidden')
   }
-  if(cmd == 'cmdShowPoints'){
-    renameDMDM(session,  "plotNavBar", "cmdShowPoints", "Show Points", newValue="cmdHidePoints")
+  
+  if(cmd == 'cmdShowPointsNoLabels'){
+    disableDMDM(session,  menuBarId="plotNavBar", entry="cmdShowPointsNoLabels")
+    enableDMDM(session,  menuBarId="plotNavBar",  entry="cmdShowPointLabels")
+    enableDMDM(session,  menuBarId="plotNavBar",  entry="cmdHidePoints")
     setDisplayOption(ptMode='Normal')
   }
-  if(cmd == 'cmdHidePointLabels'){
-    renameDMDM(session,  "plotNavBar", "cmdHidePointLabels", "Hide  Labels", newValue="cmdShowPointLabels")
-    setDisplayOption(ptMode='Normal')
-  }
+  
   if(cmd == 'cmdShowPointLabels'){
-    renameDMDM(session,  "plotNavBar", "cmdShowPointLabels", "Show  Labels", newValue="cmdHidePointLabels")
+    enableDMDM(session,  menuBarId="plotNavBar", entry="cmdShowPointsNoLabels")
+    disableDMDM(session,  menuBarId="plotNavBar",  entry="cmdShowPointLabels")
+    enableDMDM(session,  menuBarId="plotNavBar",  entry="cmdHidePoints")
     setDisplayOption(ptMode='Labeled')
   }
+  
   if(cmd == 'cmdNewColumn'){
     showModal( addNewColModal() )
   }

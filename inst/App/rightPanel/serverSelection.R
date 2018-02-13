@@ -56,7 +56,7 @@ getTibMatColMax<-reactive({
 #    1. serverEdtib to reset the name when the selection changes
 #    2. serveAce to reset name when we have a file->New or file->Open
 resetSelectedTibbleName<-function(tibs, name){
-  cat("serverSelection...Entering  resetSelectedTibbleName\n")
+  # cat("serverSelection...Entering  resetSelectedTibbleName\n")
       choices<-getRightPanelChoices()
       if(is.null(getTibName()) || !(getTibName() %in% choices)){
         selectedTibble$name=choices[1]
@@ -144,7 +144,7 @@ updateSelected<-function( name, rowIndex, columnName, matCol,  ptColName, selInd
     selectedTibble$selIndex=selIndex
   }
   if(!missing(columnName)){
-    cat('setting columnName to ', columnName,"\n")
+    # cat('setting columnName to ', columnName,"\n")
     selectedTibble$columnName=columnName
     if(!is.null(getColumnType()) && getColumnType()=='point'){
       selectedTibble$ptColName<-columnName
@@ -215,13 +215,13 @@ getTibMatColChoices<-reactive({
     rtv<-NULL
   } else {1
     mc<-ncol(pts[[rowNum]])
-    cat('length(mc)=',length(mc),'\n')
-    cat('mc=',mc,'\n')
+    # cat('length(mc)=',length(mc),'\n')
+    # cat('mc=',mc,'\n')
     if(mc>0){
-      cat('mc=',mc,'\n')
+      # cat('mc=',mc,'\n')
       rtv<-1:mc
     } else {
-      cat('mc=0\n')
+      # cat('mc=0\n')
       rtv<-0
     }
   }

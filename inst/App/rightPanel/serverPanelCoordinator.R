@@ -73,7 +73,6 @@ getColumnType<-reactive({
     }
     if(is.character(columnValues)){
       if( isColorString(columnValues)){
-        cat('column is colourable\n\n')
         return('colourable')
       } else {
         return('character')

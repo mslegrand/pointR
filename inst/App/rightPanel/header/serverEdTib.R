@@ -52,10 +52,10 @@ observeEvent(returnValue4ModuleEdTib$transformType(),{
 # if moduleEdTib changes the rowIndex,  matCol in selectedTibble needs to be updated
 observeEvent(returnValue4ModuleEdTib$rowIndex(),{
   if( getTibEditState()==TRUE && !is.null(getTibRow()) ){
-    cat("serverEdTib::...Entering----- returnValue4ModuleEdTib$rowIndex()\n")
+    # cat("serverEdTib::...Entering----- returnValue4ModuleEdTib$rowIndex()\n")
     rowIndex<-returnValue4ModuleEdTib$rowIndex()
     if(rowIndex==getTibRow()){ return(NULL) } #bail if moduleEdTib did not change rowIndex 
-    cat("serverEdTib::...rowIndex=",rowIndex,"\n")
+    # cat("serverEdTib::...rowIndex=",rowIndex,"\n")
     # moduleEdTib changed rowIndex
     # extract row, column entry from tib
     name<-returnValue4ModuleEdTib$name()
@@ -71,7 +71,7 @@ observeEvent(returnValue4ModuleEdTib$rowIndex(),{
         updateSelected(name=name, row=rowIndex)
       }
     }
-    cat("serverEdTib::...Exiting----- returnValue4ModuleEdTib$rowIndex()\n")
+    # cat("serverEdTib::...Exiting----- returnValue4ModuleEdTib$rowIndex()\n")
   }
 })
 
@@ -143,11 +143,11 @@ observeEvent(returnValue4ModuleEdTib$entryValue(),{
         if(length(which(entry==c('point','matrix')) )==0){
           stop('entry null')
         }
-        cat("serverEdTib::...entry:    ", entry ,"\n")
+        # cat("serverEdTib::...entry:    ", entry ,"\n")
         updateSelected( selIndex = which(entry==c('point','matrix')) )
       }
     }
-    cat("serverEdTib::...Exiting:    returnValue4ModuleEdTib$entryValue()\n")
+    # cat("serverEdTib::...Exiting:    returnValue4ModuleEdTib$entryValue()\n")
   } 
 },label='EdTib-rtv-entryValue')
 
