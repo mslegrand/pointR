@@ -160,6 +160,7 @@ Shiny.addCustomMessageHandler(
           editor.focus();
         }
         
+        /*
         if(!!data.tbDeleteAllBookMarks){
           editor.getSession().clearBreakpoints();
         }
@@ -178,6 +179,7 @@ Shiny.addCustomMessageHandler(
               }
               editor.focus();
         }
+        */
         
         if(!!data.tabSize){
           //editor.getSession().setUseSoftTabs(true);
@@ -338,9 +340,10 @@ Shiny.addCustomMessageHandler(
         //----------------------------
         
         if(!!data.setValue){
+          
+          /*
           console.log('data.setValue');
           console.log(JSON.stringify(data.setValue));
-          /*
           console.log('getValue fin: editor.getSession().getUndoManager()$undoStack.length=' + 
                 editor.getSession().getUndoManager().$undoStack.length);
           console.log('getValue fin: editor.getUndoManager()getSession().$ok=' + 
@@ -364,7 +367,9 @@ Shiny.addCustomMessageHandler(
           console.log('setValue fin: sender=' + data.sender); 
           console.log(data.sender);
           */
-          
+          if(['cmd.openFileNow','cmd.file.new'].indexOf(sender)>=0){
+            editor.getSession().clearBreakpoints();
+          }
           Shiny.onInputChange('messageFromAce', 
           {
              code : editor.getSession().getValue(),
