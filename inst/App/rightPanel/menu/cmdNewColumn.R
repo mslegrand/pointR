@@ -21,11 +21,11 @@ addNewColModal <- function(errMssg=NULL) {
 observeEvent(input$commitNewCol, {
     #checks 
     if(!grepl(pattern = "^[[:alpha:]]", input$modalAttrName)){ # check name syntax
-      showModal(attrValueModal( errMssg="Invalid Column Name: must begin with a character") )
+      showModal(addNewColModal( errMssg="Invalid Column Name: must begin with a character") )
     } else if( input$modalAttrName %in% names(getTib()) ){ # check name uniqueness
-      showModal(attrValueModal( errMssg="Invalid Column Name: this name is already taken!") )
+      showModal(addNewColModal( errMssg="Invalid Column Name: this name is already taken!") )
     } else if(!grepl(pattern = "^[[:graph:]]", input$modalAttrValue) ){  # check value uniqueness
-      showModal(attrValueModal( errMssg="Invalid Column Value: must begin with printable character other than space") )
+      showModal(addNewColModal( errMssg="Invalid Column Value: must begin with printable character other than space") )
     } else { 
       #add name to tib
       newPtDefs<-getPtDefs()
@@ -38,7 +38,7 @@ observeEvent(input$commitNewCol, {
       newPtDefs$tib[[getTibName()]]<-add_column(newPtDefs$tib[[getTibName()]], 
                                                 !!(newColName):=newVal   )     
       # updateAce and set selection to this column
-      sender<-'addNewColumn'
+      sender<-'cmd.add.column'
       updateAceExtDef(newPtDefs, sender=sender, selector=list( columnName = newColName   ) )
       
       removeModal() #close dialog
