@@ -56,11 +56,15 @@ getTibMatColMax<-reactive({
 #    1. serverEdtib to reset the name when the selection changes
 #    2. serveAce to reset name when we have a file->New or file->Open
 resetSelectedTibbleName<-function(tibs, name){
-  # cat("serverSelection...Entering  resetSelectedTibbleName\n")
+   #cat("serverSelection...Entering  resetSelectedTibbleName\n")
       choices<-getRightPanelChoices()
-      if(is.null(getTibName()) || !(getTibName() %in% choices)){
-        selectedTibble$name=choices[1]
+      if(is.null(name) || !(name %in% choices)){
+        name<-getTibName()
       }
+      if(is.null(getTibName()) || !(getTibName() %in% choices)){
+        name=choices[1]
+      }
+      selectedTibble$name=name
       if(is.null(tibs) ){
         selectedTibble$rowIndex=NULL
         selectedTibble$ptColName=NULL
