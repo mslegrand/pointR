@@ -52,7 +52,8 @@ list.entry.at.index<-function(ll, indx){
 # }
 
 
-r_pkgs<-c('shiny','shinyjs', 'R.utils', 'svgR', 'shinyAce', 'stringr', 'jsonlite', 'shinyDMDMenu', 'shinyFiles', 'shinythemes', 'colourpicker', 'shinyWidgets', 'bsplus')
+r_pkgs<-c('shiny','shinyjs', 'R.utils', 'svgR', 'shinyAce', 'stringr', 'jsonlite', 'shinyDMDMenu', 'shinyFiles', 'shinythemes', 'colourpicker', 'shinyWidgets', 'bsplus',
+          'shinyjqui')
 sapply(r_pkgs, library, character.only=TRUE)
 
 
@@ -62,6 +63,7 @@ sapply(r_pkgs, library, character.only=TRUE)
 defTag<-"ptR"
 transformTag<-"Transforms"
 logTag<-"logPanel"
+svgTag<-'svgPanel'
 
 getSVGWH<-function(){ c(650,620)} #this should be ultimately place in another file
 

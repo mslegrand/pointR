@@ -79,8 +79,9 @@ observeEvent( editOption$recentFiles ,{
     # 2 make dropdown containing menuItems for each recentFile 
     label="Recent Files"
     menuValues<-paste("recent",files, sep="-")
-    items<-lapply(1:N, function(i){
-      menuItem( label=menuLabels[i], value=menuValues[i])
+   
+    items<-lapply(1:N, function(i){ 
+      shinyDMDMenu::menuItem( label=menuLabels[i], value=menuValues[i])
     } )
     
     submenu=

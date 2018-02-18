@@ -40,7 +40,7 @@ overflow: hidden;
   margin: 0;
 }
 .cSvgHtml{
-  top:135px; 
+  top:140px; 
   left:5px; 
   right:5px;  
   bottom:40px;
@@ -88,7 +88,9 @@ overflow: hidden;
 .headerPanel{
 background-color: #8888AA; 
 border-color: #88AAAA; 
-top:30px; 
+top:75px; 
+height: 70px;
+width: 100%;
 left:0; 
 padding-top: 0; 
 padding-bottom: 0; 
@@ -98,7 +100,6 @@ width:100%;
 overflow: hidden;
 display: inline-block;
 }
-
 .controlBackPanel{
 background-color: #8888AA; 
 border-color: #88AAAA; 
@@ -113,9 +114,38 @@ display: inline-block;
 overflow: hidden;
 }
 .nav-tabs>li.active>a{
+background-color: #111122; 
+font-weight: bold;
+color: #44ffff; 
+}
+.nav-tabs>li>a{
 background-color: #222244; 
 color: #00ffff; 
-  
+}
+.selectize-input{
+overflow-y: auto;
+}
+.radio-bs label{
+  color: #00ffff;
+}
+.ptR2 .selectize-input,  
+.ptR2 .selectize-input input,
+.ptR2 .selectize-control.single { 
+  height: 33px;
+  font-size: 14px;
+  background-color: #222244;
+  color: #00ffff; 
+}
+.ptR2 .selectize-dropdown { 
+  font-size: 12px;  
+  line-height: 12px;
+  background-color: #22AAAA; 
+  padding: 2px;
+}
+.ptR2 .selectize-input.full {
+   background: url(http://i62.tinypic.com/15xvbd5.png) no-repeat 96% 0;
+   height: 33px;
+   overflow: hidden;
 }
 
 

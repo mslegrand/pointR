@@ -108,17 +108,17 @@ observeEvent(returnValue4ModuleEdTib$columnName(),{
 
 observeEvent(returnValue4ModuleEdTib$entryValue(),{
   if( getTibEditState()==TRUE ){
-    #cat("serverEdTib::...Entering----- returnValue4ModuleEdTib$entryValue()\n")
+    cat("serverEdTib::...Entering----- returnValue4ModuleEdTib$entryValue()\n")
     # assuming tib is uptodate, simply work on the existing tib
     name<- returnValue4ModuleEdTib$name()
-    #cat('serverEdTib::...name=', name,"\n")
+    cat('serverEdTib::...name=', name,"\n")
     entry<-name %AND% returnValue4ModuleEdTib$entryValue()
-    # cat('serverEdTib::...entry=', entry,"\n")
+    cat('serverEdTib::...entry=', entry,"\n")
     # print(returnValue4ModuleEdTib$entryValue())
-    row= entry %AND% returnValue4ModuleEdTib$rowIndex()
-    # cat('serverEdTib::row=', row,"\n")
-    columnName<-row %AND% returnValue4ModuleEdTib$columnName()
-    #cat('serverEdTib::...columnName=', columnName,"\n")
+    row= getTibRow() # entry %AND% returnValue4ModuleEdTib$rowIndex()
+    cat('serverEdTib::row=', row,"\n")
+    columnName<-getTibColumnName() #row %AND% returnValue4ModuleEdTib$columnName()
+    cat('serverEdTib::...columnName=', columnName,"\n")
     if(!is.null(columnName) && nchar(entry) &&
        !is.null(getTibColumnName()) && columnName==getTibColumnName()){
       
@@ -143,11 +143,11 @@ observeEvent(returnValue4ModuleEdTib$entryValue(),{
         if(length(which(entry==c('point','matrix')) )==0){
           stop('entry null')
         }
-        # cat("serverEdTib::...entry:    ", entry ,"\n")
+        cat("serverEdTib::...entry:    ", entry ,"\n")
         updateSelected( selIndex = which(entry==c('point','matrix')) )
       }
     }
-    # cat("serverEdTib::...Exiting:    returnValue4ModuleEdTib$entryValue()\n")
+    cat("serverEdTib::...Exiting:    returnValue4ModuleEdTib$entryValue()\n")
   } 
 },label='EdTib-rtv-entryValue')
 

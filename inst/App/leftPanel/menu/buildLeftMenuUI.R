@@ -6,48 +6,48 @@ buildLeftMenu<-function(version){
     menuBarId="editNavBar",
     menuDropdown(
       "File", 
-      menuItem("New"),
-      menuItem("Open"),
+      shinyDMDMenu::menuItem("New"),
+      shinyDMDMenu::menuItem("Open"),
       menuDropdown("Recent Files"),
       menuDivider(),
-      menuItem("Save"),
-      menuItem("Save As...", value="saveAs"),
-      menuItem("Export as SVG"),
+      shinyDMDMenu::menuItem("Save"),
+      shinyDMDMenu::menuItem("Save As...", value="saveAs"),
+      shinyDMDMenu::menuItem("Export as SVG"),
       menuDivider(),
-      menuItem("Quit", value="quit")
+      shinyDMDMenu::menuItem("Quit", value="quit")
     ),
     # menuDropdown('Tibble',
-    #              menuItem('New Tibble', value='cmdNewTibble'),
-    #              menuItem('Rename Tibble', value='cmdRenameTibble'),
-    #              menuItem('Delete Tibble', value='cmdDeleteTibble')
+    #              shinyDMDMenu::menuItem('New Tibble', value='cmdNewTibble'),
+    #              shinyDMDMenu::menuItem('Rename Tibble', value='cmdRenameTibble'),
+    #              shinyDMDMenu::menuItem('Delete Tibble', value='cmdDeleteTibble')
     # ),
     menuDropdown(
       'Configure',
       menuDropdown(
         "Editor Options", 
-        menuItem("Theme" ),
-        menuItem("Font Size"), 
-        menuItem("Adjust Tabs",       value="adjustTabs"),
-        menuItem("Show White Space"),
-        menuItem(defaultOpts$tabType)
+        shinyDMDMenu::menuItem("Theme" ),
+        shinyDMDMenu::menuItem("Font Size"), 
+        shinyDMDMenu::menuItem("Adjust Tabs",       value="adjustTabs"),
+        shinyDMDMenu::menuItem("Show White Space"),
+        shinyDMDMenu::menuItem(defaultOpts$tabType)
       ),
       menuDropdown(
         "Snippets",
-        menuItem("Import", value="importSnippetFile"),
-        menuItem("Disable")
+        shinyDMDMenu::menuItem("Import", value="importSnippetFile"),
+        shinyDMDMenu::menuItem("Disable")
       )
     ),
     menuDropdown(
       "Help",
-      menuItem("Editor ShortCuts"),
-      menuItem("Element Reference"),
+      shinyDMDMenu::menuItem("Editor ShortCuts"),
+      shinyDMDMenu::menuItem("Element Reference"),
       menuDropdown(
         "Useful Links", 
-        menuItem(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/User_Guide.html\"  target=\"_blank\" >svgR User Guide </a></li>")),
-        menuItem(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/\"  target=\"_blank\" >io.svgR</a></li>")),
-        menuItem(HTML("<li><a  href=\"https://www.w3.org/TR/SVG/intro.html\"  target=\"_blank\" >W3C SVG reference</a></li>"))
+        shinyDMDMenu::menuItem(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/User_Guide.html\"  target=\"_blank\" >svgR User Guide </a></li>")),
+        shinyDMDMenu::menuItem(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/\"  target=\"_blank\" >io.svgR</a></li>")),
+        shinyDMDMenu::menuItem(HTML("<li><a  href=\"https://www.w3.org/TR/SVG/intro.html\"  target=\"_blank\" >W3C SVG reference</a></li>"))
       ),
-      menuItem("About", value="aboutCmd")
+      shinyDMDMenu::menuItem("About", value="aboutCmd")
     )
   )
 }

@@ -39,7 +39,7 @@ shinyUI(
     div(
       
       class="split-pane vertical-percent",
-      useShinyjs(debug = FALSE),
+      useShinyjs(debug = TRUE),
       extendShinyjs(script="www/menuHelper.js"), #appears that only close window is used!
       
       #-------------left panel begin--------------------------------------------------
@@ -96,7 +96,10 @@ shinyUI(
                actionButton("commit", label = "COMMIT EDIT") %>% bs_embed_tooltip(title = "Commit code changes")
              ),
              absolutePanel( left=150, bottom=-10,
-               checkboxInput('useTribble', 'display as tribble', value = TRUE, width = NULL)
+               #checkboxInput('useTribble', 'display as tribble', value = TRUE, width = NULL)
+               awesomeRadio('useTribble', 'Style:', choices=c('Tribble','Tibble'),
+                                    selected = "Tribble", 
+                                    inline = TRUE, status='success')
              )
           )
           #-------left content end--------
@@ -114,13 +117,10 @@ shinyUI(
         class="split-pane-component",  #right panel
         #---right bootstrap page begin--------------
         bootstrapPage(
-          #----------begin right menu
           buildRightMenu(),
-          #----------end right menu
-          
-          #--------begin right content
           uiOutput("BottomRightPanel"),
           uiOutput("TopRightPanel"),
+          #moduleEdTibUI("tagValBar", input, output),
           br(),
           uiOutput("MidRightPanel")
         ) #-----right bootstrap page end----------

@@ -195,7 +195,7 @@ getTibEntryChoices<-reactive({
   tib<-name %AND% getPtDefs()$tib[[name]]
   columnValues<- columnName %AND% tib[[columnName]]
 
-  columnValues <-columnValues %AND% as.list(columnValues)
+  columnValues <-columnValues %AND%  as.list(columnValues)
   columnValues
 })
 
