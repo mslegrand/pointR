@@ -57,29 +57,45 @@ getNameType<-reactive({
 })
 
 #returns the type of column, which can be 'point', 'list', 'numeric', 'colourable', 'value'
+# would like to extend: list-numeric-pairs, list-character, 'numeric-int', 'numeric-pos', 'numeric-real',
+# 'numeric-range'
+
+# currently we only use getColumnType in 
+#   1. getPlotState
+#   2. undateSelected
+#   3. getTibEntry, getTibEntryChoices
+# and use it only for whether or not the column is a 'points' column.
 getColumnType<-reactive({
   colName<-getTibColumnName()
   columnValues<-getTib()[[colName]]
   if(!is.null(columnValues)){
-    if( is.list(columnValues) ){
-      if(all(sapply(columnValues, function(m){ is.matrix(m) && dim(m)[1]==2}))){
-        return('point')
-      } else {
-        return('list')
-      }
-    }
-    if(is.numeric(columnValues)){
-      return('numeric')
-    }
-    if(is.character(columnValues)){
-      if( isColorString(columnValues)){
-        return('colourable')
-      } else {
-        return('character')
-      }
-    } else {
-      return('value')
-    }
+    cat("getColumnType=",format(extractColType(columnValues)),"\n")
+    return(extractColType(columnValues))
+    # if( is.list(columnValues) ){
+    #   if(all(sapply(columnValues, function(m){ is.matrix(m) && dim(m)[1]==2}))){
+    #     return('point')
+    #   } else {
+    #     #//check if pair of numeric
+    #     #//check if
+    #     return('list')
+    #   }
+    # }
+    # if(is.numeric(columnValues)){
+    #   # check if all nums are ints
+    #   # check if all nums are pos
+    #   # check if all nums  in [0,1]
+    #   # angle???
+    #   return('numeric')
+    # }
+    # if(is.character(columnValues)){
+    #   if( isColorString(columnValues)){
+    #     return('colourable')
+    #   } else {
+    #     return('character')
+    #   }
+    # } else {
+    #   return('value')
+    # }
   }
   return(NULL)
 })

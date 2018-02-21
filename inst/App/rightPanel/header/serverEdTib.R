@@ -19,10 +19,20 @@ returnValue4ModuleEdTib<-callModule(
   getTibEntryChoices=reactive({     if( getTibEditState()==TRUE ){ getTibEntryChoices() } else { NULL } }),
   getTransformType=getTransformType,
   getTibEditState=getTibEditState,
-  getHandler=reactive({  if( getTibEditState()==TRUE ){ getHandler() } else { NULL } }),
-  getHandlerValue=getHandlerValue #reactive({  if( getTibEditState()==TRUE ){ getHandlerValue() } else { NULL } })
+  getWidgetChoices=getWidgetChoices,
+  getWidget=getWidget #reactive({  if( getTibEditState()==TRUE ){ getHandlerValue() } else { NULL } })
 )
 
+
+getSafeSelection<-function(selection, choices){
+  if(is.null(choices)){
+    return(NULL)
+  }
+  if(is.null(selection) || !(selection %in% choices)){
+    selection<-unlist(choices)[1]
+  }
+  selection
+}
 
 #name
 observeEvent(returnValue4ModuleEdTib$name(),{
@@ -37,6 +47,14 @@ observeEvent(returnValue4ModuleEdTib$name(),{
       tibs<-getPtDefs()$tib
       resetSelectedTibbleName(tibs=tibs, name=name)
     }
+})
+
+observeEvent(returnValue4ModuleEdTib$selectedWidget(), {
+  cat("-----------returnValue4ModuleEdTib$selectedWidget\n")
+  if( getTibEditState()==TRUE && !is.null(returnValue4ModuleEdTib$selectedWidget)){
+    cat("returnValue4ModuleEdTib$selectedWidget= ",format(returnValue4ModuleEdTib$selectedWidget() ),"\n")
+    updateWidgetChoicesRow( selectedWidget=returnValue4ModuleEdTib$selectedWidget())
+  }
 })
 
 observeEvent(returnValue4ModuleEdTib$transformType(),{
@@ -109,6 +127,11 @@ observeEvent(returnValue4ModuleEdTib$columnName(),{
 observeEvent(returnValue4ModuleEdTib$entryValue(),{
   if( getTibEditState()==TRUE ){
     cat("serverEdTib::...Entering----- returnValue4ModuleEdTib$entryValue()\n")
+    
+    # if(getColumnType()=='point'){
+    #   
+    # }
+    
     # assuming tib is uptodate, simply work on the existing tib
     name<- returnValue4ModuleEdTib$name()
     cat('serverEdTib::...name=', name,"\n")

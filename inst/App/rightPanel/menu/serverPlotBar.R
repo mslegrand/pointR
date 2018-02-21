@@ -47,6 +47,7 @@ observeEvent(input$plotNavBar, {
   if(cmd == 'cmdSetMatColMax'){
     columnName<-getTibColumnName()
     currentValue<-getHandlerValue()
+    currentValue<-getColMax()
     showModal( setMatColMaxModal(columnName, currentValue) )
   }
   if(cmd == 'cmdDeleteColumn'){

@@ -13,7 +13,10 @@ selectedTibble <- reactiveValues(
 )
 
 
-getSelIndex<-reactive({selectedTibble$selIndex})
+getSelIndex<-reactive({
+  cat('selectedIndex=',format(selectedTibble$selectedIndex),"\n");
+  selectedTibble$selIndex
+})
 getTibName<-reactive({selectedTibble$name}) #allow to be null only if tib is null  
 getTibColumnName<-reactive({ selectedTibble$columnName })
 getTib<-reactive({ getTibName() %AND% getPtDefs()$tib[[ getTibName() ]] })
@@ -167,6 +170,7 @@ getTibColumnNameChoices<-reactive({
 
 getTibEntry<-reactive({
   if( !is.null(getColumnType()) && getColumnType()=='point'){
+    cat("getTibEntry=",format(c('point','matrix')[getSelIndex()]),"\n")
     return( c('point','matrix')[getSelIndex()] )
   } 
   name<-getTibName()

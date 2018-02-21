@@ -13,22 +13,22 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
 # Reactive values----------
 
   #-- hidden output
-  output$handler<-reactive({
-    rtv<-getHandler()
-    if(is.null(rtv)){
-      rtv<-'default'
-    }
-    rtv
-  })
-  outputOptions(output, "handler", suspendWhenHidden=FALSE)
-  output$handlerValue<-reactive({
-    rtv<-getHandlerValue()
-    if(is.null(rtv)){
-      rtv<-'default'
-    }
-    rtv
-  })
-  outputOptions(output, "handlerValue", suspendWhenHidden=FALSE)
+  # output$handler<-reactive({
+  #   rtv<-getHandler()
+  #   if(is.null(rtv)){
+  #     rtv<-'default'
+  #   }
+  #   rtv
+  # })
+  # outputOptions(output, "handler", suspendWhenHidden=FALSE)
+  # output$handlerValue<-reactive({
+  #   rtv<-getHandlerValue()
+  #   if(is.null(rtv)){
+  #     rtv<-'default'
+  #   }
+  #   rtv
+  # })
+  # outputOptions(output, "handlerValue", suspendWhenHidden=FALSE)
   
   
   request<-reactiveValues(
@@ -143,11 +143,11 @@ source("rightPanel/menu/cmdNewColumn.R",           local=TRUE)
 source("rightPanel/menu/cmdSetMatColMax.R",        local=TRUE)
 source("rightPanel/menu/cmdDeleteColumn.R",        local=TRUE)
 source("rightPanel/menu/serverPlotBar.R",          local=TRUE)
-  source("rightPanel/serverPanelCoordinator.R",      local=TRUE)
-  source("rightPanel/serverOptions.R",               local=TRUE) 
-  source("rightPanel/serverHandler.R",               local=TRUE)
-  source("rightPanel/serverDisplayOptions.R",        local=TRUE)
-  source("rightPanel/serverSelection.R",             local=TRUE)  
+source("rightPanel/serverPanelCoordinator.R",      local=TRUE)
+source("rightPanel/serverOptions.R",               local=TRUE) 
+source("rightPanel/serverHandler.R",               local=TRUE)
+source("rightPanel/serverDisplayOptions.R",        local=TRUE)
+source("rightPanel/serverSelection.R",             local=TRUE)  
 #---------------leftPanel--------------------------
   
 

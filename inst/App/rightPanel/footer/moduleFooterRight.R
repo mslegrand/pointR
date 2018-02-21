@@ -9,9 +9,9 @@ moduleFooterRightUI<-function(id, input, output) {
 
 moduleFooterRight<-function(input, output, session, 
                       getTibEditState,
-                      getPanelState,
-                      getHandler,
-                      getHandlerValue
+                      getPanelState #,
+                      # getHandler,
+                      # getHandlerValue
                       
 ){
   
@@ -33,10 +33,10 @@ moduleFooterRight<-function(input, output, session,
             actionButton(session$ns("tagMoveDown"), label = "Send  Down")
           )
         } else if (footerPanelState=='value'){
-          if( !is.null(getHandler() ) && getHandler()=='colourable'){
-            value<-!is.null( getHandlerValue() ) && getHandlerValue()=='colourable'
-            checkboxInput(session$ns("useColourPalette"), label = "Use colour palette", value=value)
-          }
+          # if( !is.null(getHandler() ) && getHandler()=='colourable'){
+          #   value<-!is.null( getHandlerValue() ) && getHandlerValue()=='colourable'
+          #   checkboxInput(session$ns("useColourPalette"), label = "Use colour palette", value=value)
+          # }
         }
     } else {
       NULL

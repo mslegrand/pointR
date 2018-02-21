@@ -19,7 +19,10 @@ moduleEdTibUI<-function(id, input, output) {
     #---button
     
     absolutePanel(top= top0, left=left0,
-                  actionButton(ns("newAssetsButton"), span(class='icon-plus'," Assets"), width=wid0)
+                  div( 'class'="ptRBtn2",
+                    actionButton(ns("newAssetsButton"), span(class='icon-plus'," Assets"), width=wid0+20)
+                  )
+                  
     ),
     #chooser
     absolutePanel(top= top0, left=left,  right=10,  
@@ -34,55 +37,24 @@ moduleEdTibUI<-function(id, input, output) {
       #---column
         #---add column button---
         absolutePanel(top= top1, left=left0,
-                      actionButton(ns("newColumnButton"), span(class='icon-plus'," Columns"), width=wid0)
+            div( 'class'="ptRBtn2",
+                      actionButton(ns("newColumnButton"), span(class='icon-plus'," Variables"), width=wid0+20)
+            )
         ),
         #---chooser
         absolutePanel( top=top1, left=left,  right=10,
           uiOutput(ns("columnUI"))
         ),
-        #---add entry button---
-        # absolutePanel(top= top2, left=left0,
-        #               actionButton(ns("newColumnEntryButton"), span(class='icon-plus'," Entries"), width=wid0)
-        # ),
+    #---add entry selection---
     absolutePanel(top= top2, left=left0, 
-        div( "class"='ptR2',
-              # tags$style(type='text/css',  
-              #     ".selectize-input,  
-              #     .selectize-input input,
-              #     .selectize-control.single, 
-              #     .selectize-input.input-active, 
-              #     .selectize-input.full    
-              #     { font-size: 12px; line-height: 8px;  background-color: #222244; color: #00ffff; padding:0; width: 110px;}
-              #         .selectize-dropdown { font-size: 12px; line-height: 12px; background-color: #44aaaa; }
-              #             .selectize-input.full {
-              #               background: url(http://i62.tinypic.com/15xvbd5.png) no-repeat 96% 0;
-              #               height: 20px;
-              #               width: 110px;
-              #               overflow: hidden;
-              #             }
-              #           "),
-                  selectInput(ns("columnEntryType"), label=NULL,
-                              choices=c('radio', 'select'), width=110)
-        )
-                              #span(class='icon-plus'," Entries"), width=wid0)
+                  uiOutput(ns("widgetChooserUI"))
     )),
-      
-        # absolutePanel(top= top2, left=left0,
-        #               actionButton(ns("newColumnEntryButton"), span(class='icon-plus'," Entries"), width=wid0)
-        # ),
       #---columnEntries
         #---entry chooser
         absolutePanel( top=top2, left=left,  right=10,
                        uiOutput(ns("colEntryUI"))
         ),
    #),
-    
-    # ---name input --- #(always visible) 
-    # absolutePanel( top=top, left=15 ,style="display:inline-block",
-    #   selectizeInput( ns("name"), "Data", choices=list(),  selected=NULL, 
-    #     width= '120px' 
-    #   )
-    # ),
     
     #---transform content---#   display only if selected name is transform
     conditionalPanel( condition = sprintf("input['%s'] == '%s'", ns("name"), transformTag),
@@ -142,8 +114,8 @@ moduleEdTib<-function(input, output, session,
   getTibEntryChoices, 
   getTibEditState,
   getTransformType,
-  getHandler,
-  getHandlerValue
+  getWidgetChoices,
+  getWidget
 ){
   ns <- session$ns
 
@@ -160,6 +132,7 @@ moduleEdTib<-function(input, output, session,
                         justified=TRUE)
     }
   })
+  
   output$columnUI<-renderUI({
     if( getTibEditState()==TRUE ){
       if(!is.null(getColumnName()) && !is.null(getColumnNameChoices())){ 
@@ -171,33 +144,61 @@ moduleEdTib<-function(input, output, session,
     } 
   })
 
+  output$widgetChooserUI<-renderUI({ #widgetChoice
+    if( getTibEditState()==TRUE ){
+      #choices=c('radio', 'select')
+  ### TODO!!! get column entries, then colEntryType, from which we get handlerChoices
+  ### if handler has a choice, use it ow. default to ...
+  ### 
+      choices<-getWidgetChoices()
+      widget<-getWidget()
+  # choices come from 
+      if( !is.null(choices ) && !is.null(widget)){
+        div( "class"='ptR2',
+           selectInput(ns("selectedWidget"), label=NULL,
+                       choices=choices, selected=widget, width=110)
+        )  
+      }
+    }
+  })
+  
   output$colEntryUI<-renderUI({
     if( getTibEditState()==TRUE ){
-      
-      if(!is.null(getTibEntry()) && !is.null(getTibEntryChoices())){ handlerValue<-getHandlerValue()
-            selected<-getTibEntry()
-            choices<-unique(unlist(getTibEntryChoices()))
-            #print(choices)
-            # if( length(choices)!=2 || !all.equal(choices, c('point', 'matrix')) ){
-            #   choices<-c("New Entry",choices)
-            # }
+      widget<-getWidget()
+      cat('colEntryUI widget=', format(widget),"\n")
+      if(!is.null(widget) && !is.null(getTibEntry()) && !is.null(getTibEntryChoices())){ 
+            #handlerValue<-getHandlerValue()
             
-            if(input$columnEntryType=='radio'){
+            cat("output$colEntryUI: widget=",format(widget),"\n")
+            selected<-getTibEntry()
+            cat("output$colEntryUI:selected=",format(selected),"\n")
+            choices<-unique(unlist(getTibEntryChoices()))
+            cat('output$colEntryUI:choices=',format(choices),"\n")
+            if(widget=='radio'){
               radioGroupButtons(inputId=ns("columnEntryRadio"), 
-                          choices=as.list(choices), 
-                          selected=getTibEntry() ,
+                          choices=choices, 
+                          selected=selected,
                           justified=TRUE
               )
-            } else if (input$columnEntryType=='select'){
-              # textInputAddon(inputId = ns('columnEntryText'), label = NULL, 
-              #                placeholder = selected, addon = span(class="icon-edit"))
+            } else if (widget=='picker'){
               div( "class"="ptR2", width='800px',
                 selectizeInput(ns("entryValue"), label=NULL,
                              choices=choices, selected=selected, 
                              options = list(create = TRUE, allowEmptyOption=FALSE, maxItems=1)
+                )
               )
+            } else if(widget=='colourable') {
+              colourInput(
+                ns("entryColour"), label=NULL, value=selected
               )
-              
+            } else if(widget=='numeric'){
+              numericInput(
+                ns('entryNumeric'), label = NULL, min=1, max = 100, value = as.numeric(selected)
+              )
+            } else if(widget=='slider'){
+              sliderInput(
+                inputId=ns("entrySlider"),label = NULL, min=1,max = 100, value = as.numeric(selected)
+              )
             }
             
       }
@@ -217,38 +218,22 @@ moduleEdTib<-function(input, output, session,
     }
   })
   
-  observeEvent(input$newColumnEntryButton,{
-    #jqui_draggable(selector= paste0('#', ns('newChoiceXX')))
-    # toggle output$colEntryUI edit state to output editbox
-    entry$picker='textBox'
-    #todo:
-    #1. set focus to newChoiceXX
-    #cat(ns("newColumnEntryButton"),"\n")
-    #hide(ns("newAssetsButton"))
-    session$sendCustomMessage(
-      type = "ptRManager",
-      list(setFocus=ns('columnEntryText'), hide=ns("newColumnEntryButton") )
-      #list(setFocus=ns('colEntryUI') )
-    )
-    #2. add ok/cancel buttons or on blur/ cancelbutton to set
-    #3. set width?
-  })
-  
-  output$editEntryUI<-renderUI({
-    handlerValue<-getHandlerValue()
-    selected<-getTibEntry()
-    choices<-getTibEntryChoices()
-    if(!is.null(handlerValue) && handlerValue=='colourable'){
-       colourInput(
-        ns("entryColour"), label='Choose Colour', value=selected
-      )
-    } else {
-      selectizeInput(ns("entryValue"), label='Value',
-           choices=choices, selected=selected, width="200px",
-           options = list(create = TRUE, allowEmptyOption=FALSE, maxItems=1)
-      )
-    }
-  })
+  # output$editEntryUI<-renderUI({
+  #   handlerValue<-getHandlerValue()
+  #   widget<-getWidget()
+  #   selected<-getTibEntry()
+  #   choices<-getTibEntryChoices()
+  #   if(!is.null(handlerValue) && handlerValue=='colourable'){
+  #      colourInput(
+  #       ns("entryColour"), label='Choose Colour', value=selected
+  #     )
+  #   } else {
+  #     selectizeInput(ns("entryValue"), label='Value',
+  #          choices=choices, selected=selected, width="200px",
+  #          options = list(create = TRUE, allowEmptyOption=FALSE, maxItems=1)
+  #     )
+  #   }
+  # })
   
 
   
@@ -256,9 +241,6 @@ moduleEdTib<-function(input, output, session,
   observeEvent(c( name(), nameChoices() ), { #update the name 
     if(length(nameChoices())==0){ #name choices
     } else {
-      # updateSelectizeInput(session, "name", 
-      #                   choices=nameChoices(), 
-      #                   selected=name())
       updateRadioGroupButtons(session, inputId=ns("name" ),
         choices=nameChoices(), selected=name()
       )
@@ -305,35 +287,40 @@ moduleEdTib<-function(input, output, session,
   observeEvent( input$columnEntryRadio ,{
     val<- input$columnEntryRadio
     if(!is.null(val) && nchar(val)>0){
-        cat("ModuleEdTib::...---------- entering input$columnEntryRadio--------\n")
-        cat("ModuleEdTib::...----------val=<",val,">\n")
-        print(val)
         entry$result<-val
-        # cat("\nModuleEdTib::...----------returning entry$result=", entry$result,"\n")
-        # cat("ModuleEdTib::...---------- exiting input$entryValue--------\n")
     }
   })
   
   observeEvent( input$entryValue, {
     val<-input$entryValue
     if(!is.null(val) && nchar(val)>0){
-      # cat("ModuleEdTib::...---------- entering input$columnEntryText--------\n")
-      # cat("ModuleEdTib::...----------entryValue=<",val,">\n")
       entry$result<-val
-      # cat("\nModuleEdTib::...----------returning entry$result=", entry$result,"\n")
-      # cat("ModuleEdTib::...---------- exiting input$columnEntryText--------\n")
+    }
+  })
+  
+  observeEvent( input$entrySlider ,{
+    val<-input$entrySlider
+    if(!is.null(val) && nchar(val)>0){
+      entry$result<-val
+    }
+  })
+  
+  observeEvent( input$entryNumeric ,{
+    val<-input$entryNumeric
+    if(!is.null(val) && nchar(val)>0){
+      entry$result<-val
     }
   })
   
   observeEvent( input$entryColour ,{
     val<-input$entryColour
     if(!is.null(val) && nchar(val)>0){
-      # cat("ModuleEdTib::...---------- entering input$entryColour--------\n")
-      # cat("ModuleEdTib::...----------entryValue=<",val,">\n")
       entry$result<-val
-      # cat("\nModuleEdTib::...----------returning entry$result=", entry$result,"\n")
-      # cat("ModuleEdTib::...---------- exiting input$entryColour--------\n")
     }
+  })
+  
+  observeEvent(input$selectedWidget,{
+    cat("input$selectedWidget cnanged...................\n")
   })
   
   #when name, index, attrName valid, and attrVal changes, update the ptDefs and code
@@ -342,6 +329,7 @@ moduleEdTib<-function(input, output, session,
     rowIndex      = reactive({input$rowIndex}),
     columnName    = reactive({input$columnRadio}),
     entryValue    = reactive(entry$result), 
+    selectedWidget  = reactive(input$selectedWidget),
     matColIndex   = reactive(input$matColIndex),
     transformType = reactive({input$transformType})
   )
