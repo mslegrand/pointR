@@ -4,7 +4,6 @@ buildRightMenu<-function(){
     menuDropdown('Column',
                  shinyDMDMenu::menuItem('Add Column', value='cmdNewColumn') ,
                  shinyDMDMenu::menuItem('Set Max ncol', value='cmdSetMatColMax')
-                 
                  #   shinyDMDMenu::menuItem('Delete Column', value='cmdDeleteColumn'),
                  #   shinyDMDMenu::menuItem('Rename Column', value='cmdRenameColumn'),
                  #   shinyDMDMenu::menuItem('Clone Column', value='cmdCloneColumn'),

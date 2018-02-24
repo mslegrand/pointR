@@ -32,7 +32,6 @@ isPoints<-function(x){
   points<-!is.null(x) && all(unlist(lapply(x, function(m){
     is.matrix(m) && dim(m)[1]==2
   })))
-  #cat('isPoins=',points,'"\n')
   points
 }
 
@@ -48,9 +47,6 @@ charColType<-function(x){
 }
 
 listColType<-function(x){
-  # points
-  # pairs
-  
   lens<- sapply(x, length)
   if(isPoints(x)){
     return("point")
@@ -84,9 +80,7 @@ listColType<-function(x){
 
 extractColType<-function( column ){
   #cat("extractColType: class(column)",class(column),"\n")
-  if(is.character(column)){ print(column)}
   if(is.list(column)){
-    cat("listColType(column)=", format(listColType(column)),"\n" )
     return(listColType(column))
   } else {
     if(is.character(column)){

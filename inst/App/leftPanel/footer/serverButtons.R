@@ -111,7 +111,7 @@ processCommit<-reactive({
           }
         }
         mssg$error<-err
-        cat("commit got an error\n",mssg$error,"\n")
+        #cat("commit got an error\n",mssg$error,"\n")
         setSourceType(sourceType='logPanel')
         
       }) 

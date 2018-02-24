@@ -56,7 +56,7 @@ r_pkgs<-c('shiny','shinyjs', 'R.utils', 'svgR', 'shinyAce', 'stringr', 'jsonlite
           'shinyjqui')
 sapply(r_pkgs, library, character.only=TRUE)
 
-
+#library("RColorBrewer")
 # options(shiny.error = recover)
 # options(shiny.trace=TRUE)
 #some consts

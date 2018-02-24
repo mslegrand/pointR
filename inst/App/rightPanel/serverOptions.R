@@ -5,8 +5,6 @@ editOption<-reactiveValues(
   tabSize=defaultOpts [['tabSize']],
   tabType=defaultOpts [['tabType']],
   currentFilePath=defaultOpts [['currentFilePath']],
-  #currentFile=defaultOpts ['currentFile'],
-  #currentDirectory=defaultOpts ['currentDirectory'],
   useTribbleFormat= defaultOpts[['useTribbleFormat']],
   recentFiles=defaultOpts [['recentFiles']], 
   .saved=TRUE
@@ -14,11 +12,8 @@ editOption<-reactiveValues(
 
 
 history<-reactiveValues(
-  #currentFilePath = defaultOpts [['currentFilePath']],
-  #recentFiles=defaultOpts [['recentFiles']],
   recentFileMenuCount=0
-  #code=NULL,
-  #.saved=TRUE
+
 )
 
 
@@ -27,7 +22,6 @@ getCurrentFile<-reactive({
 })
 getCurrentDir<-reactive({
   dirname(editOption$currentFilePath)
-  #editOption$currentFile
 })
 getCurrentFilePath<-reactive({
   editOption$currentFilePath

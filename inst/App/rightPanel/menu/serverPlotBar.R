@@ -4,17 +4,14 @@
 observeEvent(input$plotNavBar, {
   cmd<-getRightMenuCmd()
   if(is.null(cmd)){
-    # cat('input$plotNavBar:: getRightMenuCmd()=NULL\n')
     return(NULL)
   }
-  # if('character' %in% class(cmd)){
-  #   cat('serverPlotBar::  input$plotBar  cmd=',cmd,'\n')
-  # }
   
   if(cmd == 'cmdShowGrid'){
     renameDMDM(session,  "plotNavBar", "cmdShowGrid", "Hide Grid", newValue="cmdHideGrid")
     setDisplayOption(showGrid=TRUE)
   }
+  
   if(cmd == 'cmdHideGrid'){
     renameDMDM(session,  "plotNavBar",  "cmdHideGrid", "Show Grid",newValue="cmdShowGrid")
     setDisplayOption(showGrid=FALSE)
@@ -44,18 +41,21 @@ observeEvent(input$plotNavBar, {
   if(cmd == 'cmdNewColumn'){
     showModal( addNewColModal() )
   }
+  
   if(cmd == 'cmdSetMatColMax'){
     columnName<-getTibColumnName()
     currentValue<-getPointMax()
-    if(is.null(currentValue)) 
+    if(is.null(currentValue)){
       currentValue=NA
-    #currentValue<-getColMax()
+    } 
     showModal( setMatColMaxModal(columnName, currentValue) )
   }
+  
   if(cmd == 'cmdDeleteColumn'){
     columnName<-getTibColumnName()
     showModal(deleteColumnModal(columnName))
   }
+  
   if(!is.null(cmd)){
     dirtyDMDM(session, "plotNavBar")
   }

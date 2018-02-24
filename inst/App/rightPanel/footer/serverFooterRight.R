@@ -3,9 +3,7 @@ returnValue4ModuleRtFtr<-callModule(
   module=moduleFooterRight,
   id="footerRight",
   getTibEditState= getTibEditState,
-  getPanelState=getRightMidPanel2 #,
-  # getHandler=getHandler,
-  # getHandlerValue=getHandlerValue 
+  getPanelState=getRightMidPanel2 
 )
 
 #-----------BUTTON EVENTS--------------------
@@ -168,17 +166,5 @@ observeEvent( returnValue4ModuleRtFtr$backwardPt(), {
   }
 })
 
-# observeEvent(returnValue4ModuleRtFtr$useColourPalette(), {
-#   hv<-returnValue4ModuleRtFtr$useColourPalette()
-#   if(is.null(hv) || is.null(getHandler())){
-#     return(NULL)
-#   }
-#   if(hv=='FALSE'){
-#     hv<-NULL
-#   } else {
-#     hv<-'colourable'
-#     # should update the colourInput???
-#   }
-#   setHandlerValue(hv)
-# })
+
 
