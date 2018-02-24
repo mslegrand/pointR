@@ -14,11 +14,11 @@ setMatColMaxModal <- function(columnName, currentValue=1) {
 }
   
 observeEvent(input$setMatColMaxModalOk, {
-  if(input$limitTibMatCol){
+  if(!is.null(input$tibMatColMax) && !is.na(input$tibMatColMax)){
      #setHandlerValue(input$tibMatColMax)
-     updateWidgetChoicesRow(maxVal= getPointMax() )
+     updateWidgetChoicesRow(maxVal= input$tibMatColMax )
   } else {
-     setHandlerValue(maxVal=NA)
+    updateWidgetChoicesRow(maxVal= NULL )
    }
   removeModal()
 })

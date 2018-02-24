@@ -69,31 +69,53 @@ observeEvent(returnValue4ModuleEdTib$transformType(),{
 # rowIndex
 # if moduleEdTib changes the rowIndex,  matCol in selectedTibble needs to be updated
 observeEvent(returnValue4ModuleEdTib$rowIndex(),{
-  if( getTibEditState()==TRUE && !is.null(getTibRow()) ){
-    # cat("serverEdTib::...Entering----- returnValue4ModuleEdTib$rowIndex()\n")
-    rowIndex<-returnValue4ModuleEdTib$rowIndex()
-    if(rowIndex==getTibRow()){ return(NULL) } #bail if moduleEdTib did not change rowIndex 
-    # cat("serverEdTib::...rowIndex=",rowIndex,"\n")
-    # moduleEdTib changed rowIndex
-    # extract row, column entry from tib
-    name<-returnValue4ModuleEdTib$name()
-    tib<-name %AND% getPtDefs()$tib[[name]]
-    colName<-getTibColumnName()
-    indices<-extractSafeRowColIndex(tib, rowIndex, colName)
-    if(!is.null(indices)){
-      entry<-tib[[indices$rowIndex, indices$colIndex]]
-      if( is.matrix(entry) && dim(entry)[1]==2 ){ # need to update the matColIndex
-        matColIndex<-ncol(entry)
-        updateSelected(name=name, row=rowIndex, matCol=matColIndex)
-      } else { #not column of points, so no need to update matColIndex
-        updateSelected(name=name, row=rowIndex)
-      }
+  if( getTibEditState()==TRUE ){
+    cat("serverEdTib:: -----Entering-----rowIndex()::----------------\n")
+    rowIndex<-as.integer(returnValue4ModuleEdTib$rowIndex())
+    if(!is.null(getTibRow()) && rowIndex==getTibRow()){ return(NULL) } #bail
+    # compute matColIndex and update rowIndex, matColIndex
+    if(getColumnType()=='point'){
+        pts<-getTibPts()
+        matColIndex<-length(pts[[rowIndex]])/2
+        cat(
+          "updateSelected( matCol=",
+          format(matColIndex) ,
+          ", rowIndex=",
+          format(rowIndex) ,
+          ")\n"
+        )
+        updateSelected( matCol=matColIndex, rowIndex=rowIndex)
+    } else {
+      cat(
+        "updateSelected( ",
+        "rowIndex=",
+        format(rowIndex) ,
+        ")\n"
+      )
+      updateSelected( rowIndex=rowIndex)
     }
-    # cat("serverEdTib::...Exiting----- returnValue4ModuleEdTib$rowIndex()\n")
+    cat("serverEdTib:: -----Leaving-----rowIndex()::----------------\n")
+  }
+}, ignoreNULL = TRUE)
+
+#row reordering
+observeEvent( returnValue4ModuleEdTib$rowReorder() ,{
+  if( getTibEditState()==TRUE ){
+    ordering<-as.numeric(returnValue4ModuleEdTib$rowReorder())
+    cat(paste(ordering,collapse=", "))
+    cat("\n")
+    name<-getTibName()
+    row<-getTibRow()
+    columnName<-getTibColumnName()
+    newPtDefs<-getPtDefs()
+    tib<-newPtDefs$tib[[name]]
+    tib<-tib[ordering,]
+    newPtDefs$tib[[name]]<-tib
+    row<-which(row==ordering)
+    sender="reorderRow"
+    updateAceExtDef(newPtDefs, sender=sender, selector=list( name=name, rowIndex=row, columnName=columnName   ) )
   }
 })
-
-
 
 # matColIndex
 observeEvent( returnValue4ModuleEdTib$matColIndex() ,{
@@ -127,52 +149,82 @@ observeEvent(returnValue4ModuleEdTib$columnName(),{
 observeEvent(returnValue4ModuleEdTib$entryValue(),{
   if( getTibEditState()==TRUE ){
     cat("serverEdTib::...Entering----- returnValue4ModuleEdTib$entryValue()\n")
-    
-    # if(getColumnType()=='point'){
-    #   
-    # }
-    
-    # assuming tib is uptodate, simply work on the existing tib
-    name<- returnValue4ModuleEdTib$name()
-    cat('serverEdTib::...name=', name,"\n")
-    entry<-name %AND% returnValue4ModuleEdTib$entryValue()
-    cat('serverEdTib::...entry=', entry,"\n")
-    # print(returnValue4ModuleEdTib$entryValue())
-    row= getTibRow() # entry %AND% returnValue4ModuleEdTib$rowIndex()
-    cat('serverEdTib::row=', row,"\n")
-    columnName<-getTibColumnName() #row %AND% returnValue4ModuleEdTib$columnName()
-    cat('serverEdTib::...columnName=', columnName,"\n")
-    if(!is.null(columnName) && nchar(entry) &&
-       !is.null(getTibColumnName()) && columnName==getTibColumnName()){
-      
-      # this is where we handle points/matrix
-      if(!(entry %in% c('matrix','point'))){
-        newPtDefs<-getPtDefs()
-        column<-columnName
-        # !!! todo: refactor
-        #should be exactly the same as returnValue4ModuleEdTib$columnName()
-        # so column and columnName are redundent
-        #row<-newPtDefs$tib[[name]] %AND% getTibRow()
-        row<-newPtDefs$tib[[name]] %AND% row
-        if(isNumericString(entry)){
-          entry<-as.numeric(entry)
-        }
-        if(!is.null(row) && row>=1 && row<=nrow(newPtDefs$tib[[name]])){
-          sender='applyTibEdit'
-          newPtDefs$tib[[getTibName()]][[row,column ]]<-entry
-          updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=row, columnName=columnName   ) )
-        }
-      } else {
-        if(length(which(entry==c('point','matrix')) )==0){
-          stop('entry null')
-        }
-        cat("serverEdTib::...entry:    ", entry ,"\n")
-        updateSelected( selIndex = which(entry==c('point','matrix')) )
-      }
+    entry<-returnValue4ModuleEdTib$entryValue()
+    if(length(entry)==0 || is.na(entry) ){
+      return(NULL)
     }
-    cat("serverEdTib::...Exiting:    returnValue4ModuleEdTib$entryValue()\n")
+    if(getColumnType()=='point'){
+      entry<-which(entry==c('point','matrix'))
+      if(length(entry)){
+        updateSelected(selIndex =entry)
+      }
+    } else {
+      if(isNumericString(entry)){
+        entry<-as.numeric(entry)
+      }
+      name<-getTibName()
+      newPtDefs<-getPtDefs()
+      columnName<-getTibColumnName()
+      rowIndex<-getTibRow()
+      sapply(c("name", "columnName", "rowIndex", "entry"), function(x){
+        cat(x,"=", format(get(x)),"\n")
+      })
+      good<-all(!sapply(list(name, newPtDefs, columnName, rowIndex), is.null))
+      stopifnot(good)
+      tib<-newPtDefs$tib[[name]]
+      stopifnot(
+          0<rowIndex && 
+          !is.null(nrow(tib)) && 
+          rowIndex<=nrow(tib)
+      )
+      sender='applyTibEdit'
+      
+      #newPtDefs$tib[[name]][[columnName ]][[row]]<-entry
+      newPtDefs$tib[[getTibName()]][[rowIndex,columnName ]]<-entry
+      updateAceExtDef(newPtDefs, sender=sender, selector=list( name=name, rowIndex=rowIndex, columnName=columnName   ) )
+    }
+    
+    # # assuming tib is uptodate, simply work on the existing tib
+    # name<- returnValue4ModuleEdTib$name()
+    # cat('serverEdTib::...name=', name,"\n")
+    # entry<-name %AND% returnValue4ModuleEdTib$entryValue()
+    # cat('serverEdTib::...entry=', entry,"\n")
+    # # print(returnValue4ModuleEdTib$entryValue())
+    # row= getTibRow() # entry %AND% returnValue4ModuleEdTib$rowIndex()
+    # cat('serverEdTib::row=', row,"\n")
+    # columnName<-getTibColumnName() #row %AND% returnValue4ModuleEdTib$columnName()
+    # cat('serverEdTib::...columnName=', columnName,"\n")
+    # if(!is.null(columnName) && nchar(entry) &&
+    #    !is.null(getTibColumnName()) && columnName==getTibColumnName()){
+    #   
+    #   # this is where we handle points/matrix
+    #   if(!(entry %in% c('matrix','point'))){
+    #     newPtDefs<-getPtDefs()
+    #     column<-columnName
+    #     # !!! todo: refactor
+    #     #should be exactly the same as returnValue4ModuleEdTib$columnName()
+    #     # so column and columnName are redundent
+    #     #row<-newPtDefs$tib[[name]] %AND% getTibRow()
+    #     row<-newPtDefs$tib[[name]] %AND% row
+    #     if(isNumericString(entry)){
+    #       entry<-as.numeric(entry)
+    #     }
+    #     if(!is.null(row) && row>=1 && row<=nrow(newPtDefs$tib[[name]])){
+    #       sender='applyTibEdit'
+    #       newPtDefs$tib[[getTibName()]][[row,column ]]<-entry
+    #       updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=row, columnName=columnName   ) )
+    #     }
+    #   } else {
+    #     if(length(which(entry==c('point','matrix')) )==0){
+    #       stop('entry null')
+    #     }
+    #     cat("serverEdTib::...entry:    ", entry ,"\n")
+    #     updateSelected( selIndex = which(entry==c('point','matrix')) )
+    #   }
+    # }
+    # cat("serverEdTib::...Exiting:    returnValue4ModuleEdTib$entryValue()\n")
   } 
-},label='EdTib-rtv-entryValue')
+},label='EdTib-rtv-entryValue', ignoreNULL = TRUE)
 
 
 #-------points----------------------------------------------

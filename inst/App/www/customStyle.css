@@ -41,7 +41,7 @@ overflow: hidden;
 }
 .cSvgHtml{
   top:140px; 
-  left:5px; 
+  left:55px; 
   right:5px;  
   bottom:40px;
   margin-top:0;
@@ -51,6 +51,13 @@ overflow: hidden;
   border: 3px solid blue;
   background-color: #DDBBFF;
   overflow: auto;
+}
+.cRowContainer{
+  top:140px; 
+  left: 5px;
+  right:53px;
+  bottom: 40px;
+  background-color: #4f6a8c; 
 }
 .cAceContainer{
   top:140px; 
@@ -155,4 +162,55 @@ font-size: 12px;
 }
 
 
+/* div.radio.ui-sortable-handle label span */
+input[type='radio']{
+  color:red;
+  background-color: yellow;
+}
+
+div .ui-sortable-handle{
+  color: #44FFFF;
+  background-color: #242424;
+  width: 45px; 
+  margin: 2px;
+  padding-left: 4px;
+  border: 1px solid #44FFFF;
+}
+
+div .radio {
+  color: #44FFFF;
+  background-color: #242424;
+  width: 45px; 
+  margin: 2px;
+  padding-left: 4px;
+  border: 1px solid #44FFFF;
+}
+
+input[type='radio']:after {
+    width: 15px;
+    height: 15px;
+    border-radius: 0px;
+    top: -2px;
+    left: -1px;
+    position: relative;
+    background-color: #448888;
+    content: '';
+    display: inline-block;
+    visibility: visible;
+    border: 2px solid #44FFFF;
+}
+
+input[type='radio']:checked:after {
+    width: 15px;
+    height: 15px;
+    border-radius: 0px;
+    top: -2px;
+    left: -1px;
+    position: relative;
+    background-color: #ffa500;
+    content: '';
+    display: inline-block;
+    visibility: visible;
+    border: 2px solid white;
+}
 

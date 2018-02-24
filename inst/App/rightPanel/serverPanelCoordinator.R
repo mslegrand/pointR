@@ -38,6 +38,7 @@ panels<-reactiveValues(
 )
 
 setSourceType<-function( sourceType ){
+  cat("setSourceType:: sourceType=",sourceType,"\n")
   if(!missing(sourceType)){
     panels$sourceType=sourceType
   }
@@ -45,6 +46,8 @@ setSourceType<-function( sourceType ){
 
 # returns type corresp to name: 'tib', 'logPanel', 'transform'
 getNameType<-reactive({
+  cat("getNameType::getTibName()=", getTibName(),"\n")
+  #cat("getNameType::getTibName()=", getTibName(),"\n")
   if(!is.null(getTibName())){
     if (getTibName() %in% names(getPtDefs()$tib)){
       'tib'
@@ -103,6 +106,7 @@ getColumnType<-reactive({
 # returns state: 'point', 'matrix', 'value', 'logPanel', 'transform'
 getPlotState<-reactive({
   nameType<-getNameType()
+  cat("getPlotState::nameType=", format(nameType),"\n")
   if(nameType=='tib'){
     colType<-getColumnType()
     if(colType=='point'){
@@ -116,6 +120,7 @@ getPlotState<-reactive({
 })
 
 getRightMidPanel2<-reactive({
+  cat("getRightMidPanel2::panels$sourceType=", format(panels$sourceType),"\n")
   if(panels$sourceType==logTag || is.null(getPlotState() )){
     rtv<-logTag
   } else {
@@ -140,16 +145,19 @@ getRightPanelChoices<-reactive({ # includes names of tibs
 })
 
 getRightPanelName<-reactive({  #used only by editTib
+  cat("getRightPanelName::panels$sourceType=", format(panels$sourceType)  , "\n")
+  cat("getRightPanelName::getTibName", format(getTibName())  , "\n")
   if(panels$sourceType==logTag){
     return(logTag)
   } else {
-    return(selectedTibble$name)
+    return( getTibName() )
   }
 })
 
 is.tibName<-function(x){ !is.null(x) || x==logTag || x==transformTag}
 
 getTibEditState<-reactive({
+  cat("getTibEditState::getPlotState()=",format(getPlotState()),"\n")
   (panels$sourceType)==svgPanelTag && !is.null(getPlotState())
     getPlotState() %in%  c("point", "value", "matrix")
     #(panels$state %in% c("point", "value", "matrix"))
