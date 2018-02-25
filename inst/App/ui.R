@@ -120,6 +120,7 @@ shinyUI(
           buildRightMenu(),
           uiOutput("BottomRightPanel"),
           uiOutput("TopRightPanel"),
+          uiOutput("LeftMidRightPanel"),
           #moduleEdTibUI("tagValBar", input, output),
           br(),
           uiOutput("MidRightPanel")

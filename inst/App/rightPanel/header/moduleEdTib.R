@@ -33,7 +33,7 @@ moduleEdTibUI<-function(id, input, output) {
     # condition: !(name %in% c( transformTag, logTag, svgTag))
     conditionalPanel(
       condition = sprintf("input['%s'] != '%s' && input['%s'] != '%s' && input['%s'] != '%s'",
-      ns("name"), transformTag, ns("name"), logTag, ns("name"), svgTag),
+      ns("name"), transformTag, ns("name"), logTag, ns("name"), svgPanelTag),
       #---column
         #---add column button---
         absolutePanel(top= top1, left=left0,
@@ -68,10 +68,11 @@ moduleEdTibUI<-function(id, input, output) {
                      type="pills"
         )
       )
-    ),
-   absolutePanel( "class"= "cRowContainer",
-      uiOutput(ns("rowPanel"))
-   )
+    )
+   #,
+   # absolutePanel( "class"= "cRowContainer",
+   #    uiOutput(ns("rowPanel"))
+   # )
     # , textInputAddon(inputId = ns('newChoiceXX'), label = "dog", 
     #                placeholder = "Username", addon = icon("at"))
     
@@ -84,7 +85,7 @@ moduleEdTib<-function(input, output, session,
   name, 
   nameChoices,
   getRowIndex,
-  getRowIndexChoices,
+  #getRowIndexChoices,
   getTibNRow,
   matColIndex,
   matColIndexChoices, 
@@ -203,18 +204,18 @@ moduleEdTib<-function(input, output, session,
   })
   
   #------rows
-  output$rowPanel<-renderUI({
-    if( getTibEditState()==TRUE ){
-      rowIndx<-getRowIndex()
-      N<-getTibNRow()
-      if( !is.null(rowIndx) && !is.null(N)){
-        sortableRadioButtons(ns("rowIndex"), label=NULL,
-                             choices=1:(getTibNRow()),
-                             selected= getRowIndex() #getSelectedRow()
-        )
-      }
-    }
-  })
+  # output$rowPanel<-renderUI({
+  #   if( getTibEditState()==TRUE ){
+  #     rowIndx<-getRowIndex()
+  #     N<-getTibNRow()
+  #     if( !is.null(rowIndx) && !is.null(N)){
+  #       sortableRadioButtons(ns("rowIndex"), label=NULL,
+  #                            choices=1:(getTibNRow()),
+  #                            selected= getRowIndex() #getSelectedRow()
+  #       )
+  #     }
+  #   }
+  # })
   
   
   output$matColIndexUI<-renderUI({
@@ -305,8 +306,8 @@ moduleEdTib<-function(input, output, session,
   #when name, index, attrName valid, and attrVal changes, update the ptDefs and code
   list( 
     name          = reactive({input$name}),
-    rowIndex      = reactive({input$rowIndex}),
-    rowReorder      = reactive({input$rowIndex_order}),
+    # rowIndex      = reactive({input$rowIndex}),
+    # rowReorder      = reactive({input$rowIndex_order}),
     columnName    = reactive({input$columnRadio}),
     entryValue    = reactive(entry$result), 
     selectedWidget  = reactive(input$selectedWidget),

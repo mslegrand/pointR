@@ -63,7 +63,8 @@ sapply(r_pkgs, library, character.only=TRUE)
 defTag<-"ptR"
 transformTag<-"Transforms"
 logTag<-"logPanel"
-svgTag<-'svgPanel'
+#svgTag<-'svgPanel'
+svgPanelTag<-'svgPanel'
 
 getSVGWH<-function(){ c(650,620)} #this should be ultimately place in another file
 
@@ -89,5 +90,6 @@ source("leftPanel/mid/shinyAce4Ptr.R")
 
 source("rightPanel/footer/moduleFooterRight.R")
 source("rightPanel/header/moduleEdTib.R")
+source("rightPanel/mid/moduleRowDND.R")
 source("rightPanel/mid/moduleSVGR.R")
 

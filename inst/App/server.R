@@ -133,6 +133,7 @@ source("leftPanel/tabs/serverFileTabs.R",          local=TRUE)
 
 source("rightPanel/footer/serverFooterRight.R",    local=TRUE) 
 source("rightPanel/header/serverEdTib.R",          local=TRUE)
+source("rightPanel/mid/serverRowDND.R",            local=TRUE)
 source("rightPanel/mid/serverPlotBarPoints.R",     local=TRUE) 
 source("rightPanel/mid/serverPlotBarTagValues.R",  local=TRUE)  
 source("rightPanel/mid/serverPlotBarTagDrag.R",    local=TRUE)  
@@ -164,6 +165,7 @@ source("leftPanel/menu/cmdOptionsFontSize.R",     local=TRUE)
 source("leftPanel/menu/cmdFileSnippet.R",         local=TRUE)
 source("leftPanel/menu/cmdAbout.R",               local=TRUE)
 source("leftPanel/serverEditBar.R",               local=TRUE)
+  
   
 
 })

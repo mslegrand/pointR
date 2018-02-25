@@ -4,13 +4,19 @@ output$TopRightPanel<-renderUI({
   moduleEdTibUI("tagValBar", input, output)
 })
 
+output$LeftMidRightPanel<-renderUI({
+  moduleRowDNDUI("rowDND", input, output)
+})
+
 output$BottomRightPanel<-renderUI({
   moduleFooterRightUI("footerRight", input, output)
 })
 
 
 output$MidRightPanel<-renderUI({
+ 
   chosenRightMidPanel<-getRightMidPanel2()
+
   if (chosenRightMidPanel=='point'){
     modulePlotSVGrUI("svgPointsMod")
   } else if (chosenRightMidPanel=='value'){
@@ -24,10 +30,12 @@ output$MidRightPanel<-renderUI({
   } else if (chosenRightMidPanel==logTag){
     moduleLogUI("errLogMod")
   }
+ 
+ 
+ 
 })
 
 
-svgPanelTag<-'svgPanel'
 
 panels<-reactiveValues(
   left='source',   #to be used as editor name later, for connecting to right graphics
