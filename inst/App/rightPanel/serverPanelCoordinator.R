@@ -4,13 +4,18 @@ output$TopRightPanel<-renderUI({
   moduleEdTibUI("tagValBar", input, output)
 })
 
+output$LeftMidRightPanel<-renderUI({
+  moduleRowDNDUI("rowDND", input, output)
+})
+
 output$BottomRightPanel<-renderUI({
   moduleFooterRightUI("footerRight", input, output)
 })
 
-
 output$MidRightPanel<-renderUI({
+ 
   chosenRightMidPanel<-getRightMidPanel2()
+  
   if (chosenRightMidPanel=='point'){
     modulePlotSVGrUI("svgPointsMod")
   } else if (chosenRightMidPanel=='value'){
@@ -24,10 +29,12 @@ output$MidRightPanel<-renderUI({
   } else if (chosenRightMidPanel==logTag){
     moduleLogUI("errLogMod")
   }
+ 
+ 
+ 
 })
 
 
-svgPanelTag<-'svgPanel'
 
 panels<-reactiveValues(
   left='source',   #to be used as editor name later, for connecting to right graphics
@@ -38,6 +45,7 @@ panels<-reactiveValues(
 )
 
 setSourceType<-function( sourceType ){
+  # cat("setSourceType:: sourceType=",sourceType,"\n")
   if(!missing(sourceType)){
     panels$sourceType=sourceType
   }
@@ -45,6 +53,7 @@ setSourceType<-function( sourceType ){
 
 # returns type corresp to name: 'tib', 'logPanel', 'transform'
 getNameType<-reactive({
+  #cat("getNameType::getTibName()=", getTibName(),"\n")
   if(!is.null(getTibName())){
     if (getTibName() %in% names(getPtDefs()$tib)){
       'tib'
@@ -57,29 +66,19 @@ getNameType<-reactive({
 })
 
 #returns the type of column, which can be 'point', 'list', 'numeric', 'colourable', 'value'
+# would like to extend: list-numeric-pairs, list-character, 'numeric-int', 'numeric-pos', 'numeric-real',
+# 'numeric-range'
+
+# currently we only use getColumnType in 
+#   1. getPlotState
+#   2. undateSelected
+#   3. getTibEntry, getTibEntryChoices
+# and use it only for whether or not the column is a 'points' column.
 getColumnType<-reactive({
   colName<-getTibColumnName()
   columnValues<-getTib()[[colName]]
   if(!is.null(columnValues)){
-    if( is.list(columnValues) ){
-      if(all(sapply(columnValues, function(m){ is.matrix(m) && dim(m)[1]==2}))){
-        return('point')
-      } else {
-        return('list')
-      }
-    }
-    if(is.numeric(columnValues)){
-      return('numeric')
-    }
-    if(is.character(columnValues)){
-      if( isColorString(columnValues)){
-        return('colourable')
-      } else {
-        return('character')
-      }
-    } else {
-      return('value')
-    }
+    return(extractColType(columnValues))
   }
   return(NULL)
 })
@@ -127,16 +126,17 @@ getRightPanelName<-reactive({  #used only by editTib
   if(panels$sourceType==logTag){
     return(logTag)
   } else {
-    return(selectedTibble$name)
+    return( getTibName() )
   }
 })
 
 is.tibName<-function(x){ !is.null(x) || x==logTag || x==transformTag}
 
 getTibEditState<-reactive({
-  (panels$sourceType)==svgPanelTag && !is.null(getPlotState())
+  #cat("getTibEditState::getPlotState()=",format(getPlotState()),"\n")
+    (panels$sourceType)==svgPanelTag && 
+    !is.null(getPlotState()) && 
     getPlotState() %in%  c("point", "value", "matrix")
-    #(panels$state %in% c("point", "value", "matrix"))
 })
 
 

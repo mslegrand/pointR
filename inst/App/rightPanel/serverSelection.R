@@ -8,18 +8,28 @@ selectedTibble <- reactiveValues(
   columnName=NULL, # currently used only by tibbleEditor and could be placed there.
   matCol=0,
   ptColName=NULL,      # !!! KLUDGE for now. should this default to last col?
-  selIndex=1,
+  selIndex=1, # only use is to determine if matrix or point!!
   transformType='Translate' # TODO!!! replace this with selIndex
 )
 
 
-getSelIndex<-reactive({selectedTibble$selIndex})
+getSelIndex<-reactive({
+  selectedTibble$selIndex
+})
+
 getTibName<-reactive({selectedTibble$name}) #allow to be null only if tib is null  
 getTibColumnName<-reactive({ selectedTibble$columnName })
 getTib<-reactive({ getTibName() %AND% getPtDefs()$tib[[ getTibName() ]] })
 getTibPtColPos<-reactive({ which(names(getTib())==selectedTibble$ptColName )})
-getTibNRow<-reactive({nrow(getPtDefs()$tib[[getTibName()]])})
-getTibRow<-reactive({selectedTibble$rowIndex})
+getTibNRow<-reactive({
+  if( getTibEditState()==TRUE ){
+    nrow(getPtDefs()$tib[[getTibName()]])
+  } else {
+    0
+  }
+})
+getTibRow<-reactive({#cat('getTibRow()=',format( selectedTibble$rowIndex),"\n");
+  selectedTibble$rowIndex})
 getTibMatCol<-reactive({ selectedTibble$matCol })
 getTibPtsNCol<-reactive({ sapply(getTibPts(),ncol)}  )
 
@@ -31,15 +41,6 @@ getTransformType<-reactive({
   }
 })
 
-# getTibMatColMax<-reactive({ 
-#   rowNum<-getTibRow()
-#   colMax<-getTibPtsNCol()
-#   if(is.null(pts) || is.null(rowNum) || rowNum<1 || rowNum>length(colMax)){
-#     NULL
-#   } else {
-#     ncol(pts[[rowNum]])
-#   }
-# })
 
 getTibMatColMax<-reactive({
     rowNum<-getTibRow()
@@ -56,7 +57,8 @@ getTibMatColMax<-reactive({
 #    1. serverEdtib to reset the name when the selection changes
 #    2. serveAce to reset name when we have a file->New or file->Open
 resetSelectedTibbleName<-function(tibs, name){
-   #cat("serverSelection...Entering  resetSelectedTibbleName\n")
+   # cat("\nserverSelection...Entering  resetSelectedTibbleName\n")
+   # cat("\nserverSelection... name= ", format(name),"\n")
       choices<-getRightPanelChoices()
       if(is.null(name) || !(name %in% choices)){
         name<-getTibName()
@@ -87,6 +89,7 @@ resetSelectedTibbleName<-function(tibs, name){
           selectedTibble$ptColName=ptColName 
           #selectedTibble$columnName=ptColName #this is the problem!!! should not reset if newColumn,
           if(is.null(selectedTibble$selIndex) || selectedTibble$selIndex!=2){
+            #unless selected is 'matrix', set to 'point' 
             updateSelected( selIndex=1)
           }
         } else {
@@ -106,40 +109,19 @@ resetSelectedTibbleName<-function(tibs, name){
       if( selectedTibble$name==transformTag){
         selectedTibble$transformType='translate'
       }
-        
-      # if(is.null(tibs) || is.null(names(tibs)) || length(names(tibs))==0){ 
-      #   selectedTibble$rowIndex=NULL
-      #   selectedTibble$ptColName=NULL
-      #   selectedTibble$columnName=NULL
-      #   selectedTibble$matCol=NULL
-      #   selectedTibble$transformType=NULL
-      #   if(usingTransformDraggable()){
-      #     selectedTibble$name=transformTag
-      #     selectedTibble$transformType='translate'
-      #   } else {
-      #     selectedTibble$name=logTag
-      #   }
-      #   return(NULL)
-      #}
-  
-  # if(is.null(name) || nchar(name)==0 || !(name %in% names(tibs))){ 
-  #   name=names(tibs)[1]
-  # }
-  # selectedTibble$name=name
-  # tib<-tibs[[name]]
-  
-  
 }
 
 updateSelected<-function( name, rowIndex, columnName, matCol,  ptColName, selIndex, transformType ){
   if(!missing(name)){
+    #cat(" updateSelected name=", format(name),"\n")
     selectedTibble$name=name
   }
   if(!missing(ptColName)){
     selectedTibble$ptColName=ptColName
   }
   if(!missing(rowIndex)){ # !!! may want to provide a check here
-    selectedTibble$row=rowIndex
+    #cat('updateSelected:: rowIndex=',format(rowIndex),"\n")
+    selectedTibble$rowIndex=rowIndex
   }
   if(!missing(matCol)){
     selectedTibble$matCol=matCol
@@ -148,7 +130,6 @@ updateSelected<-function( name, rowIndex, columnName, matCol,  ptColName, selInd
     selectedTibble$selIndex=selIndex
   }
   if(!missing(columnName)){
-    # cat('setting columnName to ', columnName,"\n")
     selectedTibble$columnName=columnName
     if(!is.null(getColumnType()) && getColumnType()=='point'){
       selectedTibble$ptColName<-columnName
@@ -195,37 +176,36 @@ getTibEntryChoices<-reactive({
   tib<-name %AND% getPtDefs()$tib[[name]]
   columnValues<- columnName %AND% tib[[columnName]]
 
-  columnValues <-columnValues %AND% as.list(columnValues)
+  columnValues <-columnValues %AND%  as.list(columnValues)
   columnValues
 })
 
 
 getTibPts<-reactive({ 
+  # cat("serverSelection:: -----Entering-----getTibPts::----------------\n")
+  # cat("selectedTibble$ptColName=",format(selectedTibble$ptColName),"\n")
   ptCol<-selectedTibble$ptColName
   tib<-getTib()
+  # cat('names of tib', format(paste(names(tib))),"\n")
   pts <- tib %AND% ptCol %AND% tib[[ptCol]]
+  # cat('length of pts=',length(pts),"\n")
+  # cat("serverSelection:: -----leaving-----getTibPts::----------------\n\n")
   pts
 })
 
 
-
+# todo refactor to return only last (or a pair)
 getTibMatColChoices<-reactive({ 
   rowNum<-getTibRow()
   pts<-getTibPts()
-  #cat('rowNum=',rowNum,'\n')
-  #print(pts)
-  #cat('length(pts)=',length(pts),"\n")
+
   if(is.null(pts) || is.null(rowNum) || rowNum<1 || rowNum>length(pts)){
     rtv<-NULL
-  } else {1
+  } else {
     mc<-ncol(pts[[rowNum]])
-    # cat('length(mc)=',length(mc),'\n')
-    # cat('mc=',mc,'\n')
     if(mc>0){
-      # cat('mc=',mc,'\n')
       rtv<-1:mc
     } else {
-      # cat('mc=0\n')
       rtv<-0
     }
   }

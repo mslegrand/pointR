@@ -52,16 +52,19 @@ list.entry.at.index<-function(ll, indx){
 # }
 
 
-r_pkgs<-c('shiny','shinyjs', 'R.utils', 'svgR', 'shinyAce', 'stringr', 'jsonlite', 'shinyDMDMenu', 'shinyFiles', 'shinythemes', 'colourpicker', 'shinyWidgets', 'bsplus')
+r_pkgs<-c('shiny','shinyjs', 'R.utils', 'svgR', 'shinyAce', 'stringr', 'jsonlite', 'shinyDMDMenu', 'shinyFiles', 'shinythemes', 'colourpicker', 'shinyWidgets', 'bsplus',
+          'shinyjqui')
 sapply(r_pkgs, library, character.only=TRUE)
 
-
+#library("RColorBrewer")
 # options(shiny.error = recover)
 # options(shiny.trace=TRUE)
 #some consts
 defTag<-"ptR"
 transformTag<-"Transforms"
 logTag<-"logPanel"
+#svgTag<-'svgPanel'
+svgPanelTag<-'svgPanel'
 
 getSVGWH<-function(){ c(650,620)} #this should be ultimately place in another file
 
@@ -87,5 +90,6 @@ source("leftPanel/mid/shinyAce4Ptr.R")
 
 source("rightPanel/footer/moduleFooterRight.R")
 source("rightPanel/header/moduleEdTib.R")
+source("rightPanel/mid/moduleRowDND.R")
 source("rightPanel/mid/moduleSVGR.R")
 

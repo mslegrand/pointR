@@ -2,37 +2,36 @@ buildRightMenu<-function(){
   dmdMenuBarPage(
     menuBarId="plotNavBar",
     menuDropdown('Column',
-                 menuItem('Add Column', value='cmdNewColumn') ,
-                 menuItem('Set Max ncol', value='cmdSetMatColMax')
-                 
-                 #   menuItem('Delete Column', value='cmdDeleteColumn'),
-                 #   menuItem('Rename Column', value='cmdRenameColumn'),
-                 #   menuItem('Clone Column', value='cmdCloneColumn'),
-                 #   menuItem('Input Using', value='cmdInputUsingColumn')
+                 shinyDMDMenu::menuItem('Add Column', value='cmdNewColumn') ,
+                 shinyDMDMenu::menuItem('Set Max ncol', value='cmdSetMatColMax')
+                 #   shinyDMDMenu::menuItem('Delete Column', value='cmdDeleteColumn'),
+                 #   shinyDMDMenu::menuItem('Rename Column', value='cmdRenameColumn'),
+                 #   shinyDMDMenu::menuItem('Clone Column', value='cmdCloneColumn'),
+                 #   shinyDMDMenu::menuItem('Input Using', value='cmdInputUsingColumn')
     ),
     menuDropdown('Display', 
                  menuDropdown('Points',
-                              menuItem('Show Points without Labels', value='cmdShowPointsNoLabels'),
-                              menuItem('Show Points with Labels', value='cmdShowPointLabels'),
-                              menuItem('Hide Points', value='cmdHidePoints') 
+                              shinyDMDMenu::menuItem('Show Points without Labels', value='cmdShowPointsNoLabels'),
+                              shinyDMDMenu::menuItem('Show Points with Labels', value='cmdShowPointLabels'),
+                              shinyDMDMenu::menuItem('Hide Points', value='cmdHidePoints') 
                  ),
                  menuDropdown( 'Grid',
-                               menuItem('Show Grid', value='cmdShowGrid')
+                               shinyDMDMenu::menuItem('Show Grid', value='cmdShowGrid')
                                # ,
                                # menuDropdown('lines',
-                               #              menuItem('Width', value='cmdGridLineWidh'), 
-                               #              menuItem('Color', value='cmdGridLineColor')
+                               #              shinyDMDMenu::menuItem('Width', value='cmdGridLineWidh'), 
+                               #              shinyDMDMenu::menuItem('Color', value='cmdGridLineColor')
                                # )
                  )
                  # ,
                  # menuDropdown( 'Backdrop',
-                 #               menuItem('Hide', value='cmdHideBack'),
-                 #               menuItem('Color', value='cmdBackDropColor')
+                 #               shinyDMDMenu::menuItem('Hide', value='cmdHideBack'),
+                 #               shinyDMDMenu::menuItem('Color', value='cmdBackDropColor')
                  # )
     ),
     menuDropdown(
       "Tools", 
-      menuItem("PointFiltering (Not implemented)" )
+      shinyDMDMenu::menuItem("PointFiltering (Not implemented)" )
     )
   ) #menubar end 
 }

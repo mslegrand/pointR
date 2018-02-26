@@ -1,8 +1,9 @@
 
 #--tibble box
 observeEvent(input$useTribble,{
-  if(editOption$useTribbleFormat!=input$useTribble){
-    editOption$useTribbleFormat=input$useTribble
+  useTribble<-ifelse(input$useTribble=='Tribble',TRUE,FALSE)
+  if(editOption$useTribbleFormat!=useTribble){
+    editOption$useTribbleFormat=useTribble
     newPtDefs<-getPtDefs()
     sender='useTibble'
     updateAceExtDef(newPtDefs, sender=sender)
@@ -110,7 +111,7 @@ processCommit<-reactive({
           }
         }
         mssg$error<-err
-        cat("commit got an error\n",mssg$error,"\n")
+        #cat("commit got an error\n",mssg$error,"\n")
         setSourceType(sourceType='logPanel')
         
       }) 

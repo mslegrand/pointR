@@ -57,7 +57,8 @@ observe({
           # if(matColIndx==2){
           #   v<-getHandlerValue()
           # }
-          if(!is.null(getHandlerValue()) && matColIndx>=getHandlerValue()){
+          if(!is.null(getPointMax()) &&  matColIndx>=getPointMax() ){
+          #if(!is.na(getWidget()) && matColIndx>=getHandlerValue()){
             # tag here
             tib<-ptDefs$tib[[selection]]
             tib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])

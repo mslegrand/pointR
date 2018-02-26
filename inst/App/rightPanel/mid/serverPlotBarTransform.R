@@ -2,12 +2,6 @@
 
 
 
-# output$svgTransformPanel<-renderUI({
-#   conditionalPanel( "input.plotNavBar =='Transforms'", modulePlotSVGrUI("svgTransformMod"))
-# })
-
-
-
 getCodeTransform<-reactive({
   src<-getCode()
   src<-usingDraggable(src, selectedTibble$transformType)
@@ -29,6 +23,7 @@ statusPlotTransform<-callModule(
   getCode,
   getCode2 = getCodeTransform,  # (or getCodeTransform)
   getErrorMssg,
+  getTibNRow=getTibNRow,
   insert.end=",NULL"
 )
 
@@ -38,7 +33,6 @@ observeEvent(statusPlotTransform$status(), {
   if(status$state!="PASS"){
     # cat("statusPlotTransform$status error\n")
     setSourceType(sourceType='logPanel')
-    #updateRightPanel('logPanel')
     mssg$err<-status$messages
   }
 })

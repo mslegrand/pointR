@@ -1,62 +1,91 @@
 
 moduleEdTibUI<-function(id, input, output) { 
   ns <- NS(id)
+  top0=40
+  top1=top0+32
+  top2=top1+32
+  top=80
+  left0=5
+  wid0=90
+  left=120
   tagList(
     #begin-----------headerPanel
-    # ---header backdrop
-    absolutePanel( id=ns('header'), 
-        top=50, left=0, width="100%", "class"="headerPanel", draggable=FALSE, height="80px"
+  
+    #---header backdrop
+    absolutePanel( id=ns('header'),
+         "class"="headerPanel", draggable=FALSE
     ),
-    # ---name input --- #(always visible) 
-    absolutePanel( top=50, left=15 ,style="display:inline-block",
-      selectizeInput( ns("name"), "Data", choices=list(),  selected=NULL, 
-        width= '120px' 
-      )
+    #---name
+    #---button
+    
+    absolutePanel(top= top0, left=left0,
+        div( 'class'="ptRBtn2",
+          actionButton(ns("newAssetsButton"), span(class='icon-plus'," Assets"), width=wid0+20)
+        )
+
+    ),
+    #chooser
+    absolutePanel(top= top0, left=left,  right=10,
+        uiOutput(ns("dataSetUI"))
     ),
     
+    #---column
+    # condition: !(name %in% c( transformTag, logTag, svgTag))
+    conditionalPanel(
+      condition = sprintf("input['%s'] != '%s' && input['%s'] != '%s' && input['%s'] != '%s'",
+      ns("name"), transformTag, ns("name"), logTag, ns("name"), svgPanelTag),
+      #---column
+        #---add column button---
+        absolutePanel(top= top1, left=left0,
+            div( 'class'="ptRBtn2",
+                      actionButton(ns("newColumnButton"), span(class='icon-plus'," Variables"), width=wid0+20)
+            )
+        ),
+        #---chooser
+        absolutePanel( top=top1, left=left,  right=10, 'class'='ptR2',
+          uiOutput(ns("columnUI"))
+        ),
+    #---columnEntries
+    #---entry widget selection---
+    absolutePanel(top= top2, left=left0,  width=wid0+20, uiOutput(ns("widgetChooserUI")) )
+
+   ),
+    #---entry value
+    absolutePanel( top=top2, left=left,  right=10, height=30, #style="background-color:red;" , 
+                   uiOutput(ns("columnEntryUI"))  
+                   ),
+    
+   
     #---transform content---#   display only if selected name is transform
     conditionalPanel( condition = sprintf("input['%s'] == '%s'", ns("name"), transformTag),
-      absolutePanel( 
-        top=50+25, left=145, width="100%", 
+      absolutePanel(
+        top=top+25, left=left, width="100%",
         "class"="headerPanel", draggable=FALSE, "background-color"='#666688',
-        tabsetPanel( id=ns("transformType"),  
-                     tabPanel("Translate"), 
-                     tabPanel("Rotate"), 
+        tabsetPanel( id=ns("transformType"),
+                     tabPanel("Translate"),
+                     tabPanel("Rotate"),
                      tabPanel("Scale"),
                      type="pills"
-        ) 
-      )    
-    ),
-    
-    #---tibble content---# display only if input name is a tibble
-    conditionalPanel( condition = sprintf("input['%s'] != '%s' && input['%s'] != '%s' ", ns("name"), transformTag, ns("name"), logTag),
-          #---row---
-          absolutePanel( top=50, left=145 ,
-            numericInput( ns("rowIndex"), "Row", 1, min=1, max=10, step=1, 
-               width= '70px' 
-            )
-          ), 
-          #---column---
-          absolutePanel( top=50, left=220 ,
-            selectizeInput(ns("columnName"), label="Column",
-              choices=list(),  selected=NULL, 
-              width= '120px' 
-            )
-          ),
-          # ---Entry Input Handlers ---
-          absolutePanel( top=50, left=345, uiOutput(ns("editEntryUI"))),
-          # ---point column---- # display if state is  point
-          absolutePanel(top=50, left=550, uiOutput(ns("matColIndexUI"))
         )
-      ) # end header panel
+      )
+    )
+   #,
+   # absolutePanel( "class"= "cRowContainer",
+   #    uiOutput(ns("rowPanel"))
+   # )
+    # , textInputAddon(inputId = ns('newChoiceXX'), label = "dog", 
+    #                placeholder = "Username", addon = icon("at"))
+    
+    
   ) # end taglist
+  
 }
 
 moduleEdTib<-function(input, output, session, 
   name, 
   nameChoices,
   getRowIndex,
-  getRowIndexChoices,
+  #getRowIndexChoices,
   getTibNRow,
   matColIndex,
   matColIndexChoices, 
@@ -68,31 +97,126 @@ moduleEdTib<-function(input, output, session,
   getTibEntryChoices, 
   getTibEditState,
   getTransformType,
-  getHandler,
-  getHandlerValue
+  getWidgetChoices,
+  getWidget
 ){
   ns <- session$ns
 
   entry<-reactiveValues(
-    #value=list(selected=NULL, choices=NULL, matColIndex=NULL, matColMax=NULL),
+    picker="buttons",
     result=NULL
   )
-  #getValue<-reactive({entry$value})
   
-  # output$matColIndexUI<-renderUI({
-  #   selected<-entry$value$matColMax %AND% 
-  #             entry$value$matColMax %AND%  
-  #             entry$value$selected
-  #   if(!is.null(selected) && selected=='point'){
-  #     matColIndex=entry$value$matColIndex
-  #     matColMax=entry$value$matColMax
-  #     matColMin=ifelse(matColMax==0, 0, 1)
-  #     numericInput(ns("matColIndex"), label="Mat Col", value= matColIndex,
-  #                                  min=matColMin, max=matColMax, step=1,
-  #                                  width= '80px'
-  #                  )
+  
+  
+
+#------------ui ouput----------------------
+  
+  #---assets
+  output$dataSetUI<-renderUI({
+    if(length(nameChoices())>0){
+      butts<- nameChoices()
+      radioGroupButtons(inputId=ns("name"), choices=butts, selected=name(),
+                        justified=TRUE)
+    }
+  })
+  
+  #---columns
+  output$columnUI<-renderUI({
+    if( getTibEditState()==TRUE ){
+      if(!is.null(getColumnName()) && !is.null(getColumnNameChoices())){ 
+        radioGroupButtons(inputId=ns("columnRadio"), 
+                          choices=as.list(getColumnNameChoices()), 
+                          selected=getColumnName() ,
+                          justified=TRUE)
+      }
+    } 
+  })  
+  
+  #---column values
+  output$widgetChooserUI<-renderUI({ #widgetChoice
+    if( getTibEditState()==TRUE ){
+      choices<-getWidgetChoices()
+      widget<-getWidget()
+      if( !is.null(choices ) && !is.null(widget)){
+        div( "class"='ptR2',
+           selectInput(ns("selectedWidget"), label=NULL,
+                       choices=choices, selected=widget, width=110)
+        )  
+      }
+    }
+  })
+  
+  output$columnEntryUI<-renderUI({
+    if( getTibEditState()==TRUE ){
+      #cat("\nEntering----------output$colEntryUI---------------\n")
+      widget<-getWidget()
+      if(!is.null(widget) && !is.null(getTibEntry()) && !is.null(getTibEntryChoices())){ 
+            selected<-getTibEntry()
+            choices<-sort(unique(unlist(getTibEntryChoices())))
+            
+            if(widget=='radio'){
+              radioGroupButtons(inputId=ns("entryRadio"), 
+                          choices=choices, 
+                          selected=selected,
+                          justified=TRUE
+              )
+            } else if (widget=='picker'){
+              div( "class"="ptR2", width='800px',
+                selectizeInput(ns("entryValue"), label=NULL,
+                             choices=choices, selected=selected, 
+                             options = list(create = TRUE, allowEmptyOption=FALSE, maxItems=1)
+                )
+              )
+            } else if(widget=='colourable') {
+              colourInput(
+                ns("entryColour"), label=NULL, value=selected
+              )
+            } else if(widget=='numeric'){
+              numericInput(
+                ns('entryNumeric'), label = NULL, min=1, max = 100, value = as.numeric(selected)
+              )
+            } else if(widget=='slider'){
+              sliderInput(
+                inputId=ns("entrySlider"),label = NULL, min=1,max = 100, value = as.numeric(selected)
+              )
+            } else if(widget=='knob'){
+               div(knobInput(
+                 ns('entryKnob'), label = NULL, min=1, max = 100, value = as.numeric(selected), width=100, height=100
+               ))
+            } 
+            # else if( widget=='spectrum'){
+            #   spectrumInput(
+            #     inputId = ns("entrySpectrum"),
+            #     label = NULL,
+            #     choices = list(
+            #       list('black', 'white', 'blanchedalmond', 'steelblue', 'forestgreen'),
+            #       as.list(brewer.pal(n = 9, name = "Blues")),
+            #       as.list(brewer.pal(n = 9, name = "Greens")),
+            #       as.list(brewer.pal(n = 11, name = "Spectral")),
+            #       as.list(brewer.pal(n = 8, name = "Dark2"))
+            #     ),
+            #     options = list(`toggle-palette-more-text` = "Show more")
+            #   )
+            # }
+      }
+    } 
+  })
+  
+  #------rows
+  # output$rowPanel<-renderUI({
+  #   if( getTibEditState()==TRUE ){
+  #     rowIndx<-getRowIndex()
+  #     N<-getTibNRow()
+  #     if( !is.null(rowIndx) && !is.null(N)){
+  #       sortableRadioButtons(ns("rowIndex"), label=NULL,
+  #                            choices=1:(getTibNRow()),
+  #                            selected= getRowIndex() #getSelectedRow()
+  #       )
+  #     }
   #   }
   # })
+  
   
   output$matColIndexUI<-renderUI({
     selected<-getTibEntry() %AND% getMatColMax() %AND% getMatColIndex() 
@@ -107,177 +231,88 @@ moduleEdTib<-function(input, output, session,
     }
   })
   
-  output$editEntryUI<-renderUI({
-    handlerValue<-getHandlerValue()
-    selected<-getTibEntry()
-    choices<-getTibEntryChoices()
-    if(!is.null(handlerValue) && handlerValue=='colourable'){
-       colourInput(
-        ns("entryColour"), label='Choose Colour', value=selected
-      )
-    } else {
-      selectizeInput(ns("entryValue"), label='Value',
-                     choices=choices, selected=selected, width="200px",
-                     options = list(create = TRUE, allowEmptyOption=FALSE, maxItems=1)
-                     )
-    }
-  })
-  
-  
-  
-  # # updateEntry is called by one of 2 observers 
-  # #  i c(getTibEntry(), getTibEntryChoices())
-  # #  ii getHandlerValue()
-  # # computes and assigns values for:
-  # #   - entryValue, entryChoices, matColIndex, matColChoices
-  # updateEntry<-function(){
-  #   cat("ModuleEdTib::...entering--------------updateEntry-------------------\n")
-  #   tibEntry=getTibEntry()
-  #   if(is.null(tibEntry)){cat("ModuleEdTib::...Quick Exit of updateEntry------------------tibEntry is NULL\n")
-  #     return(NULL)}
-  #   entryChoices=getTibEntryChoices()
-  #   entryValue<-list(selected=tibEntry, choices=as.list(entryChoices), matColIndex=NULL, matColMax=NULL)
-  #   entry$value<-entryValue
-  #   cat("Exiting----moduleEdTib----------updateEntry-------------------\n")
-  # }
-  # 
-  
-  #---name---
+
+  #---asset name---
   observeEvent(c( name(), nameChoices() ), { #update the name 
     if(length(nameChoices())==0){ #name choices
     } else {
-      updateSelectizeInput(session, "name", 
-                        choices=nameChoices(), 
-                        selected=name())
+      updateRadioGroupButtons(session, inputId=ns("name" ),
+        choices=nameChoices(), selected=name()
+      )
     }
   }) 
-  
-  #---update getRowIndex selection
-  observeEvent( c( getRowIndex(), getTibNRow() ),  { #update index
-    if( 
-      getTibEditState()==TRUE && 
-      !is.null(getRowIndex())    && 
-      !is.null(getTibNRow())  &&
-      getTibNRow()>0 
-    ){
-      updateNumericInput(
-        session, 
-        "rowIndex", 
-        min=1,
-        max=getTibNRow(),
-        value=getRowIndex()
-      )
-    } 
-  }) 
-  
-  #--row--- changed, update entryValue choices
-  # observeEvent( c( getRowIndex(), getTibNRow() ),  { #update entry 
-  #   if( 
-  #     getTibEditState()==TRUE && 
-  #     !is.null(getRowIndex())    && 
-  #     !is.null(getTibNRow())  &&
-  #              getTibNRow()>0 
-  #   ){
-  #     handlerValue<-getHandlerValue()
-  #     if(!is.null(handlerValue) && handlerValue=='colourable'){
-  #       cat('')
-  #     } else {
-  #       # val<-getValue()
-  #       # selected<-val$selected
-  #       # choices<- val$choices
-  #       selected<-getTibEntry()
-  #       choices<-getTibEntryChoices()
-  #       updateSelectizeInput(session, "entryValue",  choices=choices,  selected=selected)
-  #     } 
-  #   }
-  # })   
 
-  #---column Name change, update ColumnName choice---
-  observeEvent( c(getColumnName(), getColumnNameChoices()) , {
-    if( getTibEditState()==TRUE ){
-      if(!is.null(getColumnName()) && !is.null(getColumnNameChoices())){ 
-        updateSelectizeInput(session, "columnName", 
-                             choices=as.list(getColumnNameChoices()), 
-                             selected=getColumnName() )
-      }
-    } 
-  })
-  
   observeEvent(getTransformType(), {
     if(!is.null(input$name) && input$name==transformTag){
       updateTabsetPanel(session, input$transformType, selected=getTransformType() )
     }
   }, ignoreNULL = TRUE)
   
-
-  #---matColIndex
-  # observeEvent( c( matColIndex(), matColIndexChoices(), getValue() ),{
-  #   val=getValue()
-  #     if( 
-  #       !is.null(val$selected )    && 
-  #       (val$selected=='point')    &&
-  #       !is.null(matColIndex() )   && 
-  #       !is.null(matColIndexChoices())
-  #      )
-  #    {
-  #     mcChoices<-matColIndexChoices()
-  #     # cat('mcChoices=\n')
-  #     # print(mcChoices)
-  #     updateNumericInput(session, "matColIndex", 
-  #                        min=min(mcChoices),
-  #                        max=max(mcChoices),
-  #                        value=matColIndex()
-  #     ) 
-  #   } else {
-  #     cat('ok\n')
-  #   }
-  # })
-  
-                
-
-
-  #---the next pair of observers are used to return for the entry value---
-  observeEvent( input$entryValue ,{
-    val<- input$entryValue
+  #---the next collection of observers are used to return for the entry value---
+  observeEvent( input$entryRadio ,{
+    val<- input$entryRadio
     if(!is.null(val) && nchar(val)>0){
-        # cat("ModuleEdTib::...---------- entering input$entryValue--------\n")
-        # cat("ModuleEdTib::...----------entryValue=<",val,">\n")
-        # print(val)
         entry$result<-val
-        # cat("\nModuleEdTib::...----------returning entry$result=", entry$result,"\n")
-        # cat("ModuleEdTib::...---------- exiting input$entryValue--------\n")
+    }
+  })
+  
+  observeEvent( input$entryValue, {
+    val<-input$entryValue
+    if(!is.null(val) && nchar(val)>0){
+      entry$result<-val
+    }
+  })
+  
+  observeEvent( input$entrySlider ,{
+    val<-input$entrySlider
+    if(!is.null(val) && nchar(val)>0){
+      entry$result<-val
+    }
+  })
+  
+  observeEvent( input$entryKnob ,{
+    val<-input$entryKnob
+    if(!is.null(val) && nchar(val)>0){
+      entry$result<-val
+    }
+  })
+  
+  observeEvent( input$entryNumeric ,{
+    val<-input$entryNumeric
+    if(!is.null(val) && nchar(val)>0){
+      entry$result<-val
     }
   })
   
   observeEvent( input$entryColour ,{
     val<-input$entryColour
     if(!is.null(val) && nchar(val)>0){
-      # cat("ModuleEdTib::...---------- entering input$entryColour--------\n")
-      # cat("ModuleEdTib::...----------entryValue=<",val,">\n")
       entry$result<-val
-      # cat("\nModuleEdTib::...----------returning entry$result=", entry$result,"\n")
-      # cat("ModuleEdTib::...---------- exiting input$entryColour--------\n")
     }
   })
   
-  # observeEvent( getValue(),{
-  #   val<-getValue()$selected
-  #   if(!is.null(val ) && nchar(val)){
-  #     cat("\nModuleEdTib::...---------- entering getValue()$selected",val,">\n")
-  #     entry$result<-val
-  #     cat("\nModuleEdTib::...----------returning entry$result=", entry$result,"\n")
-  #     cat("\nModuleEdTib::...---------- exiting getValue()$selected",val,">\n")
-  #   }
-  # })
+  observeEvent( input$entrySpectrum ,{
+    val<-input$entrySpectrum
+    if(!is.null(val) && nchar(val)>0){
+      entry$result<-val
+    }
+  })
   
+  
+  # observeEvent(input$selectedWidget,{
+  #   cat("input$selectedWidget cnanged...................\n")
+  # })
   
   #when name, index, attrName valid, and attrVal changes, update the ptDefs and code
   list( 
     name          = reactive({input$name}),
-    rowIndex      = reactive({input$rowIndex}),
-    columnName    = reactive({input$columnName}),
+    # rowIndex      = reactive({input$rowIndex}),
+    # rowReorder      = reactive({input$rowIndex_order}),
+    columnName    = reactive({input$columnRadio}),
     entryValue    = reactive(entry$result), 
+    selectedWidget  = reactive(input$selectedWidget),
     matColIndex   = reactive(input$matColIndex),
-    transformType = reactive({input$transformType})
+    transformType = reactive({input$transformType}),
+    newColumn = reactive({input$newColumn})
   )
 }
