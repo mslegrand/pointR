@@ -12,11 +12,10 @@ output$BottomRightPanel<-renderUI({
   moduleFooterRightUI("footerRight", input, output)
 })
 
-
 output$MidRightPanel<-renderUI({
  
   chosenRightMidPanel<-getRightMidPanel2()
-
+  
   if (chosenRightMidPanel=='point'){
     modulePlotSVGrUI("svgPointsMod")
   } else if (chosenRightMidPanel=='value'){
@@ -138,7 +137,6 @@ getTibEditState<-reactive({
     (panels$sourceType)==svgPanelTag && 
     !is.null(getPlotState()) && 
     getPlotState() %in%  c("point", "value", "matrix")
-    #(panels$state %in% c("point", "value", "matrix"))
 })
 
 

@@ -99,6 +99,7 @@ statusPlotTagDrag<-callModule(
   getCode= getCode, #srcGet,
   getCode2 =getCode, #srcGet,  # (or getCodeTransform)
   getErrorMssg=getErrorMssg,
+  getTibNRow=getTibNRow,
   insert.end=",showPts.compound()"
 )
 

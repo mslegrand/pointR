@@ -13,24 +13,18 @@ moduleRowDND<-function(input, output, session,
 ){
   ns <- session$ns
   output$rowPanel<-renderUI({
-    if( getTibNRow()>0 ){
+    if( getTibNRow()>1 ){
       rowIndx<-getRowIndex()
       N<-getTibNRow()
       if( !is.null(rowIndx) && !is.null(N)){
         sortableRadioButtons(ns("rowIndex"), label=NULL,
                              choices=1:(getTibNRow()),
-                             selected= getRowIndex() #getSelectedRow()
+                             selected= getRowIndex() 
         )
       }
     }
   })
-  observeEvent(getRowIndex(),{
-    cat("observeEvent(getRowIndex())\n")
-    cat("getTibNRow()=",format(getTibNRow()),"\n")
-  })
-  observeEvent(input$rowIndex,{
-    cat("observeEvent(input$rowIndex)\n")
-  })
+  
   
   list(
     rowIndex      = reactive({input$rowIndex}),

@@ -125,6 +125,7 @@ statusPlotPoint<-callModule(
   getCode,
   getCode2 =getCode,  # (or getCodeTransform)
   getErrorMssg,
+  getTibNRow=getTibNRow,
   insert.end=",showPts.compound()"
 )
 

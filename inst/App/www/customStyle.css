@@ -41,6 +41,34 @@ overflow: hidden;
 }
 .cSvgHtml{
   top:140px; 
+  left:5px; 
+  right:5px;  
+  bottom:40px;
+  margin-top:0;
+  margin-left:0;
+  margin-right:0;
+  margin-bottom:0;
+  border: 3px solid blue;
+  background-color: #DDBBFF;
+  overflow: auto;
+}
+.cSvgHtml0{
+  position: relative;
+  top:140px; 
+  left:5px; 
+  right:5px;  
+  bottom:40px;
+  margin-top:0;
+  margin-left:0;
+  margin-right:0;
+  margin-bottom:0;
+  border: 3px solid blue;
+  background-color: #DDBBFF;
+  overflow: auto;
+}
+.cSvgHtml1{
+  position: relative;
+  top:140px; 
   left:55px; 
   right:5px;  
   bottom:40px;
@@ -52,6 +80,7 @@ overflow: hidden;
   background-color: #DDBBFF;
   overflow: auto;
 }
+
 .cRowContainer{
   top:140px; 
   left: 5px;

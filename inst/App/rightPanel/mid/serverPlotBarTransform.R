@@ -23,6 +23,7 @@ statusPlotTransform<-callModule(
   getCode,
   getCode2 = getCodeTransform,  # (or getCodeTransform)
   getErrorMssg,
+  getTibNRow=getTibNRow,
   insert.end=",NULL"
 )
 

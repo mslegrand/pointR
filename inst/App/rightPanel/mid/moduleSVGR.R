@@ -16,11 +16,12 @@ svgToolsScript<-function(type){
 
   modulePlotSVGrUI <- function(id, input, output) { 
     ns <- NS(id)
-    absolutePanel( 
-                   "class"="cSvgHtml", 
-                    draggable=FALSE,
-                    htmlOutput(ns( "svghtml" ), inline=FALSE)
-    )
+    # absolutePanel( 
+    #                "class"=c("cSvgHtml"),
+    #                 draggable=FALSE,
+    #                 htmlOutput(ns( "svghtml" ), inline=FALSE)
+    # )
+    uiOutput(ns("svghtml"))
   }
   
   modulePlotSVGr<-function(
@@ -33,9 +34,10 @@ svgToolsScript<-function(type){
     getCode,
     getCode2,  # =getCode (or getCodeTransform)
     getErrorMssg, 
+    getTibNRow,
     insert.end #='showPts.compound()'
   ){
-    
+  ns <- session$ns
   user<-  reactiveValues( code="")
   
   rtv<-  reactiveValues(
@@ -97,8 +99,23 @@ svgToolsScript<-function(type){
         } 
       )
     }
-    res
-  }) #end of renderUI
+    #res
+    
+    # might wrap with the absolutePanel as follows:
+   
+    if(getTibNRow()<=1){
+      cls<-"cSvgHtml0"
+    }
+    else{
+      cls<-"cSvgHtml1"
+    }
+    
+    absolutePanel( 
+      class=cls,
+      draggable=FALSE,
+      pre( res ), inline=FALSE
+    )
+   }) #end of renderUI
   
   list(
     status=reactive({rtv$status}) 

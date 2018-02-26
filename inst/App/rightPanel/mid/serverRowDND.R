@@ -10,7 +10,7 @@ returnValue4ModuleRowDND<-callModule(
 # if moduleEdTib changes the rowIndex,  matCol in selectedTibble needs to be updated
 observeEvent(returnValue4ModuleRowDND$rowIndex(),{
   if( getTibEditState()==TRUE ){
-    cat("serverRowDND:: -----Entering-----rowIndex()::----------------\n")
+    #cat("serverRowDND:: -----Entering-----rowIndex()::----------------\n")
     rowIndex<-as.integer(returnValue4ModuleRowDND$rowIndex())
     if(!is.null(getTibRow()) && rowIndex==getTibRow()){ return(NULL) } #bail
     # compute matColIndex and update rowIndex, matColIndex
@@ -42,8 +42,8 @@ observeEvent(returnValue4ModuleRowDND$rowIndex(),{
 observeEvent( returnValue4ModuleRowDND$rowReorder() ,{
   if( getTibEditState()==TRUE ){
     ordering<-as.numeric(returnValue4ModuleRowDND$rowReorder())
-    cat(paste(ordering,collapse=", "))
-    cat("\n")
+    # cat(paste(ordering,collapse=", "))
+    # cat("\n")
     name<-getTibName()
     row<-getTibRow()
     columnName<-getTibColumnName()
