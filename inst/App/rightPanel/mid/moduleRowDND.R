@@ -1,10 +1,8 @@
 moduleRowDNDUI<-function(id, input, output) { 
   ns <- NS(id)  
-  #tagList(
     absolutePanel( "class"= "cRowContainer",
                    uiOutput(ns("rowPanel"))
     )
-  #)
 }
 
 moduleRowDND<-function(input, output, session, 

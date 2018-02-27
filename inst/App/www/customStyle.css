@@ -69,7 +69,7 @@ overflow: hidden;
 .cSvgHtml1{
   position: relative;
   top:140px; 
-  left:55px; 
+  left:62px; 
   right:5px;  
   bottom:40px;
   margin-top:0;
@@ -83,15 +83,17 @@ overflow: hidden;
 
 .cRowContainer{
   top:140px; 
-  left: 5px;
-  right:53px;
+  left: 3px;
+  width: 54px;
   bottom: 40px;
-  background-color: #4f6a8c; 
+  border: 3px solid blue;
+  background-color:#222244;
+  overflow: hidden;  
 }
 .cAceContainer{
   top:140px; 
   left:5px; 
-  right:5px;  
+  right:62px;  
   bottom:40px;
   margin-top:0;
   margin-left:0;
@@ -100,6 +102,31 @@ overflow: hidden;
   border: 3px solid blue;
   background-color: #DDBBFF;
   overflow: auto;
+}
+.cAceDNDContainer{
+  top:140px; 
+  width:54px; 
+  right:5px;  
+  bottom:40px;
+  margin-top:0;
+  margin-left:0;
+  margin-right:0;
+  margin-bottom:0;
+  border: 3px solid blue;
+  background-color:#222244;
+  overflow: hidden;
+}
+.snippetButton{
+  width: 45px;
+  height: 30px;
+  /*padding: 0.25em;*/
+  float: left;
+  padding-left: 3px; 
+  margin: 0 ;
+  border-style: solid;
+  border-width: 1px;
+  background: black;
+  color: #44DDDD;
 }
 .cLogText{
   top:125px; 

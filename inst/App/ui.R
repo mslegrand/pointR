@@ -15,6 +15,8 @@ shinyUI(
   div( class="pretty-split-pane-frame", id="mySplitter",
     singleton(
       tags$head(
+        # tags$script(src="https://code.jquery.com/jquery-1.12.4.js"),
+        # tags$script(src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"),
         initResourcePaths(),
         tags$link(rel = "stylesheet", type = "text/css", id="customStyle", href = "customStyle.css"),
         tags$link(rel = "stylesheet", type = "text/css", id="customStyle", href = "fontello/css/font1_20.css"),
@@ -37,7 +39,7 @@ shinyUI(
     ),
     
     div(
-      
+      singleton(tags$head(tags$script(src='shared/jqueryui/jquery-ui.min.js'))),     
       class="split-pane vertical-percent",
       useShinyjs(debug = TRUE),
       extendShinyjs(script="www/menuHelper.js"), #appears that only close window is used!
@@ -75,14 +77,16 @@ shinyUI(
           absolutePanel( id='aceToobarTop2', 
               top=105, left=0, width="100%", "class"="headerPanel", draggable=FALSE, height="30px",
               buildHToolBar(bar2)
-         ),
+           ),
+        
+          
           absolutePanel( 
             id='aceContainer',
             "class"="cAceContainer", 
             style="overflow-y:hidden;",
             overflow= "hidden",
             draggable=FALSE,
-            
+            droppable=TRUE,
             shinyAce4Ptr( 
               outputId = "source",  value="",  
               mode="ptr", theme=defaultOpts["theme"],
@@ -91,13 +95,17 @@ shinyUI(
             ), 
             inline=FALSE
           ),
+          
+          absolutePanel( id='aceToobarMid', "class"="cAceDNDContainer", draggable=FALSE ,
+                          buildSnippetToolBar()
+          ),            
           absolutePanel( "class"="footerPanel", draggable=FALSE, style="display:inline-block",
              absolutePanel( left=5, bottom=0,
                actionButton("commit", label = "COMMIT EDIT") %>% bs_embed_tooltip(title = "Commit code changes")
              ),
              absolutePanel( left=150, bottom=-10,
                #checkboxInput('useTribble', 'display as tribble', value = TRUE, width = NULL)
-               awesomeRadio('useTribble', 'Style:', choices=c('Tribble','Tibble'),
+               awesomeRadio('useTribble', NULL, choices=c('Tribble','Tibble'),
                                     selected = "Tribble", 
                                     inline = TRUE, status='success')
              )

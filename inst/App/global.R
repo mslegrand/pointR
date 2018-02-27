@@ -31,13 +31,6 @@ list.entry.at.index<-function(ll, indx){
   ll[[indx]] 
 }
 
-# pkgsCRAN<-c("stringr", "svDialogs", "devtools",  "lintr")
-# for(pkgName in pkgsCRAN){  
-#   if(!require(pkgName, character.only=TRUE)){
-#     #install.packages(pkgName)
-#     library(pkgName, character.only = TRUE)
-#   }  
-# }            
 
 # pkgs<-list(
 #            "shinyjs"="daattali", 
@@ -63,7 +56,6 @@ sapply(r_pkgs, library, character.only=TRUE)
 defTag<-"ptR"
 transformTag<-"Transforms"
 logTag<-"logPanel"
-#svgTag<-'svgPanel'
 svgPanelTag<-'svgPanel'
 
 getSVGWH<-function(){ c(650,620)} #this should be ultimately place in another file
@@ -81,6 +73,7 @@ source("util/utilColumnType.R")
 source("util/utilTransform.R")
 source("leftPanel/menu/buildLeftMenuUI.R")
 source("leftPanel/toolbar/buildLeftHToolBarUI.R")
+source("leftPanel/mid/buildSnippetToolBar.R")
 source("rightPanel/menu/buildRightMenuUI.R")
 source("leftPanel/mid/shinyAce4Ptr.R")
 
