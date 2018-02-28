@@ -39,7 +39,7 @@ shinyUI(
     ),
     
     div(
-      singleton(tags$head(tags$script(src='shared/jqueryui/jquery-ui.min.js'))),     
+      #singleton(tags$head(tags$script(src='shared/jqueryui/jquery-ui.min.js'))),     
       class="split-pane vertical-percent",
       useShinyjs(debug = TRUE),
       extendShinyjs(script="www/menuHelper.js"), #appears that only close window is used!
@@ -85,8 +85,8 @@ shinyUI(
             "class"="cAceContainer", 
             style="overflow-y:hidden;",
             overflow= "hidden",
-            draggable=FALSE,
-            droppable=TRUE,
+            #draggable=FALSE,
+            #droppable=TRUE,
             shinyAce4Ptr( 
               outputId = "source",  value="",  
               mode="ptr", theme=defaultOpts["theme"],
@@ -96,7 +96,7 @@ shinyUI(
             inline=FALSE
           ),
           
-          absolutePanel( id='aceToobarMid', "class"="cAceDNDContainer", draggable=FALSE ,
+          absolutePanel( id='aceToobarMid', "class"="cAceDNDContainer", #draggable=FALSE ,
                           buildSnippetToolBar()
           ),            
           absolutePanel( "class"="footerPanel", draggable=FALSE, style="display:inline-block",

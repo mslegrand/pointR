@@ -41,7 +41,7 @@ observeEvent(returnValue4ModuleRowDND$rowIndex(),{
 #row reordering
 observeEvent( returnValue4ModuleRowDND$rowReorder() ,{
   if( getTibEditState()==TRUE ){
-    ordering<-as.numeric(returnValue4ModuleRowDND$rowReorder())
+    ordering<-as.integer(returnValue4ModuleRowDND$rowReorder())
     # cat(paste(ordering,collapse=", "))
     # cat("\n")
     name<-getTibName()

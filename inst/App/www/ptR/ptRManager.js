@@ -38,6 +38,18 @@ Shiny.addCustomMessageHandler(
       //var klass=data.addClass.klass;
       setTimeout(function() {$('#' + data.addClass.id).addClass(klass)}, 10);
     }
+    if(!!data.snippetButtonActivate){
+      $(".snippetButton").each( function(){
+        $(this).draggable({
+    		//revert: true
+    		opacity: 0.5,
+    		stroke: "#FFFFFF",
+    		helper: 'clone',
+        revert: 'invalid',
+        appendTo: 'body'
+      }); 
+    });
+    }
   }
 ); 
 
@@ -50,6 +62,79 @@ $('#buttonFileOpenHidden').on('selection', function(event, path){
 $('document').ready(function()
 {
   $('.hiddenButton').hide();
+  /*
+  $(".snippetButton").each( function(){
+    $(this).draggable({
+		//revert: true
+		opacity: 0.5,
+		stroke: "#FFFFFF",
+		helper: 'clone',
+    revert: 'invalid',
+    appendTo: 'body'
+    });
+    
+  });
+  */
+  
+  /*
+  $(".snippetButton").each( function(){
+    $(this).draggable({
+    		//revert: true
+    		opacity: 0.5,
+    		stroke: "#FFFFFF",
+    		helper: 'clone',
+        revert: 'invalid',
+        appendTo: 'body',
+        start: function(event, ui){
+          var tmp = $("#source");
+          //tmp.draggable('enable');
+          console.log('drag starting');
+          
+        },
+        stop: function( event, ui ) {
+          console.log('drag stoping');
+        }
+    }); 
+  });
+  */
+    
+/*  
+  $('.cAceContainer').droppable({
+    
+    //activeClass: "ui-state-default",
+    //hoverClass: "ui-state-hover",
+    accept: ":not(.ui-sortable-helper)",
+
+    drop: function(event, ui) {
+      console.log('0:  drop occurred');
+      var theEditor = $(this).data('aceEditor'); 
+      console.log( JSON.stringify( this.data ))
+      var pos = theEditor.renderer.screenToTextCoordinates(event.clientX, event.clientY);
+      
+      console.log("pos=" + JSON.stringify(pos));
+      var txt =  ui.draggable.attr("data-snippet");
+      $(this).focus();
+      theEditor.moveCursorToPosition(pos);
+      //editor.session.insert(pos, txt);
+      //editor.insert(txt);
+      ui.helper.remove();
+      
+	    var tab_press= jQuery.Event('keydown', {which: 88});
+       var snippetManager = ace.require("ace/snippets").snippetManager;
+       snippetManager.insertSnippet(theEditor, txt);
+       
+       setTimeout( function(){
+       $(this).focus();
+       console.log('drop occurred');
+ 	     $(this).trigger(tab_press);
+       }, 5);
+      return true;
+    }
+
+
+  });
+*/  
+
   //$('body').on('keypress', 'enter')
 });
 
