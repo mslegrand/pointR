@@ -9,6 +9,7 @@
 #      )
 # )
 # 
+
 jqui_droppable(
   selector ="#source", method='enable',
   options=list(

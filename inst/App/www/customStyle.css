@@ -117,11 +117,12 @@ overflow: hidden;
   overflow: hidden;
 }
 .snippetButton{
-  width: 45px;
-  height: 30px;
+  width: 54px;
+  height: 32px;
   /*padding: 0.25em;*/
   float: left;
-  padding-left: 3px; 
+  /*padding-left: 3px; */
+  padding: 0;
   margin: 0 ;
   border-style: solid;
   border-width: 1px;

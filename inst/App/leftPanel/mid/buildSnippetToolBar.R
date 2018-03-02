@@ -1,31 +1,32 @@
 
 
 
-# snippets<-as.list(letters)
-# names(snippets)<-snippets
-# load snippets and iconts
-
-snippets<-toolbarSnippets
-
 buildSnippetToolBar<-function(){
-  lapply(snippets, function(n){
-    title<-n[1]
+  lapply(toolbarSnippets, function(n){
+    
+    #title<-tag("svg", list(viewBox="0 0 32 32", tag("use", list(`xlink:href`="snippetIcons/ellipse.svg"))) )
+    hint<-n[1]
+    if(is.null(hint) || nchar(hint)==0){
+      hint="no hint"
+    }
+    if(nchar(n[2])>0){
+      iconImage<-img(src=paste0("snippetIcons/", n[2]))
+    } else{
+      iconImage<-'NA'
+    }
     snp<-n[3]
-    jqui_draggabled(
-      div( class="snippetButton", draggable=TRUE, title ,
+    d<-div( class="snippetButton", draggable=TRUE, iconImage , color='blue',
            "data-snippet"= n[3]
-# "if (${1:condition_name}) {
-# 	${2:body}
-#}"
-             #snippets[[n]] 
-      ),options=list(
+      ) %>% bs_embed_tooltip(title = hint)
+    jqui_draggabled(
+      d,options=list(
         opacity= 0.5,
         stroke= "#FFFFFF",
         helper= 'clone',
         revert= 'invalid',
         appendTo= 'body'
       )
-    )
+    )  #
   })
 }
 

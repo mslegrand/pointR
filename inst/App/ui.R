@@ -85,8 +85,6 @@ shinyUI(
             "class"="cAceContainer", 
             style="overflow-y:hidden;",
             overflow= "hidden",
-            #draggable=FALSE,
-            #droppable=TRUE,
             shinyAce4Ptr( 
               outputId = "source",  value="",  
               mode="ptr", theme=defaultOpts["theme"],
