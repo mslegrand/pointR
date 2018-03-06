@@ -1,8 +1,8 @@
 moduleRowDNDUI<-function(id, input, output) { 
   ns <- NS(id)  
-    absolutePanel( "class"= "cRowContainer",
-                   uiOutput(ns("rowPanel"))
-    )
+    #absolutePanel( "class"= "cRowContainer",
+    uiOutput(ns("rowPanel"))
+    #)
 }
 
 moduleRowDND<-function(input, output, session, 
@@ -11,7 +11,7 @@ moduleRowDND<-function(input, output, session,
 ){
   ns <- session$ns
   output$rowPanel<-renderUI({
-    if( getTibNRow()>1 ){
+    if( getTibNRow()>0 ){
       rowIndx<-getRowIndex()
       N<-getTibNRow()
       if( !is.null(rowIndx) && !is.null(N)){

@@ -6,6 +6,8 @@ returnValue4ModuleRowDND<-callModule(
   getRowIndex=getTibRow
 )
 
+
+
 # rowIndex
 # if moduleEdTib changes the rowIndex,  matCol in selectedTibble needs to be updated
 observeEvent(returnValue4ModuleRowDND$rowIndex(),{

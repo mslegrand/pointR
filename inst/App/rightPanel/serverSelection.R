@@ -30,6 +30,11 @@ getTibNRow<-reactive({
     0
   }
 })
+
+atLeast2Rows<-reactive({
+  getTibEditState()==TRUE && nrow(getPtDefs()$tib[[getTibName()]])>1
+})
+
 getTibRow<-reactive({#cat('getTibRow()=',format( selectedTibble$rowIndex),"\n");
   selectedTibble$rowIndex})
 getTibMatCol<-reactive({ selectedTibble$matCol })

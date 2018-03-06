@@ -1,6 +1,13 @@
 
 output$TopRightPanel<-renderUI({
-  moduleEdTibUI("tagValBar", input, output)
+  tagList(
+      div( "class"='topHeadPanel',
+      moduleEdAssetUI("edAssetCh", input, output),
+      div( "class"='topHeadTibEdit',
+        moduleEdTibUI("tagValBar", input, output)
+      )
+    )
+  )
 })
 
 output$LeftMidRightPanel<-renderUI({

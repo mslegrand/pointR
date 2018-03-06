@@ -5,7 +5,7 @@
 returnValue4ModuleEdTib<-callModule(
   module=moduleEdTib,
   id="tagValBar",
-  name=reactive({ if(hasError()){ errorPanelTag } else{ getTibName()}}),
+  name=reactive({ if(hasError()){ errorPanelTag } else{ getTibName() }}),
   nameChoices=getRightPanelChoices,
   getRowIndex=reactive({            if( getTibEditState()==TRUE ){ getTibRow() } else { NULL } }),
   getTibNRow=reactive({             if( getTibEditState()==TRUE ){ getTibNRow() } else { NULL } }),
@@ -34,20 +34,19 @@ getSafeSelection<-function(selection, choices){ #anybody using this???
   selection
 }
 
-#name
-observeEvent(returnValue4ModuleEdTib$name(),{
-    name<-returnValue4ModuleEdTib$name()
-    if( name==getTibName() ){ return(NULL) } #bail if moduleEdTib did not change name
-    if( !(name %in% c(errorPanelTag) )){
-      if(name==transformTag){
-          updateSelected(name=transformTag)
-      } else  {
-        tibs<-getPtDefs()$tib
-        resetSelectedTibbleName(tibs=tibs, name=name)
-      }
-    }
-    
-})
+# #name
+# observeEvent(returnValue4ModuleEdTib$name(),{
+#     name<-returnValue4ModuleEdTib$name()
+#     if( name==getTibName() ){ return(NULL) } #bail if moduleEdTib did not change name
+#     if( !(name %in% c(errorPanelTag) )){
+#       if(name==transformTag){
+#           updateSelected(name=transformTag)
+#       } else  {
+#         tibs<-getPtDefs()$tib
+#         resetSelectedTibbleName(tibs=tibs, name=name)
+#       }
+#     }
+# })
 
 observeEvent(returnValue4ModuleEdTib$selectedWidget(), {
   #cat("-----------returnValue4ModuleEdTib$selectedWidget\n")

@@ -136,3 +136,17 @@ usingTransformDraggable<-reactive({
         grepl('class\\s*=\\s*"draggable"',getCode() )
     )
 }) 
+
+observeEvent(atLeast2Rows(),{
+  cat("atLeast2Rows()=",format(atLeast2Rows()),"\n")
+  if(atLeast2Rows()){
+    #show row, shrink display
+    showElement('rowOutPanel')
+    addCssClass('svgOutPanel', 'cSvgOutLeftIndent')
+  } else {
+    #hide rows, expand display
+    hideElement('rowOutPanel')
+    removeCssClass('svgOutPanel', 'cSvgOutLeftIndent')
+  }
+})
+

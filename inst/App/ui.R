@@ -113,9 +113,10 @@ shinyUI(
           buildRightMenu(),
           uiOutput("BottomRightPanel"),
           uiOutput("TopRightPanel"),
-          uiOutput("LeftMidRightPanel"),
-          br(),
-          uiOutput("MidRightPanel")
+          div( id="midRightPanels", class="cMidPanel",
+            div( id='svgOutPanel',  class="cSvgOut", uiOutput("MidRightPanel")),
+            div( id='rowOutPanel',  class='cRowOut', uiOutput("LeftMidRightPanel"),visibility='hidden')
+          )
         ) #-----right bootstrap page end----------
       ) #----------right component end---------
       #-------------right panel end--------------------------------------------------

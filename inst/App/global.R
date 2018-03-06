@@ -85,6 +85,7 @@ source("leftPanel/mid/shinyAce4Ptr.R")
 #---load modules source -------------
 
 source("rightPanel/footer/moduleFooterRight.R")
+source("rightPanel/header/moduleEdAsset.R")
 source("rightPanel/header/moduleEdTib.R")
 source("rightPanel/mid/moduleRowDND.R")
 source("rightPanel/mid/moduleSVGR.R")

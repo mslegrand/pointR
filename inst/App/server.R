@@ -81,7 +81,9 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   
 #------------------rightPanel--------------------------------
   source("rightPanel/footer/serverFooterRight.R",    local=TRUE) 
+  
   source("rightPanel/header/serverEdTib.R",          local=TRUE)
+  source("rightPanel/header/serverEdAsset.R",          local=TRUE)
   source("rightPanel/mid/serverRowDND.R",            local=TRUE)
   source("rightPanel/mid/serverPlotBarPoints.R",     local=TRUE) 
   source("rightPanel/mid/serverPlotBarTagValues.R",  local=TRUE)  
