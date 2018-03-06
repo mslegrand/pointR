@@ -39,11 +39,9 @@ shinyUI(
     ),
     
     div(
-      #singleton(tags$head(tags$script(src='shared/jqueryui/jquery-ui.min.js'))),     
       class="split-pane vertical-percent",
       useShinyjs(debug = TRUE),
       extendShinyjs(script="www/menuHelper.js"), #appears that only close window is used!
-      
       #-------------left panel begin--------------------------------------------------
       #------- left component begin-----------
       div( 
@@ -55,31 +53,22 @@ shinyUI(
           buildLeftMenu(version),
           #-------left menu end------------
           #-------left content begin--------
-          shinyFilesButton("buttonFileOpenHidden", label="", title="Open File", multiple=FALSE, 
-                           class='hiddenButton'),
-          shinySaveButton("buttonFileSaveHidden", label="", 
-                           title="Save as ...",  list('hidden_mime_type'=c("")) , 
-                           class='hiddenButton'),
-          shinyFilesButton("buttonSnippetOpen", label="", 
-                           title="Import Snippet", multiple=FALSE, 
-                           class='hiddenButton'),
-          shinySaveButton("buttonExportSVGHidden", label="", 
-                          title="Save as ...",  list('hidden_mime_type'=c("")) , 
-                          class='hiddenButton'),
-          absolutePanel( id='aceTabSet', top=45, left=20, width="100%", 
+          shinyFilesButton("buttonFileOpenHidden", label="", title="Open File",     multiple=FALSE, class='hiddenButton'),
+          shinySaveButton( "buttonFileSaveHidden", label="", title="Save as ...",  list('hidden_mime_type'=c("")) , class='hiddenButton'),
+          shinyFilesButton("buttonSnippetOpen",    label="", title="Import Snippet", multiple=FALSE,  class='hiddenButton'),
+          shinySaveButton("buttonExportSVGHidden", label="", title="Save as ...",  list('hidden_mime_type'=c("")) , class='hiddenButton'),
+          absolutePanel( id='aceTabSet', 
+              top=45, left=20, width="100%", 
               uiOutput("TopLeftTabPanel")
           ),
           absolutePanel( id='aceToobarTop1', 
               top=75, left=0, width="100%", "class"="headerPanel", draggable=FALSE, height="30px",
               buildHToolBar(bar1)
           ),
-              
           absolutePanel( id='aceToobarTop2', 
               top=105, left=0, width="100%", "class"="headerPanel", draggable=FALSE, height="30px",
               buildHToolBar(bar2)
            ),
-        
-          
           absolutePanel( 
             id='aceContainer',
             "class"="cAceContainer", 
@@ -93,7 +82,6 @@ shinyUI(
             ), 
             inline=FALSE
           ),
-          
           absolutePanel( id='aceToobarMid', "class"="cAceDNDContainer", #draggable=FALSE ,
                           buildSnippetToolBar()
           ),            
@@ -102,7 +90,6 @@ shinyUI(
                actionButton("commit", label = "COMMIT EDIT") %>% bs_embed_tooltip(title = "Commit code changes")
              ),
              absolutePanel( left=150, bottom=-10,
-               #checkboxInput('useTribble', 'display as tribble', value = TRUE, width = NULL)
                awesomeRadio('useTribble', NULL, choices=c('Tribble','Tibble'),
                                     selected = "Tribble", 
                                     inline = TRUE, status='success')
@@ -127,7 +114,6 @@ shinyUI(
           uiOutput("BottomRightPanel"),
           uiOutput("TopRightPanel"),
           uiOutput("LeftMidRightPanel"),
-          #moduleEdTibUI("tagValBar", input, output),
           br(),
           uiOutput("MidRightPanel")
         ) #-----right bootstrap page end----------

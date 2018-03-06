@@ -133,10 +133,7 @@ statusPlotPoint<-callModule(
 observeEvent(statusPlotPoint$status(), {
   status<-statusPlotPoint$status()
   if( status$state!="PASS"){ 
-    # cat("statusPlotPoint$status() error\n")
-    setSourceType(sourceType='logPanel')
-    #updateRightPanel('logPanel')
-    mssg$err<-status$message
+    mssg$err<-paste(mssg$err, status$message, "cannot plot: code02\n", collapse="\n")
   }
 })
 

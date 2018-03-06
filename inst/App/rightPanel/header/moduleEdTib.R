@@ -15,50 +15,43 @@ moduleEdTibUI<-function(id, input, output) {
     absolutePanel( id=ns('header'),
          "class"="headerPanel", draggable=FALSE
     ),
-    #---name
-    #---button
-    
+    #---asset name
+    #-------asset button
     absolutePanel(top= top0, left=left0,
         div( 'class'="ptRBtn2",
           actionButton(ns("newAssetsButton"), span(class='icon-plus'," Assets"), width=wid0+20)
         )
-
     ),
-    #chooser
+    #------asset chooser
     absolutePanel(top= top0, left=left,  right=10,
         uiOutput(ns("dataSetUI"))
     ),
     
-    #---column
-    # condition: !(name %in% c( transformTag, logTag, svgTag))
-    conditionalPanel(
-      condition = sprintf("input['%s'] != '%s' && input['%s'] != '%s' && input['%s'] != '%s'",
-      ns("name"), transformTag, ns("name"), logTag, ns("name"), svgPanelTag),
-      #---column
+    #---tib 
+    div( id=ns('headEdTib'),
+      # #---tib column
         #---add column button---
         absolutePanel(top= top1, left=left0,
             div( 'class'="ptRBtn2",
                       actionButton(ns("newColumnButton"), span(class='icon-plus'," Variables"), width=wid0+20)
             )
         ),
-        #---chooser
+        #---tib column chooser
         absolutePanel( top=top1, left=left,  right=10, 'class'='ptR2',
           uiOutput(ns("columnUI"))
         ),
-    #---columnEntries
-    #---entry widget selection---
+    #---tib columnEntries
+    #------- tib entry widget selection---
     absolutePanel(top= top2, left=left0,  width=wid0+20, uiOutput(ns("widgetChooserUI")) )
 
    ),
-    #---entry value
+    #-------tib entry value
     absolutePanel( top=top2, left=left,  right=10, height=30, #style="background-color:red;" , 
                    uiOutput(ns("columnEntryUI"))  
                    ),
-    
-   
     #---transform content---#   display only if selected name is transform
     conditionalPanel( condition = sprintf("input['%s'] == '%s'", ns("name"), transformTag),
-      absolutePanel(
+      absolutePanel( id=ns("transformPanelContainer"),
         top=top+25, left=left, width="100%",
         "class"="headerPanel", draggable=FALSE, "background-color"='#666688',
         tabsetPanel( id=ns("transformType"),
@@ -69,14 +62,6 @@ moduleEdTibUI<-function(id, input, output) {
         )
       )
     )
-   #,
-   # absolutePanel( "class"= "cRowContainer",
-   #    uiOutput(ns("rowPanel"))
-   # )
-    # , textInputAddon(inputId = ns('newChoiceXX'), label = "dog", 
-    #                placeholder = "Username", addon = icon("at"))
-    
-    
   ) # end taglist
   
 }
@@ -85,7 +70,6 @@ moduleEdTib<-function(input, output, session,
   name, 
   nameChoices,
   getRowIndex,
-  #getRowIndexChoices,
   getTibNRow,
   matColIndex,
   matColIndexChoices, 
@@ -109,6 +93,8 @@ moduleEdTib<-function(input, output, session,
   
   
   
+  
+  
 
 #------------ui ouput----------------------
   
@@ -120,6 +106,8 @@ moduleEdTib<-function(input, output, session,
                         justified=TRUE)
     }
   })
+  
+  
   
   #---columns
   output$columnUI<-renderUI({
@@ -203,21 +191,6 @@ moduleEdTib<-function(input, output, session,
     } 
   })
   
-  #------rows
-  # output$rowPanel<-renderUI({
-  #   if( getTibEditState()==TRUE ){
-  #     rowIndx<-getRowIndex()
-  #     N<-getTibNRow()
-  #     if( !is.null(rowIndx) && !is.null(N)){
-  #       sortableRadioButtons(ns("rowIndex"), label=NULL,
-  #                            choices=1:(getTibNRow()),
-  #                            selected= getRowIndex() #getSelectedRow()
-  #       )
-  #     }
-  #   }
-  # })
-  
-  
   output$matColIndexUI<-renderUI({
     selected<-getTibEntry() %AND% getMatColMax() %AND% getMatColIndex() 
     if(!is.null(selected) && getTibEntry()=='point'){
@@ -233,11 +206,19 @@ moduleEdTib<-function(input, output, session,
   
 
   #---asset name---
-  observeEvent(c( name(), nameChoices() ), { #update the name 
+  observeEvent(c( name(), nameChoices() ), { #update the name
+    # toggleElement(
+    #   id=ns('transformPanelContainer') ,
+    #   condition=(TRUE)
+    # )
     if(length(nameChoices())==0){ #name choices
     } else {
       updateRadioGroupButtons(session, inputId=ns("name" ),
         choices=nameChoices(), selected=name()
+      )
+      toggleElement(
+        id=ns('headEdTib') ,
+        condition=!(name() %in% c( transformTag, RPanelTag, errorPanelTag, svgPanelTag))
       )
     }
   }) 
@@ -298,16 +279,10 @@ moduleEdTib<-function(input, output, session,
     }
   })
   
-  
-  # observeEvent(input$selectedWidget,{
-  #   cat("input$selectedWidget cnanged...................\n")
-  # })
-  
+
   #when name, index, attrName valid, and attrVal changes, update the ptDefs and code
   list( 
     name          = reactive({input$name}),
-    # rowIndex      = reactive({input$rowIndex}),
-    # rowReorder      = reactive({input$rowIndex_order}),
     columnName    = reactive({input$columnRadio}),
     entryValue    = reactive(entry$result), 
     selectedWidget  = reactive(input$selectedWidget),

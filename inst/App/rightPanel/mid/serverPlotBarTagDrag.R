@@ -106,9 +106,7 @@ statusPlotTagDrag<-callModule(
 observeEvent(statusPlotTagDrag$status(), {
   status<-statusPlotTagDrag$status()
   if(status$state!="PASS"){
-    setSourceType(sourceType='logPanel')
-    #updateRightPanel('logPanel')
-    mssg$err<-status$message    # send mssg to log
+    mssg$err<-paste(mssg$err, status$message, "cannot plot: code01\n", collapse="\n")
     # switch to log 
   }
 })

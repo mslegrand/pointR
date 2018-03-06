@@ -5,7 +5,7 @@
 returnValue4ModuleEdTib<-callModule(
   module=moduleEdTib,
   id="tagValBar",
-  name=getRightPanelName,
+  name=reactive({ if(hasError()){ errorPanelTag } else{ getTibName()}}),
   nameChoices=getRightPanelChoices,
   getRowIndex=reactive({            if( getTibEditState()==TRUE ){ getTibRow() } else { NULL } }),
   getTibNRow=reactive({             if( getTibEditState()==TRUE ){ getTibNRow() } else { NULL } }),
@@ -24,7 +24,7 @@ returnValue4ModuleEdTib<-callModule(
 )
 
 
-getSafeSelection<-function(selection, choices){
+getSafeSelection<-function(selection, choices){ #anybody using this???
   if(is.null(choices)){
     return(NULL)
   }
@@ -37,16 +37,16 @@ getSafeSelection<-function(selection, choices){
 #name
 observeEvent(returnValue4ModuleEdTib$name(),{
     name<-returnValue4ModuleEdTib$name()
-    if(name==getTibName()){ return(NULL) } #bail if moduleEdTib did not change name
-    if(name==transformTag){
-      updateSelected(name=transformTag)
-    } else if(name==logTag){
-        updateSelected(name=logTag)
-      } 
-    else {
-      tibs<-getPtDefs()$tib
-      resetSelectedTibbleName(tibs=tibs, name=name)
+    if( name==getTibName() ){ return(NULL) } #bail if moduleEdTib did not change name
+    if( !(name %in% c(errorPanelTag) )){
+      if(name==transformTag){
+          updateSelected(name=transformTag)
+      } else  {
+        tibs<-getPtDefs()$tib
+        resetSelectedTibbleName(tibs=tibs, name=name)
+      }
     }
+    
 })
 
 observeEvent(returnValue4ModuleEdTib$selectedWidget(), {
@@ -65,58 +65,8 @@ observeEvent(returnValue4ModuleEdTib$transformType(),{
   }
 })
 
-# rowIndex
-# # if moduleEdTib changes the rowIndex,  matCol in selectedTibble needs to be updated
-# observeEvent(returnValue4ModuleEdTib$rowIndex(),{
-#   if( getTibEditState()==TRUE ){
-#     #cat("serverEdTib:: -----Entering-----rowIndex()::----------------\n")
-#     rowIndex<-as.integer(returnValue4ModuleEdTib$rowIndex())
-#     if(!is.null(getTibRow()) && rowIndex==getTibRow()){ return(NULL) } #bail
-#     # compute matColIndex and update rowIndex, matColIndex
-#     if(getColumnType()=='point'){
-#         pts<-getTibPts()
-#         matColIndex<-length(pts[[rowIndex]])/2
-#         # cat(
-#         #   "updateSelected( matCol=",
-#         #   format(matColIndex) ,
-#         #   ", rowIndex=",
-#         #   format(rowIndex) ,
-#         #   ")\n"
-#         # )
-#         updateSelected( matCol=matColIndex, rowIndex=rowIndex)
-#     } else {
-#       # cat(
-#       #   "updateSelected( ",
-#       #   "rowIndex=",
-#       #   format(rowIndex) ,
-#       #   ")\n"
-#       # )
-#       updateSelected( rowIndex=rowIndex)
-#     }
-#     #cat("serverEdTib:: -----Leaving-----rowIndex()::----------------\n")
-#   }
-# }, ignoreNULL = TRUE)
 
-# #row reordering
-# observeEvent( returnValue4ModuleEdTib$rowReorder() ,{
-#   if( getTibEditState()==TRUE ){
-#     ordering<-as.numeric(returnValue4ModuleEdTib$rowReorder())
-#     # cat(paste(ordering,collapse=", "))
-#     # cat("\n")
-#     name<-getTibName()
-#     row<-getTibRow()
-#     columnName<-getTibColumnName()
-#     newPtDefs<-getPtDefs()
-#     tib<-newPtDefs$tib[[name]]
-#     tib<-tib[ordering,]
-#     newPtDefs$tib[[name]]<-tib
-#     row<-which(row==ordering)
-#     sender="reorderRow"
-#     updateAceExtDef(newPtDefs, sender=sender, selector=list( name=name, rowIndex=row, columnName=columnName   ) )
-#   }
-# })
-
-# matColIndex
+# matColIndex --- not integrated back into this version
 observeEvent( returnValue4ModuleEdTib$matColIndex() ,{
   if( getTibEditState()==TRUE ){
     matColIndex<-returnValue4ModuleEdTib$matColIndex()
@@ -126,15 +76,13 @@ observeEvent( returnValue4ModuleEdTib$matColIndex() ,{
   }
 }, label='EdTib-rtv-matColIndex')
 
-#  columnName
+#  columnName update
 observeEvent(returnValue4ModuleEdTib$columnName(),{
   if( getTibEditState()==TRUE ){
-    #cat('serverEdTib::...Entering-----returnValue4ModuleEdTib$columnName()\n')
     colName<-returnValue4ModuleEdTib$columnName()
     if(!is.null(colName) && nchar(colName)>0 ){
       updateSelected(columnName=colName)
     }
-    #cat('serverEdTib::...Exiting-----returnValue4ModuleEdTib$columnName()\n')
   }
 }, label='EdTib-rtv-columnName')
 
@@ -143,7 +91,6 @@ observeEvent(returnValue4ModuleEdTib$columnName(),{
 #--------EDIT Entry VALUE------------------------------
 observeEvent(returnValue4ModuleEdTib$entryValue(),{
   if( getTibEditState()==TRUE ){
-    #cat("serverEdTib::...Entering----- returnValue4ModuleEdTib$entryValue()\n")
     entry<-returnValue4ModuleEdTib$entryValue()
     if(length(entry)==0 || is.na(entry) ){
       return(NULL)
@@ -161,9 +108,6 @@ observeEvent(returnValue4ModuleEdTib$entryValue(),{
       newPtDefs<-getPtDefs()
       columnName<-getTibColumnName()
       rowIndex<-getTibRow()
-      # sapply(c("name", "columnName", "rowIndex", "entry"), function(x){
-      #   cat(x,"=", format(get(x)),"\n")
-      # })
       good<-all(!sapply(list(name, newPtDefs, columnName, rowIndex), is.null))
       stopifnot(good)
       tib<-newPtDefs$tib[[name]]

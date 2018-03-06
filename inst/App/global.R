@@ -55,8 +55,10 @@ sapply(r_pkgs, library, character.only=TRUE)
 #some consts
 defTag<-"ptR"
 transformTag<-"Transforms"
-logTag<-"logPanel"
+errorPanelTag<-"errorPanel"
+RPanelTag='RPanel'
 svgPanelTag<-'svgPanel'
+tibTag<-'tib'
 
 getSVGWH<-function(){ c(650,620)} #this should be ultimately place in another file
 

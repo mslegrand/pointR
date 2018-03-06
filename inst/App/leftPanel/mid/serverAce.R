@@ -1,47 +1,4 @@
 
-# jqui_draggable(selector = '.snippetButton', method='enable',
-#      options=list(
-#        opacity= 0.5,
-#        stroke= "#FFFFFF",
-#        helper= 'clone',
-#        revert= 'invalid',
-#        appendTo= 'body'
-#      )
-# )
-# 
-
-jqui_droppable(
-  selector ="#source", method='enable',
-  options=list(
-    activeClass= "ui-state-default",
-    hoverClass= "ui-state-hover",
-    accept= ":not(.ui-sortable-helper)",
-    drop= JS('function(event, ui) {
-      console.log("shinyjqui:  drop occurred");
-      console.log( "dropped on id="+ $(this).attr("id"));
-      var theEditoR = $(this).data("aceEditor");
-      console.log( "dropped on id="+ $(this).attr("id"));
-      //console.log("theEditoR class=" + JSON.stringify(theEditoR.className));
-      var pos = theEditoR.renderer.screenToTextCoordinates(event.clientX, event.clientY);
-      console.log("pos=" + JSON.stringify(pos));
-      var txt =  ui.draggable.attr("data-snippet");
-      this.focus();
-      theEditoR.moveCursorToPosition(pos);
-      theEditoR.clearSelection();
-      //editor.session.insert(pos, txt);
-      //editor.insert(txt);
-      ui.helper.remove();
-      var snippetManager = ace.require("ace/snippets").snippetManager;
-      snippetManager.insertSnippet(theEditoR, txt);
-      //var tab_press= jQuery.Event("keydown", {which: 88});
-      //var tab_press= jQuery.Event("keydown", {which: 9});
-      //theEditor.trigger(tab_press);
-      //theEditor.simulate("key-combo",{combo: "shift-tab"});
-      theEditoR.focus();
-      return true;
-      }')
-  )
-)
 
 observeEvent(input$messageFromAce, {
     # cat('serverAce:...observe input$messageFromAce:: entering\n')
@@ -52,7 +9,7 @@ observeEvent(input$messageFromAce, {
       
       request$code<-input$messageFromAce$code
       request$sender<-input$messageFromAce$sender
-     
+      clearErrorMssg()
       if(!is.null(input$messageFromAce$selector) && !is.null(input$messageFromAce$code) ){
         reqSelector<-input$messageFromAce$selector
         updateSelected4Ace(reqSelector)
@@ -61,19 +18,21 @@ observeEvent(input$messageFromAce, {
       if(length(input$messageFromAce$dirty)>0){
         editOption$.saved <- !(as.numeric(input$messageFromAce$dirty) > 0)
       }
+      #cat('request$sender=',format(request$sender),"\n")
       if(request$sender %in% c('cmd.commit','cmd.openFileNow', 'cmd.saveFileNow', 'cmd.file.new', 'cmd.add.column')){
+        #cat('getTibName()=',format(getTibName()),"\n")
         if(request$sender %in% c('cmd.commit', 'cmd.add.column') && !is.null(getTibName())){ 
           name=getTibName()
         } else { 
           name=NULL
         }
         tibs<-getPtDefs()$tib
-        resetSelectedTibbleName(tibs=tibs, name=name)
+        #cat('name=',format(name),"\n")
         processCommit()
+        resetSelectedTibbleName(tibs=tibs, name=name)
+        
       } 
-      # if( request$sender %in% 'cmd.openFileNow'){
-      #   # !!! TODO: set point.index to end of points (if points)
-      # }
+      
       
       if(request$sender %in% 'cmd.saveFileNow'){
         datapath<-input$messageFromAce$auxValue
@@ -117,26 +76,33 @@ updateAceExt<-function(sender, ...){
 
 observeEvent(request$sender,{
     if(request$sender=='startup'){
+      #cat('startup\n')
       cmdFileNew()
     }
 }, priority=100)
 
 # TODO!!!: rewrite
 updateSelected4Ace<-function( reqSelector){
+  
   if(!is.null(reqSelector[['name']])){
+    #cat("reqSelector$name=", format(reqSelector$name ),"\n")
     selectedTibble$name=reqSelector[['name']]
   }
   if(!is.null(reqSelector[['ptColName']])){
+    #cat("reqSelector$ptColName=", format(reqSelector$ptColName ),"\n")
     selectedTibble$ptColName=reqSelector[['ptColName']]
   }
   if(!is.null(reqSelector[['rowIndex']])){ # !!! may want to provide a check here
+    #cat("reqSelector$ptColName=", format(reqSelector$rowIndex ),"\n")
     selectedTibble$rowIndex=reqSelector[['rowIndex']]
   }
   if(!is.null(reqSelector[['matCol']])){
+    #cat("reqSelector$matCol=", format(reqSelector$matCol ),"\n")
     selectedTibble$matCol=reqSelector[['matCol']]
 
   }
   if(!is.null(reqSelector[['columnName']])){
+    #cat("reqSelector$columnName=", format(reqSelector$columnName ),"\n")
     selectedTibble$columnName=reqSelector[['columnName']]
   }
   

@@ -53,9 +53,7 @@ processCommit<-reactive({
       eval(parsedCode)
       # no error occured so all systems go!!!!
       
-      
-      cat("commit :: getTibName() is =",format(getTibName()),"\n")
-      
+ 
       #remove all removeAllMarkers from ace since all sys go.
       
       session$sendCustomMessage(
@@ -96,9 +94,6 @@ processCommit<-reactive({
         }
       }
       setErrorMssg(err)
-      cat("commit got an error\n",mssg$error,"\n")
-      #setSourceType(sourceType='logPanel')
-      
     }) 
   }
 })

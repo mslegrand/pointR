@@ -10,7 +10,6 @@ panels<-reactiveValues(
 )
 
 setSourceType<-function( sourceType ){
-  cat("setSourceType:: sourceType=",sourceType,"\n")
   panels$sourceType=sourceType
 }
 
@@ -21,9 +20,9 @@ getSourceType<-reactive({ panels$sourceType})
 # 'tib' if it is the name of an existing tibble
 #  otherwise
 getNameType<-reactive({
-  cat("getNameType::getTibName()=", format(getTibName()),"\n")
+  # cat("getNameType::getTibName()=", format(getTibName()),"\n")
   if(hasError()){
-    cat('getNameType:: Error=', getErrorMssg(),"\n")
+    # cat('getNameType:: Error=', getErrorMssg(),"\n")
     errorPanelTag
   } else {
     if(!is.null(getTibName())){
@@ -58,7 +57,7 @@ getColumnType<-reactive({
 # returns the state: 'point', 'matrix', 'value',  transformTag, RPanelTag, errorPanelTag
 # used by 
 #    getTibEditState
-#    getRightMidPanel2
+#    getRightMidPanel
 #    serverEdTib to set transform panel
 
 getPlotState<-reactive({
@@ -89,9 +88,9 @@ getTibEditState<-reactive({
 # serverFooterRight.R
 # serverMouseClicks.R, (as barName)
 # serverLog.R (as barName)
-getRightMidPanel2<-reactive({
+getRightMidPanel<-reactive({
   if(hasError()){
-    cat('getRightMidPanel2:: Error=', getErrorMssg(),"\n")
+    # cat('getRightMidPanel:: Error=', getErrorMssg(),"\n")
     rtv<-errorPanelTag
   } else if (panels$sourceType==RPanelTag){
     rtv<-RPanelTag
@@ -101,34 +100,26 @@ getRightMidPanel2<-reactive({
   rtv
 })
 
-# used only to pass into editTib the name
-#
-# getRightPanelName<-reactive({  #used only by editTib
-#   if(panels$sourceType==RPanelTag){
-#     return(RPanelTag)
-#   } else {
-#     return( getTibName() )
-#   }
-# })
+
 
 getRightPanelChoices<-reactive({ # includes names of tibs
-  cat('getRightPanelChoices', format(getSourceType()),"\n")
+  # cat('getRightPanelChoices', format(getSourceType()),"\n")
   if(hasError()){
-    cat('ggetRightPanelChoices:: Error=', format(getErrorMssg()),"\n")
+    # cat('ggetRightPanelChoices:: Error=', format(getErrorMssg()),"\n")
     choices<-errorPanelTag
   } else if( getSourceType()==RPanelTag){
     choices=RPanelTag
   } else {
     ptDefs<-getPtDefs()
     choices<-names(getPtDefs()$tib)
-    cat('getRightPanelChoices 1:: ', format(choices),"\n")
+    # cat('getRightPanelChoices 1:: ', format(choices),"\n")
     if( usingTransformDraggable() ){
       choices<-c(choices, transformTag)
     }
     choices<-c(choices, svgPanelTag, RPanelTag)
-    cat('getRightPanelChoices 2:: ', format(choices),"\n")
+    # cat('getRightPanelChoices 2:: ', format(choices),"\n")
   }
-  cat('getRightPanelChoices 3:: ', format(choices),"\n")
+  # cat('getRightPanelChoices 3:: ', format(choices),"\n")
   choices
 })
 

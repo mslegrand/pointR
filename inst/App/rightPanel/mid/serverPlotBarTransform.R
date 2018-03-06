@@ -31,8 +31,6 @@ statusPlotTransform<-callModule(
 observeEvent(statusPlotTransform$status(), { 
   status<-statusPlotTransform$status()
   if(status$state!="PASS"){
-    # cat("statusPlotTransform$status error\n")
-    setSourceType(sourceType='logPanel')
     mssg$err<-status$messages
   }
 })
