@@ -24,7 +24,8 @@ function simpleStringify (object){
     }
     return JSON.stringify(simpleObject); // returns cleaned up JSON
 }
-        
+
+
 /*
 var loadPtrSnippetFile = function(id) {
     if (!id || snippetManager.files[id])
@@ -124,6 +125,10 @@ Shiny.addCustomMessageHandler(
         var sender=data.sender;
         var auxValue="";
         
+        //$el.droppable("enable");
+        
+        
+        //makeEditorDropabble(id);
         
         if(!!data.ptRMode){ 
           editor.getSession().setMode({path: "ace/mode/ptr", v: Date.now()});

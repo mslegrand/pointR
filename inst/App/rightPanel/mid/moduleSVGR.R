@@ -21,7 +21,8 @@ svgToolsScript<-function(type){
     #                 draggable=FALSE,
     #                 htmlOutput(ns( "svghtml" ), inline=FALSE)
     # )
-    uiOutput(ns("svghtml"))
+    #uiOutput(ns("svghtml"))
+    htmlOutput(ns( "svghtml" ), inline=FALSE)
   }
   
   modulePlotSVGr<-function(
@@ -103,18 +104,19 @@ svgToolsScript<-function(type){
     
     # might wrap with the absolutePanel as follows:
    
-    if(getTibNRow()<=1){
-      cls<-"cSvgHtml0"
-    }
-    else{
-      cls<-"cSvgHtml1"
-    }
-    
-    absolutePanel( 
-      class=cls,
-      draggable=FALSE,
-      pre( res ), inline=FALSE
-    )
+    # if(getTibNRow()<=1){
+    #   cls<-"cSvgHtml0"
+    # }
+    # else{
+    #   cls<-"cSvgHtml1"
+    # }
+    # 
+    # absolutePanel( 
+    #   class=cls,
+    #   draggable=FALSE,
+    #   pre( res ), inline=FALSE
+    # )
+    res
    }) #end of renderUI
   
   list(

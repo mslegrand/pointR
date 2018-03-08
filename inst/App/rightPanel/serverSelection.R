@@ -17,7 +17,9 @@ getSelIndex<-reactive({
   selectedTibble$selIndex
 })
 
+
 getTibName<-reactive({selectedTibble$name}) #allow to be null only if tib is null  
+
 getTibColumnName<-reactive({ selectedTibble$columnName })
 getTib<-reactive({ getTibName() %AND% getPtDefs()$tib[[ getTibName() ]] })
 getTibPtColPos<-reactive({ which(names(getTib())==selectedTibble$ptColName )})
@@ -28,6 +30,11 @@ getTibNRow<-reactive({
     0
   }
 })
+
+atLeast2Rows<-reactive({
+  getTibEditState()==TRUE && nrow(getPtDefs()$tib[[getTibName()]])>1
+})
+
 getTibRow<-reactive({#cat('getTibRow()=',format( selectedTibble$rowIndex),"\n");
   selectedTibble$rowIndex})
 getTibMatCol<-reactive({ selectedTibble$matCol })
@@ -57,14 +64,19 @@ getTibMatColMax<-reactive({
 #    1. serverEdtib to reset the name when the selection changes
 #    2. serveAce to reset name when we have a file->New or file->Open
 resetSelectedTibbleName<-function(tibs, name){
-   # cat("\nserverSelection...Entering  resetSelectedTibbleName\n")
-   # cat("\nserverSelection... name= ", format(name),"\n")
+    if(hasError()){
+      return(NULL) # never change selection when in error state
+    }
+    # cat("\\n----------nserverSelection...Entering  resetSelectedTibbleName\n")
+    # cat("\nresetSelectedTibbleName... name= ", format(name),"\n")
+    #   cat("resetSelectedTibbleName... names(tibs)=",format(names(tibs)),"\n")
       choices<-getRightPanelChoices()
+      # cat("resetSelectedTibbleName:: choices=", paste(choices, collapse=", "),"\n")
       if(is.null(name) || !(name %in% choices)){
-        name<-getTibName()
+        name<-getTibName() #pick the last name
       }
       if(is.null(getTibName()) || !(getTibName() %in% choices)){
-        name=choices[1]
+        name=choices[1] #pick the first alternative
       }
       selectedTibble$name=name
       if(is.null(tibs) ){
@@ -73,7 +85,9 @@ resetSelectedTibbleName<-function(tibs, name){
         selectedTibble$columnName=NULL
         selectedTibble$matCol=NULL
       } else {
+        # cat("2: selectedTibble$name=",format(selectedTibble$name),"\n" )
         tib<-getPtDefs()$tib[[selectedTibble$name]]
+        # cat(" 2: tib=", names(tib),"\n" )
         # set row
         rowIndex=nrow( tib )
         selectedTibble$rowIndex=rowIndex
@@ -87,7 +101,6 @@ resetSelectedTibbleName<-function(tibs, name){
           selectedTibble$matCol<-matColIndex
           ptColName<- names(tib)[ptColIndex]
           selectedTibble$ptColName=ptColName 
-          #selectedTibble$columnName=ptColName #this is the problem!!! should not reset if newColumn,
           if(is.null(selectedTibble$selIndex) || selectedTibble$selIndex!=2){
             #unless selected is 'matrix', set to 'point' 
             updateSelected( selIndex=1)
@@ -96,8 +109,10 @@ resetSelectedTibbleName<-function(tibs, name){
           ptColName<-NULL
           matColIndex<-0
           selectedTibble$ptColName=ptColName 
-          #selectedTibble$columnName=names(tib[1])
+          
         }
+        # cat("selectedTibble$columnName=",format(selectedTibble$columnName), "\n")
+        # cat("names(tib)=",format(names(tib)),"\n")
         if(is.null(selectedTibble$columnName) || !( selectedTibble$columnName %in% names(tib) )){
           if(!is.null(selectedTibble$ptColName)){
             selectedTibble$columnName<-selectedTibble$ptColName
@@ -109,6 +124,9 @@ resetSelectedTibbleName<-function(tibs, name){
       if( selectedTibble$name==transformTag){
         selectedTibble$transformType='translate'
       }
+      # cat("resetSelectedTibbleName... Last values\n")
+      # cat("resetSelectedTibbleName... selectedTibble$name= ",selectedTibble$name,"\n")
+      # cat("\n----------Exiting resetSelectedTibbleName... \n\n")
 }
 
 updateSelected<-function( name, rowIndex, columnName, matCol,  ptColName, selIndex, transformType ){

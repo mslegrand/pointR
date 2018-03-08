@@ -111,24 +111,10 @@ statusPlotTagVal<-callModule(
 observeEvent(statusPlotTagVal$status(), {
   status<-statusPlotTagVal$status()
   if(status$state!="PASS"){
-    # cat("statusPlotTagVal$status() ERRUR\n")
-    setSourceType(sourceType='logPanel')
-    #updateRightPanel('logPanel')
-    mssg$err<-status$message    # send mssg to log
-    #mssg$err<-'TagValGraphErr'
+   mssg$err<-paste(mssg$err, status$message, "cannot plot: code03\n", collapse="\n")
     # switch to log 
   }
 })
-
-# observeEvent(statusPlotTagVal$status(), {
-#   status<-statusPlotTagVal$status()
-#   if(status$state!="PASS"){
-#     updateRightPanel('logPanel')
-#     mssg$err<-status$message    # send mssg to log
-#     # switch to log 
-#   }
-# })
-# 
 
 
 

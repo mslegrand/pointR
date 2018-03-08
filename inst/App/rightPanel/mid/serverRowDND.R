@@ -6,6 +6,8 @@ returnValue4ModuleRowDND<-callModule(
   getRowIndex=getTibRow
 )
 
+
+
 # rowIndex
 # if moduleEdTib changes the rowIndex,  matCol in selectedTibble needs to be updated
 observeEvent(returnValue4ModuleRowDND$rowIndex(),{
@@ -41,7 +43,7 @@ observeEvent(returnValue4ModuleRowDND$rowIndex(),{
 #row reordering
 observeEvent( returnValue4ModuleRowDND$rowReorder() ,{
   if( getTibEditState()==TRUE ){
-    ordering<-as.numeric(returnValue4ModuleRowDND$rowReorder())
+    ordering<-as.integer(returnValue4ModuleRowDND$rowReorder())
     # cat(paste(ordering,collapse=", "))
     # cat("\n")
     name<-getTibName()

@@ -3,7 +3,7 @@ returnValue4ModuleRtFtr<-callModule(
   module=moduleFooterRight,
   id="footerRight",
   getTibEditState= getTibEditState,
-  getPanelState=getRightMidPanel2 
+  getPanelState=getRightMidPanel 
 )
 
 #-----------BUTTON EVENTS--------------------

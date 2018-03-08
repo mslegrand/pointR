@@ -8,13 +8,15 @@
 library(shiny)
 
 
-version="ptR:v.0.3.7"
+version="ptR:v.0.3.8"
 
 # style="position: fixed; top: -100em" to keep hidden
 shinyUI(  
   div( class="pretty-split-pane-frame", id="mySplitter",
     singleton(
       tags$head(
+        # tags$script(src="https://code.jquery.com/jquery-1.12.4.js"),
+        # tags$script(src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"),
         initResourcePaths(),
         tags$link(rel = "stylesheet", type = "text/css", id="customStyle", href = "customStyle.css"),
         tags$link(rel = "stylesheet", type = "text/css", id="customStyle", href = "fontello/css/font1_20.css"),
@@ -32,16 +34,16 @@ shinyUI(
         tags$script(src = 'IOjs/rotIO.js' ),
         tags$script(src = 'IOjs/scaleIO.js' ),
         tags$script(src = 'IOjs/tagDragIO.js' ),
+        tags$script(src = 'ptR/snippetScroll.js' ),
         tags$script(src = 'ptR/ptRManager.js' )
+        
       )
     ),
     
     div(
-      
       class="split-pane vertical-percent",
       useShinyjs(debug = TRUE),
       extendShinyjs(script="www/menuHelper.js"), #appears that only close window is used!
-      
       #-------------left panel begin--------------------------------------------------
       #------- left component begin-----------
       div( 
@@ -53,51 +55,55 @@ shinyUI(
           buildLeftMenu(version),
           #-------left menu end------------
           #-------left content begin--------
-          shinyFilesButton("buttonFileOpenHidden", label="", title="Open File", multiple=FALSE, 
-                           class='hiddenButton'),
-          shinySaveButton("buttonFileSaveHidden", label="", 
-                           title="Save as ...",  list('hidden_mime_type'=c("")) , 
-                           class='hiddenButton'),
-          shinyFilesButton("buttonSnippetOpen", label="", 
-                           title="Import Snippet", multiple=FALSE, 
-                           class='hiddenButton'),
-          shinySaveButton("buttonExportSVGHidden", label="", 
-                          title="Save as ...",  list('hidden_mime_type'=c("")) , 
-                          class='hiddenButton'),
-          absolutePanel( id='aceTabSet', top=45, left=20, width="100%", 
+          shinyFilesButton("buttonFileOpenHidden", label="", title="Open File",     multiple=FALSE, class='hiddenButton'),
+          shinySaveButton( "buttonFileSaveHidden", label="", title="Save as ...",  list('hidden_mime_type'=c("")) , class='hiddenButton'),
+          shinyFilesButton("buttonSnippetOpen",    label="", title="Import Snippet", multiple=FALSE,  class='hiddenButton'),
+          shinySaveButton("buttonExportSVGHidden", label="", title="Save as ...",  list('hidden_mime_type'=c("")) , class='hiddenButton'),
+          absolutePanel( id='aceTabSet', 
+              top=45, left=20, width="100%", 
               uiOutput("TopLeftTabPanel")
           ),
           absolutePanel( id='aceToobarTop1', 
               top=75, left=0, width="100%", "class"="headerPanel", draggable=FALSE, height="30px",
               buildHToolBar(bar1)
           ),
-              
           absolutePanel( id='aceToobarTop2', 
               top=105, left=0, width="100%", "class"="headerPanel", draggable=FALSE, height="30px",
               buildHToolBar(bar2)
-         ),
-          absolutePanel( 
-            id='aceContainer',
-            "class"="cAceContainer", 
-            style="overflow-y:hidden;",
-            overflow= "hidden",
-            draggable=FALSE,
-            
-            shinyAce4Ptr( 
-              outputId = "source",  value="",  
-              mode="ptr", theme=defaultOpts["theme"],
-              fontSize=16, autoComplete="live", 
-              autoCompleteList =list(svgR=names(svgR:::eleDefs))
-            ), 
-            inline=FALSE
+           ),
+          div( "class"="cMidPanel",
+               div( 
+                 id='aceContainer',
+                 "class"="cSvgOut cSvgOutRightIndent", #class"="cAceContainer", 
+                 #style="overflow-y:hidden;",
+                 #overflow= "hidden",
+                 shinyAce4Ptr( 
+                   outputId = "source",  value="",  
+                   mode="ptr", theme=defaultOpts["theme"],
+                   fontSize=16, autoComplete="live", 
+                   autoCompleteList =list(svgR=names(svgR:::eleDefs))
+                 ), 
+                 inline=FALSE
+               ),
+               div( id='snippetToolBarContainer', "class"="cSnippetToolBarContainer", #draggable=FALSE ,
+                    tags$ul( id='dndSnippetList', "class"="cSnippetToolBarList",
+                      buildSnippetToolBar()
+                    ),
+                    div( id='snippetScrollUp', class='snippetButton  cTop center', 
+                         span('class'="glyphicon glyphicon-chevron-up") 
+                    ),
+                    div( id='snippetScrollDown', class='snippetButton cBottom center',
+                         span('class'="glyphicon glyphicon-chevron-down") 
+                    )
+               )  
           ),
+                    
           absolutePanel( "class"="footerPanel", draggable=FALSE, style="display:inline-block",
              absolutePanel( left=5, bottom=0,
                actionButton("commit", label = "COMMIT EDIT") %>% bs_embed_tooltip(title = "Commit code changes")
              ),
              absolutePanel( left=150, bottom=-10,
-               #checkboxInput('useTribble', 'display as tribble', value = TRUE, width = NULL)
-               awesomeRadio('useTribble', 'Style:', choices=c('Tribble','Tibble'),
+               awesomeRadio('useTribble', NULL, choices=c('Tribble','Tibble'),
                                     selected = "Tribble", 
                                     inline = TRUE, status='success')
              )
@@ -120,10 +126,10 @@ shinyUI(
           buildRightMenu(),
           uiOutput("BottomRightPanel"),
           uiOutput("TopRightPanel"),
-          uiOutput("LeftMidRightPanel"),
-          #moduleEdTibUI("tagValBar", input, output),
-          br(),
-          uiOutput("MidRightPanel")
+          div( id="midRightPanels", class="cMidPanel",
+            div( id='svgOutPanel',  class="cSvgOut", uiOutput("MidRightPanel")),
+            div( id='rowOutPanel',  class='cRowOut', uiOutput("LeftMidRightPanel"),visibility='hidden')
+          )
         ) #-----right bootstrap page end----------
       ) #----------right component end---------
       #-------------right panel end--------------------------------------------------

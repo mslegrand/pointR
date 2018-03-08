@@ -41,8 +41,8 @@ observe({
       src<-getCode()
       replacementList<-list()
       ptDefs<-getPtDefs() 
-      barName=getRightMidPanel2()
-      if(barName=="Points" || (barName=='point' ) ){
+      panelName=getRightMidPanel()
+      if(panelName=="Points" || (panelName=='point' ) ){
         sender='PointsBar.mouse'
         if(cmd=='add'){ #---------add point
           sender='PointsBar.mouse.add'
@@ -99,7 +99,7 @@ observe({
         }        
       }
 
-      if(barName=='matrix'){
+      if(panelName=='matrix'){
         sender='tagDrag.mouse'
         if(cmd=='transGrp'){ # -- move tagged group (from tagDrag)
           
@@ -118,7 +118,7 @@ observe({
       }
       
             
-      if(barName=='value'){
+      if(panelName=='value'){
         sender='tagVal.mouse'
         if(cmd=='tagValSelect'){ # -- move tagged group (from tagDrag)
           sender='tagDrag.mouse'
@@ -134,9 +134,9 @@ observe({
         }
       }
       
-      if(barName==transformTag){
+      if(panelName==transformTag){
         #-------transformations of nodes marked as class 'movable' (or 'transFormR' or 'dragR' )
-        sender=paste0(barName, '.mouse')
+        sender=paste0(panelName, '.mouse')
         if(cmd=='trans'){ # -- translate the object by id
           tid<-input$mouseMssg$id
           trDefDelta2<-paste0("matrix(c(",paste0(vec,collapse=", "), "),2)" ) 

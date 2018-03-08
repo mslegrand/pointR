@@ -17,11 +17,11 @@ moduleLogUI <- function(id, input, output) {
 moduleLog<-function(
   input, output, session, 
   id,
-  barName,
+  panelName,
   logMssgs
 ){
   output$out_log<-renderText({ 
-    if(barName()=="logPanel"){
+    if(panelName() %in% c( errorPanelTag, RPanelTag)){
       logMssgs()
     }
   })
@@ -30,7 +30,7 @@ moduleLog<-function(
 errLogModuleList<-callModule( #auto  input, output, session 
   module=moduleLog, 
   id="errLogMod", 
-  barName=getRightMidPanel2,
+  panelName=getRightMidPanel,
   logMssgs=getErrorMssg
 )
 

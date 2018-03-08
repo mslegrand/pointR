@@ -39,67 +39,80 @@ overflow: hidden;
 .checkbox{
   margin: 0;
 }
-.cSvgHtml{
-  top:140px; 
-  left:5px; 
-  right:5px;  
-  bottom:40px;
-  margin-top:0;
-  margin-left:0;
-  margin-right:0;
-  margin-bottom:0;
-  border: 3px solid blue;
-  background-color: #DDBBFF;
+.topHeadPanel{
+  position: absolute;
+  top:40px;
+  bottom:140px;
+  left: 0;
+  right: 0;
   overflow: auto;
+  padding: 0;
 }
-.cSvgHtml0{
-  position: relative;
-  top:140px; 
-  left:5px; 
-  right:5px;  
-  bottom:40px;
-  margin-top:0;
-  margin-left:0;
-  margin-right:0;
-  margin-bottom:0;
-  border: 3px solid blue;
-  background-color: #DDBBFF;
-  overflow: auto;
+.topHeadTibEdit{
+  position: absolute;
+  top:30px;
+  left: 0;
+  right: 0;
+  bottom: 100px;
 }
-.cSvgHtml1{
-  position: relative;
-  top:140px; 
-  left:55px; 
-  right:5px;  
-  bottom:40px;
-  margin-top:0;
-  margin-left:0;
-  margin-right:0;
-  margin-bottom:0;
-  border: 3px solid blue;
-  background-color: #DDBBFF;
-  overflow: auto;
-}
-
-.cRowContainer{
-  top:140px; 
+.topHeadCol1{
+  position: absolute;
   left: 5px;
-  right:53px;
-  bottom: 40px;
-  background-color: #4f6a8c; 
+  width:90px;
 }
-.cAceContainer{
-  top:140px; 
-  left:5px; 
-  right:5px;  
+.topHeadCol2{
+  position: absolute;
+  left: 120px;
+  right: 10px;
+}
+.topHeadRow1{
+  position: absolute;
+  top: 0;
+}
+.topHeadRow2{
+  position: absolute;
+  top: 32px;
+}
+.height30{
+  height:30px;
+}
+.height64{
+  width:64px;
+}
+.cMidPanel{
+  position: absolute;
+  top:140px;
   bottom:40px;
-  margin-top:0;
-  margin-left:0;
-  margin-right:0;
-  margin-bottom:0;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  padding: 10px;
+}
+.cSvgOut{
+  position: absolute;
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
   border: 3px solid blue;
   background-color: #DDBBFF;
-  overflow: auto;
+  overflow: hidden;
+}
+.cSvgOutLeftIndent{
+  left:62px;
+}
+.cSvgOutRightIndent{
+  right:62px;
+}
+.cRowOut{
+  position: absolute;
+  top:0;
+  bottom:0;
+  left: 4px;
+  width: 54px;
+  border: 3px solid blue;
+  background-color:#222244;
+  overflow: hidden;  
 }
 .cLogText{
   top:125px; 
@@ -171,6 +184,10 @@ overflow-y: auto;
   font-size: 14px;
   background-color: #222244;
   color: #00ffff; 
+  width: 110px;
+}
+#tagValBar-entryValue .formControl.selectized {
+  width:260px;
 }
 .ptR2 .selectize-dropdown { 
   font-size: 12px;  
@@ -181,6 +198,7 @@ overflow-y: auto;
 .ptR2 .selectize-input.full {
    background: url(http://i62.tinypic.com/15xvbd5.png) no-repeat 96% 0;
    height: 33px;
+   width: 110px;
    overflow: hidden;
 }
 .ptRBtn2 .btn{
@@ -188,7 +206,66 @@ background-color: #222244;
 color: #00ffff; 
 border-radius: 0px; 
 font-size: 12px;
+width: 110px;
 }
+.cSnippetToolBarList {
+  position: absolute;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  top:0;
+  left:0;
+  bottom:0;
+}
+.cSnippetToolBarContainer{
+  position: absolute;
+  top:0;
+  bottom:0;
+  right: 5px;
+  width: 54px;
+  padding:0;
+  margin:0;
+  border: 3px solid blue;
+  background-color:#222244;
+  overflow: hidden; 
+}
+.snippetButton{
+  list-style-type: none;
+  width: 48px;
+  height: 32px;
+  /*padding: 0.25em;*/
+  float: left;
+  /*left: 0;*/
+  /*padding-left: 3px; */
+  padding: 0;
+  margin: 0 ;
+  border-style: solid;
+  border-width: 1px;
+  background: #222244;
+  color: #44DDDD;
+}
+.cTop{
+  position: absolute;
+  top: 0;
+  border-width: 4px;
+  border-style: ridge;
+  color: white;
+  background: #0000CC;
+}
+.cBottom{
+  position: absolute;
+  bottom: 0;
+  color: white;
+  border-width: 4px;
+  border-style: ridge;
+  background: #0000CC;
+}
+.center {
+    padding:4px;
+    text-align: center;
+}
+
+
 /*#tagValBar-columnEntryUI{
   height: 30px;
   margin-top: -20px;
