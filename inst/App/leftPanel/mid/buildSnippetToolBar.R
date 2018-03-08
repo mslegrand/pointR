@@ -31,16 +31,3 @@ buildSnippetToolBar<-function(){
 }
 
 
-addScroll<-function(){
-  tagList(
-    div( id='snippetScrollUp', class='snippetButton  cTop center', 
-         #tag( "i",list(class="glyphicon glyphicon-chevron-up"))
-         span('class'="glyphicon glyphicon-chevron-up") 
-    ),
-    div( id='snippetScrollDown', class='snippetButton cBottom center',
-         tag( "i", list(class="glyphicon glyphicon-chevron-down"))
-         #span('class'="glyphicon glyphicon-chevron-down") 
-    )
-  )
-}
-

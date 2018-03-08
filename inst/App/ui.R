@@ -89,8 +89,12 @@ shinyUI(
                     tags$ul( id='dndSnippetList', "class"="cSnippetToolBarList",
                       buildSnippetToolBar()
                     ),
-                    addScroll()
-                    
+                    div( id='snippetScrollUp', class='snippetButton  cTop center', 
+                         span('class'="glyphicon glyphicon-chevron-up") 
+                    ),
+                    div( id='snippetScrollDown', class='snippetButton cBottom center',
+                         span('class'="glyphicon glyphicon-chevron-down") 
+                    )
                )  
           ),
                     
