@@ -34,7 +34,9 @@ shinyUI(
         tags$script(src = 'IOjs/rotIO.js' ),
         tags$script(src = 'IOjs/scaleIO.js' ),
         tags$script(src = 'IOjs/tagDragIO.js' ),
+        tags$script(src = 'ptR/snippetScroll.js' ),
         tags$script(src = 'ptR/ptRManager.js' )
+        
       )
     ),
     
@@ -69,22 +71,29 @@ shinyUI(
               top=105, left=0, width="100%", "class"="headerPanel", draggable=FALSE, height="30px",
               buildHToolBar(bar2)
            ),
-          absolutePanel( 
-            id='aceContainer',
-            "class"="cAceContainer", 
-            style="overflow-y:hidden;",
-            overflow= "hidden",
-            shinyAce4Ptr( 
-              outputId = "source",  value="",  
-              mode="ptr", theme=defaultOpts["theme"],
-              fontSize=16, autoComplete="live", 
-              autoCompleteList =list(svgR=names(svgR:::eleDefs))
-            ), 
-            inline=FALSE
+          div( "class"="cMidPanel",
+               div( 
+                 id='aceContainer',
+                 "class"="cSvgOut cSvgOutRightIndent", #class"="cAceContainer", 
+                 #style="overflow-y:hidden;",
+                 #overflow= "hidden",
+                 shinyAce4Ptr( 
+                   outputId = "source",  value="",  
+                   mode="ptr", theme=defaultOpts["theme"],
+                   fontSize=16, autoComplete="live", 
+                   autoCompleteList =list(svgR=names(svgR:::eleDefs))
+                 ), 
+                 inline=FALSE
+               ),
+               div( id='snippetToolBarContainer', "class"="cSnippetToolBarContainer", #draggable=FALSE ,
+                    tags$ul( id='dndSnippetList', "class"="cSnippetToolBarList",
+                      buildSnippetToolBar()
+                    ),
+                    addScroll()
+                    
+               )  
           ),
-          absolutePanel( id='aceToobarMid', "class"="cAceDNDContainer", #draggable=FALSE ,
-                          buildSnippetToolBar()
-          ),            
+                    
           absolutePanel( "class"="footerPanel", draggable=FALSE, style="display:inline-block",
              absolutePanel( left=5, bottom=0,
                actionButton("commit", label = "COMMIT EDIT") %>% bs_embed_tooltip(title = "Commit code changes")

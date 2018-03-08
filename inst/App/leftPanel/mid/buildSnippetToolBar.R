@@ -15,7 +15,7 @@ buildSnippetToolBar<-function(){
       iconImage<-'NA'
     }
     snp<-n[3]
-    d<-div( class="snippetButton", draggable=TRUE, iconImage , color='blue',
+    d<-tags$li( class="snippetButton", draggable=TRUE, iconImage , color='blue',
            "data-snippet"= n[3]
       ) %>% bs_embed_tooltip(title = hint)
     jqui_draggabled(
@@ -30,4 +30,17 @@ buildSnippetToolBar<-function(){
   })
 }
 
+
+addScroll<-function(){
+  tagList(
+    div( id='snippetScrollUp', class='snippetButton  cTop center', 
+         #tag( "i",list(class="glyphicon glyphicon-chevron-up"))
+         span('class'="glyphicon glyphicon-chevron-up") 
+    ),
+    div( id='snippetScrollDown', class='snippetButton cBottom center',
+         tag( "i", list(class="glyphicon glyphicon-chevron-down"))
+         #span('class'="glyphicon glyphicon-chevron-down") 
+    )
+  )
+}
 

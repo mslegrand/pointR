@@ -62,41 +62,33 @@ $('#buttonFileOpenHidden').on('selection', function(event, path){
 $('document').ready(function()
 {
   $('.hiddenButton').hide();
+  
   /*
-  $(".snippetButton").each( function(){
-    $(this).draggable({
-		//revert: true
-		opacity: 0.5,
-		stroke: "#FFFFFF",
-		helper: 'clone',
-    revert: 'invalid',
-    appendTo: 'body'
-    });
-    
+  $("#left-component").on('resize', function(e){
+    console.log('resize #left-component');
+  });
+
+  $(".split-pane-component").on('resize', function(e){
+    console.log('resize #split-pane-component');
   });
   */
   
+  
+  var sntb = new SnippetToolBaR( "snippetToolBarContainer", "dndSnippetList", "snippetScrollDown", "snippetScrollUp", 32);
+  sntb.reAdjustPos();
+  $(sntb.downId).click(function(){sntb.onDownClick();});
+  $(sntb.upId).click(function(){sntb.onUpClick();});
+  $(window).on('resize',function(e){  
+    console.log('resize window');
+    	sntb.reAdjustPos();
+  });
+  
   /*
-  $(".snippetButton").each( function(){
-    $(this).draggable({
-    		//revert: true
-    		opacity: 0.5,
-    		stroke: "#FFFFFF",
-    		helper: 'clone',
-        revert: 'invalid',
-        appendTo: 'body',
-        start: function(event, ui){
-          var tmp = $("#source");
-          //tmp.draggable('enable');
-          console.log('drag starting');
-          
-        },
-        stop: function( event, ui ) {
-          console.log('drag stoping');
-        }
-    }); 
+  $(window).on('resize',function(e){  
+  	alert('resize window');
   });
   */
+  
     
 /*  
   $('.cAceContainer').droppable({

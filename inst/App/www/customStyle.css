@@ -101,54 +101,18 @@ overflow: hidden;
 .cSvgOutLeftIndent{
   left:62px;
 }
+.cSvgOutRightIndent{
+  right:62px;
+}
 .cRowOut{
   position: absolute;
   top:0;
   bottom:0;
-  left:0;
+  left: 4px;
   width: 54px;
   border: 3px solid blue;
   background-color:#222244;
   overflow: hidden;  
-}
-.cAceContainer{
-  top:140px; 
-  left:5px; 
-  right:62px;  
-  bottom:40px;
-  margin-top:0;
-  margin-left:0;
-  margin-right:0;
-  margin-bottom:0;
-  border: 3px solid blue;
-  background-color: #DDBBFF;
-  overflow: auto;
-}
-.cAceDNDContainer{
-  top:140px; 
-  width:54px; 
-  right:5px;  
-  bottom:40px;
-  margin-top:0;
-  margin-left:0;
-  margin-right:0;
-  margin-bottom:0;
-  border: 3px solid blue;
-  background-color:#222244;
-  overflow: hidden;
-}
-.snippetButton{
-  width: 54px;
-  height: 32px;
-  /*padding: 0.25em;*/
-  float: left;
-  /*padding-left: 3px; */
-  padding: 0;
-  margin: 0 ;
-  border-style: solid;
-  border-width: 1px;
-  background: black;
-  color: #44DDDD;
 }
 .cLogText{
   top:125px; 
@@ -185,7 +149,6 @@ width:100%;
 overflow: hidden;
 display: inline-block;
 }
-
 .controlBackPanel{
 background-color: #8888AA; 
 border-color: #88AAAA; 
@@ -245,6 +208,64 @@ border-radius: 0px;
 font-size: 12px;
 width: 110px;
 }
+.cSnippetToolBarList {
+  position: absolute;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  top:0;
+  left:0;
+  bottom:0;
+}
+.cSnippetToolBarContainer{
+  position: absolute;
+  top:0;
+  bottom:0;
+  right: 5px;
+  width: 54px;
+  padding:0;
+  margin:0;
+  border: 3px solid blue;
+  background-color:#222244;
+  overflow: hidden; 
+}
+.snippetButton{
+  list-style-type: none;
+  width: 48px;
+  height: 32px;
+  /*padding: 0.25em;*/
+  float: left;
+  /*left: 0;*/
+  /*padding-left: 3px; */
+  padding: 0;
+  margin: 0 ;
+  border-style: solid;
+  border-width: 1px;
+  background: #222244;
+  color: #44DDDD;
+}
+.cTop{
+  position: absolute;
+  top: 0;
+  border-width: 4px;
+  border-style: ridge;
+  color: white;
+  background: #0000CC;
+}
+.cBottom{
+  position: absolute;
+  bottom: 0;
+  color: white;
+  border-width: 4px;
+  border-style: ridge;
+  background: #0000CC;
+}
+.center {
+    padding:4px;
+    text-align: center;
+}
+
+
 /*#tagValBar-columnEntryUI{
   height: 30px;
   margin-top: -20px;

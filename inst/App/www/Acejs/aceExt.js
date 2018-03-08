@@ -127,17 +127,7 @@ Shiny.addCustomMessageHandler(
         
         //$el.droppable("enable");
         
-        /*$(".snippetButton").each( function(){
-            $(this).draggable({
-            		//revert: true
-            		opacity: 0.5,
-            		stroke: "#FFFFFF",
-            		helper: 'clone',
-                revert: 'invalid',
-                appendTo: 'body'
-            }); 
-        });
-        */
+        
         //makeEditorDropabble(id);
         
         if(!!data.ptRMode){ 
