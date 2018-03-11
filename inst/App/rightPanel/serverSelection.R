@@ -17,6 +17,12 @@ getSelIndex<-reactive({
   selectedTibble$selIndex
 })
 
+observeEvent(getTibNRow(),{
+  session$sendCustomMessage(
+    type = "ptRManager", 
+    list(id= "source", rowCountChange=TRUE, sender='tibNrow' )
+  )
+})
 
 getTibName<-reactive({selectedTibble$name}) #allow to be null only if tib is null  
 

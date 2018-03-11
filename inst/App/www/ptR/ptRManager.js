@@ -50,7 +50,11 @@ Shiny.addCustomMessageHandler(
       }); 
     });
     }
+    if(!!data.rowCountChange){
+      $(window).resize();
+    }
   }
+  
 ); 
 
 $('#buttonFileOpenHidden').on('selection', function(event, path){
@@ -82,6 +86,21 @@ $('document').ready(function()
     console.log('resize window');
     	sntb.reAdjustPos();
   });
+  
+  var rsb = new rowScrollBaR("rowOutPanel",  "rowDND-rowPanel", "rowScrollDown","rowScrollUp", 32 );
+  //"rowDND-rowPanel" does not have position(), actually no attributes
+  
+  //var rsb = new rowScrollBaR("rowOutPanel",  "rowDND-rowIndex", "rowScrollDown","rowScrollUp", 32 );
+  
+  
+  rsb.reAdjustPos();
+  $(rsb.downId).click(function(){rsb.onDownClick();});
+  $(rsb.upId).click(function(){rsb.onUpClick();});
+  $(window).on('resize',function(e){  
+      console.log('resize window');
+    	rsb.reAdjustPos();
+  });
+  
   
   /*
   $(window).on('resize',function(e){  

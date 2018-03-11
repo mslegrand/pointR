@@ -8,7 +8,7 @@
 library(shiny)
 
 
-version="ptR:v.0.3.8"
+version="ptR:v.0.3.8.1"
 
 # style="position: fixed; top: -100em" to keep hidden
 shinyUI(  
@@ -35,6 +35,7 @@ shinyUI(
         tags$script(src = 'IOjs/scaleIO.js' ),
         tags$script(src = 'IOjs/tagDragIO.js' ),
         tags$script(src = 'ptR/snippetScroll.js' ),
+        tags$script(src = 'ptR/rowScroll.js' ),
         tags$script(src = 'ptR/ptRManager.js' )
         
       )
@@ -128,7 +129,15 @@ shinyUI(
           uiOutput("TopRightPanel"),
           div( id="midRightPanels", class="cMidPanel",
             div( id='svgOutPanel',  class="cSvgOut", uiOutput("MidRightPanel")),
-            div( id='rowOutPanel',  class='cRowOut', uiOutput("LeftMidRightPanel"),visibility='hidden')
+            div( id='rowOutPanel',  class='cRowOut', 
+                 uiOutput("LeftMidRightPanel"),visibility='hidden',
+                 div( id='rowScrollUp', class='snippetButton  cTop center cRowButtonUp', height="22px",
+                      span('class'="glyphicon glyphicon-chevron-up") 
+                 ),
+                 div( id='rowScrollDown', class='snippetButton cBottom center cRowButtonDown', height="22px",
+                      span('class'="glyphicon glyphicon-chevron-down") 
+                 )
+              )
           )
         ) #-----right bootstrap page end----------
       ) #----------right component end---------

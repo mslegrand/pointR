@@ -217,6 +217,14 @@ width: 110px;
   left:0;
   bottom:0;
 }
+.cRowSelectionList {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  width: 54px;
+  top:0;
+  left:0;
+}
 .cSnippetToolBarContainer{
   position: absolute;
   top:0;
@@ -299,7 +307,7 @@ div .radio {
   color: #44FFFF;
   background-color: #242424;
   width: 45px; 
-  margin: 2px;
+  margin: 0;
   padding-left: 4px;
   border: 1px solid #44FFFF;
 }
