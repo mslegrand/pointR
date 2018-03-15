@@ -51,8 +51,8 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   
   shinyFileChoose(input, "buttonFileOpenHidden", session=session, roots=c(wd="~") ) #hidden
   shinyFileChoose(input, "buttonSnippetOpen", session=session, roots=c(wd="~"),  filetypes=c('', 'snp') ) #hidden
-  shinyFileSave(input, "buttonFileSaveHidden", session=session, roots=c(wd="~") ) #hidden
-  shinyFileSave(input, "buttonExportSVGHidden", session=session, roots=c(wd="~") ) #hidden
+  shinyFileSave(input, "buttonFileSaveHidden", session=session, roots=c(wd="~"), filetypes=c('R','svgR') ) #hidden
+  shinyFileSave(input, "buttonExportSVGHidden", session=session, roots=c(wd="~"),filetypes=c('svg') ) #hidden
 
   # Reactive expressions------------- 
   showGrid<-reactive({displayOptions$showGrid})

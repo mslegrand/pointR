@@ -13,7 +13,6 @@ editOption<-reactiveValues(
 
 history<-reactiveValues(
   recentFileMenuCount=0
-
 )
 
 
@@ -110,7 +109,6 @@ observeEvent( editOption$currentFilePath,{
     files<-c(fileName, files)
     editOption$recentFiles<-files
   }
-  
   editOption$recentFiles<-files
 })
               

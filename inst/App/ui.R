@@ -8,7 +8,7 @@
 library(shiny)
 
 
-version="ptR:v.0.3.8.1"
+version="ptR:v.0.3.8.2"
 
 # style="position: fixed; top: -100em" to keep hidden
 shinyUI(  
@@ -56,10 +56,10 @@ shinyUI(
           buildLeftMenu(version),
           #-------left menu end------------
           #-------left content begin--------
-          shinyFilesButton("buttonFileOpenHidden", label="", title="Open File",     multiple=FALSE, class='hiddenButton'),
-          shinySaveButton( "buttonFileSaveHidden", label="", title="Save as ...",  list('hidden_mime_type'=c("")) , class='hiddenButton'),
+          shinyFilesButton("buttonFileOpenHidden", label="", title="Open File",  c('R','PTR', 'SVGR'),   multiple=FALSE, class='hiddenButton'),
+          shinySaveButton( "buttonFileSaveHidden", label="", title="Save as ...",  list('hidden_mime_type'=c("R")) , class='hiddenButton'),
           shinyFilesButton("buttonSnippetOpen",    label="", title="Import Snippet", multiple=FALSE,  class='hiddenButton'),
-          shinySaveButton("buttonExportSVGHidden", label="", title="Save as ...",  list('hidden_mime_type'=c("")) , class='hiddenButton'),
+          shinySaveButton("buttonExportSVGHidden", label="", title="Save as ...",  list('hidden_mime_type'=c("SVG")) , class='hiddenButton'),
           absolutePanel( id='aceTabSet', 
               top=45, left=20, width="100%", 
               uiOutput("TopLeftTabPanel")
