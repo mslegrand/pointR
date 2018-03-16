@@ -102,6 +102,8 @@ https://raw.github.com/shagstrom/split-pane/master/LICENSE
 			$(document).off('touchmove mousemove', moveEventHandler);
 			$divider.removeClass('dragged touch');
 			$splitPane.trigger('dividerdragend', [ getComponentsSizes($splitPane) ]);
+			// place notification to horizontal tabs here
+			$.event.trigger({type: 'splittermove'})
 		});
 		$splitPane.trigger('dividerdragstart', [ getComponentsSizes($splitPane) ]);
 	}

@@ -19,6 +19,7 @@ shinyUI(
         # tags$script(src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"),
         initResourcePaths(),
         tags$link(rel = "stylesheet", type = "text/css", id="customStyle", href = "customStyle.css"),
+        tags$link(rel = "stylesheet", type = "text/css", id="customStyle", href = "scrollTabs.css"),
         tags$link(rel = "stylesheet", type = "text/css", id="customStyle", href = "fontello/css/font1_20.css"),
         tags$link(id='shinyAceStyle', rel = 'stylesheet', type = 'text/css', href = 'Acejs/shinyAce.css'),
         tags$script(src="api.js"),
@@ -34,6 +35,7 @@ shinyUI(
         tags$script(src = 'IOjs/rotIO.js' ),
         tags$script(src = 'IOjs/scaleIO.js' ),
         tags$script(src = 'IOjs/tagDragIO.js' ),
+        tags$script(src = 'ptR/scrollTabs.js' ),
         tags$script(src = 'ptR/snippetScroll.js' ),
         tags$script(src = 'ptR/rowScroll.js' ),
         tags$script(src = 'ptR/ptRManager.js' )
@@ -51,7 +53,7 @@ shinyUI(
         id='left-component', 
         class="split-pane-component", 
         #-------left bootstrapPage begin ---------
-        bootstrapPage(
+        bootstrapPage( 
           #-----left menu begin---------------
           buildLeftMenu(version),
           #-------left menu end------------
@@ -60,45 +62,60 @@ shinyUI(
           shinySaveButton( "buttonFileSaveHidden", label="", title="Save as ...",  list('hidden_mime_type'=c("R")) , class='hiddenButton'),
           shinyFilesButton("buttonSnippetOpen",    label="", title="Import Snippet", multiple=FALSE,  class='hiddenButton'),
           shinySaveButton("buttonExportSVGHidden", label="", title="Save as ...",  list('hidden_mime_type'=c("SVG")) , class='hiddenButton'),
-          absolutePanel( id='aceTabSet', 
-              top=45, left=20, width="100%", 
-              uiOutput("TopLeftTabPanel")
+          div( id='aceTabSet', class="container",
+              tabsetPanel(id='pages', 
+                  tabPanel( 'source',
+                    div( 
+                          id='aceContainer',
+                          class="cAceContainer",
+                          #style="overflow-y:hidden;",
+                          overflow= "hidden",
+                          shinyAce4Ptr(
+                            outputId = "source",  value="",
+                            mode="ptr", theme=defaultOpts["theme"],
+                            fontSize=16, autoComplete="live",
+                            autoCompleteList =list(svgR=names(svgR:::eleDefs))
+                          ) ,
+                          inline=FALSE
+                    )
+                )
+              )
           ),
-          absolutePanel( id='aceToobarTop1', 
+          absolutePanel( id='aceToobarTop1',
               top=75, left=0, width="100%", "class"="headerPanel", draggable=FALSE, height="30px",
               buildHToolBar(bar1)
           ),
-          absolutePanel( id='aceToobarTop2', 
+          absolutePanel( id='aceToobarTop2',
               top=105, left=0, width="100%", "class"="headerPanel", draggable=FALSE, height="30px",
               buildHToolBar(bar2)
            ),
           div( "class"="cMidPanel",
-               div( 
-                 id='aceContainer',
-                 "class"="cSvgOut cSvgOutRightIndent", #class"="cAceContainer", 
-                 #style="overflow-y:hidden;",
-                 #overflow= "hidden",
-                 shinyAce4Ptr( 
-                   outputId = "source",  value="",  
-                   mode="ptr", theme=defaultOpts["theme"],
-                   fontSize=16, autoComplete="live", 
-                   autoCompleteList =list(svgR=names(svgR:::eleDefs))
-                 ), 
-                 inline=FALSE
-               ),
+               # div(
+               #   id='aceContainer',
+               #   "class"="cSvgOut cSvgOutRightIndent", #class"="cAceContainer",
+               #   #style="overflow-y:hidden;",
+               #   #overflow= "hidden",
+               #   shinyAce4Ptr(
+               #     outputId = "source",  value="",
+               #     mode="ptr", theme=defaultOpts["theme"],
+               #     fontSize=16, autoComplete="live",
+               #     autoCompleteList =list(svgR=names(svgR:::eleDefs))
+               #   ),
+               #   inline=FALSE
+               # ),
                div( id='snippetToolBarContainer', "class"="cSnippetToolBarContainer", #draggable=FALSE ,
                     tags$ul( id='dndSnippetList', "class"="cSnippetToolBarList",
                       buildSnippetToolBar()
                     ),
-                    div( id='snippetScrollUp', class='snippetButton  cTop center', 
-                         span('class'="glyphicon glyphicon-chevron-up") 
+                    div( id='snippetScrollUp', class='snippetButton  cTop center',
+                         span('class'="glyphicon glyphicon-chevron-up")
                     ),
                     div( id='snippetScrollDown', class='snippetButton cBottom center',
-                         span('class'="glyphicon glyphicon-chevron-down") 
+                         span('class'="glyphicon glyphicon-chevron-down")
                     )
-               )  
+               )
           ),
-                    
+
           absolutePanel( "class"="footerPanel", draggable=FALSE, style="display:inline-block",
              absolutePanel( left=5, bottom=0,
                actionButton("commit", label = "COMMIT EDIT") %>% bs_embed_tooltip(title = "Commit code changes")

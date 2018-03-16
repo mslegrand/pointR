@@ -294,7 +294,7 @@ input[type='radio']{
   background-color: yellow;
 }
 
-div .ui-sortable-handle{
+div .radio .ui-sortable-handle{
   color: #44FFFF;
   background-color: #242424;
   width: 45px; 
