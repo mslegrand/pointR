@@ -8,7 +8,7 @@ cmdFileSave<-function(){
     writeLines(txt, fullFilePath)
     session$sendCustomMessage(
       type = "shinyAceExt", 
-      list(id= "source", setClean=TRUE, sender='save', setOk=TRUE)
+      list(id= getAceEditorId(), setClean=TRUE, sender='save', setOk=TRUE)
     )
   }
 }

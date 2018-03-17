@@ -50,7 +50,7 @@ observeEvent(editOption$theme,{
   
   session$sendCustomMessage(
     type = "shinyAceExt",
-    list(id= "source", resetElementColor=colorSet)
+    list(id= getAceEditorId(), resetElementColor=colorSet)
   )
 
 })

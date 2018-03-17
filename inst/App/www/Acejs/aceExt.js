@@ -248,7 +248,8 @@ Shiny.addCustomMessageHandler(
           {
              code :  editor.getSession().getValue(),
              dirty: editor.getSession().getUndoManager().dirtyCounter,
-             sender : data.sender
+             sender : data.sender,
+             id:id
           });
        }
        
@@ -258,6 +259,7 @@ Shiny.addCustomMessageHandler(
           {
              code :  editor.getSession().getValue(),
              sender : data.sender,
+             id : id,
              dirty: editor.getSession().getUndoManager().dirtyCounter,
              rnd : randomString(5)
           });
@@ -319,6 +321,7 @@ Shiny.addCustomMessageHandler(
               {
                  code : editor.getSession().getValue(),
                  sender : data.sender,
+                 id : id,
                  dirty: editor.getSession().getUndoManager().dirtyCounter,
                  selector: data.selector,
                  rnd : randomString(5)
@@ -379,6 +382,7 @@ Shiny.addCustomMessageHandler(
           {
              code : editor.getSession().getValue(),
              sender : data.sender,
+             id : id,
              dirty: editor.getSession().getUndoManager().dirtyCounter,
              rnd : randomString(5)
           });
@@ -411,6 +415,7 @@ Shiny.addCustomMessageHandler(
           {
              code :  editor.getSession().getValue(),
              sender : data.sender,
+             id : id,
              dirty: editor.getSession().getUndoManager().dirtyCounter,
              auxValue: auxValue,
              rnd : randomString(5)

@@ -18,7 +18,7 @@ observeEvent( request$sender, {
         input[[tbId]],{
           session$sendCustomMessage(
             type = "shinyAceExt",    
-            list(id= "source", tbMssg=cmd)
+            list(id= getAceEditorId(), tbMssg=cmd)
           )
         }, ignoreInit=TRUE)
       )

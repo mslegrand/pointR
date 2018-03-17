@@ -49,7 +49,7 @@ openFileDlgSelector<-function(){
   #cat("reactive openFileDlgSelector:: sendCustomMessage\n")
   session$sendCustomMessage(
     type = "ptRManager", 
-    list(id= "source", openFile=TRUE, sender='cmd.openFileNow' )
+    list(id= getAceEditorId(), openFile=TRUE, sender='cmd.openFileNow' )
   )
   # try(fileName<-dlgOpen(
   #   default=fullPath,
@@ -80,7 +80,7 @@ openFileNow<-function(fileName){
       #here we set the value, 
       session$sendCustomMessage(
         type = "shinyAceExt", 
-        list(id= "source", setValue=src, sender='cmd.openFileNow' )
+        list(id= getAceEditorId(), setValue=src, sender='cmd.openFileNow' )
       )
       
     }

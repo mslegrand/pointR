@@ -63,7 +63,7 @@ observeEvent( input$editNavBar, {
       newLabel<-ifelse(indx==2,"Show White Space", "Hide White Space" )
       session$sendCustomMessage(
         type = "shinyAceExt",    
-        list(id= "source", toggleWhiteSpace=TRUE)
+        list(id= getAceEditorId(), toggleWhiteSpace=TRUE)
       )
       renameDMDM(
         session, menuBarId="editNavBar", 
@@ -81,7 +81,7 @@ observeEvent( input$editNavBar, {
       newLabel<-ifelse(indx==2,"Use Soft Tabs", "Use Hard Tabs" )
       session$sendCustomMessage(
         type = "shinyAceExt",    
-        list(id= "source", toggleTabType=TRUE)
+        list(id= getAceEditorId(), toggleTabType=TRUE)
       )
       renameDMDM(
         session, menuBarId="editNavBar", 
@@ -94,7 +94,7 @@ observeEvent( input$editNavBar, {
     if(fileCmd=="Editor ShortCuts"){
       session$sendCustomMessage(
         type = "shinyAceExt",    
-        list(id= "source", showKeyboardShortCuts=TRUE)
+        list(id= getAceEditorId(), showKeyboardShortCuts=TRUE)
       )
       dirtyDMDM(session, "editNavBar")
     }
@@ -102,7 +102,7 @@ observeEvent( input$editNavBar, {
     if(fileCmd=="Editor ShortCuts2"){
       session$sendCustomMessage(
         type = "shinyAceExt",    
-        list(id= "source", getKeyboardShortcuts=TRUE)
+        list(id= getAceEditorId(), getKeyboardShortcuts=TRUE)
       )
       dirtyDMDM(session, "editNavBar")
     }
@@ -197,14 +197,14 @@ output$fileName <- renderText({
 # )
 
 observe({
-  updateAceEditor(session, "source", fontSize=as.numeric(editOption$fontSize) )
+  updateAceEditor(session, getAceEditorId(), fontSize=as.numeric(editOption$fontSize) )
 })
 observe({
-  updateAceEditor(session, "source", theme=editOption$theme)
+  updateAceEditor(session, getAceEditorId(), theme=editOption$theme)
 })
 observe({
   session$sendCustomMessage(type = "shinyAceExt",  
-                            list(id= "source", tabSize=as.numeric(editOption$tabSize)))
+                            list(id= getAceEditorId(), tabSize=as.numeric(editOption$tabSize)))
 })
 
 

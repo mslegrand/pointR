@@ -58,6 +58,11 @@ observeEvent( request$sender,{
   
 }) 
 
+
+getAceEditorId<-reactive({
+  return('source')
+})
+
 observeEvent(input$pages,{
   #cat(input$pages,"\n")
   pages$fileName<-input$pages

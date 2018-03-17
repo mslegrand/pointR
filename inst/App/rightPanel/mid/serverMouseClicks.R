@@ -144,7 +144,7 @@ observe({
           replacementList<-list(list(rng=pos, txt= trDefDelta2))
           session$sendCustomMessage(
             type = "shinyAceExt",
-            list(id= "source", replacement=replacementList, sender=sender, ok=1)
+            list(id= getAceEditorId(), replacement=replacementList, sender=sender, ok=1)
           )
         }
         
@@ -157,7 +157,7 @@ observe({
           replacementList<-list(list(rng=pos, txt= trDefDelta2))
           session$sendCustomMessage(
             type = "shinyAceExt",
-            list(id= "source", replacement=replacementList, sender=sender, ok=1)
+            list(id= getAceEditorId(), replacement=replacementList, sender=sender, ok=1)
           )
         } 
         
@@ -170,7 +170,7 @@ observe({
           replacementList<-list(list(rng=pos, txt= trDefDelta2))
           session$sendCustomMessage(
             type = "shinyAceExt",
-            list(id= "source", replacement=replacementList, sender = sender, ok=1)
+            list(id= getAceEditorId(), replacement=replacementList, sender = sender, ok=1)
           )
         }
       }

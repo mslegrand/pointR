@@ -89,7 +89,7 @@ shinyUI(
               top=105, left=0, width="100%", "class"="headerPanel", draggable=FALSE, height="30px",
               buildHToolBar(bar2)
            ),
-          div( "class"="cMidPanel",
+          #div( "class"="cMidPanel",
                # div(
                #   id='aceContainer',
                #   "class"="cSvgOut cSvgOutRightIndent", #class"="cAceContainer",
@@ -113,7 +113,7 @@ shinyUI(
                     div( id='snippetScrollDown', class='snippetButton cBottom center',
                          span('class'="glyphicon glyphicon-chevron-down")
                     )
-               )
+               #)
           ),
 
           absolutePanel( "class"="footerPanel", draggable=FALSE, style="display:inline-block",

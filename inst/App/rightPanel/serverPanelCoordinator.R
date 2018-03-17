@@ -1,12 +1,11 @@
 
 panels<-reactiveValues(
-  left='source',   #to be used as editor name later, for connecting to right graphics
+  left='source' ,   #to be used as editor name later, for connecting to right graphics
   #  sourceType can be either svgPanelTag or RPanelTag
   #  sourceType = 'svgPanelTag'  means svgR code
   #  sourceType = 'RPanelTag' means plain R code or error
   #  sourceType is set from processCommit  
   sourceType=svgPanelTag 
-
 )
 
 setSourceType<-function( sourceType ){

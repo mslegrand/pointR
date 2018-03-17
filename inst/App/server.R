@@ -32,7 +32,7 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   triggerRefresh<-function(sender, rollBack=TRUE, auxValue=FALSE){ # to be used to force a code refresh???
     session$sendCustomMessage(
       type = "shinyAceExt",
-      list(id= "source", sender=sender, getValue=TRUE, rollBack=rollBack, auxValue=auxValue)
+      list(id= getAceEditorId(), sender=sender, getValue=TRUE, rollBack=rollBack, auxValue=auxValue)
     )
   }
   

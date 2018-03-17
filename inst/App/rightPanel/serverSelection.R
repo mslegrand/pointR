@@ -20,7 +20,7 @@ getSelIndex<-reactive({
 observeEvent(getTibNRow(),{
   session$sendCustomMessage(
     type = "ptRManager", 
-    list(id= "source", rowCountChange=TRUE, sender='tibNrow' )
+    list(id= getAceEditorId(), rowCountChange=TRUE, sender='tibNrow' )
   )
 })
 

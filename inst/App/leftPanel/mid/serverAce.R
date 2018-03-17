@@ -43,7 +43,7 @@ observeEvent(input$messageFromAce, {
         editOption$currentDirectory<-dirname(datapath)
         session$sendCustomMessage(
           type = "shinyAceExt",
-          list(id= "source", setClean=TRUE, sender='cleanPlease')
+          list(id= getAceEditorId(), setClean=TRUE, sender='cleanPlease')
         )
         
       }
@@ -58,7 +58,7 @@ updateAceExtDef<-function(newPtDef, sender, selector=list() ){
   if( length(replacementList)>0 ){
     session$sendCustomMessage(
       type = "shinyAceExt",
-      list(id= "source", replacement=replacementList, selector=selector, sender=sender, ok=1)
+      list(id= getAceEditorId(), replacement=replacementList, selector=selector, sender=sender, ok=1)
     )
   }
 }
@@ -66,7 +66,7 @@ updateAceExtDef<-function(newPtDef, sender, selector=list() ){
 updateAceExt<-function(sender, ...){
   data<-as.list(...)
   if(length(data)>0){
-    data<-c(list(id=='source', sender=sender), data )
+    data<-c(list(id= getAceEditorId(), sender=sender), data )
     session$sendCustomMessage(
       type = "shinyAceExt",
       data

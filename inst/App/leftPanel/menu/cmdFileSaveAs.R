@@ -13,7 +13,7 @@ cmdFileSaveAs<-function(){
   }
   session$sendCustomMessage( #triggers click of buttonFileSaveHidden
     type = "ptRManager", 
-    list(id= "source", saveFile=TRUE, sender='cmd.saveFileNow' )
+    list(id= getAceEditorId(), saveFile=TRUE, sender='cmd.saveFileNow' )
   )
 }
 
