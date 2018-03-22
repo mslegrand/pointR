@@ -1,10 +1,10 @@
 .container {
     position:absolute;
     top:40px;
-    left:0px;
-    right:65px;
+    left:0;
+    right:0px;
     bottom:40px;
-    background: #8888FF;
+    /*background: #8888FF;*/
     border: 3px solid #73AD21;
     overflow:hidden;
     /*margin: 0 0  0 0;*/
@@ -19,7 +19,7 @@
   top:100px;
   bottom:0;
   left: 0;
-  right: 0;
+  right: 60px;
   overflow: hidden;
   padding: 0;
 }
@@ -38,7 +38,7 @@
   	overflow:hidden;
 }
 .container .tabbable ul li{
-    margin-left:3px;
+    margin-left:0;
   	padding:0;
   	height:35px;
   	font-size:12px;
@@ -103,9 +103,9 @@
 .scroller-right{
   /*float:right;*/
   position:absolute;
-  right:8px;
-  top:5px;
-  height:35px;
+  right:1px;
+  top:1px;
+  height:30px;
   width:30px;
 
 }
@@ -113,8 +113,8 @@
 .scroller-left {
   /*float:left;*/
   position:absolute;
-  left:0;
-  top:5px;
-  height:35px;
+  left:1px;
+  top:1px;
+  height:30px;
   width:30px;
 }
