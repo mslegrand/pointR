@@ -41,9 +41,9 @@ ScollableTabs.prototype.widthOfList = function(){
 
 
 ScollableTabs.prototype.widthOfHidden = function(){
-  console.log('this.container.outerWidth()=' + this.container.outerWidth());
-  console.log('this.widthOfList()=' + this.widthOfList());
-  console.log('this.getLeftPos()=' + this.getLeftPos());
+  //console.log('this.container.outerWidth()=' + this.container.outerWidth());
+  //console.log('this.widthOfList()=' + this.widthOfList());
+  //console.log('this.getLeftPos()=' + this.getLeftPos());
   
   //return ((this.container.outerWidth())- this.widthOfList()-this.getLeftPosi())-this.scrollBarWidths;
   var rtv= this.widthOfList()- this.container.outerWidth();
@@ -84,7 +84,7 @@ ScollableTabs.prototype.dataValueToIndex = function(dataValue){
 };
 
 ScollableTabs.prototype.scrollIntoView = function(dataValue){
-  console.log('scrollIntoView');
+  //console.log('scrollIntoView');
   var targetIndex= 1+this.dataValueToIndex(dataValue);
   //console.log('targetIndex=' + targetIndex);
   var posArry = this.itemPositionArray();
@@ -136,7 +136,7 @@ ScollableTabs.prototype.scrollIntoView = function(dataValue){
 
 
 ScollableTabs.prototype.reAdjust = function(){
-  console.log('reAdjust');
+  //console.log('reAdjust');
   if( this.widthOfHidden()<=0){
     this.container.find('ul').animate({left:0},'fast');
     this.lastHiddenWidth=0;
@@ -193,7 +193,7 @@ ScollableTabs.prototype.reAdjust = function(){
 
 //$('.scroller-right').click(function() 
 ScollableTabs.prototype.rightClick =function(){
-  console.log('rightClick');
+  //console.log('rightClick');
   var m1 = this.container.outerWidth()-2*this.scrollBarWidths;
   //console.log('m1=' + m1);
   var m2 = (this.widthOfHidden()+ this.getLeftPos()); 
@@ -217,7 +217,7 @@ ScollableTabs.prototype.rightClick =function(){
 
 //$('.scroller-left').click(function() {
  ScollableTabs.prototype.leftClick =function(){
-   console.log('left click');
+   //console.log('left click');
    this.rightSB.fadeIn('slow');
     var delta = Math.min(-this.getLeftPos(), this.container.outerWidth()-2*this.scrollBarWidths );
     if(-this.getLeftPos()<= this.container.outerWidth()-2*this.scrollBarWidths ){
@@ -240,7 +240,7 @@ ScollableTabs.prototype.gotoEnd =function(){
 ScollableTabs.prototype.init=function(){
 	var ltabs=this;
 	ltabs.container.find('.scroller-right').click( function(){ 
-		  console.log('rightClick');
+		  //console.log('rightClick');
 		  //console.log('ltabs.widthOfHidden()=' + ltabs.widthOfHidden());
 		  ltabs.rightClick();
 		  //ltabs.leftSB.fadeIn('slow');
@@ -250,7 +250,7 @@ ScollableTabs.prototype.init=function(){
 		  //});
 	} );
 	ltabs.container.find('.scroller-left').click( function(){
-		console.log('leftClick');
+		//console.log('leftClick');
 		//console.log('ltabs.getLeftPos()=' + ltabs.getLeftPos());
 		ltabs.leftClick();
 		 //ltabs.rightSB.fadeIn('slow');
@@ -279,7 +279,7 @@ Shiny.addCustomMessageHandler(
   "scrollManager",
   function(data){
     if(!!data.resize){
-      console.log('resize here');
+      //console.log('resize here');
       $(window).resize();
     }
     if(!!data.selected){
