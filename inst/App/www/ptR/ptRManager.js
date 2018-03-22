@@ -5,7 +5,7 @@ Shiny.addCustomMessageHandler(
     //console.log('hello from ptRManager\n');
     //console.log(JSON.stringify(data));
     if(!!data.openFile){
-      console.log('about to trigger open\n');
+      //console.log('about to trigger open\n');
       if( data.sender==='cmd.openFileNow'){
         $('#buttonFileOpenHidden').trigger('click');
       }
@@ -14,15 +14,15 @@ Shiny.addCustomMessageHandler(
       }
     }
     if(!!data.importSnippet){
-      console.log('about to trigger load snippet\n');
+      //console.log('about to trigger load snippet\n');
       $('#buttonSnippetOpen').trigger('click');
     }
     if(!!data.saveFile){
-      console.log('about to trigger save\n');
+      //console.log('about to trigger save\n');
       $('#buttonFileSaveHidden').trigger('click');
     }
     if(!!data.exportSVG){
-      console.log('about to trigger svg export\n');
+      //console.log('about to trigger svg export\n');
       $('#buttonExportSVGHidden').trigger('click');
     }
     if(!!data.setFocus){
@@ -31,7 +31,7 @@ Shiny.addCustomMessageHandler(
       //$('#' + data.setFocus).focus();
     }
      if(!!data.hide){
-      console.log('#' + data.hide +'\n' );
+      //console.log('#' + data.hide +'\n' );
       setTimeout(function() {$('#' + data.hide).hide()}, 10);
     }
     if(!!data.addClass){
@@ -58,7 +58,7 @@ Shiny.addCustomMessageHandler(
 ); 
 
 $('#buttonFileOpenHidden').on('selection', function(event, path){
-  console.log('selection');
+  //console.log('selection');
 });
 
 
@@ -83,7 +83,7 @@ $('document').ready(function()
   $(sntb.downId).click(function(){sntb.onDownClick();});
   $(sntb.upId).click(function(){sntb.onUpClick();});
   $(window).on('resize',function(e){  
-    console.log('resize window');
+    //console.log('resize window');
     	sntb.reAdjustPos();
   });
   
@@ -97,7 +97,7 @@ $('document').ready(function()
   $(rsb.downId).click(function(){rsb.onDownClick();});
   $(rsb.upId).click(function(){rsb.onUpClick();});
   $(window).on('resize',function(e){  
-      console.log('resize window');
+      //console.log('resize window');
     	rsb.reAdjustPos();
   });
   
