@@ -32,19 +32,6 @@ list.entry.at.index<-function(ll, indx){
 }
 
 
-# pkgs<-list(
-#            "shinyjs"="daattali", 
-#            "svgR"="mlegrand",
-#            "shinyDMDMenu"="mlegrand",
-#            "shinyAce"="trestletech")
-# for(pkgName in names(pkgs)){  
-#   if(!require(pkgName, character.only=TRUE)){
-#     #install_github(pkgName, pkg[[pkgName]])
-#     library(pkgName, character.only=TRUE)
-#   }  
-# }
-
-
 r_pkgs<-c('shiny','shinyjs', 'R.utils', 'svgR', 'shinyAce', 'stringr', 'jsonlite', 'shinyDMDMenu', 'shinyFiles', 'shinythemes', 'colourpicker', 'shinyWidgets', 'bsplus',
           'shinyjqui')
 sapply(r_pkgs, library, character.only=TRUE)
@@ -52,7 +39,7 @@ sapply(r_pkgs, library, character.only=TRUE)
 #library("RColorBrewer")
 # options(shiny.error = recover)
 # options(shiny.trace=TRUE)
-#some consts
+#some constants
 defTag<-"ptR"
 transformTag<-"Transforms"
 errorPanelTag<-"errorPanel"
@@ -60,7 +47,7 @@ RPanelTag='RPanel'
 svgPanelTag<-'svgPanel'
 tibTag<-'tib'
 
-getSVGWH<-function(){ c(650,620)} #this should be ultimately place in another file
+getSVGWH<-function(){ c(650,620) } #this should be ultimately place in another file
 
 #----begin external resources loaded prior to server------------
 #source("utilStyle.R")
