@@ -15,7 +15,7 @@ observeEvent(input$buttonSnippetOpen,{
     snippetText<-paste(readLines(datapath), collapse = "\n")
     session$sendCustomMessage(
       type = "shinyAceExt",    
-      list(id= getAceEditorId(), snippets=snippetText)
+      list(id= getAceEditorId(), sender='fileCmd.openSnippets', snippets=snippetText)
     )
   }
 })

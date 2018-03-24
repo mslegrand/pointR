@@ -45,7 +45,7 @@ shinyUI(
     
     div(
       class="split-pane vertical-percent",
-      useShinyjs(debug = TRUE),
+      useShinyjs(),
       extendShinyjs(script="www/menuHelper.js"), #appears that only close window is used!
       #-------------left panel begin--------------------------------------------------
       #------- left component begin-----------
@@ -63,23 +63,7 @@ shinyUI(
           shinyFilesButton("buttonSnippetOpen",    label="", title="Import Snippet", multiple=FALSE,  class='hiddenButton'),
           shinySaveButton("buttonExportSVGHidden", label="", title="Save as ...",  list('hidden_mime_type'=c("SVG")) , class='hiddenButton'),
           div( id='aceTabSet', class="container",
-              tabsetPanel(id='pages', 
-                  tabPanel( 'source',
-                    div( 
-                          id='aceContainer',
-                          class="cAceContainer",
-                          #style="overflow-y:hidden;",
-                          overflow= "hidden",
-                          shinyAce4Ptr(
-                            outputId = "source",  value="",
-                            mode="ptr", theme=defaultOpts["theme"],
-                            fontSize=16, autoComplete="live",
-                            autoCompleteList =list(svgR=names(svgR:::eleDefs))
-                          ) ,
-                          inline=FALSE
-                    )
-                )
-              )
+              tabsetPanel(id='pages')
           ),
           absolutePanel( id='aceToobarTop1',
               top=75, left=0, width="100%", "class"="headerPanel", draggable=FALSE, height="30px",

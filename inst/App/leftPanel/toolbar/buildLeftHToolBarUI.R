@@ -6,6 +6,7 @@
 bar1<-list(
   tbNewFile=list(            icon=c("icon-doc", "icon-plus"),               title = "New",                      cmd="tbNew" ),               
   tbSaveFile=list(           icon=c("icon-doc", "icon-floppy"),             title = "Save",                     cmd="tbSave" ),                 
+  tbCloseFile=list(          icon=c("icon-doc", "icon-cancel"),             title = "Close",                    cmd="tbClose" ),                 
   tbUndo=list(               icon=c("icon-ccw"),                            title = "Undo",                     cmd="undo" ),              
   tbRedo=list(               icon=c("icon-cw"),                             title = "Redo",                     cmd="redo"  ),               
   tbIndentRight=list(        icon=c("icon-indent-right"),                   title = "Indent Right Selection",   cmd="indent" ),               

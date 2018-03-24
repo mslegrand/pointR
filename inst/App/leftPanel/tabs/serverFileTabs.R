@@ -1,73 +1,54 @@
 
-# probably this uioutput is obsolete when using tabs
-# 
-# output$TopLeftTabPanel<-renderUI({
-#   tmp<-getCurrentFile()
-#   if(nchar(tmp)==0){
-#     tmp<-'Unnamed'
-#   }
-#   tabsetPanel( tabPanel(tmp))
-# })
-
 jqui_sortable('#pages')
 
-pages<- reactiveValues(
-  fileName='',
-  fileNumber=1
-)
-
-
-addFileTab<-function(){
-  pages$fileNumber
-  newTabId<-paste0("Dynamic-", pages$fileNumber)
-  newAceId<-'source'
-  if(pages$fileNumber>1)
-    newAceId<-paste0("Ace-", pages$fileNumber)
-  txt=paste(rep(newTabId,50), collapse="\n")
-  appendTab(inputId = "pages",
-            tabPanel(newTabId)
-            #tabPanel(newTabId, aceEditor(newAceId, value=txt))
-            # tabPanel(newTabId, div(
-            #   #id='aceContainer',
-            #   "class"="cSvgOut cSvgOutRightIndent", #class"="cAceContainer",
-            #   #style="overflow-y:hidden;",
-            #   #overflow= "hidden",
-            #   shinyAce4Ptr(
-            #     outputId = newAceId,  value="",
-            #     mode="ptr", theme=defaultOpts["theme"],
-            #     fontSize=16, autoComplete="live",
-            #     autoCompleteList =list(svgR=names(svgR:::eleDefs))
-            #   ),
-            #   inline=FALSE
-            # ))
+addFileTab<-function(title, txt,  docFilePath='?'){
+  tabId<-tabName2TabId(title)
+  aceId<-tabName2AceId(title)
+  cat("addFileTab:: docFilePath",docFilePath,"\n")
+  appendTab(
+    inputId = "pages",
+    tabPanel( #tabId,
+      title=span(title, span( " " , class='icon-cancel')  ), 
+      #span(tabId,  actionButton(inputId=paste0("but",tabId), label="", class='icon-cancel') ), 
+      #checkboxInput(tabId, tabId, FALSE),
+      div(
+        class="cAceContainer",
+        overflow= "hidden",
+        shinyAce4Ptr(
+            outputId = aceId,  value=txt,
+            mode="ptr", theme=defaultOpts["theme"],
+            fontSize=16, autoComplete="live",
+            autoCompleteList =list(svgR=names(svgR:::eleDefs)),
+            docFilePath=docFilePath
+          ),
+           inline=FALSE
+        ),
+      value=tabId
+    )
   )
-  updateTabsetPanel(session,inputId = 'pages',selected = newTabId)
-  #jqui_draggable('#pages li')
+  updateTabsetPanel(session,inputId = 'pages', selected = tabId)
   session$sendCustomMessage(
-    type = "scrollManager", 
-    list( resize=TRUE )
+    type = "scrollManager", list( resize=TRUE )
   )
 }
 
-observeEvent( request$sender,{
-  # if(request$sender=='startup'){
-  #   for(i in 1:3){
-  #     addFileTab()
-  #   }
-  # }
-  
-}) 
-
-
 getAceEditorId<-reactive({
-  return('source')
+  tabId<-input$pages
+  tabID2aceID(tabId)
 })
 
+#  triggers doc has been changed.
 observeEvent(input$pages,{
-  #cat(input$pages,"\n")
+  cat("input$pages=",format(input$pages),"\n")
   pages$fileName<-input$pages
   session$sendCustomMessage(
     type = "scrollManager", 
     list( selected=pages$fileName )
   )
+  isolate(
+    {
+      sender='cmd.commit'
+      triggerRefresh(sender, rollBack=FALSE)
+    })
 }, ignoreNULL = TRUE)
+

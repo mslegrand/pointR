@@ -77,10 +77,20 @@ openFileNow<-function(fileName){
     setwd(dirname(fileName))  # should this be replaced by shinyFiles???
     if(nchar(src)>0){
       mssg$error<-""
+      tabName<-basename(fileName)
+      cat('openFileNow:: fileName=',fileName,"\n")
+      addFileTab(title=tabName, txt=src, docFilePath= fileName)
       #here we set the value, 
-      session$sendCustomMessage(
-        type = "shinyAceExt", 
-        list(id= getAceEditorId(), setValue=src, sender='cmd.openFileNow' )
+      # session$sendCustomMessage(
+      #   type = "shinyAceExt",
+      #   list(id= getAceEditorId(), setValue=src, sender='cmd.openFileNow' )
+      # )
+      cat("sendCustomMessage sender='cmd.file.open' aceId=",tabName,"\n" )
+      delay(500,
+            session$sendCustomMessage(
+              type = "shinyAceExt",
+              list(id=  getAceEditorId(), sender='cmd.openFileNow', setValue= src, setDocFileSaved=TRUE, ok=TRUE)
+            )
       )
       
     }

@@ -240,7 +240,7 @@ ex.getPtDefs<-function(src, useTribbleFormat, ptTag="ptR"  ){
 #   paste0('"',tr,'"')
 # }
 
-
+# name not used???
 ptDef2ReplacementList<-function(name, newPtDef, txt){
   replacementList<-list()
   # get the text for the point replacement  

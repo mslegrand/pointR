@@ -1,6 +1,6 @@
 
 panels<-reactiveValues(
-  left='source' ,   #to be used as editor name later, for connecting to right graphics
+  #left='source' ,   #to be used as editor name later, for connecting to right graphics
   #  sourceType can be either svgPanelTag or RPanelTag
   #  sourceType = 'svgPanelTag'  means svgR code
   #  sourceType = 'RPanelTag' means plain R code or error
@@ -9,10 +9,13 @@ panels<-reactiveValues(
 )
 
 setSourceType<-function( sourceType ){
+  cat('setting sourceType to ',format(sourceType),"\n")
   panels$sourceType=sourceType
 }
 
-getSourceType<-reactive({ panels$sourceType})
+getSourceType<-reactive({ 
+  panels$sourceType
+})
 
 # Returns a type corresp to name found in selectedTibble: 
 # RPanelTag if it is to be RCode
@@ -146,5 +149,23 @@ observeEvent(atLeast2Rows(),{
     hideElement('rowOutPanel')
     removeCssClass('svgOutPanel', 'cSvgOutLeftIndent')
   }
+})
+
+observeEvent(getAceEditorId(),{
+  id<-getAceEditorId()
+  cat("\nobserveEvent getAceEditorId:: id=",id,"\n");
+  if(is.null(id)){
+    cat("hiding TopRightPanel\n")
+    hideElement("TopRightPanel")
+  } else {
+    cat("showinging TopRightPanel\n")
+    showElement("TopRightPanel")
+  }
+  processCommit()
+  
+  
+  #cat('name=',format(name),"\n")
+  # tibs<-getPtDefs()$tib
+  # resetSelectedTibbleName(tibs=tibs, name=NULL)
 })
 

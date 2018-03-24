@@ -45,7 +45,7 @@ moduleEdTibUI<-function(id, input, output) {
     ),
     
     #---transform content---#   display only if selected name is transform
-    #conditionalPanel( condition = sprintf("input['%s'] == '%s'", ns("name"), transformTag),
+    conditionalPanel( condition = sprintf("input['%s'] == '%s'", ns("name"), transformTag),
       div( id=ns("transformPanelContainer"), #'class'='topHeadCol2 topHeadRow2 ptR2'
         top=top+25, left=left, width="100%",
         "class"="headerPanel", draggable=FALSE, "background-color"='#666688',
@@ -56,7 +56,7 @@ moduleEdTibUI<-function(id, input, output) {
                      type="pills"
         )
       )
-    #)
+    )
   ) # end taglist
   
 }
@@ -202,20 +202,37 @@ moduleEdTib<-function(input, output, session,
 
   #---asset name---
   observeEvent(c( name(), nameChoices() ), { #update the name
-    toggleElement(
-      id='transformPanelContainer' ,
-      condition=(!is.null(name())&& name()=='transformTag')
-    )
-    if(length(nameChoices())==0){ #name choices
+    if( !is.null(name()) && name()==transformTag ){
+      cat('transformPanelContainer show \n')
+      showElement('transformPanelContainer')
     } else {
+      cat('transformPanelContainer hide \n')
+      hideElement('transformPanelContainer')
+    }
+    # toggleElement(
+    #   id='transformPanelContainer' ,
+    #   condition=(!is.null(name()) && name()==transformTag)
+    # )
+   
       # updateRadioGroupButtons(session, inputId=ns("name" ),
       #   choices=nameChoices(), selected=name()
       # )
-      toggleElement(
-        id='headEdTib' ,
-        condition=!(name() %in% c( transformTag, RPanelTag, errorPanelTag, svgPanelTag))
-      )
-    }
+      
+      cat('moduleEdTib observer:: name()=', format(name()),"\n")
+      
+      if(length(nameChoices())>0 && !is.null(name()) && nchar(name())>0 && !(name() %in% c( transformTag, RPanelTag, errorPanelTag, svgPanelTag)) ){
+        cat('headEdTib show\n')
+        showElement('headEdTib')
+      } else {
+        cat('headEdTib hide\n')
+        hideElement('headEdTib')
+        hideElement(ns('headEdTib'))
+      }
+      # toggleElement(
+      #   id='headEdTib' ,
+      #   condition=!(name() %in% c( transformTag, RPanelTag, errorPanelTag, svgPanelTag))
+      # )
+    
   }) 
 
   observeEvent( getTransformType(), {

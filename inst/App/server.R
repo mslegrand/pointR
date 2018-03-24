@@ -13,10 +13,11 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
 # Reactive values----------
   request<-reactiveValues(
     code=NULL,
-    name=NULL,
+    name=NULL, # name not used??
     sender='startup',
+    closeTab=NULL,
     refresh=NULL, # to be used to force a code refresh???
-    inputHandlers=NULL
+    inputHandlers=NULL # inputHandlers not used??
   )
   
   getCode<-reactive({request$code})
@@ -35,6 +36,56 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
       list(id= getAceEditorId(), sender=sender, getValue=TRUE, rollBack=rollBack, auxValue=auxValue)
     )
   }
+  
+  sendManagerMessage<-function(id, sender, ...){ 
+    session$sendCustomMessage( type = "ptRManager", 
+        c( list(id = id, sender=sender), list(...) )
+    )
+  }
+  
+  
+  pages<- reactiveValues(
+    fileName='',
+    fileNumber=1
+  )
+  
+  
+  getNextAnonymousFileName<-function(){
+    pages$fileNumber
+    newTabId<-paste0("Anonymous ", pages$fileNumber)
+    pages$fileNumber<-pages$fileNumber+1
+    #newTabId<-"source"
+    newTabId
+  }
+  
+  
+  
+  tabName2AceId<-function(tabName){
+    if(!is.null(tabName) && nchar(tabName)>0){
+      tabName<-paste0("ACE", tabName)
+      tabName<-gsub(' ','', tabName)
+      tabName<-gsub('\\.','_',tabName)
+    } else {
+      NULL
+    }
+  }
+  tabName2TabId<-function(tabName){
+    if(!is.null(tabName) && nchar(tabName)>0){
+      tabName<-paste0("TAB", tabName)
+      tabName<-gsub(' ','', tabName)
+      tabName<-gsub('\\.','_',tabName)
+    } else {
+      NULL
+    }
+  }
+  
+  aceID2TabId<-function(aceId){
+    sub("^ACE","TAB",aceId)
+  }
+  tabID2aceID<-function(tabId){
+    sub("^TAB","ACE",tabId)
+  }
+  
   
   getLeftMenuCmd<-reactive({input$editNavBar$item})
   getRightMenuCmd<-reactive({input$plotNavBar$item})
@@ -109,6 +160,7 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   source("leftPanel/menu/cmdFileSaveAs.R",          local=TRUE)  
   source("leftPanel/menu/cmdFileSave.R",            local=TRUE)  
   source("leftPanel/menu/cmdFileNew.R",             local=TRUE)  
+  source("leftPanel/menu/cmdFileClose.R",           local=TRUE)  
   source("leftPanel/menu/cmdFileOpen.R",            local=TRUE)  
   source("leftPanel/menu/cmdFileQuit.R",            local=TRUE)  
   source("leftPanel/menu/cmdFileExportSvg.R",       local=TRUE) 

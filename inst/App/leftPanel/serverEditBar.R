@@ -20,12 +20,12 @@ observeEvent( input$editNavBar, {
       dirtyDMDM(session, "editNavBar")
     } 
     if(fileCmd=="Save"){ #-----save
-      curFile<-getCurrentFile()
-      if(nchar(curFile)>0){
+      #curFile<-getCurrentFile()
+      #if(nchar(curFile)>0){
         cmdFileSave()
-      } else {
-        cmdFileSaveAs()
-      }
+      # } else {
+      #   cmdFileSaveAs()
+      # }
       dirtyDMDM(session, "editNavBar")
     }
     if(fileCmd=="quit"){
@@ -63,7 +63,7 @@ observeEvent( input$editNavBar, {
       newLabel<-ifelse(indx==2,"Show White Space", "Hide White Space" )
       session$sendCustomMessage(
         type = "shinyAceExt",    
-        list(id= getAceEditorId(), toggleWhiteSpace=TRUE)
+        list(id= getAceEditorId(), sender= 'fileCmd.whitespace', toggleWhiteSpace=TRUE)
       )
       renameDMDM(
         session, menuBarId="editNavBar", 
@@ -81,7 +81,7 @@ observeEvent( input$editNavBar, {
       newLabel<-ifelse(indx==2,"Use Soft Tabs", "Use Hard Tabs" )
       session$sendCustomMessage(
         type = "shinyAceExt",    
-        list(id= getAceEditorId(), toggleTabType=TRUE)
+        list(id= getAceEditorId(), sender='fileCmd.toggleTab', toggleTabType=TRUE)
       )
       renameDMDM(
         session, menuBarId="editNavBar", 
@@ -94,7 +94,7 @@ observeEvent( input$editNavBar, {
     if(fileCmd=="Editor ShortCuts"){
       session$sendCustomMessage(
         type = "shinyAceExt",    
-        list(id= getAceEditorId(), showKeyboardShortCuts=TRUE)
+        list(id= getAceEditorId(), sender='fileCmd.showShortCuts', showKeyboardShortCuts=TRUE)
       )
       dirtyDMDM(session, "editNavBar")
     }
@@ -102,7 +102,7 @@ observeEvent( input$editNavBar, {
     if(fileCmd=="Editor ShortCuts2"){
       session$sendCustomMessage(
         type = "shinyAceExt",    
-        list(id= getAceEditorId(), getKeyboardShortcuts=TRUE)
+        list(id= getAceEditorId(), sender='fileCmd.showShortCuts2', getKeyboardShortcuts=TRUE)
       )
       dirtyDMDM(session, "editNavBar")
     }
@@ -196,15 +196,19 @@ output$fileName <- renderText({
 #   }
 # )
 
-observe({
+observeEvent(editOption$fontSize, {
   updateAceEditor(session, getAceEditorId(), fontSize=as.numeric(editOption$fontSize) )
 })
-observe({
+
+observeEvent(editOption$theme, {
   updateAceEditor(session, getAceEditorId(), theme=editOption$theme)
 })
-observe({
-  session$sendCustomMessage(type = "shinyAceExt",  
-                            list(id= getAceEditorId(), tabSize=as.numeric(editOption$tabSize)))
+
+observeEvent(editOption$tabSize, {
+  #updateAceEditor(session, getAceEditorId(), theme=editOption$theme)
+  # session$sendCustomMessage(type = "shinyAceExt",  
+  #                           list(id= getAceEditorId(), sender='fileCmd.tabSize', tabSize=as.numeric(editOption$tabSize)))
+  
 })
 
 

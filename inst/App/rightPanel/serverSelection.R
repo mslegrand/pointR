@@ -73,11 +73,14 @@ resetSelectedTibbleName<-function(tibs, name){
     if(hasError()){
       return(NULL) # never change selection when in error state
     }
-    # cat("\\n----------nserverSelection...Entering  resetSelectedTibbleName\n")
-    # cat("\nresetSelectedTibbleName... name= ", format(name),"\n")
-    #   cat("resetSelectedTibbleName... names(tibs)=",format(names(tibs)),"\n")
+    if(is.null(tibs)){
+      return(NULL)
+    }
+    cat("\\n----------nserverSelection...Entering  resetSelectedTibbleName\n")
+    cat("\nresetSelectedTibbleName... name= ", format(name),"\n")
+    cat("resetSelectedTibbleName... names(tibs)=",format(names(tibs)),"\n")
       choices<-getRightPanelChoices()
-      # cat("resetSelectedTibbleName:: choices=", paste(choices, collapse=", "),"\n")
+      #cat("resetSelectedTibbleName:: choices=", paste(choices, collapse=", "),"\n")
       if(is.null(name) || !(name %in% choices)){
         name<-getTibName() #pick the last name
       }

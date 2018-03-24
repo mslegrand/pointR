@@ -5,7 +5,14 @@
 returnValue4ModuleEdTib<-callModule(
   module=moduleEdTib,
   id="tagValBar",
-  name=reactive({ if(hasError()){ errorPanelTag } else{ getTibName() }}),
+  name=reactive({ 
+    if(hasError()){ 
+      rtv<-errorPanelTag } else{ 
+        rtv<-getTibName() 
+      }
+    cat('Input name to tibEditor is=',format(rtv),'\n')
+    rtv
+  }),
   nameChoices=getRightPanelChoices,
   getRowIndex=reactive({            if( getTibEditState()==TRUE ){ getTibRow() } else { NULL } }),
   getTibNRow=reactive({             if( getTibEditState()==TRUE ){ getTibNRow() } else { NULL } }),

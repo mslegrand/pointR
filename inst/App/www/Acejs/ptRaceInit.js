@@ -58,16 +58,48 @@
       };
 
 function ptRaceInit(data){
+  console.log("---------------------ptRaceInit(data)-------------------------------");
+  console.log(typeof(data));
   ace.require("UndoManager");
-  var id = data.id[0];
-  var mode = data.mode[0];
+  var id = data.id;
+  console.log("ptRaceInit:: data.id=" + data.id + ":");
+  console.log("ptRaceInit:: data.id[0]=" +data.id[0] +":");
+  var mode = data.mode;
   var $el = $('#' + id);
-  
+  console.log($el.attr());
+  console.log($el.attr());
+  //console.log('JSON.stringify($el.data)')
   var theEditor = $el.data('aceEditor'); 
-  var editorVar = data.editorVar[0];
   var autoComplete = data.autoComplete[0];
+  /*if(!!editorVar){
+    console.log('editorVar=' + editorVar);
+  } else {
+    console.log('editorVar is null');
+  }*/
+  if(!!theEditor){
+    console.log('found theEditor');
+  } else {
+    console.log('theEditor is null');
+  }
   
-   
+  if(!!mode){
+    console.log('mode=' + mode);
+  } else {
+    console.log('mode is null');
+  }
+  /*var mySession = editorVar.getSession();
+  if(!!mySession){
+    console.log('found session');
+  } else {
+    console.log('session is null');
+  }*/
+  
+  if(!!data.docFilePath){
+    $el.data('docFilePath', data.docFilePath);
+  }
+  
+  $el.data('lastSavedLen', 0); //may need to revisit
+  
     if(mode=='ptr'){ 
       data.acejs= data.acejs[0];
       ace.config.set('workerPath', "./Acejs");
@@ -118,16 +150,17 @@ function ptRaceInit(data){
             Shiny.onInputChange('commitMssg', randomString(5) );
         }
       });
+      
   
       theEditor.commands.addCommand({
         name: 'helpR',
         bindKey: {win: 'F1', mac: 'F1'},
         exec: function(editor) {
-          //console.log('helpR!');
+          console.log('--------------helpR!----------------------');
           editor.getSession().selection.moveCursorLongWordLeft();
           editor.getSession().selection.selectWordRight();
           var text = editor.getSession().getTextRange(editor.getSelectionRange());
-          Shiny.onInputChange('helpMssg', {query:text, num:Math.random(), editorId: editorVar} );
+          Shiny.onInputChange('helpMssg', {query:text, num:Math.random(), editorId: id} );
         } //TODO: remove editorVar; appears not to be used
       });
       
@@ -141,7 +174,6 @@ function ptRaceInit(data){
             return; 
         if (e.clientX > 25 + target.getBoundingClientRect().left) 
             return; 
-    
         var breakpoints = e.editor.session.getBreakpoints(row, 0);
         var row = e.getDocumentPosition().row;
         if(typeof breakpoints[row] === typeof undefined)
@@ -151,45 +183,9 @@ function ptRaceInit(data){
         e.stop();
      });
  
-      
-/*    
-     $el.droppable({
-        activeClass: "ui-state-default",
-        hoverClass: "ui-state-hover",
-        accept: ":not(.ui-sortable-helper)",
-        drop: function(event, ui) {
-            console.log('0:  drop occurred');
-            console.log( 'dropped on id='+ $(this).attr("id"));
-            alert( 'dropped on id='+ $(this).attr("id"));
-            var theEditoR = $(this).data('aceEditor');
-            console.log( 'dropped on id='+ $(this).attr("id"));
-            //console.log("theEditoR class=" + JSON.stringify(theEditoR.className));
-            var pos = theEditoR.renderer.screenToTextCoordinates(event.clientX, event.clientY);
-            console.log("pos=" + JSON.stringify(pos));
-            var txt =  ui.draggable.attr("data-snippet");
-            this.focus();
-            theEditoR.moveCursorToPosition(pos);
-            theEditoR.clearSelection(); 
-            //editor.session.insert(pos, txt);
-            //editor.insert(txt);
-            ui.helper.remove();
-            var snippetManager = ace.require("ace/snippets").snippetManager;
-            snippetManager.insertSnippet(theEditoR, txt);
-            //var tab_press= jQuery.Event('keydown', {which: 88});
-            //var tab_press= jQuery.Event('keydown', {which: 9});
-            //theEditor.trigger(tab_press);
-            //theEditor.simulate("key-combo",{combo: "shift-tab"});
-            theEditoR.focus();
-            return true;
-        }
-      }); // end $el.droppable
-*/  
     } else {
       theEditor.getSession().setMode('ace/mode/' + data.mode);  // shinyAce init
     }
-    
- 
-    
 }
 
 

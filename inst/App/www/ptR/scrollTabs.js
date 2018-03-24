@@ -83,6 +83,13 @@ ScollableTabs.prototype.dataValueToIndex = function(dataValue){
   return $(this.containerId +' div ul li a').index(targetItem) || 0;
 };
 
+
+ScollableTabs.prototype.resetTitleGivendataValue = function( newTitle, dataValue){
+  //console.log('dataValue=' + dataValue);
+  //console.log('newElement =' + newElement);
+  $(this.containerId +" div ul li a[data-value='" + dataValue + "'] span").replaceWith(newTitle);
+};
+
 ScollableTabs.prototype.scrollIntoView = function(dataValue){
   //console.log('scrollIntoView');
   var targetIndex= 1+this.dataValueToIndex(dataValue);
@@ -284,6 +291,14 @@ Shiny.addCustomMessageHandler(
     }
     if(!!data.selected){
       stabs.scrollIntoView(data.selected);
+    }
+    if(!!data.value){
+      console.log(data.value);
+      if(!! data.title){
+        console.log(data.title);
+        stabs.resetTitleGivendataValue( data.title, data.value);
+        stabs.reAdjust();
+      }
     }
   }
 );

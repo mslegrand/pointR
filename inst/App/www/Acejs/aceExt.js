@@ -54,7 +54,7 @@ var loadPtrSnippetFile = function(id) {
 //Used exclusively for swapping colors of svgR keywords
 function getStyleRule(name) {
     var ix, 
-    sheet= $('#shinyAceStyle')[0]['sheet']; //revisit this
+    sheet= $('#shinyAceStyle')[0].sheet; //['sheet']; //revisit this
     for (ix=0; ix<sheet.cssRules.length; ix++) {
       if (sheet.cssRules[ix].selectorText === name){
         return sheet.cssRules[ix].style;
@@ -111,36 +111,56 @@ function nextBookMark(ed){
                 
                 ed.gotoLine(nextRow);
               }
-}            
+}   
+
 
 Shiny.addCustomMessageHandler(
   "shinyAceExt",
       function(data) { 
+        console.log(
+          '------------Shiny.addCustomMessageHandler-------------------------------- '
+        );
         var id = data.id;
         var $el = $('#' + id);
+        console.log('ace id =' + id);
         var editor = $el.data('aceEditor'); 
         var HighlightedLines;
         var Range = ace.require("ace/range").Range;
         var ud =  editor.getSession().getUndoManager();
         var sender=data.sender;
         var auxValue="";
+        console.log('id=' + id );
+        console.log('sender =' + sender);
         
-        //$el.droppable("enable");
+        if(!!editor){
+          console.log('found editor');
+        } else {
+          console.log('editor is null');
+        }
+        
+        if(!!data.setDocFilePath){ 
+          $el.data('docFilePath', data.setDocFilePath);
+        }
+        
+        if(!!data.setDocFileSaved){
+          ud=editor.getSession().getUndoManager();
+          $el.data('docFileSaved',ud.$undoStack.length);
+        }
         
         
-        //makeEditorDropabble(id);
+        
+        //console.log( '$el.data(docFilePath)=',JSON.stringify( $el.data('docFilePath') ));
         
         if(!!data.ptRMode){ 
           editor.getSession().setMode({path: "ace/mode/ptr", v: Date.now()});
           editor.setBehavioursEnabled(true);
         }
+        
         if (!!data.addMarker ){
           var pos = data.addMarker;
           var row1 = pos[0]; 
           var col1 = pos[1]; 
           var row2 = row1+1; 
-          
-          
           var mid= editor.getSession().addMarker(
               new Range(row1, 0, row2, 1), 
               'ace_error-marker', 
@@ -197,6 +217,7 @@ Shiny.addCustomMessageHandler(
             rule.color=element;
            });
         }
+        
         if(!!data.snippets){
           var snippetManager = ace.require("ace/snippets").snippetManager;
           var m = snippetManager.files[editor.session.$mode.$id];
@@ -207,17 +228,18 @@ Shiny.addCustomMessageHandler(
           m.snippets = snippetManager.parseSnippetFile(m.snippetText, m.scope);
           snippetManager.register(m.snippets);
         }
+        
         if(!!data.toggleWhiteSpace){
-          //console.log(JSON.stringify(data))
           editor.setShowInvisibles(!editor.getShowInvisibles());
         }
+        
         if(!!data.toggleTabType){
           editor.session.setUseSoftTabs(!editor.session.getUseSoftTabs());
         }
+        
         if(!!data.setfocus){
           editor.focus();
         }
-        
         
         if(!!data.showKeyboardShortCuts){
           ace.config.loadModule(
@@ -333,6 +355,7 @@ Shiny.addCustomMessageHandler(
           
           }        
         }
+        
         //-------------------
         if(!!data.setOk){
           //console.log("\ndata.setOk");
@@ -347,21 +370,19 @@ Shiny.addCustomMessageHandler(
         }
         //----------------------------
         
+        
         if(!!data.setValue){
-          
-          /*
-          console.log('data.setValue');
-          console.log(JSON.stringify(data.setValue));
-          console.log('getValue fin: editor.getSession().getUndoManager()$undoStack.length=' + 
-                editor.getSession().getUndoManager().$undoStack.length);
-          console.log('getValue fin: editor.getUndoManager()getSession().$ok=' + 
-                editor.getSession().getUndoManager().$ok);
-          */
+          //console.log('data.setValue');
+          //console.log(JSON.stringify(data.setValue));
+          //console.log('getValue fin: editor.getSession().getUndoManager()$undoStack.length=' + editor.getSession().getUndoManager().$undoStack.length);
+          //console.log('getValue fin: editor.getUndoManager()getSession().$ok=' + editor.getSession().getUndoManager().$ok);
           //console.log('value = ' + JSON.stringify(code));
+          
           editor.getSession().setValue(data.setValue);
           if(!!data.ok){
             //console.log('!!data.ok==TRUE');
             editor.getSession().getUndoManager().setOk();
+            
           }
           
           /*
@@ -418,6 +439,39 @@ Shiny.addCustomMessageHandler(
              id : id,
              dirty: editor.getSession().getUndoManager().dirtyCounter,
              auxValue: auxValue,
+             rnd : randomString(5)
+          });
+        }
+        
+        if(!!data.getDocFileSaved){
+          Shiny.onInputChange('messageFromAce', 
+          {
+             code :  editor.getSession().getValue(),
+             sender : data.sender,
+             id : id,
+             dirty: editor.getSession().getUndoManager().dirtyCounter,
+             saved: $el.data('docFileSaved')==editor.getSession().getUndoManager().$undoStack.length,
+             docFilePath: $el.data('docFilePath'),
+             rnd : randomString(5)
+          });
+        }
+        
+        
+        
+        
+        if(!!data.getDoc){ 
+          var undoLen=editor.getSession().getUndoManager().$undoStack.length;
+          var saveLen= $el.data('docFileSaved');
+          console.log('docFileSaved=' +JSON.stringify( saveLen) + " undoLen =" + undoLen);
+          Shiny.onInputChange('messageFromAce', 
+          {
+             code :  editor.getSession().getValue(),
+             sender : data.sender,
+             id : id,
+             dirty: editor.getSession().getUndoManager().dirtyCounter,
+             saved: undoLen===saveLen,
+             //$el.data('docFileSaved')==editor.getSession().getUndoManager().$undoStack.length,
+             docFilePath: $el.data('docFilePath'),
              rnd : randomString(5)
           });
         }
