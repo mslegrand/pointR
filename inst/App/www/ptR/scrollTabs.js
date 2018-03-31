@@ -84,6 +84,10 @@ ScollableTabs.prototype.dataValueToIndex = function(dataValue){
 };
 
 
+ScollableTabs.prototype.getAllTabValues = function(){
+  return $.map( this.container.find('div ul li a[data-toggle="tab"]'), function(e){ return $(e).data('value')});  
+};
+
 ScollableTabs.prototype.resetTitleGivendataValue = function( newTitle, dataValue){
   //console.log('dataValue=' + dataValue);
   //console.log('newElement =' + newElement);
@@ -165,7 +169,7 @@ ScollableTabs.prototype.reAdjust = function(){
       // if last tab comes into view, scroll to end and hide right
       // last tab in container is -con
       // if this.widthOfHidden()-this.container.w
-      var leftpos = this.container.outerWidth() - this.widthOfList();
+      var leftPos = this.container.outerWidth() - this.widthOfList();
       if( leftPos < this.getLeftPos() ){ // do nothing
       } else {
         if(leftPos> -this.scrollBarWidths){
@@ -292,13 +296,23 @@ Shiny.addCustomMessageHandler(
     if(!!data.selected){
       stabs.scrollIntoView(data.selected);
     }
-    if(!!data.value){
+    if(!!data.value){ //aka tabId
       console.log(data.value);
       if(!! data.title){
         console.log(data.title);
         stabs.resetTitleGivendataValue( data.title, data.value);
         stabs.reAdjust();
       }
+    }
+    if(!!data.getAllTabIds){
+      var tabIds = stabs.getAllTabValues();
+      console.log('getAllTabIds=' + data.getAllTabIds );
+      console.log(JSON.stringify(tabIds));
+      Shiny.onInputChange('tabManager', {
+        tabs:tabIds, 
+        sender: data.sender, 
+        rnd: Math.random().toString(36).substring(7)
+      } );
     }
   }
 );
