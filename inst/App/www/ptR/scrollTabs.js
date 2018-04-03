@@ -88,10 +88,21 @@ ScollableTabs.prototype.getAllTabValues = function(){
   return $.map( this.container.find('div ul li a[data-toggle="tab"]'), function(e){ return $(e).data('value')});  
 };
 
+ScollableTabs.prototype.getAllDocPaths = function(){
+  return $.map( this.container.find('.shiny-ace'), function(e){ return $(e).data('docFilePath')});
+  //return $.map( this.container.find('.shiny-ace'), function(e){ return $(e).attr('id')});
+};
+
+
 ScollableTabs.prototype.resetTitleGivendataValue = function( newTitle, dataValue){
   //console.log('dataValue=' + dataValue);
   //console.log('newElement =' + newElement);
   $(this.containerId +" div ul li a[data-value='" + dataValue + "'] span").replaceWith(newTitle);
+};
+
+ScollableTabs.prototype.getTitleGivendataValue = function( dataValue){
+  var innText=$(this.containerId +" div ul li a[data-value='" + dataValue + "'] span").text().trim();
+  return innText;
 };
 
 ScollableTabs.prototype.scrollIntoView = function(dataValue){
@@ -283,6 +294,11 @@ $(document).ready(function(){
   });
   $(window).on('splittermove', function(e){ 
     stabs.reAdjust();
+  });
+  
+  $('#editNavBar').mousedown(function(){
+    var paths=stabs.getAllDocPaths();
+    console.log(JSON.stringify(paths));
   });
 });
 

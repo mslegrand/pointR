@@ -13,12 +13,22 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
 # Reactive values----------
   request<-reactiveValues(
     code=NULL,
-    name=NULL, # name not used??
     sender='startup',
-    closeTab=NULL,
-    refresh=NULL, # to be used to force a code refresh???
-    inputHandlers=NULL # inputHandlers not used??
+    tabs=NULL
   )
+  
+  setTabRequest<-function(sender, tabs){
+    request$sender<-sender
+    request$tabs<-tabs
+  }
+  getSender<-reactive({request$sender})
+  peekTab<-reactive( {request$tabs[1]} )
+  popTab<-reactive({
+    tab<-request$tabs[1]
+    request$tabs<-request$tabs[-1]
+    tab
+  })
+  
   
   getCode<-reactive({request$code})
   mssg<-reactiveValues(
@@ -37,9 +47,15 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
     )
   }
   
-  sendManagerMessage<-function(id, sender, ...){ 
+  sendPtRManagerMessage<-function(id, sender, ...){ 
     session$sendCustomMessage( type = "ptRManager", 
         c( list(id = id, sender=sender), list(...) )
+    )
+  }
+  
+  sendFileTabsMessage<-function(id, sender, ...){ 
+    session$sendCustomMessage( type = "scrollManager", 
+       c( list(id = id, sender=sender), list(...) )
     )
   }
   
@@ -79,7 +95,7 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
     }
   }
   
-  aceID2TabId<-function(aceId){
+  aceID2TabID<-function(aceId){
     sub("^ACE","TAB",aceId)
   }
   tabID2aceID<-function(tabId){
@@ -101,9 +117,9 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   
   
   shinyFileChoose(input, "buttonFileOpenHidden", session=session, roots=c(wd="~") ) #hidden
-  shinyFileChoose(input, "buttonSnippetOpen", session=session, roots=c(wd="~"),  filetypes=c('', 'snp') ) #hidden
-  shinyFileSave(input, "buttonFileSaveHidden", session=session, roots=c(wd="~"), filetypes=c('R','svgR') ) #hidden
-  shinyFileSave(input, "buttonExportSVGHidden", session=session, roots=c(wd="~"),filetypes=c('svg') ) #hidden
+  shinyFileChoose(input, "buttonSnippetOpen",    session=session, roots=c(wd="~"),  filetypes=c('', 'snp') ) #hidden
+  shinyFileSave(input, "buttonFileSaveHidden",   session=session, roots=c(wd="~"),  filetypes=c('R','svgR') ) #hidden
+  shinyFileSave(input, "buttonExportSVGHidden",  session=session, roots=c(wd="~"),  filetypes=c('svg') ) #hidden
 
   # Reactive expressions------------- 
   showGrid<-reactive({displayOptions$showGrid})

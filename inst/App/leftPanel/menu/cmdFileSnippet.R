@@ -1,9 +1,10 @@
 
 cmdSnippetFileOpen<-reactive({
-  session$sendCustomMessage(
-    type = "ptRManager", 
-    list(id= getAceEditorId(), openFile=TRUE, sender='cmd.snippet.file.open' )
-  )
+  sendPtRManagerMessage( id= getAceEditorId() , sender='cmd.snippet.file.open', openFile=TRUE)
+  # session$sendCustomMessage(
+  #   type = "ptRManager", 
+  #   list(id= getAceEditorId(), openFile=TRUE, sender='cmd.snippet.file.open' )
+  # )
   
 })
 

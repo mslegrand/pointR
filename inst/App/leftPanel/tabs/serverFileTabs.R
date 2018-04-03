@@ -1,14 +1,23 @@
 
 jqui_sortable('#pages')
 
+closeRfn<-function(tabId){paste0("event.stopPropagation();Shiny.onInputChange('closeTab',  {id:'",tabId,"', type: 'tabId'} ); return false")}
+tabTitleRfn<-function(title, tabId){
+  span(title, span( " " , class='icon-cancel', onclick=closeRfn(tabId))  )
+}
+
 addFileTab<-function(title, txt,  docFilePath='?'){
   tabId<-tabName2TabId(title)
   aceId<-tabName2AceId(title)
   cat("addFileTab:: docFilePath",docFilePath,"\n")
+  # !!!TODO add docFilePath to recentFiles (if !='?')
+  
   appendTab(
     inputId = "pages",
     tabPanel( #tabId,
-      title=span(title, span( " " , class='icon-cancel')  ), 
+      title=tabTitleRfn(title, tabId),
+      #span(title, span( " " , class='icon-cancel', onclick=closeRfn(tabId))  ), 
+      #title=span(title, span( " " , class='icon-cancel', onclick=closeRfn(tabId))  ), 
       #span(tabId,  actionButton(inputId=paste0("but",tabId), label="", class='icon-cancel') ), 
       #checkboxInput(tabId, tabId, FALSE),
       div(
@@ -40,15 +49,43 @@ getAceEditorId<-reactive({
 #  triggers doc has been changed.
 observeEvent(input$pages,{
   cat("input$pages=",format(input$pages),"\n")
-  pages$fileName<-input$pages
+  tabId<-input$pages 
   session$sendCustomMessage(
     type = "scrollManager", 
-    list( selected=pages$fileName )
+    list( selected=tabId ) #  Requests to scroll into view
   )
-  isolate(
-    {
-      sender='cmd.commit'
-      triggerRefresh(sender, rollBack=FALSE)
-    })
+  aceId<-tabID2aceID(tabId)
+  cat("input$pages:: aceId=",aceId,"\n")
+  updateAceExt(id=aceId, sender='cmd.commit', roleBack=FALSE, setfocus=TRUE)
+  triggerRefresh('cmd.commit', rollBack=FALSE)
 }, ignoreNULL = TRUE)
+
+
+# updated by scrollManager and relays sender with tabs to request
+observeEvent(input$tabManager,{
+  cat("observer input$tabManager\n")
+  tabs=unlist(input$tabManager$tabs)
+  sender=input$tabManager$sender
+  setTabRequest(sender=sender, tabs=tabs)
+  cat("leaving tabManager observer------------------\n")
+})
+
+# request$tabs is updated by either
+#  1. input$tabManager or 
+#  2. ace 
+# if non-empty, first request with 1st tab forwared to ace (save/close/saveAs) 
+observeEvent(request$tabs, {
+  if(length(request$tabs)>0){
+    #tabId<-head(request$tabs,1)
+    tabId<-peekTab()
+    sender<-getSender()
+    aceId<-tabID2aceID(tabId)
+    updateAceExt( id=aceId, sender=sender, getDoc=TRUE)
+    # saveFile(tabId)
+  } else {
+    if(getSender()=='fileCmd.quit'){
+      cmdQuitNow()
+    }
+  }
+})
 

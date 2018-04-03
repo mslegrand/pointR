@@ -5,10 +5,11 @@ cmdFileExportSvg<-function(){
   } else {
     svgFileName<-"unnamed.svg"
   }
-  session$sendCustomMessage( #triggers click of buttonFileSaveHidden
-    type = "ptRManager", 
-    list(id= getAceEditorId(), exportSVG=TRUE, sender='cmd.exportSVGNow' )
-  )  
+  sendPtRManagerMessage( id= getAceEditorId() , sender='cmd.exportSVGNow', exportSVG=TRUE)
+  # session$sendCustomMessage( #triggers click of buttonFileSaveHidden
+  #   type = "ptRManager", 
+  #   list(id= getAceEditorId(), exportSVG=TRUE, sender='cmd.exportSVGNow' )
+  # )  
 }
 
 observeEvent(input$buttonExportSVGHidden,{

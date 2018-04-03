@@ -18,8 +18,27 @@ Shiny.addCustomMessageHandler(
       $('#buttonSnippetOpen').trigger('click');
     }
     if(!!data.saveFile){
-      //console.log('about to trigger save\n');
+      var sender=data.sender;
+      //console.log('data.saveFile:: sender=' + sender);
+      var tabId = data.tabId;
+      //console.log('data.saveFile:: tabId=' + tabId);
+      //get title from tabId and stabs
+      var title=stabs.getTitleGivendataValue(tabId);
+      //console.log(JSON.stringify(title));
       $('#buttonFileSaveHidden').trigger('click');
+      //console.log(JSON.stringify( $("h4 .sF-title .modal-title").text() ));
+      $("h4.sF-title.modal-title").text( 'Save '+ title +' as ...');
+      if(sender==='fileCmd.close' || sender==='fileCmd.quit'){
+        $("#sF-cancelButton").text( "Close Without Saving");
+        $("#buttonFileSaveHidden").on('cancel', function(event){
+            Shiny.onInputChange('buttonFileSaveHidden', { cancel: 'close'});
+        });
+      } else {
+        $("#sF-cancelButton").text( "Cancel");
+        $("#buttonFileSaveHidden").on('cancel', function(event){
+          Shiny.onInputChange('buttonFileSaveHidden', {cancel: 'cancel'});
+        });
+      }
     }
     if(!!data.exportSVG){
       //console.log('about to trigger svg export\n');
@@ -57,15 +76,20 @@ Shiny.addCustomMessageHandler(
   
 ); 
 
-$('#buttonFileOpenHidden').on('selection', function(event, path){
-  //console.log('selection');
-});
-
 
 
 $('document').ready(function()
 {
   $('.hiddenButton').hide();
+  
+
+  
+  document.addEventListener('keydown', function(event) {
+    if (event.code == 'KeyW' && (event.ctrlKey || event.metaKey)) {
+      alert('phew!');
+      event.stopPropagation();
+    }
+  });
   
   /*
   $("#left-component").on('resize', function(e){

@@ -22,10 +22,12 @@ getCurrentFile<-reactive({
 getCurrentDir<-reactive({
   dirname(editOption$currentFilePath)
 })
+
 getCurrentFilePath<-reactive({
   editOption$currentFilePath
 })
 
+# TO REVISE!!!
 getFileNameStatus<-reactive({
   !is.null(editOption$currentFilePath) &&
     editOption$currentFilePath!="" &&
@@ -33,7 +35,9 @@ getFileNameStatus<-reactive({
     editOption$currentFilePath!="./"
 })
 
+# TO REVISE!!!
 getFileSavedStatus<-reactive({editOption$.saved})
+
 setCurrentFilePath<-function(filePath){
   editOption$currentFilePath<-filePath
 }
@@ -89,26 +93,40 @@ observeEvent( editOption$recentFiles ,{
   }
 })
 
-#update recentfiles whenever currentFile  changes
-observeEvent( editOption$currentFilePath,{
-  files<-editOption$recentFiles 
-  N<-history$recentFileMenuCount
-  #if(!is.null(editOption$currentFile) && editOption$currentFile!=""){
-  if(getFileNameStatus()==TRUE){
-    fileName<-editOption$currentFilePath
-    N_Max<-10
-    if(is.null(files)){
-      files<-fileName
-    }
-    pos<-grep(fileName,files)
-    if(length(pos)>0){
-      files<-files[-pos]
-    }
-    files<-files[-N_Max]
-    #remove tail
-    files<-c(fileName, files)
-    editOption$recentFiles<-files
+# #update recentfiles whenever currentFile  changes
+# observeEvent( editOption$currentFilePath,{
+#   files<-editOption$recentFiles 
+#   N<-history$recentFileMenuCount
+#   #if(!is.null(editOption$currentFile) && editOption$currentFile!=""){
+#   if(getFileNameStatus()==TRUE){
+#     fileName<-editOption$currentFilePath
+#     N_Max<-10
+#     if(is.null(files)){
+#       files<-fileName
+#     }
+#     pos<-grep(fileName,files)
+#     if(length(pos)>0){
+#       files<-files[-pos]
+#     }
+#     files<-files[-N_Max]
+#     #remove tail
+#     files<-c(fileName, files)
+#     editOption$recentFiles<-files
+#   }
+#   editOption$recentFiles<-files
+# })
+
+addToRecentFiles<-function(filePath){
+  if(filePath!='?'){
+    editOption$recentFiles <-unique(c(filePath,editOption$recentFiles ))
   }
-  editOption$recentFiles<-files
-})
+}
+
+removeFromRecentFiles<-function(filePath){
+  tmp<-editOption$recentFiles[]
+  tmp<-tmp[tmp!=filePath]
+  editOption$recentFiles<-tmp
+}
+
+
               

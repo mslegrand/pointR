@@ -1,6 +1,6 @@
 // ace customizations
-var ptr_HighlightedLines=[];
-
+var ptr_HighlightedLines=[]; // todo: integrate back into editoR
+                            // using $el.data('highlightedLines')
 var helpSvgRQuery = function(topic, address){
   var mssg= {queryTopic:topic, queryAddress:address };
   Shiny.onInputChange("helpSvgRMssg", mssg );
@@ -121,17 +121,35 @@ Shiny.addCustomMessageHandler(
           '------------Shiny.addCustomMessageHandler-------------------------------- '
         );
         var id = data.id;
+        console.log('ace id =' + JSON.stringify(id));
+        
+        if(id.length===0){ // nothing to process
+          Shiny.onInputChange('messageFromAce', 
+          {
+             code : "",
+             sender : data.sender,
+             id : 0,
+             dirty: false,
+             saved: true,
+             docFilePath: "",
+             rnd : randomString(5)
+          });
+          return false;
+        }
+        
         var $el = $('#' + id);
-        console.log('ace id =' + id);
         var editor = $el.data('aceEditor'); 
-        var HighlightedLines;
         var Range = ace.require("ace/range").Range;
         var ud =  editor.getSession().getUndoManager();
         var sender=data.sender;
         var auxValue="";
+        
+        var HighlightedLines;
+        
+        
+        
         console.log('id=' + id );
         console.log('sender =' + sender);
-        
         if(!!editor){
           console.log('found editor');
         } else {
@@ -139,15 +157,17 @@ Shiny.addCustomMessageHandler(
         }
         
         if(!!data.setDocFilePath){ 
+          data.oldFilePath=$el.data('docFilePath');
+          console.log('setting  docFilePath=' + data.setDocFilePath);
           $el.data('docFilePath', data.setDocFilePath);
+          
+          $el.data('docFileSaved',-1);
         }
         
         if(!!data.setDocFileSaved){
           ud=editor.getSession().getUndoManager();
           $el.data('docFileSaved',ud.$undoStack.length);
         }
-        
-        
         
         //console.log( '$el.data(docFilePath)=',JSON.stringify( $el.data('docFilePath') ));
         
@@ -185,26 +205,6 @@ Shiny.addCustomMessageHandler(
           editor.focus();
         }
         
-        /*
-        if(!!data.tbDeleteAllBookMarks){
-          editor.getSession().clearBreakpoints();
-        }
-        
-        if(!!data.nextBookMark){
-            //check out https://github.com/ajaxorg/ace/issues/3351
-              // get the current cursor pos
-              var curRow=editor.getCursorPosition().row;// getCursorPosition().row
-              var breakpoints=editor.getSession().getBreakpoints().slice(curRow+1);
-              // iterate over breakpoints starting at curRow+1 and 
-              // stop and process if any
-              var nextRow=breakpoints.indexOf('ace_breakpoint');
-              if(nextRow>=0){
-                var rng=new Range(curRow,0,curRow+1+nextRow,0);
-                editor.revealRange(rng, true);
-              }
-              editor.focus();
-        }
-        */
         
         if(!!data.tabSize){
           //editor.getSession().setUseSoftTabs(true);
@@ -218,6 +218,14 @@ Shiny.addCustomMessageHandler(
            });
         }
         
+        if(!!data.toggleWhiteSpace){
+          editor.setShowInvisibles(!editor.getShowInvisibles());
+        }
+        
+        if(!!data.toggleTabType){
+          editor.session.setUseSoftTabs(!editor.session.getUseSoftTabs());
+        }
+        
         if(!!data.snippets){
           var snippetManager = ace.require("ace/snippets").snippetManager;
           var m = snippetManager.files[editor.session.$mode.$id];
@@ -229,14 +237,7 @@ Shiny.addCustomMessageHandler(
           snippetManager.register(m.snippets);
         }
         
-        if(!!data.toggleWhiteSpace){
-          editor.setShowInvisibles(!editor.getShowInvisibles());
-        }
-        
-        if(!!data.toggleTabType){
-          editor.session.setUseSoftTabs(!editor.session.getUseSoftTabs());
-        }
-        
+ 
         if(!!data.setfocus){
           editor.focus();
         }
@@ -368,34 +369,14 @@ Shiny.addCustomMessageHandler(
           */
           
         }
+        
         //----------------------------
         
-        
         if(!!data.setValue){
-          //console.log('data.setValue');
-          //console.log(JSON.stringify(data.setValue));
-          //console.log('getValue fin: editor.getSession().getUndoManager()$undoStack.length=' + editor.getSession().getUndoManager().$undoStack.length);
-          //console.log('getValue fin: editor.getUndoManager()getSession().$ok=' + editor.getSession().getUndoManager().$ok);
-          //console.log('value = ' + JSON.stringify(code));
-          
           editor.getSession().setValue(data.setValue);
           if(!!data.ok){
-            //console.log('!!data.ok==TRUE');
             editor.getSession().getUndoManager().setOk();
-            
           }
-          
-          /*
-          console.log('setValue fin: editor.getSession().getUndoManager()$undoStack.length=' + 
-                editor.getSession().getUndoManager().$undoStack.length);
-          console.log('setValue fin: editor.getUndoManager()getSession().$ok=' + 
-                JSON.stringify(editor.getSession().getUndoManager().$ok));
-          console.log('editor.getSession().getUndoManager().dirtyCounter=' + 
-                JSON.stringify(editor.getSession().getUndoManager().dirtyCounter));
-          console.log('value set = ' + JSON.stringify(editor.getSession().getValue()));
-          console.log('setValue fin: sender=' + data.sender); 
-          console.log(data.sender);
-          */
           if(['cmd.openFileNow','cmd.file.new'].indexOf(sender)>=0){
             editor.getSession().clearBreakpoints();
           }
@@ -408,10 +389,11 @@ Shiny.addCustomMessageHandler(
              rnd : randomString(5)
           });
         }
-        //----------------------------------------
+        
+        //------------getValue----------------------------
         
         if(!!data.getValue){
-          //console.log('get.Value');
+          
           if(!!data.rollBack){
             ud=editor.getSession().getUndoManager();
             if( ud.$ok.length>0 ){ // only replace if we can roll back to a good state
@@ -419,14 +401,6 @@ Shiny.addCustomMessageHandler(
               editor.getSession().setUndoManager(ud); //probably not necessary
             }
           }
-          /*
-          console.log('getValue fin: editor.getSession().getUndoManager()$undoStack.length=' + 
-                editor.getSession().getUndoManager().$undoStack.length);
-          console.log('getValue fin: editor.getUndoManager()getSession().$ok=' + 
-                JSON.stringify(editor.getSession().getUndoManager().$ok));
-          console.log('getValue fin: sender=' + data.sender);
-          */
-          
           auxValue='';
           if(!!data.auxValue){
             auxValue=data.auxValue;
@@ -443,6 +417,8 @@ Shiny.addCustomMessageHandler(
           });
         }
         
+        //------------get saved status----------------------------
+        // return status of saved
         if(!!data.getDocFileSaved){
           Shiny.onInputChange('messageFromAce', 
           {
@@ -456,12 +432,13 @@ Shiny.addCustomMessageHandler(
           });
         }
         
-        
-        
-        
+        //------------getDoc-------------------
         if(!!data.getDoc){ 
           var undoLen=editor.getSession().getUndoManager().$undoStack.length;
           var saveLen= $el.data('docFileSaved');
+          if(! data.oldFilePath){
+            data.oldFilePath='?';
+          }
           console.log('docFileSaved=' +JSON.stringify( saveLen) + " undoLen =" + undoLen);
           Shiny.onInputChange('messageFromAce', 
           {
@@ -470,8 +447,8 @@ Shiny.addCustomMessageHandler(
              id : id,
              dirty: editor.getSession().getUndoManager().dirtyCounter,
              saved: undoLen===saveLen,
-             //$el.data('docFileSaved')==editor.getSession().getUndoManager().$undoStack.length,
              docFilePath: $el.data('docFilePath'),
+             priorFilePath: data.oldFilePath,
              rnd : randomString(5)
           });
         }

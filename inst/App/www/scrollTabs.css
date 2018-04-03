@@ -118,3 +118,8 @@
   height:30px;
   width:30px;
 }
+
+.star::after {
+  content:"*";
+  color: #FF00CC;
+}

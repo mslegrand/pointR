@@ -95,6 +95,7 @@ function ptRaceInit(data){
   }*/
   
   if(!!data.docFilePath){
+    console.log('setting  docFilePath=' + data.docFilePath);
     $el.data('docFilePath', data.docFilePath);
   }
   
@@ -150,6 +151,24 @@ function ptRaceInit(data){
             Shiny.onInputChange('commitMssg', randomString(5) );
         }
       });
+      
+      theEditor.commands.addCommand({
+        name: 'closeWindow',
+        bindKey: {win: 'Ctrl-x', mac: 'Command-x'},
+        exec: function(editor) {
+            event.stopPropagation();
+            var randomString = function(length) {
+                var text = '';
+                var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                for(var i = 0; i < length; i++) {
+                    text += possible.charAt(Math.floor(Math.random() * possible.length));
+              }
+              return text;
+            };
+            Shiny.onInputChange('closeTab',  { id :id,  type:'aceId', rnd: randomString(5) });
+        }
+      });
+      
       
   
       theEditor.commands.addCommand({

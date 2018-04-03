@@ -20,12 +20,21 @@ observeEvent( input$editNavBar, {
       dirtyDMDM(session, "editNavBar")
     } 
     if(fileCmd=="Save"){ #-----save
-      #curFile<-getCurrentFile()
-      #if(nchar(curFile)>0){
-        cmdFileSave()
-      # } else {
-      #   cmdFileSaveAs()
-      # }
+      cmdFileSave()
+      dirtyDMDM(session, "editNavBar")
+    }
+    if(fileCmd=="saveAll"){
+      cat(' fileCmd=="saveAll" \n')
+      cmdFileSaveAll()
+      dirtyDMDM(session, "editNavBar")
+    }
+    if(fileCmd=="close"){
+      cmdFileClose()
+      dirtyDMDM(session, "editNavBar")
+    }
+    if(fileCmd=="closeAll"){
+      cat(' fileCmd=="closeAll" \n')
+      cmdFileCloseAll()
       dirtyDMDM(session, "editNavBar")
     }
     if(fileCmd=="quit"){
