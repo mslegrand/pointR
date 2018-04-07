@@ -160,7 +160,7 @@ Shiny.addCustomMessageHandler(
           data.oldFilePath=$el.data('docFilePath');
           console.log('setting  docFilePath=' + data.setDocFilePath);
           $el.data('docFilePath', data.setDocFilePath);
-          ud.markClean();
+          //ud.markClean();
           //$el.data('docFileSaved',-1);
         }
         

@@ -116,7 +116,6 @@ $('document').ready(function()
   $(sntb.downId).click(function(){sntb.onDownClick();});
   $(sntb.upId).click(function(){sntb.onUpClick();});
   $(window).on('resize',function(e){  
-    //console.log('resize window');
     	sntb.reAdjustPos();
   });
   

@@ -36,8 +36,7 @@ addFileTab<-function(title, txt,  docFilePath='?'){
     )
   )
   updateTabsetPanel(session,inputId = 'pages', selected = tabId)
-  session$sendCustomMessage(
-    type = "scrollManager", list( resize=TRUE )
+      session$sendCustomMessage( type = "scrollManager", list( resize=TRUE )
   )
 }
 

@@ -106,6 +106,7 @@ ScollableTabs.prototype.getTitleGivendataValue = function( dataValue){
 };
 
 ScollableTabs.prototype.toggleSaveState = function( tabId, state){
+  console.log('title='+ $(this.containerId +" div ul li a[data-value='" + tabId + "'] span").text().trim());
   $(this.containerId +" div ul li a[data-value='" + tabId + "'] span span.tabTitle").toggleClass('star', state) ;
   return true;
 };
@@ -321,12 +322,15 @@ Shiny.addCustomMessageHandler(
     }
     if(!!data.value){ //aka tabId
       console.log("data.value="+ data.value);
-      if(!! data.title){
+      if(!!data.title){
         stabs.resetTitleGivendataValue( data.title, data.value);
         stabs.reAdjust();
       }
-      if(!!data.saved){
-        stabs.toggleSaveState(data.value, data.saved!=='saved');
+      console.log("data.savedStatus=" + JSON.stringify(data.savedStatus));
+      console.log("!!data.savedStatus=" + JSON.stringify(!!data.savedStatus));
+      if(!!data.savedStatus){
+        console.log("data.savedStatus="+ data.savedStatus);
+        stabs.toggleSaveState(data.value, data.savedStatus!=='saved');
       }
     }
     

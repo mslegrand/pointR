@@ -157,7 +157,7 @@ observeEvent( input$editNavBar, {
 
 # keep file menu save uptodate
 observeEvent(getFileSavedStatus(),{
-  cat("getFileSavedStatus()=",getFileSavedStatus(),"\n")
+  cat("\n*****************************getFileSavedStatus()=",getFileSavedStatus(),"\n")
   if(getFileSavedStatus()==FALSE){
     # set dmdm file save active
     enableDMDM(
@@ -176,7 +176,7 @@ observeEvent(getFileSavedStatus(),{
     status<-'saved'
   }
   cat("status=",status,"\n")
-  sendFileTabsMessage( id=input$pages, sender='savedStatus', saved=status)
+  sendFileTabsMessage( id=input$pages, sender='savedStatus', savedStatus=status)
 })
 
 #------- editor options handlers
