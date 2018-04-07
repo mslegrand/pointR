@@ -1,7 +1,7 @@
 
 
 observeEvent(input$messageFromAce, {
-     cat('serverAce:...observe input$messageFromAce:: entering\n')
+     cat('\n====serverAce:...observe input$messageFromAce:: entering\n')
     if(
       length(input$messageFromAce$code)>0 &&
       length(input$messageFromAce$sender)>0
@@ -16,11 +16,16 @@ observeEvent(input$messageFromAce, {
         reqSelector<-input$messageFromAce$selector
         updateSelected4Ace(reqSelector)
       }
-      
-      if(length(input$messageFromAce$dirty)>0){
-        editOption$.saved <- !(as.numeric(input$messageFromAce$dirty) > 0)
-      }
       cat('request$sender=',format(request$sender),"\n")
+      if(length(input$messageFromAce$isSaved)>0){ ## maybe we should replace dirty with udm.isClean in the js
+        aceId<-input$messageFromAce$id
+        editOption$.saved <- input$messageFromAce$isSaved
+        cat('\n--setting editOption$.saved --\n')
+        cat("set editOption$.saved=",editOption$.saved,"\n")
+        #cat("check: input$messageFromAce$dirty=",format(input$messageFromAce$dirty),"\n")
+        # set current tab with this status!!
+        # set menu with this status
+      }
       if(request$sender %in% c('cmd.commit','cmd.openFileNow', 'cmd.saveFileNow', 'cmd.file.new', 'cmd.add.column')){
         cat('getTibName()=',format(getTibName()),"\n")
         if(request$sender %in% c('cmd.commit', 'cmd.add.column') && !is.null(getTibName())){ 
@@ -37,15 +42,20 @@ observeEvent(input$messageFromAce, {
       if(sender %in% c( 'fileCmd.save', 'fileCmd.close', 'fileCmd.saveAs', 'fileCmd.quit' )){
         cat("\n------",sender,"-----------------------------------\n")
         id<-input$messageFromAce$id
-        saved<-input$messageFromAce$saved
+        saved<-input$messageFromAce$isSaved
+        cat('input$messageFromAce$saved=',format(saved),"\n")
         cat('class(saved)=',class(saved),"\n")
         cat('saved=',saved,"\n")
-        cat("id=",id,"\n")
+        cat("and editOption$.saved=",editOption$.saved,"\n")
+        cat("for id=",id,"\n")
         if( !saved || sender=='fileCmd.saveAs' ) { #need to save
           docFilePath<-unlist(input$messageFromAce$docFilePath)
           cat("docFilePath=",docFilePath,"\n")
+          cat("sender=",sender,"\n")
           if(docFilePath=='?' || sender=='fileCmd.saveAs'){ # file unnamed : fileSaveAs
              tabId<-aceID2TabID(id)
+             cat('11: tabId=',format(tabId),"\n")
+             cat("executing sendPtRManagerMessage( id=id,  sender=sender, saveFile=TRUE,  type='R', tabId=tabId)\n")
              sendPtRManagerMessage( id=id,  sender=sender, saveFile=TRUE,  type='R', tabId=tabId)
           } else { 
             # write file
@@ -75,7 +85,6 @@ observeEvent(input$messageFromAce, {
           tabId<-popTab()
           if(request$sender%in% c('fileCmd.close', 'fileCmd.quit') ){
             addToRecentFiles(input$messageFromAce$docFilePath)
-            cat('serverAce:: closeTab, request$closeTab=', request$closeTab, "\n")
             removeTab(inputId = "pages", tabId)
           }
         }
@@ -101,6 +110,7 @@ updateAceExt<-function(id, sender, ... ){
   if(length(data)>0){
     data<-c(list(id= id, sender=sender), data )
     cat("data=",format(data),"\n")
+    print(data)
     session$sendCustomMessage(
       type = "shinyAceExt",
       data

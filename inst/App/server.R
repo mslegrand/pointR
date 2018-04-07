@@ -54,8 +54,11 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   }
   
   sendFileTabsMessage<-function(id, sender, ...){ 
+    cat( "sendFileTabsMessage:: id=",id," sender=",sender,"\n" )
+    data<- c( list(value = id, sender=sender), list(...) )
+    print(data)
     session$sendCustomMessage( type = "scrollManager", 
-       c( list(id = id, sender=sender), list(...) )
+       c( list(value = id, sender=sender), list(...) )
     )
   }
   

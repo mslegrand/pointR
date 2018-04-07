@@ -2,8 +2,8 @@
 Shiny.addCustomMessageHandler(
   "ptRManager",
   function(data){
-    //console.log('hello from ptRManager\n');
-    //console.log(JSON.stringify(data));
+    console.log('hello from ptRManager------------\n');
+    console.log(JSON.stringify(data));
     if(!!data.openFile){
       //console.log('about to trigger open\n');
       if( data.sender==='cmd.openFileNow'){
@@ -19,33 +19,42 @@ Shiny.addCustomMessageHandler(
     }
     if(!!data.saveFile){
       var sender=data.sender;
-      //console.log('data.saveFile:: sender=' + sender);
+      console.log('data.saveFile:: sender=' + sender);
       var tabId = data.tabId;
-      //console.log('data.saveFile:: tabId=' + tabId);
+      console.log('data.saveFile:: tabId=' + tabId);
       //get title from tabId and stabs
       var title=stabs.getTitleGivendataValue(tabId);
-      //console.log(JSON.stringify(title));
+      console.log(JSON.stringify(title));
       $('#buttonFileSaveHidden').trigger('click');
-      //console.log(JSON.stringify( $("h4 .sF-title .modal-title").text() ));
+      console.log(JSON.stringify( $("h4 .sF-title .modal-title").text() ));
       $("h4.sF-title.modal-title").text( 'Save '+ title +' as ...');
       if(sender==='fileCmd.close' || sender==='fileCmd.quit'){
+        console.log("abc\n");
         $("#sF-cancelButton").text( "Close Without Saving");
         $("#buttonFileSaveHidden").on('cancel', function(event){
-            Shiny.onInputChange('buttonFileSaveHidden', { cancel: 'close'});
+            Shiny.onInputChange('buttonFileSaveHidden', { 
+              sender:sender, 
+              cancel: 'close', 
+              rnd: Math.random().toString(36).substring(7)});
         });
       } else {
+        console.log("defg\n");
         $("#sF-cancelButton").text( "Cancel");
         $("#buttonFileSaveHidden").on('cancel', function(event){
-          Shiny.onInputChange('buttonFileSaveHidden', {cancel: 'cancel'});
+          Shiny.onInputChange('buttonFileSaveHidden', {
+            sender:sender, 
+            cancel: 'cancel',
+            rnd: Math.random().toString(36).substring(7)
+          });
         });
       }
     }
     if(!!data.exportSVG){
-      //console.log('about to trigger svg export\n');
+      // console.log('about to trigger svg export\n');
       $('#buttonExportSVGHidden').trigger('click');
     }
     if(!!data.setFocus){
-      //console.log('#' + data.setFocus +'\n' );
+      // console.log('#' + data.setFocus +'\n' );
       setTimeout(function() {$('#' + data.setFocus).focus()}, 10);
       //$('#' + data.setFocus).focus();
     }

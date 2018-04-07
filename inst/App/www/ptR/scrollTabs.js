@@ -105,6 +105,11 @@ ScollableTabs.prototype.getTitleGivendataValue = function( dataValue){
   return innText;
 };
 
+ScollableTabs.prototype.toggleSaveState = function( tabId, state){
+  $(this.containerId +" div ul li a[data-value='" + tabId + "'] span span.tabTitle").toggleClass('star', state) ;
+  return true;
+};
+
 ScollableTabs.prototype.scrollIntoView = function(dataValue){
   //console.log('scrollIntoView');
   var targetIndex= 1+this.dataValueToIndex(dataValue);
@@ -305,6 +310,8 @@ $(document).ready(function(){
 Shiny.addCustomMessageHandler(
   "scrollManager",
   function(data){
+    console.log("inside scrollManager");
+    console.log("data is" + JSON.stringify(data));
     if(!!data.resize){
       //console.log('resize here');
       $(window).resize();
@@ -313,13 +320,16 @@ Shiny.addCustomMessageHandler(
       stabs.scrollIntoView(data.selected);
     }
     if(!!data.value){ //aka tabId
-      console.log(data.value);
+      console.log("data.value="+ data.value);
       if(!! data.title){
-        console.log(data.title);
         stabs.resetTitleGivendataValue( data.title, data.value);
         stabs.reAdjust();
       }
+      if(!!data.saved){
+        stabs.toggleSaveState(data.value, data.saved!=='saved');
+      }
     }
+    
     if(!!data.getAllTabIds){
       var tabIds = stabs.getAllTabValues();
       console.log('getAllTabIds=' + data.getAllTabIds );

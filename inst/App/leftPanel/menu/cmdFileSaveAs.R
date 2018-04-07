@@ -32,7 +32,8 @@ observeEvent(input$buttonFileSaveHidden,{
   if('cancel' %in% names(rtList)){
     #if(request$sender=='fileCmd.close'){
       #if(!is.null(request$closeTab)){
-    if(rtList[[1]]=='close'){ 
+    cat('rtList$cancel',format(rtList$cancel),"\n")
+    if(rtList$cancel=='close'){ 
       cat('cancel and close')
       #removeTab(inputId = "pages", request$closeTab)
       

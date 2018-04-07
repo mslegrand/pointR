@@ -99,7 +99,7 @@ function ptRaceInit(data){
     $el.data('docFilePath', data.docFilePath);
   }
   
-  $el.data('lastSavedLen', 0); //may need to revisit
+  //$el.data('lastSavedLen', 0); //may need to revisit
   
     if(mode=='ptr'){ 
       data.acejs= data.acejs[0];

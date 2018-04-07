@@ -3,7 +3,7 @@
 cmdFileQuit<-reactive({
   session$sendCustomMessage(
     type = "scrollManager", 
-    list( sender= 'fileCmd.quit', getAllTabIds=TRUE ) 
+    list( sender= 'fileCmd.quit', getAllTabIds=runif(1) ) 
   )
 })
 

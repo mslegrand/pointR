@@ -3,7 +3,7 @@ jqui_sortable('#pages')
 
 closeRfn<-function(tabId){paste0("event.stopPropagation();Shiny.onInputChange('closeTab',  {id:'",tabId,"', type: 'tabId'} ); return false")}
 tabTitleRfn<-function(title, tabId){
-  span(title, span( " " , class='icon-cancel', onclick=closeRfn(tabId))  )
+  span(span(title, "class"="tabTitle"), span( " " , class='icon-cancel', onclick=closeRfn(tabId))  )
 }
 
 addFileTab<-function(title, txt,  docFilePath='?'){
@@ -65,7 +65,9 @@ observeEvent(input$pages,{
 observeEvent(input$tabManager,{
   cat("observer input$tabManager\n")
   tabs=unlist(input$tabManager$tabs)
+  cat('tabs=',format(tabs),"\n")
   sender=input$tabManager$sender
+  cat('sender=',format(sender),"\n")
   setTabRequest(sender=sender, tabs=tabs)
   cat("leaving tabManager observer------------------\n")
 })
