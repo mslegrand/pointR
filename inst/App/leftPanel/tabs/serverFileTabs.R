@@ -2,20 +2,24 @@
 jqui_sortable('#pages')
 
 closeRfn<-function(tabId){paste0("event.stopPropagation();Shiny.onInputChange('closeTab',  {id:'",tabId,"', type: 'tabId'} ); return false")}
-tabTitleRfn<-function(title, tabId){
-  span(span(title, "class"="tabTitle"), span( " " , class='icon-cancel', onclick=closeRfn(tabId))  )
+tabTitleRfn<-function(title, tabId, docFilePath){
+  span(
+    bs_embed_tooltip(span(title, "class"="tabTitle"), title=docFilePath),
+    #span(title, "class"="tabTitle"),
+    span( " " , class='icon-cancel', onclick=closeRfn(tabId))  
+  )
 }
 
 addFileTab<-function(title, txt,  docFilePath='?'){
-  tabId<-tabName2TabId(title)
-  aceId<-tabName2AceId(title)
+  tabId<-getNextTabId()
+  aceId<-tabID2aceID(tabId)
   cat("addFileTab:: docFilePath",docFilePath,"\n")
   # !!!TODO add docFilePath to recentFiles (if !='?')
   
   appendTab(
     inputId = "pages",
     tabPanel( #tabId,
-      title=tabTitleRfn(title, tabId),
+      title=tabTitleRfn(title, tabId, docFilePath),
       #span(title, span( " " , class='icon-cancel', onclick=closeRfn(tabId))  ), 
       #title=span(title, span( " " , class='icon-cancel', onclick=closeRfn(tabId))  ), 
       #span(tabId,  actionButton(inputId=paste0("but",tabId), label="", class='icon-cancel') ), 

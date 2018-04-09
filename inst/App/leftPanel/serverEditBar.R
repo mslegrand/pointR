@@ -24,7 +24,7 @@ observeEvent( input$editNavBar, {
       dirtyDMDM(session, "editNavBar")
     }
     if(fileCmd=="saveAll"){
-      cat(' fileCmd=="saveAll" \n')
+      #cat(' fileCmd=="saveAll" \n')
       cmdFileSaveAll()
       dirtyDMDM(session, "editNavBar")
     }
@@ -33,12 +33,14 @@ observeEvent( input$editNavBar, {
       dirtyDMDM(session, "editNavBar")
     }
     if(fileCmd=="closeAll"){
-      cat(' fileCmd=="closeAll" \n')
+      #cat(' fileCmd=="closeAll" \n')
       cmdFileCloseAll()
       dirtyDMDM(session, "editNavBar")
     }
     if(fileCmd=="quit"){
+      cat(' fileCmd=="quit" \n')
       cmdFileQuit()
+      #dirtyDMDM(session, "editNavBar")
     }
     if(fileCmd=="Export as SVG"){ #-----save
       cmdFileExportSvg()

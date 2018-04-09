@@ -153,13 +153,30 @@ observeEvent(atLeast2Rows(),{
 
 observeEvent(getAceEditorId(),{
   id<-getAceEditorId()
-  cat("\nobserveEvent getAceEditorId:: id=",id,"\n");
-  if(is.null(id)){
-    cat("hiding TopRightPanel\n")
+  # cat("\nobserveEvent getAceEditorId:: id='",format(id),"'\n");
+  # cat("\nobserveEvent getAceEditorId:: class(id)='",class(id),"'\n");
+  # cat("\nobserveEvent getAceEditorId:: nchar(id)='",nchar(id),"'\n" )
+  
+  if(length(id)==0){
+    #cat("hiding TopRightPanel\n")
     hideElement("TopRightPanel")
+    hideElement("snippetToolBarContainer")
+    hideElement("aceToobarTop1")
+    hideElement("aceToobarTop2")
+    hideElement("useTribble")
+    hideElement("commit")
+    hideElement("aceTabSet")
+    hideElement("midRightPanels")
   } else {
-    cat("showinging TopRightPanel\n")
+    #cat("showinging TopRightPanel\n")
     showElement("TopRightPanel")
+    showElement("snippetToolBarContainer")
+    showElement("aceToobarTop1")
+    showElement("aceToobarTop2")
+    showElement("useTribble")
+    showElement("commit")
+    showElement("aceTabSet")
+    showElement("midRightPanels")
   }
   processCommit()
   

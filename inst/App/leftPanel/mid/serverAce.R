@@ -1,7 +1,7 @@
 
 
 observeEvent(input$messageFromAce, {
-    cat('\n\n== Entering ====serverAce.R:observeEvent input$messageFromAce=====\n\n')
+  cat('\n====serverAce:...observe input$messageFromAce:: entering\n')
     if(
       length(input$messageFromAce$code)>0 &&
       length(input$messageFromAce$sender)>0
@@ -17,15 +17,11 @@ observeEvent(input$messageFromAce, {
         updateSelected4Ace(reqSelector)
       }
       cat('request$sender=',format(request$sender),"\n")
-      
-      if(length(input$messageFromAce$isSaved)>0){ ## maybe we should replace dirty with udm.isClean in the js
+      if(length(input$messageFromAce$isSaved)>0){ 
         aceId<-input$messageFromAce$id
         editOption$.saved <- input$messageFromAce$isSaved
         cat('\n--setting editOption$.saved --\n')
         cat("set editOption$.saved=",editOption$.saved,"\n")
-        #cat("check: input$messageFromAce$dirty=",format(input$messageFromAce$dirty),"\n")
-        # set current tab with this status!!
-        # set menu with this status
       }
       if(request$sender %in% c('cmd.commit','cmd.openFileNow', 'cmd.saveFileNow', 'cmd.file.new', 'cmd.add.column')){
         cat('getTibName()=',format(getTibName()),"\n")
@@ -41,7 +37,7 @@ observeEvent(input$messageFromAce, {
       } 
       
       if(sender %in% c( 'fileCmd.save', 'fileCmd.close', 'fileCmd.saveAs', 'fileCmd.quit' )){
-        cat("\n------sender=",sender,"-----------------------------------\n")
+        cat("\n------",sender,"-----------------------------------\n")
         id<-input$messageFromAce$id
         saved<-input$messageFromAce$isSaved
         cat('input$messageFromAce$saved=',format(saved),"\n")
@@ -49,54 +45,48 @@ observeEvent(input$messageFromAce, {
         cat('saved=',saved,"\n")
         cat("and editOption$.saved=",editOption$.saved,"\n")
         cat("for id=",id,"\n")
-        #if( !saved || sender=='fileCmd.saveAs' ) { #need to save
+        if( !saved || sender=='fileCmd.saveAs' ) { #need to save
           docFilePath<-unlist(input$messageFromAce$docFilePath)
           cat("docFilePath=",docFilePath,"\n")
           cat("sender=",sender,"\n")
-          if((docFilePath=='?' && !saved) || sender=='fileCmd.saveAs'){ # need to set path
+          if(docFilePath=='?' || sender=='fileCmd.saveAs'){ # file unnamed : fileSaveAs
              tabId<-aceID2TabID(id)
-             cat('docFilePath needs to be set: tabId=',format(tabId),"\n")
+             cat('11: tabId=',format(tabId),"\n")
              cat("executing sendPtRManagerMessage( id=id,  sender=sender, saveFile=TRUE,  type='R', tabId=tabId)\n")
              sendPtRManagerMessage( id=id,  sender=sender, saveFile=TRUE,  type='R', tabId=tabId)
-          } else { #path is set
-            cat('docFilePath already set: aceId=',format(id),"\n")
-            if( !saved){ #not yet saved
-              cat("not saved")
-              # write file
-              cat('serverAce:: writeLines\n')
-              code<-input$messageFromAce$code
-              # !!!TODO!!! if write fails revert.
-              writeLines(code, docFilePath)
-              
-              updateAceExt(id, sender,  setDocFileSaved=TRUE)
-              tabId<-popTab()
-              if(request$sender %in% c('fileCmd.close', 'fileCmd.quit')){
-                addToRecentFiles(input$messageFromAce$docFilePath)
-                removeTab(inputId = "pages", tabId)
-              } else { 
-                addToRecentFiles(input$messageFromAce$priorFilePath)
-                # !!!TODO add docFilePath to recentfiles
-                #title=as.character(span(basename(docFilePath ), span( " " , class='icon-cancel')  ))
-                title=as.character(tabTitleRfn( title=basename(docFilePath ), tabId=tabId ))
-                cat("title=",title,"\n")
-                session$sendCustomMessage(
-                  type = "scrollManager", 
-                  list( title=title, value=tabId ) 
-                )
-              }
-              updateAceExt(id, sender='commit',  setDocFileSaved=TRUE)
-            } else { #already saved
-              "cat aleady saved"
-              tabId<-popTab()
-              if(request$sender%in% c('fileCmd.close', 'fileCmd.quit') ){
-                addToRecentFiles(input$messageFromAce$docFilePath)
-                removeTab(inputId = "pages", tabId)
-              }
+          } else { 
+            # write file
+            cat('serverAce:: writeLines\n')
+            code<-input$messageFromAce$code
+            # !!!TODO!!! if write fails revert.
+            writeLines(code, docFilePath)
+            
+            updateAceExt(id, sender,  setDocFileSaved=TRUE)
+            tabId<-popTab()
+            if(request$sender %in% c('fileCmd.close', 'fileCmd.quit')){
+              addToRecentFiles(input$messageFromAce$docFilePath)
+              removeTab(inputId = "pages", tabId)
+            } else { 
+              addToRecentFiles(input$messageFromAce$priorFilePath)
+              # !!!TODO add docFilePath to recentfiles
+              #title=as.character(span(basename(docFilePath ), span( " " , class='icon-cancel')  ))
+              title=as.character(tabTitleRfn( title=basename(docFilePath ), tabId=tabId, docFilePath=docFilePath ))
+              cat("title=",title,"\n")
+              session$sendCustomMessage(
+                type = "scrollManager", 
+                list( title=title, value=tabId ) 
+              )
             }
-          } #end for path set
-        } 
+          }
+        } else { #already saved
+          tabId<-popTab()
+          if(request$sender%in% c('fileCmd.close', 'fileCmd.quit') ){
+            addToRecentFiles(input$messageFromAce$docFilePath)
+            removeTab(inputId = "pages", tabId)
+          }
+        }
+      }
     }
-    cat('\n\n== Exiting ====serverAce.R:observeEvent input$messageFromAce=====\n\n')
 }, priority = 90, ignoreNULL = TRUE, ignoreInit = TRUE)
 
 updateAceExtDef<-function(newPtDef, sender, selector=list() ){

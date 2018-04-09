@@ -272,7 +272,13 @@ width: 110px;
     padding:4px;
     text-align: center;
 }
-
+.sponsorPanel {
+  left:20px;
+  right:20px;
+  top:20px;
+  bottom:20px;
+  background: #EEEEEE;
+}
 
 /*#tagValBar-columnEntryUI{
   height: 30px;

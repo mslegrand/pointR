@@ -65,44 +65,51 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   
   pages<- reactiveValues(
     fileName='',
-    fileNumber=1
+    fileNameCount=1,
+    tabIdCount=1
   )
   
   
   getNextAnonymousFileName<-function(){
-    pages$fileNumber
-    newTabId<-paste0("Anonymous ", pages$fileNumber)
-    pages$fileNumber<-pages$fileNumber+1
+    newFileName<-paste0("Anonymous ", pages$fileNameCount)
+    pages$fileNameCount<-pages$fileNameCount+1
     #newTabId<-"source"
-    newTabId
+    newFileName
+  }
+  
+  getNextTabId<-function(){
+    tabId<-paste0("PTR-TABID", pages$tabIdCount)
+    pages$tabIdCount<-pages$tabIdCount+1
+    #newTabId<-"source"
+    tabId
   }
   
   
   
-  tabName2AceId<-function(tabName){
-    if(!is.null(tabName) && nchar(tabName)>0){
-      tabName<-paste0("ACE", tabName)
-      tabName<-gsub(' ','', tabName)
-      tabName<-gsub('\\.','_',tabName)
-    } else {
-      NULL
-    }
-  }
-  tabName2TabId<-function(tabName){
-    if(!is.null(tabName) && nchar(tabName)>0){
-      tabName<-paste0("TAB", tabName)
-      tabName<-gsub(' ','', tabName)
-      tabName<-gsub('\\.','_',tabName)
-    } else {
-      NULL
-    }
-  }
+  # tabName2AceId<-function(tabName){
+  #   if(!is.null(tabName) && nchar(tabName)>0){
+  #     tabName<-paste0("ACE", tabName)
+  #     tabName<-gsub(' ','', tabName)
+  #     tabName<-gsub('\\.','_',tabName)
+  #   } else {
+  #     NULL
+  #   }
+  # }
+  # tabName2TabId<-function(tabName){
+  #   if(!is.null(tabName) && nchar(tabName)>0){
+  #     tabName<-paste0("TAB", tabName)
+  #     tabName<-gsub(' ','', tabName)
+  #     tabName<-gsub('\\.','_',tabName)
+  #   } else {
+  #     NULL
+  #   }
+  # }
   
   aceID2TabID<-function(aceId){
-    sub("^ACE","TAB",aceId)
+    sub("ACE","TAB",aceId)
   }
   tabID2aceID<-function(tabId){
-    sub("^TAB","ACE",tabId)
+    sub("TAB","ACE",tabId)
   }
   
   
