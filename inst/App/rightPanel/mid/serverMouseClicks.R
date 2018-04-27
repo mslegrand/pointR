@@ -57,7 +57,10 @@ observe({
           # if(matColIndx==2){
           #   v<-getHandlerValue()
           # }
-          if(!is.null(getPointMax()) &&  matColIndx>=getPointMax() ){
+          cat("MOUSECLICK:: length(getPointMax())=", getPointMax(),"\n")
+          cat("MOUSECLICK:: length(matColIndx=", matColIndx,"\n")
+          if( length( getPointMax())>1){ stop('getPointMax is too big')}
+          if(!is.na(getPointMax()) &&  matColIndx>=getPointMax() ){
           #if(!is.na(getWidget()) && matColIndx>=getHandlerValue()){
             # tag here
             tib<-ptDefs$tib[[selection]]

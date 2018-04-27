@@ -120,6 +120,8 @@ getRightPanelChoices<-reactive({ # includes names of tibs
     }
     choices<-c(choices, svgPanelTag, RPanelTag)
     # cat('getRightPanelChoices 2:: ', format(choices),"\n")
+    
+    
   }
   # cat('getRightPanelChoices 3:: ', format(choices),"\n")
   choices

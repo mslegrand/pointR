@@ -23,17 +23,64 @@ observeEvent(input$messageFromAce, {
         cat('\n--setting editOption$.saved --\n')
         cat("set editOption$.saved=",editOption$.saved,"\n")
       }
-      if(request$sender %in% c('cmd.commit','cmd.openFileNow', 'cmd.saveFileNow', 'cmd.file.new', 'cmd.add.column')){
-        cat('getTibName()=',format(getTibName()),"\n")
-        if(request$sender %in% c('cmd.commit', 'cmd.add.column') && !is.null(getTibName())){ 
-          name=getTibName()
-        } else { 
-          name=NULL
-        }
-        tibs<-getPtDefs()$tib
-        cat('name=',format(name),"\n")
+      cat('22 request$sender=',format(request$sender),"\n")
+      if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset', 'cmd.openFileNow', 'cmd.saveFileNow', 'cmd.file.new', 'cmd.tabChange')){
+        cat('33 request$sender=',format(request$sender),"\n")
+        cat('invoking processCommit\n')
         processCommit()
-        resetSelectedTibbleName(tibs=tibs, name=name)
+        cat('returning from processCommit\n')
+        cat('getTibName()=',format(getTibName()),"\n")
+        if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset', 'cmd.saveFileNow') && !is.null(getTibName())){ 
+          if(sender=='cmd.add.asset'){
+            name=input$messageFromAce$selector$assetName
+          } else {
+            name=getTibName() # 'cmd.commit', 'cmd.add.column'
+          }
+          tibs<-getPtDefs()$tib
+          cat('name=',format(name),"\n")
+          resetSelectedTibbleName(tibs=tibs, name=name)
+        } else { 
+          #name=NULL #  'cmd.openFileNow', 'cmd.tabChange' , 'cmd.file.new'
+          
+          # begin selectTibUpdate: 
+          # browser()
+          cat('else: ', 'cmd.openFileNow', 'cmd.tabChange' , 'cmd.file.new',"\n")
+          if(length(input$pages) >0 && nchar(input$pages)>0 && selectedTibble$tabId != input$pages ){
+            cat('next tabId=',input$pages,"\n")
+            cat('selectedTibble$tabId=',selectedTibble$tabId,"\n")
+            cat("input$messageFromAce$id=" , format(input$messageFromAce$id), "\n")
+            choices<-getRightPanelChoices()
+            if(length(choices)>0 && length(selectedTibble$tabId)>0  && selectedTibble$tabId!='whatthefuck'){
+              cat( "store( tabId=",selectedTibble$tabId,")\n")
+              tmp2<-isolate(reactiveValuesToList(selectedTibble, all.names=TRUE))
+              tmp2[is.null(tmp2)]<-NA
+              #plotSelect.tib<-rbind(plotSelect.tib, tmp )
+              tmp1<-filter(plot$selections.tib, tabId!=selectedTibble$tabId)
+              plot$selections.tib<-bind_rows(tmp1, tmp2)
+              cat("========   ",paste(plot$selections.tib$tabId,collapse=", "),"\n")
+            }
+            row.tib<-filter(plot$selections.tib, tabId==input$pages)
+            if(nrow(row.tib)==0){
+              #cat('creating new tib for tabId=\n', input$pages,"\n")
+              row.tib<-newPlotSel(tabId=input$pages, choices=choices, tibs=getPtDefs()$tib)
+            }
+            
+            #cat( "copy *row.tib* to *selectedTibble.*\n"  )
+            lapply(names(row.tib), function(n){
+              v<-row.tib[[n]][1]
+              #cat("row.tib$", n, "=", format(v),"\n")
+              selectedTibble[[n]]<-ifelse(is.na(v), NULL, v)
+            } )
+            #browser()
+            #cat('selectedTibble is\n')
+            # for(n in c('tabId','name','rowIndex','columnName', 'matCol', 'ptColName', 'selIndex', 'transformType')){
+            #   cat("selectedTibble$", n, "=", format(selectedTibble[[n]]),"\n")
+            # }
+          }
+          # end selectTibUpdate:
+          
+        }
+        
       } 
       
       if(sender %in% c( 'fileCmd.save', 'fileCmd.close', 'fileCmd.saveAs', 'fileCmd.quit' )){
@@ -62,6 +109,7 @@ observeEvent(input$messageFromAce, {
             writeLines(code, docFilePath)
             
             updateAceExt(id, sender,  setDocFileSaved=TRUE)
+            editOption$.saved<-TRUE
             tabId<-popTab()
             if(request$sender %in% c('fileCmd.close', 'fileCmd.quit')){
               addToRecentFiles(input$messageFromAce$docFilePath)

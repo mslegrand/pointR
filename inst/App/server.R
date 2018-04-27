@@ -54,9 +54,9 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   }
   
   sendFileTabsMessage<-function(id, sender, ...){ 
-    cat( "sendFileTabsMessage:: id=",id," sender=",sender,"\n" )
+    #cat( "sendFileTabsMessage:: id=",id," sender=",sender,"\n" )
     data<- c( list(value = id, sender=sender), list(...) )
-    print(data)
+    #print(data)
     session$sendCustomMessage( type = "scrollManager", 
        c( list(value = id, sender=sender), list(...) )
     )
@@ -157,10 +157,10 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   source("leftPanel/tabs/serverFileTabs.R",          local=TRUE) 
   
 #------------------rightPanel--------------------------------
+  source("rightPanel/serverPlotSelectDB.R",          local=TRUE)
   source("rightPanel/footer/serverFooterRight.R",    local=TRUE) 
-  
   source("rightPanel/header/serverEdTib.R",          local=TRUE)
-  source("rightPanel/header/serverEdAsset.R",          local=TRUE)
+  source("rightPanel/header/serverEdAsset.R",        local=TRUE)
   source("rightPanel/mid/serverRowDND.R",            local=TRUE)
   source("rightPanel/mid/serverPlotBarPoints.R",     local=TRUE) 
   source("rightPanel/mid/serverPlotBarTagValues.R",  local=TRUE)  
@@ -169,6 +169,7 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   source("rightPanel/mid/serverLog.R",               local=TRUE) 
   source("rightPanel/mid/serverMouseClicks.R",       local=TRUE)
   source("rightPanel/menu/cmdNewColumn.R",           local=TRUE)
+  source("rightPanel/menu/cmdNewAsset.R",            local=TRUE)
   source("rightPanel/menu/cmdSetMatColMax.R",        local=TRUE)
   source("rightPanel/menu/cmdDeleteColumn.R",        local=TRUE)
   source("rightPanel/menu/serverPlotBar.R",          local=TRUE)

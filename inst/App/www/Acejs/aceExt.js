@@ -166,8 +166,8 @@ Shiny.addCustomMessageHandler(
         
         if(!!data.setDocFileSaved){
           ud=editor.getSession().getUndoManager();
-         // $el.data('docFileSaved',ud.$undoStack.length);
-         ud.markClean()
+          // $el.data('docFileSaved',ud.$undoStack.length);
+          ud.markClean();
         }
         
         //console.log( '$el.data(docFilePath)=',JSON.stringify( $el.data('docFilePath') ));
@@ -278,7 +278,7 @@ Shiny.addCustomMessageHandler(
           });
        }
        
-       if(!!data.setClean){
+/*       if(!!data.setClean){
          //editor.getSession().getUndoManager().dirtyCounter=0;
          Shiny.onInputChange('messageFromAce', 
           {
@@ -290,7 +290,8 @@ Shiny.addCustomMessageHandler(
              rnd : randomString(5)
           });
        }
-       
+*/
+
        //---------------------------------
         if(!!data.replacement){
           //console.log("\n\nEntering data.replacement");

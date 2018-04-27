@@ -3,6 +3,7 @@ returnValue4ModuleRtFtr<-callModule(
   module=moduleFooterRight,
   id="footerRight",
   getTibEditState= getTibEditState,
+  getPointMax=getPointMax,
   getPanelState=getRightMidPanel 
 )
 
@@ -164,6 +165,22 @@ observeEvent( returnValue4ModuleRtFtr$backwardPt(), {
     matColIndex=max(matColIndex-1, min(matColChoices) )
     updateSelected(  matCol=matColIndex  )
   }
+})
+
+observeEvent( returnValue4ModuleRtFtr$matColLim(), {
+  mcl<-returnValue4ModuleRtFtr$matColLim()
+  cat("*** length(matColLim)=", length( mcl ),"\n")
+  cat("*** matColLim=", format( mcl ),"\n")
+  cat("class(mcl)=",class(mcl),"\n")
+  curVal<-getPointMax()
+  cat("curVal=",curVal,"\n")
+  if(!is.null(mcl) && !( identical(mcl,  curVal ))){
+    #if(!is.na(mcl) && is.numeric(mcl)){
+      updateWidgetChoicesRow(maxVal= mcl )
+    #}
+  # } else {
+  #   updateWidgetChoicesRow(maxVal= NA )
+   }
 })
 
 

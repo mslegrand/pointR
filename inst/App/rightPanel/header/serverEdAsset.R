@@ -22,3 +22,7 @@ observeEvent(returnValue4ModuleEdAsset$name(),{
   }
 }
 ,ignoreInit = TRUE)
+
+observeEvent( returnValue4ModuleEdAsset$newAsset(),{
+  showModal( addNewAssetModal() )
+}, label='EdTib-rtv-newColumn', ignoreInit = TRUE, ignoreNULL = TRUE)

@@ -1,8 +1,9 @@
 
-# todo!!! rename selectedTibble to something else, like selection 
+# todo!!! rename selectedTibble to something else, like currentPlotSelect 
 # add svg as a name when needed.
 
 selectedTibble <- reactiveValues(
+  tabId="whatthefuck",
   name=NULL,        # name of current point array
   rowIndex=1,
   columnName=NULL, # currently used only by tibbleEditor and could be placed there.
@@ -26,7 +27,7 @@ observeEvent(getTibNRow(),{
 })
 
 getTibName<-reactive({selectedTibble$name}) #allow to be null only if tib is null  
-
+getTibTabId<-reactive({ selectedTibble$tabId})
 getTibColumnName<-reactive({ selectedTibble$columnName })
 getTib<-reactive({ getTibName() %AND% getPtDefs()$tib[[ getTibName() ]] })
 getTibPtColPos<-reactive({ which(names(getTib())==selectedTibble$ptColName )})

@@ -32,7 +32,7 @@ moduleEdTibUI<-function(id, input, output) {
       id=ns('headEdTib'),
       #---tib column
         #---add  button---
-        div( 'class'="ptRBtn2 topHeadCol1 topHeadRow1", actionButton(ns("newColumnButton"), span(class='icon-plus'," Variables"))),
+        div( 'class'="ptRBtn2 topHeadCol1 topHeadRow1", actionButton(ns("newColumnButton"), span(class='icon-plus'," Tib Column"))),
         #---tib  chooser
         div( 'class'='ptR2  topHeadCol2   topHeadRow1',  uiOutput(ns("columnUI"))),
       
@@ -119,9 +119,16 @@ moduleEdTib<-function(input, output, session,
   #---column values
   output$widgetChooserUI<-renderUI({ #widgetChoice
     if( getTibEditState()==TRUE ){
+      cat('--Entering ---widgetChooserUI----------\n')
+      cat('--calling ---getWidgetChoices----------\n')
       choices<-getWidgetChoices()
+      cat('--calling ---getWidget----------\n')
       widget<-getWidget()
-      if( !is.null(choices ) && !is.null(widget)){
+      cat('--returning from  ---getWidget----------\n')
+      if(length(choices )>0 && !is.null(widget)){
+        #cat("tabId=",format(input$pages),"\n")
+        cat("widgetChooserUI:: choices=c(",paste(choices,collapse=", "),")\n")
+        cat('widget=',widget,"\n")
         div( "class"='ptR2',
            selectInput(ns("selectedWidget"), label=NULL,
                        choices=choices, selected=widget, width="110px")
@@ -132,19 +139,25 @@ moduleEdTib<-function(input, output, session,
   
   output$columnEntryUI<-renderUI({
     if( getTibEditState()==TRUE ){
-      #cat("\nEntering----------output$colEntryUI---------------\n")
+      cat("\nEntering----------output$colEntryUI---------------\n")
+      cat('--calling ---getWidget2----------\n')
       widget<-getWidget()
+      cat("widget=",format(widget),"\n")
+      cat("getTibEntry()=",format(getTibEntry()),"\n")
+      cat("getTibEntryChoices()=",format(getTibEntryChoices()),"\n")
       if(!is.null(widget) && !is.null(getTibEntry()) && !is.null(getTibEntryChoices())){ 
             selected<-getTibEntry()
             choices<-sort(unique(unlist(getTibEntryChoices())))
-            
+            cat('inside moduleEdTib::output$colEntryUI if widget==...\n')
             if(widget=='radio'){
+              cat('xxx widget=', format(widget),"\n")
               radioGroupButtons(inputId=ns("entryRadio"), 
                           choices=choices, 
                           selected=selected,
                           justified=TRUE
               )
             } else if (widget=='picker'){
+              cat('xxx widget=', format(widget),"\n")
               div( "class"="ptR2", width='800px',
                 selectizeInput(ns("entryValue"), label=NULL,
                              choices=choices, selected=selected, 
@@ -152,18 +165,22 @@ moduleEdTib<-function(input, output, session,
                 )
               )
             } else if(widget=='colourable') {
+              cat('xxx widget=', format(widget),"\n")
               colourInput(
                 ns("entryColour"), label=NULL, value=selected
               )
             } else if(widget=='numeric'){
+              cat('xxx widget=', format(widget),"\n")
               numericInput(
                 ns('entryNumeric'), label = NULL, min=1, max = 100, value = as.numeric(selected)
               )
             } else if(widget=='slider'){
+              cat('xxx widget=', format(widget),"\n")
               sliderInput(
                 inputId=ns("entrySlider"),label = NULL, min=1,max = 100, value = as.numeric(selected)
               )
             } else if(widget=='knob'){
+              cat('xxx widget=', format(widget),"\n")
                div(knobInput(
                  ns('entryKnob'), label = NULL, min=1, max = 100, value = as.numeric(selected), width=100, height=100
                ))
@@ -300,6 +317,6 @@ moduleEdTib<-function(input, output, session,
     selectedWidget  = reactive(input$selectedWidget),
     matColIndex   = reactive(input$matColIndex),
     transformType = reactive({input$transformType}),
-    newColumn = reactive({input$newColumn})
+    newColumn = reactive({input$newColumnButton})
   )
 }

@@ -8,7 +8,7 @@ moduleEdAssetUI<-function(id, input, output) {
   #-------asset button
   tagList(
     div( 'class'="ptRBtn2 topHeadCol1 topHeadRow1",
-       actionButton(ns("newAssetsButton"), span(class='icon-plus'," Assets") )
+       actionButton(ns("newAssetButton"), span(class='icon-plus'," ptR Asset") )
     ),
   #------asset chooser
     div('class'="topHeadCol2 topHeadRow1",
@@ -36,6 +36,7 @@ moduleEdAsset<-function(input, output, session,
   
   
   list(
-    name          = reactive({input$name})
+    name          = reactive({input$name}),
+    newAsset      = reactive({input$newAssetButton})
   )
 }

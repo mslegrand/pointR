@@ -56,8 +56,9 @@ getSafeSelection<-function(selection, choices){ #anybody using this???
 # })
 
 observeEvent(returnValue4ModuleEdTib$selectedWidget(), {
-  #cat("-----------returnValue4ModuleEdTib$selectedWidget\n")
-  if( getTibEditState()==TRUE && !is.null(returnValue4ModuleEdTib$selectedWidget)){
+  if( getTibEditState()==TRUE && !is.null( returnValue4ModuleEdTib$selectedWidget() )){
+    cat("\n-----------returnValue4ModuleEdTib$selectedWidget--------------------\n")
+    cat("selectedWidget=",format( returnValue4ModuleEdTib$selectedWidget() )," tabId=",format(input$pages),"\n\n")
     updateWidgetChoicesRow( selectedWidget=returnValue4ModuleEdTib$selectedWidget())
   }
 })
@@ -123,14 +124,15 @@ observeEvent(returnValue4ModuleEdTib$entryValue(),{
           rowIndex<=nrow(tib)
       )
       sender='applyTibEdit'
-      
-      newPtDefs$tib[[getTibName()]][[rowIndex,columnName ]]<-entry
-      updateAceExtDef(newPtDefs, sender=sender, selector=list( name=name, rowIndex=rowIndex, columnName=columnName   ) )
+      if(newPtDefs$tib[[getTibName()]][[rowIndex,columnName ]]!=entry){
+        newPtDefs$tib[[getTibName()]][[rowIndex,columnName ]]<-entry
+        updateAceExtDef(newPtDefs, sender=sender, selector=list( name=name, rowIndex=rowIndex, columnName=columnName   ) )
+      }
     }
   } 
 },label='EdTib-rtv-entryValue', ignoreNULL = TRUE)
 
 
-observeEvent( returnValue4ModuleEdTib$newColumn,{
+observeEvent( returnValue4ModuleEdTib$newColumn(),{
   showModal( addNewColModal() )
 }, label='EdTib-rtv-newColumn', ignoreInit = TRUE, ignoreNULL = TRUE)

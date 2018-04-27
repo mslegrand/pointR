@@ -59,8 +59,8 @@ observeEvent(input$pages,{
   )
   aceId<-tabID2aceID(tabId)
   cat("input$pages:: aceId=",aceId,"\n")
-  updateAceExt(id=aceId, sender='cmd.commit', roleBack=FALSE, setfocus=TRUE)
-  triggerRefresh('cmd.commit', rollBack=FALSE)
+  updateAceExt(id=aceId, sender='cmd.tabChange', roleBack=FALSE, setfocus=TRUE, getValue=TRUE)
+  #triggerRefresh('cmd.commit', rollBack=FALSE) # seems to trigger the redraw of the screen (uses getValue=TRUE)
 }, ignoreNULL = TRUE)
 
 
