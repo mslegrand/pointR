@@ -20,10 +20,6 @@ getSelIndex<-reactive({
 
 observeEvent(getTibNRow(),{
   sendPtRManagerMessage( id= getAceEditorId() , sender='tibNrow', rowCountChange=TRUE)
-  # session$sendCustomMessage(
-  #   type = "ptRManager", 
-  #   list(id= getAceEditorId(), rowCountChange=TRUE, sender='tibNrow' )
-  # )
 })
 
 getTibName<-reactive({selectedTibble$name}) #allow to be null only if tib is null  
@@ -78,9 +74,9 @@ resetSelectedTibbleName<-function(tibs, name){
     if(is.null(tibs)){
       return(NULL)
     }
-    cat("\\n----------nserverSelection...Entering  resetSelectedTibbleName\n")
-    cat("\nresetSelectedTibbleName... name= ", format(name),"\n")
-    cat("resetSelectedTibbleName... names(tibs)=",format(names(tibs)),"\n")
+    # cat("\\n----------nserverSelection...Entering  resetSelectedTibbleName\n")
+    # cat("\nresetSelectedTibbleName... name= ", format(name),"\n")
+    # cat("resetSelectedTibbleName... names(tibs)=",format(names(tibs)),"\n")
       choices<-getRightPanelChoices()
       #cat("resetSelectedTibbleName:: choices=", paste(choices, collapse=", "),"\n")
       if(is.null(name) || !(name %in% choices)){
@@ -242,16 +238,5 @@ getTibMatColChoices<-reactive({
 })
 
 
-# getTibColumn<-reactive({
-#   colName<-getTibColumnName()
-#   if(!is.null(colName) && nchar(colName)>0){
-#     columnNameChoices=getTibColumnNameChoices()
-#     ptPos<-getTibPtColPos()
-#     column<-match(colName, columnNameChoices, nomatch=ptPos)
-#   } else {
-#     column<-NULL
-#   }
-#   column
-# })
 
 

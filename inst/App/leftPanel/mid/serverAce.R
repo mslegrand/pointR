@@ -10,26 +10,26 @@ observeEvent(input$messageFromAce, {
       sender<-input$messageFromAce$sender
       request$sender<-sender
       clearErrorMssg()
-      cat("input$messageFromAce$id=" , format(input$messageFromAce$id), "\n")
+      # cat("input$messageFromAce$id=" , format(input$messageFromAce$id), "\n")
       
       if(!is.null(input$messageFromAce$selector) && !is.null(input$messageFromAce$code) ){
         reqSelector<-input$messageFromAce$selector
         updateSelected4Ace(reqSelector)
       }
-      cat('request$sender=',format(request$sender),"\n")
+      # cat('request$sender=',format(request$sender),"\n")
       if(length(input$messageFromAce$isSaved)>0){ 
         aceId<-input$messageFromAce$id
         editOption$.saved <- input$messageFromAce$isSaved
-        cat('\n--setting editOption$.saved --\n')
-        cat("set editOption$.saved=",editOption$.saved,"\n")
+        # cat('\n--setting editOption$.saved --\n')
+        # cat("set editOption$.saved=",editOption$.saved,"\n")
       }
       cat('22 request$sender=',format(request$sender),"\n")
       if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset', 'cmd.openFileNow', 'cmd.saveFileNow', 'cmd.file.new', 'cmd.tabChange')){
-        cat('33 request$sender=',format(request$sender),"\n")
-        cat('invoking processCommit\n')
+        # cat('33 request$sender=',format(request$sender),"\n")
+        # cat('invoking processCommit\n')
         processCommit()
-        cat('returning from processCommit\n')
-        cat('getTibName()=',format(getTibName()),"\n")
+        # cat('returning from processCommit\n')
+        # cat('getTibName()=',format(getTibName()),"\n")
         if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset', 'cmd.saveFileNow') && !is.null(getTibName())){ 
           if(sender=='cmd.add.asset'){
             name=input$messageFromAce$selector$assetName
@@ -37,27 +37,27 @@ observeEvent(input$messageFromAce, {
             name=getTibName() # 'cmd.commit', 'cmd.add.column'
           }
           tibs<-getPtDefs()$tib
-          cat('name=',format(name),"\n")
+          # cat('name=',format(name),"\n")
           resetSelectedTibbleName(tibs=tibs, name=name)
         } else { 
           #name=NULL #  'cmd.openFileNow', 'cmd.tabChange' , 'cmd.file.new'
           
           # begin selectTibUpdate: 
           # browser()
-          cat('else: ', 'cmd.openFileNow', 'cmd.tabChange' , 'cmd.file.new',"\n")
+          # cat('else: ', 'cmd.openFileNow', 'cmd.tabChange' , 'cmd.file.new',"\n")
           if(length(input$pages) >0 && nchar(input$pages)>0 && selectedTibble$tabId != input$pages ){
-            cat('next tabId=',input$pages,"\n")
-            cat('selectedTibble$tabId=',selectedTibble$tabId,"\n")
-            cat("input$messageFromAce$id=" , format(input$messageFromAce$id), "\n")
+            # cat('next tabId=',input$pages,"\n")
+            # cat('selectedTibble$tabId=',selectedTibble$tabId,"\n")
+            # cat("input$messageFromAce$id=" , format(input$messageFromAce$id), "\n")
             choices<-getRightPanelChoices()
             if(length(choices)>0 && length(selectedTibble$tabId)>0  && selectedTibble$tabId!='whatthefuck'){
-              cat( "store( tabId=",selectedTibble$tabId,")\n")
+              # cat( "store( tabId=",selectedTibble$tabId,")\n")
               tmp2<-isolate(reactiveValuesToList(selectedTibble, all.names=TRUE))
               tmp2[is.null(tmp2)]<-NA
               #plotSelect.tib<-rbind(plotSelect.tib, tmp )
               tmp1<-filter(plot$selections.tib, tabId!=selectedTibble$tabId)
               plot$selections.tib<-bind_rows(tmp1, tmp2)
-              cat("========   ",paste(plot$selections.tib$tabId,collapse=", "),"\n")
+              # cat("========   ",paste(plot$selections.tib$tabId,collapse=", "),"\n")
             }
             row.tib<-filter(plot$selections.tib, tabId==input$pages)
             if(nrow(row.tib)==0){
@@ -71,11 +71,6 @@ observeEvent(input$messageFromAce, {
               #cat("row.tib$", n, "=", format(v),"\n")
               selectedTibble[[n]]<-ifelse(is.na(v), NULL, v)
             } )
-            #browser()
-            #cat('selectedTibble is\n')
-            # for(n in c('tabId','name','rowIndex','columnName', 'matCol', 'ptColName', 'selIndex', 'transformType')){
-            #   cat("selectedTibble$", n, "=", format(selectedTibble[[n]]),"\n")
-            # }
           }
           # end selectTibUpdate:
           
