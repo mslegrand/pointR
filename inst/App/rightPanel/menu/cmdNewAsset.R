@@ -5,9 +5,10 @@ addNewAssetModal <- function(errMssg=NULL) {
     onkeypress=doOk, 
     span('Enter both the type and the name for the new asset'), 
     textInput("modalAssetName", "Enter the name for the new asset"),
+    div( class='ptR2',
     awesomeRadio("modalAssetType", "Asset Type", 
                  choices=c('matrix','tibble')
-    ), 
+    )), 
     if(!is.null(errMssg)){
       div(tags$b(errMssg, style = "color: red;"))
     },

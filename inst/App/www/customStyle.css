@@ -177,6 +177,9 @@ overflow-y: auto;
 .radio-bs label{
   color: #00ffff;
 }
+.ptR2 div > .radio-bs label{
+  color: #000000;
+}
 .ptR2 .selectize-input,  
 .ptR2 .selectize-input input,
 .ptR2 .selectize-control.single { 

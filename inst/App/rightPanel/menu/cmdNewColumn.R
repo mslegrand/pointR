@@ -7,7 +7,11 @@ addNewColModal <- function(errMssg=NULL) {
     onkeypress=doOk, 
     span('Enter both a name for the new column and a value for its entries'), 
     textInput("modalAttrName", "Enter the name for the new column"),
-    textInput("modalAttrValue", "Enter an entry value for the new column"), 
+    textInput("modalAttrValue", "Enter an entry value for the new column"),
+    div( class='ptR2',
+       awesomeRadio('modalColTreatAs', 'Treat as ', choices = c('a character string','a number','an expression') )
+    ),
+   
     if(!is.null(errMssg)){
       div(tags$b(errMssg, style = "color: red;"))
     },
@@ -31,10 +35,17 @@ observeEvent(input$commitNewCol, {
       newPtDefs<-getPtDefs()
       newColName<-input$modalAttrName
       
+      treatAs<-input$modalColTreatAs
       newVal<-input$modalAttrValue
-      if(isNumericString(newVal)){
+      if(treatAs=='a number'){
         newVal<-as.numeric(newVal)
+      } else if ( treatAs=='an expression'){
+        newVal<-list(eval(parse(text=newVal)))
       }
+
+      # if(isNumericString(newVal)){
+      #   newVal<-as.numeric(newVal)
+      # }
       newPtDefs$tib[[getTibName()]]<-add_column(newPtDefs$tib[[getTibName()]], 
                                                 !!(newColName):=newVal   )     
       # updateAce and set selection to this column
