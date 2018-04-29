@@ -50,6 +50,7 @@ observe({
           newPt<-vec
           selection<-getTibName() 
           rowIndex<-getTibRow()
+          cat('mouseMssg:: rowIndex=',format(rowIndex),"\n")
           matColIndx<-getTibMatCol()
           # if matColMax==matColIndx, first insert new row
           # cat("getHandler()=",format( getHandler() ),"\n")
@@ -57,8 +58,8 @@ observe({
           # if(matColIndx==2){
           #   v<-getHandlerValue()
           # }
-          cat("MOUSECLICK:: length(getPointMax())=", getPointMax(),"\n")
-          cat("MOUSECLICK:: length(matColIndx=", matColIndx,"\n")
+          cat("MOUSECLICK:: length(getPointMax())=", format(getPointMax()),"\n")
+          cat("MOUSECLICK:: length(matColIndx=", format(matColIndx),"\n")
           if( length( getPointMax())>1){ stop('getPointMax is too big')}
           if(!is.na(getPointMax()) &&  matColIndx>=getPointMax() ){
           #if(!is.na(getWidget()) && matColIndx>=getHandlerValue()){

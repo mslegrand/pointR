@@ -43,9 +43,6 @@ observeEvent(input$commitNewCol, {
         newVal<-list(eval(parse(text=newVal)))
       }
 
-      # if(isNumericString(newVal)){
-      #   newVal<-as.numeric(newVal)
-      # }
       newPtDefs$tib[[getTibName()]]<-add_column(newPtDefs$tib[[getTibName()]], 
                                                 !!(newColName):=newVal   )     
       # updateAce and set selection to this column

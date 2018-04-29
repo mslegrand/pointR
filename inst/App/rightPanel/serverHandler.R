@@ -9,12 +9,13 @@ type2WidgetChoices<-function(colType){
          point=c('radio','picker'),
          character=c('radio','picker'), #'switch', 'toggle'),
          character.list= c('radio','picker'), #, "multiInput", 'picker', 'checkbox'), #range
-         character.list.2= c('radio','picker'), #, "multiInput", 'picker', 'checkbox'), #range
+         character.list.2= c('slider'), #, "multiInput", 'picker', 'checkbox'), #range
          character.list.vec= c('radio','picker'), #, "multiInput", 'picker', 'checkbox'), #range
          integer=c('radio','picker','slider',  "numeric"), #,'knob'
          numeric=c('radio','picker','slider',  "numeric"), #,'knob'
          numeric.list=c('radio','picker','slider',  "numeric"), #,'knob'
-         numeric.list.2=c('radio','picker','slider',  "numeric"), #,'knob'
+         numeric.list.2=c('slider'), #,'knob'
+         integer.list.2=c('slider'),
          numeric.list.vec=c('radio','picker','slider',  "numeric"), #,'knob'
          colourable=c('radio','picker', 'colourable') , #'spectrum', 'colorSelectorInput' ),
          other=c('radio','picker'),
@@ -23,6 +24,7 @@ type2WidgetChoices<-function(colType){
   if(is.null(choices)){
     choices<-c('radio','picker')
   }
+  cat('colType=',format(colType)," ;choices=", paste(choices, collapse=","),"\n")
   choices  
 }
 

@@ -2,6 +2,7 @@
 
 observeEvent(input$messageFromAce, {
   cat('\n====serverAce:...observe input$messageFromAce:: entering\n')
+  cat('\n initial value of getTibRow()=', format(getTibRow()), "\n")
     if(
       length(input$messageFromAce$code)>0 &&
       length(input$messageFromAce$sender)>0
@@ -10,6 +11,7 @@ observeEvent(input$messageFromAce, {
       sender<-input$messageFromAce$sender
       request$sender<-sender
       clearErrorMssg()
+      
       # cat("input$messageFromAce$id=" , format(input$messageFromAce$id), "\n")
       
       if(!is.null(input$messageFromAce$selector) && !is.null(input$messageFromAce$code) ){
@@ -23,13 +25,13 @@ observeEvent(input$messageFromAce, {
         # cat('\n--setting editOption$.saved --\n')
         # cat("set editOption$.saved=",editOption$.saved,"\n")
       }
-      cat('22 request$sender=',format(request$sender),"\n")
+      cat('22 ace request$sender=',format(request$sender),"\n")
       if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset', 'cmd.openFileNow', 'cmd.saveFileNow', 'cmd.file.new', 'cmd.tabChange')){
         # cat('33 request$sender=',format(request$sender),"\n")
-        # cat('invoking processCommit\n')
+        cat('Ace: invoking processCommit\n')
         processCommit()
-        # cat('returning from processCommit\n')
-        # cat('getTibName()=',format(getTibName()),"\n")
+        cat('returning from processCommit\n')
+        cat('getTibName()=',format(getTibName()),"\n")
         if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset', 'cmd.saveFileNow') && !is.null(getTibName())){ 
           if(sender=='cmd.add.asset'){
             name=input$messageFromAce$selector$assetName
@@ -37,7 +39,8 @@ observeEvent(input$messageFromAce, {
             name=getTibName() # 'cmd.commit', 'cmd.add.column'
           }
           tibs<-getPtDefs()$tib
-          # cat('name=',format(name),"\n")
+          cat('name=',format(name),"\n")
+          cat("ace invoking resetSelectedTibbleName\n")
           resetSelectedTibbleName(tibs=tibs, name=name)
         } else { 
           #name=NULL #  'cmd.openFileNow', 'cmd.tabChange' , 'cmd.file.new'
@@ -65,10 +68,10 @@ observeEvent(input$messageFromAce, {
               row.tib<-newPlotSel(tabId=input$pages, choices=choices, tibs=getPtDefs()$tib)
             }
             
-            #cat( "copy *row.tib* to *selectedTibble.*\n"  )
+            cat( "copy *row.tib* to *selectedTibble.*\n"  )
             lapply(names(row.tib), function(n){
               v<-row.tib[[n]][1]
-              #cat("row.tib$", n, "=", format(v),"\n")
+              cat("row.tib$", n, "=", format(v),"\n")
               selectedTibble[[n]]<-ifelse(is.na(v), NULL, v)
             } )
           }
@@ -79,26 +82,26 @@ observeEvent(input$messageFromAce, {
       } 
       
       if(sender %in% c( 'fileCmd.save', 'fileCmd.close', 'fileCmd.saveAs', 'fileCmd.quit' )){
-        cat("\n------",sender,"-----------------------------------\n")
+        # cat("\n------",sender,"-----------------------------------\n")
         id<-input$messageFromAce$id
         saved<-input$messageFromAce$isSaved
-        cat('input$messageFromAce$saved=',format(saved),"\n")
-        cat('class(saved)=',class(saved),"\n")
-        cat('saved=',saved,"\n")
-        cat("and editOption$.saved=",editOption$.saved,"\n")
-        cat("for id=",id,"\n")
+        # cat('input$messageFromAce$saved=',format(saved),"\n")
+        # cat('class(saved)=',class(saved),"\n")
+        # cat('saved=',saved,"\n")
+        # cat("and editOption$.saved=",editOption$.saved,"\n")
+        # cat("for id=",id,"\n")
         if( !saved || sender=='fileCmd.saveAs' ) { #need to save
           docFilePath<-unlist(input$messageFromAce$docFilePath)
-          cat("docFilePath=",docFilePath,"\n")
-          cat("sender=",sender,"\n")
+          # cat("docFilePath=",docFilePath,"\n")
+          # cat("sender=",sender,"\n")
           if(docFilePath=='?' || sender=='fileCmd.saveAs'){ # file unnamed : fileSaveAs
              tabId<-aceID2TabID(id)
-             cat('11: tabId=',format(tabId),"\n")
-             cat("executing sendPtRManagerMessage( id=id,  sender=sender, saveFile=TRUE,  type='R', tabId=tabId)\n")
+             # cat('11: tabId=',format(tabId),"\n")
+             # cat("executing sendPtRManagerMessage( id=id,  sender=sender, saveFile=TRUE,  type='R', tabId=tabId)\n")
              sendPtRManagerMessage( id=id,  sender=sender, saveFile=TRUE,  type='R', tabId=tabId)
           } else { 
             # write file
-            cat('serverAce:: writeLines\n')
+            # cat('serverAce:: writeLines\n')
             code<-input$messageFromAce$code
             # !!!TODO!!! if write fails revert.
             writeLines(code, docFilePath)
@@ -114,7 +117,7 @@ observeEvent(input$messageFromAce, {
               # !!!TODO add docFilePath to recentfiles
               #title=as.character(span(basename(docFilePath ), span( " " , class='icon-cancel')  ))
               title=as.character(tabTitleRfn( title=basename(docFilePath ), tabId=tabId, docFilePath=docFilePath ))
-              cat("title=",title,"\n")
+              # cat("title=",title,"\n")
               session$sendCustomMessage(
                 type = "scrollManager", 
                 list( title=title, value=tabId ) 
@@ -129,6 +132,7 @@ observeEvent(input$messageFromAce, {
           }
         }
       }
+      cat('\n final value of getTibRow()=', format(getTibRow()), "\n")
     }
 }, priority = 90, ignoreNULL = TRUE, ignoreInit = TRUE)
 

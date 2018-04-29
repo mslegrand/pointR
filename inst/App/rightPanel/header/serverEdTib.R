@@ -124,7 +124,8 @@ observeEvent(returnValue4ModuleEdTib$entryValue(),{
           rowIndex<=nrow(tib)
       )
       sender='applyTibEdit'
-      if(newPtDefs$tib[[getTibName()]][[rowIndex,columnName ]]!=entry){
+      #if(newPtDefs$tib[[getTibName()]][[rowIndex,columnName ]]!=entry){
+      if(!identical(newPtDefs$tib[[getTibName()]][[rowIndex,columnName ]],entry)){
         newPtDefs$tib[[getTibName()]][[rowIndex,columnName ]]<-entry
         updateAceExtDef(newPtDefs, sender=sender, selector=list( name=name, rowIndex=rowIndex, columnName=columnName   ) )
       }

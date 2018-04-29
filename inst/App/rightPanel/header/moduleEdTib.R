@@ -125,6 +125,7 @@ moduleEdTib<-function(input, output, session,
       cat('--calling ---getWidget----------\n')
       widget<-getWidget()
       cat('--returning from  ---getWidget----------\n')
+      cat("\nAfter getWidget value of getRowIndex=", format(getRowIndex()), "\n")
       if(length(choices )>0 && !is.null(widget)){
         #cat("tabId=",format(input$pages),"\n")
         cat("widgetChooserUI:: choices=c(",paste(choices,collapse=", "),")\n")
@@ -140,24 +141,25 @@ moduleEdTib<-function(input, output, session,
   output$columnEntryUI<-renderUI({
     if( getTibEditState()==TRUE ){
       cat("\nEntering----------output$colEntryUI---------------\n")
-      cat('--calling ---getWidget2----------\n')
+      cat("\nInitial value of getRowIndex", format(getRowIndex()), "\n")
+      # cat('--calling ---getWidget2----------\n')
       widget<-getWidget()
-      cat("widget=",format(widget),"\n")
-      cat("getTibEntry()=",format(getTibEntry()),"\n")
-      cat("getTibEntryChoices()=",format(getTibEntryChoices()),"\n")
+      # cat("widget=",format(widget),"\n")
+      # cat("getTibEntry()=",format(getTibEntry()),"\n")
+      # cat("getTibEntryChoices()=",format(getTibEntryChoices()),"\n")
       if(!is.null(widget) && !is.null(getTibEntry()) && !is.null(getTibEntryChoices())){ 
             selected<-getTibEntry()
             choices<-sort(unique(unlist(getTibEntryChoices())))
-            cat('inside moduleEdTib::output$colEntryUI if widget==...\n')
+            # cat('inside moduleEdTib::output$colEntryUI if widget==...\n')
             if(widget=='radio'){
-              cat('xxx widget=', format(widget),"\n")
+              # cat('xxx widget=', format(widget),"\n")
               radioGroupButtons(inputId=ns("entryRadio"), 
                           choices=choices, 
                           selected=selected,
                           justified=TRUE
               )
             } else if (widget=='picker'){
-              cat('xxx widget=', format(widget),"\n")
+              # cat('xxx widget=', format(widget),"\n")
               div( "class"="ptR2", width='800px',
                 selectizeInput(ns("entryValue"), label=NULL,
                              choices=choices, selected=selected, 
