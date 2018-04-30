@@ -25,27 +25,27 @@ cmdFileSaveAs<-function(){
 }
 
 observeEvent(input$buttonFileSaveHidden,{
-  cat('=======shinyFiles SAVE RETURN EVENT=============\n')
+  # cat('=======shinyFiles SAVE RETURN EVENT=============\n')
   rtList<-input$buttonFileSaveHidden
-  cat('class(rtList)=',class(rtList),"\n")
-  print(format(rtList))
+  # cat('class(rtList)=',class(rtList),"\n")
+  # print(format(rtList))
   if('cancel' %in% names(rtList)){
     #if(request$sender=='fileCmd.close'){
       #if(!is.null(request$closeTab)){
-    cat('rtList$cancel',format(rtList$cancel),"\n")
+    # cat('rtList$cancel',format(rtList$cancel),"\n")
     if(rtList$cancel=='close'){ 
-      cat('cancel and close')
+      # cat('cancel and close')
       #removeTab(inputId = "pages", request$closeTab)
       
       tabId<-popTab()
-      cat('tabId=',format(tabId),"\n")
+      # cat('tabId=',format(tabId),"\n")
       removeTab(inputId = "pages", tabId)
       # TODO!!!  add oldPath to recentFiles
-      cat('tab should be gone by now')
+      # cat('tab should be gone by now')
       #removeTab(inputId = "pages", request$closeTab)
       #request$closeTab=NULL;
     } else {
-      cat('canceling a request')
+      # cat('canceling a request')
       setTabRequest(sender=NULL, tabs=NULL)
     }
   } else { 

@@ -38,7 +38,7 @@ observeEvent( input$editNavBar, {
       dirtyDMDM(session, "editNavBar")
     }
     if(fileCmd=="quit"){
-      cat(' fileCmd=="quit" \n')
+      # cat(' fileCmd=="quit" \n')
       cmdFileQuit()
       #dirtyDMDM(session, "editNavBar")
     }
@@ -159,7 +159,7 @@ observeEvent( input$editNavBar, {
 
 # keep file menu save uptodate
 observeEvent(getFileSavedStatus(),{
-  cat("\n*****************************getFileSavedStatus()=",getFileSavedStatus(),"\n")
+  # cat("\n*****************************getFileSavedStatus()=",getFileSavedStatus(),"\n")
   if(getFileSavedStatus()==FALSE){
     # set dmdm file save active
     enableDMDM(
@@ -177,7 +177,7 @@ observeEvent(getFileSavedStatus(),{
     )
     status<-'saved'
   }
-  cat("status=",status,"\n")
+  # cat("status=",status,"\n")
   sendFileTabsMessage( id=input$pages, sender='savedStatus', savedStatus=status)
 })
 

@@ -1,8 +1,8 @@
 
 
 observeEvent(input$messageFromAce, {
-  cat('\n====serverAce:...observe input$messageFromAce:: entering\n')
-  cat('\n initial value of getTibRow()=', format(getTibRow()), "\n")
+  # cat('\n====serverAce:...observe input$messageFromAce:: entering\n')
+  # cat('\n initial value of getTibRow()=', format(getTibRow()), "\n")
     if(
       length(input$messageFromAce$code)>0 &&
       length(input$messageFromAce$sender)>0
@@ -25,13 +25,13 @@ observeEvent(input$messageFromAce, {
         # cat('\n--setting editOption$.saved --\n')
         # cat("set editOption$.saved=",editOption$.saved,"\n")
       }
-      cat('22 ace request$sender=',format(request$sender),"\n")
+      # cat('22 ace request$sender=',format(request$sender),"\n")
       if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset', 'cmd.openFileNow', 'cmd.saveFileNow', 'cmd.file.new', 'cmd.tabChange')){
         # cat('33 request$sender=',format(request$sender),"\n")
-        cat('Ace: invoking processCommit\n')
+        # cat('Ace: invoking processCommit\n')
         processCommit()
-        cat('returning from processCommit\n')
-        cat('getTibName()=',format(getTibName()),"\n")
+        # cat('returning from processCommit\n')
+        # cat('getTibName()=',format(getTibName()),"\n")
         if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset', 'cmd.saveFileNow') && !is.null(getTibName())){ 
           if(sender=='cmd.add.asset'){
             name=input$messageFromAce$selector$assetName
@@ -39,8 +39,8 @@ observeEvent(input$messageFromAce, {
             name=getTibName() # 'cmd.commit', 'cmd.add.column'
           }
           tibs<-getPtDefs()$tib
-          cat('name=',format(name),"\n")
-          cat("ace invoking resetSelectedTibbleName\n")
+          # cat('name=',format(name),"\n")
+          # cat("ace invoking resetSelectedTibbleName\n")
           resetSelectedTibbleName(tibs=tibs, name=name)
         } else { 
           #name=NULL #  'cmd.openFileNow', 'cmd.tabChange' , 'cmd.file.new'
@@ -68,10 +68,10 @@ observeEvent(input$messageFromAce, {
               row.tib<-newPlotSel(tabId=input$pages, choices=choices, tibs=getPtDefs()$tib)
             }
             
-            cat( "copy *row.tib* to *selectedTibble.*\n"  )
+            # cat( "copy *row.tib* to *selectedTibble.*\n"  )
             lapply(names(row.tib), function(n){
               v<-row.tib[[n]][1]
-              cat("row.tib$", n, "=", format(v),"\n")
+              # cat("row.tib$", n, "=", format(v),"\n")
               selectedTibble[[n]]<-ifelse(is.na(v), NULL, v)
             } )
           }
@@ -132,7 +132,7 @@ observeEvent(input$messageFromAce, {
           }
         }
       }
-      cat('\n final value of getTibRow()=', format(getTibRow()), "\n")
+      # cat('\n final value of getTibRow()=', format(getTibRow()), "\n")
     }
 }, priority = 90, ignoreNULL = TRUE, ignoreInit = TRUE)
 
@@ -153,8 +153,8 @@ updateAceExt<-function(id, sender, ... ){
   data<-list(...)
   if(length(data)>0){
     data<-c(list(id= id, sender=sender), data )
-    cat("data=",format(data),"\n")
-    print(data)
+    # cat("data=",format(data),"\n")
+    # print(data)
     session$sendCustomMessage(
       type = "shinyAceExt",
       data

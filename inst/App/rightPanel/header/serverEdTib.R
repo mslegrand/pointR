@@ -10,7 +10,7 @@ returnValue4ModuleEdTib<-callModule(
       rtv<-errorPanelTag } else{ 
         rtv<-getTibName() 
       }
-    cat('Input name to tibEditor is=',format(rtv),'\n')
+    # cat('Input name to tibEditor is=',format(rtv),'\n')
     rtv
   }),
   nameChoices=getRightPanelChoices,
@@ -57,8 +57,8 @@ getSafeSelection<-function(selection, choices){ #anybody using this???
 
 observeEvent(returnValue4ModuleEdTib$selectedWidget(), {
   if( getTibEditState()==TRUE && !is.null( returnValue4ModuleEdTib$selectedWidget() )){
-    cat("\n-----------returnValue4ModuleEdTib$selectedWidget--------------------\n")
-    cat("selectedWidget=",format( returnValue4ModuleEdTib$selectedWidget() )," tabId=",format(input$pages),"\n\n")
+    # cat("\n-----------returnValue4ModuleEdTib$selectedWidget--------------------\n")
+    # cat("selectedWidget=",format( returnValue4ModuleEdTib$selectedWidget() )," tabId=",format(input$pages),"\n\n")
     updateWidgetChoicesRow( selectedWidget=returnValue4ModuleEdTib$selectedWidget())
   }
 })

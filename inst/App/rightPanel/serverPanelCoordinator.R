@@ -9,7 +9,7 @@ panels<-reactiveValues(
 )
 
 setSourceType<-function( sourceType ){
-  cat('setting sourceType to ',format(sourceType),"\n")
+  # cat('setting sourceType to ',format(sourceType),"\n")
   panels$sourceType=sourceType
 }
 

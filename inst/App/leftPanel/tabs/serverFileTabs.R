@@ -13,7 +13,7 @@ tabTitleRfn<-function(title, tabId, docFilePath){
 addFileTab<-function(title, txt,  docFilePath='?'){
   tabId<-getNextTabId()
   aceId<-tabID2aceID(tabId)
-  cat("addFileTab:: docFilePath",docFilePath,"\n")
+  # cat("addFileTab:: docFilePath",docFilePath,"\n")
   # !!!TODO add docFilePath to recentFiles (if !='?')
   
   appendTab(
@@ -51,14 +51,14 @@ getAceEditorId<-reactive({
 
 #  triggers doc has been changed.
 observeEvent(input$pages,{
-  cat("input$pages=",format(input$pages),"\n")
+  # cat("input$pages=",format(input$pages),"\n")
   tabId<-input$pages 
   session$sendCustomMessage(
     type = "scrollManager", 
     list( selected=tabId ) #  Requests to scroll into view
   )
   aceId<-tabID2aceID(tabId)
-  cat("input$pages:: aceId=",aceId,"\n")
+  # cat("input$pages:: aceId=",aceId,"\n")
   updateAceExt(id=aceId, sender='cmd.tabChange', roleBack=FALSE, setfocus=TRUE, getValue=TRUE)
   #triggerRefresh('cmd.commit', rollBack=FALSE) # seems to trigger the redraw of the screen (uses getValue=TRUE)
 }, ignoreNULL = TRUE)
@@ -66,13 +66,13 @@ observeEvent(input$pages,{
 
 # updated by scrollManager and relays sender with tabs to request
 observeEvent(input$tabManager,{
-  cat("observer input$tabManager\n")
+  # cat("observer input$tabManager\n")
   tabs=unlist(input$tabManager$tabs)
-  cat('tabs=',format(tabs),"\n")
+  # cat('tabs=',format(tabs),"\n")
   sender=input$tabManager$sender
-  cat('sender=',format(sender),"\n")
+  # cat('sender=',format(sender),"\n")
   setTabRequest(sender=sender, tabs=tabs)
-  cat("leaving tabManager observer------------------\n")
+  # cat("leaving tabManager observer------------------\n")
 })
 
 # request$tabs is updated by either

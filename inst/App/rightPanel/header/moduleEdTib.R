@@ -119,17 +119,17 @@ moduleEdTib<-function(input, output, session,
   #---column values
   output$widgetChooserUI<-renderUI({ #widgetChoice
     if( getTibEditState()==TRUE ){
-      cat('--Entering ---widgetChooserUI----------\n')
-      cat('--calling ---getWidgetChoices----------\n')
+      # cat('--Entering ---widgetChooserUI----------\n')
+      # cat('--calling ---getWidgetChoices----------\n')
       choices<-getWidgetChoices()
-      cat('--calling ---getWidget----------\n')
+      # cat('--calling ---getWidget----------\n')
       widget<-getWidget()
-      cat('--returning from  ---getWidget----------\n')
-      cat("\nAfter getWidget value of getRowIndex=", format(getRowIndex()), "\n")
+      # cat('--returning from  ---getWidget----------\n')
+      # cat("\nAfter getWidget value of getRowIndex=", format(getRowIndex()), "\n")
       if(length(choices )>0 && !is.null(widget)){
         #cat("tabId=",format(input$pages),"\n")
-        cat("widgetChooserUI:: choices=c(",paste(choices,collapse=", "),")\n")
-        cat('widget=',widget,"\n")
+        # cat("widgetChooserUI:: choices=c(",paste(choices,collapse=", "),")\n")
+        # cat('widget=',widget,"\n")
         div( "class"='ptR2',
            selectInput(ns("selectedWidget"), label=NULL,
                        choices=choices, selected=widget, width="110px")
@@ -140,8 +140,8 @@ moduleEdTib<-function(input, output, session,
   
   output$columnEntryUI<-renderUI({
     if( getTibEditState()==TRUE ){
-      cat("\nEntering----------output$colEntryUI---------------\n")
-      cat("\nInitial value of getRowIndex", format(getRowIndex()), "\n")
+      # cat("\nEntering----------output$colEntryUI---------------\n")
+      # cat("\nInitial value of getRowIndex", format(getRowIndex()), "\n")
       # cat('--calling ---getWidget2----------\n')
       widget<-getWidget()
       # cat("widget=",format(widget),"\n")
@@ -167,22 +167,22 @@ moduleEdTib<-function(input, output, session,
                 )
               )
             } else if(widget=='colourable') {
-              cat('xxx widget=', format(widget),"\n")
+              # cat('xxx widget=', format(widget),"\n")
               colourInput(
                 ns("entryColour"), label=NULL, value=selected
               )
             } else if(widget=='numeric'){
-              cat('xxx widget=', format(widget),"\n")
+              # cat('xxx widget=', format(widget),"\n")
               numericInput(
                 ns('entryNumeric'), label = NULL, min=1, max = 100, value = as.numeric(selected)
               )
             } else if(widget=='slider'){
-              cat('xxx widget=', format(widget),"\n")
+              # cat('xxx widget=', format(widget),"\n")
               sliderInput(
                 inputId=ns("entrySlider"),label = NULL, min=1,max = 100, value = as.numeric(selected)
               )
             } else if(widget=='knob'){
-              cat('xxx widget=', format(widget),"\n")
+              # cat('xxx widget=', format(widget),"\n")
                div(knobInput(
                  ns('entryKnob'), label = NULL, min=1, max = 100, value = as.numeric(selected), width=100, height=100
                ))
@@ -222,10 +222,10 @@ moduleEdTib<-function(input, output, session,
   #---asset name---
   observeEvent(c( name(), nameChoices() ), { #update the name
     if( !is.null(name()) && name()==transformTag ){
-      cat('transformPanelContainer show \n')
+      # cat('transformPanelContainer show \n')
       showElement('transformPanelContainer')
     } else {
-      cat('transformPanelContainer hide \n')
+      # cat('transformPanelContainer hide \n')
       hideElement('transformPanelContainer')
     }
     # toggleElement(
@@ -237,13 +237,13 @@ moduleEdTib<-function(input, output, session,
       #   choices=nameChoices(), selected=name()
       # )
       
-      cat('moduleEdTib observer:: name()=', format(name()),"\n")
+      # cat('moduleEdTib observer:: name()=', format(name()),"\n")
       
       if(length(nameChoices())>0 && !is.null(name()) && nchar(name())>0 && !(name() %in% c( transformTag, RPanelTag, errorPanelTag, svgPanelTag)) ){
-        cat('headEdTib show\n')
+        # cat('headEdTib show\n')
         showElement('headEdTib')
       } else {
-        cat('headEdTib hide\n')
+        # cat('headEdTib hide\n')
         hideElement('headEdTib')
         hideElement(ns('headEdTib'))
       }

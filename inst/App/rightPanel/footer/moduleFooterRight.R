@@ -20,8 +20,8 @@ moduleFooterRight<-function(input, output, session,
     footerPanelState<-getPanelState()
     if(!is.null( footerPanelState )){
         if (footerPanelState=='point' && length(getPointMax())>0 ){
-          cat("length(getPointMax())=",length(getPointMax()),"\n")
-          cat("getPointMax()=",format(getPointMax()),"\n")
+          # cat("length(getPointMax())=",length(getPointMax()),"\n")
+          # cat("getPointMax()=",format(getPointMax()),"\n")
           absolutePanel( "class"="footerPanel", draggable=FALSE, style="bottom: 0; left: 10px; display:inline-block", 
             absolutePanel( left=5, bottom=0,
                actionGroupButtons(

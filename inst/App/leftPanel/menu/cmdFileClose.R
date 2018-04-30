@@ -3,12 +3,12 @@ cmdFileClose<-function(){
 }
 
 cmdFileCloseAll<-function(){
-  cat('\n------------inside cmdFileCloseAll\n\n')
+  # cat('\n------------inside cmdFileCloseAll\n\n')
   session$sendCustomMessage(
     type = "scrollManager", 
     list( sender= 'fileCmd.close', getAllTabIds=TRUE ) 
   )
-  cat('\n----------------------------\n')
+  # cat('\n----------------------------\n')
 }
 
 observeEvent( input$closeTab, {

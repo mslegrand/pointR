@@ -35,7 +35,7 @@ initialPtrAceOptions<-function(
     gsub("[^[:alnum:]]", "", id)
   }
   id<-sanitizeId(outputId)
-  cat('sanitizeId(outputId)=', id,'\n')
+  # cat('sanitizeId(outputId)=', id,'\n')
   editorVar = paste0("editor__",sanitizeId(outputId))
   acejs = file.path(system.file(package="pointR"), "App/www/Acejs")
   options<-list(
@@ -47,8 +47,8 @@ initialPtrAceOptions<-function(
     docFilePath=docFilePath
   )
   rtv<-paste0('ptRaceInit(',toJSON(options),');')
-  cat('initialPtrAceOptions:: options')
-  print(options)
+  # cat('initialPtrAceOptions:: options')
+  # print(options)
   rtv
 }
 
@@ -67,7 +67,7 @@ shinyAce4Ptr <- function(
     hotkeys=NULL,
     docFilePath=docFilePath
   ){
-  cat('shinyAce4Ptr:: outputId=',outputId,"\n")
+  # cat('shinyAce4Ptr:: outputId=',outputId,"\n")
     saceList<-aceEditor(
       outputId,
       value,

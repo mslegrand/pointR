@@ -24,7 +24,7 @@ type2WidgetChoices<-function(colType){
   if(is.null(choices)){
     choices<-c('radio','picker')
   }
-  cat('colType=',format(colType)," ;choices=", paste(choices, collapse=","),"\n")
+  # cat('colType=',format(colType)," ;choices=", paste(choices, collapse=","),"\n")
   choices  
 }
 

@@ -71,7 +71,7 @@ observeEvent(input$buttonFileOpenHidden,{
 })
 
 openFileNow<-function(fileName){
-  cat("openFileNow:: enter\n")
+  # cat("openFileNow:: enter\n")
   if(length(fileName)>0 && nchar(fileName)>0){ 
     src<-paste(readLines(fileName), collapse = "\n")
     removeFromRecentFiles(fileName)
@@ -80,14 +80,14 @@ openFileNow<-function(fileName){
     if(nchar(src)>0){
       mssg$error<-""
       tabName<-basename(fileName)
-      cat('openFileNow:: fileName=',fileName,"\n")
+      # cat('openFileNow:: fileName=',fileName,"\n")
       addFileTab(title=tabName, txt=src, docFilePath= fileName)
       #here we set the value, 
       # session$sendCustomMessage(
       #   type = "shinyAceExt",
       #   list(id= getAceEditorId(), setValue=src, sender='cmd.openFileNow' )
       # )
-      cat("sendCustomMessage sender='cmd.file.open' aceId=",tabName,"\n" )
+      # cat("sendCustomMessage sender='cmd.file.open' aceId=",tabName,"\n" )
       delay(500,
             session$sendCustomMessage(
               type = "shinyAceExt",
