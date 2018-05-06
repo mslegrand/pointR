@@ -32,8 +32,9 @@ list.entry.at.index<-function(ll, indx){
 }
 
 
-r_pkgs<-c('shiny','shinyjs', 'R.utils', 'svgR', 'shinyAce', 'stringr', 'jsonlite', 'shinyDMDMenu', 'shinyFiles', 'shinythemes', 'colourpicker', 'shinyWidgets', 'bsplus',
-          'shinyjqui')
+r_pkgs<-c('shiny','shinyjs', 'R.utils', 'svgR', 'shinyAce', 'stringr', 'jsonlite', 
+          'shinyDMDMenu', 'shinyFiles', 'shinythemes', 'colourpicker', 'shinyWidgets', 
+          'bsplus','shinyjqui')
 sapply(r_pkgs, library, character.only=TRUE)
 
 #library("RColorBrewer")
