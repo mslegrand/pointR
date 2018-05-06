@@ -27,24 +27,28 @@ initialPtrAceOptions<-function(
   selectionId=NULL, 
   useTabs="Use Soft Tabs",
   cursorId=NULL, 
-  hotkeys=NULL
+  hotkeys=NULL,
+  docFilePath='?'
 )
 {
   sanitizeId <- function(id){
     gsub("[^[:alnum:]]", "", id)
   }
   id<-sanitizeId(outputId)
+  # cat('sanitizeId(outputId)=', id,'\n')
   editorVar = paste0("editor__",sanitizeId(outputId))
   acejs = file.path(system.file(package="pointR"), "App/www/Acejs")
   options<-list(
-    id=sanitizeId(id),
+    id=outputId,
     mode=mode,
     editorVar=editorVar,
     autoComplete='live',
-    acejs=acejs
+    acejs=acejs,
+    docFilePath=docFilePath
   )
   rtv<-paste0('ptRaceInit(',toJSON(options),');')
-  
+  # cat('initialPtrAceOptions:: options')
+  # print(options)
   rtv
 }
 
@@ -60,8 +64,10 @@ shinyAce4Ptr <- function(
     debounce=1000, 
     selectionId=NULL, 
     cursorId=NULL, 
-    hotkeys=NULL
+    hotkeys=NULL,
+    docFilePath=docFilePath
   ){
+  # cat('shinyAce4Ptr:: outputId=',outputId,"\n")
     saceList<-aceEditor(
       outputId,
       value,
@@ -73,7 +79,8 @@ shinyAce4Ptr <- function(
     js2<-initialPtrAceOptions(
       outputId=outputId, value=value, theme=theme, fontSize=fontSize, mode=mode,
       autoComplete=autoComplete, autoCompleteList=autoCompleteList,
-      debounce=debounce, selectionId=selectionId, cursorId=cursorId, hotkeys=hotkeys
+      debounce=debounce, selectionId=selectionId, cursorId=cursorId, hotkeys=hotkeys, 
+      docFilePath=docFilePath
     )
     
     

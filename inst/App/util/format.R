@@ -5,7 +5,10 @@
 #   sapply(tib, function(j)class(tib[[1,j]]))
 # }
 getTibColClass<-function(tib){ #used by fmtTribble
-  sapply(1:ncol(tib), function(j)class(tib[[1,j]]))
+  colTypes<-sapply(1:ncol(tib), function(j)class(tib[[j]]))
+  mats<-sapply(1:ncol(tib), function(j)"matrix"==class(tib[[1,j]]))
+  colTypes[mats]<-'matrix'
+  colTypes
 }
 
 
@@ -59,6 +62,16 @@ toStrPtR0.character<-function(x, ...){
     shQuote(x)
   }
 }
+toStrPtR0.numeric<-function(x, digits=0, ...){
+  if(length(x)==0){
+    "numeric(0)"
+  } else if(length(x)==1){
+    x
+  } else{
+    paste0("c(",paste(x,collapse=", "),")")
+  }
+}
+
 toStrPtR0.matrix<-function(x, digits=0, ...){
   if(length(x)==0){
     "matrix(0,2,0)"
@@ -249,5 +262,5 @@ fmtTibbleList<-function(tibList, mats, as.Tribble){
   # )
   
   
+   #x<-tibble(aa= list(c('a','b')), vv=list(c(0,1)), u=2, m=list(matrix(0,2,0)), z=TRUE, w='hello')
    
-  

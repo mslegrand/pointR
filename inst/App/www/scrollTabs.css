@@ -1,0 +1,125 @@
+.container {
+    position:absolute;
+    top:40px;
+    left:0;
+    right:0px;
+    bottom:40px;
+    /*background: #8888FF;*/
+    border: 3px solid #73AD21;
+    overflow:hidden;
+    /*margin: 0 0  0 0;*/
+    /*padding: 100px 0 0 0;*/
+    height: auto;
+    width:auto;
+	  /*width:100%;*/
+	  /*padding:50px;*/
+}
+.cAceContainer {
+  position: absolute;
+  top:100px;
+  bottom:0;
+  left: 0;
+  right: 60px;
+  overflow: hidden;
+  padding: 0;
+}
+
+.container .tabbable ul {
+    position:absolute;
+    left:0;
+    right:0;
+    top:0;
+    height:35px;
+    white-space: nowrap;
+    /*width:100%;*/
+  	width:3000px;
+  	margin:0 ;
+  	padding:0 ;
+  	overflow:hidden;
+}
+.container .tabbable ul li{
+    margin-left:0;
+  	padding:0;
+  	height:35px;
+  	font-size:12px;
+}
+
+
+/*
+.container .tabbable .tab-content tabpane.active{
+    position:absolute;
+    background: #FF00FF;
+    top:80px;
+    left:0;
+    right:80px;
+    bottom:0;
+    margin:0;
+    height:auto;
+}
+*/
+
+.list li{
+	display:table-cell;
+    position:relative;
+    text-align:center;
+    cursor:grab;
+    cursor:-webkit-grab;
+    color:#efefef;
+    vertical-align:middle;
+}
+
+.scroll-container{
+    position:absolute;
+    background: none;
+    left:0;
+    top:0;
+    right:0;
+    height:44px;
+    /*overflow:hidden;*/
+  	/*min-width:30px;*/
+  	width:100%;
+  	/*margin-left:12px;
+  	margin-right:12px;    
+  	margin-top:0;
+  	margin-bottom:0;*/
+}
+
+.scroller {
+  text-align:center;
+  cursor:pointer;
+  display:none;
+  padding:3px;
+  
+  white-space:nowrap;
+  vertical-align:middle;
+  
+  
+  border-width: 4px;
+  border-style: ridge;
+  color: white;
+  background: #0000CC;
+}
+
+.scroller-right{
+  /*float:right;*/
+  position:absolute;
+  right:1px;
+  top:1px;
+  height:30px;
+  width:30px;
+
+}
+
+.scroller-left {
+  /*float:left;*/
+  position:absolute;
+  left:1px;
+  top:1px;
+  height:30px;
+  width:30px;
+}
+
+.star::after {
+  content:"*";
+  color: #AAFFFF;
+}

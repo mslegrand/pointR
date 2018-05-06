@@ -38,3 +38,5 @@ shinyjs.enableMenu = function(navBarId) {
   $('#'+navBarId).unbind('click', shinyjs.ignoreClick );
 };
 
+
+

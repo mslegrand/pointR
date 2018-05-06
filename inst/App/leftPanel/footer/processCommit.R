@@ -58,7 +58,7 @@ processCommit<-reactive({
       
       session$sendCustomMessage(
         type = "shinyAceExt",
-        list(id= "source", removeAllMarkers='removeAllMarkers', sender='commit.removeMarkers', setOk=TRUE)
+        list(id= getAceEditorId(), removeAllMarkers='removeAllMarkers', sender='commit.removeMarkers', setOk=TRUE)
       )
       
     }, #end of try
@@ -76,7 +76,7 @@ processCommit<-reactive({
           col=as.numeric(m[3])-1
           session$sendCustomMessage(
             type = "shinyAceExt", 
-            list(id= "source", addMarker=c(row,col), sender='commit.addmarker')
+            list(id= getAceEditorId(), addMarker=c(row,col), sender='commit.addmarker')
           )
         }
       }
@@ -89,7 +89,7 @@ processCommit<-reactive({
           col<-1
           session$sendCustomMessage(
             type = "shinyAceExt", 
-            list(id= "source", addMarker=c(row,col), sender='commit.addmarker')
+            list(id= getAceEditorId(), addMarker=c(row,col), sender='commit.addmarker')
           )
         }
       }

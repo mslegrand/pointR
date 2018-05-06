@@ -9,6 +9,9 @@ font-weight: normal;
 font-style: normal;
 }
 
+.irs-min, .irs-max{
+  color: #00FFFF;
+}
 
 h1{
 font-family: 'Arial', cursive;
@@ -177,6 +180,9 @@ overflow-y: auto;
 .radio-bs label{
   color: #00ffff;
 }
+.ptR2 div > .radio-bs label{
+  color: #000000;
+}
 .ptR2 .selectize-input,  
 .ptR2 .selectize-input input,
 .ptR2 .selectize-control.single { 
@@ -227,8 +233,8 @@ width: 110px;
 }
 .cSnippetToolBarContainer{
   position: absolute;
-  top:0;
-  bottom:0;
+  top:140px;
+  bottom:40px;
   right: 5px;
   width: 54px;
   padding:0;
@@ -272,7 +278,13 @@ width: 110px;
     padding:4px;
     text-align: center;
 }
-
+.sponsorPanel {
+  left:20px;
+  right:20px;
+  top:20px;
+  bottom:20px;
+  background: #EEEEEE;
+}
 
 /*#tagValBar-columnEntryUI{
   height: 30px;
@@ -294,7 +306,7 @@ input[type='radio']{
   background-color: yellow;
 }
 
-div .ui-sortable-handle{
+div .radio .ui-sortable-handle{
   color: #44FFFF;
   background-color: #242424;
   width: 45px; 

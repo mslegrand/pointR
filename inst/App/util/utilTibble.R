@@ -44,6 +44,11 @@ extractSafeRowColIndex<-function(tib, rowIndex, colName){
 
 # y=util to discover which colunns might be points
 tagTib<-function(tib, ptColIndex,  rowIndex=nrow(tib), matCol){
+  # cat('-----------------inside tagTib-------------')
+  # cat('ptColIndex=', ptColIndex,"\n")
+  # cat('rowIndex=', rowIndex,"\n")
+  # cat('matCol=', matCol,"\n")
+  # print(tib)
   tmp<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
   pts<-tmp[[rowIndex, ptColIndex]]
   # tmp[[rowIndex,ptColIndex]]<-pts[,1:(matCol-1)]

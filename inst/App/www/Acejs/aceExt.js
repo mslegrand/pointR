@@ -1,6 +1,6 @@
 // ace customizations
-var ptr_HighlightedLines=[];
-
+var ptr_HighlightedLines=[]; // todo: integrate back into editoR
+                            // using $el.data('highlightedLines')
 var helpSvgRQuery = function(topic, address){
   var mssg= {queryTopic:topic, queryAddress:address };
   Shiny.onInputChange("helpSvgRMssg", mssg );
@@ -54,7 +54,7 @@ var loadPtrSnippetFile = function(id) {
 //Used exclusively for swapping colors of svgR keywords
 function getStyleRule(name) {
     var ix, 
-    sheet= $('#shinyAceStyle')[0]['sheet']; //revisit this
+    sheet= $('#shinyAceStyle')[0].sheet; //['sheet']; //revisit this
     for (ix=0; ix<sheet.cssRules.length; ix++) {
       if (sheet.cssRules[ix].selectorText === name){
         return sheet.cssRules[ix].style;
@@ -111,36 +111,77 @@ function nextBookMark(ed){
                 
                 ed.gotoLine(nextRow);
               }
-}            
+}   
+
 
 Shiny.addCustomMessageHandler(
   "shinyAceExt",
       function(data) { 
+        console.log(
+          '------------Entering  aceExt.js customMessageHandler-------------------------------- '
+        );
         var id = data.id;
+        console.log('ace id =' + JSON.stringify(id));
+        
+        if(id.length===0){ // nothing to process
+          Shiny.onInputChange('messageFromAce', 
+          {
+             code : "",
+             sender : data.sender,
+             id : 0,
+             //dirty: false,
+             isSaved: true,
+             docFilePath: "",
+             rnd : randomString(5)
+          });
+          return false;
+        }
+        
         var $el = $('#' + id);
         var editor = $el.data('aceEditor'); 
-        var HighlightedLines;
         var Range = ace.require("ace/range").Range;
         var ud =  editor.getSession().getUndoManager();
         var sender=data.sender;
         var auxValue="";
         
-        //$el.droppable("enable");
+        var HighlightedLines;
         
         
-        //makeEditorDropabble(id);
+        
+        console.log('id=' + id );
+        console.log('sender =' + sender);
+        if(!!editor){
+          console.log('found editor');
+        } else {
+          console.log('editor is null');
+        }
+        
+        if(!!data.setDocFilePath){ 
+          data.oldFilePath=$el.data('docFilePath');
+          console.log('setting  docFilePath=' + data.setDocFilePath);
+          $el.data('docFilePath', data.setDocFilePath);
+          //ud.markClean();
+          //$el.data('docFileSaved',-1);
+        }
+        
+        if(!!data.setDocFileSaved){
+          ud=editor.getSession().getUndoManager();
+          // $el.data('docFileSaved',ud.$undoStack.length);
+          ud.markClean();
+        }
+        
+        //console.log( '$el.data(docFilePath)=',JSON.stringify( $el.data('docFilePath') ));
         
         if(!!data.ptRMode){ 
           editor.getSession().setMode({path: "ace/mode/ptr", v: Date.now()});
           editor.setBehavioursEnabled(true);
         }
+        
         if (!!data.addMarker ){
           var pos = data.addMarker;
           var row1 = pos[0]; 
           var col1 = pos[1]; 
           var row2 = row1+1; 
-          
-          
           var mid= editor.getSession().addMarker(
               new Range(row1, 0, row2, 1), 
               'ace_error-marker', 
@@ -165,26 +206,6 @@ Shiny.addCustomMessageHandler(
           editor.focus();
         }
         
-        /*
-        if(!!data.tbDeleteAllBookMarks){
-          editor.getSession().clearBreakpoints();
-        }
-        
-        if(!!data.nextBookMark){
-            //check out https://github.com/ajaxorg/ace/issues/3351
-              // get the current cursor pos
-              var curRow=editor.getCursorPosition().row;// getCursorPosition().row
-              var breakpoints=editor.getSession().getBreakpoints().slice(curRow+1);
-              // iterate over breakpoints starting at curRow+1 and 
-              // stop and process if any
-              var nextRow=breakpoints.indexOf('ace_breakpoint');
-              if(nextRow>=0){
-                var rng=new Range(curRow,0,curRow+1+nextRow,0);
-                editor.revealRange(rng, true);
-              }
-              editor.focus();
-        }
-        */
         
         if(!!data.tabSize){
           //editor.getSession().setUseSoftTabs(true);
@@ -197,6 +218,15 @@ Shiny.addCustomMessageHandler(
             rule.color=element;
            });
         }
+        
+        if(!!data.toggleWhiteSpace){
+          editor.setShowInvisibles(!editor.getShowInvisibles());
+        }
+        
+        if(!!data.toggleTabType){
+          editor.session.setUseSoftTabs(!editor.session.getUseSoftTabs());
+        }
+        
         if(!!data.snippets){
           var snippetManager = ace.require("ace/snippets").snippetManager;
           var m = snippetManager.files[editor.session.$mode.$id];
@@ -207,17 +237,11 @@ Shiny.addCustomMessageHandler(
           m.snippets = snippetManager.parseSnippetFile(m.snippetText, m.scope);
           snippetManager.register(m.snippets);
         }
-        if(!!data.toggleWhiteSpace){
-          //console.log(JSON.stringify(data))
-          editor.setShowInvisibles(!editor.getShowInvisibles());
-        }
-        if(!!data.toggleTabType){
-          editor.session.setUseSoftTabs(!editor.session.getUseSoftTabs());
-        }
+        
+ 
         if(!!data.setfocus){
           editor.focus();
         }
-        
         
         if(!!data.showKeyboardShortCuts){
           ace.config.loadModule(
@@ -247,22 +271,27 @@ Shiny.addCustomMessageHandler(
           Shiny.onInputChange('messageFromAce', 
           {
              code :  editor.getSession().getValue(),
-             dirty: editor.getSession().getUndoManager().dirtyCounter,
-             sender : data.sender
+             //dirty: editor.getSession().getUndoManager().dirtyCounter,
+             isSaved: ud.isClean(),
+             sender : data.sender,
+             id:id
           });
        }
        
-       if(!!data.setClean){
-         editor.getSession().getUndoManager().dirtyCounter=0;
+/*       if(!!data.setClean){
+         //editor.getSession().getUndoManager().dirtyCounter=0;
          Shiny.onInputChange('messageFromAce', 
           {
              code :  editor.getSession().getValue(),
              sender : data.sender,
-             dirty: editor.getSession().getUndoManager().dirtyCounter,
+             id : id,
+             //dirty: editor.getSession().getUndoManager().dirtyCounter,
+             isSaved: ud.isClean(),
              rnd : randomString(5)
           });
        }
-       
+*/
+
        //---------------------------------
         if(!!data.replacement){
           //console.log("\n\nEntering data.replacement");
@@ -319,7 +348,9 @@ Shiny.addCustomMessageHandler(
               {
                  code : editor.getSession().getValue(),
                  sender : data.sender,
-                 dirty: editor.getSession().getUndoManager().dirtyCounter,
+                 id : id,
+                 //dirty: editor.getSession().getUndoManager().dirtyCounter,
+                 isSaved: ud.isClean(),
                  selector: data.selector,
                  rnd : randomString(5)
               } );   
@@ -330,6 +361,7 @@ Shiny.addCustomMessageHandler(
           
           }        
         }
+        
         //-------------------
         if(!!data.setOk){
           //console.log("\ndata.setOk");
@@ -342,36 +374,14 @@ Shiny.addCustomMessageHandler(
           */
           
         }
+        
         //----------------------------
         
         if(!!data.setValue){
-          
-          /*
-          console.log('data.setValue');
-          console.log(JSON.stringify(data.setValue));
-          console.log('getValue fin: editor.getSession().getUndoManager()$undoStack.length=' + 
-                editor.getSession().getUndoManager().$undoStack.length);
-          console.log('getValue fin: editor.getUndoManager()getSession().$ok=' + 
-                editor.getSession().getUndoManager().$ok);
-          */
-          //console.log('value = ' + JSON.stringify(code));
           editor.getSession().setValue(data.setValue);
           if(!!data.ok){
-            //console.log('!!data.ok==TRUE');
             editor.getSession().getUndoManager().setOk();
           }
-          
-          /*
-          console.log('setValue fin: editor.getSession().getUndoManager()$undoStack.length=' + 
-                editor.getSession().getUndoManager().$undoStack.length);
-          console.log('setValue fin: editor.getUndoManager()getSession().$ok=' + 
-                JSON.stringify(editor.getSession().getUndoManager().$ok));
-          console.log('editor.getSession().getUndoManager().dirtyCounter=' + 
-                JSON.stringify(editor.getSession().getUndoManager().dirtyCounter));
-          console.log('value set = ' + JSON.stringify(editor.getSession().getValue()));
-          console.log('setValue fin: sender=' + data.sender); 
-          console.log(data.sender);
-          */
           if(['cmd.openFileNow','cmd.file.new'].indexOf(sender)>=0){
             editor.getSession().clearBreakpoints();
           }
@@ -379,14 +389,17 @@ Shiny.addCustomMessageHandler(
           {
              code : editor.getSession().getValue(),
              sender : data.sender,
-             dirty: editor.getSession().getUndoManager().dirtyCounter,
+             id : id,
+             //dirty: editor.getSession().getUndoManager().dirtyCounter,
+             isSaved: ud.isClean(),
              rnd : randomString(5)
           });
         }
-        //----------------------------------------
+        
+        //------------getValue----------------------------
         
         if(!!data.getValue){
-          //console.log('get.Value');
+          
           if(!!data.rollBack){
             ud=editor.getSession().getUndoManager();
             if( ud.$ok.length>0 ){ // only replace if we can roll back to a good state
@@ -394,14 +407,6 @@ Shiny.addCustomMessageHandler(
               editor.getSession().setUndoManager(ud); //probably not necessary
             }
           }
-          /*
-          console.log('getValue fin: editor.getSession().getUndoManager()$undoStack.length=' + 
-                editor.getSession().getUndoManager().$undoStack.length);
-          console.log('getValue fin: editor.getUndoManager()getSession().$ok=' + 
-                JSON.stringify(editor.getSession().getUndoManager().$ok));
-          console.log('getValue fin: sender=' + data.sender);
-          */
-          
           auxValue='';
           if(!!data.auxValue){
             auxValue=data.auxValue;
@@ -411,8 +416,48 @@ Shiny.addCustomMessageHandler(
           {
              code :  editor.getSession().getValue(),
              sender : data.sender,
-             dirty: editor.getSession().getUndoManager().dirtyCounter,
+             id : id,
+             //dirty: editor.getSession().getUndoManager().dirtyCounter,
+             isSaved: ud.isClean(),
              auxValue: auxValue,
+             rnd : randomString(5)
+          });
+        }
+        
+        //------------get saved status----------------------------
+        // return status of saved
+        if(!!data.getDocFileSaved){
+          Shiny.onInputChange('messageFromAce', 
+          {
+             code :  editor.getSession().getValue(),
+             sender : data.sender,
+             id : id,
+             dirty: editor.getSession().getUndoManager().dirtyCounter,
+             //saved: $el.data('docFileSaved')==editor.getSession().getUndoManager().$undoStack.length,
+             isSaved: ud.isClean(),
+             docFilePath: $el.data('docFilePath'),
+             rnd : randomString(5)
+          });
+        }
+        
+        //------------getDoc-------------------
+        if(!!data.getDoc){ 
+          //var undoLen=editor.getSession().getUndoManager().$undoStack.length;
+          //var saveLen= $el.data('docFileSaved');
+          if(! data.oldFilePath){
+            data.oldFilePath='?';
+          }
+          console.log('getDoc:: docFileSaved=' +JSON.stringify(ud.isClean()) );
+          Shiny.onInputChange('messageFromAce', 
+          {
+             code :  editor.getSession().getValue(),
+             sender : data.sender,
+             id : id,
+             //dirty: editor.getSession().getUndoManager().dirtyCounter,
+             //saved: undoLen===saveLen,
+             isSaved: ud.isClean(),
+             docFilePath: $el.data('docFilePath'),
+             priorFilePath: data.oldFilePath,
              rnd : randomString(5)
           });
         }

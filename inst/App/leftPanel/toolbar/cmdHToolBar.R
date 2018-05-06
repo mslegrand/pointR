@@ -7,6 +7,9 @@ observeEvent( input$tbSaveFile ,{
   cmdFileSave()
 }, ignoreInit = TRUE)
 
+observeEvent( input$tbCloseFile ,{
+  cmdFileClose()
+}, ignoreInit = TRUE)
 
 hBaRR<-reactiveValues(
   observers=list()
@@ -18,7 +21,7 @@ observeEvent( request$sender, {
         input[[tbId]],{
           session$sendCustomMessage(
             type = "shinyAceExt",    
-            list(id= "source", tbMssg=cmd)
+            list(id= getAceEditorId(), sender='fileCmd.toolbar', tbMssg=cmd)
           )
         }, ignoreInit=TRUE)
       )

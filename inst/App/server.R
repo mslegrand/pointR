@@ -13,11 +13,22 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
 # Reactive values----------
   request<-reactiveValues(
     code=NULL,
-    name=NULL,
     sender='startup',
-    refresh=NULL, # to be used to force a code refresh???
-    inputHandlers=NULL
+    tabs=NULL
   )
+  
+  setTabRequest<-function(sender, tabs){
+    request$sender<-sender
+    request$tabs<-tabs
+  }
+  getSender<-reactive({request$sender})
+  peekTab<-reactive( {request$tabs[1]} )
+  popTab<-reactive({
+    tab<-request$tabs[1]
+    request$tabs<-request$tabs[-1]
+    tab
+  })
+  
   
   getCode<-reactive({request$code})
   mssg<-reactiveValues(
@@ -32,9 +43,75 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   triggerRefresh<-function(sender, rollBack=TRUE, auxValue=FALSE){ # to be used to force a code refresh???
     session$sendCustomMessage(
       type = "shinyAceExt",
-      list(id= "source", sender=sender, getValue=TRUE, rollBack=rollBack, auxValue=auxValue)
+      list(id= getAceEditorId(), sender=sender, getValue=TRUE, rollBack=rollBack, auxValue=auxValue)
     )
   }
+  
+  sendPtRManagerMessage<-function(id, sender, ...){ 
+    session$sendCustomMessage( type = "ptRManager", 
+        c( list(id = id, sender=sender), list(...) )
+    )
+  }
+  
+  sendFileTabsMessage<-function(id, sender, ...){ 
+    #cat( "sendFileTabsMessage:: id=",id," sender=",sender,"\n" )
+    data<- c( list(value = id, sender=sender), list(...) )
+    #print(data)
+    session$sendCustomMessage( type = "scrollManager", 
+       c( list(value = id, sender=sender), list(...) )
+    )
+  }
+  
+  
+  pages<- reactiveValues(
+    fileName='',
+    fileNameCount=1,
+    tabIdCount=1
+  )
+  
+  
+  getNextAnonymousFileName<-function(){
+    newFileName<-paste0("Anonymous ", pages$fileNameCount)
+    pages$fileNameCount<-pages$fileNameCount+1
+    #newTabId<-"source"
+    newFileName
+  }
+  
+  getNextTabId<-function(){
+    tabId<-paste0("PTR-TABID", pages$tabIdCount)
+    pages$tabIdCount<-pages$tabIdCount+1
+    #newTabId<-"source"
+    tabId
+  }
+  
+  
+  
+  # tabName2AceId<-function(tabName){
+  #   if(!is.null(tabName) && nchar(tabName)>0){
+  #     tabName<-paste0("ACE", tabName)
+  #     tabName<-gsub(' ','', tabName)
+  #     tabName<-gsub('\\.','_',tabName)
+  #   } else {
+  #     NULL
+  #   }
+  # }
+  # tabName2TabId<-function(tabName){
+  #   if(!is.null(tabName) && nchar(tabName)>0){
+  #     tabName<-paste0("TAB", tabName)
+  #     tabName<-gsub(' ','', tabName)
+  #     tabName<-gsub('\\.','_',tabName)
+  #   } else {
+  #     NULL
+  #   }
+  # }
+  
+  aceID2TabID<-function(aceId){
+    sub("ACE","TAB",aceId)
+  }
+  tabID2aceID<-function(tabId){
+    sub("TAB","ACE",tabId)
+  }
+  
   
   getLeftMenuCmd<-reactive({input$editNavBar$item})
   getRightMenuCmd<-reactive({input$plotNavBar$item})
@@ -50,9 +127,9 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   
   
   shinyFileChoose(input, "buttonFileOpenHidden", session=session, roots=c(wd="~") ) #hidden
-  shinyFileChoose(input, "buttonSnippetOpen", session=session, roots=c(wd="~"),  filetypes=c('', 'snp') ) #hidden
-  shinyFileSave(input, "buttonFileSaveHidden", session=session, roots=c(wd="~"), filetypes=c('R','svgR') ) #hidden
-  shinyFileSave(input, "buttonExportSVGHidden", session=session, roots=c(wd="~"),filetypes=c('svg') ) #hidden
+  shinyFileChoose(input, "buttonSnippetOpen",    session=session, roots=c(wd="~"),  filetypes=c('', 'snp') ) #hidden
+  shinyFileSave(input, "buttonFileSaveHidden",   session=session, roots=c(wd="~"),  filetypes=c('R','svgR') ) #hidden
+  shinyFileSave(input, "buttonExportSVGHidden",  session=session, roots=c(wd="~"),  filetypes=c('svg') ) #hidden
 
   # Reactive expressions------------- 
   showGrid<-reactive({displayOptions$showGrid})
@@ -80,10 +157,10 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   source("leftPanel/tabs/serverFileTabs.R",          local=TRUE) 
   
 #------------------rightPanel--------------------------------
+  source("rightPanel/serverPlotSelectDB.R",          local=TRUE)
   source("rightPanel/footer/serverFooterRight.R",    local=TRUE) 
-  
   source("rightPanel/header/serverEdTib.R",          local=TRUE)
-  source("rightPanel/header/serverEdAsset.R",          local=TRUE)
+  source("rightPanel/header/serverEdAsset.R",        local=TRUE)
   source("rightPanel/mid/serverRowDND.R",            local=TRUE)
   source("rightPanel/mid/serverPlotBarPoints.R",     local=TRUE) 
   source("rightPanel/mid/serverPlotBarTagValues.R",  local=TRUE)  
@@ -92,6 +169,7 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   source("rightPanel/mid/serverLog.R",               local=TRUE) 
   source("rightPanel/mid/serverMouseClicks.R",       local=TRUE)
   source("rightPanel/menu/cmdNewColumn.R",           local=TRUE)
+  source("rightPanel/menu/cmdNewAsset.R",            local=TRUE)
   source("rightPanel/menu/cmdSetMatColMax.R",        local=TRUE)
   source("rightPanel/menu/cmdDeleteColumn.R",        local=TRUE)
   source("rightPanel/menu/serverPlotBar.R",          local=TRUE)
@@ -109,6 +187,7 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   source("leftPanel/menu/cmdFileSaveAs.R",          local=TRUE)  
   source("leftPanel/menu/cmdFileSave.R",            local=TRUE)  
   source("leftPanel/menu/cmdFileNew.R",             local=TRUE)  
+  source("leftPanel/menu/cmdFileClose.R",           local=TRUE)  
   source("leftPanel/menu/cmdFileOpen.R",            local=TRUE)  
   source("leftPanel/menu/cmdFileQuit.R",            local=TRUE)  
   source("leftPanel/menu/cmdFileExportSvg.R",       local=TRUE) 

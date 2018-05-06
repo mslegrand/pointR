@@ -66,7 +66,7 @@ observeEvent(input$dismiss,{
   session = getDefaultReactiveDomain()
   session$sendCustomMessage(
     type = "shinyAceExt", 
-    list(id="source", setfocus='focus') 
+    list(id=getAceEditorId(), sender='fileCmd.dismiss', setfocus='focus') 
   )
 })
 

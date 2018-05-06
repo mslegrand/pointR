@@ -47,10 +47,11 @@ openFileDlgSelector<-function(){
   #   getCurrentDir(), getCurrentFile(), sep="/"
   # )
   #cat("reactive openFileDlgSelector:: sendCustomMessage\n")
-  session$sendCustomMessage(
-    type = "ptRManager", 
-    list(id= "source", openFile=TRUE, sender='cmd.openFileNow' )
-  )
+  sendPtRManagerMessage( id= getAceEditorId(), sender='cmd.openFileNow', openFile=TRUE)
+  # session$sendCustomMessage(
+  #   type = "ptRManager", 
+  #   list(id= getAceEditorId(), openFile=TRUE, sender='cmd.openFileNow' )
+  # )
   # try(fileName<-dlgOpen(
   #   default=fullPath,
   #   title = "Select which R file to Open", 
@@ -70,17 +71,28 @@ observeEvent(input$buttonFileOpenHidden,{
 })
 
 openFileNow<-function(fileName){
-  #cat("openFileNow:: enter\n")
+  # cat("openFileNow:: enter\n")
   if(length(fileName)>0 && nchar(fileName)>0){ 
     src<-paste(readLines(fileName), collapse = "\n")
+    removeFromRecentFiles(fileName)
     setCurrentFilePath(fileName) # should this be replaced by shinyFiles???
     setwd(dirname(fileName))  # should this be replaced by shinyFiles???
     if(nchar(src)>0){
       mssg$error<-""
+      tabName<-basename(fileName)
+      # cat('openFileNow:: fileName=',fileName,"\n")
+      addFileTab(title=tabName, txt=src, docFilePath= fileName)
       #here we set the value, 
-      session$sendCustomMessage(
-        type = "shinyAceExt", 
-        list(id= "source", setValue=src, sender='cmd.openFileNow' )
+      # session$sendCustomMessage(
+      #   type = "shinyAceExt",
+      #   list(id= getAceEditorId(), setValue=src, sender='cmd.openFileNow' )
+      # )
+      # cat("sendCustomMessage sender='cmd.file.open' aceId=",tabName,"\n" )
+      delay(500,
+            session$sendCustomMessage(
+              type = "shinyAceExt",
+              list(id=  getAceEditorId(), sender='cmd.openFileNow', setValue= src, setDocFileSaved=TRUE, ok=TRUE)
+            )
       )
       
     }

@@ -5,7 +5,14 @@
 returnValue4ModuleEdTib<-callModule(
   module=moduleEdTib,
   id="tagValBar",
-  name=reactive({ if(hasError()){ errorPanelTag } else{ getTibName() }}),
+  name=reactive({ 
+    if(hasError()){ 
+      rtv<-errorPanelTag } else{ 
+        rtv<-getTibName() 
+      }
+    # cat('Input name to tibEditor is=',format(rtv),'\n')
+    rtv
+  }),
   nameChoices=getRightPanelChoices,
   getRowIndex=reactive({            if( getTibEditState()==TRUE ){ getTibRow() } else { NULL } }),
   getTibNRow=reactive({             if( getTibEditState()==TRUE ){ getTibNRow() } else { NULL } }),
@@ -49,8 +56,9 @@ getSafeSelection<-function(selection, choices){ #anybody using this???
 # })
 
 observeEvent(returnValue4ModuleEdTib$selectedWidget(), {
-  #cat("-----------returnValue4ModuleEdTib$selectedWidget\n")
-  if( getTibEditState()==TRUE && !is.null(returnValue4ModuleEdTib$selectedWidget)){
+  if( getTibEditState()==TRUE && !is.null( returnValue4ModuleEdTib$selectedWidget() )){
+    # cat("\n-----------returnValue4ModuleEdTib$selectedWidget--------------------\n")
+    # cat("selectedWidget=",format( returnValue4ModuleEdTib$selectedWidget() )," tabId=",format(input$pages),"\n\n")
     updateWidgetChoicesRow( selectedWidget=returnValue4ModuleEdTib$selectedWidget())
   }
 })
@@ -94,6 +102,7 @@ observeEvent(returnValue4ModuleEdTib$entryValue(),{
     if(length(entry)==0 || is.na(entry) ){
       return(NULL)
     }
+    cat('getColumnType()=',getColumnType(),'\n')
     if(getColumnType()=='point'){
       entry<-which(entry==c('point','matrix'))
       if(length(entry)){
@@ -102,6 +111,20 @@ observeEvent(returnValue4ModuleEdTib$entryValue(),{
     } else {
       if(isNumericString(entry)){
         entry<-as.numeric(entry)
+      } else if (getColumnType() %in% 
+          c("character.list", "character.list.2", "character.list.vec",
+          "numeric.list", "numeric.list.2", "integer.list.2", "numeric.list.vec",
+          "integer.list.vec")
+      ){
+        bad<-TRUE
+        tryCatch({
+         entry<-eval(parse(text=entry)) #TODO!!!!!!!!!!!!! Better Error check???
+         bad<-FALSE
+        }, error=function(e){})
+        if(bad){
+          triggerRefresh('cmd.commit') # this works but move to the last row.
+          return(NULL) #TODO !!!! force reset dropdown value in modulueEdTib (refresh or commit?)
+        }
       }
       name<-getTibName()
       newPtDefs<-getPtDefs()
@@ -116,14 +139,16 @@ observeEvent(returnValue4ModuleEdTib$entryValue(),{
           rowIndex<=nrow(tib)
       )
       sender='applyTibEdit'
-      
-      newPtDefs$tib[[getTibName()]][[rowIndex,columnName ]]<-entry
-      updateAceExtDef(newPtDefs, sender=sender, selector=list( name=name, rowIndex=rowIndex, columnName=columnName   ) )
+     
+      if(!identical(newPtDefs$tib[[getTibName()]][[rowIndex,columnName ]],entry)){
+        newPtDefs$tib[[getTibName()]][[rowIndex,columnName ]]<-entry
+        updateAceExtDef(newPtDefs, sender=sender, selector=list( name=name, rowIndex=rowIndex, columnName=columnName   ) )
+      }
     }
   } 
 },label='EdTib-rtv-entryValue', ignoreNULL = TRUE)
 
 
-observeEvent( returnValue4ModuleEdTib$newColumn,{
+observeEvent( returnValue4ModuleEdTib$newColumn(),{
   showModal( addNewColModal() )
 }, label='EdTib-rtv-newColumn', ignoreInit = TRUE, ignoreNULL = TRUE)

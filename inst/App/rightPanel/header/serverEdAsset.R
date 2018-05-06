@@ -9,8 +9,10 @@ returnValue4ModuleEdAsset<-callModule(
 #name
 observeEvent(returnValue4ModuleEdAsset$name(),{
   name<-returnValue4ModuleEdAsset$name()
-  if( name==getTibName() ){ return(NULL) } #bail if moduleEdAsset did not change name
+  
+  if( is.null(getTibName())  || name==getTibName() ){ return(NULL) } #bail if moduleEdAsset did not change name
   if( !(name %in% c(errorPanelTag) )){
+    # cat('returnValue4ModuleEdAsset$name()= ', name, '\n')
     if(name==transformTag){
       updateSelected(name=transformTag)
     } else  {
@@ -18,4 +20,9 @@ observeEvent(returnValue4ModuleEdAsset$name(),{
       resetSelectedTibbleName(tibs=tibs, name=name)
     }
   }
-})
+}
+,ignoreInit = TRUE)
+
+observeEvent( returnValue4ModuleEdAsset$newAsset(),{
+  showModal( addNewAssetModal() )
+}, label='EdTib-rtv-newColumn', ignoreInit = TRUE, ignoreNULL = TRUE)

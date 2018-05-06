@@ -66,7 +66,7 @@ function SnippetToolBaR(containerId, listId, buttonDownId, buttonUpId, itemHeigh
 
     
   SnippetToolBaR.prototype.onUpClick = function() {
-    console.log("tbUp click");
+    //console.log("tbUp click");
   	$(this.downId).fadeIn('slow');
     var delta = Math.min(-this.getTopPos(), $(this.containerId).outerHeight()-2*this.itemHeight );
     if(-this.getTopPos()<= $(this.containerId).outerHeight()-2*this.itemHeight ){
