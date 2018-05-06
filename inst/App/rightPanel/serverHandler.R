@@ -9,14 +9,15 @@ type2WidgetChoices<-function(colType){
          point=c('radio','picker'),
          character=c('radio','picker'), #'switch', 'toggle'),
          character.list= c('radio','picker'), #, "multiInput", 'picker', 'checkbox'), #range
-         character.list.2= c('slider'), #, "multiInput", 'picker', 'checkbox'), #range
+         character.list.2= c('slider','radio','picker'), #, "multiInput", 'picker', 'checkbox'), #range
          character.list.vec= c('radio','picker'), #, "multiInput", 'picker', 'checkbox'), #range
          integer=c('radio','picker','slider',  "numeric"), #,'knob'
          numeric=c('radio','picker','slider',  "numeric"), #,'knob'
-         numeric.list=c('radio','picker','slider',  "numeric"), #,'knob'
+         numeric.list=c('radio','picker'), #,'slider',  "numeric"), #,'knob'
          numeric.list.2=c('slider'), #,'knob'
          integer.list.2=c('slider'),
-         numeric.list.vec=c('radio','picker','slider',  "numeric"), #,'knob'
+         numeric.list.vec=c('radio','picker'), #,'slider',  "numeric"), #,'knob'
+         integer.list.vec=c('radio','picker'), #,'slider',  "numeric"),
          colourable=c('radio','picker', 'colourable') , #'spectrum', 'colorSelectorInput' ),
          other=c('radio','picker'),
          other.list=c('radio','picker')
@@ -137,69 +138,3 @@ getPointMax<-reactive({
 })
 
 
-# getHandler<-reactive({
-#   # if(!is.null(colName)){
-#   #   cat("serverSelection.R:: getHandler: colName=",colName,"\n")
-#   #   if(is.null(columnValues)){
-#   #     cat("columnValues is NULL")
-#   #     print(getTib())
-#   #   }
-#   #   print(columnValues)
-#   # }
-#   # else{
-#   #   cat("colName is NULL\n")
-#   # }
-#   
-#   if(!is.null(columnValues)){
-#     if(is.character(columnValues) && isColorString(columnValues)){
-#       # cat('column is colourable\n\n')
-#       return('colourable')
-#     } else if (isPoints(columnValues)){
-#       # cat('Column',colName,' is Points\n')
-#       return('points')
-#     }
-#   }
-#   NULL
-# })
-
-# setHandlerValue<-function(hValue){ # hValue==NULL iff is 'default'
-#   handler<-getHandler()
-#   # if(handler=='default') bail
-#   if(is.null(handler)) {
-#     return(NULL)
-#   }
-#   # if(!is.null(hValue) && hValue!=handler){
-#   #   return(NULL)
-#   # }
-#   if(is.null(request$inputHandler)){
-#     request$inputHandle<-list()
-#   }
-#   name<-getTibName()
-#   colName<-getTibColumnName()
-#   # if tibName not in request$inputHandler list, add it with vector as arg
-#   if(is.null(request$inputHandler[[name]])){ 
-#     request$inputHandler[[name]]<- list()
-#   }
-#   request$inputHandler[[name]][[colName]]<-hValue
-# }
-
-
-# #-- hidden output
-# output$handler<-reactive({
-#   rtv<-getHandler()
-#   if(is.null(rtv)){
-#     rtv<-'default'
-#   }
-#   rtv
-# })
-# 
-# outputOptions(output, "handler", suspendWhenHidden=FALSE)
-# 
-# output$handlerValue<-reactive({
-#   rtv<-getHandlerValue()
-#   if(is.null(rtv)){
-#     rtv<-'default'
-#   }
-#   rtv
-# })
-# outputOptions(output, "handlerValue", suspendWhenHidden=FALSE)

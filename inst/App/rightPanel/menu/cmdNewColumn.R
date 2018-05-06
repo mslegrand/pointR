@@ -23,24 +23,39 @@ addNewColModal <- function(errMssg=NULL) {
 }
 
 observeEvent(input$commitNewCol, {
-    #checks 
+     
+  badExpr<-function(txt){
+    rtv<-TRUE
+    tryCatch({
+      eval(parse(text=txt))
+      rtv<-FALSE
+    }, 
+    error = function(e) {})
+    rtv
+  }
+  
+  treatAs<-input$modalColTreatAs
+  newVal<-input$modalAttrValue
+  #checks
     if(!grepl(pattern = "^[[:alpha:]]", input$modalAttrName)){ # check name syntax
       showModal(addNewColModal( errMssg="Invalid Column Name: must begin with a character") )
     } else if( input$modalAttrName %in% names(getTib()) ){ # check name uniqueness
       showModal(addNewColModal( errMssg="Invalid Column Name: this name is already taken!") )
     } else if(!grepl(pattern = "^[[:graph:]]", input$modalAttrValue) ){  # check value uniqueness
       showModal(addNewColModal( errMssg="Invalid Column Value: must begin with printable character other than space") )
+    } else if( treatAs=='an expression' && badExpr( input$modalAttrValue )==TRUE ){
+      showModal(addNewColModal( errMssg="Unable to evaluate expression") )
     } else { 
       #add name to tib
       newPtDefs<-getPtDefs()
       newColName<-input$modalAttrName
       
-      treatAs<-input$modalColTreatAs
-      newVal<-input$modalAttrValue
+      #treatAs<-input$modalColTreatAs
+      #newVal<-input$modalAttrValue
       if(treatAs=='a number'){
         newVal<-as.numeric(newVal)
       } else if ( treatAs=='an expression'){
-        newVal<-list(eval(parse(text=newVal)))
+        newVal<-list(eval(parse(text=newVal))) # to do: validate!!!
       }
 
       newPtDefs$tib[[getTibName()]]<-add_column(newPtDefs$tib[[getTibName()]], 

@@ -149,7 +149,24 @@ moduleEdTib<-function(input, output, session,
       # cat("getTibEntryChoices()=",format(getTibEntryChoices()),"\n")
       if(!is.null(widget) && !is.null(getTibEntry()) && !is.null(getTibEntryChoices())){ 
             selected<-getTibEntry()
-            choices<-sort(unique(unlist(getTibEntryChoices())))
+            cat("length(selected)= ", length(selected), "\n")
+            if(length(selected)>1 ){
+              selected<-paste("c(", paste(format(selected), collapse="," ),')')
+            }
+            cat("length(selected)= ", length(selected), "\n")
+            cat("(selected)= ", format(selected), "\n")
+            choices<-getTibEntryChoices()
+            choices<-lapply(choices, function(val){
+              if(length(val)>1){
+                val<-paste('c(', paste(format(val), collapse="," ),')')
+              } 
+              val
+            })
+
+            choices<-sort(unique(unlist( choices )))
+                #getTibEntryChoices() 
+            #)
+            #))
             # cat('inside moduleEdTib::output$colEntryUI if widget==...\n')
             if(widget=='radio'){
               # cat('xxx widget=', format(widget),"\n")
