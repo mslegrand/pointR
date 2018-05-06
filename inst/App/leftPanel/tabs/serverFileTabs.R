@@ -10,6 +10,12 @@ tabTitleRfn<-function(title, tabId, docFilePath){
   )
 }
 
+closeTabNow<-function(tabId2X){
+  plot$selections.tib<-filter(plot$selections.tib, tabId!=tabId2X)
+  handler$choices<-filter(handler$choices, tabId!=tabId2X)
+  removeTab(inputId = "pages", tabId2X)
+}
+
 addFileTab<-function(title, txt,  docFilePath='?'){
   tabId<-getNextTabId()
   aceId<-tabID2aceID(tabId)

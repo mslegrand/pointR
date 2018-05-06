@@ -111,7 +111,8 @@ observeEvent(input$messageFromAce, {
             tabId<-popTab()
             if(request$sender %in% c('fileCmd.close', 'fileCmd.quit')){
               addToRecentFiles(input$messageFromAce$docFilePath)
-              removeTab(inputId = "pages", tabId)
+              #removeTab(inputId = "pages", tabId)
+              closeTabNow(tabId)
             } else { 
               addToRecentFiles(input$messageFromAce$priorFilePath)
               # !!!TODO add docFilePath to recentfiles
@@ -128,7 +129,8 @@ observeEvent(input$messageFromAce, {
           tabId<-popTab()
           if(request$sender%in% c('fileCmd.close', 'fileCmd.quit') ){
             addToRecentFiles(input$messageFromAce$docFilePath)
-            removeTab(inputId = "pages", tabId)
+            # removeTab(inputId = "pages", tabId)
+            closeTabNow(tabId)
           }
         }
       }

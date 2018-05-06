@@ -39,7 +39,8 @@ observeEvent(input$buttonFileSaveHidden,{
       
       tabId<-popTab()
       # cat('tabId=',format(tabId),"\n")
-      removeTab(inputId = "pages", tabId)
+      #removeTab(inputId = "pages", tabId)
+      closeTabNow(tabId)
       # TODO!!!  add oldPath to recentFiles
       # cat('tab should be gone by now')
       #removeTab(inputId = "pages", request$closeTab)
