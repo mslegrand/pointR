@@ -29,4 +29,5 @@ Suggests:
 RoxygenNote: 6.0.1
 Remotes: 
   mslegrand/shinyDMDMenu,
-  mslegrand/svgR
+  mslegrand/svgR,
+  Yang-Tang/shinyjqui
