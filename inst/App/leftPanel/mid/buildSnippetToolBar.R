@@ -18,7 +18,7 @@ buildSnippetToolBar<-function(){
     d<-tags$li( class="snippetButton", draggable=TRUE, iconImage , color='blue',
            "data-snippet"= n[3]
       ) %>% bs_embed_tooltip(title = hint)
-    jqui_draggabled(
+    jqui_draggable(
       d,options=list(
         opacity= 0.5,
         stroke= "#FFFFFF",

@@ -93,7 +93,7 @@ shinyAce4Ptr <- function(
     ptrList<-list(
       tags$script(type="text/javascript", HTML(js2))
     )
-    saceList[[2]]<-jqui_droppabled(
+    saceList[[2]]<-jqui_droppable(
         saceList[[2]],
         #selector ="#source", method='enable',
         options=list(
