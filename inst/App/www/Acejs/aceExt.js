@@ -177,6 +177,14 @@ Shiny.addCustomMessageHandler(
           editor.setBehavioursEnabled(true);
         }
         
+        if(!!data.getMode){
+          var mode = editor.getSession().$modeId;
+          mode = mode.substr(mode.lastIndexOf('/') + 1);
+          console.log('mode is ' + mode);
+          
+        }
+
+        
         if (!!data.addMarker ){
           var pos = data.addMarker;
           var row1 = pos[0]; 
@@ -205,6 +213,7 @@ Shiny.addCustomMessageHandler(
           }
           editor.focus();
         }
+        
         
         
         if(!!data.tabSize){
