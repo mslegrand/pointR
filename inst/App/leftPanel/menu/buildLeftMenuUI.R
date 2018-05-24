@@ -6,7 +6,13 @@ buildLeftMenu<-function(version){
     menuBarId="editNavBar",
     menuDropdown(
       "File", 
-      shinyDMDMenu::menuItem("New"),
+      shinyDMDMenu::menuDropdown(
+        "New File",
+        shinyDMDMenu::menuItem('ptR script'),
+        shinyDMDMenu::menuItem('R script'),
+        shinyDMDMenu::menuItem('R markdown', value='newRmd')
+      ),
+      menuDivider(),
       shinyDMDMenu::menuItem("Open"),
       menuDropdown("Recent Files"),
       menuDivider(),

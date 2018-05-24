@@ -7,8 +7,12 @@ observeEvent( input$editNavBar, {
   #   fileCmd<-"New"
   # }
   if(length(fileCmd)>0){
-    if( fileCmd=="New"){ #-----new
+    if( fileCmd=="ptR script" || fileCmd=='R script'){ #-----new
       cmdFileNew()
+      dirtyDMDM(session, "editNavBar")
+    }
+    if(fileCmd=="newRmd"){ #-----open 
+      cmdFileNewRmd()
       dirtyDMDM(session, "editNavBar")
     }
     if(fileCmd=="Open"){ #-----open 

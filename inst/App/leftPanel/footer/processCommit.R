@@ -1,4 +1,4 @@
-src2sourceType<-function(src){
+src2sourceType<-function(src){  #not used
   lines<-strsplit(src,"\n") 
   lines<-lines[[1]]
   svgRPos<-grep("^\\s*svgR\\(",lines)
