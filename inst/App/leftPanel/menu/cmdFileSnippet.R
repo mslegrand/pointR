@@ -1,6 +1,6 @@
 
 cmdSnippetFileOpen<-reactive({
-  sendPtRManagerMessage( id= getAceEditorId() , sender='cmd.snippet.file.open', openFile=TRUE)
+  sendPtRManagerMessage(  sender='cmd.snippet.file.open', openFile=TRUE)
   # session$sendCustomMessage(
   #   type = "ptRManager", 
   #   list(id= getAceEditorId(), openFile=TRUE, sender='cmd.snippet.file.open' )
@@ -14,10 +14,11 @@ observeEvent(input$buttonSnippetOpen,{
   if(length(fp.dt)>0 && nrow(fp.dt)){
     datapath<-as.character(fp.dt$datapath[1])
     snippetText<-paste(readLines(datapath), collapse = "\n")
-    session$sendCustomMessage(
-      type = "shinyAceExt",    
-      list(id= getAceEditorId(), sender='fileCmd.openSnippets', snippets=snippetText)
-    )
+    # session$sendCustomMessage(
+    #   type = "shinyAceExt",    
+    #   list(id= getAceEditorId(), sender='fileCmd.openSnippets', snippets=snippetText)
+    # )
+    updateAceExt( id= getAceEditorId(), sender='fileCmd.openSnippets', snippets=snippetText )
   }
 })
 

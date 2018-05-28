@@ -320,10 +320,10 @@ Shiny.addCustomMessageHandler(
     if(!!data.selected){
       stabs.scrollIntoView(data.selected);
     }
-    if(!!data.value){ //aka tabId
-      console.log("data.value="+ data.value);
+    if(!!data.tabId){ //aka tabId
+      console.log("data.tabId="+ data.tabId);
       if(!!data.title){
-        stabs.resetTitleGivendataValue( data.title, data.value);
+        stabs.resetTitleGivendataValue( data.title, data.tabId);
         stabs.reAdjust();
       }
       console.log("data.savedStatus=" + JSON.stringify(data.savedStatus));

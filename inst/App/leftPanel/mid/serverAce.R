@@ -12,13 +12,13 @@ observeEvent(input$messageFromAce, {
       request$sender<-sender
       clearErrorMssg()
       
-      # cat("input$messageFromAce$id=" , format(input$messageFromAce$id), "\n")
+      cat("input$messageFromAce$id=" , format(input$messageFromAce$id), "\n")
       
       if(!is.null(input$messageFromAce$selector) && !is.null(input$messageFromAce$code) ){
         reqSelector<-input$messageFromAce$selector
         updateSelected4Ace(reqSelector)
       }
-      # cat('request$sender=',format(request$sender),"\n")
+      cat('request$sender=',format(request$sender),"\n")
       if(length(input$messageFromAce$isSaved)>0){ 
         aceId<-input$messageFromAce$id
         editOption$.saved <- input$messageFromAce$isSaved
@@ -26,9 +26,19 @@ observeEvent(input$messageFromAce, {
         # cat("set editOption$.saved=",editOption$.saved,"\n")
       }
       # cat('22 ace request$sender=',format(request$sender),"\n")
+      if(sender=='cmd.tabChange'){
+        #browser()
+        request$mode=input$messageFromAce$mode
+        cat('mode=', request$mode, '\n')
+        if(request$mode=='markdown'){
+          panels$sourceType==rmdPanelTag
+          processKnit()
+          return(NULL)
+        } 
+      }
       if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset', 'cmd.openFileNow', 'cmd.saveFileNow', 'cmd.file.new', 'cmd.tabChange')){
         # cat('33 request$sender=',format(request$sender),"\n")
-        # cat('Ace: invoking processCommit\n')
+        cat('Ace: invoking processCommit\n')
         processCommit()
         # cat('returning from processCommit\n')
         # cat('getTibName()=',format(getTibName()),"\n")
@@ -98,7 +108,7 @@ observeEvent(input$messageFromAce, {
              tabId<-aceID2TabID(id)
              # cat('11: tabId=',format(tabId),"\n")
              # cat("executing sendPtRManagerMessage( id=id,  sender=sender, saveFile=TRUE,  type='R', tabId=tabId)\n")
-             sendPtRManagerMessage( id=id,  sender=sender, saveFile=TRUE,  type='R', tabId=tabId)
+             sendPtRManagerMessage(   sender=sender, saveFile=TRUE,  type='R', tabId=tabId)
           } else { 
             # write file
             # cat('serverAce:: writeLines\n')
@@ -119,10 +129,11 @@ observeEvent(input$messageFromAce, {
               #title=as.character(span(basename(docFilePath ), span( " " , class='icon-cancel')  ))
               title=as.character(tabTitleRfn( title=basename(docFilePath ), tabId=tabId, docFilePath=docFilePath ))
               # cat("title=",title,"\n")
-              session$sendCustomMessage(
-                type = "scrollManager", 
-                list( title=title, value=tabId ) 
-              )
+              # session$sendCustomMessage(
+              #   type = "scrollManager", 
+              #   list( title=title, value=tabId ) 
+              # )
+              sendFileTabsMessage(title=title, tabId=tabId)
             }
           }
         } else { #already saved
@@ -144,9 +155,17 @@ updateAceExtDef<-function(newPtDef, sender, selector=list() ){
   
   replacementList<-ptDef2ReplacementList(name, newPtDef, getCode() ) #name not used!!!
   if( length(replacementList)>0 ){
+    data<-list(id= getAceEditorId(), replacement=replacementList, selector=selector, sender=sender, ok=1)
+    lapply(data, function(x){
+      if(any(unlist(lapply(x, is.na )))){
+        print(data)
+        stop("encounterd an NA")
+      }
+    })
     session$sendCustomMessage(
       type = "shinyAceExt",
-      list(id= getAceEditorId(), replacement=replacementList, selector=selector, sender=sender, ok=1)
+      #list(id= getAceEditorId(), replacement=replacementList, selector=selector, sender=sender, ok=1)
+      data
     )
   }
 }
@@ -155,12 +174,25 @@ updateAceExt<-function(id, sender, ... ){
   data<-list(...)
   if(length(data)>0){
     data<-c(list(id= id, sender=sender), data )
+    # cat("id=",format(id), ", class(id)=", class(id),"\n")
+    # cat("sender=",format(sender),"\n")
     # cat("data=",format(data),"\n")
     # print(data)
-    session$sendCustomMessage(
-      type = "shinyAceExt",
-      data
-    )
+
+    
+    if(length(id)>0 && nchar(id)>0){
+      lapply(data, function(x){
+        if(is.na(x)){
+          print(data)
+          stop("encounterd an NA")
+        }
+      })
+      session$sendCustomMessage(
+        type = "shinyAceExt",
+        data
+      )
+    }
+    
   }
 }
 

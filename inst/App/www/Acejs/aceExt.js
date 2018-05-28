@@ -121,7 +121,7 @@ Shiny.addCustomMessageHandler(
           '------------Entering  aceExt.js customMessageHandler-------------------------------- '
         );
         var id = data.id;
-        console.log('ace id =' + JSON.stringify(id));
+        
         
         if(id.length===0){ // nothing to process
           Shiny.onInputChange('messageFromAce', 
@@ -136,7 +136,7 @@ Shiny.addCustomMessageHandler(
           });
           return false;
         }
-        
+        console.log('ace id =' + JSON.stringify(id));
         var $el = $('#' + id);
         var editor = $el.data('aceEditor'); 
         var Range = ace.require("ace/range").Range;
@@ -177,12 +177,11 @@ Shiny.addCustomMessageHandler(
           editor.setBehavioursEnabled(true);
         }
         
-        if(!!data.getMode){
-          var mode = editor.getSession().$modeId;
-          mode = mode.substr(mode.lastIndexOf('/') + 1);
-          console.log('mode is ' + mode);
-          
-        }
+        //if(!!data.getMode){
+        // var mode = editor.getSession().$modeId;
+        //  mode = mode.substr(mode.lastIndexOf('/') + 1);
+        //  console.log( 'mode is = ' + JSON.stringify( mode ) );
+        //}
 
         
         if (!!data.addMarker ){
@@ -420,6 +419,8 @@ Shiny.addCustomMessageHandler(
           if(!!data.auxValue){
             auxValue=data.auxValue;
           }
+          var mode = editor.getSession().$modeId;
+          mode = mode.substr(mode.lastIndexOf('/') + 1);
           
           Shiny.onInputChange('messageFromAce', 
           {
@@ -427,6 +428,7 @@ Shiny.addCustomMessageHandler(
              sender : data.sender,
              id : id,
              //dirty: editor.getSession().getUndoManager().dirtyCounter,
+             mode: mode,
              isSaved: ud.isClean(),
              auxValue: auxValue,
              rnd : randomString(5)

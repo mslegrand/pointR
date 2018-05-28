@@ -1,4 +1,4 @@
-src2sourceType<-function(src){  #not used
+src2sourceType<-function(src){  #not used !!
   lines<-strsplit(src,"\n") 
   lines<-lines[[1]]
   svgRPos<-grep("^\\s*svgR\\(",lines)
@@ -55,11 +55,11 @@ processCommit<-reactive({
       
  
       #remove all removeAllMarkers from ace since all sys go.
-      
-      session$sendCustomMessage(
-        type = "shinyAceExt",
-        list(id= getAceEditorId(), removeAllMarkers='removeAllMarkers', sender='commit.removeMarkers', setOk=TRUE)
-      )
+      updateAceExt( id= getAceEditorId(), sender='commit.removeMarkers', removeAllMarkers='removeAllMarkers', setOk=TRUE)
+      # session$sendCustomMessage(
+      #   type = "shinyAceExt",
+      #   list(id= getAceEditorId(), removeAllMarkers='removeAllMarkers', sender='commit.removeMarkers', setOk=TRUE)
+      # )
       
     }, #end of try
     error=function(e){ 
@@ -74,10 +74,11 @@ processCommit<-reactive({
         if(length(m)==3){
           row=as.numeric(m[2])-1
           col=as.numeric(m[3])-1
-          session$sendCustomMessage(
-            type = "shinyAceExt", 
-            list(id= getAceEditorId(), addMarker=c(row,col), sender='commit.addmarker')
-          )
+          # session$sendCustomMessage(
+          #   type = "shinyAceExt", 
+          #   list(id= getAceEditorId(), addMarker=c(row,col), sender='commit.addmarker')
+          # )
+          updateAceExt(id= getAceEditorId(), addMarker=c(row,col), sender='commit.addmarker' )
         }
       }
       if(str_detect(err,' not found')){
@@ -87,10 +88,11 @@ processCommit<-reactive({
           srcs<-str_split(src,"\n")[[1]]
           row<-min(which(str_detect(srcs,notFound)))-1
           col<-1
-          session$sendCustomMessage(
-            type = "shinyAceExt", 
-            list(id= getAceEditorId(), addMarker=c(row,col), sender='commit.addmarker')
-          )
+          # session$sendCustomMessage(
+          #   type = "shinyAceExt", 
+          #   list(id= getAceEditorId(), addMarker=c(row,col), sender='commit.addmarker')
+          # )
+          updateAceExt(id= getAceEditorId(), addMarker=c(row,col), sender='commit.addmarker' )
         }
       }
       setErrorMssg(err)

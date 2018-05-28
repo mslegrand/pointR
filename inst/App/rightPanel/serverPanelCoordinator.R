@@ -1,4 +1,5 @@
 
+
 panels<-reactiveValues(
   #left='source' ,   #to be used as editor name later, for connecting to right graphics
   #  sourceType can be either svgPanelTag or RPanelTag
@@ -91,11 +92,14 @@ getTibEditState<-reactive({
 # serverMouseClicks.R, (as barName)
 # serverLog.R (as barName)
 getRightMidPanel<-reactive({
+  cat('panels$sourceType=', panels$sourceType,"\n")
   if(hasError()){
     # cat('getRightMidPanel:: Error=', getErrorMssg(),"\n")
     rtv<-errorPanelTag
   } else if (panels$sourceType==RPanelTag){
     rtv<-RPanelTag
+  } else if (panels$sourceType==rmdPanelTag){
+    rtv<-rmdPanelTag
   } else {
      rtv<-getPlotState()
   }
@@ -111,6 +115,8 @@ getRightPanelChoices<-reactive({ # includes names of tibs
     choices<-errorPanelTag
   } else if( getSourceType()==RPanelTag){
     choices=RPanelTag
+  } else if( getSourceType()==rmdPanelTag){
+    choices=c( rmdPanelTag, RPanelTag )
   } else {
     ptDefs<-getPtDefs()
     choices<-names(getPtDefs()$tib)

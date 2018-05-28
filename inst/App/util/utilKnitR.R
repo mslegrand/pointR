@@ -29,5 +29,7 @@ stroke.width=3
 )
 ````
 
-After making changes, simply click the *commit* button to see the results."
+After making changes, simply click the *commit* button to see the results.
+
+"
 

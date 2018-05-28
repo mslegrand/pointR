@@ -19,7 +19,7 @@ getSelIndex<-reactive({
 })
 
 observeEvent(getTibNRow(),{
-  sendPtRManagerMessage( id= getAceEditorId() , sender='tibNrow', rowCountChange=TRUE)
+  sendPtRManagerMessage(  sender='tibNrow', rowCountChange=TRUE)
 })
 
 getTibName<-reactive({selectedTibble$name}) #allow to be null only if tib is null  
@@ -40,11 +40,11 @@ atLeast2Rows<-reactive({
 })
 
 getTibRow<-reactive({
-  # cat('getTibRow()=',format( selectedTibble$rowIndex),"\n");
+  cat('getTibRow()=',format( selectedTibble$rowIndex),"\n");
   selectedTibble$rowIndex})
 
 getTibMatCol<-reactive({ 
-  # cat('getTibMatCol::', format(selectedTibble$matCol), "\n")
+  cat('getTibMatCol::', format(selectedTibble$matCol), "\n")
   selectedTibble$matCol 
 })
 getTibPtsNCol<-reactive({ sapply(getTibPts(),ncol)}  )
@@ -111,7 +111,7 @@ resetSelectedTibbleName<-function(tibs, name){
         if(length(ptIndxs)>0){
           ptColNames<-names(tib)[ptIndxs]
           #ptColIndex<-ptIndxs[1] # we arbritarily pick the first point col to select, and we use it to obtain matCol
-          if(selectedTibble$columnName %in% ptColNames){
+          if(!is.null(selectedTibble$columnName) && selectedTibble$columnName %in% ptColNames){
             ptColName<-selectedTibble$columnName
           } else {
             ptColName<-head(ptColNames,1)

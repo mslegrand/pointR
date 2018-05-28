@@ -34,7 +34,7 @@ list.entry.at.index<-function(ll, indx){
 
 r_pkgs<-c('shiny','shinyjs', 'R.utils', 'svgR', 'shinyAce', 'stringr', 'jsonlite', 
           'shinyDMDMenu', 'shinyFiles', 'shinythemes', 'colourpicker', 'shinyWidgets', 
-          'bsplus','shinyjqui')
+          'bsplus','shinyjqui', 'knitr')
 sapply(r_pkgs, library, character.only=TRUE)
 
 #library("RColorBrewer")
@@ -46,6 +46,7 @@ transformTag<-"Transforms"
 errorPanelTag<-"errorPanel"
 RPanelTag='RPanel'
 svgPanelTag<-'svgPanel'
+rmdPanelTag<-'rmdPanel'
 tibTag<-'tib'
 
 getSVGWH<-function(){ c(650,620) } #this should be ultimately place in another file

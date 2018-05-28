@@ -5,7 +5,7 @@ cmdFileExportSvg<-function(){
   } else {
     svgFileName<-"unnamed.svg"
   }
-  sendPtRManagerMessage( id= getAceEditorId() , sender='cmd.exportSVGNow', exportSVG=TRUE)
+  sendPtRManagerMessage(  sender='cmd.exportSVGNow', exportSVG=TRUE)
   # session$sendCustomMessage( #triggers click of buttonFileSaveHidden
   #   type = "ptRManager", 
   #   list(id= getAceEditorId(), exportSVG=TRUE, sender='cmd.exportSVGNow' )

@@ -47,7 +47,7 @@ openFileDlgSelector<-function(){
   #   getCurrentDir(), getCurrentFile(), sep="/"
   # )
   #cat("reactive openFileDlgSelector:: sendCustomMessage\n")
-  sendPtRManagerMessage( id= getAceEditorId(), sender='cmd.openFileNow', openFile=TRUE)
+  sendPtRManagerMessage(  sender='cmd.openFileNow', openFile=TRUE)
   # session$sendCustomMessage(
   #   type = "ptRManager", 
   #   list(id= getAceEditorId(), openFile=TRUE, sender='cmd.openFileNow' )
@@ -89,10 +89,11 @@ openFileNow<-function(fileName){
       # )
       # cat("sendCustomMessage sender='cmd.file.open' aceId=",tabName,"\n" )
       delay(500,
-            session$sendCustomMessage(
-              type = "shinyAceExt",
-              list(id=  getAceEditorId(), sender='cmd.openFileNow', setValue= src, setDocFileSaved=TRUE, ok=TRUE)
-            )
+            # session$sendCustomMessage(
+            #   type = "shinyAceExt",
+            #   list(id=  getAceEditorId(), sender='cmd.openFileNow', setValue= src, setDocFileSaved=TRUE, ok=TRUE)
+            # )
+            updateAceExt(id=  getAceEditorId(), sender='cmd.openFileNow', setValue= src, setDocFileSaved=TRUE, ok=TRUE )
       )
       
     }

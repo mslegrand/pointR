@@ -16,10 +16,11 @@ cmdFileNew<-function(){
   #cat("sendCustomMessage sender='cmd.file.new' aceId=",aceId,"\n" )
   #updateSelected(columnName='x') #kludge for getting ensuring asset selection will be x
   delay(500, 
-    session$sendCustomMessage(
-      type = "shinyAceExt",
-      list(id=  getAceEditorId(), sender='cmd.file.new', setValue= codeTemplate, setDocFileSaved=TRUE, ok=TRUE)
-    ) 
+    # session$sendCustomMessage(
+    #   type = "shinyAceExt",
+    #   list(id=  getAceEditorId(), sender='cmd.file.new', setValue= codeTemplate, setDocFileSaved=TRUE, ok=TRUE)
+    # ) 
+    updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', setValue= codeTemplate, setDocFileSaved=TRUE, ok=TRUE )
   )
 
   # session$sendCustomMessage(
@@ -48,11 +49,12 @@ cmdFileNewRmd<-function(){
   #setSourceType(sourceType=svgPanelTag)
   #cat("sendCustomMessage sender='cmd.file.new' aceId=",aceId,"\n" )
   #updateSelected(columnName='x') #kludge for getting ensuring asset selection will be x
-  delay(500, 
-        session$sendCustomMessage(
-          type = "shinyAceExt",
-          list(id=  getAceEditorId(), sender='cmd.file.new', setValue= src, setDocFileSaved=TRUE, ok=TRUE)
-        ) 
+  delay(500,
+        updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', setValue= src, setDocFileSaved=TRUE, ok=TRUE )
+        # session$sendCustomMessage(
+        #   type = "shinyAceExt",
+        #   list(id=  getAceEditorId(), sender='cmd.file.new', setValue= src, setDocFileSaved=TRUE, ok=TRUE)
+        # ) 
   )
   
   # session$sendCustomMessage(
