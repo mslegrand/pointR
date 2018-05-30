@@ -15,6 +15,10 @@ observeEvent( input$editNavBar, {
       cmdFileNewRmd()
       dirtyDMDM(session, "editNavBar")
     }
+    if(fileCmd=='newIOSlides'){
+      cmdNewIOSlides()
+      dirtyDMDM(session, "editNavBar")
+    }
     if(fileCmd=="Open"){ #-----open 
       cmdFileOpen()
       dirtyDMDM(session, "editNavBar")
@@ -105,6 +109,10 @@ observeEvent( input$editNavBar, {
         entry=fileCmd, 
         newLabel = newLabel, 
         type = "menuItem")
+      dirtyDMDM(session, "editNavBar")
+    }
+    if(fileCmd=='print'){
+      updateAceExt( id= getAceEditorId(), sender='fileCmd.print', tbMssg='print' )
       dirtyDMDM(session, "editNavBar")
     }
     
