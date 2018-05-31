@@ -26,6 +26,8 @@ function simpleStringify (object){
 }
 
 
+
+
 /*
 var loadPtrSnippetFile = function(id) {
     if (!id || snippetManager.files[id])
@@ -112,6 +114,12 @@ function nextBookMark(ed){
                 ed.gotoLine(nextRow);
               }
 }   
+
+function getAceMode(ed){
+  var mode = editor.getSession().$modeId;
+  mode = mode.substr(mode.lastIndexOf('/') + 1);
+  return mode;
+}
 
 
 Shiny.addCustomMessageHandler(
@@ -392,6 +400,12 @@ Shiny.addCustomMessageHandler(
           }
           if(['cmd.openFileNow','cmd.file.new'].indexOf(sender)>=0){
             editor.getSession().clearBreakpoints();
+          }
+          if(['cmd.file.new'].indexOf(sender)>=0){
+            // select NULL
+            //if(getAceMode(editor)=='ptr'){
+              editor.find('NULL');
+            //}
           }
           Shiny.onInputChange('messageFromAce', 
           {
