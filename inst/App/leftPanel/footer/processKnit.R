@@ -5,7 +5,7 @@ processKnit<-reactive({
   panels$sourceType==rmdPanelTag
   if(length(src)==1 && nchar(src)>0){
     tryCatch({
-      knit2html(text = src, fragment.only = TRUE, quiet = TRUE)
+      knit2html(text = src, fragment.only = FALSE, quiet = TRUE)
       setSourceType(sourceType=rmdPanelTag)
      } , #end of try
       error=function(e){ 

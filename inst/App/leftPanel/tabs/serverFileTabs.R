@@ -23,7 +23,11 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr'){
   aceId<-tabID2aceID(tabId)
   # cat("addFileTab:: docFilePath",docFilePath,"\n")
   # !!!TODO add docFilePath to recentFiles (if !='?')
-  
+  if(mode=='ptr'){
+    divClass="cAceContainer"
+  } else {
+    divClass="cAceRmdContainer"
+  }
   appendTab(
     inputId = "pages",
     tabPanel( #tabId,
@@ -33,7 +37,7 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr'){
       #span(tabId,  actionButton(inputId=paste0("but",tabId), label="", class='icon-cancel') ), 
       #checkboxInput(tabId, tabId, FALSE),
       div(
-        class="cAceContainer",
+        class=divClass,
         overflow= "hidden",
         shinyAce4Ptr(
             outputId = aceId,  value=txt,

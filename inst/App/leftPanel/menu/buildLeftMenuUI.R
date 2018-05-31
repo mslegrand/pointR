@@ -10,7 +10,8 @@ buildLeftMenu<-function(version){
         "New File",
         shinyDMDMenu::menuItem('ptR script'),
         shinyDMDMenu::menuItem('R script'),
-        shinyDMDMenu::menuItem('R markdown', value='newRmd')
+        shinyDMDMenu::menuItem('R markdown doc', value='newRmd')#,
+        #shinyDMDMenu::menuItem('R ioslides doc', value='newIOSlides')
       ),
       menuDivider(),
       shinyDMDMenu::menuItem("Open"),
@@ -24,6 +25,8 @@ buildLeftMenu<-function(version){
       menuDivider(),
       shinyDMDMenu::menuItem("Close", value="close"),
       shinyDMDMenu::menuItem("Close All", value="closeAll"),
+      menuDivider(),
+      shinyDMDMenu::menuItem("Print", value="print"),
       menuDivider(),
       shinyDMDMenu::menuItem("Quit", value="quit")
     ),

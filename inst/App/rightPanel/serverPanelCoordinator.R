@@ -159,7 +159,7 @@ observeEvent(atLeast2Rows(),{
   }
 })
 
-observeEvent(getAceEditorId(),{
+observeEvent(c(getAceEditorId(), getMode()),{
   id<-getAceEditorId()
   # cat("\nobserveEvent getAceEditorId:: id='",format(id),"'\n");
   # cat("\nobserveEvent getAceEditorId:: class(id)='",class(id),"'\n");
@@ -177,11 +177,19 @@ observeEvent(getAceEditorId(),{
     hideElement("midRightPanels")
   } else {
     #cat("showinging TopRightPanel\n")
-    showElement("TopRightPanel")
-    showElement("snippetToolBarContainer")
+    if(request$mode=='ptr'){
+      showElement("TopRightPanel")
+      showElement("snippetToolBarContainer")
+      showElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble
+      addClass( id= 'midRightPanels', class='ctop140')
+    } else {
+      removeClass( id= 'midRightPanels', class='ctop140')
+      hideElement("TopRightPanel")
+      hideElement("snippetToolBarContainer")
+      hideElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble
+    }
     showElement("aceToobarTop1")
     showElement("aceToobarTop2")
-    showElement("useTribble")
     showElement("commit")
     showElement("aceTabSet")
     showElement("midRightPanels")

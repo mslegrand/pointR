@@ -38,7 +38,7 @@ observeEvent(input$messageFromAce, {
       }
       if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset', 'cmd.openFileNow', 'cmd.saveFileNow', 'cmd.file.new', 'cmd.tabChange')){
         # cat('33 request$sender=',format(request$sender),"\n")
-        cat('Ace: invoking processCommit\n')
+        #cat('Ace: invoking processCommit\n')
         processCommit()
         # cat('returning from processCommit\n')
         # cat('getTibName()=',format(getTibName()),"\n")
