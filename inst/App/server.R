@@ -31,6 +31,10 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   })
   
   
+  getMode<-reactive({
+    request$mode
+  })
+  
   getCode<-reactive({
     if(request$mode=='ptr'){
       request$code
