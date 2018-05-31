@@ -112,7 +112,7 @@ shinyUI(
           buildRightMenu(),
           uiOutput("BottomRightPanel"),
           uiOutput("TopRightPanel"),
-          div( id="midRightPanels", class="cMidPanel",
+          div( id="midRightPanels", class="cMidPanel ctop140",
             div( id='svgOutPanel',  class="cSvgOut", uiOutput("MidRightPanel")),
             div( id='rowOutPanel',  class='cRowOut', 
                  uiOutput("LeftMidRightPanel"),visibility='hidden',
