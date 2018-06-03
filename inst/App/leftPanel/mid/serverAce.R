@@ -66,10 +66,12 @@ observeEvent(input$messageFromAce, {
             if(length(choices)>0 && length(selectedTibble$tabId)>0  && selectedTibble$tabId!='whatthefuck'){
               # cat( "store( tabId=",selectedTibble$tabId,")\n")
               tmp2<-isolate(reactiveValuesToList(selectedTibble, all.names=TRUE))
-              tmp2[is.null(tmp2)]<-NA
+              tmp2[sapply(tmp2,is.null)]<-NA
               #plotSelect.tib<-rbind(plotSelect.tib, tmp )
               tmp1<-filter(plot$selections.tib, tabId!=selectedTibble$tabId)
-              plot$selections.tib<-bind_rows(tmp1, tmp2)
+              cat("serverAce::  plot$selections.tib<-bind_rows(tmp1, tmp2)\n")
+              
+              plot$selections.tib<-bind_rows(tmp1, as.tibble(tmp2))
               # cat("========   ",paste(plot$selections.tib$tabId,collapse=", "),"\n")
             }
             row.tib<-filter(plot$selections.tib, tabId==input$pages)
@@ -150,24 +152,30 @@ observeEvent(input$messageFromAce, {
 }, priority = 90, ignoreNULL = TRUE, ignoreInit = TRUE)
 
 updateAceExtDef<-function(newPtDef, sender, selector=list() ){
-
-  newPtDef$tib<-pts2Integers(newPtDef$tib )
-  
-  replacementList<-ptDef2ReplacementList(name, newPtDef, getCode() ) #name not used!!!
-  if( length(replacementList)>0 ){
-    data<-list(id= getAceEditorId(), replacement=replacementList, selector=selector, sender=sender, ok=1)
-    lapply(data, function(x){
-      if(any(unlist(lapply(x, is.na )))){
-        print(data)
-        stop("encounterd an NA")
-      }
-    })
-    session$sendCustomMessage(
-      type = "shinyAceExt",
-      #list(id= getAceEditorId(), replacement=replacementList, selector=selector, sender=sender, ok=1)
-      data
-    )
+  if(!is.null(getCode())){
+      cat("newPtDef:\n")
+    print(newPtDef)
+    cat("getCode()\n")
+    print(getCode())
+    newPtDef$tib<-pts2Integers(newPtDef$tib )
+    
+    replacementList<-ptDef2ReplacementList(name, newPtDef, getCode() ) #name not used!!!
+    if( length(replacementList)>0 ){
+      data<-list(id= getAceEditorId(), replacement=replacementList, selector=selector, sender=sender, ok=1)
+      lapply(data, function(x){
+        if(any(unlist(lapply(x, is.na )))){
+          print(data)
+          stop("encounterd an NA")
+        }
+      })
+      session$sendCustomMessage(
+        type = "shinyAceExt",
+        #list(id= getAceEditorId(), replacement=replacementList, selector=selector, sender=sender, ok=1)
+        data
+      )
+    }
   }
+
 }
 
 updateAceExt<-function(id, sender, ... ){
