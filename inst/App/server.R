@@ -12,7 +12,7 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   
 # Reactive values----------
   request<-reactiveValues(
-    code=NULL,
+    code=NULL, 
     mode='ptr',
     sender='startup',
     tabs=NULL
@@ -53,13 +53,19 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   
   mssg<-reactiveValues(
     error="",
-    R_output=""
+    capturedOutput=""
   ) 
   setErrorMssg<-function(errMssg){ mssg$error<-errMssg }
   clearErrorMssg<-function(){ mssg$error<-"" }
   hasError<-reactive({ nchar(mssg$error)>0 })
   getErrorMssg<-reactive({ mssg$error })
-  
+  setCapturedMssg<-function(capturedMssg)({ 
+    print(capturedMssg)
+    mssg$capturedOutput<-capturedMssg
+  })
+  getCapturedMssg<-reactive({ 
+    mssg$capturedOutput
+  })
   triggerRefresh<-function(sender, rollBack=TRUE, auxValue=FALSE){ # to be used to force a code refresh???
     # session$sendCustomMessage(
     #   type = "shinyAceExt",
