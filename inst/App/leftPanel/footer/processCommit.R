@@ -14,7 +14,11 @@ src2sourceType<-function(src){  #not used !!
 processCommit<-reactive({
   clearErrorMssg()
   src<-getCode() #input$source #------ace editor
-  if(length(src)==1 && nchar(src)>0){
+  cat('length(src)=', length(src),'\n')
+  if(length(src)==1){
+    cat('nchar(src)=',nchar(src),"\n")
+  }
+  if(length(src)==1){
     ptRList<-getPtDefs()$tib
     tryCatch({
       lines<-strsplit(src,"\n") 
@@ -35,32 +39,37 @@ processCommit<-reactive({
       
       if(length(svgRPos)==0){ # just R code I guess
         # capture capture output as mssg
+        env<-new.env()
         
-        output<-captureOutput(eval(parse(text=src)))
+        #output<-c(">")
+        #tryCatch({
+        output<-lapply(lines, function(line){
+            captureOutput(eval(parse(text=line), envir=env))
+        })
+        #}
+        #,
+        # error=function(e){ 
+        #   e<-c(e,traceback())
+        # }
+        #)
         output<-paste( output, collapse="\n" )
         output<-paste("Output:",output,sep="\n")
-        
-        #setSourceType(sourceType='logPanel') #no error, just R code
+       
         setSourceType(sourceType=RPanelTag) #no error, just R code
-        
-        base::stop(output , call.=FALSE, domain=NA);
-      } else {
+        setCapturedMssg(output)
+        #base::stop(output , call.=FALSE, domain=NA);
+      } else { # presume to be svgR code
         setSourceType(sourceType=svgPanelTag) #SVG code
-      }
-      # passed so far
-      # next check if it can be run
-      parsedCode<-parse(text=src) 
-      eval(parsedCode)
-      # no error occured so all systems go!!!!
+        # next check if it can be run
+        parsedCode<-parse(text=src) 
+        eval(parsedCode)
       
+      # passed so far
  
+      # no error occured so all systems go!!!!
       #remove all removeAllMarkers from ace since all sys go.
       updateAceExt( id= getAceEditorId(), sender='commit.removeMarkers', removeAllMarkers='removeAllMarkers', setOk=TRUE)
-      # session$sendCustomMessage(
-      #   type = "shinyAceExt",
-      #   list(id= getAceEditorId(), removeAllMarkers='removeAllMarkers', sender='commit.removeMarkers', setOk=TRUE)
-      # )
-      
+      }
     }, #end of try
     error=function(e){ 
       #Error handler for commit
@@ -74,10 +83,6 @@ processCommit<-reactive({
         if(length(m)==3){
           row=as.numeric(m[2])-1
           col=as.numeric(m[3])-1
-          # session$sendCustomMessage(
-          #   type = "shinyAceExt", 
-          #   list(id= getAceEditorId(), addMarker=c(row,col), sender='commit.addmarker')
-          # )
           updateAceExt(id= getAceEditorId(), addMarker=c(row,col), sender='commit.addmarker' )
         }
       }
@@ -88,10 +93,6 @@ processCommit<-reactive({
           srcs<-str_split(src,"\n")[[1]]
           row<-min(which(str_detect(srcs,notFound)))-1
           col<-1
-          # session$sendCustomMessage(
-          #   type = "shinyAceExt", 
-          #   list(id= getAceEditorId(), addMarker=c(row,col), sender='commit.addmarker')
-          # )
           updateAceExt(id= getAceEditorId(), addMarker=c(row,col), sender='commit.addmarker' )
         }
       }
