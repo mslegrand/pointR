@@ -200,6 +200,15 @@ overflow-y: auto;
 #tagValBar-entryValue .formControl.selectized {
   width:260px;
 }
+#edTransform-transformType.nav.nav-pills{
+  background-color:#000011;
+}
+#edTransform-transformType.nav.nav-pills li a{
+  color:#00FFFF;
+}
+#edTransform-transformType.nav.nav-pills li a:hover{
+  color:#000000;
+}
 .ptR2 .selectize-dropdown { 
   font-size: 12px;  
   line-height: 12px;
