@@ -58,7 +58,6 @@ processCommit<-reactive({
         setSourceType(sourceType=svgPanelTag) #SVG code
       }
         # passed so far
-   
         # no error occured so all systems go!!!!
         #remove all removeAllMarkers from ace since all sys go.
         updateAceExt( id= getAceEditorId(), sender='commit.removeMarkers', removeAllMarkers='removeAllMarkers', setOk=TRUE)
