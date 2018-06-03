@@ -65,6 +65,7 @@ observe({
           #if(!is.na(getWidget()) && matColIndx>=getHandlerValue()){
             # tag here
             tib<-ptDefs$tib[[selection]]
+            # cat(" serverMouseClicks:: tib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])\n" )
             tib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
             rowIndex<-rowIndex+1
             tib[[getTibColumnName()]][[rowIndex]]<-matrix(newPt,2)

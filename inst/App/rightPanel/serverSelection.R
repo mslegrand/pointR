@@ -40,11 +40,11 @@ atLeast2Rows<-reactive({
 })
 
 getTibRow<-reactive({
-  cat('getTibRow()=',format( selectedTibble$rowIndex),"\n");
+  # cat('getTibRow()=',format( selectedTibble$rowIndex),"\n");
   selectedTibble$rowIndex})
 
 getTibMatCol<-reactive({ 
-  cat('getTibMatCol::', format(selectedTibble$matCol), "\n")
+  # cat('getTibMatCol::', format(selectedTibble$matCol), "\n")
   selectedTibble$matCol 
 })
 getTibPtsNCol<-reactive({ sapply(getTibPts(),ncol)}  )

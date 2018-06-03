@@ -18,6 +18,7 @@ observeEvent(
     name<-getTibName()
     tib<-ptDefs$tib[[name]]
     rowIndex<-getTibRow()
+    # cat("serverFooterRight:: newTib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])\n")
     newTib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
     rowIndx=rowIndex+1
     matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])

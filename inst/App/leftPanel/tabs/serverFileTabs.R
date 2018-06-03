@@ -19,9 +19,12 @@ closeTabNow<-function(tabId2X){
 # TODO!!!! , add input parameters for:  mode, autocomplete
 # fontsize should be read from options 
 addFileTab<-function(title, txt,  docFilePath='?', mode='ptr'){
+  # cat("addFileTab\n")
   tabId<-getNextTabId()
+  # cat("addFileTab:: tabId",tabId,"\n")
   aceId<-tabID2aceID(tabId)
-  # cat("addFileTab:: docFilePath",docFilePath,"\n")
+  # cat("addFileTab:: aceId",aceId,"\n")
+  # cat("addFileTab:: docFilePath",format(docFilePath),"\n")
   # !!!TODO add docFilePath to recentFiles (if !='?')
   if(mode=='ptr'){
     divClass="cAceContainer"

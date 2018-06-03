@@ -29,7 +29,7 @@ observeEvent(input$messageFromAce, {
       if(sender=='cmd.tabChange'){
         #browser()
         request$mode=input$messageFromAce$mode
-        cat('mode=', request$mode, '\n')
+        # cat('mode=', request$mode, '\n')
         if(request$mode=='markdown'){
           panels$sourceType==rmdPanelTag
           processKnit()
@@ -69,7 +69,7 @@ observeEvent(input$messageFromAce, {
               tmp2[sapply(tmp2,is.null)]<-NA
               #plotSelect.tib<-rbind(plotSelect.tib, tmp )
               tmp1<-filter(plot$selections.tib, tabId!=selectedTibble$tabId)
-              cat("serverAce::  plot$selections.tib<-bind_rows(tmp1, tmp2)\n")
+              # cat("serverAce::  plot$selections.tib<-bind_rows(tmp1, tmp2)\n")
               
               plot$selections.tib<-bind_rows(tmp1, as.tibble(tmp2))
               # cat("========   ",paste(plot$selections.tib$tabId,collapse=", "),"\n")
@@ -153,10 +153,10 @@ observeEvent(input$messageFromAce, {
 
 updateAceExtDef<-function(newPtDef, sender, selector=list() ){
   if(!is.null(getCode())){
-      cat("newPtDef:\n")
-    print(newPtDef)
-    cat("getCode()\n")
-    print(getCode())
+    # cat("newPtDef:\n")
+    # print(newPtDef)
+    # cat("getCode()\n")
+    # print(getCode())
     newPtDef$tib<-pts2Integers(newPtDef$tib )
     
     replacementList<-ptDef2ReplacementList(name, newPtDef, getCode() ) #name not used!!!

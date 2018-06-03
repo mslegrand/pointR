@@ -124,7 +124,7 @@ ExtendedCubicBezier=c("Extended Cubic Bezier","extendedCubicBezier.svg",
     stroke=${3:'#00FFFF'},
     stroke.width=${4:1},
     fill=${5:'none'}
-  )")#, 
+  )") #, 
 # arrow=c("linearGradientQuick","",
 #                   "	text(
 #     ${1:'hello world'},

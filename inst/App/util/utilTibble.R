@@ -49,6 +49,7 @@ tagTib<-function(tib, ptColIndex,  rowIndex=nrow(tib), matCol){
   # cat('rowIndex=', rowIndex,"\n")
   # cat('matCol=', matCol,"\n")
   # print(tib)
+  # cat("utilTibble:: tmp<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])\n")
   tmp<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
   pts<-tmp[[rowIndex, ptColIndex]]
   # tmp[[rowIndex,ptColIndex]]<-pts[,1:(matCol-1)]

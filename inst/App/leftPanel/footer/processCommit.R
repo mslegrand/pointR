@@ -14,10 +14,10 @@ src2sourceType<-function(src){  #not used !!
 processCommit<-reactive({
   clearErrorMssg()
   src<-getCode() #input$source #------ace editor
-  cat('length(src)=', length(src),'\n')
-  if(length(src)==1){
-    cat('nchar(src)=',nchar(src),"\n")
-  }
+  # cat('length(src)=', length(src),'\n')
+  # if(length(src)==1){
+  #   cat('nchar(src)=',nchar(src),"\n")
+  # }
   if(length(src)==1){
     ptRList<-getPtDefs()$tib
     tryCatch({

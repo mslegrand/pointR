@@ -77,6 +77,7 @@ source("leftPanel/mid/shinyAce4Ptr.R")
 source("rightPanel/footer/moduleFooterRight.R")
 source("rightPanel/header/moduleEdAsset.R")
 source("rightPanel/header/moduleEdTib.R")
+source("rightPanel/header/moduleEdTransform.R")
 source("rightPanel/mid/moduleRowDND.R")
 source("rightPanel/mid/moduleSVGR.R")
 

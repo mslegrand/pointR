@@ -60,17 +60,12 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   hasError<-reactive({ nchar(mssg$error)>0 })
   getErrorMssg<-reactive({ mssg$error })
   setCapturedMssg<-function(capturedMssg)({ 
-    print(capturedMssg)
     mssg$capturedOutput<-capturedMssg
   })
   getCapturedMssg<-reactive({ 
     mssg$capturedOutput
   })
   triggerRefresh<-function(sender, rollBack=TRUE, auxValue=FALSE){ # to be used to force a code refresh???
-    # session$sendCustomMessage(
-    #   type = "shinyAceExt",
-    #   list(id= getAceEditorId(), sender=sender, getValue=TRUE, rollBack=rollBack, auxValue=auxValue)
-    # )
     updateAceExt(id= getAceEditorId(), sender=sender, getValue=TRUE, rollBack=rollBack, auxValue=auxValue )
   }
   
@@ -206,6 +201,7 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   source("rightPanel/serverPlotSelectDB.R",          local=TRUE)
   source("rightPanel/footer/serverFooterRight.R",    local=TRUE) 
   source("rightPanel/header/serverEdTib.R",          local=TRUE)
+  source("rightPanel/header/serverEdTransform.R",    local=TRUE)
   source("rightPanel/header/serverEdAsset.R",        local=TRUE)
   source("rightPanel/mid/serverRowDND.R",            local=TRUE)
   source("rightPanel/mid/serverPlotBarPoints.R",     local=TRUE) 

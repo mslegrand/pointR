@@ -30,9 +30,9 @@ getNameType<-reactive({
   } else {
     #browser()
     if(!is.null(getTibName())){
-      print("names(getPtDefs()$tib:\n")
-      print(names(getPtDefs()$tib))
-      print(getTibName())
+      # print("names(getPtDefs()$tib:\n")
+      # print(names(getPtDefs()$tib))
+      # print(getTibName())
       if( getTibName() %in% names(getPtDefs()$tib) ){
         tibTag
       } else if(getTibName()==transformTag && usingTransformDraggable()) { 
@@ -73,7 +73,7 @@ getPlotState<-reactive({
   nameType<-getNameType()
   if(identical(nameType,tibTag)){
     colType<-getColumnType()
-    if(colType=='point'){
+    if(identical(colType,'point')){
       c('point', 'matrix')[ getSelIndex() ]
     } else {
       'value'
