@@ -28,13 +28,20 @@ getNameType<-reactive({
     # cat('getNameType:: Error=', getErrorMssg(),"\n")
     errorPanelTag
   } else {
+    #browser()
     if(!is.null(getTibName())){
-      if (getTibName() %in% names(getPtDefs()$tib)){
-        'tib'
+      print("names(getPtDefs()$tib:\n")
+      print(names(getPtDefs()$tib))
+      print(getTibName())
+      if( getTibName() %in% names(getPtDefs()$tib) ){
+        tibTag
+      } else if(getTibName()==transformTag && usingTransformDraggable()) { 
+        # return transformTag if transformTag and usingTransformDraggable()
+        transformTag
       } else {
         getTibName()
       }
-    } else {
+    } else { # RPanelTag whenever getTibName is NULL???
       RPanelTag
     }
   }
@@ -62,10 +69,9 @@ getColumnType<-reactive({
 #    getTibEditState
 #    getRightMidPanel
 #    serverEdTib to set transform panel
-
 getPlotState<-reactive({
   nameType<-getNameType()
-  if(nameType==tibTag){
+  if(identical(nameType,tibTag)){
     colType<-getColumnType()
     if(colType=='point'){
       c('point', 'matrix')[ getSelIndex() ]
@@ -85,12 +91,14 @@ getTibEditState<-reactive({
     getPlotState() %in%  c("point", "value", "matrix")
 })
 
-# used  in  
+# used  by
 # server.R:: ptrDisplayScript
 # serverPanelDispatch::
 # serverFooterRight.R
 # serverMouseClicks.R, (as barName)
 # serverLog.R (as barName)
+# returns:
+#  RPanelTag, rmdPanelTag, or oneof point, matrix, value, if ptR
 getRightMidPanel<-reactive({
   cat('panels$sourceType=', panels$sourceType,"\n")
   if(hasError()){
@@ -110,14 +118,13 @@ getRightMidPanel<-reactive({
 
 getRightPanelChoices<-reactive({ # includes names of tibs
   # cat('getRightPanelChoices', format(getSourceType()),"\n")
-  if(hasError()){
-    # cat('ggetRightPanelChoices:: Error=', format(getErrorMssg()),"\n")
+  if(hasError()){ # error: set to  errorPanel
     choices<-errorPanelTag
   } else if( getSourceType()==RPanelTag){
     choices=RPanelTag
   } else if( getSourceType()==rmdPanelTag){
     choices=c( rmdPanelTag, RPanelTag )
-  } else {
+  } else { # ptRPanel (names of ptDefs not null), svgRPanel, 
     ptDefs<-getPtDefs()
     choices<-names(getPtDefs()$tib)
     # cat('getRightPanelChoices 1:: ', format(choices),"\n")
@@ -126,8 +133,6 @@ getRightPanelChoices<-reactive({ # includes names of tibs
     }
     choices<-c(choices, svgPanelTag, RPanelTag)
     # cat('getRightPanelChoices 2:: ', format(choices),"\n")
-    
-    
   }
   # cat('getRightPanelChoices 3:: ', format(choices),"\n")
   choices

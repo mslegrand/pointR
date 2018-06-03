@@ -32,8 +32,12 @@ output$MidRightPanel<-renderUI({
     modulePlotSVGrUI("svgTransformMod")
   } else if( chosenRightMidPanel == svgPanelTag ){
     modulePlotSVGrUI("svgPointsMod")
-  } else if (chosenRightMidPanel %in% c(errorPanelTag, RPanelTag)){
+  } else if( chosenRightMidPanel == errorPanelTag ){
+    cat('about to"errLogMod"\n')
     moduleLogUI("errLogMod")
+  }else if (chosenRightMidPanel ==  RPanelTag ){
+    cat('about to"capturedLogMod"\n')
+    moduleLogUI("capturedLogMod")
   } else if( chosenRightMidPanel == rmdPanelTag ){
     modulePlotRmdUI("rmdMod")
   }
