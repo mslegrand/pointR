@@ -472,7 +472,7 @@ Shiny.addCustomMessageHandler(
           if(! data.oldFilePath){
             data.oldFilePath='?';
           }
-          console.log('getDoc:: docFileSaved=' +JSON.stringify(ud.isClean()) );
+          //console.log('getDoc:: docFileSaved=' +JSON.stringify(ud.isClean()) );
           Shiny.onInputChange('messageFromAce', 
           {
              code :  editor.getSession().getValue(),

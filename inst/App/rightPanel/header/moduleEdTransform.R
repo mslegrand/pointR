@@ -1,10 +1,8 @@
 moduleEdTransformUI<-function(id, input, output) { 
   ns <- NS(id)
-  #tagList(  
     div(  'class'='topHeadCol2 topHeadRow2 ptR2',  
           uiOutput(ns("transformPanelContainer"))
     )
-  #)
 }
 
 moduleEdTransform<-function(input, output, session, 
@@ -15,7 +13,7 @@ moduleEdTransform<-function(input, output, session,
   
   output$transformPanelContainer<-renderUI({
     if( !is.null(assetName()) && assetName()==transformTag ){
-      div( #style="background-color:#000000; color: #00ffff; ",
+      div( 
       tabsetPanel( id=ns("transformType"),
                    tabPanel("Translate"),
                    tabPanel("Rotate"),

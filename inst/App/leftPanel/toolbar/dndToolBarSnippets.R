@@ -4,7 +4,7 @@ circle=c( "Circle","circle.svg",
 "	circle(
 		cxy=${1:WH/2},
 		r=${2:WH[2]/3},
-    stroke='black',
+		stroke='black',
 		fill=${3:'none'}
 	)"),
 ellipse=c( "Ellipse","ellipse.svg",
