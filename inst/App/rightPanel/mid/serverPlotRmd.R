@@ -23,5 +23,5 @@ rmdModuleList<-callModule(
   module=modulePlotRmd, 
   id="rmdMod", 
   getPanelName=getRightMidPanel,
-  getCode=getMarkdown 
+  getCode=getCode 
 )

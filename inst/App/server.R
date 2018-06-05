@@ -36,20 +36,20 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   })
   
   getCode<-reactive({
-    if(request$mode=='ptr'){
+#    if(request$mode=='ptr'){
       request$code
-    } else {
-      ""
-    }
+    # } else {
+    #   ""
+    # }
   })
   
-  getMarkdown<-reactive({
-    if(request$mode=='markdown'){
-      request$code
-    } else {
-      ""
-    }
-  })
+  # getMarkdown<-reactive({
+  #   if(request$mode=='markdown'){
+  #     request$code
+  #   } else {
+  #     ""
+  #   }
+  # })
   
   mssg<-reactiveValues(
     error="",

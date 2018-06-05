@@ -13,11 +13,20 @@ src2sourceType<-function(src){  #not used !!
 
 processCommit<-reactive({
   clearErrorMssg()
-  src<-getCode() #input$source #------ace editor
-  # cat('length(src)=', length(src),'\n')
-  # if(length(src)==1){
-  #   cat('nchar(src)=',nchar(src),"\n")
-  # }
+  #src<-getCode() #input$source #------ace editor
+  
+  #if(length(src)==1){
+    if( identical(request$mode, 'ptr')){
+      processSvgR()
+    } else if(  identical(request$mode, 'markdown') ){
+      processKnit()
+    } 
+  #}
+})
+
+
+processSvgR<-reactive({
+  src<-getCode()
   if(length(src)==1){
     ptRList<-getPtDefs()$tib
     tryCatch({
@@ -92,4 +101,6 @@ processCommit<-reactive({
     ) #end of tryCatch 
   } #end of if(length==1)
 })
+
+
 

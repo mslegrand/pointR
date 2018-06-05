@@ -153,7 +153,8 @@ Shiny.addCustomMessageHandler(
         var auxValue="";
         
         var HighlightedLines;
-        
+        var aceMode = editor.getSession().$modeId;
+        aceMode = aceMode.substr(aceMode.lastIndexOf('/') + 1);
         
         
         console.log('id=' + id );
@@ -412,6 +413,7 @@ Shiny.addCustomMessageHandler(
              code : editor.getSession().getValue(),
              sender : data.sender,
              id : id,
+             mode: aceMode,
              //dirty: editor.getSession().getUndoManager().dirtyCounter,
              isSaved: ud.isClean(),
              rnd : randomString(5)
@@ -433,8 +435,7 @@ Shiny.addCustomMessageHandler(
           if(!!data.auxValue){
             auxValue=data.auxValue;
           }
-          var mode = editor.getSession().$modeId;
-          mode = mode.substr(mode.lastIndexOf('/') + 1);
+          
           
           Shiny.onInputChange('messageFromAce', 
           {
@@ -442,7 +443,7 @@ Shiny.addCustomMessageHandler(
              sender : data.sender,
              id : id,
              //dirty: editor.getSession().getUndoManager().dirtyCounter,
-             mode: mode,
+             mode: aceMode,
              isSaved: ud.isClean(),
              auxValue: auxValue,
              rnd : randomString(5)
