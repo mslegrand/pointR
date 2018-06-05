@@ -26,13 +26,13 @@ observeEvent(input$messageFromAce, {
         # cat("set editOption$.saved=",editOption$.saved,"\n")
       }
       # cat('22 ace request$sender=',format(request$sender),"\n")
-      if(sender=='cmd.tabChange'){
+      if(sender %in% c('cmd.tabChange', 'cmd.file.new')){
         #browser()
         request$mode=input$messageFromAce$mode
         # cat('mode=', request$mode, '\n')
         if(request$mode=='markdown'){
           panels$sourceType==rmdPanelTag
-          processKnit()
+          processCommit()
           return(NULL)
         } 
       }
@@ -207,7 +207,7 @@ updateAceExt<-function(id, sender, ... ){
 observeEvent(request$sender,{
     if(request$sender=='startup'){
       #cat('startup\n')
-      cmdFileNew()
+      cmdFileNewPtR()
     }
   # if(request$sender=='startup'){
   #   cat('startup\n')

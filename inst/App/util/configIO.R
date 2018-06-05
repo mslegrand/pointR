@@ -16,11 +16,6 @@ optionDirPath<-function(){
 }
 
 
-
-
-
-
-
 optionFile<-paste(path.expand("~"),".ptRProfile.csv",sep="/")
 
 
@@ -64,3 +59,14 @@ toggleTabType<-function(type){
   indx<-which(type==tabType)
   ifelse(indx==2,"Use Soft Tabs", "Use Hard Tabs" )
 }
+
+readTemplate<-function(name="rTemplate.R"){
+  path<-find.package(pkg)
+  templateFilePath<-filePath(path, "App","templates",name)
+  lines<-readLines(templateFilePath)
+  src<-paste(lines,collapse="\n")
+  src
+}
+
+fileTemplatesNames<-c("ptRTemplate.R",   "rmdTemplate.Rmd" ,"rTemplate.R",     "svgRTemplate.R" )
+fileTemplates<-sapply( fileTemplatesNames, readTemplate)

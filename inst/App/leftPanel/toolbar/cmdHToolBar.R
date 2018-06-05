@@ -1,6 +1,6 @@
 
 observeEvent( input$tbNewFile ,{
-  cmdFileNew()
+  cmdFileNewPtR()
 }, ignoreInit = TRUE)
 
 observeEvent( input$tbSaveFile ,{

@@ -1,5 +1,9 @@
 
-# todo!!! rename selectedTibble to something else, like currentPlotSelect, or selectedAsset 
+# todo!!! rename selectedTibble to something better, like 
+# currentPlotSelect or currentAsset or canvasState or 
+# selectedAsset or assetState or assetManager or assetSelectionInfo
+# or assetCoordinates or assetSelectionProperties
+# or activeAssetPropteries activeAssetState *activeAssetInfo*
 # add svg as a name when needed.
 
 selectedTibble <- reactiveValues(
