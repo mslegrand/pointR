@@ -8,8 +8,12 @@ buildLeftMenu<-function(version){
       "File", 
       shinyDMDMenu::menuDropdown(
         "New File",
-        shinyDMDMenu::menuItem('ptR script'),
-        shinyDMDMenu::menuItem('R script'),
+        shinyDMDMenu::menuDropdown('ptR script',
+              shinyDMDMenu::menuItem("ptR list containing a tibble", value="newPtrTibScript"),
+              shinyDMDMenu::menuItem("ptR list containing a matrix", value="newPtRMatScript"),
+              shinyDMDMenu::menuItem("svgR without a ptR list", value="newPtRSVGScript")
+        ),
+        shinyDMDMenu::menuItem('R script', value='newRScript'),
         shinyDMDMenu::menuItem('R markdown doc', value='newRmd')#,
         #shinyDMDMenu::menuItem('R ioslides doc', value='newIOSlides')
       ),

@@ -60,13 +60,17 @@ toggleTabType<-function(type){
   ifelse(indx==2,"Use Soft Tabs", "Use Hard Tabs" )
 }
 
+
+
+
 readTemplate<-function(name="rTemplate.R"){
-  path<-find.package(pkg)
+  path<-find.package('pointR')
   templateFilePath<-filePath(path, "App","templates",name)
   lines<-readLines(templateFilePath)
   src<-paste(lines,collapse="\n")
   src
 }
 
-fileTemplatesNames<-c("ptRTemplate.R",   "rmdTemplate.Rmd" ,"rTemplate.R",     "svgRTemplate.R" )
+fileTemplatesNames<-dir(filePath(find.package('pointR'), "App","templates"))
+  #c("ptRTemplate.R",   "rmdTemplate.Rmd" ,"rTemplate.R", "svgRTemplate.R", "matTemplate.R")
 fileTemplates<-sapply( fileTemplatesNames, readTemplate)

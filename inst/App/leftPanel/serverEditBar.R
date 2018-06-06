@@ -1,20 +1,15 @@
 
 
 observeEvent( input$editNavBar, { 
-  #fileCmd<-input$editNavBar$item
+  
   fileCmd<-getLeftMenuCmd()
-  # if(is.null(fileCmd)){
-  #   fileCmd<-"New"
-  # }
+  
   if(length(fileCmd)>0){
-    if( fileCmd=="ptR script" ){ #-----new
-      cmdFileNewPtR()
+    if( fileCmd %in% c("newPtrTibScript", "newPtRMatScript", "newPtRSVGScript", "newRScript" )){ #-----new
+      cmdFileNewPtR(fileCmd)
       dirtyDMDM(session, "editNavBar")
     }
-    if(  fileCmd=='R script'){ #-----new
-      cmdFileNewR()
-      dirtyDMDM(session, "editNavBar")
-    }
+    
     if(fileCmd=="newRmd"){ #-----open 
       cmdFileNewRmd()
       dirtyDMDM(session, "editNavBar")
