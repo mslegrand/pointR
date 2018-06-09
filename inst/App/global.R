@@ -1,6 +1,8 @@
 
 .global <- new.env()
 
+version="v.0.3.9.3"
+
 initResourcePaths <- function() {
   if (is.null(.global$loaded)) {
     shiny::addResourcePath(
