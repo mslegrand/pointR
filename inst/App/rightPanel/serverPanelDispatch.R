@@ -4,9 +4,7 @@ output$TopRightPanel<-renderUI({
       div( "class"='topHeadPanel',
       moduleEdAssetUI("edAssetCh", input, output),
       div( "class"='topHeadTibEdit',
-        moduleEdTibUI("tagValBar", input, output)
-      ),
-      div( "class"='topHeadTibEdit',
+        moduleEdTibUI("tagValBar", input, output),
         moduleEdTransformUI("edTransform", input, output)
       )
     )
