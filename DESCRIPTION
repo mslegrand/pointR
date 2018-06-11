@@ -14,7 +14,7 @@ Imports:
     shinyjs,  
     R.utils,
     svgR,
-    shinyAce,
+    shinyAce (>= 0.3.1),
     stringr,  
     jsonlite, 
     shinyDMDMenu,
