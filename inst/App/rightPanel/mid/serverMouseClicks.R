@@ -65,6 +65,7 @@ observe({
           #if(!is.na(getWidget()) && matColIndx>=getHandlerValue()){
             # tag here
             tib<-ptDefs$tib[[selection]]
+            # cat(" serverMouseClicks:: tib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])\n" )
             tib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
             rowIndex<-rowIndex+1
             tib[[getTibColumnName()]][[rowIndex]]<-matrix(newPt,2)
@@ -146,10 +147,11 @@ observe({
           trDefDelta2<-paste0("matrix(c(",paste0(vec,collapse=", "), "),2)" ) 
           pos<-tid2replacementCoord(tid)
           replacementList<-list(list(rng=pos, txt= trDefDelta2))
-          session$sendCustomMessage(
-            type = "shinyAceExt",
-            list(id= getAceEditorId(), replacement=replacementList, sender=sender, ok=1)
-          )
+          # session$sendCustomMessage(
+          #   type = "shinyAceExt",
+          #   list(id= getAceEditorId(), replacement=replacementList, sender=sender, ok=1)
+          # )
+          updateAceExt(id= getAceEditorId(), replacement=replacementList, sender = sender, ok=1 )
         }
         
         #-------transformations of nodes marked as class 'movable'
@@ -159,10 +161,11 @@ observe({
           trDefDelta2<-paste0("matrix(c(",paste0(vec,collapse=", "), "),2)" ) 
           pos<-tid2replacementCoord(tid)
           replacementList<-list(list(rng=pos, txt= trDefDelta2))
-          session$sendCustomMessage(
-            type = "shinyAceExt",
-            list(id= getAceEditorId(), replacement=replacementList, sender=sender, ok=1)
-          )
+          # session$sendCustomMessage(
+          #   type = "shinyAceExt",
+          #   list(id= getAceEditorId(), replacement=replacementList, sender=sender, ok=1)
+          # )
+          updateAceExt(id= getAceEditorId(), replacement=replacementList, sender = sender, ok=1 )
         } 
         
         #-------transformations of nodes marked as class 'movable'
@@ -172,10 +175,11 @@ observe({
           trDefDelta2<-paste0("matrix(c(",paste0(vec,collapse=", "), "),2)" ) 
           pos<-tid2replacementCoord(tid)
           replacementList<-list(list(rng=pos, txt= trDefDelta2))
-          session$sendCustomMessage(
-            type = "shinyAceExt",
-            list(id= getAceEditorId(), replacement=replacementList, sender = sender, ok=1)
-          )
+          # session$sendCustomMessage(
+          #   type = "shinyAceExt",
+          #   list(id= getAceEditorId(), replacement=replacementList, sender = sender, ok=1)
+          # )
+          updateAceExt(id= getAceEditorId(), replacement=replacementList, sender = sender, ok=1 )
         }
       }
       

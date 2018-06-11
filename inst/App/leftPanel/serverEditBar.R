@@ -1,14 +1,21 @@
 
 
 observeEvent( input$editNavBar, { 
-  #fileCmd<-input$editNavBar$item
+  
   fileCmd<-getLeftMenuCmd()
-  # if(is.null(fileCmd)){
-  #   fileCmd<-"New"
-  # }
+  
   if(length(fileCmd)>0){
-    if( fileCmd=="New"){ #-----new
-      cmdFileNew()
+    if( fileCmd %in% c("newPtrTibScript", "newPtRMatScript", "newPtRSVGScript", "newRScript" )){ #-----new
+      cmdFileNewPtR(fileCmd)
+      dirtyDMDM(session, "editNavBar")
+    }
+    
+    if(fileCmd=="newRmd"){ #-----open 
+      cmdFileNewRmd()
+      dirtyDMDM(session, "editNavBar")
+    }
+    if(fileCmd=='newIOSlides'){
+      cmdNewIOSlides()
       dirtyDMDM(session, "editNavBar")
     }
     if(fileCmd=="Open"){ #-----open 
@@ -72,10 +79,7 @@ observeEvent( input$editNavBar, {
     if(fileCmd %in% whiteSpace){
       indx<-which(fileCmd==whiteSpace)
       newLabel<-ifelse(indx==2,"Show White Space", "Hide White Space" )
-      session$sendCustomMessage(
-        type = "shinyAceExt",    
-        list(id= getAceEditorId(), sender= 'fileCmd.whitespace', toggleWhiteSpace=TRUE)
-      )
+      updateAceExt(id= getAceEditorId(), sender= 'fileCmd.whitespace', toggleWhiteSpace=TRUE )
       renameDMDM(
         session, menuBarId="editNavBar", 
         entry=fileCmd, 
@@ -90,10 +94,7 @@ observeEvent( input$editNavBar, {
       indx<-which(fileCmd==tabType)
       editOption$tabType<-fileCmd
       newLabel<-ifelse(indx==2,"Use Soft Tabs", "Use Hard Tabs" )
-      session$sendCustomMessage(
-        type = "shinyAceExt",    
-        list(id= getAceEditorId(), sender='fileCmd.toggleTab', toggleTabType=TRUE)
-      )
+      updateAceExt(id= getAceEditorId(), sender='fileCmd.toggleTab', toggleTabType=TRUE )
       renameDMDM(
         session, menuBarId="editNavBar", 
         entry=fileCmd, 
@@ -101,20 +102,18 @@ observeEvent( input$editNavBar, {
         type = "menuItem")
       dirtyDMDM(session, "editNavBar")
     }
+    if(fileCmd=='print'){
+      updateAceExt( id= getAceEditorId(), sender='fileCmd.print', tbMssg='print' )
+      dirtyDMDM(session, "editNavBar")
+    }
     
     if(fileCmd=="Editor ShortCuts"){
-      session$sendCustomMessage(
-        type = "shinyAceExt",    
-        list(id= getAceEditorId(), sender='fileCmd.showShortCuts', showKeyboardShortCuts=TRUE)
-      )
+      updateAceExt(id= getAceEditorId(), sender='fileCmd.showShortCuts', showKeyboardShortCuts=TRUE)
       dirtyDMDM(session, "editNavBar")
     }
 
     if(fileCmd=="Editor ShortCuts2"){
-      session$sendCustomMessage(
-        type = "shinyAceExt",    
-        list(id= getAceEditorId(), sender='fileCmd.showShortCuts2', getKeyboardShortcuts=TRUE)
-      )
+      updateAceExt(id= getAceEditorId(), sender='fileCmd.showShortCuts2', getKeyboardShortcuts=TRUE )
       dirtyDMDM(session, "editNavBar")
     }
     
@@ -178,7 +177,9 @@ observeEvent(getFileSavedStatus(),{
     status<-'saved'
   }
   # cat("status=",status,"\n")
-  sendFileTabsMessage( id=input$pages, sender='savedStatus', savedStatus=status)
+  if(!is.null(input$pages)){
+      sendFileTabsMessage( tabId=input$pages, sender='savedStatus', savedStatus=status)
+  }
 })
 
 #------- editor options handlers
@@ -221,11 +222,12 @@ observeEvent(editOption$theme, {
 })
 
 observeEvent(editOption$tabSize, {
+  updateAceEditor(session, getAceEditorId(), sender='fileCmd.tabSize', tabSize=as.numeric(editOption$tabSize))
   #updateAceEditor(session, getAceEditorId(), theme=editOption$theme)
   # session$sendCustomMessage(type = "shinyAceExt",  
   #                           list(id= getAceEditorId(), sender='fileCmd.tabSize', tabSize=as.numeric(editOption$tabSize)))
   
-})
+}, ignoreNULL = TRUE, ignoreInit = TRUE)
 
 
 

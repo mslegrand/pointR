@@ -2,10 +2,11 @@
 
 cmdFileQuit<-reactive({
   # cat('inside cmdFileQuit')
-  session$sendCustomMessage(
-    type = "scrollManager", 
-    list( sender= 'fileCmd.quit', getAllTabIds=runif(1) ) 
-  )
+  # session$sendCustomMessage(
+  #   type = "scrollManager",
+  #   list( sender= 'fileCmd.quit', getAllTabIds=runif(1) )
+  # )
+  sendFileTabsMessage(sender= 'fileCmd.quit', getAllTabIds=runif(1))
 })
 
 cmdQuitNow<-reactive({

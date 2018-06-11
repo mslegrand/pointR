@@ -1,36 +1,38 @@
-cmdFileNew<-function(){
-  # cat("cmdFileNew:\n")
-  src<-codeTemplate
-  
-  # session$sendCustomMessage(
-  #   type = "shinyAceExt",
-  #   list(id= getAceEditorId(), sender='cmd.file.new', setValue= src, ok=TRUE)
-  # )
-  
+cmdFileNewPtR<-function(fileCmd="newPtrTibScript"){
+    templateChoices<-list(
+      newPtrTibScript=  "ptRTemplate.R",
+      newPtRMatScript = "matTemplate.R",
+      newPtRSVGScript = "svgRTemplate.R",
+      newRScript      = "rTemplate.R"
+    )
+    templateName<-templateChoices[[fileCmd]]
+    src<-fileTemplates[[ templateName ]] #ptR template
+    tabName<-getNextAnonymousFileName()
+    #aceId<-tabName2AceId(tabId)
+    addFileTab(title=tabName, txt=src,  docFilePath="?", mode='ptr')
+    delay(500, 
+      updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', setValue= src, setDocFileSaved=TRUE, ok=TRUE )
+    )
+    mssg$error<-""
+}
+
+cmdFileNewRmd<-function(){
+  src<-fileTemplates[[ "rmdTemplate.Rmd" ]] #rmdTemplate
+  #src<-rmdTemplate
   tabName<-getNextAnonymousFileName()
-  
-  
-   
-  #aceId<-tabName2AceId(tabId)
-  addFileTab(title=tabName, txt=codeTemplate,  docFilePath="?")
-  #triggerRefresh('cmd.commit', rollBack=FALSE)
-  #setSourceType(sourceType=svgPanelTag)
-  #cat("sendCustomMessage sender='cmd.file.new' aceId=",aceId,"\n" )
-  #updateSelected(columnName='x') #kludge for getting ensuring asset selection will be x
-  delay(500, 
-    session$sendCustomMessage(
-      type = "shinyAceExt",
-      list(id=  getAceEditorId(), sender='cmd.file.new', setValue= codeTemplate, setDocFileSaved=TRUE, ok=TRUE)
-    ) 
+  addFileTab(title=tabName, txt=src,  docFilePath="?", mode='markdown')
+  delay(500,
+        updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', setValue= src, setDocFileSaved=TRUE, ok=TRUE )
   )
-
-  # session$sendCustomMessage(
-  #   type = "shinyAceExt", 
-  #   list(id= getAceEditorId(), setValue=src, sender='cmd.file.new' )
-  # )
   mssg$error<-""
+}
 
- 
-  
-  
+cmdNewIOSlides<-function(){
+  src<-ioslidesTemplate
+  tabName<-getNextAnonymousFileName()
+  addFileTab(title=tabName, txt=src,  docFilePath="?", mode='markdown')
+  delay(500,
+        updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', setValue= src, setDocFileSaved=TRUE, ok=TRUE )
+  )
+  mssg$error<-""
 }

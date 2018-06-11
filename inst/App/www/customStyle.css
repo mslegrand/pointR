@@ -84,12 +84,17 @@ overflow: hidden;
 }
 .cMidPanel{
   position: absolute;
-  top:140px;
   bottom:40px;
-  left: 0;
-  right: 0;
+  top:80px;
+  left: 20px;
+  right: 20px;
   overflow: hidden;
   padding: 10px;
+}
+.ctop140{
+  left: 0;
+  right: 0;
+  top:140px;
 }
 .cSvgOut{
   position: absolute;
@@ -99,7 +104,7 @@ overflow: hidden;
   right:0;
   border: 3px solid blue;
   background-color: #DDBBFF;
-  overflow: hidden;
+  overflow: auto;
 }
 .cSvgOutLeftIndent{
   left:62px;
@@ -194,6 +199,15 @@ overflow-y: auto;
 }
 #tagValBar-entryValue .formControl.selectized {
   width:260px;
+}
+#edTransform-transformType.nav.nav-pills{
+  background-color:#000011;
+}
+#edTransform-transformType.nav.nav-pills li a{
+  color:#00FFFF;
+}
+#edTransform-transformType.nav.nav-pills li a:hover{
+  color:#000000;
 }
 .ptR2 .selectize-dropdown { 
   font-size: 12px;  

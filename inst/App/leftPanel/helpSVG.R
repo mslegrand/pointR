@@ -65,9 +65,10 @@ observeEvent(input$dismiss,{
   removeModal()
   session = getDefaultReactiveDomain()
   session$sendCustomMessage(
-    type = "shinyAceExt", 
-    list(id=getAceEditorId(), sender='fileCmd.dismiss', setfocus='focus') 
+    type = "shinyAceExt",
+    list(id=getAceEditorId(), sender='fileCmd.dismiss', setfocus='focus')
   )
+  #updateAceExt(id=getAceEditorId(), sender='fileCmd.dismiss', setfocus='focus' )
 })
 
 svgQueryAddr2Help<-function(queryAddr){

@@ -1,5 +1,9 @@
 
-# todo!!! rename selectedTibble to something else, like currentPlotSelect 
+# todo!!! rename selectedTibble to something better, like 
+# currentPlotSelect or currentAsset or canvasState or 
+# selectedAsset or assetState or assetManager or assetSelectionInfo
+# or assetCoordinates or assetSelectionProperties
+# or activeAssetPropteries activeAssetState *activeAssetInfo*
 # add svg as a name when needed.
 
 selectedTibble <- reactiveValues(
@@ -19,7 +23,7 @@ getSelIndex<-reactive({
 })
 
 observeEvent(getTibNRow(),{
-  sendPtRManagerMessage( id= getAceEditorId() , sender='tibNrow', rowCountChange=TRUE)
+  sendPtRManagerMessage(  sender='tibNrow', rowCountChange=TRUE)
 })
 
 getTibName<-reactive({selectedTibble$name}) #allow to be null only if tib is null  
@@ -76,9 +80,9 @@ resetSelectedTibbleName<-function(tibs, name){
     if(hasError()){
       return(NULL) # never change selection when in error state
     }
-    if(is.null(tibs)){
-      return(NULL)
-    }
+    # if(is.null(tibs)){
+    #   return(NULL)
+    # }
     # cat("\\n----------nserverSelection...Entering  resetSelectedTibbleName\n")
     # cat("\nresetSelectedTibbleName... name= ", format(name),"\n")
     # cat("resetSelectedTibbleName... names(tibs)=",format(names(tibs)),"\n")
@@ -87,13 +91,12 @@ resetSelectedTibbleName<-function(tibs, name){
       if(is.null(name) || !(name %in% choices)){
         name<-getTibName() #pick the last name
       }
-      if(is.null(getTibName()) || !(getTibName() %in% choices)){
+      if(is.null(name) || !(name %in% choices)){
         name=choices[1] #pick the first alternative
       }
       selectedTibble$name=name
       if(is.null(tibs) ){
-        # cat('THIS SHOULD NEVER EXEC\n')
-        selectedTibble$rowIndex=NULL
+        selectedTibble$rowIndex=0
         selectedTibble$ptColName=NULL
         selectedTibble$columnName=NULL
         selectedTibble$matCol=NULL

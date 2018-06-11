@@ -3,11 +3,11 @@ plot<-reactiveValues(
 selections.tib=tibble(
   tabId="NULL",
   name="NULL",
-  rowIndex=1,       # row in tibble
+  rowIndex=1,         # row in tibble
   columnName="NULL",  # currently used only by tibbleEditor and could be placed there.
-  matCol=0,         # colIndex of the current matrix.
+  matCol=0,           # colIndex of the current matrix.
   ptColName="NULL",   # !!! KLUDGE for now. should this default to last col?
-  selIndex=1,       # only used when current col is points, 
+  selIndex=1,         # only used when current col is points, 
   transformType='Translate'    
 )[0,]
 )

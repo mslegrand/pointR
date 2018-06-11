@@ -42,21 +42,21 @@ moduleEdTibUI<-function(id, input, output) {
         #-------tib entry value
         div(  'class'='topHeadCol2 topHeadRow2 ptR2',  uiOutput(ns("columnEntryUI"))  
        )
-    ),
+    )
     
     #---transform content---#   display only if selected name is transform
-    conditionalPanel( condition = sprintf("input['%s'] == '%s'", ns("name"), transformTag),
-      div( id=ns("transformPanelContainer"), #'class'='topHeadCol2 topHeadRow2 ptR2'
-        top=top+25, left=left, width="100%",
-        "class"="headerPanel", draggable=FALSE, "background-color"='#666688',
-        tabsetPanel( id=ns("transformType"),
-                     tabPanel("Translate"),
-                     tabPanel("Rotate"),
-                     tabPanel("Scale"),
-                     type="pills"
-        )
-      )
-    )
+    #conditionalPanel( condition = sprintf("input['%s'] == '%s'", ns("name"), transformTag),
+      # div( id=ns("transformPanelContainer"), #'class'='topHeadCol2 topHeadRow2 ptR2'
+      #   top=top+80, left=left, width="100%", #style="visibility:hidden",
+      #   "class"="headerPanel", draggable=FALSE, "background-color"='#FF6688',
+      #   tabsetPanel( id=ns("transformType"),
+      #                tabPanel("Translate"),
+      #                tabPanel("Rotate"),
+      #                tabPanel("Scale"),
+      #                type="pills"
+      #   )
+      # )
+    #)
   ) # end taglist
   
 }
@@ -149,12 +149,12 @@ moduleEdTib<-function(input, output, session,
       # cat("getTibEntryChoices()=",format(getTibEntryChoices()),"\n")
       if(!is.null(widget) && !is.null(getTibEntry()) && !is.null(getTibEntryChoices())){ 
             selected<-getTibEntry()
-            cat("length(selected)= ", length(selected), "\n")
+            # cat("length(selected)= ", length(selected), "\n")
             if(length(selected)>1 ){
               selected<-paste("c(", paste(format(selected), collapse="," ),')')
             }
-            cat("length(selected)= ", length(selected), "\n")
-            cat("(selected)= ", format(selected), "\n")
+            # cat("length(selected)= ", length(selected), "\n")
+            # cat("(selected)= ", format(selected), "\n")
             choices<-getTibEntryChoices()
             choices<-lapply(choices, function(val){
               if(length(val)>1){

@@ -4,7 +4,7 @@ circle=c( "Circle","circle.svg",
 "	circle(
 		cxy=${1:WH/2},
 		r=${2:WH[2]/3},
-    stroke='black',
+		stroke='black',
 		fill=${3:'none'}
 	)"),
 ellipse=c( "Ellipse","ellipse.svg",
@@ -124,48 +124,48 @@ ExtendedCubicBezier=c("Extended Cubic Bezier","extendedCubicBezier.svg",
     stroke=${3:'#00FFFF'},
     stroke.width=${4:1},
     fill=${5:'none'}
-  )"), 
-arrow=c("linearGradientQuick","",
-                  "	text(
-    ${1:'hello world'},
-		cxy=${2:WH/2},
-		stroke=${3:'black'},
-    font.size=${4:36},
-		fill=${5:'none'}
-	)"),
-linearGradientQ=c("linearGradientQuick","",
-                  "	text(
-    ${1:'hello world'},
-		cxy=${2:WH/2},
-		stroke=${3:'black'},
-    font.size=${4:36},
-		fill=${5:'none'}
-	)"),
-linearGradientFull=c("linearGradientFull","",
-                     "	text(
-    ${1:'hello world'},
-		cxy=${2:WH/2},
-		stroke=${3:'black'},
-    font.size=${4:36},
-		fill=${5:'none'}
-	)"),
-setBE=c( "set with begin","",
-"	  set(
-	    attributeName=${1:name},
-	    from=${2:from_value},
-	    to=${3:to_value},
-	    begin=${4:begin},
-	    end=${5:end}
-	  )
-	)"),
-setD=c( "animate Set with duration","",
-"	  set(
-	    attributeName=${1:name},
-	    from=${2:from_value},
-	    to=${3:to_value},
-	    dur=${4:seconds}
-	  )
-	)")
+  )") #, 
+# arrow=c("linearGradientQuick","",
+#                   "	text(
+#     ${1:'hello world'},
+# 		cxy=${2:WH/2},
+# 		stroke=${3:'black'},
+#     font.size=${4:36},
+# 		fill=${5:'none'}
+# 	)")#,
+# linearGradientQ=c("linearGradientEZ","",
+#                   "	text(
+#     ${1:'hello world'},
+# 		cxy=${2:WH/2},
+# 		stroke=${3:'black'},
+#     font.size=${4:36},
+# 		fill=${5:'none'}
+# 	)"),
+# linearGradientFull=c("linearGradient","",
+#                      "	text(
+#     ${1:'hello world'},
+# 		cxy=${2:WH/2},
+# 		stroke=${3:'black'},
+#     font.size=${4:36},
+# 		fill=${5:'none'}
+# 	)"),
+# setBE=c( "set with begin","",
+# "	  set(
+# 	    attributeName=${1:name},
+# 	    from=${2:from_value},
+# 	    to=${3:to_value},
+# 	    begin=${4:begin},
+# 	    end=${5:end}
+# 	  )
+# 	)"),
+# setD=c( "animate Set with duration","",
+# "	  set(
+# 	    attributeName=${1:name},
+# 	    from=${2:from_value},
+# 	    to=${3:to_value},
+# 	    dur=${4:seconds}
+# 	  )
+# 	)")
 )
 
 

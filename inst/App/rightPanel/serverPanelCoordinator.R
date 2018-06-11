@@ -1,4 +1,5 @@
 
+
 panels<-reactiveValues(
   #left='source' ,   #to be used as editor name later, for connecting to right graphics
   #  sourceType can be either svgPanelTag or RPanelTag
@@ -27,13 +28,20 @@ getNameType<-reactive({
     # cat('getNameType:: Error=', getErrorMssg(),"\n")
     errorPanelTag
   } else {
+    #browser()
     if(!is.null(getTibName())){
-      if (getTibName() %in% names(getPtDefs()$tib)){
-        'tib'
+      # print("names(getPtDefs()$tib:\n")
+      # print(names(getPtDefs()$tib))
+      # print(getTibName())
+      if( getTibName() %in% names(getPtDefs()$tib) ){
+        tibTag
+      } else if(getTibName()==transformTag && usingTransformDraggable()) { 
+        # return transformTag if transformTag and usingTransformDraggable()
+        transformTag
       } else {
         getTibName()
       }
-    } else {
+    } else { # RPanelTag whenever getTibName is NULL???
       RPanelTag
     }
   }
@@ -61,12 +69,11 @@ getColumnType<-reactive({
 #    getTibEditState
 #    getRightMidPanel
 #    serverEdTib to set transform panel
-
 getPlotState<-reactive({
   nameType<-getNameType()
-  if(nameType==tibTag){
+  if(identical(nameType,tibTag)){
     colType<-getColumnType()
-    if(colType=='point'){
+    if(identical(colType,'point')){
       c('point', 'matrix')[ getSelIndex() ]
     } else {
       'value'
@@ -84,18 +91,23 @@ getTibEditState<-reactive({
     getPlotState() %in%  c("point", "value", "matrix")
 })
 
-# used  in  
+# used  by
 # server.R:: ptrDisplayScript
 # serverPanelDispatch::
 # serverFooterRight.R
 # serverMouseClicks.R, (as barName)
 # serverLog.R (as barName)
+# returns:
+#  RPanelTag, rmdPanelTag, or oneof point, matrix, value, if ptR
 getRightMidPanel<-reactive({
+  cat('panels$sourceType=', panels$sourceType,"\n")
   if(hasError()){
     # cat('getRightMidPanel:: Error=', getErrorMssg(),"\n")
     rtv<-errorPanelTag
   } else if (panels$sourceType==RPanelTag){
     rtv<-RPanelTag
+  } else if (panels$sourceType==rmdPanelTag){
+    rtv<-rmdPanelTag
   } else {
      rtv<-getPlotState()
   }
@@ -106,12 +118,13 @@ getRightMidPanel<-reactive({
 
 getRightPanelChoices<-reactive({ # includes names of tibs
   # cat('getRightPanelChoices', format(getSourceType()),"\n")
-  if(hasError()){
-    # cat('ggetRightPanelChoices:: Error=', format(getErrorMssg()),"\n")
+  if(hasError()){ # error: set to  errorPanel
     choices<-errorPanelTag
   } else if( getSourceType()==RPanelTag){
     choices=RPanelTag
-  } else {
+  } else if( getSourceType()==rmdPanelTag){
+    choices=c( rmdPanelTag, RPanelTag )
+  } else { # ptRPanel (names of ptDefs not null), svgRPanel, 
     ptDefs<-getPtDefs()
     choices<-names(getPtDefs()$tib)
     # cat('getRightPanelChoices 1:: ', format(choices),"\n")
@@ -120,8 +133,6 @@ getRightPanelChoices<-reactive({ # includes names of tibs
     }
     choices<-c(choices, svgPanelTag, RPanelTag)
     # cat('getRightPanelChoices 2:: ', format(choices),"\n")
-    
-    
   }
   # cat('getRightPanelChoices 3:: ', format(choices),"\n")
   choices
@@ -153,7 +164,7 @@ observeEvent(atLeast2Rows(),{
   }
 })
 
-observeEvent(getAceEditorId(),{
+observeEvent(c(getAceEditorId(), getMode()),{
   id<-getAceEditorId()
   # cat("\nobserveEvent getAceEditorId:: id='",format(id),"'\n");
   # cat("\nobserveEvent getAceEditorId:: class(id)='",class(id),"'\n");
@@ -171,11 +182,19 @@ observeEvent(getAceEditorId(),{
     hideElement("midRightPanels")
   } else {
     #cat("showinging TopRightPanel\n")
-    showElement("TopRightPanel")
-    showElement("snippetToolBarContainer")
+    if(request$mode=='ptr'){
+      showElement("TopRightPanel")
+      showElement("snippetToolBarContainer")
+      showElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble
+      addClass( id= 'midRightPanels', class='ctop140')
+    } else {
+      removeClass( id= 'midRightPanels', class='ctop140')
+      hideElement("TopRightPanel")
+      hideElement("snippetToolBarContainer")
+      hideElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble
+    }
     showElement("aceToobarTop1")
     showElement("aceToobarTop2")
-    showElement("useTribble")
     showElement("commit")
     showElement("aceTabSet")
     showElement("midRightPanels")

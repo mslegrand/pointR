@@ -35,10 +35,6 @@ moduleFooterRight<-function(input, output, session,
                   ),
                   status='primary'
                  )          
-                # actionButton(session$ns("forwardPt" ), label = "Forward Select"),
-                # actionButton(session$ns("backwardPt"), label = "Backward Select"),
-                # actionButton(session$ns("removePt"), label = "Delete Select"),
-                # actionButton(session$ns("tagPt"), label = "Tag Select End")
             ),
             absolutePanel( left=450, bottom=5, 'class'='ptR2', style="font-weight: bold; color: #00FFFF;", span('max pts/row:')),
             absolutePanel( left=540, bottom=-15, 'class'='ptR2', 

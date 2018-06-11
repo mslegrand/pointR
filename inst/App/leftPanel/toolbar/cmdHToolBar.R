@@ -1,6 +1,6 @@
 
 observeEvent( input$tbNewFile ,{
-  cmdFileNew()
+  cmdFileNewPtR()
 }, ignoreInit = TRUE)
 
 observeEvent( input$tbSaveFile ,{
@@ -19,10 +19,11 @@ observeEvent( request$sender, {
     genTBObserver<-function(tbId, cmd){
       return(observeEvent(
         input[[tbId]],{
-          session$sendCustomMessage(
-            type = "shinyAceExt",    
-            list(id= getAceEditorId(), sender='fileCmd.toolbar', tbMssg=cmd)
-          )
+          # session$sendCustomMessage(
+          #   type = "shinyAceExt",    
+          #   list(id= getAceEditorId(), sender='fileCmd.toolbar', tbMssg=cmd)
+          # )
+          updateAceExt( id= getAceEditorId(), sender='fileCmd.toolbar', tbMssg=cmd )
         }, ignoreInit=TRUE)
       )
     }

@@ -91,7 +91,7 @@ extractColType<-function( column ){
       } else {
         return("numeric")
       }
-    } else if(is.logical(xx)) {
+    } else if(is.logical(column)) {
       return("logical")
     } else {
       return("other")

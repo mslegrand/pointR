@@ -41,7 +41,7 @@ ptR<-list(
 
 svgR(wh=WH,
 #your custom code goes here
-NULL
+  NULL
 )
 "->codeTemplate
 
@@ -135,14 +135,18 @@ NULL
 # }
 
 getDefPos<-function(txt, defTag){
-  p.df<-getParseDataFrame(txt)
-  cumCharLines<-getcumCharLines(txt)
-  tag.df<-extractTagDF(p.df, tag=defTag)
-  if( !is.null(tag.df) ){
-    pos<-extractPositions(cumCharLines, tag.df)
-  } else {
-    pos<-NULL
+  pos<-NULL
+  if(!is.null(txt)){
+    p.df<-getParseDataFrame(txt)
+    cumCharLines<-getcumCharLines(txt)
+    tag.df<-extractTagDF(p.df, tag=defTag)
+    if( !is.null(tag.df) ){
+      pos<-extractPositions(cumCharLines, tag.df)
+    } else {
+      pos<-NULL
+    }
   }
+  pos
 }
 
 

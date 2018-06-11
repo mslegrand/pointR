@@ -4,7 +4,8 @@ output$TopRightPanel<-renderUI({
       div( "class"='topHeadPanel',
       moduleEdAssetUI("edAssetCh", input, output),
       div( "class"='topHeadTibEdit',
-        moduleEdTibUI("tagValBar", input, output)
+        moduleEdTibUI("tagValBar", input, output),
+        moduleEdTransformUI("edTransform", input, output)
       )
     )
   )
@@ -21,7 +22,7 @@ output$BottomRightPanel<-renderUI({
 output$MidRightPanel<-renderUI({
   
   chosenRightMidPanel<-getRightMidPanel()
-  # cat("chosenRightMidPanel=",format(chosenRightMidPanel),"\n")
+  cat("chosenRightMidPanel=",format(chosenRightMidPanel),"\n")
   if (chosenRightMidPanel=='point'){
     modulePlotSVGrUI("svgPointsMod")
   } else if (chosenRightMidPanel=='value'){
@@ -32,8 +33,14 @@ output$MidRightPanel<-renderUI({
     modulePlotSVGrUI("svgTransformMod")
   } else if( chosenRightMidPanel == svgPanelTag ){
     modulePlotSVGrUI("svgPointsMod")
-  } else if (chosenRightMidPanel %in% c(errorPanelTag, RPanelTag)){
+  } else if( chosenRightMidPanel == errorPanelTag ){
+    # cat('about to"errLogMod"\n')
     moduleLogUI("errLogMod")
+  }else if (chosenRightMidPanel ==  RPanelTag ){
+    # cat('about to"capturedLogMod"\n')
+    moduleLogUI("capturedLogMod")
+  } else if( chosenRightMidPanel == rmdPanelTag ){
+    modulePlotRmdUI("rmdMod")
   }
   
   

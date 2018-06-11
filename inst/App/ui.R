@@ -8,7 +8,7 @@
 library(shiny)
 
 
-version="ptR:v.0.3.9"
+
 
 # style="position: fixed; top: -100em" to keep hidden
 shinyUI(  
@@ -73,33 +73,17 @@ shinyUI(
               top=105, left=0, width="100%", "class"="headerPanel", draggable=FALSE, height="30px",
               buildHToolBar(bar2)
            ),
-          #div( "class"="cMidPanel",
-               # div(
-               #   id='aceContainer',
-               #   "class"="cSvgOut cSvgOutRightIndent", #class"="cAceContainer",
-               #   #style="overflow-y:hidden;",
-               #   #overflow= "hidden",
-               #   shinyAce4Ptr(
-               #     outputId = "source",  value="",
-               #     mode="ptr", theme=defaultOpts["theme"],
-               #     fontSize=16, autoComplete="live",
-               #     autoCompleteList =list(svgR=names(svgR:::eleDefs))
-               #   ),
-               #   inline=FALSE
-               # ),
-               div( id='snippetToolBarContainer', "class"="cSnippetToolBarContainer", #draggable=FALSE ,
-                    tags$ul( id='dndSnippetList', "class"="cSnippetToolBarList",
-                      buildSnippetToolBar()
-                    ),
-                    div( id='snippetScrollUp', class='snippetButton  cTop center',
-                         span('class'="glyphicon glyphicon-chevron-up")
-                    ),
-                    div( id='snippetScrollDown', class='snippetButton cBottom center',
-                         span('class'="glyphicon glyphicon-chevron-down")
-                    )
-               #)
+           div( id='snippetToolBarContainer', "class"="cSnippetToolBarContainer", #draggable=FALSE ,
+                tags$ul( id='dndSnippetList', "class"="cSnippetToolBarList",
+                  buildSnippetToolBar()
+                ),
+                div( id='snippetScrollUp', class='snippetButton  cTop center',
+                     span('class'="glyphicon glyphicon-chevron-up")
+                ),
+                div( id='snippetScrollDown', class='snippetButton cBottom center',
+                     span('class'="glyphicon glyphicon-chevron-down")
+                )
           ),
-
           absolutePanel( "class"="footerPanel", draggable=FALSE, style="display:inline-block",
              absolutePanel( left=5, bottom=0,
                actionButton("commit", label = "COMMIT EDIT") %>% bs_embed_tooltip(title = "Commit code changes")
@@ -128,7 +112,7 @@ shinyUI(
           buildRightMenu(),
           uiOutput("BottomRightPanel"),
           uiOutput("TopRightPanel"),
-          div( id="midRightPanels", class="cMidPanel",
+          div( id="midRightPanels", class="cMidPanel ctop140",
             div( id='svgOutPanel',  class="cSvgOut", uiOutput("MidRightPanel")),
             div( id='rowOutPanel',  class='cRowOut', 
                  uiOutput("LeftMidRightPanel"),visibility='hidden',

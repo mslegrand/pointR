@@ -34,3 +34,12 @@ errLogModuleList<-callModule( #auto  input, output, session
   logMssgs=getErrorMssg
 )
 
+captLogModuleList<-callModule( #auto  input, output, session 
+  module=moduleLog, 
+  id="capturedLogMod", 
+  panelName=getRightMidPanel,
+  logMssgs=getCapturedMssg
+)
+
+
+

@@ -12,7 +12,8 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   
 # Reactive values----------
   request<-reactiveValues(
-    code=NULL,
+    code=NULL, 
+    mode='ptr',
     sender='startup',
     tabs=NULL
   )
@@ -30,36 +31,76 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   })
   
   
-  getCode<-reactive({request$code})
+  getMode<-reactive({
+    request$mode
+  })
+  
+  getCode<-reactive({
+#    if(request$mode=='ptr'){
+      request$code
+    # } else {
+    #   ""
+    # }
+  })
+  
+  # getMarkdown<-reactive({
+  #   if(request$mode=='markdown'){
+  #     request$code
+  #   } else {
+  #     ""
+  #   }
+  # })
+  
   mssg<-reactiveValues(
     error="",
-    R_output=""
+    capturedOutput=""
   ) 
   setErrorMssg<-function(errMssg){ mssg$error<-errMssg }
   clearErrorMssg<-function(){ mssg$error<-"" }
   hasError<-reactive({ nchar(mssg$error)>0 })
   getErrorMssg<-reactive({ mssg$error })
-  
+  setCapturedMssg<-function(capturedMssg)({ 
+    mssg$capturedOutput<-capturedMssg
+  })
+  getCapturedMssg<-reactive({ 
+    mssg$capturedOutput
+  })
   triggerRefresh<-function(sender, rollBack=TRUE, auxValue=FALSE){ # to be used to force a code refresh???
-    session$sendCustomMessage(
-      type = "shinyAceExt",
-      list(id= getAceEditorId(), sender=sender, getValue=TRUE, rollBack=rollBack, auxValue=auxValue)
-    )
+    updateAceExt(id= getAceEditorId(), sender=sender, getValue=TRUE, rollBack=rollBack, auxValue=auxValue )
   }
   
-  sendPtRManagerMessage<-function(id, sender, ...){ 
-    session$sendCustomMessage( type = "ptRManager", 
-        c( list(id = id, sender=sender), list(...) )
-    )
+  sendPtRManagerMessage<-function(sender, ...){ 
+    data<- c( list(sender=sender), list(...))
+    lapply(data, function(x){if(is.na(x)){
+      print(data)
+      stop("encounterd an NA")
+    }})
+    session$sendCustomMessage( type = "ptRManager", data)
   }
   
-  sendFileTabsMessage<-function(id, sender, ...){ 
+  # sendFileTabsMessage<-function(id, sender, ...){ 
+  #   cat( "sendFileTabsMessage:: id=",id," sender=",sender,"\n" )
+  #   data<- c( list(value = id, sender=sender), list(...) )
+  #   print(data)
+  #   session$sendCustomMessage( type = "scrollManager", 
+  #      c( list(value = id, sender=sender), list(...) )
+  #   )
+  # }
+  
+  sendFileTabsMessage<-function(...){ 
     #cat( "sendFileTabsMessage:: id=",id," sender=",sender,"\n" )
-    data<- c( list(value = id, sender=sender), list(...) )
+    data<- list(...) 
     #print(data)
-    session$sendCustomMessage( type = "scrollManager", 
-       c( list(value = id, sender=sender), list(...) )
-    )
+    if(length(data)>0){
+    #   lapply(data, function(x){
+    #     if(is.null(x) || is.na(x) ){
+    #       print(data)
+    #       stop("encounterd an NA")
+    #     }
+    #   })
+      session$sendCustomMessage( type = "scrollManager",  data )
+    }
+    
   }
   
   
@@ -160,6 +201,7 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   source("rightPanel/serverPlotSelectDB.R",          local=TRUE)
   source("rightPanel/footer/serverFooterRight.R",    local=TRUE) 
   source("rightPanel/header/serverEdTib.R",          local=TRUE)
+  source("rightPanel/header/serverEdTransform.R",    local=TRUE)
   source("rightPanel/header/serverEdAsset.R",        local=TRUE)
   source("rightPanel/mid/serverRowDND.R",            local=TRUE)
   source("rightPanel/mid/serverPlotBarPoints.R",     local=TRUE) 
@@ -167,6 +209,7 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   source("rightPanel/mid/serverPlotBarTagDrag.R",    local=TRUE)  
   source("rightPanel/mid/serverPlotBarTransform.R",  local=TRUE) 
   source("rightPanel/mid/serverLog.R",               local=TRUE) 
+  source("rightPanel/mid/serverPlotRmd.R",           local=TRUE) 
   source("rightPanel/mid/serverMouseClicks.R",       local=TRUE)
   source("rightPanel/menu/cmdNewColumn.R",           local=TRUE)
   source("rightPanel/menu/cmdNewAsset.R",            local=TRUE)
@@ -182,6 +225,7 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   
 #---------------leftPanel--------------------------
   source("leftPanel/footer/processCommit.R",        local=TRUE)
+  source("leftPanel/footer/processKnit.R",          local=TRUE)
   source("leftPanel/footer/serverButtons.R",        local=TRUE)
   source("leftPanel/toolbar/cmdHToolBar.R",         local=TRUE)    
   source("leftPanel/menu/cmdFileSaveAs.R",          local=TRUE)  

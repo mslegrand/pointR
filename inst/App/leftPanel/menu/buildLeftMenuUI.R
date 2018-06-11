@@ -6,7 +6,18 @@ buildLeftMenu<-function(version){
     menuBarId="editNavBar",
     menuDropdown(
       "File", 
-      shinyDMDMenu::menuItem("New"),
+      shinyDMDMenu::menuDropdown(
+        "New File",
+        shinyDMDMenu::menuDropdown('ptR script',
+              shinyDMDMenu::menuItem("ptR list containing a tibble", value="newPtrTibScript"),
+              shinyDMDMenu::menuItem("ptR list containing a matrix", value="newPtRMatScript"),
+              shinyDMDMenu::menuItem("svgR without a ptR list", value="newPtRSVGScript")
+        ),
+        shinyDMDMenu::menuItem('R script', value='newRScript'),
+        shinyDMDMenu::menuItem('R markdown doc', value='newRmd')#,
+        #shinyDMDMenu::menuItem('R ioslides doc', value='newIOSlides')
+      ),
+      menuDivider(),
       shinyDMDMenu::menuItem("Open"),
       menuDropdown("Recent Files"),
       menuDivider(),
@@ -18,6 +29,8 @@ buildLeftMenu<-function(version){
       menuDivider(),
       shinyDMDMenu::menuItem("Close", value="close"),
       shinyDMDMenu::menuItem("Close All", value="closeAll"),
+      menuDivider(),
+      shinyDMDMenu::menuItem("Print", value="print"),
       menuDivider(),
       shinyDMDMenu::menuItem("Quit", value="quit")
     ),

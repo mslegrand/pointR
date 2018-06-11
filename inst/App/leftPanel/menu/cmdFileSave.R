@@ -31,10 +31,11 @@ cmdFileSave<-function(){
 
 cmdFileSaveAll<-function(){
   # cat('starting in cmdFileSaveAll')
-  session$sendCustomMessage(
-    type = "scrollManager", 
-    list( sender= 'fileCmd.save', getAllTabIds=TRUE ) 
-  )
+  # session$sendCustomMessage(
+  #   type = "scrollManager", 
+  #   list( sender= 'fileCmd.save', getAllTabIds=TRUE ) 
+  # )
+  sendFileTabsMessage(sender= 'fileCmd.save', getAllTabIds=runif(1))
   # cat('\n------exit cmdFileSaveAll------------\n')
 }
 

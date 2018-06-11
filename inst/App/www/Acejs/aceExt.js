@@ -26,6 +26,8 @@ function simpleStringify (object){
 }
 
 
+
+
 /*
 var loadPtrSnippetFile = function(id) {
     if (!id || snippetManager.files[id])
@@ -113,6 +115,12 @@ function nextBookMark(ed){
               }
 }   
 
+function getAceMode(ed){
+  var mode = editor.getSession().$modeId;
+  mode = mode.substr(mode.lastIndexOf('/') + 1);
+  return mode;
+}
+
 
 Shiny.addCustomMessageHandler(
   "shinyAceExt",
@@ -121,7 +129,7 @@ Shiny.addCustomMessageHandler(
           '------------Entering  aceExt.js customMessageHandler-------------------------------- '
         );
         var id = data.id;
-        console.log('ace id =' + JSON.stringify(id));
+        
         
         if(id.length===0){ // nothing to process
           Shiny.onInputChange('messageFromAce', 
@@ -136,7 +144,7 @@ Shiny.addCustomMessageHandler(
           });
           return false;
         }
-        
+        console.log('ace id =' + JSON.stringify(id));
         var $el = $('#' + id);
         var editor = $el.data('aceEditor'); 
         var Range = ace.require("ace/range").Range;
@@ -145,7 +153,8 @@ Shiny.addCustomMessageHandler(
         var auxValue="";
         
         var HighlightedLines;
-        
+        var aceMode = editor.getSession().$modeId;
+        aceMode = aceMode.substr(aceMode.lastIndexOf('/') + 1);
         
         
         console.log('id=' + id );
@@ -177,6 +186,13 @@ Shiny.addCustomMessageHandler(
           editor.setBehavioursEnabled(true);
         }
         
+        //if(!!data.getMode){
+        // var mode = editor.getSession().$modeId;
+        //  mode = mode.substr(mode.lastIndexOf('/') + 1);
+        //  console.log( 'mode is = ' + JSON.stringify( mode ) );
+        //}
+
+        
         if (!!data.addMarker ){
           var pos = data.addMarker;
           var row1 = pos[0]; 
@@ -205,6 +221,7 @@ Shiny.addCustomMessageHandler(
           }
           editor.focus();
         }
+        
         
         
         if(!!data.tabSize){
@@ -385,11 +402,18 @@ Shiny.addCustomMessageHandler(
           if(['cmd.openFileNow','cmd.file.new'].indexOf(sender)>=0){
             editor.getSession().clearBreakpoints();
           }
+          if(['cmd.file.new'].indexOf(sender)>=0){
+            // select NULL
+            //if(getAceMode(editor)=='ptr'){
+              editor.find('NULL');
+            //}
+          }
           Shiny.onInputChange('messageFromAce', 
           {
              code : editor.getSession().getValue(),
              sender : data.sender,
              id : id,
+             mode: aceMode,
              //dirty: editor.getSession().getUndoManager().dirtyCounter,
              isSaved: ud.isClean(),
              rnd : randomString(5)
@@ -412,12 +436,14 @@ Shiny.addCustomMessageHandler(
             auxValue=data.auxValue;
           }
           
+          
           Shiny.onInputChange('messageFromAce', 
           {
              code :  editor.getSession().getValue(),
              sender : data.sender,
              id : id,
              //dirty: editor.getSession().getUndoManager().dirtyCounter,
+             mode: aceMode,
              isSaved: ud.isClean(),
              auxValue: auxValue,
              rnd : randomString(5)
@@ -447,7 +473,7 @@ Shiny.addCustomMessageHandler(
           if(! data.oldFilePath){
             data.oldFilePath='?';
           }
-          console.log('getDoc:: docFileSaved=' +JSON.stringify(ud.isClean()) );
+          //console.log('getDoc:: docFileSaved=' +JSON.stringify(ud.isClean()) );
           Shiny.onInputChange('messageFromAce', 
           {
              code :  editor.getSession().getValue(),
