@@ -14,9 +14,9 @@ bar1<-list(
   tbToggleComment=list(      icon=c("icon-comment-empty","icon-toggle-on"), title = "Toggle Comment Selection", cmd="togglecomment" ),                  
   tbCollapse=list(           icon=c("icon-collapse"),                       title = "Collapse All",             cmd="foldall"  ),                
   tbExpand=list(             icon=c("icon-expand"),                         title = "Expand All",               cmd="unfoldall"  ),               
-  tbNextBookMark=list(       icon=c("icon-bookmark", "icon-level-down"),    title = "Next BookMark",            cmd="nextBookMark"  ),                  
-  tbPreviousBookMark=list(   icon=c("icon-bookmark", "icon-level-up" ),     title = "Previous BookMark",        cmd="previousBookMark"  ),                  
-  tbDeleteAllBookMarks=list( icon=c("icon-bookmark","icon-cancel" ),        title = "Delete All BookMarks",     cmd="deleteAllBookMarks" ),                
+  # tbNextBookMark=list(       icon=c("icon-bookmark", "icon-level-down"),    title = "Next BookMark",            cmd="nextBookMark"  ),                  
+  # tbPreviousBookMark=list(   icon=c("icon-bookmark", "icon-level-up" ),     title = "Previous BookMark",        cmd="previousBookMark"  ),                  
+  # tbDeleteAllBookMarks=list( icon=c("icon-bookmark","icon-cancel" ),        title = "Delete All BookMarks",     cmd="deleteAllBookMarks" ),                
   tbPrint=list(              icon=c("icon-print-1" ),                       title = "Print",                     cmd= 'print'  ),
   tbHelp=list(               icon=c("icon-help" ),                          title = "Help",                      cmd= 'help'  )
 )

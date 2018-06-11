@@ -71,6 +71,8 @@ function ptRaceInit(data){
   //console.log('JSON.stringify($el.data)')
   var theEditor = $el.data('aceEditor'); 
   var autoComplete = data.autoComplete[0];
+  var autoCompleteList=data.autoCompleteList;
+  console.log('autoCompleteList=', JSON.stringify(autoCompleteList));
   /*if(!!editorVar){
     console.log('editorVar=' + editorVar);
   } else {
@@ -123,6 +125,9 @@ function ptRaceInit(data){
         theEditor.completers.splice(1, 1); // to get rid of the ducpliate local matches 
         //console.log(JSON.stringify(theEditor.completers.length));
         //console.log(JSON.stringify(theEditor.completers));
+      }
+      if (data.hasOwnProperty('autoCompleteList')){
+          $el.data('autoCompleteList', data.autoCompleteList);
       }
       //Next a custom history manager
       

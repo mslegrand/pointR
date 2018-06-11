@@ -43,6 +43,7 @@ initialPtrAceOptions<-function(
     mode=mode,
     editorVar=editorVar,
     autoComplete='live',
+    autoCompleteList=autoCompleteList,
     acejs=acejs,
     docFilePath=docFilePath
   )
@@ -59,7 +60,7 @@ shinyAce4Ptr <- function(
     theme="chrome",
     fontSize=16,
     mode="ptr",
-    autoComplete=c("disabled", "enabled", "live"),
+    autoComplete= "enabled",
     autoCompleteList=NULL,
     debounce=1000, 
     selectionId=NULL, 
@@ -72,13 +73,15 @@ shinyAce4Ptr <- function(
       outputId,
       value,
       'text',
+      autoComplete='disabled',
       theme=theme,
       height='100%'
     )
     
     js2<-initialPtrAceOptions(
       outputId=outputId, value=value, theme=theme, fontSize=fontSize, mode=mode,
-      autoComplete=autoComplete, autoCompleteList=autoCompleteList,
+      autoComplete=autoComplete, 
+      autoCompleteList=autoCompleteList,
       debounce=debounce, selectionId=selectionId, cursorId=cursorId, hotkeys=hotkeys, 
       docFilePath=docFilePath
     )

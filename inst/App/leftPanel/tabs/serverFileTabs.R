@@ -45,8 +45,9 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr'){
         shinyAce4Ptr(
             outputId = aceId,  value=txt,
             mode=mode, theme=defaultOpts["theme"],
-            fontSize=defaultOpts["fontSize"], autoComplete="live",
-            autoCompleteList =list(svgR=names(svgR:::eleDefs)),
+            fontSize=defaultOpts["fontSize"], autoComplete="enabled",
+            #autoCompleteList =list(svgR=names(svgR:::eleDefs)),
+            autoCompleteList =list(names(svgR:::eleDefs)),
             docFilePath=docFilePath
           ),
            inline=FALSE
