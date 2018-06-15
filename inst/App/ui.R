@@ -58,10 +58,12 @@ shinyUI(
           buildLeftMenu(version),
           #-------left menu end------------
           #-------left content begin--------
-          shinyFilesButton("buttonFileOpenHidden", label="", title="Open File",  c('R','PTR', 'SVGR'),   multiple=FALSE, class='hiddenButton'),
-          shinySaveButton( "buttonFileSaveHidden", label="", title="Save as ...",  list('hidden_mime_type'=c("R")) , class='hiddenButton'),
-          shinyFilesButton("buttonSnippetOpen",    label="", title="Import Snippet", multiple=FALSE,  class='hiddenButton'),
-          shinySaveButton("buttonExportSVGHidden", label="", title="Save as ...",  list('hidden_mime_type'=c("SVG")) , class='hiddenButton'),
+          genShinyOpenFilesButtons(),
+          genShinySaveFilesButtons(),
+          # shinyFilesButton("buttonFileOpenHidden", label="", title="Open File",     c('R','PTR', 'SVGR'),   multiple=FALSE, class='hiddenButton'),
+          # shinySaveButton( "buttonFileSaveHidden", label="", title="Save as ...",   filetype=list(text='txt', R=c('R'), Rmd='Rmd'), class='hiddenButton'),
+          # shinyFilesButton("buttonSnippetOpen",    label="", title="Import Snippet", multiple=FALSE,                        class='hiddenButton'),
+          # shinySaveButton("buttonExportSVGHidden", label="", title="Save as ...",    list('hidden_mime_type'=c("SVG")) ,    class='hiddenButton'),
           div( id='aceTabSet', class="container",
               tabsetPanel(id='pages')
           ),

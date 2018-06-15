@@ -2,21 +2,21 @@
 Shiny.addCustomMessageHandler(
   "ptRManager",
   function(data){
-    console.log('hello from ptRManager------------\n');
+    console.log('-----------Entering ptRManager------------\n');
     console.log(JSON.stringify(data));
     if(!!data.openFile){
       //console.log('about to trigger open\n');
       if( data.sender==='cmd.openFileNow'){
-        $('#buttonFileOpenHidden').trigger('click');
+        $('#buttonFileOpen').trigger('click');
       }
       if( data.sender==='cmd.snippet.file.open'){
         $('#buttonSnippetOpen').trigger('click');
       }
-    }
+    } //end data.openFile
     if(!!data.importSnippet){
       //console.log('about to trigger load snippet\n');
       $('#buttonSnippetOpen').trigger('click');
-    }
+    } //end data.importSnippet
     if(!!data.saveFile){
       var sender=data.sender;
       console.log('data.saveFile:: sender=' + sender);
@@ -24,15 +24,20 @@ Shiny.addCustomMessageHandler(
       console.log('data.saveFile:: tabId=' + tabId);
       //get title from tabId and stabs
       var title=stabs.getTitleGivendataValue(tabId);
-      console.log(JSON.stringify(title));
-      $('#buttonFileSaveHidden').trigger('click');
-      console.log(JSON.stringify( $("h4 .sF-title .modal-title").text() ));
+      console.log('ptRManager:: title= ' + JSON.stringify(title));
+      
+      if(!!data.target){
+        console.log('save target=' + data.target); 
+      } 
+      
+      $('#' + data.target).trigger('click');
       $("h4.sF-title.modal-title").text( 'Save '+ title +' as ...');
+      
       if(sender==='fileCmd.close' || sender==='fileCmd.quit'){
         console.log("abc\n");
         $("#sF-cancelButton").text( "Close Without Saving");
-        $("#buttonFileSaveHidden").on('cancel', function(event){
-            Shiny.onInputChange('buttonFileSaveHidden', { 
+        $("#buttonFileSaveR").on('cancel', function(event){
+            Shiny.onInputChange('buttonFileSaveR', { 
               sender:sender, 
               cancel: 'close', 
               rnd: Math.random().toString(36).substring(7)});
@@ -40,18 +45,18 @@ Shiny.addCustomMessageHandler(
       } else {
         console.log("defg\n");
         $("#sF-cancelButton").text( "Cancel");
-        $("#buttonFileSaveHidden").on('cancel', function(event){
-          Shiny.onInputChange('buttonFileSaveHidden', {
+        $("#buttonFileSaveR").on('cancel', function(event){
+          Shiny.onInputChange('buttonFileSaveR', {
             sender:sender, 
             cancel: 'cancel',
             rnd: Math.random().toString(36).substring(7)
           });
         });
       }
-    }
+    } //endof data.saveFile
     if(!!data.exportSVG){
       // console.log('about to trigger svg export\n');
-      $('#buttonExportSVGHidden').trigger('click');
+      $('#buttonExportSVG').trigger('click');
     }
     if(!!data.setFocus){ // I don't if this is still being called???
       // console.log('#' + data.setFocus +'\n' );
@@ -77,12 +82,12 @@ Shiny.addCustomMessageHandler(
         appendTo: 'body'
       }); 
     });
-    }
+    } //endof data.snippetButtonActivate
     if(!!data.rowCountChange){
       $(window).resize();
     }
+    console.log('-----------Exiting ptRManager------------\n');
   }
-  
 ); 
 
 

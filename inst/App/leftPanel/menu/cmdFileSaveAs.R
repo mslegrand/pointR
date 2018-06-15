@@ -18,15 +18,15 @@ cmdFileSaveAs<-function(){
   
   setTabRequest(sender="fileCmd.saveAs", tabs=input$pages)
   #sendPtRManagerMessage( id=tabId,   sender='cmd.saveFileAs', saveFile=TRUE)
-  # session$sendCustomMessage( #triggers click of buttonFileSaveHidden
+  # session$sendCustomMessage( #triggers click of buttonFileSave
   #   type = "ptRManager", 
   #   list(id= getAceEditorId(), saveFile=TRUE, sender='cmd.saveFileNow' )
   # )
 }
 
-observeEvent(input$buttonFileSaveHidden,{
+observeEvent(input$buttonFileSaveR,{
   # cat('=======shinyFiles SAVE RETURN EVENT=============\n')
-  rtList<-input$buttonFileSaveHidden
+  rtList<-input$buttonFileSaveR
   # cat('class(rtList)=',class(rtList),"\n")
   # print(format(rtList))
   if('cancel' %in% names(rtList)){
@@ -50,7 +50,8 @@ observeEvent(input$buttonFileSaveHidden,{
       setTabRequest(sender=NULL, tabs=NULL)
     }
   } else { 
-    fp.dt<-parseSavePath(c(wd='~'), input$buttonFileSaveHidden)
+    #browser()
+    fp.dt<-parseSavePath(c(wd='~'), input$buttonFileSaveR)
     if(length(fp.dt)>0 && nrow(fp.dt)>0){
       #cat('=======shinyFiles SAVE=============\n')
       datapath<-as.character(fp.dt$datapath[1])

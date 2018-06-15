@@ -101,12 +101,12 @@ ScollableTabs.prototype.resetTitleGivendataValue = function( newTitle, dataValue
 };
 
 ScollableTabs.prototype.getTitleGivendataValue = function( dataValue){
-  var innText=$(this.containerId +" div ul li a[data-value='" + dataValue + "'] span").text().trim();
+  var innText=$(this.containerId +" div ul li a[data-value='" + dataValue + "'] span span.tabTitle").text().trim();
   return innText;
 };
 
 ScollableTabs.prototype.toggleSaveState = function( tabId, state){
-  console.log('title='+ $(this.containerId +" div ul li a[data-value='" + tabId + "'] span").text().trim());
+  console.log('title='+ $(this.containerId +" div ul li a[data-value='" + tabId + "'] span span.tabTitle").text().trim());
   $(this.containerId +" div ul li a[data-value='" + tabId + "'] span span.tabTitle").toggleClass('star', state) ;
   return true;
 };
@@ -311,7 +311,7 @@ $(document).ready(function(){
 Shiny.addCustomMessageHandler(
   "scrollManager",
   function(data){
-    console.log("inside scrollManager");
+    console.log("----------entering  scrollManager------------");
     console.log("data is" + JSON.stringify(data));
     if(!!data.resize){
       //console.log('resize here');
@@ -330,7 +330,7 @@ Shiny.addCustomMessageHandler(
       console.log("!!data.savedStatus=" + JSON.stringify(!!data.savedStatus));
       if(!!data.savedStatus){
         console.log("data.savedStatus="+ data.savedStatus);
-        stabs.toggleSaveState(data.value, data.savedStatus!=='saved');
+        stabs.toggleSaveState(data.tabId, data.savedStatus!=='saved');
       }
     }
     
@@ -344,5 +344,6 @@ Shiny.addCustomMessageHandler(
         rnd: Math.random().toString(36).substring(7)
       } );
     }
+    console.log("----------exiting  scrollManager------------");
   }
 );

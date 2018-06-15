@@ -20,7 +20,7 @@ cmdFileNewRmd<-function(){
   src<-fileTemplates[[ "rmdTemplate.Rmd" ]] #rmdTemplate
   #src<-rmdTemplate
   tabName<-getNextAnonymousFileName()
-  addFileTab(title=tabName, txt=src,  docFilePath="?", mode='markdown')
+  addFileTab(title=tabName, txt=src,  docFilePath="?", mode='ptrrmd')
   delay(500,
         updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', setValue= src, setDocFileSaved=TRUE, ok=TRUE )
   )
@@ -30,7 +30,7 @@ cmdFileNewRmd<-function(){
 cmdNewIOSlides<-function(){
   src<-ioslidesTemplate
   tabName<-getNextAnonymousFileName()
-  addFileTab(title=tabName, txt=src,  docFilePath="?", mode='markdown')
+  addFileTab(title=tabName, txt=src,  docFilePath="?", mode='ptrrmd')
   delay(500,
         updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', setValue= src, setDocFileSaved=TRUE, ok=TRUE )
   )

@@ -61,9 +61,9 @@ openFileDlgSelector<-function(){
 }
 
 
-observeEvent(input$buttonFileOpenHidden,{
-  #cat("observe input$buttonFileOpenHidden:: enter\n")
-  fp.dt<-parseFilePaths(c(wd='~'), input$buttonFileOpenHidden)
+observeEvent(input$buttonFileOpen,{
+  #cat("observe input$buttonFileOpen:: enter\n")
+  fp.dt<-parseFilePaths(c(wd='~'), input$buttonFileOpen)
   if(length(fp.dt)>0 && nrow(fp.dt)){
     datapath<-as.character(fp.dt$datapath[1])
     openFileNow(datapath)
@@ -80,15 +80,20 @@ openFileNow<-function(fileName){
     if(nchar(src)>0){
       mssg$error<-""
       tabName<-basename(fileName)
-      # cat('openFileNow:: fileName=', format(fileName),"\n")
-      # ext<-file_ext(fileName)
-      # mode<-'txt'
-      # if(ext %in% c('ptr','R','ptR','r')){
-      #   mode=='ptr'
-      # } else if(ext %in% 'Rmd'){
-      #    mode='markdown'
-      # }
-      addFileTab(title=tabName, txt=src, docFilePath= fileName)
+      cat('openFileNow:: fileName=', format(fileName),"\n")
+      #ext<-file_ext(fileName)
+      mode<-'txt'
+      if( grepl("*.ptr$", fileName, ignore.case = T)){
+        mode<-'ptr'
+      }
+      if( grepl("*.r$", fileName, ignore.case = T)){
+        mode<-'ptr'
+      }
+      if( grepl("*.Rmd$", fileName, ignore.case = T)){
+        mode<-'ptrrmd'
+      }
+      cat('MODE=',mode,'\n')
+      addFileTab(title=tabName, txt=src, docFilePath= fileName, mode=mode)
       #here we set the value, 
       # session$sendCustomMessage(
       #   type = "shinyAceExt",

@@ -182,7 +182,7 @@ observeEvent(c(getAceEditorId(), getMode()),{
     hideElement("midRightPanels")
   } else {
     #cat("showinging TopRightPanel\n")
-    if(request$mode=='ptr'){
+    if(identical(request$mode,'ptr')){
       showElement("TopRightPanel")
       showElement("snippetToolBarContainer")
       showElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble

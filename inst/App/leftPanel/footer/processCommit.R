@@ -14,19 +14,24 @@ src2sourceType<-function(src){  #not used !!
 processCommit<-reactive({
   clearErrorMssg()
   #src<-getCode() #input$source #------ace editor
-  
+  #request$code
   #if(length(src)==1){
+  cat('ProcessCommit: request$mode=',format(request$mode),"\n")
     if( identical(request$mode, 'ptr')){
       processSvgR()
-    } else if(  identical(request$mode, 'markdown') ){
+    } else if(  identical(request$mode, 'ptrrmd') ){
       processKnit()
     } 
+  # isolate({
+  #   request$refresh<-runif(1)
+  # })
+  
   #}
 })
 
 
 processSvgR<-reactive({
-  src<-getCode()
+  src<-request$code
   if(length(src)==1){
     ptRList<-getPtDefs()$tib
     tryCatch({

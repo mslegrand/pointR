@@ -6,14 +6,14 @@ cmdFileExportSvg<-function(){
     svgFileName<-"unnamed.svg"
   }
   sendPtRManagerMessage(  sender='cmd.exportSVGNow', exportSVG=TRUE)
-  # session$sendCustomMessage( #triggers click of buttonFileSaveHidden
+  # session$sendCustomMessage( #triggers click of buttonFileSave
   #   type = "ptRManager", 
   #   list(id= getAceEditorId(), exportSVG=TRUE, sender='cmd.exportSVGNow' )
   # )  
 }
 
-observeEvent(input$buttonExportSVGHidden,{
-  fp.dt<-parseSavePath(c(wd='~'), input$buttonExportSVGHidden)
+observeEvent(input$buttonExportSVG,{
+  fp.dt<-parseSavePath(c(wd='~'), input$buttonExportSVG)
   if(length(fp.dt)>0 && nrow(fp.dt)){
     fileName<-as.character(fp.dt$datapath[1])
     src<- getCode()

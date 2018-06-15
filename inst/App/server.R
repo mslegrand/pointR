@@ -36,20 +36,9 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   })
   
   getCode<-reactive({
-#    if(request$mode=='ptr'){
       request$code
-    # } else {
-    #   ""
-    # }
   })
   
-  # getMarkdown<-reactive({
-  #   if(request$mode=='markdown'){
-  #     request$code
-  #   } else {
-  #     ""
-  #   }
-  # })
   
   mssg<-reactiveValues(
     error="",
@@ -70,11 +59,18 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   }
   
   sendPtRManagerMessage<-function(sender, ...){ 
-    data<- c( list(sender=sender), list(...))
-    lapply(data, function(x){if(is.na(x)){
+    data<- c( list(sender=sender), list(...), list(fk=runif(1)))
+    if(identical(sender,'tibNrow')){
+      cat("Enter==============tibNRow data ======================\n")
       print(data)
-      stop("encounterd an NA")
-    }})
+      cat("Exit==============tibNRow data =======================\n")
+    }
+    lapply(data, function(dd){
+      if(is.na(dd)){
+        print(data)
+        stop("encounterd an NA")
+      }
+    })
     session$sendCustomMessage( type = "ptRManager", data)
   }
   
@@ -92,6 +88,10 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
     data<- list(...) 
     #print(data)
     if(length(data)>0){
+        if(identical(data$sender, 'savedStatus')){
+          cat('sendFileTabsMessage\n')
+          print(data)
+        }
     #   lapply(data, function(x){
     #     if(is.null(x) || is.na(x) ){
     #       print(data)
@@ -115,6 +115,7 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
     newFileName<-paste0("Anonymous ", pages$fileNameCount)
     pages$fileNameCount<-pages$fileNameCount+1
     #newTabId<-"source"
+    #cat("getNextAnonymousFileName::newFileName",newFileName,"\n")
     newFileName
   }
   
@@ -167,11 +168,14 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   })  
   
   
-  shinyFileChoose(input, "buttonFileOpenHidden", session=session, roots=c(wd="~") ) #hidden
+  shinyFileChoose(input, "buttonFileOpen", session=session, roots=c(wd="~") ) #hidden
   shinyFileChoose(input, "buttonSnippetOpen",    session=session, roots=c(wd="~"),  filetypes=c('', 'snp') ) #hidden
-  shinyFileSave(input, "buttonFileSaveHidden",   session=session, roots=c(wd="~"),  filetypes=c('R','svgR') ) #hidden
-  shinyFileSave(input, "buttonExportSVGHidden",  session=session, roots=c(wd="~"),  filetypes=c('svg') ) #hidden
-
+  
+  #shinyFileSave(input, "buttonFileSaveR",   session=session, roots=c(wd="~") ) #hidden
+  #shinyFileSave(input, "buttonExportSVG",  session=session, roots=c(wd="~")  ) #hidden
+  
+  # genShinySaveFilesServerConnection(input, session)
+  # genShinySaveFilesObservers(input, session)
   # Reactive expressions------------- 
   showGrid<-reactive({displayOptions$showGrid})
 
@@ -196,6 +200,8 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   source("leftPanel/mid/serverAce.R",                local=TRUE) 
   source("leftPanel/helpSVG.R",                      local=TRUE) 
   source("leftPanel/tabs/serverFileTabs.R",          local=TRUE) 
+  source("leftPanel/fileIO/serverGenShinyFilesSaveObservers.R",        
+                                                     local=TRUE)
   
 #------------------rightPanel--------------------------------
   source("rightPanel/serverPlotSelectDB.R",          local=TRUE)

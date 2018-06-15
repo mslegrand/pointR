@@ -2,9 +2,9 @@
 jqui_sortable('#pages')
 
 closeRfn<-function(tabId){paste0("event.stopPropagation();Shiny.onInputChange('closeTab',  {id:'",tabId,"', type: 'tabId'} ); return false")}
-tabTitleRfn<-function(title, tabId, docFilePath){
+tabTitleRfn<-function(tabName, tabId, docFilePath){
   span(
-    bs_embed_tooltip(span(title, "class"="tabTitle"), title=docFilePath),
+    bs_embed_tooltip(span(tabName, "class"="tabTitle"), title=docFilePath),
     #span(title, "class"="tabTitle"),
     span( " " , class='icon-cancel', onclick=closeRfn(tabId))  
   )
@@ -34,7 +34,7 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr'){
   appendTab(
     inputId = "pages",
     tabPanel( #tabId,
-      title=tabTitleRfn(title, tabId, docFilePath),
+      title<-tabTitleRfn(title, tabId, docFilePath),
       #span(title, span( " " , class='icon-cancel', onclick=closeRfn(tabId))  ), 
       #title=span(title, span( " " , class='icon-cancel', onclick=closeRfn(tabId))  ), 
       #span(tabId,  actionButton(inputId=paste0("but",tabId), label="", class='icon-cancel') ), 
@@ -97,7 +97,7 @@ observeEvent(input$tabManager,{
 # request$tabs is updated by either
 #  1. input$tabManager or 
 #  2. ace 
-# if non-empty, first request with 1st tab forwared to ace (save/close/saveAs) 
+# if non-empty, first request with 1st tab forwarded to ace (save/close/saveAs) 
 observeEvent(request$tabs, {
   if(length(request$tabs)>0){
     #tabId<-head(request$tabs,1)

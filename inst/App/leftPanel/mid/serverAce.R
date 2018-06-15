@@ -1,7 +1,7 @@
 
 
 observeEvent(input$messageFromAce, {
-  # cat('\n====serverAce:...observe input$messageFromAce:: entering\n')
+  cat('\n====serverAce:...observe input$messageFromAce:: entering\n')
   # cat('\n initial value of getTibRow()=', format(getTibRow()), "\n")
     if(
       length(input$messageFromAce$code)>0 &&
@@ -22,16 +22,16 @@ observeEvent(input$messageFromAce, {
       if(length(input$messageFromAce$isSaved)>0){ 
         aceId<-input$messageFromAce$id
         editOption$.saved <- input$messageFromAce$isSaved
-        # cat('\n--setting editOption$.saved --\n')
-        # cat("set editOption$.saved=",editOption$.saved,"\n")
+        cat('\n--setting editOption$.saved --\n')
+        cat("set editOption$.saved=",editOption$.saved,"\n")
       }
       # cat('22 ace request$sender=',format(request$sender),"\n")
       if(sender %in% c('cmd.tabChange', 'cmd.file.new')){
         #browser()
-        request$mode=input$messageFromAce$mode
-        # cat('mode=', request$mode, '\n')
-        if(request$mode=='markdown'){
-          panels$sourceType==rmdPanelTag
+        request$mode<-input$messageFromAce$mode
+        cat('Ace:: request$mode=', request$mode, '\n')
+        if(identical(request$mode, 'ptrrmd')){
+          panels$sourceType<-rmdPanelTag
           processCommit()
           return(NULL)
         } 
@@ -94,26 +94,47 @@ observeEvent(input$messageFromAce, {
       } 
       
       if(sender %in% c( 'fileCmd.save', 'fileCmd.close', 'fileCmd.saveAs', 'fileCmd.quit' )){
-        # cat("\n------",sender,"-----------------------------------\n")
+        
         id<-input$messageFromAce$id
         saved<-input$messageFromAce$isSaved
-        # cat('input$messageFromAce$saved=',format(saved),"\n")
-        # cat('class(saved)=',class(saved),"\n")
-        # cat('saved=',saved,"\n")
-        # cat("and editOption$.saved=",editOption$.saved,"\n")
-        # cat("for id=",id,"\n")
+        if(TRUE){
+          cat("\n------",sender,"-----------------------------------\n")
+          cat('input$messageFromAce$saved=',format(saved),"\n")
+          cat('class(saved)=',class(saved),"\n")
+          cat('saved=',saved,"\n")
+          cat("and editOption$.saved=",editOption$.saved,"\n")
+          cat("for id=",id,"\n")
+        }
+        
         if( !saved || sender=='fileCmd.saveAs' ) { #need to save
           docFilePath<-unlist(input$messageFromAce$docFilePath)
-          # cat("docFilePath=",docFilePath,"\n")
-          # cat("sender=",sender,"\n")
+          if(TRUE){
+            cat("docFilePath=",docFilePath,"\n")
+            cat("sender=",sender,"\n")
+          }
           if(docFilePath=='?' || sender=='fileCmd.saveAs'){ # file unnamed : fileSaveAs
              tabId<-aceID2TabID(id)
              # cat('11: tabId=',format(tabId),"\n")
              # cat("executing sendPtRManagerMessage( id=id,  sender=sender, saveFile=TRUE,  type='R', tabId=tabId)\n")
-             sendPtRManagerMessage(   sender=sender, saveFile=TRUE,  type='R', tabId=tabId)
+             
+             if(identical(request$mode, 'ptr')){
+               ext=list(R='R')
+             } else if( identical(request$mode, 'ptrrmd') ){
+               ext=list(Rmd='Rmd')
+             } else {
+               cat('request$mode=',request$mode,"\n")
+               stop('unknowMode')
+               ext=list(text='txt')
+             }
+             ext<-shinyFiles:::formatFiletype(ext)
+
+             target<-saveButtonFileNames[[request$mode]]
+             cat('sendPtRManagerMessage( sender=',sender,', saveFile=TRUE,',  'target=',target, ', tabId=',tabId,')\n'  )
+             sendPtRManagerMessage( sender=sender, saveFile=TRUE,  target=target, tabId=tabId )
           } else { 
             # write file
-            # cat('serverAce:: writeLines\n')
+            cat('serverAce:: writeLines\n')
+            cat('serverAce::docFilePath=',format(docFilePath),"\n")
             code<-input$messageFromAce$code
             # !!!TODO!!! if write fails revert.
             writeLines(code, docFilePath)
@@ -129,7 +150,7 @@ observeEvent(input$messageFromAce, {
               addToRecentFiles(input$messageFromAce$priorFilePath)
               # !!!TODO add docFilePath to recentfiles
               #title=as.character(span(basename(docFilePath ), span( " " , class='icon-cancel')  ))
-              title=as.character(tabTitleRfn( title=basename(docFilePath ), tabId=tabId, docFilePath=docFilePath ))
+              title=as.character(tabTitleRfn( tabName=basename(docFilePath ), tabId=tabId, docFilePath=docFilePath ))
               # cat("title=",title,"\n")
               # session$sendCustomMessage(
               #   type = "scrollManager", 
@@ -180,17 +201,32 @@ updateAceExtDef<-function(newPtDef, sender, selector=list() ){
 
 updateAceExt<-function(id, sender, ... ){
   data<-list(...)
+  if(is.null(sender)){stop('null sender')}
   if(length(data)>0){
+    if(length(id)==0){
+      id<-'bogus'
+    }
     data<-c(list(id= id, sender=sender), data )
-    # cat("id=",format(id), ", class(id)=", class(id),"\n")
-    # cat("sender=",format(sender),"\n")
-    # cat("data=",format(data),"\n")
-    # print(data)
+    if(TRUE){
+        cat("Entering updateAceExt::\n")
+        cat("updateAceExt::id=",format(id), ", length(id)=",length(id),",class(id)=", class(id),"\n")
+        cat("updateAceExt::sender=",format(sender),"\n")
+        cat("updateAceExt::names(data)=",format(names(data)),"\n")
+        cat("updateAceExt::data=",format(data),"\n")
+        #print(data)
+        cat("updateAceExt::sendCustomMessage NOW\n")
+    }
+
 
     
     if(length(id)>0 && nchar(id)>0){
-      lapply(data, function(x){
-        if(is.na(x)){
+      lapply(data, function(d){
+        if(length(d)==0){
+          cat("-----------\n")
+          print(data)
+          stop('d has length 0')
+        }
+        if(length(d)==1 && is.na(d)){
           print(data)
           stop("encounterd an NA")
         }
@@ -254,6 +290,5 @@ updateSelected4Ace<-function( reqSelector){
     #cat("reqSelector$columnName=", format(reqSelector$columnName ),"\n")
     selectedTibble$columnName=reqSelector[['columnName']]
   }
-  
 } 
 

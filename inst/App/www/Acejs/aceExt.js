@@ -184,7 +184,7 @@ Shiny.addCustomMessageHandler(
         if(!!data.ptRMode){ 
           editor.getSession().setMode({path: "ace/mode/ptr", v: Date.now()});
           editor.setBehavioursEnabled(true);
-        }
+        } 
         
         //if(!!data.getMode){
         // var mode = editor.getSession().$modeId;

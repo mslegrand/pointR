@@ -206,11 +206,11 @@ extractWH<-function(src){
 
 #used in showPts::serverSVGHTML.R
 subSVGX2<-function(txt, insert.beg, insert.end){
-  # cat(txt)
-  # if(nchar(txt)==0){
-  #   return('')
-  # }
+  
+  # cat('insert.beg=',format(insert.beg),"\n")
+  # cat('insert.end=',format(insert.end),"\n")
   ep<-parse(text=txt, keep.source=TRUE)
+  
   df<-getParseData(ep)
   svgR.df<-df[df$text=="svgR" & df$token=='SYMBOL_FUNCTION_CALL',] #svgr
   if( length(svgR.df)==0 || nrow(svgR.df)==0){

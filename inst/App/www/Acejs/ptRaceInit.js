@@ -107,6 +107,7 @@ function ptRaceInit(data){
       data.acejs= data.acejs[0];
       ace.config.set('workerPath', "./Acejs");
       ace.config.set('modePath', "./Acejs");
+    }  
       theEditor.getSession().setMode('ace/mode/' + mode);  // shinyAce init
       theEditor.getSession().setOption('useWorker', true);
       theEditor.getSession().setUseSoftTabs(true);
@@ -207,9 +208,9 @@ function ptRaceInit(data){
         e.stop();
      });
  
-    } else {
-      theEditor.getSession().setMode('ace/mode/' + data.mode);  // shinyAce init
-    }
+    //} else {
+    //  theEditor.getSession().setMode('ace/mode/' + data.mode);  // shinyAce init
+    //}
 }
 
 

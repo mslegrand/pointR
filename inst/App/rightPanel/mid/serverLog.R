@@ -21,9 +21,15 @@ moduleLog<-function(
   logMssgs
 ){
   output$out_log<-renderText({ 
+    
     if(panelName() %in% c( errorPanelTag, RPanelTag)){
-      logMssgs()
+      txt<-logMssgs()
+      if(length(txt)==0){
+        txt=""
+      }
+      txt
     }
+    
   })
 }
 
