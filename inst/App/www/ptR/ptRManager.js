@@ -34,7 +34,8 @@ Shiny.addCustomMessageHandler(
       $("h4.sF-title.modal-title").text( 'Save '+ title +' as ...');
       
       if(sender==='fileCmd.close' || sender==='fileCmd.quit'){
-        console.log("abc\n");
+        console.log("sender is close or quit\n");
+        console.log('data.saveFile:: sender=' + sender);
         $("#sF-cancelButton").text( "Close Without Saving");
         $("#buttonFileSaveR").on('cancel', function(event){
             Shiny.onInputChange('buttonFileSaveR', { 
@@ -43,7 +44,8 @@ Shiny.addCustomMessageHandler(
               rnd: Math.random().toString(36).substring(7)});
         });
       } else {
-        console.log("defg\n");
+        console.log("sender is neither close or quit\n");
+        console.log('data.saveFile:: sender=' + sender);
         $("#sF-cancelButton").text( "Cancel");
         $("#buttonFileSaveR").on('cancel', function(event){
           Shiny.onInputChange('buttonFileSaveR', {

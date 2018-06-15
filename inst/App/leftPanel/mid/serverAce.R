@@ -93,7 +93,7 @@ observeEvent(input$messageFromAce, {
         
       } 
       
-      if(sender %in% c( 'fileCmd.save', 'fileCmd.close', 'fileCmd.saveAs', 'fileCmd.quit' )){
+      if(sender %in% c( 'fileCmd.save', 'fileCmd.close', 'fileCmd.saveAs', 'fileCmd.quit' , 'fileCmd.saveNow')){
         
         id<-input$messageFromAce$id
         saved<-input$messageFromAce$isSaved
@@ -106,7 +106,7 @@ observeEvent(input$messageFromAce, {
           cat("for id=",id,"\n")
         }
         
-        if( !saved || sender=='fileCmd.saveAs' ) { #need to save
+        if( !saved || sender %in% c('fileCmd.saveAs','fileCmd.saveNow') ) { #need to save
           docFilePath<-unlist(input$messageFromAce$docFilePath)
           if(TRUE){
             cat("docFilePath=",docFilePath,"\n")
