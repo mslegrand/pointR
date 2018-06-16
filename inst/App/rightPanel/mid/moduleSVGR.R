@@ -75,10 +75,9 @@ svgToolsScript<-function(type){
    
     
      
-     
-    codeTxt<-subSVGX2(codeTxt, insert.beg, insert.end)
-    
-    
+    try({
+      codeTxt<-subSVGX2(codeTxt, insert.beg, insert.end)
+    }) 
     # transform: modifies src, but omits insert.end
     res<-""
     if(!is.null(codeTxt)){
