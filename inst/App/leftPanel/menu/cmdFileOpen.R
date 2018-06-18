@@ -92,6 +92,8 @@ openFileNow<-function(fileName){
       if( grepl("*.Rmd$", fileName, ignore.case = T)){
         mode<-'ptrrmd'
       }
+      #if ptr mode, try to parse, if not parsable, get Error, set choices=R, error, and do error report????
+      
       cat('MODE=',mode,'\n')
       addFileTab(title=tabName, txt=src, docFilePath= fileName, mode=mode)
       #here we set the value, 
@@ -105,7 +107,7 @@ openFileNow<-function(fileName){
             #   type = "shinyAceExt",
             #   list(id=  getAceEditorId(), sender='cmd.openFileNow', setValue= src, setDocFileSaved=TRUE, ok=TRUE)
             # )
-            updateAceExt(id=getAceEditorId(), sender='cmd.openFileNow', setValue= src, setDocFileSaved=TRUE, ok=TRUE )
+            updateAceExt(id=getAceEditorId(), sender='cmd.openFileNow', getValue= src, setDocFileSaved=TRUE, ok=TRUE )
       )
       
     }
