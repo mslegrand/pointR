@@ -11,7 +11,7 @@ cmdFileNewPtR<-function(fileCmd="newPtrTibScript"){
     #aceId<-tabName2AceId(tabId)
     addFileTab(title=tabName, txt=src,  docFilePath="?", mode='ptr')
     delay(500, 
-      updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', setValue= src, setDocFileSaved=TRUE, ok=TRUE )
+      updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE, setDocFileSaved=TRUE, ok=TRUE )
     )
     mssg$error<-""
 }
@@ -22,17 +22,43 @@ cmdFileNewRmd<-function(){
   tabName<-getNextAnonymousFileName()
   addFileTab(title=tabName, txt=src,  docFilePath="?", mode='ptrrmd')
   delay(500,
-        updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', setValue= src, setDocFileSaved=TRUE, ok=TRUE )
+        updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE, setDocFileSaved=TRUE, ok=TRUE )
   )
   mssg$error<-""
 }
+
+
+cmdFileNewSnippet<-function(){
+  cat('cmdFileNewSnippet\n')
+  src<-fileTemplates[[ "snippetTemplate.snippets" ]] #rmdTemplate
+  tabName<-getNextAnonymousFileName()
+  addFileTab(title=tabName, txt=src,  docFilePath="?", mode='snippets')
+  delay(500,
+        updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE, setDocFileSaved=TRUE, ok=TRUE )
+  )
+  mssg$error<-""
+}
+
+cmdFileNewTxt<-function(){
+  #src<-"fileTemplates[[ "rmdTemplate.Rmd" ]]" #rmdTemplate
+  src<-"A plain text document"
+  tabName<-getNextAnonymousFileName()
+  addFileTab(title=tabName, txt=src,  docFilePath="?", mode='text')
+  delay(500,
+        updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE, setDocFileSaved=TRUE, ok=TRUE )
+  )
+  mssg$error<-""
+}
+
+
+
 
 cmdNewIOSlides<-function(){
   src<-ioslidesTemplate
   tabName<-getNextAnonymousFileName()
   addFileTab(title=tabName, txt=src,  docFilePath="?", mode='ptrrmd')
   delay(500,
-        updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', setValue= src, setDocFileSaved=TRUE, ok=TRUE )
+        updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE, setDocFileSaved=TRUE, ok=TRUE )
   )
   mssg$error<-""
 }
