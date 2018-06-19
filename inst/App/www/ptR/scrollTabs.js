@@ -202,7 +202,7 @@ ScollableTabs.prototype.reAdjust = function(){
         } else {
           this.rightSB.show();
         }
-        this.container.find('ul').animate({left:"=" + lftPos +"px"},'fast');
+        this.container.find('ul').animate({left:"=" + leftPos +"px"},'fast');
       }
       /*
       var delta = this.widthOfHidden()-this.container.outerWidth();

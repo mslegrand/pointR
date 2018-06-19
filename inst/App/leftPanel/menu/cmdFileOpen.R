@@ -12,15 +12,7 @@ modalSaveOrContinue <- function() {
 }
 
 cmdFileOpen<-function(){
-  #cat("cmdFileOpen:: Enter\n")
-  if(getFileSavedStatus()==FALSE){
-    #cat("getFileSavedStatus()==FALSE")
-    showModal( modalSaveOrContinue() )
-  } else {
-    #cat("getFileSavedStatus()==TRUE\n")
     openFileDlgSelector()
-  }
-  
 }
 
 observeEvent(input$saveFirst, {
@@ -43,26 +35,11 @@ observeEvent(input$continueOpen, {
 #          b. update framework
 #          c. update Ace via openFileNow (or maybe like a request$sender=startup (or new), but with a different src)
 openFileDlgSelector<-function(){
-  # fullPath<-paste0(
-  #   getCurrentDir(), getCurrentFile(), sep="/"
-  # )
-  #cat("reactive openFileDlgSelector:: sendCustomMessage\n")
   sendPtRManagerMessage(  sender='cmd.openFileNow', openFile=TRUE)
-  # session$sendCustomMessage(
-  #   type = "ptRManager", 
-  #   list(id= getAceEditorId(), openFile=TRUE, sender='cmd.openFileNow' )
-  # )
-  # try(fileName<-dlgOpen(
-  #   default=fullPath,
-  #   title = "Select which R file to Open", 
-  #   filters = dlgFilters[c("R", "All"), ])$res
-  # )
-  # openFileNow(fileName)
 }
 
-
 observeEvent(input$buttonFileOpen,{
-  #cat("observe input$buttonFileOpen:: enter\n")
+  cat("observe input$buttonFileOpen:: enter\n")
   fp.dt<-parseFilePaths(c(wd='~'), input$buttonFileOpen)
   if(length(fp.dt)>0 && nrow(fp.dt)){
     datapath<-as.character(fp.dt$datapath[1])
@@ -92,22 +69,16 @@ openFileNow<-function(fileName){
       if( grepl("*.Rmd$", fileName, ignore.case = T)){
         mode<-'ptrrmd'
       }
+      if( grepl("*.snippets$", fileName, ignore.case = T)){
+        mode<-'snippets'
+      }
       #if ptr mode, try to parse, if not parsable, get Error, set choices=R, error, and do error report????
       
       cat('MODE=',mode,'\n')
       addFileTab(title=tabName, txt=src, docFilePath= fileName, mode=mode)
-      #here we set the value, 
-      # session$sendCustomMessage(
-      #   type = "shinyAceExt",
-      #   list(id= getAceEditorId(), setValue=src, sender='cmd.openFileNow' )
-      # )
-      # cat("sendCustomMessage sender='cmd.file.open' aceId=",tabName,"\n" )
+      #here we get the code and set the doc status as saved, 
       delay(500,
-            # session$sendCustomMessage(
-            #   type = "shinyAceExt",
-            #   list(id=  getAceEditorId(), sender='cmd.openFileNow', setValue= src, setDocFileSaved=TRUE, ok=TRUE)
-            # )
-            updateAceExt(id=getAceEditorId(), sender='cmd.openFileNow', getValue= src, setDocFileSaved=TRUE, ok=TRUE )
+            updateAceExt(id=getAceEditorId(), sender='cmd.openFileNow', getValue= TRUE, setDocFileSaved=TRUE, ok=TRUE )
       )
       
     }

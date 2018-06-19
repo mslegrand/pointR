@@ -57,7 +57,7 @@ Shiny.addCustomMessageHandler(
       }
     } //endof data.saveFile
     if(!!data.exportSVG){
-      // console.log('about to trigger svg export\n');
+      console.log('about to trigger svg export\n');
       $('#buttonExportSVG').trigger('click');
     }
     if(!!data.setFocus){ // I don't if this is still being called???

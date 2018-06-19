@@ -14,8 +14,10 @@ buildLeftMenu<-function(version){
               shinyDMDMenu::menuItem("svgR without a ptR list", value="newPtRSVGScript")
         ),
         shinyDMDMenu::menuItem('R script', value='newRScript'),
-        shinyDMDMenu::menuItem('R markdown doc', value='newRmd')#,
+        shinyDMDMenu::menuItem('R markdown doc', value='newRmd'),
         #shinyDMDMenu::menuItem('R ioslides doc', value='newIOSlides')
+        shinyDMDMenu::menuItem('Snippet File', value='newSnippets'),
+        shinyDMDMenu::menuItem('Plain Text Doc', value='newText')
       ),
       menuDivider(),
       shinyDMDMenu::menuItem("Open"),

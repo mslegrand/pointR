@@ -59,6 +59,7 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   }
   
   sendPtRManagerMessage<-function(sender, ...){ 
+    cat('entering ---------------sendPtRManagerMessage---------------------\n')
     data<- c( list(sender=sender), list(...), list(fk=runif(1)))
     if(identical(sender,'tibNrow')){
       cat("Enter==============tibNRow data ======================\n")
@@ -72,6 +73,7 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
       }
     })
     session$sendCustomMessage( type = "ptRManager", data)
+    cat('exiting ---------------sendPtRManagerMessage---------------------\n')
   }
   
   # sendFileTabsMessage<-function(id, sender, ...){ 
@@ -170,9 +172,7 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   
   shinyFileChoose(input, "buttonFileOpen", session=session, roots=c(wd="~") ) #hidden
   shinyFileChoose(input, "buttonSnippetOpen",    session=session, roots=c(wd="~"),  filetypes=c('', 'snp') ) #hidden
-  
-  #shinyFileSave(input, "buttonFileSaveR",   session=session, roots=c(wd="~") ) #hidden
-  #shinyFileSave(input, "buttonExportSVG",  session=session, roots=c(wd="~")  ) #hidden
+  shinyFileSave(input, "buttonExportSVG",  session=session, roots=c(wd="~")  ) #hidden
   
   # genShinySaveFilesServerConnection(input, session)
   # genShinySaveFilesObservers(input, session)

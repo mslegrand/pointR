@@ -14,6 +14,14 @@ observeEvent( input$editNavBar, {
       cmdFileNewRmd()
       dirtyDMDM(session, "editNavBar")
     }
+    if(fileCmd=="newSnippets"){ #-----open 
+      cmdFileNewSnippet()
+      dirtyDMDM(session, "editNavBar")
+    }
+    if(fileCmd=="newText"){ #-----open 
+      cmdFileNewTxt()
+      dirtyDMDM(session, "editNavBar")
+    }
     if(fileCmd=='newIOSlides'){
       cmdNewIOSlides()
       dirtyDMDM(session, "editNavBar")

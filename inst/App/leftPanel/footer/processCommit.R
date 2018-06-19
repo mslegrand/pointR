@@ -32,6 +32,7 @@ processCommit<-reactive({
 
 processSvgR<-reactive({
   src<-request$code
+  cat('processSvgR::\n')
   if(length(src)==1){
     ptRList<-getPtDefs()$tib
     tryCatch({
@@ -56,6 +57,7 @@ processSvgR<-reactive({
         # capture capture output as mssg
         env<-new.env()
         output<-lapply(lines, function(line){
+          cat("processCommit::captureOutput\n")
           captureOutput(eval(parse(text=line), envir=env))
         })
         output<-paste( output, collapse="\n" )
@@ -64,6 +66,7 @@ processSvgR<-reactive({
         setSourceType(sourceType=RPanelTag) #no error, just R code
       } else { # presume to be svgR code
         # next check if it can be run
+        cat("processCommit::captureOutput2\n")
         parsedCode<-parse(text=src) 
         output<-captureOutput(eval(parsedCode))
         output<-paste( output, collapse="\n" )

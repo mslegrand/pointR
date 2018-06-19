@@ -1,7 +1,7 @@
 
 
 
-  modes2filetypes=list(ptr="R",ptrrmd="Rmd",text="txt")
+  modes2filetypes=list(ptr="R",ptrrmd="Rmd",text="txt", snippets="snippets")
   
   getExtenstionList<-function(ext){
     tmp<-modes2filetypes
@@ -11,6 +11,7 @@
   }
   
   type2ExtensionList<-lapply( unlist(modes2filetypes), getExtenstionList )
+  
   
   saveButtonFileNames<-paste0('buttonFileSave', modes2filetypes)
   names(saveButtonFileNames )<-names(modes2filetypes )
@@ -22,6 +23,12 @@
       filetype=type2ExtensionList[[i]]
       shinySaveButton( id, label="", title="Save as ...",    filetype=filetype, class="hiddenButton")
     })
+    # tmp<-c( # kludge to add export
+    #   tmp,
+    #   list(
+    #     shinySaveButton( id="buttonExportSVG", label="", title="Export as ...", filetype=list(SVG=c("SVG")) ,    class='hiddenButton')
+    #   )
+    # )
     saveButtons<-do.call(tagList, tmp)
     saveButtons
   }

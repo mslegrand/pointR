@@ -104,13 +104,24 @@ getRightMidPanel<-reactive({
   if(hasError()){
     # cat('getRightMidPanel:: Error=', getErrorMssg(),"\n")
     rtv<-errorPanelTag
-  } else if (panels$sourceType==RPanelTag){
-    rtv<-RPanelTag
-  } else if (panels$sourceType==rmdPanelTag){
-    rtv<-rmdPanelTag
+  } else if (panels$sourceType %in% c( RPanelTag, rmdPanelTag, textPanelTag, snippetPanelTag)){
+    rtv<-panels$sourceType
   } else {
-     rtv<-getPlotState()
+    rtv<-getPlotState()
   }
+    
+    
+  #   if (panels$sourceType==RPanelTag){
+  #   rtv<-RPanelTag
+  # } else if (panels$sourceType==rmdPanelTag){
+  #   rtv<-rmdPanelTag
+  # } else if (panels$sourceType==textPanelTag){
+  #   rtv<-textPanelTag
+  # } else if (panels$sourceType==snippetPanelTag){
+  #   rtv<-snippetPanelTag
+  # } else {
+  #    rtv<-getPlotState()
+  # }
   rtv
 })
 
@@ -124,6 +135,8 @@ getRightPanelChoices<-reactive({ # includes names of tibs
     choices=RPanelTag
   } else if( getSourceType()==rmdPanelTag){
     choices=c( rmdPanelTag, RPanelTag )
+  } else if( getSourceType()==snippetPanelTag){
+    choices=snippetPanelTag
   } else { # ptRPanel (names of ptDefs not null), svgRPanel, 
     ptDefs<-getPtDefs()
     choices<-names(getPtDefs()$tib)
@@ -133,7 +146,7 @@ getRightPanelChoices<-reactive({ # includes names of tibs
     }
     choices<-c(choices, svgPanelTag, RPanelTag)
     # cat('getRightPanelChoices 2:: ', format(choices),"\n")
-  }
+  } 
   # cat('getRightPanelChoices 3:: ', format(choices),"\n")
   choices
 })

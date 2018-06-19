@@ -49,6 +49,8 @@ errorPanelTag<-"errorPanel"
 RPanelTag='RPanel'
 svgPanelTag<-'svgPanel'
 rmdPanelTag<-'rmdPanel'
+textPanelTag<-'textPanel'
+snippetPanelTag<-'snippetPanel'
 tibTag<-'tib'
 
 getSVGWH<-function(){ c(650,620) } #this should be ultimately place in another file

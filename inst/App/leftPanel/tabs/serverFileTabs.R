@@ -19,7 +19,7 @@ closeTabNow<-function(tabId2X){
 # TODO!!!! , add input parameters for:  mode, autocomplete
 # fontsize should be read from options 
 addFileTab<-function(title, txt,  docFilePath='?', mode='ptr'){
-  # cat("addFileTab\n")
+  cat("addFileTab:: mode=",mode,"\n")
   tabId<-getNextTabId()
   # cat("addFileTab:: tabId",tabId,"\n")
   aceId<-tabID2aceID(tabId)
@@ -43,11 +43,17 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr'){
         class=divClass,
         overflow= "hidden",
         shinyAce4Ptr(
-            outputId = aceId,  value=txt,
-            mode=mode, theme=defaultOpts["theme"],
+            outputId = aceId,  
+            value=txt,
+            mode=mode, 
+            theme=defaultOpts["theme"],
             fontSize=defaultOpts["fontSize"], autoComplete="enabled",
             #autoCompleteList =list(svgR=names(svgR:::eleDefs)),
-            autoCompleteList =list(names(svgR:::eleDefs)),
+            if(mode=='ptR')
+              autoCompleteList =list(names(svgR:::eleDefs))
+            else
+              NULL
+            ,
             docFilePath=docFilePath
           ),
            inline=FALSE
