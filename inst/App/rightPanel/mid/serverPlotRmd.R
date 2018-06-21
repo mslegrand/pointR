@@ -11,8 +11,10 @@ modulePlotRmd<-function(input, output, session,
   output$rmd_Html <- renderUI({ 
     #HTML('')
     if(getPanelName() %in% rmdPanelTag){
-      HTML(knit2html(text = getCode(), fragment.only = TRUE, quiet = TRUE))
-    } else {
+      div( style='background-color: #FFFFFF;',
+        HTML(knit2html(text = getCode(), fragment.only = TRUE, quiet = TRUE))
+      )
+     } else {
       HTML('')
     }
   }) #end of renderUI
