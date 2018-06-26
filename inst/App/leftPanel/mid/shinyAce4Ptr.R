@@ -90,45 +90,48 @@ shinyAce4Ptr <- function(
     ptRAce<-tagList(
      tags$script(src="Acejs/aceExt.js"),
      tags$script(src='Acejs/snippets/ptr.js'), 
+     tags$script(src='Acejs/snippets/ptrrmd.js'), 
      tags$script(src="Acejs/ptRaceInit.js")
     )
     
     ptrList<-list(
       tags$script(type="text/javascript", HTML(js2))
     )
-    saceList[[2]]<-jqui_droppable(
-        saceList[[2]],
-        #selector ="#source", method='enable',
-        options=list(
-          activeClass= "ui-state-default",
-          hoverClass= "ui-state-hover",
-          accept= ":not(.ui-sortable-helper)",
-          drop= JS('function(event, ui) {
-                   console.log("shinyjqui:  drop occurred");
-                   console.log( "dropped on id="+ $(this).attr("id"));
-                   var theEditoR = $(this).data("aceEditor");
-                   console.log( "dropped on id="+ $(this).attr("id"));
-                   //console.log("theEditoR class=" + JSON.stringify(theEditoR.className));
-                   var pos = theEditoR.renderer.screenToTextCoordinates(event.clientX, event.clientY);
-                   console.log("pos=" + JSON.stringify(pos));
-                   var txt =  ui.draggable.attr("data-snippet");
-                   this.focus();
-                   theEditoR.moveCursorToPosition(pos);
-                   theEditoR.clearSelection();
-                   //editor.session.insert(pos, txt);
-                   //editor.insert(txt);
-                   ui.helper.remove();
-                   var snippetManager = ace.require("ace/snippets").snippetManager;
-                   snippetManager.insertSnippet(theEditoR, txt);
-                   //var tab_press= jQuery.Event("keydown", {which: 88});
-                   //var tab_press= jQuery.Event("keydown", {which: 9});
-                   //theEditor.trigger(tab_press);
-                   //theEditor.simulate("key-combo",{combo: "shift-tab"});
-                   theEditoR.focus();
-                   return true;
-}')
-  )
-)
+#     saceList[[2]]<-jqui_droppable(
+#         saceList[[2]],
+#         operation="enable",
+#         #selector ="#source", method='enable',
+#         options=list(
+#           activeClass= "ui-state-default",
+#           hoverClass= "ui-state-hover",
+#           accept= ":not(.ui-sortable-helper)",
+#           drop= JS('function(event, ui) {
+#                    console.log("shinyjqui:  drop occurred");
+#                    console.log( "dropped on id="+ $(this).attr("id"));
+#                    var theEditoR = $(this).data("aceEditor");
+#                    console.log( "dropped on id="+ $(this).attr("id"));
+#                    console.log("theEditoR class=" + JSON.stringify(theEditoR.className));
+#                    var pos = theEditoR.renderer.screenToTextCoordinates(event.clientX, event.clientY);
+#                    console.log("pos=" + JSON.stringify(pos));
+#                    var txt =  ui.draggable.attr("data-snippet");
+# console.log("data-snippet=" + JSON.stringify(txt));
+#                    this.focus();
+#                    theEditoR.moveCursorToPosition(pos);
+#                    theEditoR.clearSelection();
+#                    //editor.session.insert(pos, txt);
+#                    //editor.insert(txt);
+#                    ui.helper.remove();
+#                    var snippetManager = ace.require("ace/snippets").snippetManager;
+#                    snippetManager.insertSnippet(theEditoR, txt);
+#                    //var tab_press= jQuery.Event("keydown", {which: 88});
+#                    //var tab_press= jQuery.Event("keydown", {which: 9});
+#                    //theEditor.trigger(tab_press);
+#                    //theEditor.simulate("key-combo",{combo: "shift-tab"});
+#                    theEditoR.focus();
+#                    return true;
+# }')
+  # )
+# )
   
       
     saceList[[1]][[3]]<-c(saceList[[1]][[3]], ptRAce)

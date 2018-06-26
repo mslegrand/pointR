@@ -72,9 +72,12 @@ openFileNow<-function(fileName){
       if( grepl("*.snippets$", fileName, ignore.case = T)){
         mode<-'snippets'
       }
+      if( grepl("*.dnippets$", fileName, ignore.case = T)){
+        mode<-'markdown'
+      }
       #if ptr mode, try to parse, if not parsable, get Error, set choices=R, error, and do error report????
       
-      cat('MODE=',mode,'\n')
+      cat('\n\nMODE=',mode,'\n\n')
       addFileTab(title=tabName, txt=src, docFilePath= fileName, mode=mode)
       #here we get the code and set the doc status as saved, 
       delay(500,

@@ -1,25 +1,19 @@
 
-cmdSnippetFileOpen<-reactive({
-  sendPtRManagerMessage(  sender='cmd.snippet.file.open', openFile=TRUE)
-  # session$sendCustomMessage(
-  #   type = "ptRManager", 
-  #   list(id= getAceEditorId(), openFile=TRUE, sender='cmd.snippet.file.open' )
-  # )
-  
+cmdSnippetImport<-reactive({
+  sendPtRManagerMessage(  sender='cmd.snippet.file.import', openFile=runif(1) )
 })
 
+cmdSnippetUnload<-reactive({
+  updateAceExt( id= getAceEditorId(), sender='fileCmd.unloadSnippets', snippets="" )
+})
 
-observeEvent(input$buttonSnippetOpen,{
-  cat('input$buttonSnippetOpen\n')
-  fp.dt<-parseFilePaths(c(wd='~'), input$buttonSnippetOpen)
+observeEvent(input$buttonSnippetImport,{
+  cat('input$buttonSnippetImport\n')
+  fp.dt<-parseFilePaths(c(wd='~'), input$buttonSnippetImport)
   if(length(fp.dt)>0 && nrow(fp.dt)){
     datapath<-as.character(fp.dt$datapath[1])
     snippetText<-paste(readLines(datapath), collapse = "\n")
-    # session$sendCustomMessage(
-    #   type = "shinyAceExt",    
-    #   list(id= getAceEditorId(), sender='fileCmd.openSnippets', snippets=snippetText)
-    # )
-    updateAceExt( id= getAceEditorId(), sender='fileCmd.openSnippets', snippets=snippetText )
+    #updateAceExt( id= getAceEditorId(), sender='fileCmd.importSnippets', snippets=snippetText )
   }
 })
 

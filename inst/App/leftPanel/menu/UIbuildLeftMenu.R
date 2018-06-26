@@ -16,12 +16,26 @@ buildLeftMenu<-function(version){
         shinyDMDMenu::menuItem('R script', value='newRScript'),
         shinyDMDMenu::menuItem('R markdown doc', value='newRmd'),
         #shinyDMDMenu::menuItem('R ioslides doc', value='newIOSlides')
-        shinyDMDMenu::menuItem('Snippet File', value='newSnippets'),
         shinyDMDMenu::menuItem('Plain Text Doc', value='newText')
       ),
       menuDivider(),
       shinyDMDMenu::menuItem("Open"),
+      menuDivider(),
       menuDropdown("Recent Files"),
+      menuDivider(),
+      menuDropdown(
+        "Snippets",
+        shinyDMDMenu::menuItem("Import",         value="importSnippetFile"),
+        shinyDMDMenu::menuItem("Remove",         value='unloadSnippets'),
+        shinyDMDMenu::menuItem('New',            value='newSnippets')
+        
+      ),
+      menuDropdown(
+        "Dnippets",
+        shinyDMDMenu::menuItem("Import",        value="importDndSnippetsFile"),
+        shinyDMDMenu::menuItem("Remove",        value='unloadDndSnippets'),
+        shinyDMDMenu::menuItem("New",           value="newDndSnippetsFile")
+      ),
       menuDivider(),
       shinyDMDMenu::menuItem("Export as SVG"),
       menuDivider(),
@@ -42,19 +56,14 @@ buildLeftMenu<-function(version){
     #              shinyDMDMenu::menuItem('Delete Tibble', value='cmdDeleteTibble')
     # ),
     menuDropdown(
-      'Configure',
+      'Edit',
       menuDropdown(
-        "Editor Options", 
+        "Options", 
         shinyDMDMenu::menuItem("Theme" ),
         shinyDMDMenu::menuItem("Font Size"), 
         shinyDMDMenu::menuItem("Adjust Tabs",       value="adjustTabs"),
         shinyDMDMenu::menuItem("Show White Space"),
         shinyDMDMenu::menuItem(defaultOpts$tabType)
-      ),
-      menuDropdown(
-        "Snippets",
-        shinyDMDMenu::menuItem("Import", value="importSnippetFile"),
-        shinyDMDMenu::menuItem("Disable")
       )
     ),
     menuDropdown(

@@ -9,7 +9,7 @@
 shinyServer(function(input, output,session) {
   
 source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
-  
+
 # Reactive values----------
   request<-reactiveValues(
     code=NULL, 
@@ -17,6 +17,45 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
     sender='startup',
     tabs=NULL
   )
+  
+  drippetSelection<-reactiveValues(
+    current=NULL,
+    all=list()
+  )
+  
+  addDrippets<-function(dnName, dnippets, select=dnName ){
+    drippetSelection$all[[dnName]]=dnippets
+    drippetSelection$current<-c(drippetSelection$current, select)
+  }
+  
+  observeEvent(c( drippetSelection$all),{
+    updateAwesomeCheckboxGroup(session, inputId="selectedDDDnippets", choices = names(drippetSelection$all),
+                              selected = drippetSelection$current, inline = FALSE, status = "primary")
+    
+    
+  })
+  
+  observeEvent(input$selectedDDDnippets,{
+    selected=input$selectedDDDnippets
+    #browser()
+    cat('\nselected=',format(selected),"\n\n")
+    drippetSelection$selected=selected
+    dnippets<-drippetSelection$all[selected]
+    cat('+++++++++++dnippets are\n')
+    print(dnippets)
+    dnippets<-unlist(dnippets,recursive=F)
+    names(dnippets)<-NULL
+    cat('+++++++++++dnippets are\n')
+    print(dnippets)
+    if(length(dnippets)==0){
+      sendPtRManagerMessage(sender='cmd.dnippet.file.load', removeDrippets=runif(1));
+    } else{
+      sendPtRManagerMessage(sender='cmd.dnippet.file.load', insertDrippets=dnippets)
+    }
+    
+  }, ignoreInit = TRUE, ignoreNULL = FALSE)
+  
+  
   
   setTabRequest<-function(sender, tabs){
     request$sender<-sender
@@ -67,7 +106,7 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
       cat("Exit==============tibNRow data =======================\n")
     }
     lapply(data, function(dd){
-      if(is.na(dd)){
+      if(any(sapply(dd,is.na))){
         print(data)
         stop("encounterd an NA")
       }
@@ -170,9 +209,10 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   })  
   
   
-  shinyFileChoose(input, "buttonFileOpen", session=session, roots=c(wd="~") ) #hidden
-  shinyFileChoose(input, "buttonSnippetOpen",    session=session, roots=c(wd="~"),  filetypes=c('', 'snp') ) #hidden
-  shinyFileSave(input, "buttonExportSVG",  session=session, roots=c(wd="~")  ) #hidden
+  shinyFileChoose(input, "buttonFileOpen",       session=session, roots=c(wd="~") ) #hidden
+  shinyFileChoose(input, "buttonSnippetImport",    session=session, roots=c(wd="~"),  filetypes=c('snippets') ) #hidden
+  shinyFileChoose(input, "buttonDnippetImport",    session=session, roots=c(wd="~"),  filetypes=c('dnippets') ) #hidden
+  shinyFileSave(input,   "buttonExportSVG",      session=session, roots=c(wd="~")  ) #hidden
   
   # genShinySaveFilesServerConnection(input, session)
   # genShinySaveFilesObservers(input, session)
@@ -232,6 +272,7 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
 #---------------leftPanel--------------------------
   source("leftPanel/footer/processCommit.R",        local=TRUE)
   source("leftPanel/footer/processKnit.R",          local=TRUE)
+  source("leftPanel/footer/processDnip.R",          local=TRUE)
   source("leftPanel/footer/serverButtons.R",        local=TRUE)
   source("leftPanel/toolbar/cmdHToolBar.R",         local=TRUE)    
   source("leftPanel/menu/cmdFileSaveAs.R",          local=TRUE)  
@@ -244,6 +285,8 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   source("leftPanel/menu/cmdOptionsTheme.R",        local=TRUE)
   source("leftPanel/menu/cmdOptionsFontSize.R",     local=TRUE)  
   source("leftPanel/menu/cmdFileSnippet.R",         local=TRUE)
+  source("leftPanel/toolbar/serverDnippetToolBar.R",   local=TRUE)
+  source("leftPanel/menu/cmdFileDnippet.R",         local=TRUE)
   source("leftPanel/menu/cmdAbout.R",               local=TRUE)
   source("leftPanel/serverEditBar.R",               local=TRUE)
 })

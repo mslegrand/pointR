@@ -1,7 +1,7 @@
 ---
 title: 'svgR in a Markdown Doc'
 author: 'author'
-date: '5/13/2018'
+date: "TODAY"
 output: html_document
 ---
   

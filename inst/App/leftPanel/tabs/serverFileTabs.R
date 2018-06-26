@@ -62,7 +62,6 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr'){
     )
   )
   updateTabsetPanel(session,inputId = 'pages', selected = tabId)
-  #session$sendCustomMessage( type = "scrollManager", list( resize=TRUE ))
   sendFileTabsMessage(resize=runif(1))                          
   
 }
@@ -74,16 +73,10 @@ getAceEditorId<-reactive({
 
 #  triggers doc has been changed.
 observeEvent(input$pages,{
-  # cat("input$pages=",format(input$pages),"\n")
   tabId<-input$pages 
-  # session$sendCustomMessage(
-  #   type = "scrollManager", 
-  #   list( selected=tabId ) #  Requests to scroll into view
-  # )
   sendFileTabsMessage(selected=tabId)
   
   aceId<-tabID2aceID(tabId)
-  # cat("input$pages:: aceId=",aceId,"\n")
   updateAceExt(id=aceId, sender='cmd.tabChange', roleBack=FALSE, setfocus=TRUE, getValue=TRUE)
   #triggerRefresh('cmd.commit', rollBack=FALSE) # seems to trigger the redraw of the screen (uses getValue=TRUE)
 }, ignoreNULL = TRUE)
@@ -106,7 +99,6 @@ observeEvent(input$tabManager,{
 # if non-empty, first request with 1st tab forwarded to ace (save/close/saveAs) 
 observeEvent(request$tabs, {
   if(length(request$tabs)>0){
-    #tabId<-head(request$tabs,1)
     tabId<-peekTab()
     sender<-getSender()
     aceId<-tabID2aceID(tabId)

@@ -19,6 +19,20 @@ output$BottomRightPanel<-renderUI({
   moduleFooterRightUI("footerRight", input, output)
 })
 
+# output$drippetUI<-renderUI({
+#    div( id='snippetToolBarContainer', "class"="cSnippetToolBarContainer", #draggable=FALSE ,
+#         tags$ul( id='dndSnippetList', "class"="cSnippetToolBarList",
+#           buildSnippetToolBar()
+#         ),
+#         div( id='snippetScrollUp', class='snippetButton  cTop center',
+#              span('class'="glyphicon glyphicon-chevron-up")
+#         ),
+#         div( id='snippetScrollDown', class='snippetButton cBottom center',
+#              span('class'="glyphicon glyphicon-chevron-down")
+#         )
+#   )
+# })
+
 output$MidRightPanel<-renderUI({
   
   chosenRightMidPanel<-getRightMidPanel()

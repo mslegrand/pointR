@@ -103,7 +103,7 @@ function ptRaceInit(data){
   
   //$el.data('lastSavedLen', 0); //may need to revisit
   
-    if(mode=='ptr'){ 
+    if(mode == 'ptr' || mode=='ptrrmd'){ 
       data.acejs= data.acejs[0];
       ace.config.set('workerPath', "./Acejs");
       ace.config.set('modePath', "./Acejs");
@@ -211,6 +211,37 @@ function ptRaceInit(data){
     //} else {
     //  theEditor.getSession().setMode('ace/mode/' + data.mode);  // shinyAce init
     //}
+    
+    
+    $el.droppable({
+
+    activeClass: "ui-state-default",
+    hoverClass: "ui-state-hover",
+    accept: ":not(.ui-sortable-helper)",
+
+    drop: function(event, ui) {
+      var pos = $el.data('aceEditor').renderer.screenToTextCoordinates(event.clientX, event.clientY);
+      
+      console.log("pos=" + JSON.stringify(pos));
+      var txt =  ui.draggable.attr("data-snippet");
+      console.log(
+        'txt=' + JSON.stringify(txt)
+      )
+      $el.data('aceEditor').moveCursorToPosition(pos);
+      //editor.session.insert(pos, txt);
+      //editor.insert(txt);
+      $el.data('aceEditor').focus();
+	    var tab_press= jQuery.Event('keydown', {which: 88});
+       
+      console.log('drop occurred');
+ 	    $el.trigger(tab_press);
+       var snippetManager = ace.require("ace/snippets").snippetManager;
+      snippetManager.insertSnippet($el.data('aceEditor'), txt);
+
+      return true;
+    }
+  });
+  
 }
 
 

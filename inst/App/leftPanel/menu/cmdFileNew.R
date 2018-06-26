@@ -18,7 +18,7 @@ cmdFileNewPtR<-function(fileCmd="newPtrTibScript"){
 
 cmdFileNewRmd<-function(){
   src<-fileTemplates[[ "rmdTemplate.Rmd" ]] #rmdTemplate
-  #src<-rmdTemplate
+  src<-sub('\ndate: "TODAY"', paste0('\ndate:\ndate: "', Sys.Date(),'"'), src)
   tabName<-getNextAnonymousFileName()
   addFileTab(title=tabName, txt=src,  docFilePath="?", mode='ptrrmd')
   delay(500,
@@ -49,6 +49,19 @@ cmdFileNewTxt<-function(){
   )
   mssg$error<-""
 }
+
+cmdDndSnippetNew<-function(){
+  cat('cmdDndSnippetNew\n')
+  src<-fileTemplates[[ "dndSnippetTemplate.dnippets" ]] #rmdTemplate
+  src<-sub('\ndate: "TODAY"', paste0('\ndate:\ndate: "', Sys.Date(),'"'), src)
+  tabName<-getNextAnonymousFileName()
+  addFileTab(title=tabName, txt=src,  docFilePath="?", mode='markdown')
+  delay(500,
+        updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE, setDocFileSaved=TRUE, ok=TRUE )
+  )
+  mssg$error<-""
+}
+
 
 
 

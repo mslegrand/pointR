@@ -18,25 +18,8 @@ cmdFileSave<-function(){
   setTabRequest(sender="fileCmd.save", tabs=input$pages)
 }
 
-# saveFile<-function(tabId){
-#   aceId<-tabID2aceID(tabId)
-#   cat('saveFile...., with aceId=', aceId, "\n")
-#   updateAceExt( id=aceId, sender=request$sender, getDoc=TRUE)
-#   # session$sendCustomMessage(
-#   #   type = "shinyAceExt", 
-#   #   list(id= aceId, sender='saveFile', getDoc=TRUE)
-#   # )
-# }
-
-
 cmdFileSaveAll<-function(){
-  # cat('starting in cmdFileSaveAll')
-  # session$sendCustomMessage(
-  #   type = "scrollManager", 
-  #   list( sender= 'fileCmd.save', getAllTabIds=TRUE ) 
-  # )
   sendFileTabsMessage(sender= 'fileCmd.save', getAllTabIds=runif(1))
-  # cat('\n------exit cmdFileSaveAll------------\n')
 }
 
 

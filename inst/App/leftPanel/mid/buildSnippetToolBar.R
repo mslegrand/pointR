@@ -2,9 +2,8 @@
 
 
 buildSnippetToolBar<-function(){
-  lapply(toolbarSnippets, function(n){
-    
-    #title<-tag("svg", list(viewBox="0 0 32 32", tag("use", list(`xlink:href`="snippetIcons/ellipse.svg"))) )
+  cat('===========buildSnippetToolBar==================')
+  temp<-lapply(toolbarSnippets, function(n){
     hint<-n[1]
     if(is.null(hint) || nchar(hint)==0){
       hint="no hint"
@@ -15,9 +14,12 @@ buildSnippetToolBar<-function(){
       iconImage<-'NA'
     }
     snp<-n[3]
-    d<-tags$li( class="snippetButton", draggable=TRUE, iconImage , color='blue',
+    cat('===========snp1==================')
+    print(snp)
+    d<-tags$li(id=sample(letters,12), class="snippetButton", draggable=TRUE, iconImage , color='blue',
            "data-snippet"= n[3]
       ) %>% bs_embed_tooltip(title = hint)
+    #browser()
     jqui_draggable(
       d,options=list(
         opacity= 0.5,
@@ -28,6 +30,18 @@ buildSnippetToolBar<-function(){
       )
     )  #
   })
+  # jqui_draggable(
+  #   ".snippetButton", operation="enable", options=list(
+  #     opacity= 0.5,
+  #     stroke= "#FFFFFF",
+  #     helper= 'clone',
+  #     revert= 'invalid',
+  #     appendTo= 'body'
+  #   )
+  #)
+  #temp<-NULL
+#browser()
+  paste(sapply(temp, as.character), collapse="\n")
+  temp
 }
-
 

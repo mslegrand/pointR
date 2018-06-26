@@ -11,8 +11,14 @@ modulePlotRmd<-function(input, output, session,
   output$rmd_Html <- renderUI({ 
     #HTML('')
     if(getPanelName() %in% rmdPanelTag){
+      src<-getCode()
+      if(grepl("output: dnd_snippet",src)){
+        cat("founds\n")
+        src<-dripplets2Rmd(src)
+        cat(src)
+      }
       div( style='background-color: #FFFFFF;',
-        HTML(knit2html(text = getCode(), fragment.only = TRUE, quiet = TRUE))
+        HTML(knit2html(text =src , fragment.only = TRUE, quiet = TRUE))
       )
      } else {
       HTML('')

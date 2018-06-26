@@ -1,3 +1,4 @@
+var global_snbt=null;
 
 function SnippetToolBaR(containerId, listId, buttonDownId, buttonUpId, itemHeight){
   this.containerId =  "#" +  containerId;
@@ -74,6 +75,8 @@ function SnippetToolBaR(containerId, listId, buttonDownId, buttonUpId, itemHeigh
     }
     $(this.listId).animate({top:"+=" + delta +"px"},'slow',function(){});
   };
+  
+
     
 
 

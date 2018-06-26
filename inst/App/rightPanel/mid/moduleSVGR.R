@@ -99,22 +99,7 @@ svgToolsScript<-function(type){
         } 
       )
     }
-    #res
     
-    # might wrap with the absolutePanel as follows:
-   
-    # if(getTibNRow()<=1){
-    #   cls<-"cSvgHtml0"
-    # }
-    # else{
-    #   cls<-"cSvgHtml1"
-    # }
-    # 
-    # absolutePanel( 
-    #   class=cls,
-    #   draggable=FALSE,
-    #   pre( res ), inline=FALSE
-    # )
     res
    }) #end of renderUI
   

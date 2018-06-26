@@ -9,14 +9,17 @@ Shiny.addCustomMessageHandler(
       if( data.sender==='cmd.openFileNow'){
         $('#buttonFileOpen').trigger('click');
       }
-      if( data.sender==='cmd.snippet.file.open'){
-        $('#buttonSnippetOpen').trigger('click');
+      if( data.sender==='cmd.snippet.file.import'){
+        $('#buttonSnippetImport').trigger('click');
+      }
+      if( data.sender==='cmd.dnippet.file.import'){
+        $('#buttonDnippetImport').trigger('click');
       }
     } //end data.openFile
-    if(!!data.importSnippet){
+   // if(!!data.importSnippet){
       //console.log('about to trigger load snippet\n');
-      $('#buttonSnippetOpen').trigger('click');
-    } //end data.importSnippet
+    //  $('#buttonSnippetOpen').trigger('click');
+   // } //end data.importSnippet
     if(!!data.saveFile){
       var sender=data.sender;
       console.log('data.saveFile:: sender=' + sender);
@@ -73,17 +76,48 @@ Shiny.addCustomMessageHandler(
       //var klass=data.addClass.klass;
       setTimeout(function() {$('#' + data.addClass.id).addClass(klass)}, 10);
     }
-    if(!!data.snippetButtonActivate){
-      $(".snippetButton").each( function(){
-        $(this).draggable({
-    		//revert: true
-    		opacity: 0.5,
-    		stroke: "#FFFFFF",
-    		helper: 'clone',
-        revert: 'invalid',
-        appendTo: 'body'
-      }); 
-    });
+    if(!!data.removeDrippets){
+      $('#dndSnippetList').empty();
+    }
+    if(!!data.insertDrippets){
+      var drippets = data.insertDrippets;
+      console.log('drippets', JSON.stringify(drippets ));
+      console.log('Array.isArray(drippets);'+ Array.isArray(drippets));
+      //for (var drippet in drippets){
+      $('#dndSnippetList').empty();
+      drippets.forEach( function(dripItem){
+        console.log('dripItem =' + JSON.stringify(dripItem)+"\n");
+        console.log('logo =' + JSON.stringify(dripItem.logo)+"\n");
+        console.log('logo =' + JSON.stringify(dripItem['logo'])+"\n");
+        $('#dndSnippetList').append(
+        	"<li id='" + dripItem.id + "' " +
+        	"class='snippetButton'  " +
+        	"data-snippet='" + dripItem.snip + "' " +
+        	"title='" + dripItem.hint + "' " +
+        	"'data-toggle='tooltip'  " +
+        	" data-placement='top'  " + 
+        	" >"+
+        	"<div >"+
+        	 dripItem.logo +
+        	"</div>"+
+        	"</li>"
+      	);
+      });
+      $('.snippetButton').draggable({
+		appendTo: 'body',
+		    revert: 'invalid',
+		    helper: function() {
+			//drag selected items
+			var selected = $(this);
+			var container = $('<div/>');
+			container.append(selected.clone());
+			return container;
+		     },
+		    stop: function () {
+			$(this).draggable('option', 'revert', 'invalid');
+		    }
+	}); 
+      //}
     } //endof data.snippetButtonActivate
     if(!!data.rowCountChange){
       $(window).resize();
@@ -118,12 +152,12 @@ $('document').ready(function()
   */
   
   
-  var sntb = new SnippetToolBaR( "snippetToolBarContainer", "dndSnippetList", "snippetScrollDown", "snippetScrollUp", 32);
-  sntb.reAdjustPos();
-  $(sntb.downId).click(function(){sntb.onDownClick();});
-  $(sntb.upId).click(function(){sntb.onUpClick();});
+  global_snbt = new SnippetToolBaR( "snippetToolBarContainer", "dndSnippetList", "snippetScrollDown", "snippetScrollUp", 32);
+  global_snbt.reAdjustPos();
+  $(global_snbt.downId).click(function(){global_snbt.onDownClick();});
+  $(global_snbt.upId).click(function(){global_snbt.onUpClick();});
   $(window).on('resize',function(e){  
-    	sntb.reAdjustPos();
+    	global_snbt.reAdjustPos();
   });
   
   var rsb = new rowScrollBaR("rowOutPanel",  "rowDND-rowPanel", "rowScrollDown","rowScrollUp", 32 );

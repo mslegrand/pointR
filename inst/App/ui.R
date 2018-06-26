@@ -15,8 +15,6 @@ shinyUI(
   div( class="pretty-split-pane-frame", id="mySplitter",
     singleton(
       tags$head(
-        # tags$script(src="https://code.jquery.com/jquery-1.12.4.js"),
-        # tags$script(src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"),
         initResourcePaths(),
         tags$link(rel = "stylesheet", type = "text/css", id="customStyle", href = "customStyle.css"),
         tags$link(rel = "stylesheet", type = "text/css", id="customStyle", href = "scrollTabs.css"),
@@ -75,9 +73,11 @@ shinyUI(
               top=105, left=0, width="100%", "class"="headerPanel", draggable=FALSE, height="30px",
               buildHToolBar(bar2)
            ),
+          #uiOutput('drippetUI'),
            div( id='snippetToolBarContainer', "class"="cSnippetToolBarContainer", #draggable=FALSE ,
                 tags$ul( id='dndSnippetList', "class"="cSnippetToolBarList",
-                  buildSnippetToolBar()
+                  #buildSnippetToolBar()
+                  NULL
                 ),
                 div( id='snippetScrollUp', class='snippetButton  cTop center',
                      span('class'="glyphicon glyphicon-chevron-up")
@@ -94,6 +94,23 @@ shinyUI(
                awesomeRadio('useTribble', NULL, choices=c('Tribble','Tibble'),
                                     selected = "Tribble", 
                                     inline = TRUE, status='success')
+             ),
+             absolutePanel( right=50, bottom=0,
+                 dropdown( 
+                   awesomeCheckboxGroup(
+                     inputId = "selectedDDDnippets",
+                     label = "Selected Dnippets", 
+                     choices = c(),
+                     selected = c()
+                   ),
+                   style = "unite", icon = icon("gear"),
+                   status = "primary", width = "300px", size='sm',
+                   up=TRUE, right=TRUE,
+                   animate = animateOptions(
+                     enter = animations$fading_entrances$fadeInLeftBig,
+                     exit = animations$fading_exits$fadeOutRightBig
+                   )
+                 )
              )
           )
           #-------left content end--------

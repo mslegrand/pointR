@@ -21,7 +21,9 @@ processCommit<-reactive({
       processSvgR()
     } else if(  identical(request$mode, 'ptrrmd') ){
       processKnit()
-    } 
+    } else if( identical(request$mode, 'markdown')){
+      processDnip()
+    }
   # isolate({
   #   request$refresh<-runif(1)
   # })

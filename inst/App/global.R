@@ -3,6 +3,8 @@
 
 version="v.0.3.9.3"
 
+drippetdirectoryPath = paste(system.file('App', package='pointR'), 'inst', 'www', 'drippets', sep='/')
+
 initResourcePaths <- function() {
   if (is.null(.global$loaded)) {
     shiny::addResourcePath(
@@ -67,6 +69,7 @@ source("util/utilptR.R")
 source("util/utilTibble.R")
 source("util/utilColumnType.R")
 source("util/utilTransform.R")
+source("leftPanel/fileIO/dndSnippetLoader.R")
 source("leftPanel/fileIO/genShinyFilesOpenButtons.R")
 source("leftPanel/fileIO/genShinyFilesSaveButtons.R")
 source("leftPanel/menu/UIbuildLeftMenu.R")

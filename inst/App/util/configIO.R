@@ -15,6 +15,24 @@ optionDirPath<-function(){
   dirPath
 }
 
+drippetsDirPath<-function(){
+  opPath<-optionDirPath()
+  dirPath<-paste(opPath,'drippets',sep='/')
+  if(!file.exists(dirPath)){
+    dir.create(dirPath)
+  }
+  dirPath
+}
+
+snippetsDirPath<-function(){
+  opPath<-optionDirPath()
+  dirPath<-paste(opPath,'snippets',sep='/')
+  if(!file.exists(dirPath)){
+    dir.create(dirPath)
+  }
+  dirPath
+}
+
 
 optionFile<-paste(path.expand("~"),".ptRProfile.csv",sep="/")
 

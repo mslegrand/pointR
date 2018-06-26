@@ -131,9 +131,24 @@ observeEvent( input$editNavBar, {
       dirtyDMDM(session, "editNavBar")
     }
  
-    if(fileCmd=="importSnippetFile"){
-      cmdSnippetFileOpen()
+    if(fileCmd=="newDndSnippetsFile"){
+      cmdDndSnippetNew()
     }
+    
+    if(fileCmd=="importDndSnippetsFile"){
+      cmdDnippetImport()
+    }
+    
+    if(fileCmd=="importSnippetFile"){
+      cmdSnippetImport()
+    }
+    
+    if(fileCmd=="unloadSnippets"){
+      cmdSnippetUnload()
+    }
+    
+    
+    
     
     if(fileCmd=="aboutCmd"){
       cmdAbout()

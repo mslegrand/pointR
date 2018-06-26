@@ -34,6 +34,11 @@ observeEvent(input$messageFromAce, {
           processCommit()
           return(NULL) #skip the rest of the processing (for ptR mode)
         } 
+        if(identical(request$mode, 'markdown')){
+          panels$sourceType<-rmdPanelTag
+          processCommit()
+          return(NULL) #skip the rest of the processing (for ptR mode)
+        } 
         if(identical(request$mode, 'text')){
           panels$sourceType<-textPanelTag
           processCommit()
@@ -149,6 +154,8 @@ observeEvent(input$messageFromAce, {
                ext=list(Rmd='Rmd')
              } else if( identical(request$mode, 'snippets') ){
                ext=list(snippet='snippets')
+             } else if( identical(request$mode, 'markdown') ){
+                 ext=list(dnippets='dnippets')
              } else {
                cat('request$mode=',request$mode,"\n")
                stop('unknowMode')
