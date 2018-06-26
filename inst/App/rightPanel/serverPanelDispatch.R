@@ -19,24 +19,10 @@ output$BottomRightPanel<-renderUI({
   moduleFooterRightUI("footerRight", input, output)
 })
 
-# output$drippetUI<-renderUI({
-#    div( id='snippetToolBarContainer', "class"="cSnippetToolBarContainer", #draggable=FALSE ,
-#         tags$ul( id='dndSnippetList', "class"="cSnippetToolBarList",
-#           buildSnippetToolBar()
-#         ),
-#         div( id='snippetScrollUp', class='snippetButton  cTop center',
-#              span('class'="glyphicon glyphicon-chevron-up")
-#         ),
-#         div( id='snippetScrollDown', class='snippetButton cBottom center',
-#              span('class'="glyphicon glyphicon-chevron-down")
-#         )
-#   )
-# })
-
 output$MidRightPanel<-renderUI({
   
   chosenRightMidPanel<-getRightMidPanel()
-  cat("chosenRightMidPanel=",format(chosenRightMidPanel),"\n")
+  # cat("chosenRightMidPanel=",format(chosenRightMidPanel),"\n")
   if (chosenRightMidPanel=='point'){
     #cat("chosenRightMidPanel=1\n")
     modulePlotSVGrUI("svgPointsMod", input, output)
@@ -68,11 +54,11 @@ output$MidRightPanel<-renderUI({
     div( img(src="ptR/pointRLogo.SVG") ) 
     #Todo add something about sponsors.
   }  else if(chosenRightMidPanel == snippetPanelTag){
-    cat("chosenRightMidPanel=10\n")
+    #cat("chosenRightMidPanel=10\n")
     div( img(src="ptR/pointRLogo.SVG") ) 
     #Todo add something about sponsors.
   } else {
-    cat("chosenRightMidPanel=11\n")
+    #cat("chosenRightMidPanel=11\n")
     div( img(src="ptR/pointRLogo.SVG"))
   }
   

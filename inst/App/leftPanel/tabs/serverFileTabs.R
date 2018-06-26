@@ -5,7 +5,6 @@ closeRfn<-function(tabId){paste0("event.stopPropagation();Shiny.onInputChange('c
 tabTitleRfn<-function(tabName, tabId, docFilePath){
   span(
     bs_embed_tooltip(span(tabName, "class"="tabTitle"), title=docFilePath),
-    #span(title, "class"="tabTitle"),
     span( " " , class='icon-cancel', onclick=closeRfn(tabId))  
   )
 }

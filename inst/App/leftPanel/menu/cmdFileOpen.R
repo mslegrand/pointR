@@ -57,8 +57,7 @@ openFileNow<-function(fileName){
     if(nchar(src)>0){
       mssg$error<-""
       tabName<-basename(fileName)
-      cat('openFileNow:: fileName=', format(fileName),"\n")
-      #ext<-file_ext(fileName)
+      #cat('openFileNow:: fileName=', format(fileName),"\n")
       mode<-'txt'
       if( grepl("*.ptr$", fileName, ignore.case = T)){
         mode<-'ptr'
@@ -76,8 +75,7 @@ openFileNow<-function(fileName){
         mode<-'markdown'
       }
       #if ptr mode, try to parse, if not parsable, get Error, set choices=R, error, and do error report????
-      
-      cat('\n\nMODE=',mode,'\n\n')
+    
       addFileTab(title=tabName, txt=src, docFilePath= fileName, mode=mode)
       #here we get the code and set the doc status as saved, 
       delay(500,

@@ -81,14 +81,13 @@ Shiny.addCustomMessageHandler(
     }
     if(!!data.insertDrippets){
       var drippets = data.insertDrippets;
-      console.log('drippets', JSON.stringify(drippets ));
-      console.log('Array.isArray(drippets);'+ Array.isArray(drippets));
-      //for (var drippet in drippets){
+//      console.log('drippets', JSON.stringify(drippets ));
+//      console.log('Array.isArray(drippets);'+ Array.isArray(drippets));
       $('#dndSnippetList').empty();
       drippets.forEach( function(dripItem){
-        console.log('dripItem =' + JSON.stringify(dripItem)+"\n");
-        console.log('logo =' + JSON.stringify(dripItem.logo)+"\n");
-        console.log('logo =' + JSON.stringify(dripItem['logo'])+"\n");
+//        console.log('dripItem =' + JSON.stringify(dripItem)+"\n");
+//        console.log('logo =' + JSON.stringify(dripItem.logo)+"\n");
+//        console.log('logo =' + JSON.stringify(dripItem['logo'])+"\n");
         $('#dndSnippetList').append(
         	"<li id='" + dripItem.id + "' " +
         	"class='snippetButton'  " +

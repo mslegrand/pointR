@@ -17,7 +17,6 @@ getDnippets4ToolBar<-function(dnippetList){
     
     list(id=id, hint=hint, snip=snip, logo=iconImage)
   })
-  #print(temp)
   temp
 }
 

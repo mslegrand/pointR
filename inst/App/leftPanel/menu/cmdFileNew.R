@@ -40,7 +40,6 @@ cmdFileNewSnippet<-function(){
 }
 
 cmdFileNewTxt<-function(){
-  #src<-"fileTemplates[[ "rmdTemplate.Rmd" ]]" #rmdTemplate
   src<-"A plain text document"
   tabName<-getNextAnonymousFileName()
   addFileTab(title=tabName, txt=src,  docFilePath="?", mode='text')
@@ -51,7 +50,6 @@ cmdFileNewTxt<-function(){
 }
 
 cmdDndSnippetNew<-function(){
-  cat('cmdDndSnippetNew\n')
   src<-fileTemplates[[ "dndSnippetTemplate.dnippets" ]] #rmdTemplate
   src<-sub('\ndate: "TODAY"', paste0('\ndate:\ndate: "', Sys.Date(),'"'), src)
   tabName<-getNextAnonymousFileName()
@@ -61,9 +59,6 @@ cmdDndSnippetNew<-function(){
   )
   mssg$error<-""
 }
-
-
-
 
 
 cmdNewIOSlides<-function(){

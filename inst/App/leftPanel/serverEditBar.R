@@ -147,9 +147,7 @@ observeEvent( input$editNavBar, {
       cmdSnippetUnload()
     }
     
-    
-    
-    
+
     if(fileCmd=="aboutCmd"){
       cmdAbout()
       dirtyDMDM(session, "editNavBar")

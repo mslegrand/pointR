@@ -13,22 +13,16 @@ src2sourceType<-function(src){  #not used !!
 
 processCommit<-reactive({
   clearErrorMssg()
-  #src<-getCode() #input$source #------ace editor
-  #request$code
-  #if(length(src)==1){
-  cat('ProcessCommit: request$mode=',format(request$mode),"\n")
-    if( identical(request$mode, 'ptr')){
-      processSvgR()
-    } else if(  identical(request$mode, 'ptrrmd') ){
-      processKnit()
-    } else if( identical(request$mode, 'markdown')){
-      processDnip()
-    }
-  # isolate({
-  #   request$refresh<-runif(1)
-  # })
-  
-  #}
+
+  #cat('ProcessCommit: request$mode=',format(request$mode),"\n")
+  if( identical(request$mode, 'ptr')){
+    processSvgR()
+  } else if(  identical(request$mode, 'ptrrmd') ){
+    processKnit()
+  } else if( identical(request$mode, 'markdown')){
+    processDnip()
+  }
+
 })
 
 

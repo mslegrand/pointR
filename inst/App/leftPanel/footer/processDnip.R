@@ -1,7 +1,6 @@
 
 processDnip<-reactive({
   clearErrorMssg()
-  #src<-getCode() #input$source #------ace editor
   src<-request$code
   panels$sourceType<-rmdPanelTag
   if(length(src)==1 && nchar(src)>0){

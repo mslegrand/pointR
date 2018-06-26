@@ -1,7 +1,6 @@
 
 processKnit<-reactive({
   clearErrorMssg()
-  #src<-getCode() #input$source #------ace editor
   src<-request$code
   panels$sourceType<-rmdPanelTag
   

@@ -76,7 +76,6 @@ shinyUI(
           #uiOutput('drippetUI'),
            div( id='snippetToolBarContainer', "class"="cSnippetToolBarContainer", #draggable=FALSE ,
                 tags$ul( id='dndSnippetList', "class"="cSnippetToolBarList",
-                  #buildSnippetToolBar()
                   NULL
                 ),
                 div( id='snippetScrollUp', class='snippetButton  cTop center',

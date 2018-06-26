@@ -75,7 +75,7 @@ source("leftPanel/fileIO/genShinyFilesSaveButtons.R")
 source("leftPanel/menu/UIbuildLeftMenu.R")
 source("leftPanel/toolbar/dndToolBarSnippets.R")
 source("leftPanel/toolbar/buildLeftHToolBarUI.R")
-source("leftPanel/mid/buildSnippetToolBar.R")
+
 source("rightPanel/menu/buildRightMenuUI.R")
 source("leftPanel/mid/shinyAce4Ptr.R")
 

@@ -37,16 +37,10 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   
   observeEvent(input$selectedDDDnippets,{
     selected=input$selectedDDDnippets
-    #browser()
-    cat('\nselected=',format(selected),"\n\n")
     drippetSelection$selected=selected
     dnippets<-drippetSelection$all[selected]
-    cat('+++++++++++dnippets are\n')
-    print(dnippets)
     dnippets<-unlist(dnippets,recursive=F)
     names(dnippets)<-NULL
-    cat('+++++++++++dnippets are\n')
-    print(dnippets)
     if(length(dnippets)==0){
       sendPtRManagerMessage(sender='cmd.dnippet.file.load', removeDrippets=runif(1));
     } else{
@@ -115,14 +109,7 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
     cat('exiting ---------------sendPtRManagerMessage---------------------\n')
   }
   
-  # sendFileTabsMessage<-function(id, sender, ...){ 
-  #   cat( "sendFileTabsMessage:: id=",id," sender=",sender,"\n" )
-  #   data<- c( list(value = id, sender=sender), list(...) )
-  #   print(data)
-  #   session$sendCustomMessage( type = "scrollManager", 
-  #      c( list(value = id, sender=sender), list(...) )
-  #   )
-  # }
+
   
   sendFileTabsMessage<-function(...){ 
     #cat( "sendFileTabsMessage:: id=",id," sender=",sender,"\n" )
@@ -133,12 +120,6 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
           cat('sendFileTabsMessage\n')
           print(data)
         }
-    #   lapply(data, function(x){
-    #     if(is.null(x) || is.na(x) ){
-    #       print(data)
-    #       stop("encounterd an NA")
-    #     }
-    #   })
       session$sendCustomMessage( type = "scrollManager",  data )
     }
     
@@ -155,39 +136,17 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   getNextAnonymousFileName<-function(){
     newFileName<-paste0("Anonymous ", pages$fileNameCount)
     pages$fileNameCount<-pages$fileNameCount+1
-    #newTabId<-"source"
-    #cat("getNextAnonymousFileName::newFileName",newFileName,"\n")
     newFileName
   }
   
   getNextTabId<-function(){
     tabId<-paste0("PTR-TABID", pages$tabIdCount)
     pages$tabIdCount<-pages$tabIdCount+1
-    #newTabId<-"source"
     tabId
   }
   
   
-  
-  # tabName2AceId<-function(tabName){
-  #   if(!is.null(tabName) && nchar(tabName)>0){
-  #     tabName<-paste0("ACE", tabName)
-  #     tabName<-gsub(' ','', tabName)
-  #     tabName<-gsub('\\.','_',tabName)
-  #   } else {
-  #     NULL
-  #   }
-  # }
-  # tabName2TabId<-function(tabName){
-  #   if(!is.null(tabName) && nchar(tabName)>0){
-  #     tabName<-paste0("TAB", tabName)
-  #     tabName<-gsub(' ','', tabName)
-  #     tabName<-gsub('\\.','_',tabName)
-  #   } else {
-  #     NULL
-  #   }
-  # }
-  
+
   aceID2TabID<-function(aceId){
     sub("ACE","TAB",aceId)
   }
@@ -214,8 +173,7 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   shinyFileChoose(input, "buttonDnippetImport",    session=session, roots=c(wd="~"),  filetypes=c('dnippets') ) #hidden
   shinyFileSave(input,   "buttonExportSVG",      session=session, roots=c(wd="~")  ) #hidden
   
-  # genShinySaveFilesServerConnection(input, session)
-  # genShinySaveFilesObservers(input, session)
+
   # Reactive expressions------------- 
   showGrid<-reactive({displayOptions$showGrid})
 

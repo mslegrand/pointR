@@ -1,7 +1,7 @@
 
 
 observeEvent(input$messageFromAce, {
-  cat('\n====serverAce:...observe input$messageFromAce:: entering\n')
+  # cat('\n====serverAce:...observe input$messageFromAce:: entering\n')
   # cat('\n initial value of getTibRow()=', format(getTibRow()), "\n")
     if(
       length(input$messageFromAce$code)>0 &&
@@ -12,12 +12,12 @@ observeEvent(input$messageFromAce, {
       request$sender<-sender
       clearErrorMssg()
       
-      cat("input$messageFromAce$id=" , format(input$messageFromAce$id), "\n")
+      # cat("input$messageFromAce$id=" , format(input$messageFromAce$id), "\n")
       if(!is.null(input$messageFromAce$selector) && !is.null(input$messageFromAce$code) ){
         reqSelector<-input$messageFromAce$selector
         updateSelected4Ace(reqSelector)
       }
-      cat('request$sender=',format(request$sender),"\n")
+      # cat('request$sender=',format(request$sender),"\n")
       if(length(input$messageFromAce$isSaved)>0){ 
         aceId<-input$messageFromAce$id
         editOption$.saved <- input$messageFromAce$isSaved
@@ -69,18 +69,18 @@ observeEvent(input$messageFromAce, {
           resetSelectedTibbleName(tibs=tibs, name=name)
         } else { 
           #name=NULL #  'cmd.openFileNow', 'cmd.tabChange' , 'cmd.file.new'
-          cat('else: ', 'cmd.openFileNow', 'cmd.tabChange' , 'cmd.file.new',"\n")
-          cat('sender=',format(sender),"\n")
-          cat("length(input$pages)=",length(input$pages),"\n")
+          # cat('else: ', 'cmd.openFileNow', 'cmd.tabChange' , 'cmd.file.new',"\n")
+          # cat('sender=',format(sender),"\n")
+          # cat("length(input$pages)=",length(input$pages),"\n")
           tttid<-input$pages;
-          cat("input$pages=",format(tttid),"\n")
+          # cat("input$pages=",format(tttid),"\n")
           if(length(input$pages) >0 && 
              nchar(input$pages)>0 && 
              selectedTibble$tabId != input$pages ){
             
-             cat('next tabId=',input$pages,"\n")
-             cat('selectedTibble$tabId=',selectedTibble$tabId,"\n")
-             cat("input$messageFromAce$id=" , format(input$messageFromAce$id), "\n")
+             # cat('next tabId=',input$pages,"\n")
+             # cat('selectedTibble$tabId=',selectedTibble$tabId,"\n")
+             # cat("input$messageFromAce$id=" , format(input$messageFromAce$id), "\n")
              storeAssetState()
              restoreAssetState(input$pages)
             # choices<-getRightPanelChoices()
@@ -128,26 +128,10 @@ observeEvent(input$messageFromAce, {
         
         id<-input$messageFromAce$id
         saved<-input$messageFromAce$isSaved
-        # if(TRUE){
-        #   cat("\n------",sender,"-----------------------------------\n")
-        #   cat('input$messageFromAce$saved=',format(saved),"\n")
-        #   cat('class(saved)=',class(saved),"\n")
-        #   cat('saved=',saved,"\n")
-        #   cat("and editOption$.saved=",editOption$.saved,"\n")
-        #   cat("for id=",id,"\n")
-        # }
-        
         if( !saved || sender %in% c('fileCmd.saveAs','fileCmd.saveNow') ) { #need to save
           docFilePath<-unlist(input$messageFromAce$docFilePath)
-          # if(TRUE){
-          #   cat("docFilePath=",docFilePath,"\n")
-          #   cat("sender=",sender,"\n")
-          # }
           if(docFilePath=='?' || sender=='fileCmd.saveAs'){ # file unnamed : fileSaveAs
              tabId<-aceID2TabID(id)
-             # cat('11: tabId=',format(tabId),"\n")
-             # cat("executing sendPtRManagerMessage( id=id,  sender=sender, saveFile=TRUE,  type='R', tabId=tabId)\n")
-             
              if(identical(request$mode, 'ptr')){
                ext=list(R='R')
              } else if( identical(request$mode, 'ptrrmd') ){
@@ -164,12 +148,9 @@ observeEvent(input$messageFromAce, {
              ext<-shinyFiles:::formatFiletype(ext)
 
              target<-saveButtonFileNames[[request$mode]]
-             # cat('sendPtRManagerMessage( sender=',sender,', saveFile=TRUE,',  'target=',target, ', tabId=',tabId,')\n'  )
              sendPtRManagerMessage( sender=sender, saveFile=TRUE,  target=target, tabId=tabId )
           } else { 
             # write file
-            # cat('serverAce:: writeLines\n')
-            # cat('serverAce::docFilePath=',format(docFilePath),"\n")
             code<-input$messageFromAce$code
             # !!!TODO!!! if write fails revert.
             writeLines(code, docFilePath)
@@ -200,12 +181,7 @@ observeEvent(input$messageFromAce, {
 
 updateAceExtDef<-function(newPtDef, sender, selector=list() ){
   if(!is.null(getCode())){
-    # cat("newPtDef:\n")
-    # print(newPtDef)
-    # cat("getCode()\n")
-    # print(getCode())
     newPtDef$tib<-pts2Integers(newPtDef$tib )
-    
     replacementList<-ptDef2ReplacementList(name, newPtDef, getCode() ) #name not used!!!
     if( length(replacementList)>0 ){
       data<-list(id= getAceEditorId(), replacement=replacementList, selector=selector, sender=sender, ok=1)
@@ -215,11 +191,7 @@ updateAceExtDef<-function(newPtDef, sender, selector=list() ){
           stop("encounterd an NA")
         }
       })
-      session$sendCustomMessage(
-        type = "shinyAceExt",
-        #list(id= getAceEditorId(), replacement=replacementList, selector=selector, sender=sender, ok=1)
-        data
-      )
+      session$sendCustomMessage( type = "shinyAceExt", data )
     }
   }
 
@@ -233,15 +205,15 @@ updateAceExt<-function(id, sender, ... ){
       id<-'bogus'
     }
     data<-c(list(id= id, sender=sender), data )
-    if(TRUE){
-        cat("Entering updateAceExt::\n")
-        cat("updateAceExt::id=",format(id), ", length(id)=",length(id),",class(id)=", class(id),"\n")
-        cat("updateAceExt::sender=",format(sender),"\n")
-        cat("updateAceExt::names(data)=",format(names(data)),"\n")
-        cat("updateAceExt::data=",format(data),"\n")
-        #print(data)
-        cat("updateAceExt::sendCustomMessage NOW\n")
-    }
+    # if(TRUE){
+    #     cat("Entering updateAceExt::\n")
+    #     cat("updateAceExt::id=",format(id), ", length(id)=",length(id),",class(id)=", class(id),"\n")
+    #     cat("updateAceExt::sender=",format(sender),"\n")
+    #     cat("updateAceExt::names(data)=",format(names(data)),"\n")
+    #     cat("updateAceExt::data=",format(data),"\n")
+    #     #print(data)
+    #     cat("updateAceExt::sendCustomMessage NOW\n")
+    # }
 
 
     
@@ -268,28 +240,8 @@ updateAceExt<-function(id, sender, ... ){
 
 observeEvent(request$sender,{
     if(request$sender=='startup'){
-      #cat('startup\n')
       cmdFileNewPtR()
     }
-  # if(request$sender=='startup'){
-  #   cat('startup\n')
-  #   tabId=getNextAnonymousFileName()
-  #   # txt=''
-  #   src<-codeTemplate
-  #   addFileTab(tabId,codeTemplate)
-  #   # addFileTab(tabId, txt)
-  #   
-  #   cat('fin addFileTab\n')
-  #   cat('sendCustomMessage sender=  cmd.file.new\n')
-  #   # session$sendCustomMessage(
-  #   #   type = "shinyAceExt",
-  #   #   list(id= tabId, sender='cmd.file.new', setValue= src, ok=TRUE)
-  #   # )
-  #   triggerRefresh('cmd.commit', rollBack=FALSE)
-  # 
-  #   mssg$error<-""
-  #}
-  
 }, priority=100)
 
 # TODO!!!: rewrite

@@ -1,94 +1,4 @@
-# translate2rmd
-# 
-# Hint:\n ```codeBlock``` to ### codeBlock 
-# 
-# Snippet Insert:  delete
-# 
-# SVGR Image:
-# ``` 
-# 
-# to
-# ```
-# {r, results='asis'}
-# 
-# testScript<-'
-# ---
-# title: "Untitled"
-# author: "me"
-# date: "June 21, 2018"
-# output: html_document
-# ---
-# 
-# ******************
-# Hint:
-# ```
-# err
-# ```
-# Snippet Insert:
-# ```
-# dala
-# asdlka
-# asdfa
-# ```
-# SVGR Image:
-# ```
-# library(svgR)
-# WH<-c(48,32)
-# ptR<-list(
-#   x=matrix(0,2,0)
-# )
-# svgR(wh=WH,
-#     ellipse(
-#       cxy=WH/2,
-#       rxy=WH/4,
-#       fill=\'none\',
-#       stroke=\'white\',
-#       stroke.width=2
-#     )
-# )
-# ```
-# *********************
-# 
-# ******************
-# Hint:
-# ```
-# err2
-# ```
-# Snippet Insert:
-# ```
-# dala
-# asdlka
-# asdfa
-# ```
-# SVGR Image:
-# ```
-# library(svgR)
-# WH<-c(48,32)
-# ptR<-list(
-#   x=matrix(0,2,0)
-# )
-# svgR(wh=WH,
-#     ellipse(
-#       cxy=WH/2,
-#       rxy=WH/4,
-#       fill=\'none\',
-#       stroke=\'white\',
-#       stroke.width=2
-#     )
-# )
-# ```
-# *********************
-# '
 
-
-# 
-# svgRPrev<-function(...){
-#   temp<-svgR( as.expression(as.list(match.call()[-1])))
-#   temp$root$setAttr('width',480)
-#   temp$root$setAttr('height',320)
-#   temp$root$setAttr('viewBox',"0 0  48 32")
-#   temp
-# }
 
 imageBlockIndices<-function(temp){
   unlist(str_split(temp, '\n'))->lines
@@ -100,9 +10,6 @@ imageBlockIndices<-function(temp){
   rtv<-rbind(posx,posy)
   rtv
 }
-
-# imageBlockIndices(testScript)->m
-# print(m)
 
 dripplets2Rmd<-function( drps ){
   drps<-str_replace_all(drps, "svgR\\(", 'temp<-svgR(')
@@ -118,7 +25,6 @@ dripplets2Rmd<-function( drps ){
     "temp$root$prependChildren(
       svgR:::use(filter=svgR:::filter( filterUnits='userSpaceOnUse', svgR:::feFlood(flood.color='black') ) )
     )",
-    #use(filter=filter( filterUnits='userSpaceOnUse', feFlood(flood.color='black') )),
     "temp",
     "```",
     sep="\n"
@@ -128,13 +34,8 @@ dripplets2Rmd<-function( drps ){
   drps<-str_replace_all(drps, "Hint:\\s*\n```\n(.+)\n```", "### \\1")
   drps<-str_replace_all(drps, "\nSnippet\\s+Insert:\\s*","\n")
   drps<-str_replace_all(drps, "\nSVGR Image:\\s*\n```\n", '\n\n```\\{r, echo=FALSE, results=\'asis\'\\}\n')
-  
-  
   drps
-  
 }
-
-# cat(dripplets2Rmd(testScript))
 
 extractVal<-function(x,pattern){
   cat('extractVal\n')
@@ -165,11 +66,6 @@ dripplets2List<-function(drps){
 }
 
 
-# drpl<-dripplets2List(temp)
-# print(class(drpl))
-# print(drpl)
-
-
 extractDripplet<-function(dr, tmpdir=tempdir() ){
   temp<-str_trim(unlist(str_split(dr,'\n```')))
   if(length(temp)>=6){
@@ -181,21 +77,14 @@ extractDripplet<-function(dr, tmpdir=tempdir() ){
   
   tt<-setNames(temp[c(2,4,6)], str_remove(temp[c(1,3,5)], ":\\s*"))
   m<-match(names(tt),c("Hint", "Snippet Insert", "SVGR Image"),0)
-  # browser()
   if(all(m>0)){
     rtv<-tt
     rtv<-tryCatch({
-      # browser()
        svg<-as.character(eval(parse(text=tt['SVGR Image'])))
        fileName1<-tempfile('ptRSnippet', tmpdir=tmpdir, fileext='.SVG')
-       cat('fileName1=',fileName1,'\n')
        rtv["SVGR Image"]<-fileName1
        fileName2 = paste(system.file('App', package='pointR'),  'www', fileName1, sep='/')
-       cat('fileName2=',fileName2,'\n')
-       #browser()
        write_file(svg, fileName2)
-      
-       #rtv["SVGR Image"]<-HTML(as.character(svg))
        names(rtv)<-c('hint','snip','logo')[m]
        rtv
     }, error=function(e){NULL} )
@@ -207,8 +96,6 @@ extractDripplet<-function(dr, tmpdir=tempdir() ){
 
 dripplets2List2<-function(drps){
   drps<-unlist(str_split(drps,pattern = '\\*{3,}'))
-  #drps<-drps[[1]]
-  #print(drps)
   tmpdir=tempdir()
   tmpdir='drippets'
   drps<-lapply(drps, function(dr){

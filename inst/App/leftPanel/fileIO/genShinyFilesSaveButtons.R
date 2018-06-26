@@ -23,12 +23,6 @@
       filetype=type2ExtensionList[[i]]
       shinySaveButton( id, label="", title="Save as ...",    filetype=filetype, class="hiddenButton")
     })
-    # tmp<-c( # kludge to add export
-    #   tmp,
-    #   list(
-    #     shinySaveButton( id="buttonExportSVG", label="", title="Export as ...", filetype=list(SVG=c("SVG")) ,    class='hiddenButton')
-    #   )
-    # )
     saveButtons<-do.call(tagList, tmp)
     saveButtons
   }
