@@ -94,7 +94,7 @@ shinyUI(
                                     selected = "Tribble", 
                                     inline = TRUE, status='success')
              ),
-             absolutePanel( right=50, bottom=0,
+             absolutePanel( right=50, bottom=0, id='selectedDnippetButtonBoxContainer',
                  dropdown( 
                    awesomeCheckboxGroup(
                      inputId = "selectedDDDnippets",
