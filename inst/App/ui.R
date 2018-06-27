@@ -33,6 +33,7 @@ shinyUI(
         tags$script(src = 'IOjs/rotIO.js' ),
         tags$script(src = 'IOjs/scaleIO.js' ),
         tags$script(src = 'IOjs/tagDragIO.js' ),
+        tags$script(src='shared/jqueryui/jquery-ui.min.js'),
         tags$script(src = 'ptR/scrollTabs.js' ),
         tags$script(src = 'ptR/snippetScroll.js' ),
         tags$script(src = 'ptR/rowScroll.js' ),
@@ -63,7 +64,7 @@ shinyUI(
           #shinyFilesButton("buttonSnippetOpen",    label="", title="Import Snippet", multiple=FALSE,                        class='hiddenButton'),
           #shinySaveButton("buttonExportSVGHidden", label="", title="Save as ...",    list('hidden_mime_type'=c("SVG")) ,    class='hiddenButton'),
           div( id='aceTabSet', class="container",
-              tabsetPanel(id='pages')
+               tabsetPanel(id='pages')
           ),
           absolutePanel( id='aceToobarTop1',
               top=75, left=0, width="100%", "class"="headerPanel", draggable=FALSE, height="30px",

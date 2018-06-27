@@ -16,10 +16,6 @@ Shiny.addCustomMessageHandler(
         $('#buttonDnippetImport').trigger('click');
       }
     } //end data.openFile
-   // if(!!data.importSnippet){
-      //console.log('about to trigger load snippet\n');
-    //  $('#buttonSnippetOpen').trigger('click');
-   // } //end data.importSnippet
     if(!!data.saveFile){
       var sender=data.sender;
       console.log('data.saveFile:: sender=' + sender);
@@ -64,16 +60,12 @@ Shiny.addCustomMessageHandler(
       $('#buttonExportSVG').trigger('click');
     }
     if(!!data.setFocus){ // I don't if this is still being called???
-      // console.log('#' + data.setFocus +'\n' );
       setTimeout(function() {$('#' + data.setFocus).focus()}, 10);
-      //$('#' + data.setFocus).focus();
     }
      if(!!data.hide){ // I don't if this is still being called???
-      //console.log('#' + data.hide +'\n' );
       setTimeout(function() {$('#' + data.hide).hide()}, 10);
     }
     if(!!data.addClass){ // I don't if this is still being called???
-      //var klass=data.addClass.klass;
       setTimeout(function() {$('#' + data.addClass.id).addClass(klass)}, 10);
     }
     if(!!data.removeDrippets){
@@ -81,30 +73,14 @@ Shiny.addCustomMessageHandler(
     }
     if(!!data.insertDrippets){
       var drippets = data.insertDrippets;
-//      console.log('drippets', JSON.stringify(drippets ));
-//      console.log('Array.isArray(drippets);'+ Array.isArray(drippets));
       $('#dndSnippetList').empty();
       drippets.forEach( function(dripItem){
+        /*
           console.log('dripItem =' + JSON.stringify(dripItem)+"\n");
           console.log('logo =' + JSON.stringify(dripItem.logo)+"\n");
-          //console.log('logo =' + JSON.stringify(dripItem['logo'])+"\n");
           console.log('snip =' + JSON.stringify(dripItem.snip)+"\n");
           console.log('hint =' + JSON.stringify(dripItem.hint)+"\n");
-        /*$('#dndSnippetList').append(
-        	"<li id='" + dripItem.id + "' " +
-        	"class='snippetButton'  " +
-        	"data-snippet='" + dripItem.snip + "' " +
-        	"title='" + dripItem.hint + "' " +
-        	"'data-toggle='tooltip'  " +
-        	" data-placement='top'  " + 
-        	" >"+
-        	"<div >"+
-        	 dripItem.logo +
-        	"</div>"+
-        	"</li>"
-      	);
       	*/
-      	
         $('#dndSnippetList').append(
            $('<li/>')
               .attr("id",dripItem.id)
@@ -135,24 +111,7 @@ Shiny.addCustomMessageHandler(
      	
       	
       });
-      /*
-      $('.snippetButton').draggable({
-      		appendTo: 'body',
-      		    revert: 'invalid',
-      		    helper: function() {
-      			//drag selected items
-      			var selected = $(this);
-      			var container = $('<div/>');
-      			container.append(selected.clone());
-      			return container;
-      		     },
-      		    stop: function () {
-      			$(this).draggable('option', 'revert', 'invalid');
-      		    }
-      	}); 
-      	*/
-      //}
-    } //endof data.snippetButtonActivate
+    } //endof insertDrippets
     
     
     if(!!data.rowCountChange){

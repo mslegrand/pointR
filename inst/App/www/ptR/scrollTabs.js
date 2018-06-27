@@ -7,32 +7,30 @@ function ScollableTabs( containerId ){
 	this.lastHiddenWidth=0;
 	this.containerId =  "#" +  containerId;
 	this.container = $(this.containerId);
-	//var containerSB = $('<div class=scroll-container> <div class="scroller scroller-right"> <i class="glyphicon glyphicon-chevron-right"></i> </div> <div class="scroller scroller-left"> <i class="glyphicon glyphicon-chevron-left"></i> </div> </div>' );
-	//this.container.append(containerSB);
-	//containerSB.insertAfter(this.container.find('ul'));
-	var rightSB = $('<div class="scroller scroller-right"><i class="glyphicon glyphicon-chevron-right"></i></div>');
-	//this.container.prepend(rightSB);
+	
+	var rightSB = 
+	$('<div class="scroller scroller-right"><i class="glyphicon glyphicon-chevron-right"></i></div>');
+	
 	rightSB.insertAfter(this.container.find('ul'));
-	var leftSB = $('<div class="scroller scroller-left"><i class="glyphicon glyphicon-chevron-left"></i></div>');
-	//this.container.prepend(leftSB);
+	var leftSB = 
+	$('<div class="scroller scroller-left"><i class="glyphicon glyphicon-chevron-left"></i></div>');
+	
 	leftSB.insertAfter(this.container.find('ul'));
 	
 	this.rightSB =   this.container.find('.scroller-right');
 	this.leftSB =  this.container.find('.scroller-left');
-	//this.container.find('.scroller-left').onclick=function(){console.log('leftClick');};
-	//this.container.find('.scroller-right').onclick=function(){console.log('rightClick');}
-	//this.container.find('.scroller-right').click( function(){ this.rightClick(); } );
+	
 	return this;
 }
 
 ScollableTabs.prototype.widthOfList = function(){
    var itemsWidth = 0;
    this.container.find('ul li').each(function(){ //li elements 
-   // $('.list li').each(function(){ //li elements 
+   
     var itemWidth = $(this).outerWidth();
     itemsWidth+=itemWidth;
   });
-  //console.log('no of items=' + this.container.find('ul li').length );
+  
   return itemsWidth;
 };
 
@@ -41,11 +39,7 @@ ScollableTabs.prototype.widthOfList = function(){
 
 
 ScollableTabs.prototype.widthOfHidden = function(){
-  //console.log('this.container.outerWidth()=' + this.container.outerWidth());
-  //console.log('this.widthOfList()=' + this.widthOfList());
-  //console.log('this.getLeftPos()=' + this.getLeftPos());
-  
-  //return ((this.container.outerWidth())- this.widthOfList()-this.getLeftPosi())-this.scrollBarWidths;
+
   var rtv= this.widthOfList()- this.container.outerWidth();
   if(rtv<0){
     rtv=0;
@@ -55,7 +49,7 @@ ScollableTabs.prototype.widthOfHidden = function(){
 
 
 ScollableTabs.prototype.getLeftPos = function(){
-	//return this.container.find('.list').position().left;
+	
 	if(!!(this.container.find('ul')) && !!(this.container.find('ul').position()) ){
 		return this.container.find('ul').position().left;
 	} else {
@@ -65,21 +59,16 @@ ScollableTabs.prototype.getLeftPos = function(){
 
 ScollableTabs.prototype.itemPositionArray = function(){
   var targetWidths=$.map(this.container.find('ul li'),( function(e){ return $(e).outerWidth();})) || [];
-  //console.log("targetWidths=" + JSON.stringify(targetWidths));
-  //console.log(JSON.stringify(this.getLeftPos()));
+
   targetWidths.unshift(this.getLeftPos());
   targetWidths.push(0);
   return targetWidths.reduce((a,x,i)=>[...a, x + (a[i-1] || 0)], []);
 };
 
 ScollableTabs.prototype.dataValueToIndex = function(dataValue){
-  //console.log('dataValue=' + dataValue);
-  //console.log('search String=');
-  //console.log(this.containerId +" div ul li a[data-value='" + dataValue + "']" );
-  //var targetItem = $.find(this.containerId +" div ul li a[data-value='" + dataValue + "']");
+  
   var targetItem = $("a[data-value='" + dataValue + "']");
-  //console.log( "targetItem=" + JSON.stringify(targetItem) );
-  //console.log('index=' + $(this.containerId +' div ul li a').index(targetItem) );
+
   return $(this.containerId +' div ul li a').index(targetItem) || 0;
 };
 
@@ -90,13 +79,10 @@ ScollableTabs.prototype.getAllTabValues = function(){
 
 ScollableTabs.prototype.getAllDocPaths = function(){
   return $.map( this.container.find('.shiny-ace'), function(e){ return $(e).data('docFilePath')});
-  //return $.map( this.container.find('.shiny-ace'), function(e){ return $(e).attr('id')});
 };
 
 
 ScollableTabs.prototype.resetTitleGivendataValue = function( newTitle, dataValue){
-  //console.log('dataValue=' + dataValue);
-  //console.log('newElement =' + newElement);
   $(this.containerId +" div ul li a[data-value='" + dataValue + "'] span").replaceWith(newTitle);
 };
 
@@ -204,22 +190,12 @@ ScollableTabs.prototype.reAdjust = function(){
         }
         this.container.find('ul').animate({left:"=" + leftPos +"px"},'fast');
       }
-      /*
-      var delta = this.widthOfHidden()-this.container.outerWidth();
-      var offset =-Math.max(0,this.widthOfHidden()-this.container.outerWidth());
-      this.container.find('ul').animate({left:"=" + offset +"px"},'fast');
-      if(offset<0){
-        this.leftSB.show();
-      } else {
-        this.leftSB.hide();
-      }
-      this.rightSB.hide();
-      */
+      
     }
   }
 };
 
-//$('.scroller-right').click(function() 
+
 ScollableTabs.prototype.rightClick =function(){
   //console.log('rightClick');
   var m1 = this.container.outerWidth()-2*this.scrollBarWidths;
@@ -243,7 +219,7 @@ ScollableTabs.prototype.rightClick =function(){
 
 };
 
-//$('.scroller-left').click(function() {
+
  ScollableTabs.prototype.leftClick =function(){
    //console.log('left click');
    this.rightSB.fadeIn('slow');
@@ -268,25 +244,18 @@ ScollableTabs.prototype.gotoEnd =function(){
 ScollableTabs.prototype.init=function(){
 	var ltabs=this;
 	ltabs.container.find('.scroller-right').click( function(){ 
-		  //console.log('rightClick');
-		  //console.log('ltabs.widthOfHidden()=' + ltabs.widthOfHidden());
 		  ltabs.rightClick();
-		  //ltabs.leftSB.fadeIn('slow');
-		  //ltabs.rightSB.fadeOut('slow');
-		   //ltabs.container.find('ul').animate({left:"+="+ltabs.widthOfHidden()+"px"},'slow',function(){
-
-		  //});
 	} );
 	ltabs.container.find('.scroller-left').click( function(){
-		//console.log('leftClick');
-		//console.log('ltabs.getLeftPos()=' + ltabs.getLeftPos());
 		ltabs.leftClick();
-		 //ltabs.rightSB.fadeIn('slow');
-		 //ltabs.leftSB.fadeOut('slow');
-		 //ltabs.container.find('ul').animate({left:"-="+ltabs.getLeftPosi()+"px"},'slow',function(){
-		
-		//});
 	} );
+	
+	$(function(){ // make the tabs reorderable
+	  $(ltabs.containerId).find('ul').sortable();
+	  $(ltabs.containerId).find('ul').disableSelection();
+
+	});
+	
 };
 
 

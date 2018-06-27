@@ -1,5 +1,5 @@
 
-jqui_sortable('#pages')
+
 
 closeRfn<-function(tabId){paste0("event.stopPropagation();Shiny.onInputChange('closeTab',  {id:'",tabId,"', type: 'tabId'} ); return false")}
 tabTitleRfn<-function(tabName, tabId, docFilePath){
@@ -47,7 +47,6 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr'){
             mode=mode, 
             theme=defaultOpts["theme"],
             fontSize=defaultOpts["fontSize"], autoComplete="enabled",
-            #autoCompleteList =list(svgR=names(svgR:::eleDefs)),
             if(mode=='ptR')
               autoCompleteList =list(names(svgR:::eleDefs))
             else
@@ -60,9 +59,10 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr'){
       value=tabId
     )
   )
+  
+  
   updateTabsetPanel(session,inputId = 'pages', selected = tabId)
   sendFileTabsMessage(resize=runif(1))                          
-  
 }
 
 getAceEditorId<-reactive({
@@ -109,4 +109,5 @@ observeEvent(request$tabs, {
     }
   }
 })
+
 

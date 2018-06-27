@@ -14,27 +14,23 @@ buildLeftMenu<-function(version){
               shinyDMDMenu::menuItem("svgR without a ptR list", value="newPtRSVGScript")
         ),
         shinyDMDMenu::menuItem('R script', value='newRScript'),
+        menuDivider(),
         shinyDMDMenu::menuItem('R markdown doc', value='newRmd'),
+        menuDivider(),
+        shinyDMDMenu::menuItem('Snippets',            value='newSnippets'),
+        shinyDMDMenu::menuItem("Dnippets",           value="newDndSnippetsFile"),
+        menuDivider(),
         #shinyDMDMenu::menuItem('R ioslides doc', value='newIOSlides')
         shinyDMDMenu::menuItem('Plain Text Doc', value='newText')
       ),
       menuDivider(),
       shinyDMDMenu::menuItem("Open"),
-      menuDivider(),
       menuDropdown("Recent Files"),
       menuDivider(),
       menuDropdown(
-        "Snippets",
-        shinyDMDMenu::menuItem("Import",         value="importSnippetFile"),
-        shinyDMDMenu::menuItem("Remove",         value='unloadSnippets'),
-        shinyDMDMenu::menuItem('New',            value='newSnippets')
-        
-      ),
-      menuDropdown(
-        "Dnippets",
-        shinyDMDMenu::menuItem("Import",        value="importDndSnippetsFile"),
-        shinyDMDMenu::menuItem("Remove",        value='unloadDndSnippets'),
-        shinyDMDMenu::menuItem("New",           value="newDndSnippetsFile")
+        "Import",
+        shinyDMDMenu::menuItem("Snippet",   value="importSnippetFile"),
+        shinyDMDMenu::menuItem("Dnippet",   value='importDndSnippetsFile')
       ),
       menuDivider(),
       shinyDMDMenu::menuItem("Export as SVG"),
