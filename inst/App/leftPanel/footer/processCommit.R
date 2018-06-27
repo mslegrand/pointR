@@ -13,20 +13,22 @@ src2sourceType<-function(src){  #not used !!
 
 processCommit<-reactive({
   clearErrorMssg()
-  #src<-getCode() #input$source #------ace editor
-  
-  #if(length(src)==1){
-    if( identical(request$mode, 'ptr')){
-      processSvgR()
-    } else if(  identical(request$mode, 'markdown') ){
-      processKnit()
-    } 
-  #}
+
+  #cat('ProcessCommit: request$mode=',format(request$mode),"\n")
+  if( identical(request$mode, 'ptr')){
+    processSvgR()
+  } else if(  identical(request$mode, 'ptrrmd') ){
+    processKnit()
+  } else if( identical(request$mode, 'markdown')){
+    processDnip()
+  }
+
 })
 
 
 processSvgR<-reactive({
-  src<-getCode()
+  src<-request$code
+  cat('processSvgR::\n')
   if(length(src)==1){
     ptRList<-getPtDefs()$tib
     tryCatch({
@@ -51,6 +53,7 @@ processSvgR<-reactive({
         # capture capture output as mssg
         env<-new.env()
         output<-lapply(lines, function(line){
+          cat("processCommit::captureOutput\n")
           captureOutput(eval(parse(text=line), envir=env))
         })
         output<-paste( output, collapse="\n" )
@@ -59,6 +62,7 @@ processSvgR<-reactive({
         setSourceType(sourceType=RPanelTag) #no error, just R code
       } else { # presume to be svgR code
         # next check if it can be run
+        cat("processCommit::captureOutput2\n")
         parsedCode<-parse(text=src) 
         output<-captureOutput(eval(parsedCode))
         output<-paste( output, collapse="\n" )

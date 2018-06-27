@@ -75,10 +75,9 @@ svgToolsScript<-function(type){
    
     
      
-     
-    codeTxt<-subSVGX2(codeTxt, insert.beg, insert.end)
-    
-    
+    try({
+      codeTxt<-subSVGX2(codeTxt, insert.beg, insert.end)
+    }) 
     # transform: modifies src, but omits insert.end
     res<-""
     if(!is.null(codeTxt)){
@@ -100,22 +99,7 @@ svgToolsScript<-function(type){
         } 
       )
     }
-    #res
     
-    # might wrap with the absolutePanel as follows:
-   
-    # if(getTibNRow()<=1){
-    #   cls<-"cSvgHtml0"
-    # }
-    # else{
-    #   cls<-"cSvgHtml1"
-    # }
-    # 
-    # absolutePanel( 
-    #   class=cls,
-    #   draggable=FALSE,
-    #   pre( res ), inline=FALSE
-    # )
     res
    }) #end of renderUI
   

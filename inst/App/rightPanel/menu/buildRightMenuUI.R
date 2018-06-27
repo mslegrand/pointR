@@ -30,7 +30,7 @@ buildRightMenu<-function(){
                  # )
     ),
     menuDropdown(
-      "Tools", 
+      "Tools",
       shinyDMDMenu::menuItem("PointFiltering (Not implemented)" )
     )
   ) #menubar end 

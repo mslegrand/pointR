@@ -14,6 +14,14 @@ observeEvent( input$editNavBar, {
       cmdFileNewRmd()
       dirtyDMDM(session, "editNavBar")
     }
+    if(fileCmd=="newSnippets"){ #-----open 
+      cmdFileNewSnippet()
+      dirtyDMDM(session, "editNavBar")
+    }
+    if(fileCmd=="newText"){ #-----open 
+      cmdFileNewTxt()
+      dirtyDMDM(session, "editNavBar")
+    }
     if(fileCmd=='newIOSlides'){
       cmdNewIOSlides()
       dirtyDMDM(session, "editNavBar")
@@ -123,10 +131,28 @@ observeEvent( input$editNavBar, {
       dirtyDMDM(session, "editNavBar")
     }
  
-    if(fileCmd=="importSnippetFile"){
-      cmdSnippetFileOpen()
+    if(fileCmd=="newDndSnippetsFile"){
+      cmdDndSnippetNew()
+      dirtyDMDM(session, "editNavBar")
     }
     
+    if(fileCmd=="importDndSnippetsFile"){
+      cmdDnippetImport()
+      dirtyDMDM(session, "editNavBar")
+    }
+    
+    if(fileCmd=="importSnippetFile"){
+      cat('serverEditBar---------------fileCmd=="importSnippetFile"---------------------------------------\n ')
+      cmdSnippetImport()
+      dirtyDMDM(session, "editNavBar")
+    }
+    
+    if(fileCmd=="unloadSnippets"){
+      cmdSnippetUnload()
+      dirtyDMDM(session, "editNavBar")
+    }
+    
+
     if(fileCmd=="aboutCmd"){
       cmdAbout()
       dirtyDMDM(session, "editNavBar")

@@ -134,26 +134,16 @@ observeEvent( returnValue4ModuleRtFtr$tagPt(), {
   row<-getTibRow()
   matCol<-getTibMatCol()
 
-  # cat('\nserverFooter::\n')
-  # cat(' 1 row=',format(row),'\n')
-  # cat(' 1 matCol=', format(matCol),'\n')
   m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]
   if(ncol(m)<1){
     return(NULL) # bail if matrix of points is empty
   }
   ptDefs$mats[selection]<-FALSE # no longer a matrix input!
   tib<-ptDefs$tib[[selection]] #get the tib
-  # cat("matCol=",matCol,"\n")
-  # cat("getTibPtColPos()=",getTibPtColPos(),"\n")
-  # cat("getTibColumnName()",getTibColumnName(),"\n")
   tib<-tagTib(tib, getTibPtColPos(), row, matCol)
   row<-row+1
   matCol<-length(tib[[row, getTibPtColPos()]])/2
   ptDefs$tib[[selection]]<-tib
-  # cat('sending to updateAceExtDef')
-  # cat(' 2 row=',format(row),'\n')
-  # cat(' 2 matCol=', format(matCol),'\n')
-  
   sender='tagPt'
   updateAceExtDef(ptDefs, sender=sender, selector=list(rowIndex=row, matCol=matCol   ) )
 }) #end of point InfoList Tag Point,

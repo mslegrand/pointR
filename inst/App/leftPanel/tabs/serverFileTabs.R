@@ -1,11 +1,10 @@
 
-jqui_sortable('#pages')
+
 
 closeRfn<-function(tabId){paste0("event.stopPropagation();Shiny.onInputChange('closeTab',  {id:'",tabId,"', type: 'tabId'} ); return false")}
-tabTitleRfn<-function(title, tabId, docFilePath){
+tabTitleRfn<-function(tabName, tabId, docFilePath){
   span(
-    bs_embed_tooltip(span(title, "class"="tabTitle"), title=docFilePath),
-    #span(title, "class"="tabTitle"),
+    bs_embed_tooltip(span(tabName, "class"="tabTitle"), title=docFilePath),
     span( " " , class='icon-cancel', onclick=closeRfn(tabId))  
   )
 }
@@ -19,7 +18,7 @@ closeTabNow<-function(tabId2X){
 # TODO!!!! , add input parameters for:  mode, autocomplete
 # fontsize should be read from options 
 addFileTab<-function(title, txt,  docFilePath='?', mode='ptr'){
-  # cat("addFileTab\n")
+  cat("addFileTab:: mode=",mode,"\n")
   tabId<-getNextTabId()
   # cat("addFileTab:: tabId",tabId,"\n")
   aceId<-tabID2aceID(tabId)
@@ -34,7 +33,7 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr'){
   appendTab(
     inputId = "pages",
     tabPanel( #tabId,
-      title=tabTitleRfn(title, tabId, docFilePath),
+      title<-tabTitleRfn(title, tabId, docFilePath),
       #span(title, span( " " , class='icon-cancel', onclick=closeRfn(tabId))  ), 
       #title=span(title, span( " " , class='icon-cancel', onclick=closeRfn(tabId))  ), 
       #span(tabId,  actionButton(inputId=paste0("but",tabId), label="", class='icon-cancel') ), 
@@ -43,11 +42,16 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr'){
         class=divClass,
         overflow= "hidden",
         shinyAce4Ptr(
-            outputId = aceId,  value=txt,
-            mode=mode, theme=defaultOpts["theme"],
+            outputId = aceId,  
+            value=txt,
+            mode=mode, 
+            theme=defaultOpts["theme"],
             fontSize=defaultOpts["fontSize"], autoComplete="enabled",
-            #autoCompleteList =list(svgR=names(svgR:::eleDefs)),
-            autoCompleteList =list(names(svgR:::eleDefs)),
+            if(mode=='ptR')
+              autoCompleteList =list(names(svgR:::eleDefs))
+            else
+              NULL
+            ,
             docFilePath=docFilePath
           ),
            inline=FALSE
@@ -55,10 +59,10 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr'){
       value=tabId
     )
   )
-  updateTabsetPanel(session,inputId = 'pages', selected = tabId)
-  #session$sendCustomMessage( type = "scrollManager", list( resize=TRUE ))
-  sendFileTabsMessage(resize=runif(1))                          
   
+  
+  updateTabsetPanel(session,inputId = 'pages', selected = tabId)
+  sendFileTabsMessage(resize=runif(1))                          
 }
 
 getAceEditorId<-reactive({
@@ -68,16 +72,10 @@ getAceEditorId<-reactive({
 
 #  triggers doc has been changed.
 observeEvent(input$pages,{
-  # cat("input$pages=",format(input$pages),"\n")
   tabId<-input$pages 
-  # session$sendCustomMessage(
-  #   type = "scrollManager", 
-  #   list( selected=tabId ) #  Requests to scroll into view
-  # )
   sendFileTabsMessage(selected=tabId)
   
   aceId<-tabID2aceID(tabId)
-  # cat("input$pages:: aceId=",aceId,"\n")
   updateAceExt(id=aceId, sender='cmd.tabChange', roleBack=FALSE, setfocus=TRUE, getValue=TRUE)
   #triggerRefresh('cmd.commit', rollBack=FALSE) # seems to trigger the redraw of the screen (uses getValue=TRUE)
 }, ignoreNULL = TRUE)
@@ -97,10 +95,9 @@ observeEvent(input$tabManager,{
 # request$tabs is updated by either
 #  1. input$tabManager or 
 #  2. ace 
-# if non-empty, first request with 1st tab forwared to ace (save/close/saveAs) 
+# if non-empty, first request with 1st tab forwarded to ace (save/close/saveAs) 
 observeEvent(request$tabs, {
   if(length(request$tabs)>0){
-    #tabId<-head(request$tabs,1)
     tabId<-peekTab()
     sender<-getSender()
     aceId<-tabID2aceID(tabId)
@@ -112,4 +109,5 @@ observeEvent(request$tabs, {
     }
   }
 })
+
 

@@ -10,9 +10,11 @@ colLine2charPositions<-function(csnCharLines, lineNums, colNums){
 
 #todo?? make reactive expr: parseDataFrame<-reactive({getParseDataFrame(user$code)})
 getParseDataFrame<-function(txt){
-
+  # cat('getParseDataFrame: 0\n')
   ep<-parse(text=txt, keep.source = T)
+  # cat('getParseDataFrame: 1\n')
   p.df<-getParseData(ep)
+  # cat('getParseDataFrame: 2\n')
   id<-p.df$id
   pid<-p.df$parent
   gid<-pid[match(pid,id)]

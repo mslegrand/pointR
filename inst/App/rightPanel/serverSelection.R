@@ -23,7 +23,9 @@ getSelIndex<-reactive({
 })
 
 observeEvent(getTibNRow(),{
-  sendPtRManagerMessage(  sender='tibNrow', rowCountChange=TRUE)
+  if(request$mode=='ptR' && length(names(getPtDefs()$tib))>0 ){
+    sendPtRManagerMessage(  sender='tibNrow', rowCountChange=TRUE)
+  }
 })
 
 getTibName<-reactive({selectedTibble$name}) #allow to be null only if tib is null  

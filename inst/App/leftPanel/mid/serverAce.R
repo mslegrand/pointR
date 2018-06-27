@@ -12,34 +12,49 @@ observeEvent(input$messageFromAce, {
       request$sender<-sender
       clearErrorMssg()
       
-      cat("input$messageFromAce$id=" , format(input$messageFromAce$id), "\n")
-      
+      # cat("input$messageFromAce$id=" , format(input$messageFromAce$id), "\n")
       if(!is.null(input$messageFromAce$selector) && !is.null(input$messageFromAce$code) ){
         reqSelector<-input$messageFromAce$selector
         updateSelected4Ace(reqSelector)
       }
-      cat('request$sender=',format(request$sender),"\n")
+      # cat('request$sender=',format(request$sender),"\n")
       if(length(input$messageFromAce$isSaved)>0){ 
         aceId<-input$messageFromAce$id
         editOption$.saved <- input$messageFromAce$isSaved
-        # cat('\n--setting editOption$.saved --\n')
-        # cat("set editOption$.saved=",editOption$.saved,"\n")
+        cat('\n--setting editOption$.saved --\n')
+        cat("set editOption$.saved=",editOption$.saved,"\n")
       }
       # cat('22 ace request$sender=',format(request$sender),"\n")
-      if(sender %in% c('cmd.tabChange', 'cmd.file.new')){
+      if(sender %in% c('cmd.tabChange', 'cmd.file.new', 'cmd.openFileNow')){
         #browser()
-        request$mode=input$messageFromAce$mode
-        # cat('mode=', request$mode, '\n')
-        if(request$mode=='markdown'){
-          panels$sourceType==rmdPanelTag
+        request$mode<-input$messageFromAce$mode
+        cat('Ace:: request$mode=', request$mode, '\n')
+        if(identical(request$mode, 'ptrrmd')){
+          panels$sourceType<-rmdPanelTag
           processCommit()
-          return(NULL)
+          return(NULL) #skip the rest of the processing (for ptR mode)
+        } 
+        if(identical(request$mode, 'markdown')){
+          panels$sourceType<-rmdPanelTag
+          processCommit()
+          return(NULL) #skip the rest of the processing (for ptR mode)
+        } 
+        if(identical(request$mode, 'text')){
+          panels$sourceType<-textPanelTag
+          processCommit()
+          return(NULL) #skip the rest of the processing (for ptR mode)
+        } 
+        if(identical(request$mode, 'snippets')){
+          panels$sourceType<-snippetPanelTag
+          processCommit()
+          return(NULL) #skip the rest of the processing (for ptR mode)
         } 
       }
+      # From this point on, all processing assumes ptR mode
       if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset', 'cmd.openFileNow', 'cmd.saveFileNow', 'cmd.file.new', 'cmd.tabChange')){
         # cat('33 request$sender=',format(request$sender),"\n")
         #cat('Ace: invoking processCommit\n')
-        processCommit()
+        processCommit() # this sets the sourceType
         # cat('returning from processCommit\n')
         # cat('getTibName()=',format(getTibName()),"\n")
         if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset', 'cmd.saveFileNow') && !is.null(getTibName())){ 
@@ -54,38 +69,54 @@ observeEvent(input$messageFromAce, {
           resetSelectedTibbleName(tibs=tibs, name=name)
         } else { 
           #name=NULL #  'cmd.openFileNow', 'cmd.tabChange' , 'cmd.file.new'
-          
-          # begin selectTibUpdate: 
-          # browser()
           # cat('else: ', 'cmd.openFileNow', 'cmd.tabChange' , 'cmd.file.new',"\n")
-          if(length(input$pages) >0 && nchar(input$pages)>0 && selectedTibble$tabId != input$pages ){
-            # cat('next tabId=',input$pages,"\n")
-            # cat('selectedTibble$tabId=',selectedTibble$tabId,"\n")
-            # cat("input$messageFromAce$id=" , format(input$messageFromAce$id), "\n")
-            choices<-getRightPanelChoices()
-            if(length(choices)>0 && length(selectedTibble$tabId)>0  && selectedTibble$tabId!='whatthefuck'){
-              # cat( "store( tabId=",selectedTibble$tabId,")\n")
-              tmp2<-isolate(reactiveValuesToList(selectedTibble, all.names=TRUE))
-              tmp2[sapply(tmp2,is.null)]<-NA
-              #plotSelect.tib<-rbind(plotSelect.tib, tmp )
-              tmp1<-filter(plot$selections.tib, tabId!=selectedTibble$tabId)
-              # cat("serverAce::  plot$selections.tib<-bind_rows(tmp1, tmp2)\n")
-              
-              plot$selections.tib<-bind_rows(tmp1, as.tibble(tmp2))
-              # cat("========   ",paste(plot$selections.tib$tabId,collapse=", "),"\n")
-            }
-            row.tib<-filter(plot$selections.tib, tabId==input$pages)
-            if(nrow(row.tib)==0){
-              #cat('creating new tib for tabId=\n', input$pages,"\n")
-              row.tib<-newPlotSel(tabId=input$pages, choices=choices, tibs=getPtDefs()$tib)
-            }
+          # cat('sender=',format(sender),"\n")
+          # cat("length(input$pages)=",length(input$pages),"\n")
+          tttid<-input$pages;
+          # cat("input$pages=",format(tttid),"\n")
+          if(length(input$pages) >0 && 
+             nchar(input$pages)>0 && 
+             selectedTibble$tabId != input$pages ){
             
-            # cat( "copy *row.tib* to *selectedTibble.*\n"  )
-            lapply(names(row.tib), function(n){
-              v<-row.tib[[n]][1]
-              # cat("row.tib$", n, "=", format(v),"\n")
-              selectedTibble[[n]]<-ifelse(is.na(v), NULL, v)
-            } )
+             # cat('next tabId=',input$pages,"\n")
+             # cat('selectedTibble$tabId=',selectedTibble$tabId,"\n")
+             # cat("input$messageFromAce$id=" , format(input$messageFromAce$id), "\n")
+             storeAssetState()
+             restoreAssetState(input$pages)
+            # choices<-getRightPanelChoices()
+            # cat("getRightPanelChoices()=",format(getRightPanelChoices()),"\n" )
+            # if(length(choices)>0 && length(selectedTibble$tabId)>0  && selectedTibble$tabId!='whatthefuck'){
+            #   # cat( "store( tabId=",selectedTibble$tabId,")\n")
+            #   tmp2<-isolate(reactiveValuesToList(selectedTibble, all.names=TRUE))
+            #   #browser()
+            #   tmp2[sapply(tmp2,is.null)]<-NA
+            #   #plotSelect.tib<-rbind(plotSelect.tib, tmp )
+            #   tmp1<-filter(plot$selections.tib, tabId!=selectedTibble$tabId)
+            #    cat("serverAce::  plot$selections.tib<-bind_rows(tmp1, tmp2)\n")
+            #    
+            #   cat("tmp2=",format(tmp2),"\n")
+            #   plot$selections.tib<-bind_rows(tmp1, as.tibble(tmp2))
+            #    cat("========   ",paste(plot$selections.tib$tabId,collapse=", "),"\n")
+            # }
+            # row.tib<-filter(plot$selections.tib, tabId==input$pages)
+            # cat("nrow(row.tib)=",nrow(row.tib),"\n")
+            # print(row.tib)
+            # if(nrow(row.tib)==0){
+            #   cat('creating new tib for tabId=', input$pages,"\n")
+            #   cat('choices=',format(choices),"\n")
+            #   cat('columns=',format(names(getPtDefs()$tib )), "\n")
+            #   row.tib<-newPlotSel(tabId=input$pages, choices=choices, tibs=getPtDefs()$tib)
+            # }
+            # 
+            # # cat( "copy *row.tib* to *selectedTibble.*\n"  )
+            # if(!is.null(row.tib)){
+            #   lapply(names(row.tib), function(n){
+            #     v<-row.tib[[n]][1]
+            #     cat("row.tib$", n, "=", format(v),"\n")
+            #     selectedTibble[[n]]<-ifelse(is.na(v), NULL, v)
+            #   } )
+            # }
+            
           }
           # end selectTibUpdate:
           
@@ -93,27 +124,33 @@ observeEvent(input$messageFromAce, {
         
       } 
       
-      if(sender %in% c( 'fileCmd.save', 'fileCmd.close', 'fileCmd.saveAs', 'fileCmd.quit' )){
-        # cat("\n------",sender,"-----------------------------------\n")
+      if(sender %in% c( 'fileCmd.save', 'fileCmd.close', 'fileCmd.saveAs', 'fileCmd.quit' , 'fileCmd.saveNow')){
+        
         id<-input$messageFromAce$id
         saved<-input$messageFromAce$isSaved
-        # cat('input$messageFromAce$saved=',format(saved),"\n")
-        # cat('class(saved)=',class(saved),"\n")
-        # cat('saved=',saved,"\n")
-        # cat("and editOption$.saved=",editOption$.saved,"\n")
-        # cat("for id=",id,"\n")
-        if( !saved || sender=='fileCmd.saveAs' ) { #need to save
+        if( !saved || sender %in% c('fileCmd.saveAs','fileCmd.saveNow') ) { #need to save
           docFilePath<-unlist(input$messageFromAce$docFilePath)
-          # cat("docFilePath=",docFilePath,"\n")
-          # cat("sender=",sender,"\n")
           if(docFilePath=='?' || sender=='fileCmd.saveAs'){ # file unnamed : fileSaveAs
              tabId<-aceID2TabID(id)
-             # cat('11: tabId=',format(tabId),"\n")
-             # cat("executing sendPtRManagerMessage( id=id,  sender=sender, saveFile=TRUE,  type='R', tabId=tabId)\n")
-             sendPtRManagerMessage(   sender=sender, saveFile=TRUE,  type='R', tabId=tabId)
+             if(identical(request$mode, 'ptr')){
+               ext=list(R='R')
+             } else if( identical(request$mode, 'ptrrmd') ){
+               ext=list(Rmd='Rmd')
+             } else if( identical(request$mode, 'snippets') ){
+               ext=list(snippet='snippets')
+             } else if( identical(request$mode, 'markdown') ){
+                 ext=list(dnippets='dnippets')
+             } else {
+               cat('request$mode=',request$mode,"\n")
+               stop('unknowMode')
+               ext=list(text='txt')
+             }
+             ext<-shinyFiles:::formatFiletype(ext)
+
+             target<-saveButtonFileNames[[request$mode]]
+             sendPtRManagerMessage( sender=sender, saveFile=TRUE,  target=target, tabId=tabId )
           } else { 
             # write file
-            # cat('serverAce:: writeLines\n')
             code<-input$messageFromAce$code
             # !!!TODO!!! if write fails revert.
             writeLines(code, docFilePath)
@@ -123,18 +160,10 @@ observeEvent(input$messageFromAce, {
             tabId<-popTab()
             if(request$sender %in% c('fileCmd.close', 'fileCmd.quit')){
               addToRecentFiles(input$messageFromAce$docFilePath)
-              #removeTab(inputId = "pages", tabId)
               closeTabNow(tabId)
             } else { 
               addToRecentFiles(input$messageFromAce$priorFilePath)
-              # !!!TODO add docFilePath to recentfiles
-              #title=as.character(span(basename(docFilePath ), span( " " , class='icon-cancel')  ))
-              title=as.character(tabTitleRfn( title=basename(docFilePath ), tabId=tabId, docFilePath=docFilePath ))
-              # cat("title=",title,"\n")
-              # session$sendCustomMessage(
-              #   type = "scrollManager", 
-              #   list( title=title, value=tabId ) 
-              # )
+              title=as.character(tabTitleRfn( tabName=basename(docFilePath ), tabId=tabId, docFilePath=docFilePath ))
               sendFileTabsMessage(title=title, tabId=tabId)
             }
           }
@@ -142,7 +171,6 @@ observeEvent(input$messageFromAce, {
           tabId<-popTab()
           if(request$sender%in% c('fileCmd.close', 'fileCmd.quit') ){
             addToRecentFiles(input$messageFromAce$docFilePath)
-            # removeTab(inputId = "pages", tabId)
             closeTabNow(tabId)
           }
         }
@@ -153,12 +181,7 @@ observeEvent(input$messageFromAce, {
 
 updateAceExtDef<-function(newPtDef, sender, selector=list() ){
   if(!is.null(getCode())){
-    # cat("newPtDef:\n")
-    # print(newPtDef)
-    # cat("getCode()\n")
-    # print(getCode())
     newPtDef$tib<-pts2Integers(newPtDef$tib )
-    
     replacementList<-ptDef2ReplacementList(name, newPtDef, getCode() ) #name not used!!!
     if( length(replacementList)>0 ){
       data<-list(id= getAceEditorId(), replacement=replacementList, selector=selector, sender=sender, ok=1)
@@ -168,11 +191,7 @@ updateAceExtDef<-function(newPtDef, sender, selector=list() ){
           stop("encounterd an NA")
         }
       })
-      session$sendCustomMessage(
-        type = "shinyAceExt",
-        #list(id= getAceEditorId(), replacement=replacementList, selector=selector, sender=sender, ok=1)
-        data
-      )
+      session$sendCustomMessage( type = "shinyAceExt", data )
     }
   }
 
@@ -180,17 +199,32 @@ updateAceExtDef<-function(newPtDef, sender, selector=list() ){
 
 updateAceExt<-function(id, sender, ... ){
   data<-list(...)
+  if(is.null(sender)){stop('null sender')}
   if(length(data)>0){
+    if(length(id)==0){
+      id<-'bogus'
+    }
     data<-c(list(id= id, sender=sender), data )
-    # cat("id=",format(id), ", class(id)=", class(id),"\n")
-    # cat("sender=",format(sender),"\n")
-    # cat("data=",format(data),"\n")
-    # print(data)
+    # if(TRUE){
+    #     cat("Entering updateAceExt::\n")
+    #     cat("updateAceExt::id=",format(id), ", length(id)=",length(id),",class(id)=", class(id),"\n")
+    #     cat("updateAceExt::sender=",format(sender),"\n")
+    #     cat("updateAceExt::names(data)=",format(names(data)),"\n")
+    #     cat("updateAceExt::data=",format(data),"\n")
+    #     #print(data)
+    #     cat("updateAceExt::sendCustomMessage NOW\n")
+    # }
+
 
     
     if(length(id)>0 && nchar(id)>0){
-      lapply(data, function(x){
-        if(is.na(x)){
+      lapply(data, function(d){
+        if(length(d)==0){
+          cat("-----------\n")
+          print(data)
+          stop('d has length 0')
+        }
+        if(length(d)==1 && is.na(d)){
           print(data)
           stop("encounterd an NA")
         }
@@ -206,28 +240,8 @@ updateAceExt<-function(id, sender, ... ){
 
 observeEvent(request$sender,{
     if(request$sender=='startup'){
-      #cat('startup\n')
       cmdFileNewPtR()
     }
-  # if(request$sender=='startup'){
-  #   cat('startup\n')
-  #   tabId=getNextAnonymousFileName()
-  #   # txt=''
-  #   src<-codeTemplate
-  #   addFileTab(tabId,codeTemplate)
-  #   # addFileTab(tabId, txt)
-  #   
-  #   cat('fin addFileTab\n')
-  #   cat('sendCustomMessage sender=  cmd.file.new\n')
-  #   # session$sendCustomMessage(
-  #   #   type = "shinyAceExt",
-  #   #   list(id= tabId, sender='cmd.file.new', setValue= src, ok=TRUE)
-  #   # )
-  #   triggerRefresh('cmd.commit', rollBack=FALSE)
-  # 
-  #   mssg$error<-""
-  #}
-  
 }, priority=100)
 
 # TODO!!!: rewrite
@@ -254,6 +268,5 @@ updateSelected4Ace<-function( reqSelector){
     #cat("reqSelector$columnName=", format(reqSelector$columnName ),"\n")
     selectedTibble$columnName=reqSelector[['columnName']]
   }
-  
 } 
 

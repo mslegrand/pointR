@@ -2,21 +2,20 @@
 Shiny.addCustomMessageHandler(
   "ptRManager",
   function(data){
-    console.log('hello from ptRManager------------\n');
+    console.log('-----------Entering ptRManager------------\n');
     console.log(JSON.stringify(data));
     if(!!data.openFile){
       //console.log('about to trigger open\n');
       if( data.sender==='cmd.openFileNow'){
-        $('#buttonFileOpenHidden').trigger('click');
+        $('#buttonFileOpen').trigger('click');
       }
-      if( data.sender==='cmd.snippet.file.open'){
-        $('#buttonSnippetOpen').trigger('click');
+      if( data.sender==='cmd.snippet.file.import'){
+        $('#buttonSnippetImport').trigger('click');
       }
-    }
-    if(!!data.importSnippet){
-      //console.log('about to trigger load snippet\n');
-      $('#buttonSnippetOpen').trigger('click');
-    }
+      if( data.sender==='cmd.dnippet.file.import'){
+        $('#buttonDnippetImport').trigger('click');
+      }
+    } //end data.openFile
     if(!!data.saveFile){
       var sender=data.sender;
       console.log('data.saveFile:: sender=' + sender);
@@ -24,65 +23,102 @@ Shiny.addCustomMessageHandler(
       console.log('data.saveFile:: tabId=' + tabId);
       //get title from tabId and stabs
       var title=stabs.getTitleGivendataValue(tabId);
-      console.log(JSON.stringify(title));
-      $('#buttonFileSaveHidden').trigger('click');
-      console.log(JSON.stringify( $("h4 .sF-title .modal-title").text() ));
+      console.log('ptRManager:: title= ' + JSON.stringify(title));
+      
+      if(!!data.target){
+        console.log('save target=' + data.target); 
+      } 
+      
+      $('#' + data.target).trigger('click');
       $("h4.sF-title.modal-title").text( 'Save '+ title +' as ...');
+      
       if(sender==='fileCmd.close' || sender==='fileCmd.quit'){
-        console.log("abc\n");
+        console.log("sender is close or quit\n");
+        console.log('data.saveFile:: sender=' + sender);
         $("#sF-cancelButton").text( "Close Without Saving");
-        $("#buttonFileSaveHidden").on('cancel', function(event){
-            Shiny.onInputChange('buttonFileSaveHidden', { 
+        $("#buttonFileSaveR").on('cancel', function(event){
+            Shiny.onInputChange('buttonFileSaveR', { 
               sender:sender, 
               cancel: 'close', 
               rnd: Math.random().toString(36).substring(7)});
         });
       } else {
-        console.log("defg\n");
+        console.log("sender is neither close or quit\n");
+        console.log('data.saveFile:: sender=' + sender);
         $("#sF-cancelButton").text( "Cancel");
-        $("#buttonFileSaveHidden").on('cancel', function(event){
-          Shiny.onInputChange('buttonFileSaveHidden', {
+        $("#buttonFileSaveR").on('cancel', function(event){
+          Shiny.onInputChange('buttonFileSaveR', {
             sender:sender, 
             cancel: 'cancel',
             rnd: Math.random().toString(36).substring(7)
           });
         });
       }
-    }
+    } //endof data.saveFile
     if(!!data.exportSVG){
-      // console.log('about to trigger svg export\n');
-      $('#buttonExportSVGHidden').trigger('click');
+      console.log('about to trigger svg export\n');
+      $('#buttonExportSVG').trigger('click');
     }
     if(!!data.setFocus){ // I don't if this is still being called???
-      // console.log('#' + data.setFocus +'\n' );
       setTimeout(function() {$('#' + data.setFocus).focus()}, 10);
-      //$('#' + data.setFocus).focus();
     }
      if(!!data.hide){ // I don't if this is still being called???
-      //console.log('#' + data.hide +'\n' );
       setTimeout(function() {$('#' + data.hide).hide()}, 10);
     }
     if(!!data.addClass){ // I don't if this is still being called???
-      //var klass=data.addClass.klass;
       setTimeout(function() {$('#' + data.addClass.id).addClass(klass)}, 10);
     }
-    if(!!data.snippetButtonActivate){
-      $(".snippetButton").each( function(){
-        $(this).draggable({
-    		//revert: true
-    		opacity: 0.5,
-    		stroke: "#FFFFFF",
-    		helper: 'clone',
-        revert: 'invalid',
-        appendTo: 'body'
-      }); 
-    });
+    if(!!data.removeDrippets){
+      $('#dndSnippetList').empty();
     }
+    if(!!data.insertDrippets){
+      var drippets = data.insertDrippets;
+      $('#dndSnippetList').empty();
+      drippets.forEach( function(dripItem){
+        /*
+          console.log('dripItem =' + JSON.stringify(dripItem)+"\n");
+          console.log('logo =' + JSON.stringify(dripItem.logo)+"\n");
+          console.log('snip =' + JSON.stringify(dripItem.snip)+"\n");
+          console.log('hint =' + JSON.stringify(dripItem.hint)+"\n");
+      	*/
+        $('#dndSnippetList').append(
+           $('<li/>')
+              .attr("id",dripItem.id)
+              .addClass('snippetButton')
+              .attr('data-snippet', dripItem.snip)
+              .attr('title', dripItem.hint)
+              .prop('data-toggle','tooltip')
+              .prop('data-placement','top')
+              .append(
+                  $(dripItem.logo)
+              )
+              .draggable({
+              		appendTo: 'body',
+              		revert: 'invalid',
+              		helper: function() {
+              			//drag selected items
+              			var selected = $(this);
+              			var container = $('<div/>');
+              			container.append(selected.clone());
+              			return container;
+              		},
+              		stop: function () {
+              			$(this).draggable('option', 'revert', 'invalid');
+              		}
+              	})
+          );
+          
+     	
+      	
+      });
+    } //endof insertDrippets
+    
+    
     if(!!data.rowCountChange){
       $(window).resize();
     }
+    console.log('-----------Exiting ptRManager------------\n');
   }
-  
 ); 
 
 
@@ -111,12 +147,12 @@ $('document').ready(function()
   */
   
   
-  var sntb = new SnippetToolBaR( "snippetToolBarContainer", "dndSnippetList", "snippetScrollDown", "snippetScrollUp", 32);
-  sntb.reAdjustPos();
-  $(sntb.downId).click(function(){sntb.onDownClick();});
-  $(sntb.upId).click(function(){sntb.onUpClick();});
+  global_snbt = new SnippetToolBaR( "snippetToolBarContainer", "dndSnippetList", "snippetScrollDown", "snippetScrollUp", 32);
+  global_snbt.reAdjustPos();
+  $(global_snbt.downId).click(function(){global_snbt.onDownClick();});
+  $(global_snbt.upId).click(function(){global_snbt.onUpClick();});
   $(window).on('resize',function(e){  
-    	sntb.reAdjustPos();
+    	global_snbt.reAdjustPos();
   });
   
   var rsb = new rowScrollBaR("rowOutPanel",  "rowDND-rowPanel", "rowScrollDown","rowScrollUp", 32 );

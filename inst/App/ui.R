@@ -15,8 +15,6 @@ shinyUI(
   div( class="pretty-split-pane-frame", id="mySplitter",
     singleton(
       tags$head(
-        # tags$script(src="https://code.jquery.com/jquery-1.12.4.js"),
-        # tags$script(src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"),
         initResourcePaths(),
         tags$link(rel = "stylesheet", type = "text/css", id="customStyle", href = "customStyle.css"),
         tags$link(rel = "stylesheet", type = "text/css", id="customStyle", href = "scrollTabs.css"),
@@ -35,6 +33,7 @@ shinyUI(
         tags$script(src = 'IOjs/rotIO.js' ),
         tags$script(src = 'IOjs/scaleIO.js' ),
         tags$script(src = 'IOjs/tagDragIO.js' ),
+        tags$script(src='shared/jqueryui/jquery-ui.min.js'),
         tags$script(src = 'ptR/scrollTabs.js' ),
         tags$script(src = 'ptR/snippetScroll.js' ),
         tags$script(src = 'ptR/rowScroll.js' ),
@@ -58,12 +57,14 @@ shinyUI(
           buildLeftMenu(version),
           #-------left menu end------------
           #-------left content begin--------
-          shinyFilesButton("buttonFileOpenHidden", label="", title="Open File",  c('R','PTR', 'SVGR'),   multiple=FALSE, class='hiddenButton'),
-          shinySaveButton( "buttonFileSaveHidden", label="", title="Save as ...",  list('hidden_mime_type'=c("R")) , class='hiddenButton'),
-          shinyFilesButton("buttonSnippetOpen",    label="", title="Import Snippet", multiple=FALSE,  class='hiddenButton'),
-          shinySaveButton("buttonExportSVGHidden", label="", title="Save as ...",  list('hidden_mime_type'=c("SVG")) , class='hiddenButton'),
+          genShinyOpenFilesButtons(),
+          genShinySaveFilesButtons(),
+          # shinyFilesButton("buttonFileOpenHidden", label="", title="Open File",     c('R','PTR', 'SVGR'),   multiple=FALSE, class='hiddenButton'),
+          # shinySaveButton( "buttonFileSaveHidden", label="", title="Save as ...",   filetype=list(text='txt', R=c('R'), Rmd='Rmd'), class='hiddenButton'),
+          #shinyFilesButton("buttonSnippetOpen",    label="", title="Import Snippet", multiple=FALSE,                        class='hiddenButton'),
+          #shinySaveButton("buttonExportSVGHidden", label="", title="Save as ...",    list('hidden_mime_type'=c("SVG")) ,    class='hiddenButton'),
           div( id='aceTabSet', class="container",
-              tabsetPanel(id='pages')
+               tabsetPanel(id='pages')
           ),
           absolutePanel( id='aceToobarTop1',
               top=75, left=0, width="100%", "class"="headerPanel", draggable=FALSE, height="30px",
@@ -73,9 +74,10 @@ shinyUI(
               top=105, left=0, width="100%", "class"="headerPanel", draggable=FALSE, height="30px",
               buildHToolBar(bar2)
            ),
+          #uiOutput('drippetUI'),
            div( id='snippetToolBarContainer', "class"="cSnippetToolBarContainer", #draggable=FALSE ,
                 tags$ul( id='dndSnippetList', "class"="cSnippetToolBarList",
-                  buildSnippetToolBar()
+                  NULL
                 ),
                 div( id='snippetScrollUp', class='snippetButton  cTop center',
                      span('class'="glyphicon glyphicon-chevron-up")
@@ -92,6 +94,23 @@ shinyUI(
                awesomeRadio('useTribble', NULL, choices=c('Tribble','Tibble'),
                                     selected = "Tribble", 
                                     inline = TRUE, status='success')
+             ),
+             absolutePanel( right=50, bottom=0, id='selectedDnippetButtonBoxContainer',
+                 dropdown( 
+                   awesomeCheckboxGroup(
+                     inputId = "selectedDDDnippets",
+                     label = "Selected Dnippets", 
+                     choices = c(),
+                     selected = c()
+                   ),
+                   style = "unite", icon = icon("gear"),
+                   status = "primary", width = "300px", size='sm',
+                   up=TRUE, right=TRUE,
+                   animate = animateOptions(
+                     enter = animations$fading_entrances$fadeInLeftBig,
+                     exit = animations$fading_exits$fadeOutRightBig
+                   )
+                 )
              )
           )
           #-------left content end--------

@@ -3,6 +3,8 @@
 
 version="v.0.3.9.3"
 
+drippetdirectoryPath = paste(system.file('App', package='pointR'), 'inst', 'www', 'drippets', sep='/')
+
 initResourcePaths <- function() {
   if (is.null(.global$loaded)) {
     shiny::addResourcePath(
@@ -49,6 +51,8 @@ errorPanelTag<-"errorPanel"
 RPanelTag='RPanel'
 svgPanelTag<-'svgPanel'
 rmdPanelTag<-'rmdPanel'
+textPanelTag<-'textPanel'
+snippetPanelTag<-'snippetPanel'
 tibTag<-'tib'
 
 getSVGWH<-function(){ c(650,620) } #this should be ultimately place in another file
@@ -65,21 +69,24 @@ source("util/utilptR.R")
 source("util/utilTibble.R")
 source("util/utilColumnType.R")
 source("util/utilTransform.R")
-source("leftPanel/menu/buildLeftMenuUI.R")
+source("leftPanel/fileIO/dndSnippetLoader.R")
+source("leftPanel/fileIO/genShinyFilesOpenButtons.R")
+source("leftPanel/fileIO/genShinyFilesSaveButtons.R")
+source("leftPanel/menu/UIbuildLeftMenu.R")
 source("leftPanel/toolbar/dndToolBarSnippets.R")
 source("leftPanel/toolbar/buildLeftHToolBarUI.R")
-source("leftPanel/mid/buildSnippetToolBar.R")
+
 source("rightPanel/menu/buildRightMenuUI.R")
 source("leftPanel/mid/shinyAce4Ptr.R")
 
 
 
 #---load modules source -------------
-
 source("rightPanel/footer/moduleFooterRight.R")
 source("rightPanel/header/moduleEdAsset.R")
 source("rightPanel/header/moduleEdTib.R")
 source("rightPanel/header/moduleEdTransform.R")
+source("rightPanel/mid/moduleLog.R")
 source("rightPanel/mid/moduleRowDND.R")
 source("rightPanel/mid/moduleSVGR.R")
 

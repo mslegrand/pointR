@@ -1,27 +1,20 @@
 moduleFooterRightUI<-function(id, input, output) { 
   ns <- NS(id)
-  #tagList(
     absolutePanel( "class"="footerPanel", draggable=FALSE,
           uiOutput(ns('footer'))         
     )
-  #)
 }
 
 moduleFooterRight<-function(input, output, session, 
                       getTibEditState,
                       getPointMax,
-                      getPanelState #,
-                      # getHandler,
-                      # getHandlerValue
-                      
+                      getPanelState 
 ){
   
   output$footer<-renderUI({
     footerPanelState<-getPanelState()
     if(!is.null( footerPanelState )){
         if (footerPanelState=='point' && length(getPointMax())>0 ){
-          # cat("length(getPointMax())=",length(getPointMax()),"\n")
-          # cat("getPointMax()=",format(getPointMax()),"\n")
           absolutePanel( "class"="footerPanel", draggable=FALSE, style="bottom: 0; left: 10px; display:inline-block", 
             absolutePanel( left=5, bottom=0,
                actionGroupButtons(
@@ -36,11 +29,14 @@ moduleFooterRight<-function(input, output, session,
                   status='primary'
                  )          
             ),
-            absolutePanel( left=450, bottom=5, 'class'='ptR2', style="font-weight: bold; color: #00FFFF;", span('max pts/row:')),
-            absolutePanel( left=540, bottom=-15, 'class'='ptR2', 
+            absolutePanel( right=100,  bottom=5, width=100,
+              absolutePanel( left=0, bottom=0, 'class'='ptR2', style="font-weight: bold; color: #00FFFF;", span('max pts/row:')),
+              absolutePanel( left=90, bottom=-20, 'class'='ptR2', 
                 numericInput(session$ns("matColLim"), width='70px', label = NULL, min=1, 
                              value = getPointMax()
                 )
+            )
+            
             )
           )
         } else if (footerPanelState=='matrix'){
@@ -55,19 +51,7 @@ moduleFooterRight<-function(input, output, session,
             ),
             status='primary'
           )      
-          # tagList(
-          #   #  icon-up-big   icon-down-big icon-cancel icon-clone  icon-level-up icon-level-down  icon-menu icon-window-minimize
-          #   
-          #   actionButton(session$ns("tagDelete"),  label = "Delete Select"),
-          #   actionButton(session$ns("tagMoveUp"),  label = "Send Up Select"),
-          #   actionButton(session$ns("tagMoveDown"), label = "Send  Down Select"),
-          #   actionButton(session$ns("tagClone"),   label = "Clone Select"   )
-          # )
         } else if (footerPanelState=='value'){
-          # if( !is.null(getHandler() ) && getHandler()=='colourable'){
-          #   value<-!is.null( getHandlerValue() ) && getHandlerValue()=='colourable'
-          #   checkboxInput(session$ns("useColourPalette"), label = "Use colour palette", value=value)
-          # }
         }
     } else {
       NULL

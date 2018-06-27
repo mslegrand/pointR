@@ -9,7 +9,7 @@
 shinyServer(function(input, output,session) {
   
 source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
-  
+
 # Reactive values----------
   request<-reactiveValues(
     code=NULL, 
@@ -17,6 +17,44 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
     sender='startup',
     tabs=NULL
   )
+  
+  drippetSelection<-reactiveValues(
+    current=NULL,
+    all=list()
+  )
+  
+  addDrippets<-function(dnName, dnippets, select=dnName ){
+    drippetSelection$all[[dnName]]=dnippets
+    drippetSelection$current<-c(drippetSelection$current, select)
+  }
+  
+  observeEvent(c( drippetSelection$all, request$mode),{
+    updateAwesomeCheckboxGroup(session, inputId="selectedDDDnippets", choices = names(drippetSelection$all),
+                              selected = drippetSelection$current, inline = FALSE, status = "primary")
+    if(length(drippetSelection$all)>0 && identical(request$mode,'ptr') ){
+      showElement('selectedDnippetButtonBoxContainer')
+    } else {
+      hideElement('selectedDnippetButtonBoxContainer')
+    }
+    
+  })
+  
+  observeEvent(input$selectedDDDnippets,{
+    selected=input$selectedDDDnippets
+    drippetSelection$selected=selected
+    dnippets<-drippetSelection$all[selected]
+    dnippets<-unlist(dnippets,recursive=F)
+    # browser()
+    names(dnippets)<-NULL
+    if(length(dnippets)==0){
+      sendPtRManagerMessage(sender='cmd.dnippet.file.load', removeDrippets=runif(1));
+    } else{
+      sendPtRManagerMessage(sender='cmd.dnippet.file.load', insertDrippets=dnippets)
+    }
+    
+  }, ignoreInit = TRUE, ignoreNULL = FALSE)
+  
+  
   
   setTabRequest<-function(sender, tabs){
     request$sender<-sender
@@ -36,20 +74,9 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   })
   
   getCode<-reactive({
-#    if(request$mode=='ptr'){
       request$code
-    # } else {
-    #   ""
-    # }
   })
   
-  # getMarkdown<-reactive({
-  #   if(request$mode=='markdown'){
-  #     request$code
-  #   } else {
-  #     ""
-  #   }
-  # })
   
   mssg<-reactiveValues(
     error="",
@@ -70,34 +97,34 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   }
   
   sendPtRManagerMessage<-function(sender, ...){ 
-    data<- c( list(sender=sender), list(...))
-    lapply(data, function(x){if(is.na(x)){
+    cat('entering ---------------sendPtRManagerMessage---------------------\n')
+    data<- c( list(sender=sender), list(...), list(fk=runif(1)))
+    if(identical(sender,'tibNrow')){
+      cat("Enter==============tibNRow data ======================\n")
       print(data)
-      stop("encounterd an NA")
-    }})
+      cat("Exit==============tibNRow data =======================\n")
+    }
+    lapply(data, function(dd){
+      if(any(sapply(dd,is.na))){
+        print(data)
+        stop("encounterd an NA")
+      }
+    })
     session$sendCustomMessage( type = "ptRManager", data)
+    cat('exiting ---------------sendPtRManagerMessage---------------------\n')
   }
   
-  # sendFileTabsMessage<-function(id, sender, ...){ 
-  #   cat( "sendFileTabsMessage:: id=",id," sender=",sender,"\n" )
-  #   data<- c( list(value = id, sender=sender), list(...) )
-  #   print(data)
-  #   session$sendCustomMessage( type = "scrollManager", 
-  #      c( list(value = id, sender=sender), list(...) )
-  #   )
-  # }
+
   
   sendFileTabsMessage<-function(...){ 
     #cat( "sendFileTabsMessage:: id=",id," sender=",sender,"\n" )
     data<- list(...) 
     #print(data)
     if(length(data)>0){
-    #   lapply(data, function(x){
-    #     if(is.null(x) || is.na(x) ){
-    #       print(data)
-    #       stop("encounterd an NA")
-    #     }
-    #   })
+        if(identical(data$sender, 'savedStatus')){
+          cat('sendFileTabsMessage\n')
+          print(data)
+        }
       session$sendCustomMessage( type = "scrollManager",  data )
     }
     
@@ -114,38 +141,17 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   getNextAnonymousFileName<-function(){
     newFileName<-paste0("Anonymous ", pages$fileNameCount)
     pages$fileNameCount<-pages$fileNameCount+1
-    #newTabId<-"source"
     newFileName
   }
   
   getNextTabId<-function(){
     tabId<-paste0("PTR-TABID", pages$tabIdCount)
     pages$tabIdCount<-pages$tabIdCount+1
-    #newTabId<-"source"
     tabId
   }
   
   
-  
-  # tabName2AceId<-function(tabName){
-  #   if(!is.null(tabName) && nchar(tabName)>0){
-  #     tabName<-paste0("ACE", tabName)
-  #     tabName<-gsub(' ','', tabName)
-  #     tabName<-gsub('\\.','_',tabName)
-  #   } else {
-  #     NULL
-  #   }
-  # }
-  # tabName2TabId<-function(tabName){
-  #   if(!is.null(tabName) && nchar(tabName)>0){
-  #     tabName<-paste0("TAB", tabName)
-  #     tabName<-gsub(' ','', tabName)
-  #     tabName<-gsub('\\.','_',tabName)
-  #   } else {
-  #     NULL
-  #   }
-  # }
-  
+
   aceID2TabID<-function(aceId){
     sub("ACE","TAB",aceId)
   }
@@ -167,10 +173,11 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   })  
   
   
-  shinyFileChoose(input, "buttonFileOpenHidden", session=session, roots=c(wd="~") ) #hidden
-  shinyFileChoose(input, "buttonSnippetOpen",    session=session, roots=c(wd="~"),  filetypes=c('', 'snp') ) #hidden
-  shinyFileSave(input, "buttonFileSaveHidden",   session=session, roots=c(wd="~"),  filetypes=c('R','svgR') ) #hidden
-  shinyFileSave(input, "buttonExportSVGHidden",  session=session, roots=c(wd="~"),  filetypes=c('svg') ) #hidden
+  shinyFileChoose(input, "buttonFileOpen",       session=session, roots=c(wd="~") ) #hidden
+  shinyFileChoose(input, "buttonSnippetImport",    session=session, roots=c(wd="~"),  filetypes=c('snippets') ) #hidden
+  shinyFileChoose(input, "buttonDnippetImport",    session=session, roots=c(wd="~"),  filetypes=c('dnippets') ) #hidden
+  shinyFileSave(input,   "buttonExportSVG",      session=session, roots=c(wd="~")  ) #hidden
+  
 
   # Reactive expressions------------- 
   showGrid<-reactive({displayOptions$showGrid})
@@ -196,6 +203,8 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   source("leftPanel/mid/serverAce.R",                local=TRUE) 
   source("leftPanel/helpSVG.R",                      local=TRUE) 
   source("leftPanel/tabs/serverFileTabs.R",          local=TRUE) 
+  source("leftPanel/fileIO/serverGenShinyFilesSaveObservers.R",        
+                                                     local=TRUE)
   
 #------------------rightPanel--------------------------------
   source("rightPanel/serverPlotSelectDB.R",          local=TRUE)
@@ -226,6 +235,7 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
 #---------------leftPanel--------------------------
   source("leftPanel/footer/processCommit.R",        local=TRUE)
   source("leftPanel/footer/processKnit.R",          local=TRUE)
+  source("leftPanel/footer/processDnip.R",          local=TRUE)
   source("leftPanel/footer/serverButtons.R",        local=TRUE)
   source("leftPanel/toolbar/cmdHToolBar.R",         local=TRUE)    
   source("leftPanel/menu/cmdFileSaveAs.R",          local=TRUE)  
@@ -238,6 +248,8 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
   source("leftPanel/menu/cmdOptionsTheme.R",        local=TRUE)
   source("leftPanel/menu/cmdOptionsFontSize.R",     local=TRUE)  
   source("leftPanel/menu/cmdFileSnippet.R",         local=TRUE)
+  source("leftPanel/toolbar/serverDnippetToolBar.R",   local=TRUE)
+  source("leftPanel/menu/cmdFileDnippet.R",         local=TRUE)
   source("leftPanel/menu/cmdAbout.R",               local=TRUE)
   source("leftPanel/serverEditBar.R",               local=TRUE)
 })
