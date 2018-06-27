@@ -85,10 +85,12 @@ Shiny.addCustomMessageHandler(
 //      console.log('Array.isArray(drippets);'+ Array.isArray(drippets));
       $('#dndSnippetList').empty();
       drippets.forEach( function(dripItem){
-//        console.log('dripItem =' + JSON.stringify(dripItem)+"\n");
-//        console.log('logo =' + JSON.stringify(dripItem.logo)+"\n");
-//        console.log('logo =' + JSON.stringify(dripItem['logo'])+"\n");
-        $('#dndSnippetList').append(
+          console.log('dripItem =' + JSON.stringify(dripItem)+"\n");
+          console.log('logo =' + JSON.stringify(dripItem.logo)+"\n");
+          //console.log('logo =' + JSON.stringify(dripItem['logo'])+"\n");
+          console.log('snip =' + JSON.stringify(dripItem.snip)+"\n");
+          console.log('hint =' + JSON.stringify(dripItem.hint)+"\n");
+        /*$('#dndSnippetList').append(
         	"<li id='" + dripItem.id + "' " +
         	"class='snippetButton'  " +
         	"data-snippet='" + dripItem.snip + "' " +
@@ -101,23 +103,58 @@ Shiny.addCustomMessageHandler(
         	"</div>"+
         	"</li>"
       	);
+      	*/
+      	
+        $('#dndSnippetList').append(
+           $('<li/>')
+              .attr("id",dripItem.id)
+              .addClass('snippetButton')
+              .attr('data-snippet', dripItem.snip)
+              .attr('title', dripItem.hint)
+              .prop('data-toggle','tooltip')
+              .prop('data-placement','top')
+              .append(
+                  $(dripItem.logo)
+              )
+              .draggable({
+              		appendTo: 'body',
+              		revert: 'invalid',
+              		helper: function() {
+              			//drag selected items
+              			var selected = $(this);
+              			var container = $('<div/>');
+              			container.append(selected.clone());
+              			return container;
+              		},
+              		stop: function () {
+              			$(this).draggable('option', 'revert', 'invalid');
+              		}
+              	})
+          );
+          
+     	
+      	
       });
+      /*
       $('.snippetButton').draggable({
-		appendTo: 'body',
-		    revert: 'invalid',
-		    helper: function() {
-			//drag selected items
-			var selected = $(this);
-			var container = $('<div/>');
-			container.append(selected.clone());
-			return container;
-		     },
-		    stop: function () {
-			$(this).draggable('option', 'revert', 'invalid');
-		    }
-	}); 
+      		appendTo: 'body',
+      		    revert: 'invalid',
+      		    helper: function() {
+      			//drag selected items
+      			var selected = $(this);
+      			var container = $('<div/>');
+      			container.append(selected.clone());
+      			return container;
+      		     },
+      		    stop: function () {
+      			$(this).draggable('option', 'revert', 'invalid');
+      		    }
+      	}); 
+      	*/
       //}
     } //endof data.snippetButtonActivate
+    
+    
     if(!!data.rowCountChange){
       $(window).resize();
     }

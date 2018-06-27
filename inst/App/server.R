@@ -28,10 +28,14 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
     drippetSelection$current<-c(drippetSelection$current, select)
   }
   
-  observeEvent(c( drippetSelection$all),{
+  observeEvent(c( drippetSelection$all, request$mode),{
     updateAwesomeCheckboxGroup(session, inputId="selectedDDDnippets", choices = names(drippetSelection$all),
                               selected = drippetSelection$current, inline = FALSE, status = "primary")
-    
+    if(length(drippetSelection$all)>0 && identical(request$mode,'ptr') ){
+      showElement('selectedDnippetButtonBoxContainer')
+    } else {
+      hideElement('selectedDnippetButtonBoxContainer')
+    }
     
   })
   
@@ -40,6 +44,7 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
     drippetSelection$selected=selected
     dnippets<-drippetSelection$all[selected]
     dnippets<-unlist(dnippets,recursive=F)
+    # browser()
     names(dnippets)<-NULL
     if(length(dnippets)==0){
       sendPtRManagerMessage(sender='cmd.dnippet.file.load', removeDrippets=runif(1));
