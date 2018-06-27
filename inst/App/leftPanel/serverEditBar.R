@@ -133,18 +133,23 @@ observeEvent( input$editNavBar, {
  
     if(fileCmd=="newDndSnippetsFile"){
       cmdDndSnippetNew()
+      dirtyDMDM(session, "editNavBar")
     }
     
     if(fileCmd=="importDndSnippetsFile"){
       cmdDnippetImport()
+      dirtyDMDM(session, "editNavBar")
     }
     
     if(fileCmd=="importSnippetFile"){
+      cat('serverEditBar---------------fileCmd=="importSnippetFile"---------------------------------------\n ')
       cmdSnippetImport()
+      dirtyDMDM(session, "editNavBar")
     }
     
     if(fileCmd=="unloadSnippets"){
       cmdSnippetUnload()
+      dirtyDMDM(session, "editNavBar")
     }
     
 
