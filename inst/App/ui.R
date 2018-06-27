@@ -86,7 +86,7 @@ shinyUI(
                      span('class'="glyphicon glyphicon-chevron-down")
                 )
           ),
-          absolutePanel( "class"="footerPanel", draggable=FALSE, style="display:inline-block",
+          absolutePanel( class="footerPanel", draggable=FALSE, style="display:inline-block",
              absolutePanel( left=5, bottom=0,
                actionButton("commit", label = "COMMIT EDIT") %>% bs_embed_tooltip(title = "Commit code changes")
              ),
