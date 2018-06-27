@@ -1,11 +1,11 @@
 
-cmdSnippetImport<-reactive({
+cmdSnippetImport<-function(){
   sendPtRManagerMessage(  sender='cmd.snippet.file.import', openFile=runif(1) )
-})
+}
 
-cmdSnippetUnload<-reactive({
+cmdSnippetUnload<-function(){
   updateAceExt( id= getAceEditorId(), sender='fileCmd.unloadSnippets', snippets="" )
-})
+}
 
 observeEvent(input$buttonSnippetImport,{
   cat('input$buttonSnippetImport\n')
