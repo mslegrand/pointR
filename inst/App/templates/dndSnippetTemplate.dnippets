@@ -55,7 +55,7 @@ Assign Point Matrix
 ```
 Snippet Insert:
 ```
-=matrix(${1:0},,2,${0:0})
+=matrix(${1:0},2,${0:0})
 ```
 SVGR Image:
 ```
@@ -77,3 +77,4 @@ svgR(wh=WH, stroke.width=2, stroke="#00FFFF",  fille="none",
 )
 ```
 ******************
+
