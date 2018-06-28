@@ -194,9 +194,13 @@ observeEvent(c(getAceEditorId(), getMode()),{
     hideElement("aceTabSet")
     hideElement("midRightPanels")
     hideElement("BottomRightPanel")
-    
+    showElement("logo.right")
+    showElement("logo.left")
   } else {
     #cat("showinging TopRightPanel\n")
+    hideElement("logo.right")
+    hideElement("logo.left")
+    
     if(identical(request$mode,'ptr')){
       showElement("BottomRightPanel")
       showElement("TopRightPanel")
