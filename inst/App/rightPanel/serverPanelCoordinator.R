@@ -9,6 +9,14 @@ panels<-reactiveValues(
   sourceType=svgPanelTag 
 )
 
+observeEvent( panels$sourceType,{
+  if(identical(panels$sourceType, svgPanelTag)){
+    enableDMDM(session, "editNavBar", "Export as SVG")
+  } else {
+    disableDMDM(session, "editNavBar", "Export as SVG")
+  }
+})
+
 setSourceType<-function( sourceType ){
   # cat('setting sourceType to ',format(sourceType),"\n")
   panels$sourceType=sourceType
