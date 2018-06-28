@@ -241,6 +241,9 @@ updateAceExt<-function(id, sender, ... ){
 observeEvent(request$sender,{
     if(request$sender=='startup'){
       cmdFileNewPtR()
+      sampleDnippets<-paste(system.file('App', package='pointR'), 'templates', 'sampleShapes.dnippets', sep='/')
+      cat(sampleDnippets)
+      loadDndSnippets(sampleDnippets)
     }
 }, priority=100)
 
