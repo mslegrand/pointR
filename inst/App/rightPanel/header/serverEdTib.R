@@ -8,7 +8,7 @@ returnValue4ModuleEdTib<-callModule(
   name=reactive({ 
     if(hasError()){ 
       rtv<-errorPanelTag } else{ 
-        rtv<-getTibName() 
+        rtv<-getAssetName() 
       }
     # cat('Input name to tibEditor is=',format(rtv),'\n')
     rtv
@@ -44,7 +44,7 @@ getSafeSelection<-function(selection, choices){ #anybody using this???
 # #name
 # observeEvent(returnValue4ModuleEdTib$name(),{
 #     name<-returnValue4ModuleEdTib$name()
-#     if( name==getTibName() ){ return(NULL) } #bail if moduleEdTib did not change name
+#     if( name==getAssetName() ){ return(NULL) } #bail if moduleEdTib did not change name
 #     if( !(name %in% c(errorPanelTag) )){
 #       if(name==transformTag){
 #           updateSelected(name=transformTag)
@@ -102,7 +102,7 @@ observeEvent(returnValue4ModuleEdTib$entryValue(),{
     if(length(entry)==0 || is.na(entry) ){
       return(NULL)
     }
-    cat('getColumnType()=',getColumnType(),'\n')
+    # cat('getColumnType()=',getColumnType(),'\n')
     if(getColumnType()=='point'){
       entry<-which(entry==c('point','matrix'))
       if(length(entry)){
@@ -126,7 +126,7 @@ observeEvent(returnValue4ModuleEdTib$entryValue(),{
           return(NULL) #TODO !!!! force reset dropdown value in modulueEdTib (refresh or commit?)
         }
       }
-      name<-getTibName()
+      name<-getAssetName()
       newPtDefs<-getPtDefs()
       columnName<-getTibColumnName()
       rowIndex<-getTibRow()
@@ -140,8 +140,8 @@ observeEvent(returnValue4ModuleEdTib$entryValue(),{
       )
       sender='applyTibEdit'
      
-      if(!identical(newPtDefs$tib[[getTibName()]][[rowIndex,columnName ]],entry)){
-        newPtDefs$tib[[getTibName()]][[rowIndex,columnName ]]<-entry
+      if(!identical(newPtDefs$tib[[getAssetName()]][[rowIndex,columnName ]],entry)){
+        newPtDefs$tib[[getAssetName()]][[rowIndex,columnName ]]<-entry
         updateAceExtDef(newPtDefs, sender=sender, selector=list( name=name, rowIndex=rowIndex, columnName=columnName   ) )
       }
     }

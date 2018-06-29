@@ -2,7 +2,7 @@
 returnValue4ModuleEdAsset<-callModule(
   module=moduleEdAsset,
   id="edAssetCh",
-  name=reactive({ if(hasError()){ errorPanelTag } else{ getTibName()}}),
+  name=reactive({ if(hasError()){ errorPanelTag } else{ getAssetName()}}),
   nameChoices=getRightPanelChoices
 )
 
@@ -10,7 +10,7 @@ returnValue4ModuleEdAsset<-callModule(
 observeEvent(returnValue4ModuleEdAsset$name(),{
   name<-returnValue4ModuleEdAsset$name()
   
-  if( is.null(getTibName())  || name==getTibName() ){ return(NULL) } #bail if moduleEdAsset did not change name
+  if( is.null(getAssetName())  || name==getAssetName() ){ return(NULL) } #bail if moduleEdAsset did not change name
   if( !(name %in% c(errorPanelTag) )){
     # cat('returnValue4ModuleEdAsset$name()= ', name, '\n')
     if(name==transformTag){

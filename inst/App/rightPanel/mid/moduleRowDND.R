@@ -1,8 +1,6 @@
 moduleRowDNDUI<-function(id, input, output) { 
   ns <- NS(id)  
-    #absolutePanel( "class"= "cRowContainer",
     uiOutput(ns("rowPanel"), 'class'='cRowSelectionList')
-    #)
 }
 
 moduleRowDND<-function(input, output, session, 

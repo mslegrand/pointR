@@ -17,12 +17,6 @@ observeEvent(input$plotNavBar, {
     setDisplayOption(showGrid=FALSE)
   }
   
-  if(cmd == 'cmdHidePoints'){
-    enableDMDM(session,  menuBarId="plotNavBar", entry="cmdShowPointsNoLabels")
-    enableDMDM(session,  menuBarId="plotNavBar",  entry="cmdShowPointLabels")
-    disableDMDM(session,  menuBarId="plotNavBar",  entry="cmdHidePoints")
-    setDisplayOption(ptMode='Hidden')
-  }
   
   if(cmd == 'cmdShowPointsNoLabels'){
     disableDMDM(session,  menuBarId="plotNavBar", entry="cmdShowPointsNoLabels")

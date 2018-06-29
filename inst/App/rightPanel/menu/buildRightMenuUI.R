@@ -1,19 +1,10 @@
 buildRightMenu<-function(){
   dmdMenuBarPage(
     menuBarId="plotNavBar",
-    # menuDropdown('Column',
-    #              shinyDMDMenu::menuItem('Add Column', value='cmdNewColumn') ,
-    #              shinyDMDMenu::menuItem('Set Max ncol', value='cmdSetMatColMax')
-                 #   shinyDMDMenu::menuItem('Delete Column', value='cmdDeleteColumn'),
-                 #   shinyDMDMenu::menuItem('Rename Column', value='cmdRenameColumn'),
-                 #   shinyDMDMenu::menuItem('Clone Column', value='cmdCloneColumn'),
-                 #   shinyDMDMenu::menuItem('Input Using', value='cmdInputUsingColumn')
-    #),
     menuDropdown('Display', 
                  menuDropdown('Points',
                               shinyDMDMenu::menuItem('Show Points without Labels', value='cmdShowPointsNoLabels'),
-                              shinyDMDMenu::menuItem('Show Points with Labels', value='cmdShowPointLabels'),
-                              shinyDMDMenu::menuItem('Hide Points', value='cmdHidePoints') 
+                              shinyDMDMenu::menuItem('Show Points with Labels', value='cmdShowPointLabels')
                  ),
                  menuDropdown( 'Grid',
                                shinyDMDMenu::menuItem('Show Grid', value='cmdShowGrid')

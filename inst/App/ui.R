@@ -59,10 +59,6 @@ shinyUI(
           #-------left content begin--------
           genShinyOpenFilesButtons(),
           genShinySaveFilesButtons(),
-          # shinyFilesButton("buttonFileOpenHidden", label="", title="Open File",     c('R','PTR', 'SVGR'),   multiple=FALSE, class='hiddenButton'),
-          # shinySaveButton( "buttonFileSaveHidden", label="", title="Save as ...",   filetype=list(text='txt', R=c('R'), Rmd='Rmd'), class='hiddenButton'),
-          #shinyFilesButton("buttonSnippetOpen",    label="", title="Import Snippet", multiple=FALSE,                        class='hiddenButton'),
-          #shinySaveButton("buttonExportSVGHidden", label="", title="Save as ...",    list('hidden_mime_type'=c("SVG")) ,    class='hiddenButton'),
           div( id='aceTabSet', class="container",
                tabsetPanel(id='pages')
           ),
@@ -74,6 +70,7 @@ shinyUI(
               top=105, left=0, width="100%", "class"="headerPanel", draggable=FALSE, height="30px",
               buildHToolBar(bar2)
            ),
+          absolutePanel(id="logo.left", top=145, left=0, width="100%", img(src="ptR/pointRLogo.SVG") ),
           #uiOutput('drippetUI'),
            div( id='snippetToolBarContainer', "class"="cSnippetToolBarContainer", #draggable=FALSE ,
                 tags$ul( id='dndSnippetList', "class"="cSnippetToolBarList",
@@ -86,7 +83,7 @@ shinyUI(
                      span('class'="glyphicon glyphicon-chevron-down")
                 )
           ),
-          absolutePanel( "class"="footerPanel", draggable=FALSE, style="display:inline-block",
+          absolutePanel( class="footerPanel", draggable=FALSE, style="display:inline-block",
              absolutePanel( left=5, bottom=0,
                actionButton("commit", label = "COMMIT EDIT") %>% bs_embed_tooltip(title = "Commit code changes")
              ),
@@ -103,7 +100,10 @@ shinyUI(
                      choices = c(),
                      selected = c()
                    ),
-                   style = "unite", icon = icon("gear"),
+                   #style = "unite", 
+                   icon=icon("option-vertical", lib = "glyphicon"),
+                   #icon=icon("wrench", lib = "glyphicon"),
+                   #icon = icon("gear"),
                    status = "primary", width = "300px", size='sm',
                    up=TRUE, right=TRUE,
                    animate = animateOptions(
@@ -129,6 +129,7 @@ shinyUI(
         #---right bootstrap page begin--------------
         bootstrapPage(
           buildRightMenu(),
+          absolutePanel(id="logo.left", top=145, left=0, width="100%", img(src="ptR/pointRLogo.SVG") ),
           uiOutput("BottomRightPanel"),
           uiOutput("TopRightPanel"),
           div( id="midRightPanels", class="cMidPanel ctop140",

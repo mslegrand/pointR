@@ -81,10 +81,7 @@ extractDripplet<-function(dr, tmpdir=tempdir() ){
     rtv<-tt
     rtv<-tryCatch({
        svg<-as.character(eval(parse(text=tt['SVGR Image'])))
-       fileName1<-tempfile('ptRSnippet', tmpdir=tmpdir, fileext='.SVG')
-       rtv["SVGR Image"]<-fileName1
-       fileName2 = paste(system.file('App', package='pointR'),  'www', fileName1, sep='/')
-       write_file(svg, fileName2)
+       rtv["SVGR Image"]<-svg
        names(rtv)<-c('hint','snip','logo')[m]
        rtv
     }, error=function(e){NULL} )
@@ -138,4 +135,7 @@ row2DrippletBlockIndices<-function(lineNo){
   }
   rtv
 }
+
+
+
 

@@ -1,11 +1,5 @@
 #// called when adding a new point
 
-
-
-
-
-
-
 addPt2ptDefs<-function(name, row, matCol,  ptDefs, newPt){
   
   if(is.numeric(row) && 
@@ -48,24 +42,14 @@ observe({
           sender='PointsBar.mouse.add'
           #cat('Enter: mouse cmd add')
           newPt<-vec
-          selection<-getTibName() 
+          selection<-getAssetName() 
           rowIndex<-getTibRow()
           # cat('mouseMssg:: rowIndex=',format(rowIndex),"\n")
           matColIndx<-getTibMatCol()
-          # if matColMax==matColIndx, first insert new row
-          # cat("getHandler()=",format( getHandler() ),"\n")
-          # cat("getHandlerValue()=",format( getHandlerValue() ),"\n")
-          # if(matColIndx==2){
-          #   v<-getHandlerValue()
-          # }
-          # cat("MOUSECLICK:: length(getPointMax())=", format(getPointMax()),"\n")
-          # cat("MOUSECLICK:: length(matColIndx=", format(matColIndx),"\n")
           if( length( getPointMax())>1){ stop('getPointMax is too big')}
           if(!is.na(getPointMax()) &&  matColIndx>=getPointMax() ){
-          #if(!is.na(getWidget()) && matColIndx>=getHandlerValue()){
             # tag here
             tib<-ptDefs$tib[[selection]]
-            # cat(" serverMouseClicks:: tib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])\n" )
             tib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
             rowIndex<-rowIndex+1
             tib[[getTibColumnName()]][[rowIndex]]<-matrix(newPt,2)
@@ -93,9 +77,8 @@ observe({
           #get selection
           selection<-vid[2]
           #get point index
-          #indx<-as.numeric(vid[3]) # index is the absolute position of in the points array
           newPt<-vec
-          rowIndex<-as.numeric(vid[3])
+          rowIndex<-as.numeric(vid[3]) # index is the absolute position of in the points array
           matColIndx<-as.numeric(vid[4])
           ptDefs$tib[[selection]][[ rowIndex, getTibPtColPos() ]][,matColIndx]<-newPt
           newPtDefs<-ptDefs
@@ -113,7 +96,7 @@ observe({
           tmp<-unlist(str_split(tid,"_"))
           row<-as.numeric(tail(tmp,1))
           
-          selection<-getTibName() 
+          selection<-getAssetName() 
           m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]
           ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]<-m+vec
           matCol<-ncol(m)
@@ -130,7 +113,7 @@ observe({
           tid<-input$mouseMssg$id
           tmp<-unlist(str_split(tid,"_"))
           row<-as.numeric(tail(tmp,1))
-          selection<-getTibName() 
+          selection<-getAssetName() 
           m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]
           matCol<-ncol(m)
         
@@ -147,10 +130,6 @@ observe({
           trDefDelta2<-paste0("matrix(c(",paste0(vec,collapse=", "), "),2)" ) 
           pos<-tid2replacementCoord(tid)
           replacementList<-list(list(rng=pos, txt= trDefDelta2))
-          # session$sendCustomMessage(
-          #   type = "shinyAceExt",
-          #   list(id= getAceEditorId(), replacement=replacementList, sender=sender, ok=1)
-          # )
           updateAceExt(id= getAceEditorId(), replacement=replacementList, sender = sender, ok=1 )
         }
         
@@ -161,10 +140,6 @@ observe({
           trDefDelta2<-paste0("matrix(c(",paste0(vec,collapse=", "), "),2)" ) 
           pos<-tid2replacementCoord(tid)
           replacementList<-list(list(rng=pos, txt= trDefDelta2))
-          # session$sendCustomMessage(
-          #   type = "shinyAceExt",
-          #   list(id= getAceEditorId(), replacement=replacementList, sender=sender, ok=1)
-          # )
           updateAceExt(id= getAceEditorId(), replacement=replacementList, sender = sender, ok=1 )
         } 
         
@@ -175,10 +150,6 @@ observe({
           trDefDelta2<-paste0("matrix(c(",paste0(vec,collapse=", "), "),2)" ) 
           pos<-tid2replacementCoord(tid)
           replacementList<-list(list(rng=pos, txt= trDefDelta2))
-          # session$sendCustomMessage(
-          #   type = "shinyAceExt",
-          #   list(id= getAceEditorId(), replacement=replacementList, sender = sender, ok=1)
-          # )
           updateAceExt(id= getAceEditorId(), replacement=replacementList, sender = sender, ok=1 )
         }
       }

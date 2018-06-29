@@ -1,7 +1,7 @@
 
 .global <- new.env()
 
-version="v.0.3.9.3"
+version="v.0.3.9.6"
 
 drippetdirectoryPath = paste(system.file('App', package='pointR'), 'inst', 'www', 'drippets', sep='/')
 
@@ -58,11 +58,8 @@ tibTag<-'tib'
 getSVGWH<-function(){ c(650,620) } #this should be ultimately place in another file
 
 #----begin external resources loaded prior to server------------
-#source("utilStyle.R")
 
 source("util/configIO.R") # must be loaded prior to alles
-source("util/utilKnitR.R")
-source("util/utilFormat.R") 
 source("util/format.R") 
 source("util/utilParser.R")
 source("util/utilptR.R")
@@ -73,7 +70,6 @@ source("leftPanel/fileIO/dndSnippetLoader.R")
 source("leftPanel/fileIO/genShinyFilesOpenButtons.R")
 source("leftPanel/fileIO/genShinyFilesSaveButtons.R")
 source("leftPanel/menu/UIbuildLeftMenu.R")
-source("leftPanel/toolbar/dndToolBarSnippets.R")
 source("leftPanel/toolbar/buildLeftHToolBarUI.R")
 
 source("rightPanel/menu/buildRightMenuUI.R")

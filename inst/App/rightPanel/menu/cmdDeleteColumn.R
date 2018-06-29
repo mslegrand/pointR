@@ -22,7 +22,7 @@ observeEvent(input$deleteColumnButton, {
   if(getTibEditState()==TRUE){
     indx<-getTibColumn()
     newPtDefs<-getPtDefs()
-    newPtDefs$tib[[getTibName()]]<-newPtDefs$tib[[getTibName()]][,-indx]
+    newPtDefs$tib[[getAssetName()]]<-newPtDefs$tib[[getAssetName()]][,-indx]
     sender<-'deleteColumn'
     updateAceExtDef(newPtDefs, sender=sender)
     # update columnSelection

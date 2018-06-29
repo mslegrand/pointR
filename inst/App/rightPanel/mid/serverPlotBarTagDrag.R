@@ -87,17 +87,16 @@ statusPlotTagDrag<-callModule(
   svgID='ptR_SVG_TagDrag',
   showPts.compound=reactive({
     showPts.dragTag(
-      ptName=getTibName(), 
+      ptName=getAssetName(), 
       pts=getTibPts(), 
       rowIndex=getTibRow(),
       ptDisplayMode=getDisplayMode()  
     )
   }),
-  ptrDisplayScript = reactive({ svgToolsScript( "TagDrag") }), # reactive({ js.scripts[[ "TagDrag"]] }),
+  ptrDisplayScript = reactive({ svgToolsScript( "TagDrag") }), 
   getSVGWH=getSVGWH,
   showGrid=showGrid,
-  getCode= getCode, #srcGet,
-  getCode2 =getCode, #srcGet,  # (or getCodeTransform)
+  getCode= getCode, 
   getErrorMssg=getErrorMssg,
   getTibNRow=getTibNRow,
   insert.end=",showPts.compound()"

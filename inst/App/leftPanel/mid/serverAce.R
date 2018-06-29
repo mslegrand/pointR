@@ -21,14 +21,14 @@ observeEvent(input$messageFromAce, {
       if(length(input$messageFromAce$isSaved)>0){ 
         aceId<-input$messageFromAce$id
         editOption$.saved <- input$messageFromAce$isSaved
-        cat('\n--setting editOption$.saved --\n')
-        cat("set editOption$.saved=",editOption$.saved,"\n")
+        # cat('\n--setting editOption$.saved --\n')
+        # cat("set editOption$.saved=",editOption$.saved,"\n")
       }
       # cat('22 ace request$sender=',format(request$sender),"\n")
       if(sender %in% c('cmd.tabChange', 'cmd.file.new', 'cmd.openFileNow')){
         #browser()
         request$mode<-input$messageFromAce$mode
-        cat('Ace:: request$mode=', request$mode, '\n')
+        # cat('Ace:: request$mode=', request$mode, '\n')
         if(identical(request$mode, 'ptrrmd')){
           panels$sourceType<-rmdPanelTag
           processCommit()
@@ -56,12 +56,12 @@ observeEvent(input$messageFromAce, {
         #cat('Ace: invoking processCommit\n')
         processCommit() # this sets the sourceType
         # cat('returning from processCommit\n')
-        # cat('getTibName()=',format(getTibName()),"\n")
-        if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset', 'cmd.saveFileNow') && !is.null(getTibName())){ 
+        # cat('getAssetName()=',format(getAssetName()),"\n")
+        if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset', 'cmd.saveFileNow') && !is.null(getAssetName())){ 
           if(sender=='cmd.add.asset'){
             name=input$messageFromAce$selector$assetName
           } else {
-            name=getTibName() # 'cmd.commit', 'cmd.add.column'
+            name=getAssetName() # 'cmd.commit', 'cmd.add.column'
           }
           tibs<-getPtDefs()$tib
           # cat('name=',format(name),"\n")
@@ -76,47 +76,9 @@ observeEvent(input$messageFromAce, {
           # cat("input$pages=",format(tttid),"\n")
           if(length(input$pages) >0 && 
              nchar(input$pages)>0 && 
-             selectedTibble$tabId != input$pages ){
-            
-             # cat('next tabId=',input$pages,"\n")
-             # cat('selectedTibble$tabId=',selectedTibble$tabId,"\n")
-             # cat("input$messageFromAce$id=" , format(input$messageFromAce$id), "\n")
+             selectedAsset$tabId != input$pages ){
              storeAssetState()
              restoreAssetState(input$pages)
-            # choices<-getRightPanelChoices()
-            # cat("getRightPanelChoices()=",format(getRightPanelChoices()),"\n" )
-            # if(length(choices)>0 && length(selectedTibble$tabId)>0  && selectedTibble$tabId!='whatthefuck'){
-            #   # cat( "store( tabId=",selectedTibble$tabId,")\n")
-            #   tmp2<-isolate(reactiveValuesToList(selectedTibble, all.names=TRUE))
-            #   #browser()
-            #   tmp2[sapply(tmp2,is.null)]<-NA
-            #   #plotSelect.tib<-rbind(plotSelect.tib, tmp )
-            #   tmp1<-filter(plot$selections.tib, tabId!=selectedTibble$tabId)
-            #    cat("serverAce::  plot$selections.tib<-bind_rows(tmp1, tmp2)\n")
-            #    
-            #   cat("tmp2=",format(tmp2),"\n")
-            #   plot$selections.tib<-bind_rows(tmp1, as.tibble(tmp2))
-            #    cat("========   ",paste(plot$selections.tib$tabId,collapse=", "),"\n")
-            # }
-            # row.tib<-filter(plot$selections.tib, tabId==input$pages)
-            # cat("nrow(row.tib)=",nrow(row.tib),"\n")
-            # print(row.tib)
-            # if(nrow(row.tib)==0){
-            #   cat('creating new tib for tabId=', input$pages,"\n")
-            #   cat('choices=',format(choices),"\n")
-            #   cat('columns=',format(names(getPtDefs()$tib )), "\n")
-            #   row.tib<-newPlotSel(tabId=input$pages, choices=choices, tibs=getPtDefs()$tib)
-            # }
-            # 
-            # # cat( "copy *row.tib* to *selectedTibble.*\n"  )
-            # if(!is.null(row.tib)){
-            #   lapply(names(row.tib), function(n){
-            #     v<-row.tib[[n]][1]
-            #     cat("row.tib$", n, "=", format(v),"\n")
-            #     selectedTibble[[n]]<-ifelse(is.na(v), NULL, v)
-            #   } )
-            # }
-            
           }
           # end selectTibUpdate:
           
@@ -214,9 +176,6 @@ updateAceExt<-function(id, sender, ... ){
     #     #print(data)
     #     cat("updateAceExt::sendCustomMessage NOW\n")
     # }
-
-
-    
     if(length(id)>0 && nchar(id)>0){
       lapply(data, function(d){
         if(length(d)==0){
@@ -241,6 +200,9 @@ updateAceExt<-function(id, sender, ... ){
 observeEvent(request$sender,{
     if(request$sender=='startup'){
       cmdFileNewPtR()
+      sampleDnippets<-paste(system.file('App', package='pointR'), 'templates', 'sampleShapes.dnippets', sep='/')
+      cat(sampleDnippets)
+      loadDndSnippets(sampleDnippets)
     }
 }, priority=100)
 
@@ -249,24 +211,24 @@ updateSelected4Ace<-function( reqSelector){
   
   if(!is.null(reqSelector[['name']])){
     #cat("reqSelector$name=", format(reqSelector$name ),"\n")
-    selectedTibble$name=reqSelector[['name']]
+    selectedAsset$name=reqSelector[['name']]
   }
   if(!is.null(reqSelector[['ptColName']])){
     #cat("reqSelector$ptColName=", format(reqSelector$ptColName ),"\n")
-    selectedTibble$ptColName=reqSelector[['ptColName']]
+    selectedAsset$ptColName=reqSelector[['ptColName']]
   }
   if(!is.null(reqSelector[['rowIndex']])){ # !!! may want to provide a check here
     #cat("reqSelector$ptColName=", format(reqSelector$rowIndex ),"\n")
-    selectedTibble$rowIndex=reqSelector[['rowIndex']]
+    selectedAsset$rowIndex=reqSelector[['rowIndex']]
   }
   if(!is.null(reqSelector[['matCol']])){
     #cat("reqSelector$matCol=", format(reqSelector$matCol ),"\n")
-    selectedTibble$matCol=reqSelector[['matCol']]
+    selectedAsset$matCol=reqSelector[['matCol']]
 
   }
   if(!is.null(reqSelector[['columnName']])){
     #cat("reqSelector$columnName=", format(reqSelector$columnName ),"\n")
-    selectedTibble$columnName=reqSelector[['columnName']]
+    selectedAsset$columnName=reqSelector[['columnName']]
   }
 } 
 

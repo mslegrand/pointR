@@ -58,7 +58,7 @@ observeEvent(input$commitNewCol, {
         newVal<-list(eval(parse(text=newVal))) # to do: validate!!!
       }
 
-      newPtDefs$tib[[getTibName()]]<-add_column(newPtDefs$tib[[getTibName()]], 
+      newPtDefs$tib[[getAssetName()]]<-add_column(newPtDefs$tib[[getAssetName()]], 
                                                 !!(newColName):=newVal   )     
       # updateAce and set selection to this column
       sender<-'cmd.add.column'

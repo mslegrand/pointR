@@ -9,6 +9,14 @@ panels<-reactiveValues(
   sourceType=svgPanelTag 
 )
 
+observeEvent( panels$sourceType,{
+  if(identical(panels$sourceType, svgPanelTag)){
+    enableDMDM(session, "editNavBar", "Export as SVG")
+  } else {
+    disableDMDM(session, "editNavBar", "Export as SVG")
+  }
+})
+
 setSourceType<-function( sourceType ){
   # cat('setting sourceType to ',format(sourceType),"\n")
   panels$sourceType=sourceType
@@ -23,25 +31,22 @@ getSourceType<-reactive({
 # 'tib' if it is the name of an existing tibble
 #  otherwise
 getNameType<-reactive({
-  # cat("getNameType::getTibName()=", format(getTibName()),"\n")
+  # cat("getNameType::getAssetName()=", format(getAssetName()),"\n")
   if(hasError()){
     # cat('getNameType:: Error=', getErrorMssg(),"\n")
     errorPanelTag
   } else {
     #browser()
-    if(!is.null(getTibName())){
-      # print("names(getPtDefs()$tib:\n")
-      # print(names(getPtDefs()$tib))
-      # print(getTibName())
-      if( getTibName() %in% names(getPtDefs()$tib) ){
+    if(!is.null(getAssetName())){
+      if( getAssetName() %in% names(getPtDefs()$tib) ){
         tibTag
-      } else if(getTibName()==transformTag && usingTransformDraggable()) { 
+      } else if(getAssetName()==transformTag && usingTransformDraggable()) { 
         # return transformTag if transformTag and usingTransformDraggable()
         transformTag
       } else {
-        getTibName()
+        getAssetName()
       }
-    } else { # RPanelTag whenever getTibName is NULL???
+    } else { # RPanelTag whenever getAssetName is NULL???
       RPanelTag
     }
   }
@@ -100,28 +105,13 @@ getTibEditState<-reactive({
 # returns:
 #  RPanelTag, rmdPanelTag, or oneof point, matrix, value, if ptR
 getRightMidPanel<-reactive({
-  cat('panels$sourceType=', panels$sourceType,"\n")
   if(hasError()){
-    # cat('getRightMidPanel:: Error=', getErrorMssg(),"\n")
     rtv<-errorPanelTag
   } else if (panels$sourceType %in% c( RPanelTag, rmdPanelTag, textPanelTag, snippetPanelTag)){
     rtv<-panels$sourceType
   } else {
     rtv<-getPlotState()
   }
-    
-    
-  #   if (panels$sourceType==RPanelTag){
-  #   rtv<-RPanelTag
-  # } else if (panels$sourceType==rmdPanelTag){
-  #   rtv<-rmdPanelTag
-  # } else if (panels$sourceType==textPanelTag){
-  #   rtv<-textPanelTag
-  # } else if (panels$sourceType==snippetPanelTag){
-  #   rtv<-snippetPanelTag
-  # } else {
-  #    rtv<-getPlotState()
-  # }
   rtv
 })
 
@@ -140,14 +130,11 @@ getRightPanelChoices<-reactive({ # includes names of tibs
   } else { # ptRPanel (names of ptDefs not null), svgRPanel, 
     ptDefs<-getPtDefs()
     choices<-names(getPtDefs()$tib)
-    # cat('getRightPanelChoices 1:: ', format(choices),"\n")
     if( usingTransformDraggable() ){
       choices<-c(choices, transformTag)
     }
     choices<-c(choices, svgPanelTag, RPanelTag)
-    # cat('getRightPanelChoices 2:: ', format(choices),"\n")
   } 
-  # cat('getRightPanelChoices 3:: ', format(choices),"\n")
   choices
 })
 
@@ -193,9 +180,16 @@ observeEvent(c(getAceEditorId(), getMode()),{
     hideElement("commit")
     hideElement("aceTabSet")
     hideElement("midRightPanels")
+    hideElement("BottomRightPanel")
+    showElement("logo.right")
+    showElement("logo.left")
   } else {
     #cat("showinging TopRightPanel\n")
+    hideElement("logo.right")
+    hideElement("logo.left")
+    
     if(identical(request$mode,'ptr')){
+      showElement("BottomRightPanel")
       showElement("TopRightPanel")
       showElement("snippetToolBarContainer")
       showElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble
@@ -213,10 +207,5 @@ observeEvent(c(getAceEditorId(), getMode()),{
     showElement("midRightPanels")
   }
   processCommit()
-  
-  
-  #cat('name=',format(name),"\n")
-  # tibs<-getPtDefs()$tib
-  # resetSelectedTibbleName(tibs=tibs, name=NULL)
 })
 
