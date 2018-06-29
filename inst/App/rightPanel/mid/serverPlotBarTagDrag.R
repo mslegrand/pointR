@@ -93,7 +93,7 @@ statusPlotTagDrag<-callModule(
       ptDisplayMode=getDisplayMode()  
     )
   }),
-  ptrDisplayScript = reactive({ svgToolsScript( "TagDrag") }), # reactive({ js.scripts[[ "TagDrag"]] }),
+  ptrDisplayScript = reactive({ svgToolsScript( "TagDrag") }), 
   getSVGWH=getSVGWH,
   showGrid=showGrid,
   getCode= getCode, #srcGet,

@@ -143,7 +143,7 @@ usingDraggable<-function(txt, transformType){
 #   paste(lines, collapse="\n")
 # }
 
-tid2replacementCoord<-function(tid, trDefDelta){
+tid2replacementCoord<-function(tid){
   strsplit(tid,'-')[[1]]->coords
   as.numeric(coords[2])->row
   as.numeric(coords[3])->start

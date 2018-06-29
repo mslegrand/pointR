@@ -11,9 +11,6 @@ svgToolsScript<-function(type){
   scripts[type]
 }
 
-
-
-
   modulePlotSVGrUI <- function(id, input, output) { 
     ns <- NS(id)
     htmlOutput(ns( "svghtml" ), inline=FALSE)

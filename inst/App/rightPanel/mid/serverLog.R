@@ -2,9 +2,6 @@
 
 #-----log panel---------------------------
 
-
-
-
 errLogModuleList<-callModule( #auto  input, output, session 
   module=moduleLog, 
   id="errLogMod", 

@@ -59,7 +59,6 @@ shinyUI(
           #-------left content begin--------
           genShinyOpenFilesButtons(),
           genShinySaveFilesButtons(),
-           div(id="logo.left",  img(src="ptR/pointRLogo.SVG") ),
           div( id='aceTabSet', class="container",
                tabsetPanel(id='pages')
           ),
@@ -71,6 +70,7 @@ shinyUI(
               top=105, left=0, width="100%", "class"="headerPanel", draggable=FALSE, height="30px",
               buildHToolBar(bar2)
            ),
+          absolutePanel(id="logo.left", top=145, left=0, width="100%", img(src="ptR/pointRLogo.SVG") ),
           #uiOutput('drippetUI'),
            div( id='snippetToolBarContainer', "class"="cSnippetToolBarContainer", #draggable=FALSE ,
                 tags$ul( id='dndSnippetList', "class"="cSnippetToolBarList",
