@@ -15,14 +15,10 @@ plot<-reactiveValues(
 
 storeAssetState<-function(){ 
   selectionList<-isolate(reactiveValuesToList(selectedAsset, all.names=TRUE))
-  #cat("selectionList=\n")
-  print(selectionList)
-  if(is.null(selectionList$tabId) || selectedAsset$tabId=='whatthefuck'){
-    #cat('returning from storeAssetState\n')
+  if(is.null(selectionList$tabId) || identical(selectedAsset$tabId,'bogus')){
     return()
   }
   selectionList[sapply(selectionList,is.null)]<-NA
-  #cat("storing selectionList=",format(selectionList),"\n")
   tmp1<-filter(plot$selections.tib, tabId!=selectionList$tabId)
   plot$selections.tib<-bind_rows(tmp1, as.tibble(selectionList))
 }
@@ -31,16 +27,12 @@ storeAssetState<-function(){
 restoreAssetState<-function(nextTabId){
   row.tib<-filter(plot$selections.tib, tabId==nextTabId)
   if(nrow(row.tib)==0){
-    #cat('creating new tib for tabId=', nextTabId,"\n")
-    #cat('columns=',format(names(getPtDefs()$tib )), "\n")
     choices<-getRightPanelChoices()
-    #cat('choices=',format(choices),"\n")
     row.tib<-newPlotSel(tabId=nextTabId, choices=choices, tibs=getPtDefs()$tib)
   }
   if(!is.null(row.tib)){
     lapply(names(row.tib), function(n){
       v<-row.tib[[n]][1]
-      #cat("row.tib$", n, "=", format(v),"\n")
       selectedAsset[[n]]<-ifelse(is.na(v), NULL, v)
     } )
   }

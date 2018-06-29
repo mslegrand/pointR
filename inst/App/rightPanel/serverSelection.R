@@ -7,7 +7,7 @@
 # add svg as a name when needed.
 
 selectedAsset <- reactiveValues(
-  tabId="whatthefuck",
+  tabId="bogus",
   name=NULL,        # name of current point array
   rowIndex=1,
   columnName=NULL, # currently used only by tibbleEditor and could be placed there.
