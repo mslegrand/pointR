@@ -19,8 +19,7 @@ statusPlotTransform<-callModule(
   }),
   getSVGWH,
   showGrid,
-  getCode,
-  getCode2 = getCodeTransform,  # (or getCodeTransform)
+  getCode = getCodeTransform,
   getErrorMssg,
   getTibNRow=getTibNRow,
   insert.end=",NULL"

@@ -24,7 +24,6 @@ svgToolsScript<-function(type){
     getSVGWH, 
     showGrid,
     getCode,
-    getCode2,  # =getCode (or getCodeTransform)
     getErrorMssg, 
     getTibNRow,
     insert.end #='showPts.compound()'
@@ -44,7 +43,7 @@ svgToolsScript<-function(type){
   
   output$svghtml <- renderUI({
     WH<-getSVGWH()
-    codeTxt<-getCode2()
+    codeTxt<-getCode()
     if(is.null(showGrid())){return(NULL)}
     
     # why can't I force this???

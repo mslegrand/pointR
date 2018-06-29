@@ -44,7 +44,7 @@ source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
     drippetSelection$selected=selected
     dnippets<-drippetSelection$all[selected]
     dnippets<-unlist(dnippets,recursive=F)
-    # browser()
+   
     names(dnippets)<-NULL
     if(length(dnippets)==0){
       sendPtRManagerMessage(sender='cmd.dnippet.file.load', removeDrippets=runif(1));
