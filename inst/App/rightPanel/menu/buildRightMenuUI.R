@@ -12,8 +12,7 @@ buildRightMenu<-function(){
     menuDropdown('Display', 
                  menuDropdown('Points',
                               shinyDMDMenu::menuItem('Show Points without Labels', value='cmdShowPointsNoLabels'),
-                              shinyDMDMenu::menuItem('Show Points with Labels', value='cmdShowPointLabels'),
-                              shinyDMDMenu::menuItem('Hide Points', value='cmdHidePoints') 
+                              shinyDMDMenu::menuItem('Show Points with Labels', value='cmdShowPointLabels')
                  ),
                  menuDropdown( 'Grid',
                                shinyDMDMenu::menuItem('Show Grid', value='cmdShowGrid')

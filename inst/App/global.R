@@ -61,8 +61,8 @@ getSVGWH<-function(){ c(650,620) } #this should be ultimately place in another f
 #source("utilStyle.R")
 
 source("util/configIO.R") # must be loaded prior to alles
-source("util/utilKnitR.R")
-source("util/utilFormat.R") 
+#source("util/utilKnitR.R")
+#source("util/utilFormat.R") 
 source("util/format.R") 
 source("util/utilParser.R")
 source("util/utilptR.R")

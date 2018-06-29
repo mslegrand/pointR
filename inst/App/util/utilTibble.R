@@ -23,37 +23,13 @@ extractSafeRowColIndex<-function(tib, rowIndex, colName){
 
 
 
-#tib<- ptR$x
-# 
-# 
-# #returns TRUE if all numeric
-# isNumericString<-function(x){
-#   all(grepl("[-]?[0-9]+[.]?[0-9]*|[-]?[0-9]+[L]?|[-]?[0-9]+[.]?[0-9]*[eE][0-9]+",x))
-# }
-
-
-# splits tib at point given by rowIndex, ptIndex
-# tagTib<-function(tib, ptCol,  rowIndex=nrow(tib), ptIndx){
-#   tmp<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),]) # clones row
-#   pts<-tmp[[rowIndex, ptCol]] # extract pts in that row and
-#   ini<-1:(ptIndx-1)
-#   tmp[[rowIndex,ptCol]]<-pts[,ini] # keep ini
-#   tmp[[(rowIndex+1),ptCol]]<-pts[,-ini] # remove ini
-#   tmp
-# }
 
 # y=util to discover which colunns might be points
+# used in serverFooterRight.R
 tagTib<-function(tib, ptColIndex,  rowIndex=nrow(tib), matCol){
   # cat('-----------------inside tagTib-------------')
-  # cat('ptColIndex=', ptColIndex,"\n")
-  # cat('rowIndex=', rowIndex,"\n")
-  # cat('matCol=', matCol,"\n")
-  # print(tib)
-  # cat("utilTibble:: tmp<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])\n")
   tmp<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
   pts<-tmp[[rowIndex, ptColIndex]]
-  # tmp[[rowIndex,ptColIndex]]<-pts[,1:(matCol-1)]
-  # tmp[[(rowIndex+1),ptColIndex]]<-pts[,-(1:(matCol-1))]
   tmp[[rowIndex,ptColIndex]]<-matrix(pts[,1:(matCol)],2)
   tmp[[(rowIndex+1),ptColIndex]]<-matrix(pts[,-(1:(matCol))],2)
   tmp

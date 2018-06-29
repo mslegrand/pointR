@@ -197,7 +197,7 @@ Snippet Insert:
 polyline(
 	points=${1:WH*matrix(c(.25,.25,.5,.5,.75,.25),2)},
 	stroke=${2:'black'},
-  stroke.width=${2:1},
+	stroke.width=${2:1},
 	fill=${3:'none'}
 )${0:}
 ```

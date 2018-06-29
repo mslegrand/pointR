@@ -5,23 +5,29 @@ handler<-reactiveValues(
 )
 
 type2WidgetChoices<-function(colType){
-  choices<-list(
-         point=c('radio','picker'),
-         character=c('radio','picker'), #'switch', 'toggle'),
-         character.list= c('radio','picker'), #, "multiInput", 'picker', 'checkbox'), #range
-         character.list.2= c('slider','radio','picker'), #, "multiInput", 'picker', 'checkbox'), #range
-         character.list.vec= c('radio','picker'), #, "multiInput", 'picker', 'checkbox'), #range
-         integer=c('radio','picker','slider',  "numeric"), #,'knob'
-         numeric=c('radio','picker','slider',  "numeric"), #,'knob'
-         numeric.list=c('radio','picker'), #,'slider',  "numeric"), #,'knob'
-         numeric.list.2=c('slider'), #,'knob'
-         integer.list.2=c('slider'),
-         numeric.list.vec=c('radio','picker'), #,'slider',  "numeric"), #,'knob'
-         integer.list.vec=c('radio','picker'), #,'slider',  "numeric"),
-         colourable=c('radio','picker', 'colourable') , #'spectrum', 'colorSelectorInput' ),
-         other=c('radio','picker'),
-         other.list=c('radio','picker')
-  )[[colType]]
+  
+    
+ if(!is.null(colType)){
+   choices<-list(
+     point=c('radio','picker'),
+     character=c('radio','picker'), #'switch', 'toggle'),
+     character.list= c('radio','picker'), #, "multiInput", 'picker', 'checkbox'), #range
+     character.list.2= c('slider','radio','picker'), #, "multiInput", 'picker', 'checkbox'), #range
+     character.list.vec= c('radio','picker'), #, "multiInput", 'picker', 'checkbox'), #range
+     integer=c('radio','picker','slider',  "numeric"), #,'knob'
+     numeric=c('radio','picker','slider',  "numeric"), #,'knob'
+     numeric.list=c('radio','picker'), #,'slider',  "numeric"), #,'knob'
+     numeric.list.2=c('slider'), #,'knob'
+     integer.list.2=c('slider'),
+     numeric.list.vec=c('radio','picker'), #,'slider',  "numeric"), #,'knob'
+     integer.list.vec=c('radio','picker'), #,'slider',  "numeric"),
+     colourable=c('radio','picker', 'colourable') , #'spectrum', 'colorSelectorInput' ),
+     other=c('radio','picker'),
+     other.list=c('radio','picker')
+     )[[colType]]   
+ } else {
+   choices<-NULL
+ }
   if(is.null(choices)){
     choices<-c('radio','picker')
   }
