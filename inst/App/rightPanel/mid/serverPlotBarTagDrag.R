@@ -87,7 +87,7 @@ statusPlotTagDrag<-callModule(
   svgID='ptR_SVG_TagDrag',
   showPts.compound=reactive({
     showPts.dragTag(
-      ptName=getTibName(), 
+      ptName=getAssetName(), 
       pts=getTibPts(), 
       rowIndex=getTibRow(),
       ptDisplayMode=getDisplayMode()  

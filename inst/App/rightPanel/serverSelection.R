@@ -6,7 +6,7 @@
 # or activeAssetPropteries activeAssetState *activeAssetInfo*
 # add svg as a name when needed.
 
-selectedTibble <- reactiveValues(
+selectedAsset <- reactiveValues(
   tabId="whatthefuck",
   name=NULL,        # name of current point array
   rowIndex=1,
@@ -19,7 +19,7 @@ selectedTibble <- reactiveValues(
 
 
 getSelIndex<-reactive({
-  selectedTibble$selIndex
+  selectedAsset$selIndex
 })
 
 observeEvent(getTibNRow(),{
@@ -28,38 +28,38 @@ observeEvent(getTibNRow(),{
   }
 })
 
-getTibName<-reactive({selectedTibble$name}) #allow to be null only if tib is null  
-getTibTabId<-reactive({ selectedTibble$tabId})
-getTibColumnName<-reactive({ selectedTibble$columnName })
-getTib<-reactive({ getTibName() %AND% getPtDefs()$tib[[ getTibName() ]] })
-getTibPtColPos<-reactive({ which(names(getTib())==selectedTibble$ptColName )})
+getAssetName<-reactive({selectedAsset$name}) #allow to be null only if tib is null  
+getTibTabId<-reactive({ selectedAsset$tabId})
+getTibColumnName<-reactive({ selectedAsset$columnName })
+getTib<-reactive({ getAssetName() %AND% getPtDefs()$tib[[ getAssetName() ]] })
+getTibPtColPos<-reactive({ which(names(getTib())==selectedAsset$ptColName )})
 getTibNRow<-reactive({
   if( getTibEditState()==TRUE ){
-    nrow(getPtDefs()$tib[[getTibName()]])
+    nrow(getPtDefs()$tib[[getAssetName()]])
   } else {
     0
   }
 })
 
 atLeast2Rows<-reactive({
-  getTibEditState()==TRUE && nrow(getPtDefs()$tib[[getTibName()]])>1
+  getTibEditState()==TRUE && nrow(getPtDefs()$tib[[getAssetName()]])>1
 })
 
 getTibRow<-reactive({
-  # cat('getTibRow()=',format( selectedTibble$rowIndex),"\n");
-  selectedTibble$rowIndex})
+  # cat('getTibRow()=',format( selectedAsset$rowIndex),"\n");
+  selectedAsset$rowIndex})
 
 getTibMatCol<-reactive({ 
-  # cat('getTibMatCol::', format(selectedTibble$matCol), "\n")
-  selectedTibble$matCol 
+  # cat('getTibMatCol::', format(selectedAsset$matCol), "\n")
+  selectedAsset$matCol 
 })
 getTibPtsNCol<-reactive({ sapply(getTibPts(),ncol)}  )
 
 getTransformType<-reactive({ 
-  if(is.null(selectedTibble$transformType)){
+  if(is.null(selectedAsset$transformType)){
     'Translate'
   } else {
-    selectedTibble$transformType
+    selectedAsset$transformType
   }
 })
 
@@ -91,24 +91,24 @@ resetSelectedTibbleName<-function(tibs, name){
       choices<-getRightPanelChoices()
       #cat("resetSelectedTibbleName:: choices=", paste(choices, collapse=", "),"\n")
       if(is.null(name) || !(name %in% choices)){
-        name<-getTibName() #pick the last name
+        name<-getAssetName() #pick the last name
       }
       if(is.null(name) || !(name %in% choices)){
         name=choices[1] #pick the first alternative
       }
-      selectedTibble$name=name
+      selectedAsset$name=name
       if(is.null(tibs) ){
-        selectedTibble$rowIndex=0
-        selectedTibble$ptColName=NULL
-        selectedTibble$columnName=NULL
-        selectedTibble$matCol=NULL
+        selectedAsset$rowIndex=0
+        selectedAsset$ptColName=NULL
+        selectedAsset$columnName=NULL
+        selectedAsset$matCol=NULL
       } else {
-        # cat("2: selectedTibble$name=",format(selectedTibble$name),"\n" )
-        tib<-getPtDefs()$tib[[selectedTibble$name]]
+        # cat("2: selectedAsset$name=",format(selectedAsset$name),"\n" )
+        tib<-getPtDefs()$tib[[selectedAsset$name]]
         # cat(" 2: tib=", names(tib),"\n" )
         # set row
         rowIndex=nrow( tib )
-        selectedTibble$rowIndex=rowIndex
+        selectedAsset$rowIndex=rowIndex
         # cat('resetSelectedTibbleName:: rowIndex=',format(rowIndex),"\n")
         # next we try to extract a pt column for the selected tib
         ptIndxs<-sapply(seq_along(names(tib)),function(j) is.matrix(tib[[rowIndex,j]]) && dim(tib[[rowIndex,j]])[1]==2)
@@ -116,77 +116,77 @@ resetSelectedTibbleName<-function(tibs, name){
         if(length(ptIndxs)>0){
           ptColNames<-names(tib)[ptIndxs]
           #ptColIndex<-ptIndxs[1] # we arbritarily pick the first point col to select, and we use it to obtain matCol
-          if(!is.null(selectedTibble$columnName) && selectedTibble$columnName %in% ptColNames){
-            ptColName<-selectedTibble$columnName
+          if(!is.null(selectedAsset$columnName) && selectedAsset$columnName %in% ptColNames){
+            ptColName<-selectedAsset$columnName
           } else {
             ptColName<-head(ptColNames,1)
           }
           entry<-tib[[ptColName]][[rowIndex]]
           matColIndex<-ncol(entry)
-          selectedTibble$matCol<-matColIndex
+          selectedAsset$matCol<-matColIndex
           # cat('ptColName=',format(ptColName),"\n")
-          selectedTibble$ptColName=ptColName 
-          if(is.null(selectedTibble$selIndex) || selectedTibble$selIndex!=2){
+          selectedAsset$ptColName=ptColName 
+          if(is.null(selectedAsset$selIndex) || selectedAsset$selIndex!=2){
             #unless selected is 'matrix', set to 'point' 
             updateSelected( selIndex=1)
           }
         } else {
           ptColName<-NULL
           matColIndex<-0
-          selectedTibble$ptColName=ptColName 
+          selectedAsset$ptColName=ptColName 
           
         }
-        # cat("selectedTibble$columnName=",format(selectedTibble$columnName), "\n")
+        # cat("selectedAsset$columnName=",format(selectedAsset$columnName), "\n")
         # cat("names(tib)=",format(names(tib)),"\n")
-        if(is.null(selectedTibble$columnName) || !( selectedTibble$columnName %in% names(tib) )){
-          if(!is.null(selectedTibble$ptColName)){
-            selectedTibble$columnName<-selectedTibble$ptColName
+        if(is.null(selectedAsset$columnName) || !( selectedAsset$columnName %in% names(tib) )){
+          if(!is.null(selectedAsset$ptColName)){
+            selectedAsset$columnName<-selectedAsset$ptColName
           } else {
-            selectedTibble$columnName=names(tib[1])
+            selectedAsset$columnName=names(tib[1])
           }
         }
       }
-      if( selectedTibble$name==transformTag){
-        selectedTibble$transformType='translate'
+      if( selectedAsset$name==transformTag){
+        selectedAsset$transformType='translate'
       }
       # cat("resetSelectedTibbleName... Last values\n")
-      # cat("resetSelectedTibbleName... selectedTibble$name= ",selectedTibble$name,"\n")
+      # cat("resetSelectedTibbleName... selectedAsset$name= ",selectedAsset$name,"\n")
       # cat("\n----------Exiting resetSelectedTibbleName... \n\n")
 }
 
 updateSelected<-function( name, rowIndex, columnName, matCol,  ptColName, selIndex, transformType ){
   if(!missing(name)){
     #cat(" updateSelected name=", format(name),"\n")
-    selectedTibble$name=name
+    selectedAsset$name=name
   }
   if(!missing(ptColName)){
-    selectedTibble$ptColName=ptColName
+    selectedAsset$ptColName=ptColName
   }
   if(!missing(rowIndex)){ # !!! may want to provide a check here
     #cat('updateSelected:: rowIndex=',format(rowIndex),"\n")
-    selectedTibble$rowIndex=rowIndex
+    selectedAsset$rowIndex=rowIndex
   }
   if(!missing(matCol)){
-    selectedTibble$matCol=matCol
+    selectedAsset$matCol=matCol
   }
   if(!missing(selIndex)){
-    selectedTibble$selIndex=selIndex
+    selectedAsset$selIndex=selIndex
   }
   if(!missing(columnName)){
-    selectedTibble$columnName=columnName
+    selectedAsset$columnName=columnName
     if(!is.null(getColumnType()) && getColumnType()=='point'){
-      selectedTibble$ptColName<-columnName
+      selectedAsset$ptColName<-columnName
       #browser()
-      # cat('selectedTibble$name=',format(selectedTibble$name),"\n")
+      # cat('selectedAsset$name=',format(selectedAsset$name),"\n")
       #browser()
       # cat('columnName=',format(columnName),"\n")
       #browser()
-      # cat('selectedTibble$row=',format(selectedTibble$row),"\n")
+      # cat('selectedAsset$row=',format(selectedAsset$row),"\n")
       #browser()
-      # print(getPtDefs()$tib[[ selectedTibble$name ]])
-      if(!is.null(selectedTibble$row) && !is.null(columnName ) && !is.null(selectedTibble$name )){
-        m<-getPtDefs()$tib[[ selectedTibble$name ]][[columnName]][[selectedTibble$row]]
-        matCol<-selectedTibble$matCol
+      # print(getPtDefs()$tib[[ selectedAsset$name ]])
+      if(!is.null(selectedAsset$row) && !is.null(columnName ) && !is.null(selectedAsset$name )){
+        m<-getPtDefs()$tib[[ selectedAsset$name ]][[columnName]][[selectedAsset$row]]
+        matCol<-selectedAsset$matCol
         # cat('matCol=',format(matCol),'\n')
         if(length(m>0)){
           matCol=min(matCol, ncol(m))
@@ -201,7 +201,7 @@ updateSelected<-function( name, rowIndex, columnName, matCol,  ptColName, selInd
     }
   }
   if(!missing(transformType)){
-    selectedTibble$transformType=transformType
+    selectedAsset$transformType=transformType
   }
 } 
 
@@ -215,7 +215,7 @@ getTibEntry<-reactive({
   if( !is.null(getColumnType()) && getColumnType()=='point'){
     return( c('point','matrix')[getSelIndex()] )
   } 
-  name<-getTibName()
+  name<-getAssetName()
   rowNum<-getTibRow()
   columnName<-getTibColumnName()
   # cat("serverSelection:: -----Entering-----getTibEntry::----------------\n")
@@ -236,7 +236,7 @@ getTibEntryChoices<-reactive({
   if( !is.null(getColumnType()) && getColumnType()=='point'){
     return( c('point', 'matrix'))
   } 
-  name<-getTibName()
+  name<-getAssetName()
   columnName<-getTibColumnName()
   tib<-name %AND% getPtDefs()$tib[[name]]
   columnValues<- columnName %AND% tib[[columnName]]
@@ -248,8 +248,8 @@ getTibEntryChoices<-reactive({
 
 getTibPts<-reactive({ 
   # cat("serverSelection:: -----Entering-----getTibPts::----------------\n")
-  # cat("selectedTibble$ptColName=",format(selectedTibble$ptColName),"\n")
-  ptCol<-selectedTibble$ptColName
+  # cat("selectedAsset$ptColName=",format(selectedAsset$ptColName),"\n")
+  ptCol<-selectedAsset$ptColName
   tib<-getTib()
   # cat('names of tib', format(paste(names(tib))),"\n")
   pts <- tib %AND% ptCol %AND% tib[[ptCol]]

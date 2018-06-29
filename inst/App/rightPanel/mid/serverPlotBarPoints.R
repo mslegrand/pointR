@@ -96,7 +96,7 @@ statusPlotPoint<-callModule(
     list(
       newPtLayer( getInsertMode(), getSVGWH() ),
       showPts.PtCmd(
-        ptName=getTibName(), 
+        ptName=getAssetName(), 
         pts=getTibPts(), #getPtDefs()$pts[[getPtName()]],
         rowIndex=getTibRow(),
         matColIndex=getTibMatCol(),

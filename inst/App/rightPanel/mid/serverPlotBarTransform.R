@@ -4,7 +4,7 @@
 
 getCodeTransform<-reactive({
   src<-getCode()
-  src<-usingDraggable(src, selectedTibble$transformType)
+  src<-usingDraggable(src, selectedAsset$transformType)
 })
 
 

@@ -15,7 +15,7 @@ observeEvent(
   {
     sender='cloneRow'
     ptDefs<-getPtDefs()
-    name<-getTibName()
+    name<-getAssetName()
     tib<-ptDefs$tib[[name]]
     rowIndex<-getTibRow()
     # cat("serverFooterRight:: newTib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])\n")
@@ -36,7 +36,7 @@ observeEvent(
   {
     sender='deleteRow'
     ptDefs<-getPtDefs()
-    name<-getTibName()
+    name<-getAssetName()
     newTib<-ptDefs$tib[[name]]
     rowIndex<-getTibRow()
     # !!!TODO handle case where this would be last existing row. What to do???
@@ -60,7 +60,7 @@ observeEvent( returnValue4ModuleRtFtr$tagMoveUp(),{
   if(rowIndex>1){
     sender='tagMoveUp'
     ptDefs<-getPtDefs()
-    name<-    getTibName()
+    name<-    getAssetName()
     newTib<-ptDefs$tib[[name]]
 
     newTib[c(rowIndex,rowIndex-1),]<-newTib[c(rowIndex-1,rowIndex),]
@@ -79,7 +79,7 @@ observeEvent( returnValue4ModuleRtFtr$tagMoveUp(),{
 observeEvent( returnValue4ModuleRtFtr$tagMoveDown(),{
   rowIndex<-getTibRow()
   ptDefs<-getPtDefs()
-  name<-    getTibName()
+  name<-    getAssetName()
   newTib<-ptDefs$tib[[name]]
   if(rowIndex<nrow(newTib)){
     sender='tagMoveDown'
@@ -101,7 +101,7 @@ observeEvent( returnValue4ModuleRtFtr$tagMoveDown(),{
 #---BUTTON: remove selected point  -----
 
 observeEvent( returnValue4ModuleRtFtr$removePt(), {
-  selection<-getTibName()
+  selection<-getAssetName()
   if(selection!=""){
     ptDefs<-getPtDefs()
     if(length(ptDefs$tib)==0){return(NULL)}
@@ -128,7 +128,7 @@ observeEvent( returnValue4ModuleRtFtr$removePt(), {
 observeEvent( returnValue4ModuleRtFtr$tagPt(), {
 
   src<-getCode()
-  selection<-getTibName()
+  selection<-getAssetName()
   ptDefs<-getPtDefs()
 
   row<-getTibRow()

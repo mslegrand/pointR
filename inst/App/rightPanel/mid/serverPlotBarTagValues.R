@@ -82,7 +82,7 @@ statusPlotTagVal<-callModule(
   svgID='ptR_SVG_TagVal',
   showPts.compound=reactive({
     showPts.valTag(
-      ptName=getTibName(), 
+      ptName=getAssetName(), 
       pts=getTibPts(), 
       rowIndex=getTibRow(),
       ptDisplayMode=getDisplayMode() #, 

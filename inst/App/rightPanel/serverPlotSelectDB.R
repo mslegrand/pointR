@@ -14,10 +14,10 @@ plot<-reactiveValues(
 
 
 storeAssetState<-function(){ 
-  selectionList<-isolate(reactiveValuesToList(selectedTibble, all.names=TRUE))
+  selectionList<-isolate(reactiveValuesToList(selectedAsset, all.names=TRUE))
   #cat("selectionList=\n")
   print(selectionList)
-  if(is.null(selectionList$tabId) || selectedTibble$tabId=='whatthefuck'){
+  if(is.null(selectionList$tabId) || selectedAsset$tabId=='whatthefuck'){
     #cat('returning from storeAssetState\n')
     return()
   }
@@ -41,7 +41,7 @@ restoreAssetState<-function(nextTabId){
     lapply(names(row.tib), function(n){
       v<-row.tib[[n]][1]
       #cat("row.tib$", n, "=", format(v),"\n")
-      selectedTibble[[n]]<-ifelse(is.na(v), NULL, v)
+      selectedAsset[[n]]<-ifelse(is.na(v), NULL, v)
     } )
   }
 }

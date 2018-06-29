@@ -42,7 +42,7 @@ observe({
           sender='PointsBar.mouse.add'
           #cat('Enter: mouse cmd add')
           newPt<-vec
-          selection<-getTibName() 
+          selection<-getAssetName() 
           rowIndex<-getTibRow()
           # cat('mouseMssg:: rowIndex=',format(rowIndex),"\n")
           matColIndx<-getTibMatCol()
@@ -96,7 +96,7 @@ observe({
           tmp<-unlist(str_split(tid,"_"))
           row<-as.numeric(tail(tmp,1))
           
-          selection<-getTibName() 
+          selection<-getAssetName() 
           m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]
           ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]<-m+vec
           matCol<-ncol(m)
@@ -113,7 +113,7 @@ observe({
           tid<-input$mouseMssg$id
           tmp<-unlist(str_split(tid,"_"))
           row<-as.numeric(tail(tmp,1))
-          selection<-getTibName() 
+          selection<-getAssetName() 
           m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]
           matCol<-ncol(m)
         

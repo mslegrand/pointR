@@ -1,7 +1,7 @@
 returnValue4ModuleEdTransform<-callModule(
   module=moduleEdTransform,
   id="edTransform",
-  assetName=reactive({ if(hasError()){ errorPanelTag } else{ getTibName()}}),
+  assetName=reactive({ if(hasError()){ errorPanelTag } else{ getAssetName()}}),
   getTransformType=getTransformType
 )
 

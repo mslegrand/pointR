@@ -56,12 +56,12 @@ observeEvent(input$messageFromAce, {
         #cat('Ace: invoking processCommit\n')
         processCommit() # this sets the sourceType
         # cat('returning from processCommit\n')
-        # cat('getTibName()=',format(getTibName()),"\n")
-        if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset', 'cmd.saveFileNow') && !is.null(getTibName())){ 
+        # cat('getAssetName()=',format(getAssetName()),"\n")
+        if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset', 'cmd.saveFileNow') && !is.null(getAssetName())){ 
           if(sender=='cmd.add.asset'){
             name=input$messageFromAce$selector$assetName
           } else {
-            name=getTibName() # 'cmd.commit', 'cmd.add.column'
+            name=getAssetName() # 'cmd.commit', 'cmd.add.column'
           }
           tibs<-getPtDefs()$tib
           # cat('name=',format(name),"\n")
@@ -76,22 +76,22 @@ observeEvent(input$messageFromAce, {
           # cat("input$pages=",format(tttid),"\n")
           if(length(input$pages) >0 && 
              nchar(input$pages)>0 && 
-             selectedTibble$tabId != input$pages ){
+             selectedAsset$tabId != input$pages ){
             
              # cat('next tabId=',input$pages,"\n")
-             # cat('selectedTibble$tabId=',selectedTibble$tabId,"\n")
+             # cat('selectedAsset$tabId=',selectedAsset$tabId,"\n")
              # cat("input$messageFromAce$id=" , format(input$messageFromAce$id), "\n")
              storeAssetState()
              restoreAssetState(input$pages)
             # choices<-getRightPanelChoices()
             # cat("getRightPanelChoices()=",format(getRightPanelChoices()),"\n" )
-            # if(length(choices)>0 && length(selectedTibble$tabId)>0  && selectedTibble$tabId!='whatthefuck'){
-            #   # cat( "store( tabId=",selectedTibble$tabId,")\n")
+            # if(length(choices)>0 && length(selectedAsset$tabId)>0  && selectedAsset$tabId!='whatthefuck'){
+            #   # cat( "store( tabId=",selectedAsset$tabId,")\n")
             #   tmp2<-isolate(reactiveValuesToList(selectedTibble, all.names=TRUE))
             #   #browser()
             #   tmp2[sapply(tmp2,is.null)]<-NA
             #   #plotSelect.tib<-rbind(plotSelect.tib, tmp )
-            #   tmp1<-filter(plot$selections.tib, tabId!=selectedTibble$tabId)
+            #   tmp1<-filter(plot$selections.tib, tabId!=selectedAsset$tabId)
             #    cat("serverAce::  plot$selections.tib<-bind_rows(tmp1, tmp2)\n")
             #    
             #   cat("tmp2=",format(tmp2),"\n")
@@ -252,24 +252,24 @@ updateSelected4Ace<-function( reqSelector){
   
   if(!is.null(reqSelector[['name']])){
     #cat("reqSelector$name=", format(reqSelector$name ),"\n")
-    selectedTibble$name=reqSelector[['name']]
+    selectedAsset$name=reqSelector[['name']]
   }
   if(!is.null(reqSelector[['ptColName']])){
     #cat("reqSelector$ptColName=", format(reqSelector$ptColName ),"\n")
-    selectedTibble$ptColName=reqSelector[['ptColName']]
+    selectedAsset$ptColName=reqSelector[['ptColName']]
   }
   if(!is.null(reqSelector[['rowIndex']])){ # !!! may want to provide a check here
     #cat("reqSelector$ptColName=", format(reqSelector$rowIndex ),"\n")
-    selectedTibble$rowIndex=reqSelector[['rowIndex']]
+    selectedAsset$rowIndex=reqSelector[['rowIndex']]
   }
   if(!is.null(reqSelector[['matCol']])){
     #cat("reqSelector$matCol=", format(reqSelector$matCol ),"\n")
-    selectedTibble$matCol=reqSelector[['matCol']]
+    selectedAsset$matCol=reqSelector[['matCol']]
 
   }
   if(!is.null(reqSelector[['columnName']])){
     #cat("reqSelector$columnName=", format(reqSelector$columnName ),"\n")
-    selectedTibble$columnName=reqSelector[['columnName']]
+    selectedAsset$columnName=reqSelector[['columnName']]
   }
 } 
 

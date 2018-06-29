@@ -32,7 +32,7 @@ observeEvent(returnValue4ModuleRowDND$rowIndex(),{
 observeEvent( returnValue4ModuleRowDND$rowReorder() ,{
   if( getTibEditState()==TRUE ){
     ordering<-as.integer(returnValue4ModuleRowDND$rowReorder())
-    name<-getTibName()
+    name<-getAssetName()
     row<-getTibRow()
     columnName<-getTibColumnName()
     newPtDefs<-getPtDefs()

@@ -43,7 +43,7 @@ updateWidgetChoicesRow<-function(#tibName, colName, colType,
                                  minVal=NA, maxVal=NA, step=1, selectedWidget='radio'){ # use current tib and col
   #if( missing(tibName)|| missing(colName)){ stop("missing tibName or colName")}
   tabId<-input$pages
-  tibName<-getTibName()
+  tibName<-getAssetName()
   colName<-getTibColumnName()
   colType<-getColumnType()
   
@@ -82,7 +82,7 @@ getWidget<-reactive({
   colName<-getTibColumnName()
   columnValues<-getTib()[[colName]]
   
-  row<-filter(handler$choices, tabId==getTibTabId() , name==getTibName(), column==getTibColumnName())
+  row<-filter(handler$choices, tabId==getTibTabId() , name==getAssetName(), column==getTibColumnName())
   # cat("getWidget:: nrow=",nrow(row),"\n")
   if(nrow(row)==1 ){
     widget<-row$selectedWidget
@@ -99,13 +99,13 @@ getWidget<-reactive({
 
 getWidgetVal<-reactive({
   tabId<-input$pages
-  row<-filter(handler$choices, tabId==tabId, name==getTibName(), column==getTibColumnName())
+  row<-filter(handler$choices, tabId==tabId, name==getAssetName(), column==getTibColumnName())
 })
 
 getPointMax<-reactive({
   # cat('\n---Entering -getPointMax---------\n')
   selectedTabId<-getTibTabId()
-  colMax<-filter(handler$choices, tabId== getTibTabId() , name==getTibName(), column==getTibColumnName())$maxVal
+  colMax<-filter(handler$choices, tabId== getTibTabId() , name==getAssetName(), column==getTibColumnName())$maxVal
   if(length(colMax)==0 ){ #or length(colMax)!=1
     NA
   } else {

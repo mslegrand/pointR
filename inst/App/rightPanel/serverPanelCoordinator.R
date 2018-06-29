@@ -31,22 +31,22 @@ getSourceType<-reactive({
 # 'tib' if it is the name of an existing tibble
 #  otherwise
 getNameType<-reactive({
-  # cat("getNameType::getTibName()=", format(getTibName()),"\n")
+  # cat("getNameType::getAssetName()=", format(getAssetName()),"\n")
   if(hasError()){
     # cat('getNameType:: Error=', getErrorMssg(),"\n")
     errorPanelTag
   } else {
     #browser()
-    if(!is.null(getTibName())){
-      if( getTibName() %in% names(getPtDefs()$tib) ){
+    if(!is.null(getAssetName())){
+      if( getAssetName() %in% names(getPtDefs()$tib) ){
         tibTag
-      } else if(getTibName()==transformTag && usingTransformDraggable()) { 
+      } else if(getAssetName()==transformTag && usingTransformDraggable()) { 
         # return transformTag if transformTag and usingTransformDraggable()
         transformTag
       } else {
-        getTibName()
+        getAssetName()
       }
-    } else { # RPanelTag whenever getTibName is NULL???
+    } else { # RPanelTag whenever getAssetName is NULL???
       RPanelTag
     }
   }
