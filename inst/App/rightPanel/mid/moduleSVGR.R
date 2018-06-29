@@ -16,12 +16,6 @@ svgToolsScript<-function(type){
 
   modulePlotSVGrUI <- function(id, input, output) { 
     ns <- NS(id)
-    # absolutePanel( 
-    #                "class"=c("cSvgHtml"),
-    #                 draggable=FALSE,
-    #                 htmlOutput(ns( "svghtml" ), inline=FALSE)
-    # )
-    #uiOutput(ns("svghtml"))
     htmlOutput(ns( "svghtml" ), inline=FALSE)
   }
   
@@ -53,38 +47,32 @@ svgToolsScript<-function(type){
   
   output$svghtml <- renderUI({
     WH<-getSVGWH()
-    #src<-getCode()
     codeTxt<-getCode2()
     if(is.null(showGrid())){return(NULL)}
     
     # why can't I force this???
     showPts.compound=showPts.compound #should be able to force this
     svgid<-paste0('id="', svgID, '",')
-    #defining the prolog 
-    
-    ptrDisplyScriptTxt<-ptrDisplayScript()
-    insert.beg<-c( svgid,
-      'style(".draggable {','cursor: move;','}"),', 
-      gsub('ptrDisplayScript', ptrDisplyScriptTxt, "script('ptrDisplayScript'),"),      
-      "use(filter=filter(filterUnits=\"userSpaceOnUse\", feFlood(flood.color='white') )),",
-      if(showGrid()==TRUE){"graphPaper( wh=c(2000,2000), dxy=c(50, 50), labels=TRUE ),"} 
-      else { NULL }
-    )
-    #defining the epilog
-    #put it together
-   
-    
-     
-    try({
-      codeTxt<-subSVGX2(codeTxt, insert.beg, insert.end)
-    }) 
+    ptrDisplyScriptTxt<-unlist(ptrDisplayScript())
+
     # transform: modifies src, but omits insert.end
     res<-""
     if(!is.null(codeTxt)){
       tryCatch({
           parsedCode<-parse(text=codeTxt)
           svg<-eval(parsedCode)
-          as.character(svg)->svgOut 
+          w<-svg$root$getAttr('width')
+          h<-svg$root$getAttr('height')
+          svg$root$setAttr('id',svgID)
+          if(showGrid()==TRUE){ svg$root$prependNode(svgR:::graphPaper( wh=c(w,h), dxy=c(50, 50), labels=TRUE )) }
+          svg$root$prependChildren(svgR:::use(filter=svgR:::filter(filterUnits="userSpaceOnUse", svgR:::feFlood(flood.color='white'))))
+          svg$root$prependNode(svgR:::script(ptrDisplyScriptTxt))
+          svg$root$prependNode( svgR:::style(".draggable {','cursor: move;','}"))
+          if(!is.null(showPts.compound)){
+              temp<-svgR(showPts.compound())$root$xmlChildren()
+              svg$root$appendChildren(temp)
+          }
+         as.character(svg)->svgOut 
           res<-HTML(svgOut)
           rtv$status<-list(
             state="PASS",
