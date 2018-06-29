@@ -102,7 +102,7 @@ observeEvent(returnValue4ModuleEdTib$entryValue(),{
     if(length(entry)==0 || is.na(entry) ){
       return(NULL)
     }
-    cat('getColumnType()=',getColumnType(),'\n')
+    # cat('getColumnType()=',getColumnType(),'\n')
     if(getColumnType()=='point'){
       entry<-which(entry==c('point','matrix'))
       if(length(entry)){

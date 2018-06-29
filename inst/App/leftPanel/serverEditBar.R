@@ -249,10 +249,6 @@ observeEvent(editOption$theme, {
 
 observeEvent(editOption$tabSize, {
   updateAceEditor(session, getAceEditorId(), sender='fileCmd.tabSize', tabSize=as.numeric(editOption$tabSize))
-  #updateAceEditor(session, getAceEditorId(), theme=editOption$theme)
-  # session$sendCustomMessage(type = "shinyAceExt",  
-  #                           list(id= getAceEditorId(), sender='fileCmd.tabSize', tabSize=as.numeric(editOption$tabSize)))
-  
 }, ignoreNULL = TRUE, ignoreInit = TRUE)
 
 

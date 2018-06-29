@@ -6,22 +6,9 @@
 # 2 get the return, and set directory/name
 # 3 write the file
 cmdFileSaveAs<-function(){
-  # if(getFileNameStatus()==TRUE){
-  #   default<-getCurrentFile()
-  # } else {
-  #   default<-"Unnamed"
-  # }
-  # cat('cmdFileSaveAs\n')
-  # request$closeTab=NULL;
-  # tabId<-input$pages
   # sendPtRManagerMessage( id=tabId,  sender='cmd.saveFileAs', saveFile=TRUE, closing=!is.null(request$closeTab), type='R')
   
   setTabRequest(sender="fileCmd.saveAs", tabs=input$pages)
-  #sendPtRManagerMessage( id=tabId,   sender='cmd.saveFileAs', saveFile=TRUE)
-  # session$sendCustomMessage( #triggers click of buttonFileSave
-  #   type = "ptRManager", 
-  #   list(id= getAceEditorId(), saveFile=TRUE, sender='cmd.saveFileNow' )
-  # )
 }
 
 observeEvent(input$buttonFileSaveR,{
@@ -90,11 +77,4 @@ observeEvent(input$buttonFileSaveR,{
   }
 })
 
-
-# saveAsFile<-function(aceId){
-#   session$sendCustomMessage(
-#     type = "shinyAceExt", 
-#     list(id= aceId, sender='saveAsFile', getDoc=TRUE)
-#   )
-# }
 

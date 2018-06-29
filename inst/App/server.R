@@ -97,13 +97,13 @@ shinyServer(function(input, output,session) {
   }
   
   sendPtRManagerMessage<-function(sender, ...){ 
-    cat('entering ---------------sendPtRManagerMessage---------------------\n')
+    # cat('entering ---------------sendPtRManagerMessage---------------------\n')
     data<- c( list(sender=sender), list(...), list(fk=runif(1)))
-    if(identical(sender,'tibNrow')){
-      cat("Enter==============tibNRow data ======================\n")
-      print(data)
-      cat("Exit==============tibNRow data =======================\n")
-    }
+    # if(identical(sender,'tibNrow')){
+    #   cat("Enter==============tibNRow data ======================\n")
+    #   print(data)
+    #   cat("Exit==============tibNRow data =======================\n")
+    # }
     lapply(data, function(dd){
       if(any(sapply(dd,is.na))){
         print(data)
@@ -111,7 +111,7 @@ shinyServer(function(input, output,session) {
       }
     })
     session$sendCustomMessage( type = "ptRManager", data)
-    cat('exiting ---------------sendPtRManagerMessage---------------------\n')
+    # cat('exiting ---------------sendPtRManagerMessage---------------------\n')
   }
   
 
@@ -121,10 +121,10 @@ shinyServer(function(input, output,session) {
     data<- list(...) 
     #print(data)
     if(length(data)>0){
-        if(identical(data$sender, 'savedStatus')){
-          cat('sendFileTabsMessage\n')
-          print(data)
-        }
+        # if(identical(data$sender, 'savedStatus')){
+        #   cat('sendFileTabsMessage\n')
+        #   print(data)
+        # }
       session$sendCustomMessage( type = "scrollManager",  data )
     }
     
@@ -182,22 +182,21 @@ shinyServer(function(input, output,session) {
   # Reactive expressions------------- 
   showGrid<-reactive({displayOptions$showGrid})
 
-  
-  ptrDisplayScript =reactive({ 
-    type=getRightMidPanel()
-    if(type=='transform'){
-      type=  paste0(type,".",getTransformType() )
-    }
-    scripts<-list(
-      point=    'var ptRPlotter_ptR_SVG_Point = new PtRPanelPoints("ptR_SVG_Point");',
-      value=    'var ptRPlotter_ptR_SVG_TagVal = new PtRPanelTagVal("ptR_SVG_TagVal");',
-      transform.Translate= 'var ptRPlotter_ptR_SVG_TRANSFORM_TRANSLATE = new PtRPanelTranslate("ptR_SVG_TRANSFORM");',
-      transform.Rotate=    'var ptRPlotter_ptR_SVG_TRANSFORM_ROTATE = new PtRPanelRotate("ptR_SVG_TRANSFORM");',
-      transform.Scale=     'var ptRPlotter_ptR_SVG_TRANSFORM_SCALE = new PtRPanelScale("ptR_SVG_TRANSFORM");',
-      matrix=    'var ptRPlotter_ptR_SVG_TagDrag = new PtRPanelTagDrag("ptR_SVG_TagDrag");'
-    )
-    scripts[type]
-  })
+  # ptrDisplayScript =reactive({ 
+  #   type=getRightMidPanel()
+  #   if(type=='transform'){
+  #     type=  paste0(type,".",getTransformType() )
+  #   }
+  #   scripts<-list(
+  #     point=    'var ptRPlotter_ptR_SVG_Point = new PtRPanelPoints("ptR_SVG_Point");',
+  #     value=    'var ptRPlotter_ptR_SVG_TagVal = new PtRPanelTagVal("ptR_SVG_TagVal");',
+  #     transform.Translate= 'var ptRPlotter_ptR_SVG_TRANSFORM_TRANSLATE = new PtRPanelTranslate("ptR_SVG_TRANSFORM");',
+  #     transform.Rotate=    'var ptRPlotter_ptR_SVG_TRANSFORM_ROTATE = new PtRPanelRotate("ptR_SVG_TRANSFORM");',
+  #     transform.Scale=     'var ptRPlotter_ptR_SVG_TRANSFORM_SCALE = new PtRPanelScale("ptR_SVG_TRANSFORM");',
+  #     matrix=    'var ptRPlotter_ptR_SVG_TagDrag = new PtRPanelTagDrag("ptR_SVG_TagDrag");'
+  #   )
+  #   scripts[type]
+  # })
 
 #------------------leftPanel--------------------------------
   source("leftPanel/mid/serverAce.R",                local=TRUE) 

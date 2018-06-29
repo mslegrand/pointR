@@ -6,10 +6,6 @@ cmdFileExportSvg<-function(){
     svgFileName<-"unnamed.svg"
   }
   sendPtRManagerMessage(  sender='cmd.exportSVG', exportSVG=TRUE)
-  # session$sendCustomMessage( #triggers click of buttonFileSave
-  #   type = "ptRManager", 
-  #   list(id= getAceEditorId(), exportSVG=TRUE, sender='cmd.exportSVGNow' )
-  # )  
 }
 
 observeEvent(input$buttonExportSVG,{
