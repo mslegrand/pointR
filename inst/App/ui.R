@@ -129,7 +129,7 @@ shinyUI(
         #---right bootstrap page begin--------------
         bootstrapPage(
           buildRightMenu(),
-          div(id="logo.right",  img(src="ptR/pointRLogo.SVG") ),
+          absolutePanel(id="logo.left", top=145, left=0, width="100%", img(src="ptR/pointRLogo.SVG") ),
           uiOutput("BottomRightPanel"),
           uiOutput("TopRightPanel"),
           div( id="midRightPanels", class="cMidPanel ctop140",
