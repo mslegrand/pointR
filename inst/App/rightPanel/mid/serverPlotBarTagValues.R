@@ -13,21 +13,12 @@ showPts.valTag %<c-% function(
   ){
   if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
   onMouseDownTxt<-"ptRPlotter_ptR_SVG_TagVal.selectElement(evt)"
-  
-  # cat("rowIndx=", rowIndex, "\n")
-  # cat("length(ptName)=", length(ptName), "\n")
-  # cat("length(pts)=", length(pts), "\n")
   if(length(ptName)<1){return(NULL)}
   if(length(pts)<1)  {return(NULL) }
-  
-  
-  
   if(length(rowIndex)<1 || rowIndex==0){return(NULL)}
-  
   semitransparent<-0.3
   colorScheme<-c(default="purple", ending="red", selected="blue")
   color<-colorScheme[1]
-  
   opacity<-rep(semitransparent, length(pts)) 
   opacity[rowIndex]<-1 
   rowNums<-seq(length(pts))
@@ -39,7 +30,6 @@ showPts.valTag %<c-% function(
     lapply(offRows, function(i){
       m<-pts[[i]]
       if(length(m)==0){
-        # cat('m is null\n')
         NULL
       } else {
         g( opacity=opacity[i], 

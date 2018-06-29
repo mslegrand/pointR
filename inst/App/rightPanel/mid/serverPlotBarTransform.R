@@ -17,7 +17,6 @@ statusPlotTransform<-callModule(
     type=getTransformType()
     svgToolsScript(type) 
   }),
-  #ptrDisplayScript, #
   getSVGWH,
   showGrid,
   getCode,

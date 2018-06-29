@@ -59,11 +59,7 @@ shinyUI(
           #-------left content begin--------
           genShinyOpenFilesButtons(),
           genShinySaveFilesButtons(),
-          # shinyFilesButton("buttonFileOpenHidden", label="", title="Open File",     c('R','PTR', 'SVGR'),   multiple=FALSE, class='hiddenButton'),
-          # shinySaveButton( "buttonFileSaveHidden", label="", title="Save as ...",   filetype=list(text='txt', R=c('R'), Rmd='Rmd'), class='hiddenButton'),
-          #shinyFilesButton("buttonSnippetOpen",    label="", title="Import Snippet", multiple=FALSE,                        class='hiddenButton'),
-          #shinySaveButton("buttonExportSVGHidden", label="", title="Save as ...",    list('hidden_mime_type'=c("SVG")) ,    class='hiddenButton'),
-          div(id="logo.left",  img(src="ptR/pointRLogo.SVG") ),
+           div(id="logo.left",  img(src="ptR/pointRLogo.SVG") ),
           div( id='aceTabSet', class="container",
                tabsetPanel(id='pages')
           ),

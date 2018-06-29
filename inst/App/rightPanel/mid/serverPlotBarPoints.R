@@ -16,24 +16,11 @@
     if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
     onMouseDownTxt='ptRPlotter_ptR_SVG_Point.selectPoint(evt)'
     
-    # cat('\nshowPts.PtCmd:: class(pts)=',class(pts),'\n')
-    # cat('\nshowPts.PtCmd:: length(pts)=',length(pts),'\n')
     if(is.null(pts) ){ return(NULL) } 
-    
-    
-     # cat("pts-----------------------------------------------\n")
-     # print(pts)
     if(length(unlist(pts))<2){ return(NULL)}
     
     colorScheme<-c(default="green", ending="red", selected="blue")
     semitransparent<-0.3
-    
-    # cat("rowIndex",rowIndex,"\n")
-    # cat("class(rowIndex)",class(rowIndex),"\n")
-    # 
-    # cat("matColIndex",matColIndex,"\n")
-    # cat("class(matColIndex)",class(matColIndex),"\n")
-    
     opacity<-rep(semitransparent, length(pts) )
     opacity[rowIndex]<-1
     
@@ -58,14 +45,12 @@
                      cxy=pt, r=9, fill="yellow", 
                      opacity=opacity[i],
                      stroke=colorScheme['selected'], stroke.width=3,
-                     #transform="matrix(1 0 0 1 0 0)", 
                      onmousedown=onMouseDownTxt
               )
             } else { #a non-selected point
               circle(class="draggable", 
                      id=id,  
                      cxy=pt, r=8, fill=color, opacity=opacity[i],
-                     #transform="matrix(1 0 0 1 0 0)", 
                      onmousedown=onMouseDownTxt
               )
             },

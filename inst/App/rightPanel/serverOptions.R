@@ -93,28 +93,6 @@ observeEvent( editOption$recentFiles ,{
   }
 })
 
-# #update recentfiles whenever currentFile  changes
-# observeEvent( editOption$currentFilePath,{
-#   files<-editOption$recentFiles 
-#   N<-history$recentFileMenuCount
-#   #if(!is.null(editOption$currentFile) && editOption$currentFile!=""){
-#   if(getFileNameStatus()==TRUE){
-#     fileName<-editOption$currentFilePath
-#     N_Max<-10
-#     if(is.null(files)){
-#       files<-fileName
-#     }
-#     pos<-grep(fileName,files)
-#     if(length(pos)>0){
-#       files<-files[-pos]
-#     }
-#     files<-files[-N_Max]
-#     #remove tail
-#     files<-c(fileName, files)
-#     editOption$recentFiles<-files
-#   }
-#   editOption$recentFiles<-files
-# })
 
 addToRecentFiles<-function(filePath){
   if(filePath!='?'){

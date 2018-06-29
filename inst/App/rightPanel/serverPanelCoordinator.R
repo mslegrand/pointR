@@ -38,9 +38,6 @@ getNameType<-reactive({
   } else {
     #browser()
     if(!is.null(getTibName())){
-      # print("names(getPtDefs()$tib:\n")
-      # print(names(getPtDefs()$tib))
-      # print(getTibName())
       if( getTibName() %in% names(getPtDefs()$tib) ){
         tibTag
       } else if(getTibName()==transformTag && usingTransformDraggable()) { 
@@ -108,28 +105,13 @@ getTibEditState<-reactive({
 # returns:
 #  RPanelTag, rmdPanelTag, or oneof point, matrix, value, if ptR
 getRightMidPanel<-reactive({
-  cat('panels$sourceType=', panels$sourceType,"\n")
   if(hasError()){
-    # cat('getRightMidPanel:: Error=', getErrorMssg(),"\n")
     rtv<-errorPanelTag
   } else if (panels$sourceType %in% c( RPanelTag, rmdPanelTag, textPanelTag, snippetPanelTag)){
     rtv<-panels$sourceType
   } else {
     rtv<-getPlotState()
   }
-    
-    
-  #   if (panels$sourceType==RPanelTag){
-  #   rtv<-RPanelTag
-  # } else if (panels$sourceType==rmdPanelTag){
-  #   rtv<-rmdPanelTag
-  # } else if (panels$sourceType==textPanelTag){
-  #   rtv<-textPanelTag
-  # } else if (panels$sourceType==snippetPanelTag){
-  #   rtv<-snippetPanelTag
-  # } else {
-  #    rtv<-getPlotState()
-  # }
   rtv
 })
 
@@ -148,14 +130,11 @@ getRightPanelChoices<-reactive({ # includes names of tibs
   } else { # ptRPanel (names of ptDefs not null), svgRPanel, 
     ptDefs<-getPtDefs()
     choices<-names(getPtDefs()$tib)
-    # cat('getRightPanelChoices 1:: ', format(choices),"\n")
     if( usingTransformDraggable() ){
       choices<-c(choices, transformTag)
     }
     choices<-c(choices, svgPanelTag, RPanelTag)
-    # cat('getRightPanelChoices 2:: ', format(choices),"\n")
   } 
-  # cat('getRightPanelChoices 3:: ', format(choices),"\n")
   choices
 })
 
@@ -228,10 +207,5 @@ observeEvent(c(getAceEditorId(), getMode()),{
     showElement("midRightPanels")
   }
   processCommit()
-  
-  
-  #cat('name=',format(name),"\n")
-  # tibs<-getPtDefs()$tib
-  # resetSelectedTibbleName(tibs=tibs, name=NULL)
 })
 
