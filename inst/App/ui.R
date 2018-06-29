@@ -104,7 +104,10 @@ shinyUI(
                      choices = c(),
                      selected = c()
                    ),
-                   style = "unite", icon = icon("gear"),
+                   #style = "unite", 
+                   icon=icon("option-vertical", lib = "glyphicon"),
+                   #icon=icon("wrench", lib = "glyphicon"),
+                   #icon = icon("gear"),
                    status = "primary", width = "300px", size='sm',
                    up=TRUE, right=TRUE,
                    animate = animateOptions(
