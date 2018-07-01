@@ -40,7 +40,7 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr'){
       #checkboxInput(tabId, tabId, FALSE),
       div(
         class=divClass,
-        overflow= "hidden",
+        overflow= "hidden",inline=FALSE,
         shinyAce4Ptr(
             outputId = aceId,  
             value=txt,
@@ -53,8 +53,7 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr'){
               NULL
             ,
             docFilePath=docFilePath
-          ),
-           inline=FALSE
+          )
         ),
       value=tabId
     )
