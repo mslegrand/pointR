@@ -158,6 +158,9 @@ shinyServer(function(input, output,session) {
   tabID2aceID<-function(tabId){
     sub("TAB","ACE",tabId)
   }
+  tabID2prePtProc<-function(tabId){
+    sub("TAB","PTPP",tabId)
+  }
   
   
   getLeftMenuCmd<-reactive({input$editNavBar$item})
@@ -200,13 +203,14 @@ shinyServer(function(input, output,session) {
 
 #------------------leftPanel--------------------------------
   source("leftPanel/mid/serverAce.R",                local=TRUE) 
-  source("leftPanel/helpSVG.R",                      local=TRUE) 
+  source("leftPanel/helpSVG.R",                      local=TRUE)
+  # source("rightPanel/footer/pointPreprocessor.R",    local=TRUE)
   source("leftPanel/tabs/serverFileTabs.R",          local=TRUE) 
   source("leftPanel/fileIO/serverGenShinyFilesSaveObservers.R",        
                                                      local=TRUE)
   
 #------------------rightPanel--------------------------------
-  source("rightPanel/serverPlotSelectDB.R",          local=TRUE)
+  source("rightPanel/selector/serverPlotSelectDB.R", local=TRUE)
   source("rightPanel/footer/serverFooterRight.R",    local=TRUE) 
   source("rightPanel/header/serverEdTib.R",          local=TRUE)
   source("rightPanel/header/serverEdTransform.R",    local=TRUE)
@@ -227,9 +231,9 @@ shinyServer(function(input, output,session) {
   source("rightPanel/serverPanelCoordinator.R",      local=TRUE)
   source("rightPanel/serverPanelDispatch.R",         local=TRUE)
   source("rightPanel/serverOptions.R",               local=TRUE) 
-  source("rightPanel/serverHandler.R",               local=TRUE)
+  source("rightPanel/selector/serverHandler.R",      local=TRUE)
   source("rightPanel/serverDisplayOptions.R",        local=TRUE)
-  source("rightPanel/serverSelection.R",             local=TRUE)
+  source("rightPanel/selector/serverSelection.R",    local=TRUE)
   
 #---------------leftPanel--------------------------
   source("leftPanel/footer/processCommit.R",        local=TRUE)
