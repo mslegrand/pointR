@@ -28,7 +28,7 @@ restoreAssetState<-function(nextTabId){
   row.tib<-filter(serverAssetDB$tib, tabId==nextTabId)
   if(nrow(row.tib)==0){
     choices<-getRightPanelChoices()
-    row.tib<-newPlotSel(tabId=nextTabId, choices=choices, tibs=getPtDefs()$tib)
+    row.tib<-newAssetSelection(tabId=nextTabId, choices=choices, tibs=getPtDefs()$tib)
   }
   if(!is.null(row.tib)){
     lapply(names(row.tib), function(n){
@@ -39,7 +39,7 @@ restoreAssetState<-function(nextTabId){
 }
 
 
-newPlotSel<-function( tabId, choices, tibs){
+newAssetSelection<-function( tabId, choices, tibs){
   if( length(tabId)==0 || length(choices)==0){
     return( NULL)
   }
