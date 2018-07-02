@@ -230,7 +230,7 @@ shinyServer(function(input, output,session) {
   source("rightPanel/serverPanelCoordinator.R",                  local=TRUE)
   source("rightPanel/serverPanelDispatch.R",                     local=TRUE)
   source("rightPanel/serverOptions.R",                           local=TRUE) 
-  source("rightPanel/selector/serverHandler.R",                  local=TRUE)
+  source("rightPanel/selector/serverWidgetHandler.R",            local=TRUE)
   source("rightPanel/serverDisplayOptions.R",                    local=TRUE)
   source("rightPanel/selector/serverAssetSelection.R",           local=TRUE)
   
