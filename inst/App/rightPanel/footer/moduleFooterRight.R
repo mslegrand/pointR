@@ -15,48 +15,32 @@ moduleFooterRight<-function(input, output, session,
     footerPanelState<-getPanelState()
     if(!is.null( footerPanelState )){
       tagList(
-          absolutePanel( left=-10, bottom=0, id='rightFooterButton33BoxContainer',
-                         dropdown( 
-                           h5('Point Preprocessor'),
-                           aceEditor(
-                             outputId="ace", 
-                             height = "400px", 
-                             value = "createData <- function(rows) {\ndata.frame(col1 = 1:rows, col2 = rnorm(rows))\n}"),
-                             #icon=icon("option-vertical", lib = "glyphicon"),
-                           icon=icon("filter", lib = "glyphicon"),
-                           #icon=icon("wrench", lib = "glyphicon"),
-                           #icon = icon("toolbox"),
-                           status = "primary", width = "400px", size='sm',
-                           up=TRUE, right=FALSE,
-                           animate = animateOptions(
-                             enter = animations$fading_entrances$fadeInLeftBig,
-                             exit = animations$fading_exits$fadeOutRightBig
-                           )
-                           )
-          ),
+            # absolutePanel( left=-10, bottom=0, id='cXX', span(":")),
+            # absolutePanel( left=-10, bottom=0, id=session$ns('cXX'),
+            #   span(":")
+            #   #              ,
+              newPointPreprocessor(),
+          #),
           if (footerPanelState=='point' && length(getPointMax())>0 ){
               absolutePanel( "class"="footerPanel", draggable=FALSE, style="bottom: 0; left: 10px; display:inline-block",
-                absolutePanel( left=30, bottom=0,
-                   actionGroupButtons(
-                      inputIds=c(session$ns("forwardPt" ),session$ns("backwardPt" ),session$ns("removePt" ),session$ns("tagPt" )),
-                      labels=list(
-                        span(span('class'="icon-circle"), span('class'="icon-right-big"))  %>% bs_embed_tooltip(title = "Forward Select"),
-                        span(span('class'="icon-circle"), span('class'="icon-left-big")) %>% bs_embed_tooltip(title = "Backward Select"),
-                        span(span('class'="icon-circle"), span('class'="icon-cancel")) %>% bs_embed_tooltip(title = "Delete Select"),
-                        #span(span('class'="icon-circle"), span('class'="icon-split")) %>% bs_embed_tooltip(title = "Split Select")
-                        span(span('class'="icon-circle"), span('class'="icon-fork")) %>% bs_embed_tooltip(title = "Split Select")
-                      ),
-                      status='primary'
-                     )
-                ),
-                absolutePanel( right=90,  bottom=5, width=110,
-                                              absolutePanel( left=0, bottom=0, 'class'='ptR2', style="font-weight: bold; color: #00FFFF;", span('max pts/row:')),
-                                              absolutePanel( left=90, bottom=-20, 'class'='ptR2',
-                                                             numericInput(session$ns("matColLim"), width='70px', label = NULL, min=1,
-                                                                          value = getPointMax()
-                                                             )
-                                              )
-                                )
+                  absolutePanel( left=40, bottom=0,
+                     actionGroupButtons(
+                        inputIds=c(session$ns("forwardPt" ),session$ns("backwardPt" ),session$ns("removePt" ),session$ns("tagPt" )),
+                        labels=list(
+                          span(span('class'="icon-circle"), span('class'="icon-right-big"))  %>% bs_embed_tooltip(title = "Forward Select"),
+                          span(span('class'="icon-circle"), span('class'="icon-left-big")) %>% bs_embed_tooltip(title = "Backward Select"),
+                          span(span('class'="icon-circle"), span('class'="icon-cancel")) %>% bs_embed_tooltip(title = "Delete Select"),
+                          span(span('class'="icon-circle"), span('class'="icon-fork")) %>% bs_embed_tooltip(title = "Split Select")
+                        ),
+                        status='primary'
+                       )
+                  ),
+                  absolutePanel( right=90,  bottom=5, width=110,
+                      absolutePanel( left=0, bottom=0, 'class'='ptR2', style="font-weight: bold; color: #00FFFF;", span('max pts/row:')),
+                      absolutePanel( left=90, bottom=-20, 'class'='ptR2',
+                          numericInput(session$ns("matColLim"), width='70px', label = NULL, min=1, value = getPointMax() )
+                      )
+                  )
               )
           } else if (footerPanelState=='matrix'){
             absolutePanel( left=30, bottom=0,
@@ -66,7 +50,6 @@ moduleFooterRight<-function(input, output, session,
                   span(span('class'="icon-window-minimize"), span('class'="icon-up-big"))  %>% bs_embed_tooltip(title = "Send Up Row"),
                   span(span('class'="icon-window-minimize"), span('class'="icon-down-big")) %>% bs_embed_tooltip(title = "Send  Down Row"),
                   span(span('class'="icon-window-minimize"), span('class'="icon-cancel")) %>% bs_embed_tooltip(title = "Delete Row"),
-                  #span(span('class'="icon-circle"), span('class'="icon-split")) %>% bs_embed_tooltip(title = "Split Select")
                   span(span('class'="icon-window-minimize"), span('class'="icon-clone")) %>% bs_embed_tooltip(title = "Clone Row")
                 ),
                 status='primary'
