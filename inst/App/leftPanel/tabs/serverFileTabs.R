@@ -1,5 +1,29 @@
 
-
+# 
+# insertEDinPP<-function(id){
+#   if(length(id)==0){
+#     return(NULL)
+#   }
+# 
+#   cat("acePointPreprocId=",id,"\n")
+#   text='"createData <- function(rows) {\ndata.frame(col1 = 1:rows, col2 = rnorm(rows))\n}"'
+#   # ui=shinyAce4Ptr(
+#   #   outputId=id, value = text,
+#   #   height = "300px",
+#   #   mode='R'
+#   # )
+#   ui=aceEditor(
+#     outputId=id,
+#     height = "300px",
+#     value = text,
+#     mode='R'
+#   )
+#   insertUI(
+#     selector='#dogbert',
+#     where='beforeEnd',
+#     ui=ui
+#   )
+# }
 
 closeRfn<-function(tabId){paste0("event.stopPropagation();Shiny.onInputChange('closeTab',  {id:'",tabId,"', type: 'tabId'} ); return false")}
 tabTitleRfn<-function(tabName, tabId, docFilePath){
@@ -10,7 +34,7 @@ tabTitleRfn<-function(tabName, tabId, docFilePath){
 }
 
 closeTabNow<-function(tabId2X){
-  plot$selections.tib<-filter(plot$selections.tib, tabId!=tabId2X)
+  serverAssetDB$tib<-filter(serverAssetDB$tib, tabId!=tabId2X)
   handler$choices<-filter(handler$choices, tabId!=tabId2X)
   removeTab(inputId = "pages", tabId2X)
 }
@@ -30,6 +54,7 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr'){
   } else {
     divClass="cAceRmdContainer"
   }
+  ptpreprocId=tabID2prePtProc(tabId)
   appendTab(
     inputId = "pages",
     tabPanel( #tabId,
@@ -59,9 +84,23 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr'){
     )
   )
   
-  
   updateTabsetPanel(session,inputId = 'pages', selected = tabId)
-  sendFileTabsMessage(resize=runif(1))                          
+  
+  sendFileTabsMessage(resize=runif(1))
+
+  # insertEDinPP(ptpreprocId)
+  
+  # selector='#cXX' #paste0( '#',NS("footerRight")('cXX'))
+  # cat('selector=',selector,'\n')
+  # ui=newPointPreprocessor(id=ptpreprocId)
+  # #ui=textInput("txttxt", "Insert some text")
+  # insertUI(
+  #   selector=selector,
+  #   where='beforeEnd',
+  #   ui=ui,
+  #   #immediate=FALSE,
+  #   session=session
+  # )
 }
 
 getAceEditorId<-reactive({

@@ -1,6 +1,6 @@
 
-plot<-reactiveValues(
-  selections.tib=tibble(
+serverAssetDB<-reactiveValues(
+  tib=tibble(
     tabId="NULL",
     name="NULL",
     rowIndex=1,         # row in tibble
@@ -19,13 +19,13 @@ storeAssetState<-function(){
     return()
   }
   selectionList[sapply(selectionList,is.null)]<-NA
-  tmp1<-filter(plot$selections.tib, tabId!=selectionList$tabId)
-  plot$selections.tib<-bind_rows(tmp1, as.tibble(selectionList))
+  tmp1<-filter(serverAssetDB$tib, tabId!=selectionList$tabId)
+  serverAssetDB$tib<-bind_rows(tmp1, as.tibble(selectionList))
 }
 
 
 restoreAssetState<-function(nextTabId){
-  row.tib<-filter(plot$selections.tib, tabId==nextTabId)
+  row.tib<-filter(serverAssetDB$tib, tabId==nextTabId)
   if(nrow(row.tib)==0){
     choices<-getRightPanelChoices()
     row.tib<-newPlotSel(tabId=nextTabId, choices=choices, tibs=getPtDefs()$tib)
