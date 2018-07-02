@@ -1,30 +1,37 @@
 
 newPointPreprocessor<-function(
      id='BadWolf',  
-     text='"createData <- function(rows) {\ndata.frame(col1 = 1:rows, col2 = rnorm(rows))\n}"', 
-     title='Point Preprocessor'
+     title='Point Preprocessor',
+     PPPCode = list(
+       onNewPt='newPt',
+       onMovePt= 'movePt',
+       onDeletePt= 'deletePt'
+     ),
+     selected="onNewPt"
   )
 {
+  
+  
   dropdownId= paste0("PtPreProc-",id)
   #is actually paste0('sw-dropdown-',dropdownId)
   cat("dropdownId=",dropdownId,"\n")
-
   div(
     dropdown( inputId = dropdownId ,
     div( id='dogbert', class='backPanel',
          div( style="margin:10px",
                h5(title, style='color:white;'),
               radioGroupButtons(
-                inputId = "Id062",
+                inputId = "dilbert",
                 label = "Action",
-                choices = c("onNewPt",  "onMovePt", "onDeletePt", "onSplitAfterPt")
+                choices = c("onNewPt",  "onMovePt", "onDeletePt", "onSplitAfterPt"),
+                selected=selected
               )
          ),
 
       aceEditor(
             outputId='catberg',
             height = "300px",
-            value = text
+            value = PPPCode[[selected]]
           ),
       div( style="margin:10px",
            actionButton("commitPtPreProc", "Commit")

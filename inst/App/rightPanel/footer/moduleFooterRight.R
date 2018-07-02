@@ -8,20 +8,23 @@ moduleFooterRightUI<-function(id, input, output) {
 moduleFooterRight<-function(input, output, session, 
                       getTibEditState,
                       getPointMax,
-                      getPanelState 
+                      getPanelState, 
+                      getPPPCode,
+                      getPPPSel
 ){
   
   output$footer<-renderUI({
     footerPanelState<-getPanelState()
     if(!is.null( footerPanelState )){
-      tagList(
-            # absolutePanel( left=-10, bottom=0, id='cXX', span(":")),
-            # absolutePanel( left=-10, bottom=0, id=session$ns('cXX'),
-            #   span(":")
-            #   #              ,
-              newPointPreprocessor(),
-          #),
+      
+          
           if (footerPanelState=='point' && length(getPointMax())>0 ){
+          tagList( 
+              newPointPreprocessor(
+                id='BadWolf', title='Point Preprocessor',
+                PPPCode=getPPPCode(),
+                selected=getPPPSel()
+              ),
               absolutePanel( "class"="footerPanel", draggable=FALSE, style="bottom: 0; left: 10px; display:inline-block",
                   absolutePanel( left=40, bottom=0,
                      actionGroupButtons(
@@ -42,6 +45,7 @@ moduleFooterRight<-function(input, output, session,
                       )
                   )
               )
+          )
           } else if (footerPanelState=='matrix'){
             absolutePanel( left=30, bottom=0,
               actionGroupButtons(
@@ -57,7 +61,7 @@ moduleFooterRight<-function(input, output, session,
             )
           } else if (footerPanelState=='value'){
           }
-      )
+      
     } else {
       NULL
     }
