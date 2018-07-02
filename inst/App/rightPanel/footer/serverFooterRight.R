@@ -4,7 +4,15 @@ returnValue4ModuleRtFtr<-callModule(
   id="footerRight",
   getTibEditState= getTibEditState,
   getPointMax=getPointMax,
-  getPanelState=getRightMidPanel 
+  getPanelState=getRightMidPanel,
+  getPPPCode= reactive({
+    list(
+      onNewPt=selectedAsset$ptAddScript,
+      onMovePt= selectedAsset$ptMoveScript,
+      onDeletePt= selectedAsset$ptDeleteScript
+    )
+  }),
+  getPPPSel= reactive({selectedAsset$ptScriptSel})
 )
 
 #-----------BUTTON EVENTS--------------------

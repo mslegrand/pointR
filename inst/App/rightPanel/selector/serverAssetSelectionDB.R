@@ -8,7 +8,11 @@ serverAssetDB<-reactiveValues(
     matCol=0,           # colIndex of the current matrix.
     ptColName="NULL",   # !!! KLUDGE for now. should this default to last col?
     selIndex=1,         # only used when current col is points, 
-    transformType='Translate'    
+    transformType='Translate',
+    ptAddScript="NULL",
+    ptMoveScript="NULL",
+    ptDeleteScript="NULL",
+    ptScriptSel='onNewPt'
   )[0,]
 )
 
@@ -81,7 +85,9 @@ newAssetSelection<-function( tabId, choices, tibs){
     matCol=matCol,
     ptColName=ptColName,
     selIndex=1,
-    transformType='Translate'
+    transformType='Translate',
+    ptAddScript=fileTemplates[['newPtTemplate.R']],
+    ptMoveScript=fileTemplates[['movePtTemplate.R']],
+    ptDeleteScript=fileTemplates[['deletePtTemplate.R']]
   )
-  
 }
