@@ -232,7 +232,7 @@ shinyServer(function(input, output,session) {
   source("rightPanel/serverOptions.R",                           local=TRUE) 
   source("rightPanel/selector/serverHandler.R",                  local=TRUE)
   source("rightPanel/serverDisplayOptions.R",                    local=TRUE)
-  source("rightPanel/selector/serverSelection.R",                local=TRUE)
+  source("rightPanel/selector/serverAssetSelection.R",           local=TRUE)
   
 #---------------leftPanel--------------------------
   source("leftPanel/footer/processCommit.R",                    local=TRUE)
