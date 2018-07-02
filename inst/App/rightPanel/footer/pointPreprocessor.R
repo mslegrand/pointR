@@ -25,7 +25,10 @@ newPointPreprocessor<-function(
             outputId='catberg',
             height = "300px",
             value = text
-          )
+          ),
+      div( style="margin:10px",
+           actionButton("commitPtPreProc", "Commit")
+      )
     ),
    
     icon=icon("filter", lib = "glyphicon"), #icon=icon("wrench", lib = "glyphicon"), #icon = icon("toolbox"),
