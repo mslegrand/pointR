@@ -10,22 +10,22 @@ newPointPreprocessor<-function(
      selected="onNewPt"
   )
 {
-  
-  
   dropdownId= paste0("PtPreProc-",id)
   #is actually paste0('sw-dropdown-',dropdownId)
   cat("dropdownId=",dropdownId,"\n")
   div(
     dropdown( inputId = dropdownId ,
     div( id='dogbert', class='backPanel',
-         div( style="margin:10px",
+         div( style="margin:10px; color:white;", 
+              div( style="margin:10px",
                h5(title, style='color:white;'),
               radioGroupButtons(
                 inputId = "dilbert",
                 label = "Action",
-                choices = c("onNewPt",  "onMovePt", "onDeletePt", "onSplitAfterPt"),
+                choices = c("onNewPt",  "onMovePt", "onDeletePt"),
                 selected=selected
               )
+            )
          ),
 
       aceEditor(

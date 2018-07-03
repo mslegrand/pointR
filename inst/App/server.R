@@ -210,8 +210,9 @@ shinyServer(function(input, output,session) {
   
 #------------------rightPanel--------------------------------
   source("rightPanel/selector/serverAssetSelectionDB.R",         local=TRUE)
+  source("rightPanel/preProc/serverPreProcDB.R",         local=TRUE)
   source("rightPanel/footer/serverFooterRight.R",                local=TRUE) 
-  source("rightPanel/footer/serverPreProcPts.R",                 local=TRUE)
+  source("rightPanel/preProc/serverPreProcPts.R",                 local=TRUE)
   source("rightPanel/header/serverEdTib.R",                      local=TRUE)
   source("rightPanel/header/serverEdTransform.R",                local=TRUE)
   source("rightPanel/header/serverEdAsset.R",                    local=TRUE)

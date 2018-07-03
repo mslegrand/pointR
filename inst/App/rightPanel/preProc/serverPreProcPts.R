@@ -1,4 +1,16 @@
 
+observeEvent( c(getRightMidPanel(), preProcDB$points) ,{
+  cat('getRightMidPanel()=', getRightMidPanel(), "\n")
+  cat('nrow=',nrow(filter(preProcDB$points, tabId==getTibTabId() && tibName==getAssetName())),"\n")
+  if(
+    getRightMidPanel()=='point' && 
+    nrow(filter(preProcDB$points, tabId==getTibTabId() && tibName==getAssetName()))==0
+  ){
+    hideElement('sw-drop-PtPreProc-BadWolf')
+  } else {
+    showElement('sw-drop-PtPreProc-BadWolf')
+  }
+})
 
 observeEvent( selectedAsset$ptAddScript,{
   if(identical(input$dilbert, "onNewPt")){
@@ -50,6 +62,16 @@ observeEvent( input$commitPtPreProc,{
     selectedAsset$ptDeleteScript<-input$catberg
   }
   if(input$dilbert %in% c( 'onNewPt', 'onMovePt',  'onDeletePt')){
+    
     selectedAsset$ptScriptSel<-input$dilbert
+    cmd<-input$dilbert
+    setPreProcPtScript(
+      tab_Id=getTibTabId(),
+      tib_Name=getAssetName(),
+      pt_Column_Name=getTibColumnName(),
+      cmd_name=cmd,
+      newScript=input$catberg
+    )
+    
   }
 }, ignoreNULL = TRUE)
