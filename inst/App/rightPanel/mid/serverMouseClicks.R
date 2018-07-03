@@ -55,6 +55,35 @@ observe({
             tib[[getTibColumnName()]][[rowIndex]]<-matrix(newPt,2)
             ptDefs$tib[[selection]]<-tib
             updateAceExtDef(ptDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=1))
+          } else if( hasPtScript() ){
+            
+            newPtDefs<-ptDefs
+            tibs<-ptDefs$tib
+            getTibs<-function(){ tibs }
+            txt<-getPreProcPtScript()
+            
+            getPoint<-function(){newPt}
+            # fn<-function(){
+            #   pt<-getPoint() # coordinates derived from the mouse click
+            #   
+            #   tibs<-insertPoint(pt=pt, location=getLocation() )
+            #   tibs
+            # }
+            # 
+            # newPtDefs$tib<-fn()
+            # 
+            tryCatch({
+              tibs<-eval(parse(text=txt))
+             },error=function(e){
+              e<-c('preproErr',unlist(e))
+              err<-paste(unlist(e), collapse="\n", sep="\n")
+              setErrorMssg(err)
+            })
+            
+            newPtDefs$tib<-tibs
+            if(!is.null(newPtDefs)){ #update only upon success
+              updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx+1))
+            }
           } else {
             newPtDefs<-addPt2ptDefs(
               selection,
