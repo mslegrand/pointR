@@ -31,6 +31,7 @@ newPointPreprocessor<-function(
       aceEditor(
             outputId='catberg',
             height = "300px",
+            mode='r',
             value = PPPCode[[selected]]
           ),
       div( style="margin:10px",
