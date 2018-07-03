@@ -94,22 +94,25 @@ shinyUI(
              ),
              absolutePanel( right=25, bottom=0, id='selectedDnippetButtonBoxContainer',
                  dropdown( 
-                   awesomeCheckboxGroup(
-                     inputId = "selectedDDDnippets",
-                     label = "Selected Dnippets", 
-                     choices = c(),
-                     selected = c()
-                   ),
-                   #style = "unite", 
-                   icon=icon("option-vertical", lib = "glyphicon"),
-                   #icon=icon("wrench", lib = "glyphicon"),
-                   #icon = icon("gear"),
-                   status = "primary", width = "300px", size='sm',
-                   up=TRUE, right=TRUE,
-                   animate = animateOptions(
-                     enter = animations$fading_entrances$fadeInLeftBig,
-                     exit = animations$fading_exits$fadeOutRightBig
-                   )
+                   div( class='backPanel',
+                        h5('Dnippet Selection', style='color:white;'),
+                       awesomeCheckboxGroup(
+                         inputId = "selectedDDDnippets",
+                         label = NULL, 
+                         choices = c(),
+                         selected = c()
+                       )
+                    ),
+                       #style = "unite", 
+                       icon=icon("option-vertical", lib = "glyphicon"),
+                       #icon=icon("wrench", lib = "glyphicon"),
+                       #icon = icon("gear"),
+                       status = "primary", width = "300px", size='sm',
+                       up=TRUE, right=TRUE,
+                       animate = animateOptions(
+                         enter = animations$fading_entrances$fadeInLeftBig,
+                         exit = animations$fading_exits$fadeOutRightBig
+                       )
                  )
              )
              

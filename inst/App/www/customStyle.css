@@ -39,6 +39,9 @@ right:10px;
 left:10px;
 overflow: hidden;
 }
+.awesome-checkbox{
+  color:#FFFFFF;
+}
 .checkbox{
   margin: 0;
 }
