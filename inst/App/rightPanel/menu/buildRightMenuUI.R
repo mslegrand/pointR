@@ -4,7 +4,7 @@ buildRightMenu<-function(){
     menuDropdown('Display', 
                  menuDropdown('Points',
                               shinyDMDMenu::menuItem('Show Points without Labels', value='cmdShowPointsNoLabels'),
-                              shinyDMDMenu::menuItem('Show Points with Labels', value='cmdShowPointLabels')
+                              shinyDMDMenu::menuItem('Show Points with Labels',    value='cmdShowPointLabels')
                  ),
                  menuDropdown( 'Grid',
                                shinyDMDMenu::menuItem('Show Grid', value='cmdShowGrid')
@@ -22,7 +22,11 @@ buildRightMenu<-function(){
     ),
     menuDropdown(
       "Tools",
-      shinyDMDMenu::menuItem("PointFiltering (Not implemented)" )
+      shinyDMDMenu::menuDropdown(
+        "Point Preprocessor",
+        shinyDMDMenu::menuItem('New', value='cmdNewPP'),
+        shinyDMDMenu::menuItem('Load', value='cmdOpenPP')
+      )
     )
   ) #menubar end 
 }

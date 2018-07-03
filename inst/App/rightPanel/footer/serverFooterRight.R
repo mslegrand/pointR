@@ -6,11 +6,13 @@ returnValue4ModuleRtFtr<-callModule(
   getPointMax=getPointMax,
   getPanelState=getRightMidPanel,
   getPPPCode= reactive({
-    list(
-      onNewPt=selectedAsset$ptAddScript,
-      onMovePt= selectedAsset$ptMoveScript,
-      onDeletePt= selectedAsset$ptDeleteScript
-    )
+    # extract from db, and send
+    tmp.db<-filter(preProcDB$points, tabId==getTibTabId() && tibName==getAssetName())
+    tmp.list<-as.list(tmp.db$script)
+    if(length(tmp.list)>0){
+      names(tmp.list)<-tmp.db$cmd
+    }
+    tmp.list
   }),
   getPPPSel= reactive({selectedAsset$ptScriptSel})
 )

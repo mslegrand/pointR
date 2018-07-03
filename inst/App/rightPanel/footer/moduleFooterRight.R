@@ -16,15 +16,17 @@ moduleFooterRight<-function(input, output, session,
   output$footer<-renderUI({
     footerPanelState<-getPanelState()
     if(!is.null( footerPanelState )){
-      
-          
           if (footerPanelState=='point' && length(getPointMax())>0 ){
-          tagList( 
-              newPointPreprocessor(
-                id='BadWolf', title='Point Preprocessor',
-                PPPCode=getPPPCode(),
-                selected=getPPPSel()
-              ),
+            tagList(
+              if(length(getPPPCode())==3){
+                newPointPreprocessor(
+                  id='BadWolf', title='Point Preprocessor',
+                  PPPCode=getPPPCode(),
+                  selected=getPPPSel()
+                )
+              } else {
+                NULL
+              },
               absolutePanel( "class"="footerPanel", draggable=FALSE, style="bottom: 0; left: 10px; display:inline-block",
                   absolutePanel( left=40, bottom=0,
                      actionGroupButtons(

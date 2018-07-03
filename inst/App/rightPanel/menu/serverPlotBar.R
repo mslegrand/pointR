@@ -50,9 +50,23 @@ observeEvent(input$plotNavBar, {
     showModal(deleteColumnModal(columnName))
   }
   
+  if(cmd == 'cmdNewPP'){ # disable unless ...
+    columnName<-getTibColumnName()
+    #get pt column and add if not there
+    if( getRightMidPanel()=='point' && 
+      nrow(filter(preProcDB$points, tabId==getTibTabId() && tibName==getAssetName()))==0
+    ){
+      newPreProcPtEntry(getTibTabId(), getAssetName(), getTibColumnName() )
+    }
+    
+    
+  }
+  
   if(!is.null(cmd)){
     dirtyDMDM(session, "plotNavBar")
   }
+  
+
   
 })
 
