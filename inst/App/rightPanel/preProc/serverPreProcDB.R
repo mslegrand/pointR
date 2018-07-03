@@ -4,6 +4,9 @@ preProcDB<-reactiveValues(
   matrix=tibble( tabId="bogus", tibName="bogus", ptColName='bogus', cmd="bogus", script='bogus')[0,]
 )
 
+hasPtScript<-reactive({
+  nrow(filter(preProcDB$points, tabId==getTibTabId() && tibName==getAssetName()))>0
+})
 
 newPreProcPtEntry<-function(tab_Id, tib_Name, pt_Column_Name){
   temp<-tibble( 
