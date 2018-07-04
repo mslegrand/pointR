@@ -212,6 +212,7 @@ shinyServer(function(input, output,session) {
   source("rightPanel/selector/serverAssetSelectionDB.R",         local=TRUE)
   source("rightPanel/preProc/serverPreProcDB.R",                 local=TRUE)
   source("rightPanel/preProc/serverPreProcPtsInsert.R",          local=TRUE)
+  source("rightPanel/preProc/serverPreProcPtsMove.R",            local=TRUE)
   source("rightPanel/footer/serverFooterRight.R",                local=TRUE) 
   source("rightPanel/preProc/serverPreProcPts.R",                local=TRUE)
   source("rightPanel/header/serverEdTib.R",                      local=TRUE)

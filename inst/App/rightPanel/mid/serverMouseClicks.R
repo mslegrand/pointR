@@ -22,6 +22,8 @@ addPt2ptDefs<-function(name, row, matCol,  ptDefs, newPt){
   ptDefs
 }
 
+
+
 observe({ 
   input$mouseMssg #may want to rename this
   isolate({
@@ -48,60 +50,60 @@ observe({
           matColIndx<-getTibMatCol()
           if( length( getPointMax())>1){ stop('getPointMax is too big')}
           if(!is.na(getPointMax()) &&  matColIndx>=getPointMax() ){
-            # tag here
-            tib<-ptDefs$tib[[selection]]
-            tib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
-            rowIndex<-rowIndex+1
-            tib[[getTibColumnName()]][[rowIndex]]<-matrix(newPt,2)
-            ptDefs$tib[[selection]]<-tib
-            updateAceExtDef(ptDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=1))
-          } else if( hasPtScript() ){
-            
-            newPtDefs<-ptDefs
-            tibs<-ptDefs$tib
-            getTibs<-function(){ tibs }
-            txt<-getPreProcPtScript()
-            
-            getPoint<-function(){newPt}
-            # fn<-function(){
-            #   pt<-getPoint() # coordinates derived from the mouse click
-            #   
-            #   tibs<-insertPoint(pt=pt, location=getLocation() )
-            #   tibs
-            # }
-            # 
-            # newPtDefs$tib<-fn()
-            # 
-            tryCatch({
-              tibs<-eval(parse(text=txt))
-             },error=function(e){
-              e<-c('preproErr',unlist(e))
-              err<-paste(unlist(e), collapse="\n", sep="\n")
-              setErrorMssg(err)
-            })
-            
-            newPtDefs$tib<-tibs
-            if(!is.null(newPtDefs)){ #update only upon success
-              updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx+1))
-            }
-          } else {
-            newPtDefs<-addPt2ptDefs(
-              selection,
-              rowIndex,
-              matColIndx,
-              ptDefs, 
-              newPt 
-            )
-            if(!is.null(newPtDefs)){ #update only upon success
-                updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx+1))
-            }
-          }
-         }
+              # #split here
+              tib<-ptDefs$tib[[selection]]
+              tib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
+              rowIndex<-rowIndex+1
+              tib[[getTibColumnName()]][[rowIndex]]<-matrix(newPt,2)
+              ptDefs$tib[[selection]]<-tib
+              updateAceExtDef(ptDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=1))
+            } else {
+              # no split, jjust add
+              newPtDefs<-ptDefs
+              if( hasPtScript() ){ #preproc
+                  cat('hasPtScript:: onNewPt script:\n')
+                  txt<-getPreProcPtScript()['onNewPt']
+                  print(txt)
+                  tryCatch({
+                    getPoint<-function(){newPt}
+                    getLocation<-function(){
+                      list(
+                        assetName=getAssetName(),
+                        columIndex=getTibPtColPos(),
+                        rowIndex=getTibRow(),
+                        matColIndex=getTibMatCol(),
+                        tibs=getPtDefs()$tib
+                      )
+                    }
+                    tibs<-eval(parse(text=txt))
+                    cat('trCatch:: newPtDefs \n')
+                    print(newPtDefs)
+                    newPtDefs$tib<-tibs
+                   },error=function(e){
+                    e<-c('preproErr',unlist(e))
+                    err<-paste(unlist(e), collapse="\n", sep="\n")
+                    setErrorMssg(err)
+                  })
+              } else { #no prepoc
+                newPtDefs<-addPt2ptDefs(
+                  selection,
+                  rowIndex,
+                  matColIndx,
+                  ptDefs, 
+                  newPt 
+                )
+              }
+              if(!is.null(newPtDefs)){ #update only upon success
+                  updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx+1))
+              }
+           } #end no split
+        }#------end---add point
         
         if(cmd=='move'){ # --------move point
-          #cat('Enter: mouse cmd move')
+          cat('Enter: mouse cmd move')
           sender='PointsBar.mouse.move'
           id<-input$mouseMssg$id
+          newPtDefs<-ptDefs
           vid<-strsplit(id,"-")[[1]] 
           #get selection
           selection<-vid[2]
@@ -109,12 +111,36 @@ observe({
           newPt<-vec
           rowIndex<-as.numeric(vid[3]) # index is the absolute position of in the points array
           matColIndx<-as.numeric(vid[4])
-          ptDefs$tib[[selection]][[ rowIndex, getTibPtColPos() ]][,matColIndx]<-newPt
-          newPtDefs<-ptDefs
+          if( hasPtScript() ){
+            cat('hasPtScript:: onMovePt script:\n')
+            txt<-getPreProcPtScript()['onMovePt']
+            cat(txt)
+           tryCatch({ 
+              getPoint<-function(){newPt}
+              getLocation<-function(){
+                list(
+                  assetName=getAssetName(),
+                  columIndex=getTibPtColPos(),
+                  rowIndex=rowIndex,
+                  matColIndex=matColIndx,
+                  tibs=getPtDefs()$tib
+                )
+              }
+              tibs<-eval(parse(text=txt))
+              newPtDefs$tib<-tibs
+            },error=function(e){
+              e<-c('preproErr',unlist(e))
+              err<-paste(unlist(e), collapse="\n", sep="\n")
+              setErrorMssg(err)
+            })
+          } else {
+            newPtDefs$tib[[selection]][[ rowIndex, getTibPtColPos() ]][,matColIndx]<-newPt
+          }
+
           updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx))
           
         }        
-      }
+      
 
       if(panelName=='matrix'){
         sender='tagDrag.mouse'
@@ -182,7 +208,7 @@ observe({
           updateAceExt(id= getAceEditorId(), replacement=replacementList, sender = sender, ok=1 )
         }
       }
-      
-    }
+      }
+    } #end of mouseMssg if
   })
 })

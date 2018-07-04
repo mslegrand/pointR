@@ -1,6 +1,8 @@
+# template for point insertion precprossing
 
-pt<-getPoint() # coordinates derived from the mouse click
+pt<-getPoint() # pt contains coordinates derived from the mouse click
+
+# apply your point manipulations here
 
 tibs<-insertPoint(pt=pt, location=getLocation() )
-
-tibs
+tibs # always return tibs
