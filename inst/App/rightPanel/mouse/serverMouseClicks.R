@@ -22,7 +22,6 @@ addPt2ptDefs<-function(name, row, matCol,  ptDefs, newPt){
   ptDefs
 }
 
-
 observe({ 
   input$mouseMssg #may want to rename this
   isolate({
@@ -30,7 +29,7 @@ observe({
       mssg<-input$mouseMssg
       #get cmd
       cmd<-mssg$cmd
-      
+      cat('cmd=',cmd,'\n')
       if(length(mssg$vec)>0){
         vec<- as.numeric(unlist(mssg$vec))
       }
@@ -38,8 +37,9 @@ observe({
       replacementList<-list()
       ptDefs<-getPtDefs() 
       panelName=getRightMidPanel()
+      cat('1 panelName=',panelName,"\n")
       if(panelName=="Points" || (panelName=='point' ) ){
-        sender='PointsBar.mouse'
+        
         if(cmd=='add'){ #---------add point
           mouseCmdAddPt(mssg)
         }#------end---add point
@@ -47,24 +47,13 @@ observe({
         if(cmd=='move'){ # --------move point
           mouseCmdMovePt(mssg)
                     
-        }        
-      
-
+        }    
+      }
       if(panelName=='matrix'){
-        sender='tagDrag.mouse'
+        cat('2 panelName=',panelName,'\n')
         if(cmd=='transGrp'){ # -- move tagged group (from tagDrag)
-          
-          tid<-mssg$id
-          dxy<-vec 
-          tmp<-unlist(str_split(tid,"_"))
-          row<-as.numeric(tail(tmp,1))
-          
-          selection<-getAssetName() 
-          m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]
-          ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]<-m+vec
-          matCol<-ncol(m)
-          newPtDefs<-ptDefs
-          updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=row, matCol=matCol))
+          cat('calling mouseCmdMoveMatrix\n')
+          mouseCmdMoveMatrix(mssg)
         }
       }
       
@@ -115,7 +104,6 @@ observe({
           replacementList<-list(list(rng=pos, txt= trDefDelta2))
           updateAceExt(id= getAceEditorId(), replacement=replacementList, sender = sender, ok=1 )
         }
-      }
       }
     } #end of mouseMssg if
   })
