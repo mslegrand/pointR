@@ -86,8 +86,6 @@ newAssetSelection<-function( tabId, choices, tibs){
     ptColName=ptColName,
     selIndex=1,
     transformType='Translate',
-    ptAddScript=fileTemplates[['newPtTemplate.R']],
-    ptMoveScript=fileTemplates[['movePtTemplate.R']],
-    ptDeleteScript=fileTemplates[['deletePtTemplate.R']]
+    ptScriptSel='onNewPt'
   )
 }
