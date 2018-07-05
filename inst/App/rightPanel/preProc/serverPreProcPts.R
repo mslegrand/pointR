@@ -1,7 +1,7 @@
 
 observeEvent( c(getRightMidPanel(), preProcDB$points) ,{
-  cat('getRightMidPanel()=', getRightMidPanel(), "\n")
-  cat('nrow=',nrow(filter(preProcDB$points, tabId==getTibTabId() && tibName==getAssetName())),"\n")
+  # cat('getRightMidPanel()=', getRightMidPanel(), "\n")
+  # cat('nrow=',nrow(filter(preProcDB$points, tabId==getTibTabId() && tibName==getAssetName())),"\n")
   if(
     getRightMidPanel()=='point' && 
     nrow(filter(preProcDB$points, tabId==getTibTabId() && tibName==getAssetName()))==0
@@ -13,13 +13,13 @@ observeEvent( c(getRightMidPanel(), preProcDB$points) ,{
 })
 
 
-observeEvent(input$dilbert,{
-  cat('input$dilbert', input$dilbert, "\n")
-  if(input$dilbert %in% c( 'onNewPt', 'onMovePt',  'onDeletePt')){
-    cat( "input#dilbert=", input$dilbert,"\n")
-    txt= getPreProcPtScript()[input$dilbert]
-    selectedAsset$ptScriptSel<-input$dilbert
-    cat("updating catbert:")
+observeEvent(input$ptPreProcCmdChoice,{
+  # cat('input$ptPreProcCmdChoice', input$ptPreProcCmdChoice, "\n")
+  if(input$ptPreProcCmdChoice %in% c( 'onNewPt', 'onMovePt',  'onDeletePt')){
+    # cat( "input#dilbert=", input$dilbert,"\n")
+    txt= getPreProcPtScript()[input$ptPreProcCmdChoice]
+    selectedAsset$ptScriptSel<-input$ptPreProcCmdChoice
+    # cat("updating catbert:")
     updateAceEditor(session, editorId='catberg', value=txt)
   }
  
@@ -28,13 +28,11 @@ observeEvent(input$dilbert,{
 
 observeEvent( input$commitPtPreProc,{
   cat("\n******input$commitPPP************\n")
-  cat("input$dilbert=",input$dilbert,"\n")
-  
-  if(input$dilbert %in% c( 'onNewPt', 'onMovePt',  'onDeletePt')){
+  cat("input$dilbert=",input$ptPreProcCmdChoice,"\n")
+  cmd<-input$ptPreProcCmdChoice
+  if(cmd %in% c( 'onNewPt', 'onMovePt',  'onDeletePt')){
     newScript=input$catberg
-    selectedAsset$ptScriptSel<-input$dilbert
-   
-    cmd<-input$dilbert
+    selectedAsset$ptScriptSel<-input$ptPreProcCmdChoice
     setPreProcPtScript(
       tab_Id=getTibTabId(),
       tib_Name=getAssetName(),
