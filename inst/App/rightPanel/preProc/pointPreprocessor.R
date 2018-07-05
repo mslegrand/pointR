@@ -5,14 +5,14 @@ newPointPreprocessor<-function(
      PPPCode = list(
        onNewPt='newPt',
        onMovePt= 'movePt',
-       onDeletePt= 'deletePt'
+       onMoveMat= 'onMoveMat'
      ),
      selected="onNewPt"
   )
 {
   dropdownId= paste0("PtPreProc-",id)
   #is actually paste0('sw-dropdown-',dropdownId)
-  cat("dropdownId=",dropdownId,"\n")
+  #cat("dropdownId=",dropdownId,"\n")
   div(
     dropdown( inputId = dropdownId ,
     div( id='ptPreProcBackPanel', class='backPanel',
@@ -22,12 +22,11 @@ newPointPreprocessor<-function(
               radioGroupButtons(
                 inputId = "ptPreProcCmdChoice",
                 label = "Action",
-                choices = c("onNewPt",  "onMovePt", "onDeletePt"),
+                choices = c("onNewPt",  "onMovePt", "onMoveMat"),
                 selected=selected
               )
             )
          ),
-
       aceEditor(
             outputId='ptPreProcAceEditor',
             height = "300px",

@@ -225,7 +225,7 @@ shinyServer(function(input, output,session) {
   source("rightPanel/mid/serverPlotBarTransform.R",              local=TRUE) 
   source("rightPanel/mid/serverLog.R",                           local=TRUE) 
   source("rightPanel/mid/serverPlotRmd.R",                       local=TRUE) 
-  source("rightPanel/mid/serverMouseClicks.R",                   local=TRUE)
+  source("rightPanel/mouse/serverMouseClicks.R",                 local=TRUE)
   source("rightPanel/menu/cmdNewColumn.R",                       local=TRUE)
   source("rightPanel/menu/cmdNewAsset.R",                        local=TRUE)
   source("rightPanel/menu/cmdSetMatColMax.R",                    local=TRUE)
