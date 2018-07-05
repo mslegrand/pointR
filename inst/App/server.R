@@ -7,8 +7,6 @@
 
 #---begin server--------------
 shinyServer(function(input, output,session) {
-  
-#source("util/exGetTag.R",  local=TRUE) # some ordinary functions :)
 
 # Reactive values----------
   request<-reactiveValues(

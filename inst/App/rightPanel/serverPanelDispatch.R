@@ -20,7 +20,6 @@ output$BottomRightPanel<-renderUI({
       moduleFooterRightUI("footerRight", input, output),
       div( actionButton("commitPtPreProc", 'none'), class='hiddenButton' )
   )
-
 })
 
 output$MidRightPanel<-renderUI({

@@ -90,5 +90,4 @@ readTemplate<-function(name="rTemplate.R"){
 }
 
 fileTemplatesNames<-dir(filePath(find.package('pointR'), "App","templates"))
-  #c("ptRTemplate.R",   "rmdTemplate.Rmd" ,"rTemplate.R", "svgRTemplate.R", "matTemplate.R")
 fileTemplates<-sapply( fileTemplatesNames, readTemplate)
