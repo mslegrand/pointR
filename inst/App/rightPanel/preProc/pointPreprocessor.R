@@ -50,18 +50,3 @@ newPointPreprocessor<-function(
   )
 }
 
-
-# insertEDinPP<-function(id){
-#   cat("acePointPreprocId=",acePointPreprocId,"\n")
-#   acePointPreprocId=paste0("ACE", id)
-#   ui=aceEditor(
-#     outputId=acePointPreprocId, 
-#     height = "300px", 
-#     value = text
-#   )
-#   insertUI(
-#     selector='#dogbert',
-#     where='beforeEnd',
-#     ui=ui
-#   )
-# }

@@ -1,17 +1,4 @@
 
-# 
-# getLocation<-reactive({
-#   list(
-#     assetName=getAssetName(),
-#     columIndex=getTibPtColPos(),
-#     rowIndex=getTibRow(),
-#     matColIndex=getTibMatCol(),
-#     tibs=getPtDefs()$tib
-#   )
-# })
-
-
-
 insertPoint<-function(pt, location=getLocation()  ){
   tibs<-location$tibs
   

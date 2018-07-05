@@ -5,22 +5,7 @@ preProcDB<-reactiveValues(
 )
 
 hasPtScript<-reactive({
-  #x1<-filter(preProcDB$points, tabId==getTibTabId() && tibName==getAssetName())
   nrow(filter(preProcDB$points, tabId==getTibTabId() && tibName==getAssetName(), ptColName== getTibColumnName()))>0
-  # if(nrow(x1)>0){
-  #   cat("number of rows x1= ",nrow(x1),"\n")
-  #   cat('cmd x1 are', paste(x1$cmd, collapse=", "), "\n")
-  #   cat("number of rows x2= ",nrow(x2),"\n")
-  #   cat('cmd x2 are', paste(x2$cmd, collapse=", "), "\n")
-  # } else {
-  #   cat(
-  #     'nrow(x1) in zero\n',
-  #     'tabId=',format(getTibTabId()), " ",
-  #     'tibName=', format(getAssetName()),"\n"
-  #    )
-  # }
-  # 
-  #nrow(filter(preProcDB$points, tabId==getTibTabId() && tibName==getAssetName()))>0
 })
 
 newPreProcPtEntry<-function(tab_Id, tib_Name, pt_Column_Name){
@@ -58,14 +43,5 @@ getPreProcPtScript<-reactive({
   }
   temp
 })
-
-# removePreProcPtEntry<-function(tabId, tibName, ptColName){
-#   tibble( tabId="bogus", 
-#           tibName="bogus", 
-#           ptColName='bogus', 
-#           cmd="bogus", 
-#           script='bogus'
-#   )
-# }
 
 
