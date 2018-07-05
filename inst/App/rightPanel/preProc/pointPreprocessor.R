@@ -29,7 +29,7 @@ newPointPreprocessor<-function(
          ),
 
       aceEditor(
-            outputId='catberg',
+            outputId='ptPreProcAceEditor',
             height = "300px",
             mode='r',
             value = PPPCode[[selected]]

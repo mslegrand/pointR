@@ -19,8 +19,8 @@ observeEvent(input$ptPreProcCmdChoice,{
     # cat( "input#dilbert=", input$dilbert,"\n")
     txt= getPreProcPtScript()[input$ptPreProcCmdChoice]
     selectedAsset$ptScriptSel<-input$ptPreProcCmdChoice
-    # cat("updating catbert:")
-    updateAceEditor(session, editorId='catberg', value=txt)
+    # cat("updating ptPreProcAceEditor:")
+    updateAceEditor(session, editorId='ptPreProcAceEditor', value=txt)
   }
  
 })
@@ -31,14 +31,14 @@ observeEvent( input$commitPtPreProc,{
   cat("input$dilbert=",input$ptPreProcCmdChoice,"\n")
   cmd<-input$ptPreProcCmdChoice
   if(cmd %in% c( 'onNewPt', 'onMovePt',  'onDeletePt')){
-    newScript=input$catberg
+    newScript=input$ptPreProcAceEditor
     selectedAsset$ptScriptSel<-input$ptPreProcCmdChoice
     setPreProcPtScript(
       tab_Id=getTibTabId(),
       tib_Name=getAssetName(),
       pt_Column_Name=getTibColumnName(),
       cmd_name=cmd,
-      newScript=input$catberg
+      newScript=input$ptPreProcAceEditor
     )
     
   }
