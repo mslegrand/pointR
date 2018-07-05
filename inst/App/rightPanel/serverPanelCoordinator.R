@@ -187,14 +187,14 @@ observeEvent(c(getAceEditorId(), getMode()),{
     #cat("showinging TopRightPanel\n")
     hideElement("logo.right")
     hideElement("logo.left")
-    
+    # editing ptr
     if(identical(request$mode,'ptr')){
       showElement("BottomRightPanel")
       showElement("TopRightPanel")
       showElement("snippetToolBarContainer")
       showElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble
       addClass( id= 'midRightPanels', class='ctop140')
-    } else {
+    } else { # editing other
       removeClass( id= 'midRightPanels', class='ctop140')
       hideElement("TopRightPanel")
       hideElement("snippetToolBarContainer")
@@ -209,3 +209,17 @@ observeEvent(c(getAceEditorId(), getMode()),{
   processCommit()
 })
 
+
+observeEvent( c(getRightMidPanel(), hasPtScript()), {
+  cat('getRightMidPanel()==', getRightMidPanel(),"\n")
+  cat('hasPtScript()==', hasPtScript(),"\n")
+  if( identical( getRightMidPanel(),'point') &&  hasPtScript() ){
+    cat('removing class\n')
+    removeClass( id='PtPreProcDiv', class="hiddenPanel")
+    #showElement( 'PtPreProcDiv')
+  } else {
+    cat('adding class\n')
+    #hideElement( 'PtPreProcDiv')
+    addClass( id='PtPreProcDiv', class="hiddenPanel")
+  }
+})

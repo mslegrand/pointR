@@ -57,6 +57,8 @@ observeEvent(input$plotNavBar, {
       nrow(filter(preProcDB$points, tabId==getTibTabId() && tibName==getAssetName()))==0
     ){
       newPreProcPtEntry(getTibTabId(), getAssetName(), getTibColumnName() )
+      txt=fileTemplates[['newPtTemplate.R']]
+      updateAceEditor(session, editorId='ptPreProcAceEditor', value=txt)
     }
     
     

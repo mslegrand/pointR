@@ -13,8 +13,8 @@ newPointPreprocessor<-function(
   dropdownId= paste0("PtPreProc-",id)
   #is actually paste0('sw-dropdown-',dropdownId)
   #cat("dropdownId=",dropdownId,"\n")
-  div(
-    dropdown( inputId = dropdownId ,
+  absolutePanel( id='PtPreProcDiv', left=5, bottom=5, 
+    dropdown( inputId = dropdownId , 
     div( id='ptPreProcBackPanel', class='backPanel',
          div( style="margin:10px; color:white;", 
               div( style="margin:10px",
@@ -23,7 +23,7 @@ newPointPreprocessor<-function(
                 inputId = "ptPreProcCmdChoice",
                 label = "Action",
                 choices = c("onNewPt",  "onMovePt", "onMoveMat"),
-                selected=selected
+                selected='onNewPt'
               )
             )
          ),
@@ -31,10 +31,13 @@ newPointPreprocessor<-function(
             outputId='ptPreProcAceEditor',
             height = "300px",
             mode='r',
-            value = PPPCode[[selected]]
+            value='on new' #fileTemplates[['newPtTemplate.R']]
           ),
       div( style="margin:10px",
-           actionButton("commitPtPreProc", "Commit")
+           #actionButton("commitPtPreProc", "Commit"),
+           span(id= "commitPtPreProcRequest", 'Commit', class="btn" )
+           
+           #actionBttn("commitPtPreProc", label = "Commit")
       )
     ),
    

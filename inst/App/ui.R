@@ -46,6 +46,7 @@ shinyUI(
       class="split-pane vertical-percent",
       useShinyjs(),
       extendShinyjs(script="www/menuHelper.js"), #appears that only close window is used!
+      
       #-------------left panel begin--------------------------------------------------
       #------- left component begin-----------
       div( 
@@ -53,6 +54,7 @@ shinyUI(
         class="split-pane-component", 
         #-------left bootstrapPage begin ---------
         bootstrapPage( 
+          
           #-----left menu begin---------------
           buildLeftMenu(version),
           #-------left menu end------------
@@ -134,6 +136,7 @@ shinyUI(
         bootstrapPage(
           buildRightMenu(),
           absolutePanel(id="logo.left", top=145, left=0, width="100%", img(src="ptR/pointRLogo.SVG") ),
+          div(newPointPreprocessor(id='BadWolf', title='Point Preprocessor')),
           uiOutput("BottomRightPanel"),
           uiOutput("TopRightPanel"),
           div( id="midRightPanels", class="cMidPanel ctop140",

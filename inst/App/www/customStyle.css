@@ -8,7 +8,9 @@ url('Chunkfive-webfont.svg#ChunkFiveRegular') format('svg');
 font-weight: normal;
 font-style: normal;
 }
-
+.hiddenPanel{
+  display:none;
+}
 .irs-min, .irs-max{
   color: #00FFFF;
 }

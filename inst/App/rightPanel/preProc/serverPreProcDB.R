@@ -21,6 +21,7 @@ newPreProcPtEntry<-function(tab_Id, tib_Name, pt_Column_Name){
     )
   )
   preProcDB$points<-bind_rows( preProcDB$points, temp)
+  serverAssetDB$ptScriptSel='onNewPt'
 }
 
 setPreProcPtScript<-function(tab_Id, tib_Name, pt_Column_Name,  cmd_name, newScript){
