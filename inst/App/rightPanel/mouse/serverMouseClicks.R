@@ -23,16 +23,16 @@ addPt2ptDefs<-function(name, row, matCol,  ptDefs, newPt){
 }
 
 
-
 observe({ 
   input$mouseMssg #may want to rename this
   isolate({
     if(length(input$mouseMssg)>0){
+      mssg<-input$mouseMssg
       #get cmd
-      cmd<-input$mouseMssg$cmd
+      cmd<-mssg$cmd
       
-      if(length(input$mouseMssg$vec)>0){
-        vec<- as.numeric(unlist(input$mouseMssg$vec))
+      if(length(mssg$vec)>0){
+        vec<- as.numeric(unlist(mssg$vec))
       }
       src<-getCode()
       replacementList<-list()
@@ -41,68 +41,13 @@ observe({
       if(panelName=="Points" || (panelName=='point' ) ){
         sender='PointsBar.mouse'
         if(cmd=='add'){ #---------add point
-          sender='PointsBar.mouse.add'
-          #cat('Enter: mouse cmd add')
-          newPt<-vec
-          selection<-getAssetName() 
-          rowIndex<-getTibRow()
-          # cat('mouseMssg:: rowIndex=',format(rowIndex),"\n")
-          matColIndx<-getTibMatCol()
-          if( length( getPointMax())>1){ stop('getPointMax is too big')}
-          if(!is.na(getPointMax()) &&  matColIndx>=getPointMax() ){
-              # #split here
-              tib<-ptDefs$tib[[selection]]
-              tib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
-              rowIndex<-rowIndex+1
-              tib[[getTibColumnName()]][[rowIndex]]<-matrix(newPt,2)
-              ptDefs$tib[[selection]]<-tib
-              updateAceExtDef(ptDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=1))
-            } else {
-              # no split, jjust add
-              newPtDefs<-ptDefs
-              if( hasPtScript() ){ #preproc
-                  cat('hasPtScript:: onNewPt script:\n')
-                  txt<-getPreProcPtScript()['onNewPt']
-                  print(txt)
-                  tryCatch({
-                    getPoint<-function(){newPt}
-                    getLocation<-function(){
-                      list(
-                        assetName=getAssetName(),
-                        columIndex=getTibPtColPos(),
-                        rowIndex=getTibRow(),
-                        matColIndex=getTibMatCol(),
-                        tibs=getPtDefs()$tib
-                      )
-                    }
-                    tibs<-eval(parse(text=txt))
-                    cat('trCatch:: newPtDefs \n')
-                    print(newPtDefs)
-                    newPtDefs$tib<-tibs
-                   },error=function(e){
-                    e<-c('preproErr',unlist(e))
-                    err<-paste(unlist(e), collapse="\n", sep="\n")
-                    setErrorMssg(err)
-                  })
-              } else { #no prepoc
-                newPtDefs<-addPt2ptDefs(
-                  selection,
-                  rowIndex,
-                  matColIndx,
-                  ptDefs, 
-                  newPt 
-                )
-              }
-              if(!is.null(newPtDefs)){ #update only upon success
-                  updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx+1))
-              }
-           } #end no split
+          mouseCmdAddPt(mssg)
         }#------end---add point
         
         if(cmd=='move'){ # --------move point
           cat('Enter: mouse cmd move')
           sender='PointsBar.mouse.move'
-          id<-input$mouseMssg$id
+          id<-mssg$id
           newPtDefs<-ptDefs
           vid<-strsplit(id,"-")[[1]] 
           #get selection
@@ -146,7 +91,7 @@ observe({
         sender='tagDrag.mouse'
         if(cmd=='transGrp'){ # -- move tagged group (from tagDrag)
           
-          tid<-input$mouseMssg$id
+          tid<-mssg$id
           dxy<-vec 
           tmp<-unlist(str_split(tid,"_"))
           row<-as.numeric(tail(tmp,1))
@@ -165,7 +110,7 @@ observe({
         sender='tagVal.mouse'
         if(cmd=='tagValSelect'){ # -- move tagged group (from tagDrag)
           sender='tagDrag.mouse'
-          tid<-input$mouseMssg$id
+          tid<-mssg$id
           tmp<-unlist(str_split(tid,"_"))
           row<-as.numeric(tail(tmp,1))
           selection<-getAssetName() 
@@ -181,7 +126,7 @@ observe({
         #-------transformations of nodes marked as class 'movable' (or 'transFormR' or 'dragR' )
         sender=paste0(panelName, '.mouse')
         if(cmd=='trans'){ # -- translate the object by id
-          tid<-input$mouseMssg$id
+          tid<-mssg$id
           trDefDelta2<-paste0("matrix(c(",paste0(vec,collapse=", "), "),2)" ) 
           pos<-tid2replacementCoord(tid)
           replacementList<-list(list(rng=pos, txt= trDefDelta2))
@@ -190,8 +135,8 @@ observe({
         
         #-------transformations of nodes marked as class 'movable'
         if(cmd=='rotate'){ # ----rotate
-          tid<-input$mouseMssg$id
-          vec<-input$mouseMssg$vec
+          tid<-mssg$id
+          vec<-mssg$vec
           trDefDelta2<-paste0("matrix(c(",paste0(vec,collapse=", "), "),2)" ) 
           pos<-tid2replacementCoord(tid)
           replacementList<-list(list(rng=pos, txt= trDefDelta2))
@@ -200,8 +145,8 @@ observe({
         
         #-------transformations of nodes marked as class 'movable'
         if(cmd=='scale'){ # ----scale
-          tid<-input$mouseMssg$id
-          vec<-input$mouseMssg$vec
+          tid<-mssg$id
+          vec<-mssg$vec
           trDefDelta2<-paste0("matrix(c(",paste0(vec,collapse=", "), "),2)" ) 
           pos<-tid2replacementCoord(tid)
           replacementList<-list(list(rng=pos, txt= trDefDelta2))
