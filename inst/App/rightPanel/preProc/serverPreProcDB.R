@@ -13,11 +13,11 @@ newPreProcPtEntry<-function(tab_Id, tib_Name, pt_Column_Name){
     tabId=c(tab_Id, tab_Id, tab_Id), 
     tibName=c(tib_Name, tib_Name, tib_Name), 
     ptColName=c(pt_Column_Name,pt_Column_Name,pt_Column_Name), 
-    cmd=c('onNewPt', 'onMovePt', 'onDeletePt'), 
+    cmd=c('onNewPt', 'onMovePt', 'onMoveMat'), 
     script=c(
       fileTemplates[['newPtTemplate.R']],
       fileTemplates[['movePtTemplate.R']],
-      fileTemplates[['deletePtTemplate.R']]            
+      fileTemplates[['movePtTemplate.R']]            
     )
   )
   preProcDB$points<-bind_rows( preProcDB$points, temp)
@@ -39,7 +39,7 @@ getPreProcPtScript<-reactive({
   x<-filter(preProcDB$points, tabId==getTibTabId() && tibName==getAssetName(), ptColName== getTibColumnName())
   temp<-x$script
   if(length(temp)==3){
-    names(temp)<-c('onNewPt', 'onMovePt', 'onDeletePt')
+    names(temp)<-c('onNewPt', 'onMovePt', 'onMoveMat')
   }
   temp
 })

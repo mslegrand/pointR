@@ -15,7 +15,7 @@ observeEvent( c(getRightMidPanel(), preProcDB$points) ,{
 
 observeEvent(input$ptPreProcCmdChoice,{
   # cat('input$ptPreProcCmdChoice', input$ptPreProcCmdChoice, "\n")
-  if(input$ptPreProcCmdChoice %in% c( 'onNewPt', 'onMovePt',  'onDeletePt')){
+  if(input$ptPreProcCmdChoice %in% c( 'onNewPt', 'onMovePt',  'onMoveMat')){
     # cat( "input#dilbert=", input$dilbert,"\n")
     txt= getPreProcPtScript()[input$ptPreProcCmdChoice]
     selectedAsset$ptScriptSel<-input$ptPreProcCmdChoice
@@ -30,7 +30,7 @@ observeEvent( input$commitPtPreProc,{
   cat("\n******input$commitPPP************\n")
   cat("input$dilbert=",input$ptPreProcCmdChoice,"\n")
   cmd<-input$ptPreProcCmdChoice
-  if(cmd %in% c( 'onNewPt', 'onMovePt',  'onDeletePt')){
+  if(cmd %in% c( 'onNewPt', 'onMovePt',  'onMoveMat')){
     newScript=input$ptPreProcAceEditor
     selectedAsset$ptScriptSel<-input$ptPreProcCmdChoice
     setPreProcPtScript(
