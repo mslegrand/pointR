@@ -4,25 +4,32 @@ cmdPreProcPtsImport<-function(){
 }
 
 loadPrePoints<-function(datapath){
-   #preprocText<-paste(readLines(datapath), collapse = "\n")
-  
+
   tryCatch({
     preProcList<-unlist(source(datapath, local=T)$value)
+    #check preProcList
+    if(is.null(preProcList) ||  
+       length(preProcList)!=3 ||
+       any(match(names(preProcList), c( 'onNewPt', 'onMovePt',  'onMoveMat')   , 0 )==0)
+       # TODO: check for return of eval(parse(text=preProcList[i])) for each i
+    ){
+      stop('bad preproc')
+    }
       insertPreProcPtEntry(
         tab_Id= getTibTabId(),  
         tib_Name=getAssetName(),
         pt_Column_Name=getTibColumnName(),
         newScript=preProcList
       )
-      #selection<-names(preProcList)[1]
+      selection<-names(preProcList)[1]
+      updateRadioGroupButtons(session, "ptPreProcCmdChoice", selected=selection )
       txt=preProcList[1]
       updateAceEditor(session, editorId='ptPreProcAceEditor', value=txt)
   }, 
   error=function(e){
         e<-c(e,traceback())
         err<-paste(unlist(e), collapse="\n", sep="\n")
-        # maybe should do an alert here.
-        setErrorMssg(err)
+        alert(err)
   })
 }
 
