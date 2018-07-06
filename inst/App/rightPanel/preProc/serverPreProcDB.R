@@ -25,6 +25,7 @@ insertPreProcPtEntry<-function(
   ){
   cat("---entering insertPreProcPtEntry---\n")
   # todo addd tests for newScript (is character...)
+  browser()
   temp2<-tibble( 
     tabId=rep(tab_Id,length(newScript)), 
     tibName=rep(tib_Name, length(newScript)), 
@@ -36,8 +37,8 @@ insertPreProcPtEntry<-function(
   temp1<-filter(preProcDB$points, 
     !(
       tabId==tab_Id & 
-      tibName!=tib_Name &  
-      ptColName!=pt_Column_Name & 
+      tibName==tib_Name &  
+      ptColName==pt_Column_Name & 
       cmd %in% names(newScript)
     )           
   )
