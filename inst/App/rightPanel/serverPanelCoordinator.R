@@ -214,12 +214,14 @@ observeEvent( c(getRightMidPanel(), hasPtScript()), {
   cat('getRightMidPanel()==', getRightMidPanel(),"\n")
   cat('hasPtScript()==', hasPtScript(),"\n")
   if( identical( getRightMidPanel(),'point') &&  hasPtScript() ){
-    cat('removing class\n')
+    cat('removing class hiddenPanel\n')
     removeClass( id='PtPreProcDiv', class="hiddenPanel")
+    cat('class hiddenPanel removed\n')
     #showElement( 'PtPreProcDiv')
   } else {
-    cat('adding class\n')
+    cat('adding class hiddenPanel\n')
     #hideElement( 'PtPreProcDiv')
     addClass( id='PtPreProcDiv', class="hiddenPanel")
+    cat('class hiddenPanel added\n')
   }
 })
