@@ -261,5 +261,5 @@ shinyServer(function(input, output,session) {
   source("leftPanel/toolbar/serverDnippetToolBar.R",            local=TRUE)
   source("leftPanel/menu/cmdFileDnippet.R",                     local=TRUE)
   source("leftPanel/menu/cmdAbout.R",                           local=TRUE)
-  source("leftPanel/serverEditBar.R",                           local=TRUE)
+  source("leftPanel/menu/serverEditBar.R",                      local=TRUE)
 })
