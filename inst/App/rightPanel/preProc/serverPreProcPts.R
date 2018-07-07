@@ -1,7 +1,14 @@
+output$uiPreProcChooser<-renderUI({
+  radioGroupButtons(
+    inputId = "ptPreProcCmdChoice",
+    label = "Action",
+    choices = preprocChoices #,
+    #selected='onNewPt'
+  )
+})
 
 observeEvent(input$ptPreProcCmdChoice, {
-  if(input$ptPreProcCmdChoice %in% c( 'onNewPt', 'onMovePt',  'onMoveMat') &&
-    getRightMidPanel()=='point'){
+  if((input$ptPreProcCmdChoice %in% preprocChoices) &&  getRightMidPanel()%in% c('point', 'matrix') ){
     txt= getPreProcPtScript()[input$ptPreProcCmdChoice]
     selectedAsset$ptScriptSel<-input$ptPreProcCmdChoice
     updateAceEditor(session, editorId='ptPreProcAceEditor', value=txt)
@@ -12,10 +19,10 @@ observeEvent(input$ptPreProcCmdChoice, {
 onclick("commitPtPreProcRequest", click('commitPtPreProc') )
 
 observeEvent( input$commitPtPreProc,{
-  if(getRightMidPanel()=='point'){
+  if(getRightMidPanel() %in% c('point', 'matrix')){
     cat("\n******input$commitPtPreProc************\n")
     cmd<-input$ptPreProcCmdChoice
-    if(cmd %in% c( 'onNewPt', 'onMovePt',  'onMoveMat')){
+    if(cmd %in% preprocChoices){
       newScript=input$ptPreProcAceEditor
       cat('newScript=\n')
       cat(newScript)
