@@ -20,12 +20,10 @@ onclick("commitPtPreProcRequest", click('commitPtPreProc') )
 
 observeEvent( input$commitPtPreProc,{
   if(getRightMidPanel() %in% c('point', 'matrix')){
-    cat("\n******input$commitPtPreProc************\n")
+    # cat("\n******input$commitPtPreProc************\n")
     cmd<-input$ptPreProcCmdChoice
     if(cmd %in% preprocChoices){
       newScript=input$ptPreProcAceEditor
-      cat('newScript=\n')
-      cat(newScript)
       selectedAsset$ptScriptSel<-cmd
       setPreProcPtScript(
         tab_Id=getTibTabId(),
