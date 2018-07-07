@@ -12,7 +12,7 @@ serverAssetDB<-reactiveValues(
     ptAddScript="NULL",
     ptMoveScript="NULL",
     ptDeleteScript="NULL",
-    ptScriptSel='onNewPt'
+    ptScriptSel=preprocChoices[1]
   )[0,]
 )
 
@@ -86,6 +86,6 @@ newAssetSelection<-function( tabId, choices, tibs){
     ptColName=ptColName,
     selIndex=1,
     transformType='Translate',
-    ptScriptSel='onNewPt'
+    ptScriptSel=preprocChoices[1]
   )
 }

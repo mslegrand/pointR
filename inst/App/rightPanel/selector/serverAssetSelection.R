@@ -15,7 +15,7 @@ selectedAsset <- reactiveValues(
   ptColName=NULL,      # !!! KLUDGE for now. should this default to last col?
   selIndex=1, # only used is to determine if in matrix or point mode !! 
   transformType='Translate', # TODO!!! replace this with selIndex
-  ptScriptSel='onNewPt'
+  ptScriptSel=preprocChoices[1]
 )
 
 

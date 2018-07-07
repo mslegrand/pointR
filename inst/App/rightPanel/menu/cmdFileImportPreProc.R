@@ -10,7 +10,7 @@ loadPrePoints<-function(datapath){
     #check preProcList
     if(is.null(preProcList) ||  
        length(preProcList)!=3 ||
-       any(match(names(preProcList), c( 'onNewPt', 'onMovePt',  'onMoveMat')   , 0 )==0)
+       any(match(names(preProcList), preprocChoices   , 0 )==0)
        # TODO: check for return of eval(parse(text=preProcList[i])) for each i
     ){
       stop('bad preproc')
