@@ -14,31 +14,15 @@ cmdFileSaveAs<-function(){
 observeEvent(input$buttonFileSaveR,{
   # cat('=======shinyFiles SAVE RETURN EVENT=============\n')
   rtList<-input$buttonFileSaveR
-  # cat('class(rtList)=',class(rtList),"\n")
-  # print(format(rtList))
+
   if('cancel' %in% names(rtList)){
-    #if(request$sender=='fileCmd.close'){
-      #if(!is.null(request$closeTab)){
-    # cat('rtList$cancel',format(rtList$cancel),"\n")
     if(rtList$cancel=='close'){ 
-      # cat('cancel and close')
-      #removeTab(inputId = "pages", request$closeTab)
-      
       tabId<-popTab()
-      # cat('tabId=',format(tabId),"\n")
-      #removeTab(inputId = "pages", tabId)
       closeTabNow(tabId)
-      # TODO!!!  add oldPath to recentFiles
-      # cat('tab should be gone by now')
-      #removeTab(inputId = "pages", request$closeTab)
-      #request$closeTab=NULL;
     } else {
-      # cat('canceling a request')
       setTabRequest(sender=NULL, tabs=NULL)
     }
   } else { 
-    #browser()
-    # cat("input$buttonFileSaveR\n")
     fp.dt<-parseSavePath(c(wd='~'), input$buttonFileSaveR)
     if(length(fp.dt)>0 && nrow(fp.dt)>0){
       #cat('=======shinyFiles SAVE=============\n')

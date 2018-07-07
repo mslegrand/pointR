@@ -27,9 +27,7 @@ observe({
   isolate({
     if(length(input$mouseMssg)>0){
       mssg<-input$mouseMssg
-      #get cmd
       cmd<-mssg$cmd
-      # cat('cmd=',cmd,'\n')
       if(length(mssg$vec)>0){
         vec<- as.numeric(unlist(mssg$vec))
       }
@@ -37,7 +35,6 @@ observe({
       replacementList<-list()
       ptDefs<-getPtDefs() 
       panelName=getRightMidPanel()
-      # cat('1 panelName=',panelName,"\n")
       if(panelName=="Points" || (panelName=='point' ) ){
         
         if(cmd=='add'){ #---------add point
@@ -49,9 +46,7 @@ observe({
         }    
       }
       if(panelName=='matrix'){
-        # cat('2 panelName=',panelName,'\n')
         if(cmd=='transGrp'){ # -- move tagged group (from tagDrag)
-          # cat('calling mouseCmdMoveMatrix\n')
           mouseCmdMoveMatrix(mssg)
         }
       }

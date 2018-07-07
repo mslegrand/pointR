@@ -5,13 +5,7 @@ preProcDB<-reactiveValues(
 )
 
 hasPtScript<-reactive({
-  # cat('hasPtScript begin\n')
- 
-    # browser()
     rtv<-nrow(filter(preProcDB$points, tabId==getTibTabId() && tibName==getAssetName() && ptColName== getTibColumnName()))>0
-
-    
-  # cat('hasPtScript end\n')
   rtv
 })
 
@@ -33,7 +27,6 @@ insertPreProcPtEntry<-function(
     cmd=names(newScript), 
     script=newScript            
   )
-  #Todo remove preexisting entries
   temp1<-filter(preProcDB$points, 
     !(
       tabId==tab_Id & 
@@ -42,11 +35,8 @@ insertPreProcPtEntry<-function(
       cmd %in% names(newScript)
     )           
   )
-  
   preProcDB$points<-bind_rows( temp1, temp2)
-  #preProcDB$points<-bind_rows( preProcDB$points, temp)
   serverAssetDB$ptScriptSel=names(newScript)[1]
-  # cat("---exiting insertPreProcPtEntry---\n")
 }
 
 setPreProcPtScript<-function(tab_Id, tib_Name, pt_Column_Name,  cmd_name, newScript){
@@ -61,7 +51,6 @@ setPreProcPtScript<-function(tab_Id, tib_Name, pt_Column_Name,  cmd_name, newScr
 
 
 getPreProcPtScript<-reactive({
-  # cat("---entering getPreProcPtScript---")
   tab_Id=getTibTabId()
   tib_Name= getAssetName()
   pt_Column_Name= getTibColumnName()
@@ -70,8 +59,6 @@ getPreProcPtScript<-reactive({
   if(length(temp)==3){
     names(temp)<-x$cmd
   }
-  # cat('x$script=',paste(temp, collapse=", "))
-  # cat("---returning getPreProcPtScript---")
   temp
 })
 

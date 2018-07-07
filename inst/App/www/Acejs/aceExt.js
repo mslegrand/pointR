@@ -131,7 +131,7 @@ Shiny.addCustomMessageHandler(
         var id = data.id;
         
         
-        if(id.length===0){ // nothing to process
+        if(id.length===0 || id==='bogus'){ // nothing to process
           Shiny.onInputChange('messageFromAce', 
           {
              code : "",
