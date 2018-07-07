@@ -55,6 +55,7 @@ textPanelTag<-'textPanel'
 snippetPanelTag<-'snippetPanel'
 tibTag<-'tib'
 
+preprocChoices<-c("onNewPt",  "onMovePt", "onMoveMat")
 getSVGWH<-function(){ c(650,620) } #this should be ultimately place in another file
 
 #----begin external resources loaded prior to server------------
