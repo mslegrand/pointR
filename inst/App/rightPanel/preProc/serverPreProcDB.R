@@ -20,12 +20,12 @@ insertPreProcPtEntry<-function(
   newScript = c(
     onNewPt=fileTemplates[['newPtTemplate.R']],
     onMovePt=fileTemplates[['movePtTemplate.R']],
-    onMoveMat=fileTemplates[['movePtTemplate.R']]  
-  )
+    onMoveMat=fileTemplates[['moveMatTemplate.R']]  
+  ) 
   ){
   cat("---entering insertPreProcPtEntry---\n")
   # todo addd tests for newScript (is character...)
-  browser()
+ 
   temp2<-tibble( 
     tabId=rep(tab_Id,length(newScript)), 
     tibName=rep(tib_Name, length(newScript)), 
@@ -68,7 +68,7 @@ getPreProcPtScript<-reactive({
   x<-filter(preProcDB$points, tabId==getTibTabId() && tibName==getAssetName(), ptColName== getTibColumnName())
   temp<-x$script
   if(length(temp)==3){
-    names(temp)<-c('onNewPt', 'onMovePt', 'onMoveMat')
+    names(temp)<-x$cmd
   }
   cat('x$script=',paste(temp, collapse=", "))
   cat("---returning getPreProcPtScript---")

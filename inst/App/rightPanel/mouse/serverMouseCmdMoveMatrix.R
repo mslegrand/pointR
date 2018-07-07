@@ -5,18 +5,50 @@ mouseCmdMoveMatrix<-function(mssg){
   }
   src<-getCode()
   replacementList<-list()
-  ptDefs<-getPtDefs() 
+  newPtDefs<-getPtDefs() 
   
   sender='tagDrag.mouse'
-  tid<-mssg$id
+  id<-mssg$id
   dxy<-vec 
-  tmp<-unlist(str_split(tid,"_"))
-  row<-as.numeric(tail(tmp,1))
-  
+  tmp<-unlist(str_split(id,"_"))
+  row<-as.numeric(tail(tmp,1)) 
   selection<-getAssetName() 
-  m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]
-  ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]<-m+vec
-  matCol<-ncol(m)
-  newPtDefs<-ptDefs
-  updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=row, matCol=matCol))  
+  matColIndx<-ncol(newPtDefs$tib[[selection]][[ row, getTibPtColPos() ]])
+  cat("matColIndx=",matColIndx,"\n")
+  #getMatrix<-function(){m}
+  
+  if( hasPtScript() ){
+      cat('hasPtScript:: onMoveMat script:\n')
+      txt<-getPreProcPtScript()['onMoveMat']
+      cat(txt)
+      tryCatch({ 
+        getDxy<-function(){dxy}
+        getLocation<-function(){
+          list(
+            assetName=getAssetName(),
+            columIndex=getTibPtColPos(),
+            rowIndex=row,
+            matColIndex=matColIndx,
+            tibs=getPtDefs()$tib
+          )
+        }
+        tibs<-eval(parse(text=txt))
+        newPtDefs$tib<-tibs
+        matCol<-ncol(tibs[[getAssetName()]][row, getTibPtColPos()] )
+        updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=row, matCol=matCol))  
+      },error=function(e){
+        e<-c('preproErr',unlist(e))
+        err<-paste(unlist(e), collapse="\n", sep="\n")
+        alert(err)
+      })
+  } else {
+    m<-newPtDefs$tib[[selection]][[ row, getTibPtColPos() ]]
+    newPtDefs$tib[[selection]][[ row, getTibPtColPos() ]]<-m+vec
+    matCol<-ncol(m)
+    updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=row, matCol=matCol)) 
+  }
+  
+  
+  
+   
 }

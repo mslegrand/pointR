@@ -46,7 +46,6 @@ observe({
         
         if(cmd=='move'){ # --------move point
           mouseCmdMovePt(mssg)
-                    
         }    
       }
       if(panelName=='matrix'){
