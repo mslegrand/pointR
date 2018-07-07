@@ -38,7 +38,7 @@ observeEvent(input$buttonFileSaveR,{
     }
   } else { 
     #browser()
-    cat("input$buttonFileSaveR\n")
+    # cat("input$buttonFileSaveR\n")
     fp.dt<-parseSavePath(c(wd='~'), input$buttonFileSaveR)
     if(length(fp.dt)>0 && nrow(fp.dt)>0){
       #cat('=======shinyFiles SAVE=============\n')

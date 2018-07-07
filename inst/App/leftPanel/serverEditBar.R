@@ -142,7 +142,7 @@ observeEvent( input$editNavBar, {
     }
     
     if(fileCmd=="importSnippetFile"){
-      cat('serverEditBar---------------fileCmd=="importSnippetFile"---------------------------------------\n ')
+      # cat('serverEditBar---------------fileCmd=="importSnippetFile"---------------------------------------\n ')
       cmdSnippetImport()
       dirtyDMDM(session, "editNavBar")
     }

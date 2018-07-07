@@ -6,13 +6,11 @@ processKnit<-reactive({
   
   if(length(src)==1 && nchar(src)>0){
     if(grepl("output: dnd_snippet",src)){
-      
-      cat("founds\n")
       src<-dripplets2Rmd(src)
-      cat(src)
     }
     tryCatch({
       knit2html(text = src, fragment.only = FALSE, quiet = TRUE)
+      #knit2html(text = src, fragment.only = FALSE, quiet = TRUE)
       setSourceType(sourceType=rmdPanelTag)
      } 
      , #end of try

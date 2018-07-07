@@ -34,13 +34,18 @@ mouseCmdMovePt<- function(mssg){
       }
       tibs<-eval(parse(text=txt))
       newPtDefs$tib<-tibs
+      if(!is.null(newPtDefs)){ #update only upon success
+        updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx+1))
+      }
     },error=function(e){
       e<-c('preproErr',unlist(e))
       err<-paste(unlist(e), collapse="\n", sep="\n")
-      setErrorMssg(err)
+      alert(err)
     })
   } else {
     newPtDefs$tib[[selection]][[ rowIndex, getTibPtColPos() ]][,matColIndx]<-newPt
+    if(!is.null(newPtDefs)){ #update only upon success
+      updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx+1))
+    }
   }
-  updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx))
 }

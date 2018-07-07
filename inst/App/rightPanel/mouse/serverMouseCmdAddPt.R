@@ -28,7 +28,7 @@ mouseCmdAddPt<-function(mssg){
     if( hasPtScript() ){ #preproc
       cat('hasPtScript:: onNewPt script:\n')
       txt<-getPreProcPtScript()['onNewPt']
-      print(txt)
+      # print(txt)
       tryCatch({
         getPoint<-function(){newPt}
         getLocation<-function(){
@@ -41,13 +41,16 @@ mouseCmdAddPt<-function(mssg){
           )
         }
         tibs<-eval(parse(text=txt))
-        cat('trCatch:: newPtDefs \n')
-        print(newPtDefs)
+        # cat('trCatch:: newPtDefs \n')
+        # print(newPtDefs)
         newPtDefs$tib<-tibs
+        if(!is.null(newPtDefs)){ #update only upon success
+          updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx+1))
+        }
       },error=function(e){
         e<-c('preproErr',unlist(e))
         err<-paste(unlist(e), collapse="\n", sep="\n")
-        setErrorMssg(err)
+        alert(err)(err)
       })
     } else { #no prepoc
       newPtDefs<-addPt2ptDefs(
@@ -57,9 +60,9 @@ mouseCmdAddPt<-function(mssg){
         ptDefs, 
         newPt 
       )
-    }
-    if(!is.null(newPtDefs)){ #update only upon success
-      updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx+1))
+      if(!is.null(newPtDefs)){ #update only upon success
+        updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx+1))
+      }    
     }
   } #end no split
   

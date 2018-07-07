@@ -5,13 +5,13 @@ preProcDB<-reactiveValues(
 )
 
 hasPtScript<-reactive({
-  cat('hasPtScript begin\n')
+  # cat('hasPtScript begin\n')
  
     # browser()
     rtv<-nrow(filter(preProcDB$points, tabId==getTibTabId() && tibName==getAssetName() && ptColName== getTibColumnName()))>0
 
     
-  cat('hasPtScript end\n')
+  # cat('hasPtScript end\n')
   rtv
 })
 
@@ -23,7 +23,7 @@ insertPreProcPtEntry<-function(
     onMoveMat=fileTemplates[['moveMatTemplate.R']]  
   ) 
   ){
-  cat("---entering insertPreProcPtEntry---\n")
+  # cat("---entering insertPreProcPtEntry---\n")
   # todo addd tests for newScript (is character...)
  
   temp2<-tibble( 
@@ -46,7 +46,7 @@ insertPreProcPtEntry<-function(
   preProcDB$points<-bind_rows( temp1, temp2)
   #preProcDB$points<-bind_rows( preProcDB$points, temp)
   serverAssetDB$ptScriptSel=names(newScript)[1]
-  cat("---exiting insertPreProcPtEntry---\n")
+  # cat("---exiting insertPreProcPtEntry---\n")
 }
 
 setPreProcPtScript<-function(tab_Id, tib_Name, pt_Column_Name,  cmd_name, newScript){
@@ -61,7 +61,7 @@ setPreProcPtScript<-function(tab_Id, tib_Name, pt_Column_Name,  cmd_name, newScr
 
 
 getPreProcPtScript<-reactive({
-  cat("---entering getPreProcPtScript---")
+  # cat("---entering getPreProcPtScript---")
   tab_Id=getTibTabId()
   tib_Name= getAssetName()
   pt_Column_Name= getTibColumnName()
@@ -70,8 +70,8 @@ getPreProcPtScript<-reactive({
   if(length(temp)==3){
     names(temp)<-x$cmd
   }
-  cat('x$script=',paste(temp, collapse=", "))
-  cat("---returning getPreProcPtScript---")
+  # cat('x$script=',paste(temp, collapse=", "))
+  # cat("---returning getPreProcPtScript---")
   temp
 })
 

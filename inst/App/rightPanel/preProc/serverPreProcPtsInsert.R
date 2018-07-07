@@ -1,4 +1,4 @@
-
+# user util for point insertion preprossesing
 insertPoint<-function(pt, location=getLocation()  ){
   tibs<-location$tibs
   

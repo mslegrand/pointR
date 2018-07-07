@@ -211,17 +211,17 @@ observeEvent(c(getAceEditorId(), getMode()),{
 
 
 observeEvent( c(getRightMidPanel(), hasPtScript()), {
-  cat('getRightMidPanel()==', getRightMidPanel(),"\n")
-  cat('hasPtScript()==', hasPtScript(),"\n")
+  # cat('getRightMidPanel()==', getRightMidPanel(),"\n")
+  # cat('hasPtScript()==', hasPtScript(),"\n")
   if( identical( getRightMidPanel(),'point') &&  hasPtScript() ){
-    cat('removing class hiddenPanel\n')
+    # cat('removing class hiddenPanel\n')
     removeClass( id='PtPreProcDiv', class="hiddenPanel")
-    cat('class hiddenPanel removed\n')
+    # cat('class hiddenPanel removed\n')
     #showElement( 'PtPreProcDiv')
   } else {
-    cat('adding class hiddenPanel\n')
+    # cat('adding class hiddenPanel\n')
     #hideElement( 'PtPreProcDiv')
     addClass( id='PtPreProcDiv', class="hiddenPanel")
-    cat('class hiddenPanel added\n')
+    # cat('class hiddenPanel added\n')
   }
 })

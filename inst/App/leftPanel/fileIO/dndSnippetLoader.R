@@ -14,10 +14,10 @@ imageBlockIndices<-function(temp){
 dripplets2Rmd<-function( drps ){
   drps<-str_replace_all(drps, "svgR\\(", 'temp<-svgR(')
   m<-imageBlockIndices(drps)
-  print(m)
+  # print(m)
   unlist(str_split(drps, '\n'))->drps
   indx<-m[2,]
-  print(indx)
+  # print(indx)
   drps[indx]<-paste(
     "temp$root$setAttr('width',480)",
     "temp$root$setAttr('height',320)",
@@ -38,9 +38,9 @@ dripplets2Rmd<-function( drps ){
 }
 
 extractVal<-function(x,pattern){
-  cat('extractVal\n')
+  # cat('extractVal\n')
   rtv<-str_match_all(x,pattern)
-  print(rtv)
+  # print(rtv)
   rtv<-rtv[[1]]
   if(length(rtv)>0){
     rtv<-rtv[1,2]
@@ -57,9 +57,9 @@ dripplets2List<-function(drps){
   i<-1
   drps<-lapply(drps, function(dr){
     rtv<-list()
-    cat(i, 'hint\n')
+    # cat(i, 'hint\n')
     rtv$hint<-    extractVal(dr, "(?:\nHint: \n```\n)(.+)(?:\n```\n)")
-    cat(i, 'snippet\n')
+    # cat(i, 'snippet\n')
     rtv$snippet<- extractVal(dr, "(?:\nSnippet\\s+Insert:\\s*\n```\\s*\n)(.+)(?:\n```\\s*\n)")
     rtv
   })

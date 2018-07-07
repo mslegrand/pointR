@@ -19,7 +19,7 @@ genShinySaveFilesObservers<-function(input, session){
           setTabRequest(sender=NULL, tabs=NULL)
         }
       } else { 
-        cat('parseSavePath 123\n')
+        # cat('parseSavePath 123\n')
         fp.dt<-parseSavePath(c(wd='~'), rtList)
         if(length(fp.dt)>0 && nrow(fp.dt)>0){
           cat('=======shinyFiles SAVE observer=============\n')
@@ -49,7 +49,7 @@ genShinySaveFilesObservers<-function(input, session){
           if(request$sender=='fileCmd.saveAs'){
             sender='fileCmd.saveNow'
           }
-          cat('sender=',format(sender),"\n")
+          # cat('sender=',format(sender),"\n")
           tabId<-peekTab()
           aceId<-tabID2aceID(tabId)
           

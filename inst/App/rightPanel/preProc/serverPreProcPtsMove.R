@@ -1,5 +1,4 @@
-
-
+# user util for point move preprossesing
 movePoint<-function(pt, location=getLocation()  ){
   tibs<-location$tibs
   
@@ -16,7 +15,7 @@ movePoint<-function(pt, location=getLocation()  ){
       rowIndex>0 && 
       rowIndex<=nrow(tib)
     ){
-      columIndex<-getTibPtColPos() #which(names(tib)==ptColName)
+      columIndex<-getTibPtColPos() #ie. which(names(tib)==ptColName)
       tib[[rowIndex,columIndex]][,location$matColIndex] <-pt
       tibs[[location$assetName]]<-tib
     }

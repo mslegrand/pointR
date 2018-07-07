@@ -1,4 +1,4 @@
-
+# dropdown for preprocessor
 newPointPreprocessor<-function(
      id='BadWolf',  
      title='Point Preprocessor'
@@ -13,26 +13,6 @@ newPointPreprocessor<-function(
                h5(title, style='color:white;'),
                div(actionBttn('tmp','tmp'), style="display:none;"),
                uiOutput("uiPreProcChooser")
-               
-              #  ,
-              # radioGroupButtons(
-              #   inputId = "ptPreProcCmdChoice",
-              #   label = "Action",
-              #   choices = c(preprocChoices,'.') #,
-              #   #selected='onNewPt'
-              # )
-              # ,
-              # div(class='btn-group-container-sw btn-group',
-              #   div( class='btn-group', role='group',
-              #        span ( class='btn btn-default active', id='but1', 'onNewPt')
-              #   ),
-              #   div( class='btn-group', role='group',
-              #         span ( class='btn', id='but2', 'onMovePt')
-              #   ),
-              #   div( class='btn-group', role='group',
-              #         span ( class='btn', id='but3', 'onMoveMat')
-              #   )
-              # )
             )
          ),
       aceEditor(

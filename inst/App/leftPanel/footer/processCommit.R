@@ -53,7 +53,7 @@ processSvgR<-reactive({
         # capture capture output as mssg
         env<-new.env()
         output<-lapply(lines, function(line){
-          cat("processCommit::captureOutput\n")
+          # cat("processCommit::captureOutput\n")
           captureOutput(eval(parse(text=line), envir=env))
         })
         output<-paste( output, collapse="\n" )

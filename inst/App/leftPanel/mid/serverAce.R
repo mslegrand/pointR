@@ -103,7 +103,7 @@ observeEvent(input$messageFromAce, {
              } else if( identical(request$mode, 'markdown') ){
                  ext=list(dnippets='dnippets')
              } else {
-               cat('request$mode=',request$mode,"\n")
+               # cat('request$mode=',request$mode,"\n")
                stop('unknowMode')
                ext=list(text='txt')
              }
