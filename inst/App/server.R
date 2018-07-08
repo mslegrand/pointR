@@ -179,6 +179,7 @@ shinyServer(function(input, output,session) {
   shinyFileChoose(input, "buttonDnippetImport",      session=session, roots=c(wd="~"),  filetypes=c('dnippets') ) #hidden
   shinyFileChoose(input, "buttonPreProcPtImport",    session=session, roots=c(wd="~"),  filetypes=c('preprocpts') ) #hidden
   shinyFileSave(input,   "buttonExportSVG",          session=session, roots=c(wd="~")  ) #hidden
+  shinyFileSave(input,   "buttonExportPreproc",      session=session, roots=c(wd="~")  ) #hidden
   
 
   # Reactive expressions------------- 
@@ -234,6 +235,7 @@ shinyServer(function(input, output,session) {
   source("rightPanel/menu/cmdSetMatColMax.R",                    local=TRUE)
   source("rightPanel/menu/cmdDeleteColumn.R",                    local=TRUE)
   source("rightPanel/menu/cmdFileImportPreProc.R",               local=TRUE)
+  source("rightPanel/menu/cmdFileExportPreProc.R",               local=TRUE)
   source("rightPanel/menu/serverPlotBar.R",                      local=TRUE)
   source("rightPanel/serverPanelCoordinator.R",                  local=TRUE)
   source("rightPanel/serverPanelDispatch.R",                     local=TRUE)

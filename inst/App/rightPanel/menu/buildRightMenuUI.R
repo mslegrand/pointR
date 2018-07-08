@@ -25,7 +25,9 @@ buildRightMenu<-function(){
       shinyDMDMenu::menuDropdown(
         "Point Preprocessor",
         shinyDMDMenu::menuItem('New', value='cmdNewPP'),
-        shinyDMDMenu::menuItem('Import', value='cmdImportPP')
+        shinyDMDMenu::menuItem('Import', value='cmdImportPP'),
+        shinyDMDMenu::menuItem('Export', value='cmdExportPP'),
+        shinyDMDMenu::menuItem('Remove', value='cmdRemovePP')
       )
     )
   ) #menubar end 

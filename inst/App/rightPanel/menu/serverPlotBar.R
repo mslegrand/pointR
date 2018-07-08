@@ -65,7 +65,10 @@ observeEvent(input$plotNavBar, {
       cmdPreProcPtsImport()
       dirtyDMDM(session, "editNavBar")
   }  
-    
+  if(cmd=="cmdExportPP"){ #-----save
+    cmdPreProcPtsExport()
+    dirtyDMDM(session, "editNavBar")
+  }    
   
   if(!is.null(cmd)){
     dirtyDMDM(session, "plotNavBar")
