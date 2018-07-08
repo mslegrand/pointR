@@ -1,8 +1,8 @@
 # template for point insertion precprossing
 
-dxy<-getDxy() # pt contains coordinates derived from the mouse move
+pt<-getPoint() # pt contains coordinates derived from the mouse move
 
 #apply your point manipulations here
 
-tibs<-moveMatrix(dxy=dxy, location=getLocation() )
+tibs<-movePoint(pt=pt, location=getLocation() )
 tibs # always return tibs
