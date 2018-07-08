@@ -211,7 +211,8 @@ observeEvent(c(getAceEditorId(), getMode()),{
 
 
 observeEvent( c(getRightMidPanel(), hasPtScript()), {
-  if( identical( getRightMidPanel(),'point') &&  hasPtScript() ){
+  if( !is.null(getRightMidPanel()) && getRightMidPanel() %in% c('point','matrix')
+      &&  hasPtScript() ){
     # cat('removing class hiddenPanel\n')
     removeClass( id='PtPreProcDiv', class="hiddenPanel")
   } else {
