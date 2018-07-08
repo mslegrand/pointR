@@ -204,7 +204,6 @@ shinyServer(function(input, output,session) {
 #------------------leftPanel--------------------------------
   source("leftPanel/mid/serverAce.R",                            local=TRUE) 
   source("leftPanel/helpSVG.R",                                  local=TRUE)
-  # source("rightPanel/footer/pointPreprocessor.R",    local=TRUE)
   source("leftPanel/tabs/serverFileTabs.R",                      local=TRUE) 
   source("leftPanel/fileIO/serverGenShinyFilesSaveObservers.R",  local=TRUE)
   
@@ -236,6 +235,7 @@ shinyServer(function(input, output,session) {
   source("rightPanel/menu/cmdDeleteColumn.R",                    local=TRUE)
   source("rightPanel/menu/cmdFileImportPreProc.R",               local=TRUE)
   source("rightPanel/menu/cmdFileExportPreProc.R",               local=TRUE)
+  source("rightPanel/menu/cmdRemovePreProc.R",                   local=TRUE)
   source("rightPanel/menu/serverPlotBar.R",                      local=TRUE)
   source("rightPanel/serverPanelCoordinator.R",                  local=TRUE)
   source("rightPanel/serverPanelDispatch.R",                     local=TRUE)

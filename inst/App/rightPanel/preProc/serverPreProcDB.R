@@ -9,6 +9,15 @@ hasPtScript<-reactive({
   rtv
 })
 
+
+removePreProcPtEntry<-function(tab_Id, tib_Name, pt_Column_Name){
+  temp1<-filter(
+    preProcDB$points, 
+    !(tabId==tab_Id & tibName==tib_Name &  ptColName==pt_Column_Name)           
+  )  
+  preProcDB$points<-temp1
+}
+
 insertPreProcPtEntry<-function(
   tab_Id, tib_Name, pt_Column_Name, 
   newScript = c(
