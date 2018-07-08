@@ -215,8 +215,12 @@ observeEvent( c(getRightMidPanel(), hasPtScript()), {
       &&  hasPtScript() ){
     # cat('removing class hiddenPanel\n')
     removeClass( id='PtPreProcDiv', class="hiddenPanel")
+    enableDMDM( session, menuBarId="plotNavBar", entry="cmdExportPP")
+    enableDMDM( session, menuBarId="plotNavBar", entry="cmdRemovePP")
   } else {
     # cat('adding class hiddenPanel\n')
     addClass( id='PtPreProcDiv', class="hiddenPanel")
+    disableDMDM( session, menuBarId="plotNavBar", entry="cmdExportPP")
+    disableDMDM( session, menuBarId="plotNavBar", entry="cmdRemovePP")
   }
 })
