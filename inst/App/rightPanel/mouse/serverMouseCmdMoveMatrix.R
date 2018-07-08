@@ -33,6 +33,7 @@ mouseCmdMoveMatrix<-function(mssg){
           )
         }
         tibs<-eval(parse(text=txt))
+        validateTibLists(getPtDefs()$tib, tibs)
         newPtDefs$tib<-tibs
         matCol<-ncol(tibs[[getAssetName()]][row, getTibPtColPos()] )
         updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=row, matCol=matCol))  

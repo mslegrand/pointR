@@ -39,14 +39,16 @@ mouseCmdAddPt<-function(mssg){
           )
         }
         tibs<-eval(parse(text=txt))
+        validateTibLists(getPtDefs()$tib, tibs)
         newPtDefs$tib<-tibs
         if(!is.null(newPtDefs)){ #update only upon success
           updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx+1))
         }
       },error=function(e){
-        e<-c('preproErr',unlist(e))
+        e<-c('preproErr',e)
         err<-paste(unlist(e), collapse="\n", sep="\n")
-        alert(err)(err)
+        cat(err)
+        alert(err)
       })
     } else { #no prepoc
       newPtDefs<-addPt2ptDefs(

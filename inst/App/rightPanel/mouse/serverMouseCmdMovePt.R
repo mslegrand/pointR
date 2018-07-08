@@ -33,6 +33,7 @@ mouseCmdMovePt<- function(mssg){
         )
       }
       tibs<-eval(parse(text=txt))
+      validateTibLists(getPtDefs()$tib, tibs) 
       newPtDefs$tib<-tibs
       if(!is.null(newPtDefs)){ #update only upon success
         updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx+1))
