@@ -5,7 +5,7 @@ cmdFileExportSvg<-function(){
   } else {
     svgFileName<-"unnamed.svg"
   }
-  sendPtRManagerMessage(  sender='cmd.exportSVG', exportSVG=TRUE)
+  click('buttonExportSVG')
 }
 
 observeEvent(input$buttonExportSVG,{
