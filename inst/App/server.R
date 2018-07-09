@@ -205,7 +205,10 @@ shinyServer(function(input, output,session) {
   source("leftPanel/mid/serverAce.R",                            local=TRUE) 
   source("leftPanel/helpSVG.R",                                  local=TRUE)
   source("leftPanel/tabs/serverFileTabs.R",                      local=TRUE) 
-  source("leftPanel/fileIO/serverGenShinyFilesSaveObservers.R",  local=TRUE)
+  
+  
+  #------------------fileIO----------------------------------
+  source("fileIO/serverGenShinyFilesSaveObservers.R",            local=TRUE)
   
 #------------------rightPanel--------------------------------
   source("rightPanel/selector/serverAssetSelectionDB.R",         local=TRUE)
