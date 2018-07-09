@@ -1,34 +1,20 @@
 moduleFooterRightUI<-function(id, input, output) { 
   ns <- NS(id)
-    absolutePanel( "class"="footerPanel", draggable=FALSE,
           uiOutput(ns('footer'))         
-    )
 }
 
 moduleFooterRight<-function(input, output, session, 
                       getTibEditState,
                       getPointMax,
-                      getPanelState #, 
-                      # getPPPCode,
-                      # getPPPSel
+                      getPanelState
 ){
   
   output$footer<-renderUI({
     footerPanelState<-getPanelState()
     if(!is.null( footerPanelState )){
           if (footerPanelState=='point' && length(getPointMax())>0 ){
-            #tagList(
-              # if(length(getPPPCode())==3){
-              #   newPointPreprocessor(
-              #     id='BadWolf', title='Point Preprocessor',
-              #     PPPCode=getPPPCode(),
-              #     selected=getPPPSel()
-              #   )
-              # } else {
-              #   NULL
-              # },
               absolutePanel( "class"="footerPanel", draggable=FALSE, style="bottom: 0; left: 10px; display:inline-block",
-                  absolutePanel( left=40, bottom=0,
+                  absolutePanel(  id='rightFooterPointButtons',  bottom=5,  
                      actionGroupButtons(
                         inputIds=c(session$ns("forwardPt" ),session$ns("backwardPt" ),session$ns("removePt" ),session$ns("tagPt" )),
                         labels=list(
@@ -40,25 +26,26 @@ moduleFooterRight<-function(input, output, session,
                         status='primary'
                        )
                   ),
-                  absolutePanel( right=90,  bottom=5, width=110,
+                  absolutePanel( right=90,  bottom=10, width=110,
                       absolutePanel( left=0, bottom=0, 'class'='ptR2', style="font-weight: bold; color: #00FFFF;", span('max pts/row:')),
                       absolutePanel( left=90, bottom=-20, 'class'='ptR2',
                           numericInput(session$ns("matColLim"), width='70px', label = NULL, min=1, value = getPointMax() )
                       )
                   )
               )
-          #)
           } else if (footerPanelState=='matrix'){
-            absolutePanel( left=30, bottom=0,
-              actionGroupButtons(
-                inputIds=c(session$ns("tagMoveUp" ),session$ns("tagMoveDown" ),session$ns("tagDelete" ),session$ns("tagClone" )),
-                labels=list(
-                  span(span('class'="icon-window-minimize"), span('class'="icon-up-big"))  %>% bs_embed_tooltip(title = "Send Up Row"),
-                  span(span('class'="icon-window-minimize"), span('class'="icon-down-big")) %>% bs_embed_tooltip(title = "Send  Down Row"),
-                  span(span('class'="icon-window-minimize"), span('class'="icon-cancel")) %>% bs_embed_tooltip(title = "Delete Row"),
-                  span(span('class'="icon-window-minimize"), span('class'="icon-clone")) %>% bs_embed_tooltip(title = "Clone Row")
-                ),
-                status='primary'
+            absolutePanel( "class"="footerPanel", draggable=FALSE, style="bottom: 0; left: 10px; display:inline-block",
+              absolutePanel(  id='rightFooterMatrixButtons', bottom=5, 
+                actionGroupButtons(
+                  inputIds=c(session$ns("tagMoveUp" ),session$ns("tagMoveDown" ),session$ns("tagDelete" ),session$ns("tagClone" )),
+                  labels=list(
+                    span(span('class'="icon-window-minimize"), span('class'="icon-up-big"))  %>% bs_embed_tooltip(title = "Send Up Row"),
+                    span(span('class'="icon-window-minimize"), span('class'="icon-down-big")) %>% bs_embed_tooltip(title = "Send  Down Row"),
+                    span(span('class'="icon-window-minimize"), span('class'="icon-cancel")) %>% bs_embed_tooltip(title = "Delete Row"),
+                    span(span('class'="icon-window-minimize"), span('class'="icon-clone")) %>% bs_embed_tooltip(title = "Clone Row")
+                  ),
+                  status='primary'
+                )
               )
             )
           } else if (footerPanelState=='value'){
