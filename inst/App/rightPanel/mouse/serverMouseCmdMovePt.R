@@ -6,7 +6,6 @@ mouseCmdMovePt<- function(mssg){
   replacementList<-list()
   ptDefs<-getPtDefs() 
   
-  cat('Enter: mouse cmd move')
   sender='PointsBar.mouse.move'
   id<-mssg$id
   newPtDefs<-ptDefs
@@ -18,7 +17,6 @@ mouseCmdMovePt<- function(mssg){
   rowIndex<-as.numeric(vid[3]) # index is the absolute position of in the points array
   matColIndx<-as.numeric(vid[4])
   if( hasPtScript() ){
-    cat('hasPtScript:: onMovePt script:\n')
     txt<-getPreProcPtScript()['onMovePt']
     cat(txt)
     tryCatch({ 
