@@ -1,0 +1,1 @@
+ace.define("ace/snippets/dnippets",["require","exports","module"],function(e,t,n){"use strict";t.snippetText="snippet po\n	POPUP\n	```\n	${0:hint}\n	```\nsnippet sn\n	SNIPPET\n	```\n	${0:snip}\n	```\nsnippet sv\n	SVGR\n	```\n	${0:image}\n	```",t.scope="dnippets"})

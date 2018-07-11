@@ -31,12 +31,9 @@ getSourceType<-reactive({
 # 'tib' if it is the name of an existing tibble
 #  otherwise
 getNameType<-reactive({
-  # cat("getNameType::getAssetName()=", format(getAssetName()),"\n")
   if(hasError()){
-    # cat('getNameType:: Error=', getErrorMssg(),"\n")
     errorPanelTag
   } else {
-    #browser()
     if(!is.null(getAssetName())){
       if( getAssetName() %in% names(getPtDefs()$tib) ){
         tibTag

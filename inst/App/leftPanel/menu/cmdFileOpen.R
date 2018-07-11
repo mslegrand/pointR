@@ -72,7 +72,7 @@ openFileNow<-function(fileName){
         mode<-'snippets'
       }
       if( grepl("*.dnippets$", fileName, ignore.case = T)){
-        mode<-'markdown'
+        mode<-'dnippets'
       }
       #if ptr mode, try to parse, if not parsable, get Error, set choices=R, error, and do error report????
     

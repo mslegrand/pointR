@@ -91,6 +91,7 @@ shinyAce4Ptr <- function(
      tags$script(src="Acejs/aceExt.js"),
      tags$script(src='Acejs/snippets/ptr.js'), 
      tags$script(src='Acejs/snippets/ptrrmd.js'), 
+     tags$script(src='Acejs/snippets/dnippets.js'), 
      tags$script(src="Acejs/ptRaceInit.js")
     )
     

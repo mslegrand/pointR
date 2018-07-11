@@ -8,7 +8,7 @@ output: dnd_snippet
 - Individual drippets are seperate by lines consisting of three or more stars (*)
 - Each drippet consists of 3 entries, with each entry having a title and a value (block)
     - The title consists of a single line followed by a colon (:)
-        - titles are *Hint:*, *Snippet Insert:*, *SVGR Image:*
+        - titles are *POPUP*, *SNIPPET*, *SVGR*
         - The values are blocks defined by 3 backtics *````*
 - Two drippets are shown below to help you get started
    
@@ -16,11 +16,11 @@ output: dnd_snippet
 *********************
                         
 
-Hint: 
+POPUP 
 ```
 Ellipse
 ```
-Snippet Insert:
+SNIPPET
 ```
 ellipse(
   cxy=${1:WH/2},
@@ -30,7 +30,7 @@ ellipse(
   stroke.width=${0:3}
 )
 ```
-SVGR Image:
+SVGR
 ```
 library(svgR)
 WH<-c(48,32)
@@ -49,15 +49,15 @@ svgR(wh=WH,
 ```
 *********************
 
-Hint: 
+POPUP 
 ```
 Assign Point Matrix
 ```
-Snippet Insert:
+SNIPPET
 ```
 =matrix(${1:0},2,${0:0})
 ```
-SVGR Image:
+SVGR
 ```
 library(svgR)
 WH<-c(48,32)

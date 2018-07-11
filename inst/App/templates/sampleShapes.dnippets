@@ -8,18 +8,18 @@ output: dnd_snippet
 - Individual drippets are seperate by lines consisting of three or more stars (*)
 - Each drippet consists of 3 entries, with each entry having a title and a value (block)
 - The title consists of a single line followed by a colon (:)
-- titles are *Hint:*, *Snippet Insert:*, *SVGR Image:*
+- titles are *Hint:*, *SNIPPET*, *SVGR*
   - The values are blocks defined by 3 backtics *````*
   - Two drippets are shown below to help you get started
 
 *********************
   
   
-Hint: 
+POPUP
 ```
 Sample Circle
 ```
-Snippet Insert:
+SNIPPET
 ```
 circle(
 	cxy=${1:WH/2},
@@ -28,7 +28,7 @@ circle(
 	fill=${3:'none'}
 )${0:}
 ```
-SVGR Image:
+SVGR
 ```
 library(svgR)
 WH<-c(48,32)
@@ -50,11 +50,11 @@ svgR(wh=WH,
 
   
   
-Hint: 
+POPUP
 ```
 Sample Ellipse
 ```
-Snippet Insert:
+SNIPPET
 ```
 ellipse(
 	cxy=${1:WH/2},
@@ -63,7 +63,7 @@ ellipse(
 	fill=${4:'none'}
 )${0:}
 ```
-SVGR Image:
+SVGR
 ```
 library(svgR)
 WH<-c(48,32)
@@ -87,11 +87,11 @@ svgR(wh=WH,
 
   
   
-Hint: 
+POPUP
 ```
 Sample Rectangle
 ```
-Snippet Insert:
+SNIPPET
 ```
 rect(
     xy=${1:WH/2},
@@ -100,7 +100,7 @@ rect(
     fill=${3:'none'}
 )${0:}
 ```
-SVGR Image:
+SVGR
 ```
 library(svgR)
 WH<-c(48,32)
@@ -124,11 +124,11 @@ svgR(wh=WH,
 
   
   
-Hint: 
+POPUP
 ```
 Sample Centered Rectangle
 ```
-Snippet Insert:
+SNIPPET
 ```
 rect(
     cxy=${1:WH/2},
@@ -137,7 +137,7 @@ rect(
     fill=${3:'none'}
 )${0:}
 ```
-SVGR Image:
+SVGR
 ```
 library(svgR)
 WH<-c(48,32)
@@ -158,11 +158,11 @@ svgR(wh=WH,
 ```
 *********************
 *********************
-Hint: 
+POPUP
 ```
 Sample Line Segment
 ```
-Snippet Insert:
+SNIPPET
 ```
 line(
 	xy1=${1:c(0,0)},
@@ -170,7 +170,7 @@ line(
 	stroke=${3:'black'}
 )${0:}
 ```
-SVGR Image:
+SVGR
 ```
 library(svgR)
 WH<-c(48,32)
@@ -188,11 +188,11 @@ svgR(wh=WH,
 ```
 *********************
 *********************
-Hint: 
+POPUP
 ```
 Sample PolyLine (Connected Line Segments)
 ```
-Snippet Insert:
+SNIPPET
 ```
 polyline(
 	points=${1:WH*matrix(c(.25,.25,.5,.5,.75,.25),2)},
@@ -201,7 +201,7 @@ polyline(
 	fill=${3:'none'}
 )${0:}
 ```
-SVGR Image:
+SVGR
 ```
 library(svgR)
 WH<-c(48,32)
@@ -219,11 +219,11 @@ svgR(wh=WH,
 ```
 *********************
 *********************
-Hint: 
+POPUP
 ```
 Sample Polygon
 ```
-Snippet Insert:
+SNIPPET
 ```
 polygon(
     points=${1:WH*matrix(c(.25,.75,.5,.5,.75,.75),2)},
@@ -232,7 +232,7 @@ polygon(
     fill=${3:'none'}
 )${0:}
 ```
-SVGR Image:
+SVGR
 ```
 library(svgR)
 WH<-c(48,32)
@@ -250,11 +250,11 @@ svgR(wh=WH,
 ```
 *********************
 *********************
-Hint: 
+POPUP
 ```
 Sample Text
 ```
-Snippet Insert:
+SNIPPET
 ```
 text(
     ${1:'hello world'},
@@ -264,7 +264,7 @@ text(
     fill=${5:'none'}
 )${0:}
 ```
-SVGR Image:
+SVGR
 ```
 library(svgR)
 WH<-c(48,32)
@@ -285,11 +285,11 @@ svgR(wh=WH,
 ```
 *********************
 *********************
-Hint: 
+POPUP
 ```
 Sample Text
 ```
-Snippet Insert:
+SNIPPET
 ```
     text(
         ${1:'hello world'},
@@ -299,7 +299,7 @@ Snippet Insert:
         fill=${5:'none'}
     )${0:}
 ```
-SVGR Image:
+SVGR
 ```
 library(svgR)
 WH<-c(48,32)
@@ -320,11 +320,11 @@ svgR(wh=WH,
 ```
 *********************
 ******************
-Hint: 
+POPUP
 ```
 Sample Arc
 ```
-Snippet Insert:
+SNIPPET
 ```
 	path(
 		d=list(
@@ -336,7 +336,7 @@ Snippet Insert:
 		fill=${5:'none'}
 	)${0:} 
 ```
-SVGR Image:
+SVGR
 ```
 library(svgR)
 WH<-c(48,32)
@@ -361,11 +361,11 @@ svgR(wh=WH,
 ```
 ***********************
 ******************
-Hint: 
+POPUP
 ```
 Sample Quadratic Bezier
 ```
-Snippet Insert:
+SNIPPET
   ```
 path(
     d=list(
@@ -377,7 +377,7 @@ path(
     fill=${5:'none'}
 )${0:}
 ```
-SVGR Image:
+SVGR
 ```
 library(svgR)
 WH<-c(48,32)
@@ -402,11 +402,11 @@ svgR(wh=WH,
 ```
 ***********************
 ******************
-Hint: 
+POPUP
 ```
 Sample Extended Quadratic Bezier
 ```
-Snippet Insert:
+SNIPPET
   ```
 path(
     d=list(
@@ -419,7 +419,7 @@ path(
     fill=${6:'none'}
 )${0:}
 ```
-SVGR Image:
+SVGR
 ```
 library(svgR)
 WH<-c(48,32)
@@ -445,11 +445,11 @@ svgR(wh=WH,
 ```
 ***********************
   
-Hint: 
+POPUP
 ```
 Sample Cubic Bezier
 ```
-Snippet Insert:
+SNIPPET
 ```
 path(
 	d=list(
@@ -461,7 +461,7 @@ path(
 	fill=${5:'none'}
 )${0:}
 ```
-SVGR Image:
+SVGR
 ```
 library(svgR)
 WH<-c(48,32)
@@ -484,11 +484,11 @@ svgR(wh=WH,
 *********************
 ***********************
   
-Hint: 
+POPUP
 ```
 Sample Extended Cubic Bezier
 ```
-Snippet Insert:
+SNIPPET
 ```
 path(
     d=list(
@@ -501,7 +501,7 @@ path(
     fill=${5:'none'}
 )${0:}
 ```
-SVGR Image:
+SVGR
 ```
 library(svgR)
 WH<-c(48,32)

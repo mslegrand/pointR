@@ -14,12 +14,12 @@ src2sourceType<-function(src){  #not used !!
 processCommit<-reactive({
   clearErrorMssg()
 
-  #cat('ProcessCommit: request$mode=',format(request$mode),"\n")
+  cat('ProcessCommit: request$mode=',format(request$mode),"\n")
   if( identical(request$mode, 'ptr')){
     processSvgR()
   } else if(  identical(request$mode, 'ptrrmd') ){
     processKnit()
-  } else if( identical(request$mode, 'markdown')){
+  } else if( identical(request$mode, 'dnippets')){
     processDnip()
   }
 

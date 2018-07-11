@@ -53,7 +53,7 @@ cmdDndSnippetNew<-function(){
   src<-fileTemplates[[ "dndSnippetTemplate.dnippets" ]] #rmdTemplate
   src<-sub('\ndate: "TODAY"', paste0('\ndate:\ndate: "', Sys.Date(),'"'), src)
   tabName<-getNextAnonymousFileName()
-  addFileTab(title=tabName, txt=src,  docFilePath="?", mode='markdown')
+  addFileTab(title=tabName, txt=src,  docFilePath="?", mode='dnippets')
   delay(500,
         updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE, setDocFileSaved=TRUE, ok=TRUE )
   )

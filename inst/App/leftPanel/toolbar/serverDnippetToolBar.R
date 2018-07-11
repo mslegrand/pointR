@@ -2,6 +2,7 @@ getDnippets4ToolBar<-function(dnippetList){
   dnippetList<-dnippetList[!sapply(dnippetList, is.null)]
   
   temp<-lapply(dnippetList, function(dr){
+    
      hint<-dr[['hint']]
     if(is.null(hint) || nchar(hint)==0){
       hint="no hint"
