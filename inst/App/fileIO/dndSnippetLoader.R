@@ -49,6 +49,7 @@ extractVal<-function(x,pattern){
   rtv
 }
 
+# NOT USED!!!
 dripplets2List<-function(drps){
   drps<-str_split(drps,pattern = '\\*{3,}')
   drps<-drps[[1]]
@@ -64,9 +65,17 @@ dripplets2List<-function(drps){
   })
 }
 
-
-extractDripplet<-function(dr, tmpdir=tempdir() ){
-  temp<-str_trim(unlist(str_split(dr,'\n```')))
+#' @param dr, a section of a drippet text file representing a single drippet
+#' @return a named character vector, with each component representation a piece of the drippet
+#' 
+#' \enumerate{
+#'  \item hint represents the popup
+#'  \item snip represents the snippet
+#'  \item logo is the result of processing the svgr
+#' }
+#extractDripplet<-function(dr, tmpdir=tempdir() ){
+extractDripplet<-function(dr ){
+    temp<-str_trim(unlist(str_split(dr,'\n```')))
   if(length(temp)>=6){
     temp<-temp[nchar(temp)>0]
   }
@@ -90,12 +99,17 @@ extractDripplet<-function(dr, tmpdir=tempdir() ){
   rtv
 }
 
+#' @param drps text from drippet file
+#' @return list of drippet tripples (named character vectors)
+#' 
+#' Returns list of character vectors named with names'hint', 'snip', 'logo' representing a drippet
 dripplets2List2<-function(drps){
   drps<-unlist(str_split(drps,pattern = '\\*{3,}'))
-  tmpdir=tempdir()
-  tmpdir='drippets'
+  # tmpdir=tempdir()
+  # tmpdir='drippets'
   drps<-lapply(drps, function(dr){
-    rtv<-extractDripplet(dr, tmpdir)
+    # rtv<-extractDripplet(dr, tmpdir)
+    rtv<-extractDripplet(dr)
     rtv
   })
   drps
