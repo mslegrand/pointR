@@ -56,14 +56,7 @@ processSvgR<-reactive({
         output<-lapply(parsedCode, function(x){
           captureOutput(eval(x, envir=env))
         })
-        # output<-lapply(lines, function(line){
-        #   # cat("processCommit::captureOutput\n")
-        #   captureOutput(eval(parse(text=line), envir=env))
-        # })
-         
-        # output<-captureOutput(eval(parsedCode), envir=env)
-        output<-paste( output, collapse="\n" )
-        #output<-paste( output, collapse="\n" )
+        output<-paste( unlist(output), collapse="\n" )
         output<-paste("Output:",output,sep="\n")
         setCapturedMssg(output)
         setSourceType(sourceType=RPanelTag) #no error, just R code
