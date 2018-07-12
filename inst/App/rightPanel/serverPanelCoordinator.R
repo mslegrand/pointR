@@ -190,12 +190,19 @@ observeEvent(c(getAceEditorId(), getMode()),{
       showElement("TopRightPanel")
       showElement("snippetToolBarContainer")
       showElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble
+      hideElement("rmdBrowser")
       addClass( id= 'midRightPanels', class='ctop140')
     } else { # editing other
       removeClass( id= 'midRightPanels', class='ctop140')
       hideElement("TopRightPanel")
       hideElement("snippetToolBarContainer")
       hideElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble
+      if(identical(request$mode,'ptrrmd')){
+        showElement("rmdBrowser")
+      }
+      else{
+        hideElement("rmdBrowser")
+      }
     }
     showElement("aceToobarTop1")
     showElement("aceToobarTop2")
