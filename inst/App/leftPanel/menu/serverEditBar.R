@@ -23,7 +23,7 @@ observeEvent( input$editNavBar, {
       dirtyDMDM(session, "editNavBar")
     }
     if(fileCmd=='newIOSlides'){
-      cmdNewIOSlides()
+      cmdFileNewIOSlides()
       dirtyDMDM(session, "editNavBar")
     }
     if(fileCmd=="Open"){ #-----open 

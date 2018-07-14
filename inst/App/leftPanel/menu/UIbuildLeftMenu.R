@@ -16,12 +16,13 @@ buildLeftMenu<-function(version){
         shinyDMDMenu::menuItem('R script', value='newRScript'),
         menuDivider(),
         shinyDMDMenu::menuItem('R markdown doc', value='newRmd'),
+        shinyDMDMenu::menuItem('R ioslides presentation', value='newIOSlides'),
         menuDivider(),
         shinyDMDMenu::menuItem('Snippets',            value='newSnippets'),
-        shinyDMDMenu::menuItem("Dnippets",           value="newDndSnippetsFile"),
-        menuDivider(),
-        #shinyDMDMenu::menuItem('R ioslides doc', value='newIOSlides')
-        shinyDMDMenu::menuItem('Plain Text Doc', value='newText')
+        shinyDMDMenu::menuItem("Dnippets",           value="newDndSnippetsFile")#,
+        # menuDivider(),
+        # 
+        # shinyDMDMenu::menuItem('Plain Text Doc', value='newText')
       ),
       menuDivider(),
       shinyDMDMenu::menuItem("Open"),

@@ -174,7 +174,7 @@ shinyServer(function(input, output,session) {
   })  
   
   
-  shinyFileChoose(input, "buttonFileOpen",         session=session, roots=c(wd="~") ) #hidden
+  shinyFileChoose(input, "buttonFileOpen",           session=session, roots=c(wd="~") ) #hidden
   shinyFileChoose(input, "buttonSnippetImport",      session=session, roots=c(wd="~"),  filetypes=c('snippets') ) #hidden
   shinyFileChoose(input, "buttonDnippetImport",      session=session, roots=c(wd="~"),  filetypes=c('dnippets') ) #hidden
   shinyFileChoose(input, "buttonPreProcPtImport",    session=session, roots=c(wd="~"),  filetypes=c('preprocpts') ) #hidden

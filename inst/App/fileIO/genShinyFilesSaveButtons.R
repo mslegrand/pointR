@@ -1,6 +1,4 @@
 
-
-
   modes2filetypes=list(ptr="R",ptrrmd="Rmd",text="txt", snippets="snippets", dnippets="dnippets")
   
   getExtenstionList<-function(ext){
@@ -21,7 +19,7 @@
     tmp<-lapply(1:length(saveButtonFileTypes), function(i){
       id=saveButtonFileNames[i] #paste0('buttonFileSave',ext)
       filetype=type2ExtensionList[[i]]
-      shinySaveButton( id, label="", title="Save as ...",    filetype=filetype, class="hiddenButton")
+      shinySaveButton( id, label="", title="Save as ...", filetype=filetype, class="hiddenButton")
     })
     saveButtons<-do.call(tagList, tmp)
     saveButtons
