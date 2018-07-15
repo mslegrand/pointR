@@ -16,42 +16,6 @@ shinyServer(function(input, output,session) {
     tabs=NULL
   )
   
-  drippetSelection<-reactiveValues(
-    current=NULL,
-    all=list()
-  )
-  
-  addDrippets<-function(dnName, dnippets, select=dnName ){
-    drippetSelection$all[[dnName]]=dnippets
-    drippetSelection$current<-c(drippetSelection$current, select)
-  }
-  
-  observeEvent(c( drippetSelection$all, request$mode, input$pages),{
-    updateAwesomeCheckboxGroup(session, inputId="selectedDDDnippets", choices = names(drippetSelection$all),
-                              selected = drippetSelection$current, inline = FALSE, status = "primary")
-    if(length(input$pages) && length(drippetSelection$all)>0 && identical(request$mode,'ptr') ){
-      showElement('selectedDnippetButtonBoxContainer')
-    } else {
-      hideElement('selectedDnippetButtonBoxContainer')
-    }
-    
-  })
-  
-  observeEvent(input$selectedDDDnippets,{
-    selected=input$selectedDDDnippets
-    drippetSelection$selected=selected
-    dnippets<-drippetSelection$all[selected]
-    dnippets<-unlist(dnippets,recursive=F)
-   
-    names(dnippets)<-NULL
-    if(length(dnippets)==0){
-      sendPtRManagerMessage(sender='cmd.dnippet.file.load', removeDrippets=runif(1));
-    } else{
-      sendPtRManagerMessage(sender='cmd.dnippet.file.load', insertDrippets=dnippets)
-    }
-    
-  }, ignoreInit = TRUE, ignoreNULL = FALSE)
-  
   
   
   setTabRequest<-function(sender, tabs){
@@ -185,21 +149,6 @@ shinyServer(function(input, output,session) {
   # Reactive expressions------------- 
   showGrid<-reactive({displayOptions$showGrid})
 
-  # ptrDisplayScript =reactive({ 
-  #   type=getRightMidPanel()
-  #   if(type=='transform'){
-  #     type=  paste0(type,".",getTransformType() )
-  #   }
-  #   scripts<-list(
-  #     point=    'var ptRPlotter_ptR_SVG_Point = new PtRPanelPoints("ptR_SVG_Point");',
-  #     value=    'var ptRPlotter_ptR_SVG_TagVal = new PtRPanelTagVal("ptR_SVG_TagVal");',
-  #     transform.Translate= 'var ptRPlotter_ptR_SVG_TRANSFORM_TRANSLATE = new PtRPanelTranslate("ptR_SVG_TRANSFORM");',
-  #     transform.Rotate=    'var ptRPlotter_ptR_SVG_TRANSFORM_ROTATE = new PtRPanelRotate("ptR_SVG_TRANSFORM");',
-  #     transform.Scale=     'var ptRPlotter_ptR_SVG_TRANSFORM_SCALE = new PtRPanelScale("ptR_SVG_TRANSFORM");',
-  #     matrix=    'var ptRPlotter_ptR_SVG_TagDrag = new PtRPanelTagDrag("ptR_SVG_TagDrag");'
-  #   )
-  #   scripts[type]
-  # })
 
 #------------------leftPanel--------------------------------
   source("leftPanel/mid/serverAce.R",                            local=TRUE) 
@@ -236,7 +185,7 @@ shinyServer(function(input, output,session) {
   source("rightPanel/mouse/serverMouseClicks.R",                 local=TRUE)
   source("rightPanel/menu/cmdNewColumn.R",                       local=TRUE)
   source("rightPanel/menu/cmdNewAsset.R",                        local=TRUE)
-  source("rightPanel/menu/cmdSetMatColMax.R",                    local=TRUE)
+  
   source("rightPanel/menu/cmdDeleteColumn.R",                    local=TRUE)
   source("rightPanel/menu/cmdFileImportPreProc.R",               local=TRUE)
   source("rightPanel/menu/cmdFileExportPreProc.R",               local=TRUE)
@@ -265,7 +214,8 @@ shinyServer(function(input, output,session) {
   source("leftPanel/menu/cmdOptionsTheme.R",                    local=TRUE)
   source("leftPanel/menu/cmdOptionsFontSize.R",                 local=TRUE)  
   source("leftPanel/menu/cmdFileSnippet.R",                     local=TRUE)
-  source("leftPanel/toolbar/serverDnippetToolBar.R",            local=TRUE)
+  source("leftPanel/dnippets/serverDnippetToolBar.R",           local=TRUE)
+  source("leftPanel/dnippets/serverDnippetCntrl.R",             local=TRUE)
   source("leftPanel/menu/cmdFileDnippet.R",                     local=TRUE)
   source("leftPanel/menu/cmdAbout.R",                           local=TRUE)
   source("leftPanel/menu/serverEditBar.R",                      local=TRUE)
