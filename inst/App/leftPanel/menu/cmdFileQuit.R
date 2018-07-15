@@ -1,11 +1,15 @@
 
 
 cmdFileQuit<-reactive({
-  sendFileTabsMessage(sender= 'fileCmd.quit', getAllTabIds=runif(1))
+  if(is.null(input$pages)){
+    cmdQuitNow()
+  } else {
+    sendFileTabsMessage(sender= 'fileCmd.quit', getAllTabIds=runif(1))
+  }
+  
 })
 
 cmdQuitNow<-reactive({
-  # cat('inside cmdQuitNow')
   opts<-isolate(reactiveValuesToList((editOption)))
   opts<-sapply(opts,unlist, USE.NAMES = T, simplify = F )
   writeOptionsJSON(opts)
