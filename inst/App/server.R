@@ -22,6 +22,7 @@ shinyServer(function(input, output,session) {
     request$sender<-sender
     request$tabs<-tabs
   }
+  
   getSender<-reactive({request$sender})
   peekTab<-reactive( {request$tabs[1]} )
   popTab<-reactive({
@@ -77,52 +78,6 @@ shinyServer(function(input, output,session) {
   }
   
 
-  
-  sendFileTabsMessage<-function(...){ 
-    #cat( "sendFileTabsMessage:: id=",id," sender=",sender,"\n" )
-    data<- list(...) 
-    #print(data)
-    if(length(data)>0){
-        # if(identical(data$sender, 'savedStatus')){
-        #   cat('sendFileTabsMessage\n')
-        #   print(data)
-        # }
-      session$sendCustomMessage( type = "scrollManager",  data )
-    }
-    
-  }
-  
-  
-  pages<- reactiveValues(
-    fileName='',
-    fileNameCount=1,
-    tabIdCount=1
-  )
-  
-  
-  getNextAnonymousFileName<-function(){
-    newFileName<-paste0("Anonymous ", pages$fileNameCount)
-    pages$fileNameCount<-pages$fileNameCount+1
-    newFileName
-  }
-  
-  getNextTabId<-function(){
-    tabId<-paste0("PTR-TABID", pages$tabIdCount)
-    pages$tabIdCount<-pages$tabIdCount+1
-    tabId
-  }
-  
-  
-
-  aceID2TabID<-function(aceId){
-    sub("ACE","TAB",aceId)
-  }
-  tabID2aceID<-function(tabId){
-    sub("TAB","ACE",tabId)
-  }
-  tabID2prePtProc<-function(tabId){
-    sub("TAB","PTPP",tabId)
-  }
   
   
   getLeftMenuCmd<-reactive({input$editNavBar$item})
