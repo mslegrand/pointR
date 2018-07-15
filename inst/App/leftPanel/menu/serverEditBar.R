@@ -248,7 +248,7 @@ observeEvent(editOption$theme, {
 })
 
 observeEvent(editOption$tabSize, {
-  updateAceEditor(session, getAceEditorId(), sender='fileCmd.tabSize', tabSize=as.numeric(editOption$tabSize))
+  updateAceEditor(session, getAceEditorId(),  tabSize=as.numeric(editOption$tabSize))
 }, ignoreNULL = TRUE, ignoreInit = TRUE)
 
 
