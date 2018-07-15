@@ -103,7 +103,7 @@ function ptRaceInit(data){
   
   //$el.data('lastSavedLen', 0); //may need to revisit
   
-    if(mode == 'ptr' || mode=='ptrrmd'){ 
+    if(mode == 'ptr' || mode=='ptrrmd' || mode=='dnippets'){ 
       data.acejs= data.acejs[0];
       ace.config.set('workerPath', "./Acejs");
       ace.config.set('modePath', "./Acejs");

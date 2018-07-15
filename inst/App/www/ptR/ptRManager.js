@@ -36,8 +36,8 @@ Shiny.addCustomMessageHandler(
         console.log("sender is close or quit\n");
         console.log('data.saveFile:: sender=' + sender);
         $("#sF-cancelButton").text( "Close Without Saving");
-        $("#buttonFileSaveR").on('cancel', function(event){
-            Shiny.onInputChange('buttonFileSaveR', { 
+        $('#' + data.target).on('cancel', function(event){
+            Shiny.onInputChange(data.target, { 
               sender:sender, 
               cancel: 'close', 
               rnd: Math.random().toString(36).substring(7)});
@@ -45,9 +45,9 @@ Shiny.addCustomMessageHandler(
       } else {
         console.log("sender is neither close or quit\n");
         console.log('data.saveFile:: sender=' + sender);
-        $("#sF-cancelButton").text( "Cancel");
-        $("#buttonFileSaveR").on('cancel', function(event){
-          Shiny.onInputChange('buttonFileSaveR', {
+        $("#sF-cancelButton").text( "Cancel Save");
+        $('#' + data.target).on('cancel', function(event){
+          Shiny.onInputChange(data.target, {
             sender:sender, 
             cancel: 'cancel',
             rnd: Math.random().toString(36).substring(7)
@@ -55,10 +55,6 @@ Shiny.addCustomMessageHandler(
         });
       }
     } //endof data.saveFile
-    if(!!data.exportSVG){
-      console.log('about to trigger svg export\n');
-      $('#buttonExportSVG').trigger('click');
-    }
     if(!!data.setFocus){ // I don't if this is still being called???
       setTimeout(function() {$('#' + data.setFocus).focus()}, 10);
     }

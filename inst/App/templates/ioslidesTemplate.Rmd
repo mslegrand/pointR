@@ -1,0 +1,69 @@
+---
+title: 'svgR in an IOSlides Presentation'
+author: 'author'
+date: "TODAY"
+output:  ioslides_presentation
+---
+
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(svgR)
+```
+
+## This is an example of using svgR inside an IOSlides presentation.
+
+
+## An ellipse
+
+**Note** the use of the option results='asis'
+
+```{r, results='asis'}
+WH<-c(500,200)
+svgR(wh=WH,
+     ellipse(
+       cxy=WH/2,
+       rxy=WH/4,
+       fill='orange',
+       stroke='blue',
+       stroke.width=3
+     )
+)
+```
+
+## A Bouncing Ball
+
+```{r, results='asis'}
+WH<-c(800,300)
+rxy<-c(50,250)
+startPt<-c(0, 0)
+NumberOfJumps<-4
+da<-sapply(1:NumberOfJumps,function(i){
+  endPt<-c(rxy[1]*2*i, 0)+startPt
+  c( "A", rxy, 0, 0, 1, endPt )
+})
+d<-c("M",startPt,da)
+ani.id<-autoId()
+splat.id<-autoId()
+splat.dur<-.1
+svgR( 
+    playBar(wh=WH),
+    ellipse( cxy=c(20,280), rxy=c(10,10), stroke="black", fill="yellow",
+      animateMotion(id=ani.id, path=d, 
+                    calcMode="spline",
+                    keyPoints=seq(0,1,length.out=1+NumberOfJumps),
+                    keyTimes=seq(0,1,length.out=1+NumberOfJumps), 
+                    keySplines=rep( c(0,.6,1,.4), NumberOfJumps),
+                    begin=playButton.click(), dur=3, fill="freeze"),
+      animate(attributeName="rx",from=10,to=50,begin=paste0(ani.id,".end"), dur=splat.dur, fill="freeze"),
+      animate(id=splat.id, attributeName="ry",from=10,to=2, begin=paste0(ani.id,".end"), dur=splat.dur, fill="freeze" ),
+      set(attributeName="cxy", to=c(20,280),  begin=playButton.click(), fill='freeze'),
+      set(attributeName="rxy", to=c(10,10),  begin=playButton.click(), fill='freeze')
+
+    ),
+    text('Splat', font.size=90, cxy=c(650,200), stroke='red', fill='red', visibility='hidden',
+      set(attributeName='visibility', to="visible",  begin=paste0(ani.id,".end"), fill='freeze'),
+      set(attributeName='visibility', to="hidden",  begin=playButton.click(), fill='freeze')
+    )
+)
+```

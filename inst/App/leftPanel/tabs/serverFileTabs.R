@@ -1,29 +1,4 @@
 
-# 
-# insertEDinPP<-function(id){
-#   if(length(id)==0){
-#     return(NULL)
-#   }
-# 
-#   cat("acePointPreprocId=",id,"\n")
-#   text='"createData <- function(rows) {\ndata.frame(col1 = 1:rows, col2 = rnorm(rows))\n}"'
-#   # ui=shinyAce4Ptr(
-#   #   outputId=id, value = text,
-#   #   height = "300px",
-#   #   mode='R'
-#   # )
-#   ui=aceEditor(
-#     outputId=id,
-#     height = "300px",
-#     value = text,
-#     mode='R'
-#   )
-#   insertUI(
-#     selector='#dogbert',
-#     where='beforeEnd',
-#     ui=ui
-#   )
-# }
 
 closeRfn<-function(tabId){paste0("event.stopPropagation();Shiny.onInputChange('closeTab',  {id:'",tabId,"', type: 'tabId'} ); return false")}
 tabTitleRfn<-function(tabName, tabId, docFilePath){

@@ -9,9 +9,6 @@ serverAssetDB<-reactiveValues(
     ptColName="NULL",   # !!! KLUDGE for now. should this default to last col?
     selIndex=1,         # only used when current col is points, 
     transformType='Translate',
-    ptAddScript="NULL",
-    ptMoveScript="NULL",
-    ptDeleteScript="NULL",
     ptScriptSel=preprocChoices[1]
   )[0,]
 )
@@ -37,7 +34,10 @@ restoreAssetState<-function(nextTabId){
   if(!is.null(row.tib)){
     lapply(names(row.tib), function(n){
       v<-row.tib[[n]][1]
-      selectedAsset[[n]]<-ifelse(is.na(v), NULL, v)
+      if(is.na(v)){
+        v<-NULL
+      } 
+      selectedAsset[[n]]<-v
     } )
   }
 }

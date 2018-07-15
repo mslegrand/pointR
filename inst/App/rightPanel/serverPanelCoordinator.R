@@ -31,12 +31,9 @@ getSourceType<-reactive({
 # 'tib' if it is the name of an existing tibble
 #  otherwise
 getNameType<-reactive({
-  # cat("getNameType::getAssetName()=", format(getAssetName()),"\n")
   if(hasError()){
-    # cat('getNameType:: Error=', getErrorMssg(),"\n")
     errorPanelTag
   } else {
-    #browser()
     if(!is.null(getAssetName())){
       if( getAssetName() %in% names(getPtDefs()$tib) ){
         tibTag
@@ -193,12 +190,19 @@ observeEvent(c(getAceEditorId(), getMode()),{
       showElement("TopRightPanel")
       showElement("snippetToolBarContainer")
       showElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble
+      hideElement("rmdBrowserButtonPanel")
       addClass( id= 'midRightPanels', class='ctop140')
     } else { # editing other
       removeClass( id= 'midRightPanels', class='ctop140')
       hideElement("TopRightPanel")
       hideElement("snippetToolBarContainer")
       hideElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble
+      if(identical(request$mode,'ptrrmd')){
+        showElement("rmdBrowserButtonPanel")
+      }
+      else{
+        hideElement("rmdBrowserButtonPanel")
+      }
     }
     showElement("aceToobarTop1")
     showElement("aceToobarTop2")
@@ -214,12 +218,16 @@ observeEvent( c(getRightMidPanel(), hasPtScript()), {
   if( !is.null(getRightMidPanel()) && getRightMidPanel() %in% c('point','matrix')
       &&  hasPtScript() ){
     # cat('removing class hiddenPanel\n')
+    addClass( id='rightFooterPointButtons', class='posl30b0')
+    addClass( id='rightFooterMatrixButtons', class='posl30b0')    
     removeClass( id='PtPreProcDiv', class="hiddenPanel")
     enableDMDM( session, menuBarId="plotNavBar", entry="cmdExportPP")
     enableDMDM( session, menuBarId="plotNavBar", entry="cmdRemovePP")
   } else {
     # cat('adding class hiddenPanel\n')
     addClass( id='PtPreProcDiv', class="hiddenPanel")
+    removeClass( id='rightFooterPointButtons', class='posl30b0')
+    removeClass( id='rightFooterMatrixButtons', class='posl30b0')
     disableDMDM( session, menuBarId="plotNavBar", entry="cmdExportPP")
     disableDMDM( session, menuBarId="plotNavBar", entry="cmdRemovePP")
   }

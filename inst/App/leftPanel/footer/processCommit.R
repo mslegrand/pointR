@@ -14,12 +14,12 @@ src2sourceType<-function(src){  #not used !!
 processCommit<-reactive({
   clearErrorMssg()
 
-  #cat('ProcessCommit: request$mode=',format(request$mode),"\n")
+  cat('ProcessCommit: request$mode=',format(request$mode),"\n")
   if( identical(request$mode, 'ptr')){
     processSvgR()
   } else if(  identical(request$mode, 'ptrrmd') ){
     processKnit()
-  } else if( identical(request$mode, 'markdown')){
+  } else if( identical(request$mode, 'dnippets')){
     processDnip()
   }
 
@@ -52,11 +52,11 @@ processSvgR<-reactive({
         #test for error and capture output
         # capture capture output as mssg
         env<-new.env()
-        output<-lapply(lines, function(line){
-          # cat("processCommit::captureOutput\n")
-          captureOutput(eval(parse(text=line), envir=env))
+        parsedCode<-parse(text=src)
+        output<-lapply(parsedCode, function(x){
+          captureOutput(eval(x, envir=env))
         })
-        output<-paste( output, collapse="\n" )
+        output<-paste( unlist(output), collapse="\n" )
         output<-paste("Output:",output,sep="\n")
         setCapturedMssg(output)
         setSourceType(sourceType=RPanelTag) #no error, just R code

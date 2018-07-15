@@ -34,7 +34,7 @@ observeEvent(input$messageFromAce, {
           processCommit()
           return(NULL) #skip the rest of the processing (for ptR mode)
         } 
-        if(identical(request$mode, 'markdown')){
+        if(identical(request$mode, 'dnippets')){
           panels$sourceType<-rmdPanelTag
           processCommit()
           return(NULL) #skip the rest of the processing (for ptR mode)
@@ -86,11 +86,11 @@ observeEvent(input$messageFromAce, {
         
       } 
       
-      if(sender %in% c( 'fileCmd.save', 'fileCmd.close', 'fileCmd.saveAs', 'fileCmd.quit' , 'fileCmd.saveNow')){
+      if(sender %in% c( 'fileCmd.save', 'fileCmd.close', 'fileCmd.saveAs', 'fileCmd.quit' , 'fileCmd.saveNow', 'buttonCmd.rmdViewer')){
         
         id<-input$messageFromAce$id
         saved<-input$messageFromAce$isSaved
-        if( !saved || sender %in% c('fileCmd.saveAs','fileCmd.saveNow') ) { #need to save
+        if( !saved || sender %in% c('fileCmd.saveAs','fileCmd.saveNow', 'buttonCmd.rmdViewer') ) { #need to save
           docFilePath<-unlist(input$messageFromAce$docFilePath)
           if(docFilePath=='?' || sender=='fileCmd.saveAs'){ # file unnamed : fileSaveAs
              tabId<-aceID2TabID(id)
@@ -100,7 +100,7 @@ observeEvent(input$messageFromAce, {
                ext=list(Rmd='Rmd')
              } else if( identical(request$mode, 'snippets') ){
                ext=list(snippet='snippets')
-             } else if( identical(request$mode, 'markdown') ){
+             } else if( identical(request$mode, 'dnippets') ){
                  ext=list(dnippets='dnippets')
              } else {
                # cat('request$mode=',request$mode,"\n")
@@ -124,12 +124,25 @@ observeEvent(input$messageFromAce, {
               addToRecentFiles(input$messageFromAce$docFilePath)
               closeTabNow(tabId)
             } else { 
+              if( identical(request$sender, 'buttonCmd.rmdViewer')){
+               
+                rmarkdown::render(docFilePath )
+                htmlPath<-sub('\\.Rmd$','\\.html',docFilePath)
+                browseURL(htmlPath)
+              }
               addToRecentFiles(input$messageFromAce$priorFilePath)
               title=as.character(tabTitleRfn( tabName=basename(docFilePath ), tabId=tabId, docFilePath=docFilePath ))
               sendFileTabsMessage(title=title, tabId=tabId)
             }
           }
         } else { #already saved
+          
+          if( identical(request$sender, 'buttonCmd.rmdViewer')){
+            
+            rmarkdown::render(docFilePath )
+            htmlPath<-sub('\\.Rmd$','\\.html',docFilePath)
+            browseURL(htmlPath)
+          }
           tabId<-popTab()
           if(request$sender%in% c('fileCmd.close', 'fileCmd.quit') ){
             addToRecentFiles(input$messageFromAce$docFilePath)

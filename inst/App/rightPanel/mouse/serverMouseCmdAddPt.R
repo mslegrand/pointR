@@ -1,3 +1,27 @@
+# mouse add points
+
+#// called from mouseCmdAddPt when adding a new point
+addPt2ptDefs<-function(name, row, matCol,  ptDefs, newPt){
+  if(is.numeric(row) && 
+     is.numeric(matCol)  &&
+     row>0 && 
+     length(ptDefs$tib)>0 && 
+     length(ptDefs$tib[[name]])>0 && 
+     row<=nrow(ptDefs$tib[[name]])
+  ){
+    tib<-ptDefs$tib[[name]]
+    col<-getTibPtColPos() #which(names(tib)==ptColName)
+    pts<-tib[[row,col]] 
+    pts<-append(pts,newPt,2*(matCol))
+    tib[[row,col]]<-matrix(pts,2)
+    ptDefs$tib[[name]]<-tib
+  } else {
+    ptDefs<-NULL #failed
+    #cat("addPt2ptDefs returning NULL")
+  }
+  ptDefs
+}
+
 mouseCmdAddPt<-function(mssg){
   if(length(mssg$vec)>0){
     vec<- as.numeric(unlist(mssg$vec))

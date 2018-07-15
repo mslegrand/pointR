@@ -18,7 +18,18 @@ cmdFileNewPtR<-function(fileCmd="newPtrTibScript"){
 
 cmdFileNewRmd<-function(){
   src<-fileTemplates[[ "rmdTemplate.Rmd" ]] #rmdTemplate
-  src<-sub('\ndate: "TODAY"', paste0('\ndate:\ndate: "', Sys.Date(),'"'), src)
+  src<-sub('\ndate: "TODAY"', paste0('\ndate: "', Sys.Date(),'"'), src)
+  tabName<-getNextAnonymousFileName()
+  addFileTab(title=tabName, txt=src,  docFilePath="?", mode='ptrrmd')
+  delay(500,
+        updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE, setDocFileSaved=TRUE, ok=TRUE )
+  )
+  mssg$error<-""
+}
+
+cmdFileNewIOSlides<-function(){
+  src<-fileTemplates[[ "ioslidesTemplate.Rmd" ]] #rmdTemplate
+  src<-sub('\ndate: "TODAY"', paste0('\ndate: "', Sys.Date(),'"'), src)
   tabName<-getNextAnonymousFileName()
   addFileTab(title=tabName, txt=src,  docFilePath="?", mode='ptrrmd')
   delay(500,
@@ -53,7 +64,7 @@ cmdDndSnippetNew<-function(){
   src<-fileTemplates[[ "dndSnippetTemplate.dnippets" ]] #rmdTemplate
   src<-sub('\ndate: "TODAY"', paste0('\ndate:\ndate: "', Sys.Date(),'"'), src)
   tabName<-getNextAnonymousFileName()
-  addFileTab(title=tabName, txt=src,  docFilePath="?", mode='markdown')
+  addFileTab(title=tabName, txt=src,  docFilePath="?", mode='dnippets')
   delay(500,
         updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE, setDocFileSaved=TRUE, ok=TRUE )
   )

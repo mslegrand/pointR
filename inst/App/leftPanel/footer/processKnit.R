@@ -24,3 +24,8 @@ processKnit<-reactive({
     ) #end tryCatch
   } #end if
 })
+
+
+
+
+

@@ -142,10 +142,13 @@ overflow: hidden;
 }
 .footerPanel{
   bottom:5px;
-  left:20px; 
+  left:10px; 
   width:100%;
-  margin:0px; 
-  padding:0px;
+  margin:0; 
+  padding:0;
+}
+.posl30b0{
+  left:50px;  
 }
 .headerPanel{
 background-color: #8888AA; 

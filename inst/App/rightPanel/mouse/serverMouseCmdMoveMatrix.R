@@ -1,5 +1,4 @@
 mouseCmdMoveMatrix<-function(mssg){
-  cat('\n---------------Entering---mouseCmdMoveMatrix------------------------\n')
   if(length(mssg$vec)>0){
     vec<- as.numeric(unlist(mssg$vec))
   }
@@ -14,8 +13,6 @@ mouseCmdMoveMatrix<-function(mssg){
   row<-as.numeric(tail(tmp,1)) 
   selection<-getAssetName() 
   matColIndx<-ncol(newPtDefs$tib[[selection]][[ row, getTibPtColPos() ]])
-  cat("matColIndx=",matColIndx,"\n")
-  #getMatrix<-function(){m}
   
   if( hasPtScript() ){
       cat('hasPtScript:: onMoveMat script:\n')

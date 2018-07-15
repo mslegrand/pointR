@@ -12,20 +12,17 @@ genShinySaveFilesObservers<-function(input, session){
       rtList<-input[[n]]
       if('cancel' %in% names(rtList)){
         if(rtList$cancel=='close'){ 
-          # cat('cancel and close')
           tabId<-popTab()
           closeTabNow(tabId)
         } else {
           setTabRequest(sender=NULL, tabs=NULL)
         }
       } else { 
-        # cat('parseSavePath 123\n')
         fp.dt<-parseSavePath(c(wd='~'), rtList)
         if(length(fp.dt)>0 && nrow(fp.dt)>0){
-          cat('=======shinyFiles SAVE observer=============\n')
+          #cat('=======shinyFiles SAVE observer=============\n')
           
           datapath<-as.character(fp.dt$datapath[1])
-          # 
           
           # TODO!!!  add oldPath to recentFiles (this assumes that we can do a saveAs)
           #  The safest time is after the file has been saved under the new path, but that
@@ -49,7 +46,7 @@ genShinySaveFilesObservers<-function(input, session){
           if(request$sender=='fileCmd.saveAs'){
             sender='fileCmd.saveNow'
           }
-          # cat('sender=',format(sender),"\n")
+          
           tabId<-peekTab()
           aceId<-tabID2aceID(tabId)
           

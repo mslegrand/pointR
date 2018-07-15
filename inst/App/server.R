@@ -174,7 +174,7 @@ shinyServer(function(input, output,session) {
   })  
   
   
-  shinyFileChoose(input, "buttonFileOpen",         session=session, roots=c(wd="~") ) #hidden
+  shinyFileChoose(input, "buttonFileOpen",           session=session, roots=c(wd="~") ) #hidden
   shinyFileChoose(input, "buttonSnippetImport",      session=session, roots=c(wd="~"),  filetypes=c('snippets') ) #hidden
   shinyFileChoose(input, "buttonDnippetImport",      session=session, roots=c(wd="~"),  filetypes=c('dnippets') ) #hidden
   shinyFileChoose(input, "buttonPreProcPtImport",    session=session, roots=c(wd="~"),  filetypes=c('preprocpts') ) #hidden
@@ -205,7 +205,10 @@ shinyServer(function(input, output,session) {
   source("leftPanel/mid/serverAce.R",                            local=TRUE) 
   source("leftPanel/helpSVG.R",                                  local=TRUE)
   source("leftPanel/tabs/serverFileTabs.R",                      local=TRUE) 
-  source("leftPanel/fileIO/serverGenShinyFilesSaveObservers.R",  local=TRUE)
+  
+  
+  #------------------fileIO----------------------------------
+  source("fileIO/serverGenShinyFilesSaveObservers.R",            local=TRUE)
   
 #------------------rightPanel--------------------------------
   source("rightPanel/selector/serverAssetSelectionDB.R",         local=TRUE)
@@ -228,6 +231,8 @@ shinyServer(function(input, output,session) {
   source("rightPanel/mouse/serverMouseCmdAddPt.R",               local=TRUE)
   source("rightPanel/mouse/serverMouseCmdMovePt.R",              local=TRUE)
   source("rightPanel/mouse/serverMouseCmdMoveMatrix.R",          local=TRUE)
+  source("rightPanel/mouse/serverMouseCmdValue.R",               local=TRUE)
+  source("rightPanel/mouse/serverMouseCmdTransform.R",           local=TRUE)
   source("rightPanel/mouse/serverMouseClicks.R",                 local=TRUE)
   source("rightPanel/menu/cmdNewColumn.R",                       local=TRUE)
   source("rightPanel/menu/cmdNewAsset.R",                        local=TRUE)

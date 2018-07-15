@@ -1,7 +1,7 @@
 
 .global <- new.env()
 
-version="v.0.3.9.7"
+version="v.0.3.9.8"
 
 drippetdirectoryPath = paste(system.file('App', package='pointR'), 'inst', 'www', 'drippets', sep='/')
 
@@ -67,9 +67,9 @@ source("util/utilptR.R")
 source("util/utilTibble.R")
 source("util/utilColumnType.R")
 source("util/utilTransform.R")
-source("leftPanel/fileIO/dndSnippetLoader.R")
-source("leftPanel/fileIO/genShinyFilesOpenButtons.R")
-source("leftPanel/fileIO/genShinyFilesSaveButtons.R")
+source("fileIO/dndSnippetLoader.R")
+source("fileIO/genShinyFilesOpenButtons.R")
+source("fileIO/genShinyFilesSaveButtons.R")
 source("leftPanel/menu/UIbuildLeftMenu.R")
 source("leftPanel/toolbar/buildLeftHToolBarUI.R")
 source("rightPanel/preProc/preProcValidate.R")
