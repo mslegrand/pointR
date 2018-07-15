@@ -9,36 +9,6 @@
 shinyServer(function(input, output,session) {
 
 # Reactive values----------
-  request<-reactiveValues(
-    code=NULL, 
-    mode='ptr',
-    sender='startup',
-    tabs=NULL
-  )
-  
-  
-  
-  setTabRequest<-function(sender, tabs){
-    request$sender<-sender
-    request$tabs<-tabs
-  }
-  
-  getSender<-reactive({request$sender})
-  peekTab<-reactive( {request$tabs[1]} )
-  popTab<-reactive({
-    tab<-request$tabs[1]
-    request$tabs<-request$tabs[-1]
-    tab
-  })
-  
-  
-  getMode<-reactive({
-    request$mode
-  })
-  
-  getCode<-reactive({
-      request$code
-  })
   
   
   mssg<-reactiveValues(
@@ -55,29 +25,10 @@ shinyServer(function(input, output,session) {
   getCapturedMssg<-reactive({ 
     mssg$capturedOutput
   })
+  
   triggerRefresh<-function(sender, rollBack=TRUE, auxValue=FALSE){ # to be used to force a code refresh???
     updateAceExt(id= getAceEditorId(), sender=sender, getValue=TRUE, rollBack=rollBack, auxValue=auxValue )
   }
-  
-  sendPtRManagerMessage<-function(sender, ...){ 
-    # cat('entering ---------------sendPtRManagerMessage---------------------\n')
-    data<- c( list(sender=sender), list(...), list(fk=runif(1)))
-    # if(identical(sender,'tibNrow')){
-    #   cat("Enter==============tibNRow data ======================\n")
-    #   print(data)
-    #   cat("Exit==============tibNRow data =======================\n")
-    # }
-    lapply(data, function(dd){
-      if(any(sapply(dd,is.na))){
-        print(data)
-        stop("encounterd an NA")
-      }
-    })
-    session$sendCustomMessage( type = "ptRManager", data)
-    # cat('exiting ---------------sendPtRManagerMessage---------------------\n')
-  }
-  
-
   
   
   getLeftMenuCmd<-reactive({input$editNavBar$item})
@@ -106,6 +57,8 @@ shinyServer(function(input, output,session) {
 
 
 #------------------leftPanel--------------------------------
+  source("leftPanel/serverRequest.R",                            local=TRUE) 
+  source("leftPanel/serverSendPtRManagerMessage.R",              local=TRUE) 
   source("leftPanel/mid/serverAce.R",                            local=TRUE) 
   source("leftPanel/helpSVG.R",                                  local=TRUE)
   source("leftPanel/tabs/serverFileTabs.R",                      local=TRUE) 
