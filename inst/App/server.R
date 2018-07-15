@@ -11,21 +11,6 @@ shinyServer(function(input, output,session) {
 # Reactive values----------
   
   
-  mssg<-reactiveValues(
-    error="",
-    capturedOutput=""
-  ) 
-  setErrorMssg<-function(errMssg){ mssg$error<-errMssg }
-  clearErrorMssg<-function(){ mssg$error<-"" }
-  hasError<-reactive({ nchar(mssg$error)>0 })
-  getErrorMssg<-reactive({ mssg$error })
-  setCapturedMssg<-function(capturedMssg)({ 
-    mssg$capturedOutput<-capturedMssg
-  })
-  getCapturedMssg<-reactive({ 
-    mssg$capturedOutput
-  })
-  
   triggerRefresh<-function(sender, rollBack=TRUE, auxValue=FALSE){ # to be used to force a code refresh???
     updateAceExt(id= getAceEditorId(), sender=sender, getValue=TRUE, rollBack=rollBack, auxValue=auxValue )
   }
@@ -59,6 +44,7 @@ shinyServer(function(input, output,session) {
 #------------------leftPanel--------------------------------
   source("leftPanel/serverRequest.R",                            local=TRUE) 
   source("leftPanel/serverSendPtRManagerMessage.R",              local=TRUE) 
+  source("leftPanel/serverOutputMssg.R",                         local=TRUE) 
   source("leftPanel/mid/serverAce.R",                            local=TRUE) 
   source("leftPanel/helpSVG.R",                                  local=TRUE)
   source("leftPanel/tabs/serverFileTabs.R",                      local=TRUE) 
