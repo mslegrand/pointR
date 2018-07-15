@@ -88,7 +88,7 @@ shinyUI(
              absolutePanel( left=5, bottom=0,
                actionButton("commit", label = "COMMIT EDIT") %>% bs_embed_tooltip(title = "Commit code changes")
              ),
-             absolutePanel( id='rmdBrowserButtonPanel', left=120, bottom=0,
+             absolutePanel( id='rmdBrowserButtonPanel', left=120, bottom=0,  class='hiddenPanel',
                 actionButton("writeNOpen", label = "Open in Browser") %>% bs_embed_tooltip(title = "Save as Html then Open in Browser")
              ),
              absolutePanel( left=150, bottom=-10,

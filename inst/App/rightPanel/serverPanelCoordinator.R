@@ -175,6 +175,7 @@ observeEvent(c(getAceEditorId(), getMode()),{
     hideElement("aceToobarTop2")
     hideElement("useTribble")
     hideElement("commit")
+    addClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
     hideElement("aceTabSet")
     hideElement("midRightPanels")
     hideElement("BottomRightPanel")
@@ -190,7 +191,7 @@ observeEvent(c(getAceEditorId(), getMode()),{
       showElement("TopRightPanel")
       showElement("snippetToolBarContainer")
       showElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble
-      hideElement("rmdBrowserButtonPanel")
+      addClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
       addClass( id= 'midRightPanels', class='ctop140')
     } else { # editing other
       removeClass( id= 'midRightPanels', class='ctop140')
@@ -198,10 +199,10 @@ observeEvent(c(getAceEditorId(), getMode()),{
       hideElement("snippetToolBarContainer")
       hideElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble
       if(identical(request$mode,'ptrrmd')){
-        showElement("rmdBrowserButtonPanel")
+        removeClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
       }
       else{
-        hideElement("rmdBrowserButtonPanel")
+        addClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
       }
     }
     showElement("aceToobarTop1")
