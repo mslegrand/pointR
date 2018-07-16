@@ -14,11 +14,23 @@ buildRightMenu<-function(){
                                #              shinyDMDMenu::menuItem('Color', value='cmdGridLineColor')
                                # )
                  )
-                 # ,
-                 # menuDropdown( 'Backdrop',
-                 #               shinyDMDMenu::menuItem('Hide', value='cmdHideBack'),
-                 #               shinyDMDMenu::menuItem('Color', value='cmdBackDropColor')
-                 # )
+                 ,
+                 menuDropdown( 'Backdrop',
+                               shinyDMDMenu::menuDropdown('colour',
+                                 colourInput( 
+                                 "backdropColour", NULL,
+                                 palette = "limited",
+                                 allowedCols = c(
+                                   "white", "black", "red",
+                                   "#DDD", "blue",
+                                   "#0000FFA0", "#0000FF30",
+                                   "rgb(255, 255, 0)", value='white')
+                                 )
+                                ),
+                               shinyDMDMenu::menuItem(
+                                  checkboxInput('solidBackdrop', 'Solid', TRUE), value="consolidate"
+                                )
+                 )
     ),
     menuDropdown(
       "Tools",

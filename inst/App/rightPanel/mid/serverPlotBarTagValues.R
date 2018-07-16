@@ -91,6 +91,7 @@ statusPlotTagVal<-callModule(
   ptrDisplayScript = reactive({ svgToolsScript( "TagVal") }), 
   getSVGWH,
   showGrid,
+  getBackDrop,
   getCode,
   getErrorMssg,
   getTibNRow=getTibNRow,

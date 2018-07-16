@@ -16,7 +16,14 @@ observeEvent(input$plotNavBar, {
     renameDMDM(session,  "plotNavBar",  "cmdHideGrid", "Show Grid",newValue="cmdShowGrid")
     setDisplayOption(showGrid=FALSE)
   }
+
+  if(cmd == 'cmdBackDropColor'){
+    # popup color picker
+  }  
   
+  if(cmd == 'cmdHideBack'){
+    setBackDrop(hide=FALSE)
+  } 
   
   if(cmd == 'cmdShowPointsNoLabels'){
     disableDMDM(session,  menuBarId="plotNavBar", entry="cmdShowPointsNoLabels")

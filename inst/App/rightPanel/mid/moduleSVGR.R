@@ -23,6 +23,7 @@ svgToolsScript<-function(type){
     ptrDisplayScript, # =js.scripts[[ "Points"]]
     getSVGWH, 
     showGrid,
+    getBackDrop,
     getCode,
     getErrorMssg, 
     getTibNRow,
@@ -61,7 +62,21 @@ svgToolsScript<-function(type){
           h<-svg$root$getAttr('height')
           svg$root$setAttr('id',svgID)
           if(showGrid()==TRUE){ svg$root$prependNode(svgR:::graphPaper( wh=c(w,h), dxy=c(50, 50), labels=TRUE )) }
-          svg$root$prependChildren(svgR:::use(filter=svgR:::filter(filterUnits="userSpaceOnUse", svgR:::feFlood(flood.color='white'))))
+          if(getBackDrop()$checked==FALSE){
+              svg$root$prependChildren(
+                svgR:::use(filter=svgR:::filter(filterUnits="userSpaceOnUse", svgR:::feFlood(flood.color=getBackDrop()$color))))
+          } else {
+             svg$root$prependChildren(
+               svgR:::rect(xy=c(0,0), wh=c(w,h),
+                  fill=svgR:::pattern( xy=c(0,0), wh=c(20,20), patternUnits="userSpaceOnUse",
+                    svgR:::g(
+                      svgR:::rect(xy=c(0,0), wh=c(10,10), fill=getBackDrop()$color),
+                      svgR:::rect(xy=c(10,10), wh=c(10,10), fill=getBackDrop()$color)
+                    )
+                  )
+                )
+              )
+          }
           svg$root$prependNode(svgR:::script(ptrDisplyScriptTxt))
           svg$root$prependNode( svgR:::style(".draggable {','cursor: move;','}"))
           if(!is.null(showPts.compound)){
