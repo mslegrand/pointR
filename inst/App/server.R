@@ -37,8 +37,6 @@ shinyServer(function(input, output,session) {
   shinyFileSave(input,   "buttonExportPreproc",      session=session, roots=c(wd="~")  ) #hidden
   
 
-  # Reactive expressions------------- 
-  showGrid<-reactive({displayOptions$showGrid})
 
 
 #------------------leftPanel--------------------------------

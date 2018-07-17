@@ -64,7 +64,15 @@ processSvgR<-reactive({
         # next check if it can be run
         #cat("processCommit::captureOutput2\n")
         parsedCode<-parse(text=src) 
+        # svg<-eval(parsedCode)
+        # if(identical(class(svg),'svgDoc')){
+        #   w<-svg$root$getAttr('width')
+        #   h<-svg$root$getAttr('height')
+        #   #set WH in selected...
+        # }
+        cat("class(svg)=",class(svg),"\n")
         output<-captureOutput(eval(parsedCode))
+        cat("class(output)=",class(output),"\n")
         output<-paste( output, collapse="\n" )
         output<-paste("Output:",output,sep="\n")
         setCapturedMssg(output)
