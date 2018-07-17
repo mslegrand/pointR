@@ -7,28 +7,24 @@ buildRightMenu<-function(){
                               shinyDMDMenu::menuItem('Show Points with Labels',    value='cmdShowPointLabels')
                  ),
                  menuDropdown( 'Grid',
-                               shinyDMDMenu::menuItem('Show Grid', value='cmdShowGrid')
-                               # ,
-                               # menuDropdown('lines',
-                               #              shinyDMDMenu::menuItem('Width', value='cmdGridLineWidh'), 
-                               #              shinyDMDMenu::menuItem('Color', value='cmdGridLineColor')
-                               # )
+                               shinyDMDMenu::menuItem('Show', value='cmdShowGrid'),
+                               shinyDMDMenu::menuItem('Spacing', value='cmdAdjustGridSpacing')
                  )
                  ,
                  menuDropdown( 'Backdrop',
                                shinyDMDMenu::menuDropdown('colour',
-                                 colourInput( 
-                                 "backdropColour", NULL,
-                                 palette = "limited",
-                                 allowedCols = c(
-                                   "white", "black", "red",
-                                   "#DDD", "blue",
-                                   "#0000FFA0", "#0000FF30",
-                                   "rgb(255, 255, 0)", value='white')
-                                 )
+                                 menuItem(div(id='bullfrog', style='width:80px;',
+                                   colourInput( "backdropColour", NULL, palette = "limited", 
+                                     allowedCols = 
+                                       c(
+                                         "white", "black", "red", "#DDD", "blue","green", "#333",
+                                         value='white'
+                                       )
+                                     )
+                                  ))
                                 ),
                                shinyDMDMenu::menuItem(
-                                  checkboxInput('solidBackdrop', 'Solid', TRUE), value="consolidate"
+                                  checkboxInput('solidBackdrop', 'Solid', TRUE, width="100px"), value="consolidate"
                                 )
                  )
     ),

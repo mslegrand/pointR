@@ -255,3 +255,15 @@ observeEvent(editOption$tabSize, {
 
 #----------------------------------------------
 
+observeEvent(input$modalGridSpacingCancel, {
+  removeModal()
+}) 
+
+observeEvent(input$modalGridSpacingOk, {
+  setSvgGrid(
+    dx= as.numeric(input$selectGridDX),
+    dy= as.numeric(input$selectGridDY)
+  )
+  editOption$tabSize<-input$selectIndentSize
+  removeModal()
+})

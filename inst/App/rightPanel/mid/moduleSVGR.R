@@ -22,7 +22,7 @@ svgToolsScript<-function(type){
     showPts.compound, # =showsvgRPoints.pts2
     ptrDisplayScript, # =js.scripts[[ "Points"]]
     getSVGWH, 
-    showGrid,
+    getSvgGrid,
     getBackDrop,
     getCode,
     getErrorMssg, 
@@ -35,7 +35,8 @@ svgToolsScript<-function(type){
   rtv<-  reactiveValues(
     status=list(
       state="PASS", 
-      message=""
+      message="",
+      WH=NULL
     )
   )
  
@@ -45,7 +46,7 @@ svgToolsScript<-function(type){
   output$svghtml <- renderUI({
     WH<-getSVGWH()
     codeTxt<-getCode()
-    if(is.null(showGrid())){return(NULL)}
+    if(is.null(getSvgGrid())){return(NULL)}
     
     # why can't I force this???
     showPts.compound=showPts.compound #should be able to force this
@@ -61,7 +62,10 @@ svgToolsScript<-function(type){
           w<-svg$root$getAttr('width')
           h<-svg$root$getAttr('height')
           svg$root$setAttr('id',svgID)
-          if(showGrid()==TRUE){ svg$root$prependNode(svgR:::graphPaper( wh=c(w,h), dxy=c(50, 50), labels=TRUE )) }
+          if(getSvgGrid()$show==TRUE){ 
+            dxy<-c( getSvgGrid()$dx, getSvgGrid()$dy)
+            svg$root$prependNode(svgR:::graphPaper( wh=c(w,h), dxy=dxy, labels=TRUE )) 
+          }
           if(getBackDrop()$checked==FALSE){
               svg$root$prependChildren(
                 svgR:::use(filter=svgR:::filter(filterUnits="userSpaceOnUse", svgR:::feFlood(flood.color=getBackDrop()$color))))
@@ -87,13 +91,15 @@ svgToolsScript<-function(type){
           res<-HTML(svgOut)
           rtv$status<-list(
             state="PASS",
-            message=""
+            message="",
+            WH=c(w,h)
           )
         },
         error=function(e){
           rtv$status<-list(
             state="FAIL", 
-            message=paste(getErrorMssg(), e, collapse="\n", sep="\n")
+            message=paste(getErrorMssg(), e, collapse="\n", sep="\n"),
+            WH=NULL
           )
         } 
       )
