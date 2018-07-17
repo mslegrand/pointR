@@ -54,8 +54,6 @@ setSvgGrid<-function(show,color,dx,dy){
   }
 }
 
-showGrid<-reactive({svgGrid$show})
-
 
 observeEvent( input$Hspacing, {
   browser()
@@ -68,10 +66,6 @@ observeEvent( input$Vspacing, {
   dy<-as.numeric(input$Vspacing)
   svgGrid$dy=dy
 })
-
-# observeEvent(input$gridColour,{
-#   svgGrid$color=input$gridColour
-# }, ignoreNULL = TRUE)
 
 
 #--Backdrop-----------------------------------
@@ -104,48 +98,6 @@ setBackDrop<-function(hide, color){
 }
 
 
-# getGridOpt<-reactive({
-#   list(
-#     show=displayOptions$showGrid, 
-#     color= displayOptions$color,
-#     checked=displayOptions$checkGrid
-#   )
-# })
-
-
-
-# gridSpacingModal <- function() {
-#   modalGridSpacing<-modalDialog(
-#     span('Grid Spacing'), 
-#     selectInput( "GridDX", "Horizontal Spacing", 
-#       c('.05',"5","50","500"), multiple=FALSE, 
-#       selectize = FALSE, width="300px", size=1  
-#     ), 
-#     selectInput( "GridDY", "Vertical Spacing", 
-#                  c('.05',"5","50","500"), multiple=FALSE, 
-#                  selectize = FALSE, width="300px", size=1  
-#     ),
-#     footer = tagList(
-#       modalButton("Cancel"),
-#       actionButton("modalSetGridSpacingOK", "OK")
-#     )
-#   ) 
-#   showModal( modalGridSpacing() )
-# }
-# 
-
-
-# observeEvent(input$deleteColumnButton, {
-#   if(getTibEditState()==TRUE){
-#     indx<-getTibColumn()
-#     newPtDefs<-getPtDefs()
-#     newPtDefs$tib[[getAssetName()]]<-newPtDefs$tib[[getAssetName()]][,-indx]
-#     sender<-'deleteColumn'
-#     updateAceExtDef(newPtDefs, sender=sender)
-#     # update columnSelection
-#     removeModal() #close dialog
-#   }
-# })
 
 
 
