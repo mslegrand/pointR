@@ -275,11 +275,11 @@ svgR(wh=WH,
     line(xy1=c(.5,0)*WH, xy2=c(.5,1)*WH, stroke.dasharray=2, stroke="#00FFFF"),
     line(xy1=c(0,.5)*WH, xy2=c(1,.5)*WH, stroke.dasharray=2, stroke="#00FFFF"),  
     text(
-        'T',
+        'Text',
         xy=WH/2,
-        stroke='#0000FF',
-        font.size=18,
-        fill='none'
+        stroke='#00FFFF',
+        font.size=10,
+        fill='#00FFFF'
     ) 
 )
 ```
@@ -310,11 +310,11 @@ svgR(wh=WH,
     line(xy1=c(.5,0)*WH, xy2=c(.5,1)*WH, stroke.dasharray=2, stroke="#00FFFF"),
     line(xy1=c(0,.5)*WH, xy2=c(1,.5)*WH, stroke.dasharray=2, stroke="#00FFFF"),  
     text(
-        'T',
+        'Text',
         cxy=WH/2,
         stroke='#00FFFF',
-        font.size=18,
-        fill='none'
+        font.size=10,
+        fill='#00FFFF'
     ) 
 )
 ```
