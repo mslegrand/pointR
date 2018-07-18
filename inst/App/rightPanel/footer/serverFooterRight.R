@@ -5,16 +5,6 @@ returnValue4ModuleRtFtr<-callModule(
   getTibEditState= getTibEditState,
   getPointMax=getPointMax,
   getPanelState=getRightMidPanel #,
-  # getPPPCode= function(){
-  #   # extract from db, and send
-  #   tmp.db<-filter(preProcDB$points, tabId==getTibTabId() && tibName==getAssetName())
-  #   tmp.list<-as.list(tmp.db$script)
-  #   if(length(tmp.list)>0){
-  #     names(tmp.list)<-tmp.db$cmd
-  #   }
-  #   tmp.list
-  # },
-  # getPPPSel= reactive({selectedAsset$ptScriptSel})
 )
 
 #-----------BUTTON EVENTS--------------------
@@ -28,7 +18,6 @@ observeEvent(
     name<-getAssetName()
     tib<-ptDefs$tib[[name]]
     rowIndex<-getTibRow()
-    # cat("serverFooterRight:: newTib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])\n")
     newTib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
     rowIndx=rowIndex+1
     matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
@@ -180,17 +169,9 @@ observeEvent( returnValue4ModuleRtFtr$backwardPt(), {
 
 observeEvent( returnValue4ModuleRtFtr$matColLim(), {
   mcl<-returnValue4ModuleRtFtr$matColLim()
-  # cat("*** length(matColLim)=", length( mcl ),"\n")
-  # cat("*** matColLim=", format( mcl ),"\n")
-  # cat("class(mcl)=",class(mcl),"\n")
   curVal<-getPointMax()
-  # cat("curVal=",format(curVal),"\n")
   if(!is.null(mcl) && !( identical(mcl,  curVal ))){
-    #if(!is.na(mcl) && is.numeric(mcl)){
       updateWidgetChoicesRow(maxVal= mcl )
-    #}
-  # } else {
-  #   updateWidgetChoicesRow(maxVal= NA )
    }
 })
 
