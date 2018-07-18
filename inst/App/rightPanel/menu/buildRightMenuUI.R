@@ -7,18 +7,26 @@ buildRightMenu<-function(){
                               shinyDMDMenu::menuItem('Show Points with Labels',    value='cmdShowPointLabels')
                  ),
                  menuDropdown( 'Grid',
-                               shinyDMDMenu::menuItem('Show Grid', value='cmdShowGrid')
-                               # ,
-                               # menuDropdown('lines',
-                               #              shinyDMDMenu::menuItem('Width', value='cmdGridLineWidh'), 
-                               #              shinyDMDMenu::menuItem('Color', value='cmdGridLineColor')
-                               # )
+                               shinyDMDMenu::menuItem('Show', value='cmdShowGrid'),
+                               shinyDMDMenu::menuItem('Spacing', value='cmdAdjustGridSpacing')
                  )
-                 # ,
-                 # menuDropdown( 'Backdrop',
-                 #               shinyDMDMenu::menuItem('Hide', value='cmdHideBack'),
-                 #               shinyDMDMenu::menuItem('Color', value='cmdBackDropColor')
-                 # )
+                 ,
+                 menuDropdown( 'Backdrop',
+                               shinyDMDMenu::menuDropdown('colour',
+                                 menuItem(div(id='bullfrog', style='width:80px;',
+                                   colourInput( "backdropColour", NULL, palette = "limited", 
+                                     allowedCols = 
+                                       c(
+                                         "white", "black", "red", "#DDD", "blue","green", "#333",
+                                         value='white'
+                                       )
+                                     )
+                                  ))
+                                ),
+                               shinyDMDMenu::menuItem(
+                                  checkboxInput('solidBackdrop', 'Solid', TRUE, width="100px"), value="consolidate"
+                                )
+                 )
     ),
     menuDropdown(
       "Tools",

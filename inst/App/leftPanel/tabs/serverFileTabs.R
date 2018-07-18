@@ -1,4 +1,42 @@
 
+sendFileTabsMessage<-function(...){ 
+  data<- list(...) 
+  if(length(data)>0){
+    cat("sendFileTabsMessage::", paste(data, collapse = ', '),"\n")
+    session$sendCustomMessage( type = "scrollManager",  data )
+  }
+}
+
+
+pages<- reactiveValues(
+  fileName='',
+  fileNameCount=1,
+  tabIdCount=1
+)
+
+
+getNextAnonymousFileName<-function(){
+  newFileName<-paste0("Anonymous ", pages$fileNameCount)
+  pages$fileNameCount<-pages$fileNameCount+1
+  newFileName
+}
+
+getNextTabId<-function(){
+  tabId<-paste0("PTR-TABID", pages$tabIdCount)
+  pages$tabIdCount<-pages$tabIdCount+1
+  tabId
+}
+
+aceID2TabID<-function(aceId){
+  sub("ACE","TAB",aceId)
+}
+tabID2aceID<-function(tabId){
+  sub("TAB","ACE",tabId)
+}
+tabID2prePtProc<-function(tabId){
+  sub("TAB","PTPP",tabId)
+}
+
 
 closeRfn<-function(tabId){paste0("event.stopPropagation();Shiny.onInputChange('closeTab',  {id:'",tabId,"', type: 'tabId'} ); return false")}
 tabTitleRfn<-function(tabName, tabId, docFilePath){

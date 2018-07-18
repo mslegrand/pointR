@@ -9,14 +9,40 @@ observeEvent(input$plotNavBar, {
   
   if(cmd == 'cmdShowGrid'){
     renameDMDM(session,  "plotNavBar", "cmdShowGrid", "Hide Grid", newValue="cmdHideGrid")
-    setDisplayOption(showGrid=TRUE)
+    setSvgGrid(show=TRUE)
   }
   
   if(cmd == 'cmdHideGrid'){
     renameDMDM(session,  "plotNavBar",  "cmdHideGrid", "Show Grid",newValue="cmdShowGrid")
-    setDisplayOption(showGrid=FALSE)
+    setSvgGrid(show=FALSE)
   }
   
+  if(cmd == 'cmdAdjustGridSpacing'){
+    spacingChoices<-c(.01, .05, .1, .5 ,1, 5,50,100,500)
+    choiceDX<-svgGrid$dx
+    choiceDY<-svgGrid$dy
+    modalGridSpacing <- function() {
+      modalDialog(
+            selectInput( "selectGridDX", "Horizontal Spacing", spacingChoices,
+              multiple=FALSE, selectize = FALSE, width="90px", selected=choiceDX
+            ),
+            selectInput( "selectGridDY", "Vertical Spacing", spacingChoices,
+              multiple=FALSE, selectize = FALSE, width="90px", selected=choiceDY
+            ),
+        footer = tagList(actionButton("modalGridSpacingCancel", "Cancel"),actionButton("modalGridSpacingOk", "OK") )
+      ) 
+    }
+    showModal( modalGridSpacing() )
+    dirtyDMDM(session, "plotNavBar")
+  }
+
+  if(cmd == 'cmdBackDropColor'){
+    # popup color picker
+  }  
+  
+  if(cmd == 'cmdHideBack'){
+    setBackDrop(hide=FALSE)
+  } 
   
   if(cmd == 'cmdShowPointsNoLabels'){
     disableDMDM(session,  menuBarId="plotNavBar", entry="cmdShowPointsNoLabels")
@@ -63,15 +89,15 @@ observeEvent(input$plotNavBar, {
   
   if(cmd == 'cmdImportPP'){ # disable unless ...
       cmdPreProcPtsImport()
-      dirtyDMDM(session, "editNavBar")
+      dirtyDMDM(session, "plotNavBar")
   }  
   if(cmd=="cmdExportPP"){ #-----save
     cmdPreProcPtsExport()
-    dirtyDMDM(session, "editNavBar")
+    dirtyDMDM(session, "plotNavBar")
   }   
   if(cmd=="cmdRemovePP"){ #-----save
     cmdPreProcPtsRemove()
-    dirtyDMDM(session, "editNavBar")
+    dirtyDMDM(session, "plotNavBar")
   } 
   
   if(!is.null(cmd)){

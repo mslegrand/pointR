@@ -248,10 +248,22 @@ observeEvent(editOption$theme, {
 })
 
 observeEvent(editOption$tabSize, {
-  updateAceEditor(session, getAceEditorId(), sender='fileCmd.tabSize', tabSize=as.numeric(editOption$tabSize))
+  updateAceEditor(session, getAceEditorId(),  tabSize=as.numeric(editOption$tabSize))
 }, ignoreNULL = TRUE, ignoreInit = TRUE)
 
 
 
 #----------------------------------------------
 
+observeEvent(input$modalGridSpacingCancel, {
+  removeModal()
+}) 
+
+observeEvent(input$modalGridSpacingOk, {
+  setSvgGrid(
+    dx= as.numeric(input$selectGridDX),
+    dy= as.numeric(input$selectGridDY)
+  )
+  editOption$tabSize<-input$selectIndentSize
+  removeModal()
+})
