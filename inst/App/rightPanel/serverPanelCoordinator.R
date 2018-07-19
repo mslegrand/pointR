@@ -133,7 +133,9 @@ getRightPanelChoices<-reactive({ # includes names of tibs
     choices<-c(choices, svgPanelTag, RPanelTag)
   } 
   choices
-})
+},
+label= 'c(getAceEditorId(), getMode())'
+)
 
 
 
@@ -163,12 +165,8 @@ observeEvent(atLeast2Rows(),{
 
 observeEvent(c(getAceEditorId(), getMode()),{
   id<-getAceEditorId()
-  # cat("\nobserveEvent getAceEditorId:: id='",format(id),"'\n");
-  # cat("\nobserveEvent getAceEditorId:: class(id)='",class(id),"'\n");
-  # cat("\nobserveEvent getAceEditorId:: nchar(id)='",nchar(id),"'\n" )
   
   if(length(id)==0){
-    #cat("hiding TopRightPanel\n")
     hideElement("TopRightPanel")
     hideElement("snippetToolBarContainer")
     hideElement("aceToobarTop1")
@@ -182,7 +180,6 @@ observeEvent(c(getAceEditorId(), getMode()),{
     showElement("logo.right")
     showElement("logo.left")
   } else {
-    #cat("showinging TopRightPanel\n")
     hideElement("logo.right")
     hideElement("logo.left")
     # editing ptr
@@ -212,24 +209,24 @@ observeEvent(c(getAceEditorId(), getMode()),{
     showElement("midRightPanels")
   }
   processCommit()
-})
+},
+label='PanelCoordinator.R:: c(getAceEditorId(), getMode())'
+)
 
 
-observeEvent( c(getRightMidPanel(), hasPtScript()), {
-  if( !is.null(getRightMidPanel()) && getRightMidPanel() %in% c('point','matrix')
-      &&  hasPtScript() ){
-    # cat('removing class hiddenPanel\n')
-    addClass( id='rightFooterPointButtons', class='posl30b0')
-    addClass( id='rightFooterMatrixButtons', class='posl30b0')    
+observeEvent( c(getRightMidPanel(), hasPtScript() ), {
+  if( !is.null(getRightMidPanel()) && 
+      (getRightMidPanel() %in% c('point','matrix')) &&
+      hasPtScript() 
+  ){
     removeClass( id='PtPreProcDiv', class="hiddenPanel")
     enableDMDM( session, menuBarId="plotNavBar", entry="cmdExportPP")
     enableDMDM( session, menuBarId="plotNavBar", entry="cmdRemovePP")
   } else {
-    # cat('adding class hiddenPanel\n')
     addClass( id='PtPreProcDiv', class="hiddenPanel")
-    removeClass( id='rightFooterPointButtons', class='posl30b0')
-    removeClass( id='rightFooterMatrixButtons', class='posl30b0')
     disableDMDM( session, menuBarId="plotNavBar", entry="cmdExportPP")
     disableDMDM( session, menuBarId="plotNavBar", entry="cmdRemovePP")
   }
-})
+}, 
+label='PanelCoordinator.R:: c(getRightMidPanel(), hasPtScript(), input$pages)' 
+)
