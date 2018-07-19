@@ -138,6 +138,54 @@ label= 'c(getAceEditorId(), getMode())'
 )
 
 
+observeEvent(c(getSourceType(), hasError()),{
+  if(!hasError() && identical(getSourceType(), svgPanelTag)){
+    enableDMDM(
+      session, 
+      menuBarId="plotNavBar", 
+      entry="Grid"
+    )
+    enableDMDM(
+      session, 
+      menuBarId="plotNavBar", 
+      entry="Backdrop"
+    )
+  } else {
+    disableDMDM(
+      session, 
+      menuBarId="plotNavBar", 
+      entry="Grid"
+    )
+    disableDMDM(
+      session, 
+      menuBarId="plotNavBar", 
+      entry="Backdrop"
+    )
+  }
+}, label='ShowGridMenu')
+
+
+observeEvent(c(getSourceType(), hasError(), getPtDefs() ),{
+  if(
+    !hasError() && 
+    identical(getSourceType(), svgPanelTag) &&
+    length(names(getPtDefs()$tib))>0
+  ){
+    enableDMDM(
+      session, 
+      menuBarId="plotNavBar", 
+      entry="Points"
+    )
+  } else {
+    disableDMDM(
+      session, 
+      menuBarId="plotNavBar", 
+      entry="Points"
+    )
+  }
+}, label='ShowGridMenu')
+
+
 
 is.tibName<-function(x){ !is.null(x) || x==errorPanelTag || x==transformTag}
 
