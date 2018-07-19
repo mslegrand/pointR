@@ -55,7 +55,7 @@ observeEvent( input$editNavBar, {
     if(fileCmd=="quit"){
       # cat(' fileCmd=="quit" \n')
       cmdFileQuit()
-      #dirtyDMDM(session, "editNavBar")
+      dirtyDMDM(session, "editNavBar")
     }
     if(fileCmd=="Export as SVG"){ #-----save
       cmdFileExportSvg()
