@@ -1,7 +1,7 @@
 
 .global <- new.env()
 
-version="v.0.3.9.9"
+version="v.0.3.9.10"
 
 drippetdirectoryPath = paste(system.file('App', package='pointR'), 'inst', 'www', 'drippets', sep='/')
 
