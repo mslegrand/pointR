@@ -89,6 +89,8 @@ shinyServer(function(input, output,session) {
   source("rightPanel/selector/serverWidgetHandler.R",            local=TRUE)
   source("rightPanel/serverDisplayOptions.R",                    local=TRUE)
   source("rightPanel/selector/serverAssetSelection.R",           local=TRUE)
+  source("rightPanel/mid/serverSvgGrid.R",                       local=TRUE)
+  source("rightPanel/mid/serverSvgBackdrop.R",                   local=TRUE)
   
 #---------------leftPanel--------------------------
   source("leftPanel/footer/processCommit.R",                    local=TRUE)

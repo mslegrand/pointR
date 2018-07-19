@@ -6,15 +6,22 @@ moduleFooterRightUI<-function(id, input, output) {
 moduleFooterRight<-function(input, output, session, 
                       getTibEditState,
                       getPointMax,
-                      getPanelState
+                      getPanelState, 
+                      hasPtScript
 ){
   
   output$footer<-renderUI({
     footerPanelState<-getPanelState()
+    if(hasPtScript()){
+      leftPtButtons= 50
+    } else {
+      leftPtButtons= 0
+    }
+      
     if(!is.null( footerPanelState )){
           if (footerPanelState=='point' && length(getPointMax())>0 ){
               absolutePanel( "class"="footerPanel", draggable=FALSE, style="bottom: 0; left: 10px; display:inline-block",
-                  absolutePanel(  id='rightFooterPointButtons',  bottom=5,  
+                  absolutePanel(  id='rightFooterPointButtons',  bottom=5,  left=leftPtButtons,
                      actionGroupButtons(
                         inputIds=c(session$ns("forwardPt" ),session$ns("backwardPt" ),session$ns("removePt" ),session$ns("tagPt" )),
                         labels=list(
@@ -35,7 +42,7 @@ moduleFooterRight<-function(input, output, session,
               )
           } else if (footerPanelState=='matrix'){
             absolutePanel( "class"="footerPanel", draggable=FALSE, style="bottom: 0; left: 10px; display:inline-block",
-              absolutePanel(  id='rightFooterMatrixButtons', bottom=5, 
+              absolutePanel(  id='rightFooterMatrixButtons', bottom=5, left=leftPtButtons,
                 actionGroupButtons(
                   inputIds=c(session$ns("tagMoveUp" ),session$ns("tagMoveDown" ),session$ns("tagDelete" ),session$ns("tagClone" )),
                   labels=list(

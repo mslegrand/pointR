@@ -4,9 +4,14 @@ preProcDB<-reactiveValues(
   matrix=tibble( tabId="bogus", tibName="bogus", ptColName='bogus', cmd="bogus", script='bogus')[0,]
 )
 
-hasPtScript<-reactive({
-    rtv<-nrow(filter(preProcDB$points, tabId==getTibTabId() && tibName==getAssetName() && ptColName== getTibColumnName()))>0
-  rtv
+hasPtScript<-reactiveVal(FALSE, label='hasPtScript' )
+
+
+observeEvent(c(preProcDB$points, input$pages, getTibTabId(), getAssetName(), getTibColumnName()),{
+  if(!is.null(input$pages) && identical( getTibTabId(), input$pages )){
+    newVal<-nrow(filter(preProcDB$points, tabId==getTibTabId() & tibName==getAssetName() & ptColName== getTibColumnName()))>0
+    hasPtScript(newVal)
+  }
 })
 
 
@@ -26,7 +31,7 @@ insertPreProcPtEntry<-function(
     onMoveMat=fileTemplates[['moveMatTemplate.R']]  
   ) 
   ){
-  # cat("---entering insertPreProcPtEntry---\n")
+  
   # todo addd tests for newScript (is character...)
  
   temp2<-tibble( 
@@ -63,11 +68,12 @@ getPreProcPtScript<-reactive({
   tab_Id=getTibTabId()
   tib_Name= getAssetName()
   pt_Column_Name= getTibColumnName()
-  x<-filter(preProcDB$points, tabId==getTibTabId() && tibName==getAssetName(), ptColName== getTibColumnName())
+  x<-filter(preProcDB$points, tabId==getTibTabId() & tibName==getAssetName() & ptColName== getTibColumnName())
   temp<-x$script
   if(length(temp)==3){
     names(temp)<-x$cmd
   }
+
   temp
 })
 

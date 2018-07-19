@@ -85,6 +85,7 @@ observeEvent(input$plotNavBar, {
       txt=fileTemplates[['newPtTemplate.R']]
       updateAceEditor(session, editorId='ptPreProcAceEditor', value=txt)
     }
+    dirtyDMDM(session, "plotNavBar")
   }
   
   if(cmd == 'cmdImportPP'){ # disable unless ...
@@ -104,23 +105,6 @@ observeEvent(input$plotNavBar, {
     dirtyDMDM(session, "plotNavBar")
   }
   
-})
-
-observeEvent( getRightMidPanel(), {
-  panel<-getRightMidPanel()
-  if( !is.null(panel) && panel %in% c('point','matrix')){
-    enableDMDM(
-      session, 
-      menuBarId="plotNavBar", 
-      entry="Point Preprocessor"
-    )
-  } else {
-    disableDMDM(
-      session, 
-      menuBarId="plotNavBar", 
-      entry="Point Preprocessor"
-    )    
-  }
 })
 
 
