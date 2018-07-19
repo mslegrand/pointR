@@ -15,16 +15,16 @@ loadPrePoints<-function(datapath){
     ){
       stop('bad preproc')
     }
-      insertPreProcPtEntry(
-        tab_Id= getTibTabId(),  
-        tib_Name=getAssetName(),
-        pt_Column_Name=getTibColumnName(),
-        newScript=preProcList
-      )
-      selection<-names(preProcList)[1]
-      updateRadioGroupButtons(session, "ptPreProcCmdChoice", selected=selection )
-      txt=preProcList[1]
-      updateAceEditor(session, editorId='ptPreProcAceEditor', value=txt)
+    insertPreProcPtEntry(
+      tab_Id= getTibTabId(),  
+      tib_Name=getAssetName(),
+      pt_Column_Name=getTibColumnName(),
+      newScript=preProcList
+    )
+    selection<-names(preProcList)[1]
+    updateRadioGroupButtons(session, "ptPreProcCmdChoice", selected=selection )
+    txt=preProcList[1]
+    updateAceEditor(session, editorId='ptPreProcAceEditor', value=txt)
   }, 
   error=function(e){
         e<-c(e,traceback())
@@ -36,7 +36,9 @@ loadPrePoints<-function(datapath){
 observeEvent(input$buttonPreProcPtImport,{
   fp.dt<-parseFilePaths(c(wd='~'), input$buttonPreProcPtImport)
   if(length(fp.dt)>0 && nrow(fp.dt)){
+    
     datapath<-as.character(fp.dt$datapath[1])
+    # cat('loading ', datapath,"\n")
     loadPrePoints(datapath)
   }
 })
