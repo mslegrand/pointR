@@ -1,3 +1,7 @@
+
+getSVGWH<-reactiveVal(c(650,620)) 
+
+
 output$uiPreProcChooser<-renderUI({
   radioGroupButtons(
     inputId = "ptPreProcCmdChoice",
