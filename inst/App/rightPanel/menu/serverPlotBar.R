@@ -107,21 +107,4 @@ observeEvent(input$plotNavBar, {
   
 })
 
-observeEvent( getRightMidPanel(), {
-  panel<-getRightMidPanel()
-  if( !is.null(panel) && panel %in% c('point','matrix')){
-    enableDMDM(
-      session, 
-      menuBarId="plotNavBar", 
-      entry="Point Preprocessor"
-    )
-  } else {
-    disableDMDM(
-      session, 
-      menuBarId="plotNavBar", 
-      entry="Point Preprocessor"
-    )    
-  }
-})
-
 
