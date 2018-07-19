@@ -4,12 +4,14 @@ preProcDB<-reactiveValues(
   matrix=tibble( tabId="bogus", tibName="bogus", ptColName='bogus', cmd="bogus", script='bogus')[0,]
 )
 
-hasPtScript<-reactive({
-   cat("getTibTabId()=" ,getTibTabId(), "\n" )
-     cat("hasPtScript::", paste(preProcDB$points$tabId, collapse=", "),"\n")
-    rtv<-nrow(filter(preProcDB$points, tabId==getTibTabId() & tibName==getAssetName() & ptColName== getTibColumnName()))>0
-     cat("hasPtScript:: return=", format(rtv),"\n")
-  rtv
+hasPtScript<-reactiveVal(FALSE, label='hasPtScript' )
+
+
+observeEvent(c(preProcDB$points, input$pages, getTibTabId(), getAssetName(), getTibColumnName()),{
+  if(!is.null(input$pages) && identical( getTibTabId(), input$pages )){
+    newVal<-nrow(filter(preProcDB$points, tabId==getTibTabId() & tibName==getAssetName() & ptColName== getTibColumnName()))>0
+    hasPtScript(newVal)
+  }
 })
 
 
@@ -29,7 +31,7 @@ insertPreProcPtEntry<-function(
     onMoveMat=fileTemplates[['moveMatTemplate.R']]  
   ) 
   ){
-  # cat("---entering insertPreProcPtEntry---\n")
+  
   # todo addd tests for newScript (is character...)
  
   temp2<-tibble( 
@@ -52,15 +54,6 @@ insertPreProcPtEntry<-function(
 }
 
 setPreProcPtScript<-function(tab_Id, tib_Name, pt_Column_Name,  cmd_name, newScript){
-  # cat("setPreProcPtScript:: tab_Id=",format(tab_Id),"!\n")
-  # cat("setPreProcPtScript:: tib_Name=",format(tib_Name),"\n")
-  # cat("setPreProcPtScript:: pt_Column_Name=",format(pt_Column_Name),"\n")
-  # cat("setPreProcPtScript:: cmd_name=",format(cmd_name),"\n")
-  # cat("setPreProcPtScript:: newScript=",format(newScript),"\n")
-  # cat("setPreProcPtScript:: newScript=",newScript,"\n")
-  
-  
-  
   preProcDB$points[ 
       preProcDB$points$tabId==tab_Id &
       preProcDB$points$tibName==tib_Name &
@@ -75,14 +68,12 @@ getPreProcPtScript<-reactive({
   tab_Id=getTibTabId()
   tib_Name= getAssetName()
   pt_Column_Name= getTibColumnName()
-  cat("getPreProcPtScript:: tab_Id=",tab_Id,"\n")
   x<-filter(preProcDB$points, tabId==getTibTabId() & tibName==getAssetName() & ptColName== getTibColumnName())
   temp<-x$script
   if(length(temp)==3){
     names(temp)<-x$cmd
   }
-  # cat("getPreProcPtScript:: return value=\n")
-  #     print(temp)
+
   temp
 })
 
