@@ -115,12 +115,16 @@ statusPlotPoint<-callModule(
 )
 
 #error handler
-observeEvent(statusPlotPoint$status(), {
+observeEvent(c(statusPlotPoint$status(), statusPlotPoint$WH()), {
   status<-statusPlotPoint$status()
   if( status$state!="PASS"){ 
     mssg$err<-paste(mssg$err, status$message, "cannot plot: code02\n", collapse="\n")
+  } else {
+    wh<-statusPlotPoint$WH()
+    getSVGWH(wh)
   }
 })
+
 
 
 

@@ -103,11 +103,14 @@ statusPlotTagDrag<-callModule(
   insert.end=",showPts.compound()"
 )
 
-observeEvent(statusPlotTagDrag$status(), {
+observeEvent(c(statusPlotTagDrag$status(),   statusPlotPoint$WH()), {
   status<-statusPlotTagDrag$status()
   if(status$state!="PASS"){
     mssg$err<-paste(mssg$err, status$message, "cannot plot: code01\n", collapse="\n")
     # switch to log 
+  } else {
+    wh<-statusPlotPoint$WH()
+    getSVGWH(wh)
   }
 })
 

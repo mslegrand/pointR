@@ -35,9 +35,9 @@ svgToolsScript<-function(type){
   rtv<-  reactiveValues(
     status=list(
       state="PASS", 
-      message="",
-      WH=NULL
-    )
+      message=""
+    ),
+    WH=NULL
   )
  
   
@@ -61,6 +61,8 @@ svgToolsScript<-function(type){
           svg<-eval(parsedCode)
           w<-svg$root$getAttr('width')
           h<-svg$root$getAttr('height')
+          # browser()
+          rtv$WH<-c(w,h)
           svg$root$setAttr('id',svgID)
           if(getSvgGrid()$show==TRUE){ 
             dxy<-c( getSvgGrid()$dx, getSvgGrid()$dy)
@@ -91,15 +93,13 @@ svgToolsScript<-function(type){
           res<-HTML(svgOut)
           rtv$status<-list(
             state="PASS",
-            message="",
-            WH=c(w,h)
+            message=""
           )
         },
         error=function(e){
           rtv$status<-list(
             state="FAIL", 
-            message=paste(getErrorMssg(), e, collapse="\n", sep="\n"),
-            WH=NULL
+            message=paste(getErrorMssg(), e, collapse="\n", sep="\n")
           )
         } 
       )
@@ -109,7 +109,8 @@ svgToolsScript<-function(type){
    }) #end of renderUI
   
   list(
-    status=reactive({rtv$status}) 
+    status=reactive({rtv$status}) ,
+    WH=reactive({rtv$WH})
   )
   
 }

@@ -62,7 +62,7 @@ mouseCmdAddPt<-function(mssg){
             tibs=getPtDefs()$tib
           )
         }
-        tibs<-eval(parse(text=txt))
+        tibs<-eval(parse(text=txt)) # may want to restrict the env to given set of fns: addPt2ptDefs, getSVGWH
         validateTibLists(getPtDefs()$tib, tibs)
         newPtDefs$tib<-tibs
         if(!is.null(newPtDefs)){ #update only upon success
