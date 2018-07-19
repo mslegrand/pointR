@@ -4,7 +4,8 @@ returnValue4ModuleRtFtr<-callModule(
   id="footerRight",
   getTibEditState= getTibEditState,
   getPointMax=getPointMax,
-  getPanelState=getRightMidPanel #,
+  getPanelState=getRightMidPanel ,
+  hasPtScript=hasPtScript
 )
 
 #-----------BUTTON EVENTS--------------------
