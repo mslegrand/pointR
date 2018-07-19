@@ -85,6 +85,7 @@ observeEvent(input$plotNavBar, {
       txt=fileTemplates[['newPtTemplate.R']]
       updateAceEditor(session, editorId='ptPreProcAceEditor', value=txt)
     }
+    dirtyDMDM(session, "plotNavBar")
   }
   
   if(cmd == 'cmdImportPP'){ # disable unless ...
