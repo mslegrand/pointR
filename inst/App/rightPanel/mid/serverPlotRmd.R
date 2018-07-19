@@ -9,7 +9,6 @@ modulePlotRmd<-function(input, output, session,
 ){
   
   output$rmd_Html <- renderUI({ 
-    #HTML('')
     if(getPanelName() %in% rmdPanelTag){
       src<-getCode()
       if(grepl("output: dnd_snippet",src)){
