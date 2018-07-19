@@ -7,15 +7,17 @@ output$uiPreProcChooser<-renderUI({
   )
 })
 
+
+
 observeEvent(c(input$pages, getTibTabId()), {
   if(identical(input$pages, getTibTabId())){
     if(hasPtScript()){
-      #browser()
-      txt= getPreProcPtScript()[input$ptPreProcCmdChoice]
+      choice<-input$ptPreProcCmdChoice
+      if(is.null(choice)){ choice<-1}
+      txt= getPreProcPtScript()[choice]
       updateAceEditor(session, editorId='ptPreProcAceEditor', value=txt)
-    }
+    } 
   }
-
 })
 
 observeEvent(input$ptPreProcCmdChoice, {
