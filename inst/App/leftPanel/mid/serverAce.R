@@ -55,8 +55,8 @@ observeEvent(input$messageFromAce, {
         # cat('33 request$sender=',format(request$sender),"\n")
         #cat('Ace: invoking processCommit\n')
         processCommit() # this sets the sourceType
-        # cat('returning from processCommit\n')
-        # cat('getAssetName()=',format(getAssetName()),"\n")
+        cat('mssgFromAce:: returning from processCommit\n')
+        cat('mssgFromAce:: getAssetName()=',format(getAssetName()),"\n")
         if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset', 'cmd.saveFileNow') && !is.null(getAssetName())){ 
           if(sender=='cmd.add.asset'){
             name=input$messageFromAce$selector$assetName
@@ -221,27 +221,32 @@ observeEvent(request$sender,{
 
 # TODO!!!: rewrite
 updateSelected4Ace<-function( reqSelector){
-  
-  if(!is.null(reqSelector[['name']])){
-    #cat("reqSelector$name=", format(reqSelector$name ),"\n")
-    selectedAsset$name=reqSelector[['name']]
+  # TODO: make into iteration
+  # updatEle<- c('name', 'ptColName', 'rowIndex', 'matCol', 'colName')
+  cat('names of reqSelector:', paste(names(reqSelector), collapse=", "),"\n" )
+  for(n in names(reqSelector)){
+    stopifnot({n %in% names(selectedAsset)})
+    selectedAsset[[n]]<-reqSelector[[n]]
   }
-  if(!is.null(reqSelector[['ptColName']])){
-    #cat("reqSelector$ptColName=", format(reqSelector$ptColName ),"\n")
-    selectedAsset$ptColName=reqSelector[['ptColName']]
-  }
-  if(!is.null(reqSelector[['rowIndex']])){ # !!! may want to provide a check here
-    #cat("reqSelector$ptColName=", format(reqSelector$rowIndex ),"\n")
-    selectedAsset$rowIndex=reqSelector[['rowIndex']]
-  }
-  if(!is.null(reqSelector[['matCol']])){
-    #cat("reqSelector$matCol=", format(reqSelector$matCol ),"\n")
-    selectedAsset$matCol=reqSelector[['matCol']]
-
-  }
-  if(!is.null(reqSelector[['columnName']])){
-    #cat("reqSelector$columnName=", format(reqSelector$columnName ),"\n")
-    selectedAsset$columnName=reqSelector[['columnName']]
-  }
+  # if(!is.null(reqSelector[['name']])){
+  #   #cat("reqSelector$name=", format(reqSelector$name ),"\n")
+  #   selectedAsset$name=reqSelector[['name']]
+  # }
+  # if(!is.null(reqSelector[['ptColName']])){
+  #   #cat("reqSelector$ptColName=", format(reqSelector$ptColName ),"\n")
+  #   selectedAsset$ptColName=reqSelector[['ptColName']]
+  # }
+  # if(!is.null(reqSelector[['rowIndex']])){ # !!! may want to provide a check here
+  #   #cat("reqSelector$ptColName=", format(reqSelector$rowIndex ),"\n")
+  #   selectedAsset$rowIndex=reqSelector[['rowIndex']]
+  # }
+  # if(!is.null(reqSelector[['matCol']])){
+  #   #cat("reqSelector$matCol=", format(reqSelector$matCol ),"\n")
+  #   selectedAsset$matCol=reqSelector[['matCol']]
+  # }
+  # if(!is.null(reqSelector[['columnName']])){
+  #   #cat("reqSelector$columnName=", format(reqSelector$columnName ),"\n")
+  #   selectedAsset$columnName=reqSelector[['columnName']]
+  # }
 } 
 
