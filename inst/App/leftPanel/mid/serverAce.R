@@ -1,7 +1,5 @@
 
 observeEvent(input$messageFromAce, {
-  # cat('\n====serverAce:...observe input$messageFromAce:: entering\n')
-  # cat('\n initial value of getTibRow()=', format(getTibRow()), "\n")
     if(
       length(input$messageFromAce$code)>0 &&
       length(input$messageFromAce$sender)>0
@@ -11,74 +9,45 @@ observeEvent(input$messageFromAce, {
       request$sender<-sender
       clearErrorMssg()
       
-      # cat("input$messageFromAce$id=" , format(input$messageFromAce$id), "\n")
       if(!is.null(input$messageFromAce$selector) && !is.null(input$messageFromAce$code) ){
         reqSelector<-input$messageFromAce$selector
         updateSelected4Ace(reqSelector)
       }
-      # cat('request$sender=',format(request$sender),"\n")
+      
       if(length(input$messageFromAce$isSaved)>0){ 
         aceId<-input$messageFromAce$id
         editOption$.saved <- input$messageFromAce$isSaved
-        # cat('\n--setting editOption$.saved --\n')
-        # cat("set editOption$.saved=",editOption$.saved,"\n")
       }
-      # cat('22 ace request$sender=',format(request$sender),"\n")
+      
 
-      if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset', 'cmd.openFileNow', 'cmd.saveFileNow', 'cmd.file.new', 'cmd.tabChange')){
+      if(
+        sender %in% c( 
+          'cmd.file.new', 'cmd.tabChange', 'cmd.openFileNow', 
+          'cmd.commit', 'cmd.add.column', 'cmd.add.asset', 'cmd.saveFileNow' 
+          )
+      ){#not sure if cmd.saveFileNow should be here, infact, cannot find sender issuing this.
         processMssgFromAceMssgPageIn(sender, input$messageFromAce)
       } 
       
-      if( sender %in% c( 'fileCmd.save', 'fileCmd.close', 'fileCmd.saveAs', 'fileCmd.quit' , 'fileCmd.saveNow', 'buttonCmd.rmdViewer')){
+      if( sender %in% c( 
+          'fileCmd.save', 'fileCmd.close', 'fileCmd.saveAs', 'fileCmd.quit' , 'fileCmd.saveNow', 'buttonCmd.rmdViewer'
+          )
+      ){
         processMssgFromAceMssgPageOut(sender, input$messageFromAce) 
       }
 
-      # cat('\n final value of getTibRow()=', format(getTibRow()), "\n")
+      
     }
 }, priority = 90, ignoreNULL = TRUE, ignoreInit = TRUE)
 
 
 
-
-
-
-observeEvent(request$sender,{
-    if(request$sender=='startup'){
-      cmdFileNewPtR()
-      sampleDnippets<-paste(system.file('App', package='pointR'), 'templates', 'sampleShapes.dnippets', sep='/')
-      cat(sampleDnippets)
-      loadDndSnippets(sampleDnippets)
-    }
-}, priority=100)
-
-# TODO!!!: rewrite
 updateSelected4Ace<-function( reqSelector){
-  # TODO: make into iteration
   # updatEle<- c('name', 'ptColName', 'rowIndex', 'matCol', 'colName')
   cat('names of reqSelector:', paste(names(reqSelector), collapse=", "),"\n" )
   for(n in names(reqSelector)){
     stopifnot({n %in% names(selectedAsset)})
     selectedAsset[[n]]<-reqSelector[[n]]
   }
-  # if(!is.null(reqSelector[['name']])){
-  #   #cat("reqSelector$name=", format(reqSelector$name ),"\n")
-  #   selectedAsset$name=reqSelector[['name']]
-  # }
-  # if(!is.null(reqSelector[['ptColName']])){
-  #   #cat("reqSelector$ptColName=", format(reqSelector$ptColName ),"\n")
-  #   selectedAsset$ptColName=reqSelector[['ptColName']]
-  # }
-  # if(!is.null(reqSelector[['rowIndex']])){ # !!! may want to provide a check here
-  #   #cat("reqSelector$ptColName=", format(reqSelector$rowIndex ),"\n")
-  #   selectedAsset$rowIndex=reqSelector[['rowIndex']]
-  # }
-  # if(!is.null(reqSelector[['matCol']])){
-  #   #cat("reqSelector$matCol=", format(reqSelector$matCol ),"\n")
-  #   selectedAsset$matCol=reqSelector[['matCol']]
-  # }
-  # if(!is.null(reqSelector[['columnName']])){
-  #   #cat("reqSelector$columnName=", format(reqSelector$columnName ),"\n")
-  #   selectedAsset$columnName=reqSelector[['columnName']]
-  # }
-} 
+}
 

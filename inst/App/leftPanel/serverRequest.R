@@ -5,7 +5,14 @@ request<-reactiveValues(
   tabs=NULL
 )
 
-
+observeEvent(request$sender,{
+    if(request$sender=='startup'){
+      cmdFileNewPtR()
+      sampleDnippets<-paste(system.file('App', package='pointR'), 'templates', 'sampleShapes.dnippets', sep='/')
+      cat(sampleDnippets)
+      loadDndSnippets(sampleDnippets)
+    }
+}, priority=100)
 
 setTabRequest<-function(sender, tabs){
   request$sender<-sender
