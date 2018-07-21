@@ -44,6 +44,7 @@ shinyServer(function(input, output,session) {
   source("leftPanel/serverSendPtRManagerMessage.R",              local=TRUE) 
   source("leftPanel/serverOutputMssg.R",                         local=TRUE) 
   source("leftPanel/mid/serverAce.R",                            local=TRUE) 
+  source("leftPanel/mid/serverSendMessage2Ace.R",                local=TRUE) 
   source("leftPanel/helpSVG.R",                                  local=TRUE)
   source("leftPanel/tabs/serverFileTabs.R",                      local=TRUE) 
   
