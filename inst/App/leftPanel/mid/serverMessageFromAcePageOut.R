@@ -5,6 +5,7 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
     docFilePath<-unlist(mssg$docFilePath)
     if(docFilePath=='?' || sender=='fileCmd.saveAs'){ # file unnamed : fileSaveAs
       tabId<-aceID2TabID(id)
+      
       if(identical(request$mode, 'ptr')){
         ext=list(R='R')
       } else if( identical(request$mode, 'ptrrmd') ){
@@ -14,8 +15,7 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
       } else if( identical(request$mode, 'dnippets') ){
         ext=list(dnippets='dnippets')
       } else {
-        # cat('request$mode=',request$mode,"\n")
-        stop('unknowMode')
+        stop('unknowMode', format(request$mode))
         ext=list(text='txt')
       }
       ext<-shinyFiles:::formatFiletype(ext)
