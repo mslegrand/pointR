@@ -140,6 +140,16 @@ resetSelectedTibbleName<-function(tibs, name){
       }
 }
 
+
+setSelectedAssetFromAce<-function( reqSelector){
+  # updatEle<- c('name', 'ptColName', 'rowIndex', 'matCol', 'colName')
+  cat('names of reqSelector:', paste(names(reqSelector), collapse=", "),"\n" )
+  for(n in names(reqSelector)){
+    stopifnot({n %in% names(selectedAsset)})
+    selectedAsset[[n]]<-reqSelector[[n]]
+  }
+}
+
 updateSelected<-function( name, rowIndex, columnName, matCol,  ptColName, selIndex, transformType ){
   if(!missing(name)){
     selectedAsset$name=name
