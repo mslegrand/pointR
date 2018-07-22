@@ -6,20 +6,7 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
     if(docFilePath=='?' || sender=='fileCmd.saveAs'){ # file unnamed : fileSaveAs
       tabId<-aceID2TabID(id)
       ext<-mode2pathExt(request$mode)
-      # if(identical(request$mode, 'ptr')){
-      #   ext=list(R='R')
-      # } else if( identical(request$mode, 'ptrrmd') ){
-      #   ext=list(Rmd='Rmd')
-      # } else if( identical(request$mode, 'snippets') ){
-      #   ext=list(snippet='snippets')
-      # } else if( identical(request$mode, 'dnippets') ){
-      #   ext=list(dnippets='dnippets')
-      # } else {
-      #   stop('unknowMode', format(request$mode))
-      #   ext=list(text='txt')
-      # }
       ext<-shinyFiles:::formatFiletype(ext)
-      
       target<-saveButtonFileNames[[request$mode]]
       sendPtRManagerMessage( sender=sender, saveFile=TRUE,  target=target, tabId=tabId )
     } else { 
