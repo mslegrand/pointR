@@ -13,7 +13,6 @@ src2sourceType<-function(src){  #not used !!
 
 processCommit<-reactive({
   clearErrorMssg()
-
   cat('ProcessCommit: request$mode=',format(request$mode),"\n")
   if( identical(request$mode, 'ptr')){
     processSvgR()
@@ -21,6 +20,10 @@ processCommit<-reactive({
     processKnit()
   } else if( identical(request$mode, 'dnippets')){
     processDnip()
+  } else if (identical(request$mode, 'text')){
+    panels$sourceType<-textPanelTag
+  } else if (identical(request$mode, 'snippets')){
+    panels$sourceType<-snippetPanelTag
   }
 
 })
