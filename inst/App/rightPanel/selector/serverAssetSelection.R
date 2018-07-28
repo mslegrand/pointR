@@ -24,7 +24,7 @@ getSelIndex<-reactive({
 })
 
 observeEvent(getTibNRow(),{
-  if(identical(request$mode,'ptR') && length(names(getPtDefs()$tib))>0 ){
+  if(identical(getMode(),'ptR') && length(names(getPtDefs()$tib))>0 ){
     sendPtRManagerMessage(  sender='tibNrow', rowCountChange=TRUE)
   }
 })

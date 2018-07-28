@@ -5,9 +5,9 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
     docFilePath<-unlist(mssg$docFilePath)
     if(docFilePath=='?' || sender=='fileCmd.saveAs'){ # file unnamed : fileSaveAs
       tabId<-aceID2TabID(id)
-      ext<-mode2pathExt(request$mode)
+      ext<-mode2pathExt( getMode() )
       ext<-shinyFiles:::formatFiletype(ext)
-      target<-saveButtonFileNames[[request$mode]]
+      target<-saveButtonFileNames[[getMode()]]
       sendPtRManagerMessage( sender=sender, saveFile=TRUE,  target=target, tabId=tabId )
     } else { 
       # write file

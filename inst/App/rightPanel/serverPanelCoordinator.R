@@ -231,7 +231,7 @@ observeEvent(c(getAceEditorId(), getMode()),{
     hideElement("logo.right")
     hideElement("logo.left")
     # editing ptr
-    if(identical(request$mode,'ptr')){
+    if(identical(getMode(),'ptr')){
       showElement("BottomRightPanel")
       showElement("TopRightPanel")
       showElement("snippetToolBarContainer")
@@ -243,7 +243,7 @@ observeEvent(c(getAceEditorId(), getMode()),{
       hideElement("TopRightPanel")
       hideElement("snippetToolBarContainer")
       hideElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble
-      if(identical(request$mode,'ptrrmd')){
+      if(identical(getMode(),'ptrrmd')){
         removeClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
       }
       else{

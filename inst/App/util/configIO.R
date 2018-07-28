@@ -12,10 +12,24 @@ optionDirPath<-function(){
   if(!file.exists(dirPath)){
     dir.create(dirPath)
   }
+  workSpaceDir<-paste0(dirPath,"/",'workspace')
+  if(!file.exists(workSpaceDir)){
+    dir.create(workSpaceDir)
+  }
   dirPath
 }
 
-drippetsDirPath<-function(){
+getWorkSpaceDir<-function(){
+  dirPath<-optionDirPath()
+  workSpaceDir<-paste0(dirPath,"/",'workspace')
+}
+
+getWorkSpaceDir<-function(){
+  dirPath<-optionDirPath()
+  workSpaceDir<-paste0(dirPath,"/",'workspace')
+}
+
+dnippetsDirPath<-function(){
   opPath<-optionDirPath()
   dirPath<-paste(opPath,'drippets',sep='/')
   if(!file.exists(dirPath)){
@@ -57,6 +71,7 @@ readOptionsJSON<-function(){
     currentFilePath="./",
     tabType="Use Soft Tabs",
     useTribbleFormat=TRUE,
+    dnippetsFiles=NULL,
     recentFiles=NULL
   )
   

@@ -51,9 +51,9 @@ newAssetSelection<-function( tabId, choices, tibs){
   name=choices[1]
   if( is.null(tibs)){
     rowIndex=1
-    columnName='x'
+    columnName='x' #bogus
     matCol=0
-    ptColName='x'
+    ptColName='x'  #bogus
   } else {
     tib<-tibs[[name]]
     rowIndex=nrow( tib )

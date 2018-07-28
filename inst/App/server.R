@@ -53,6 +53,7 @@ shinyServer(function(input, output,session) {
   
   #------------------fileIO----------------------------------
   source("fileIO/serverGenShinyFilesSaveObservers.R",            local=TRUE)
+  source("fileIO/serverFileDescriptor.R",                        local=TRUE)
   
 #------------------rightPanel--------------------------------
   source("rightPanel/selector/serverAssetSelectionDB.R",         local=TRUE)

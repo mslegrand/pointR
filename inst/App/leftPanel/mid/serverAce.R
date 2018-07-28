@@ -8,7 +8,7 @@ observeEvent(input$messageFromAce, {
       sender<-input$messageFromAce$sender
       request$sender<-sender
       clearErrorMssg()
-      
+      cat('messageFromAce:: sender=',sender,'\n')
       if(!is.null(input$messageFromAce$selector) && !is.null(input$messageFromAce$code) ){
         reqSelector<-input$messageFromAce$selector
         setSelectedAssetFromAce(reqSelector)
@@ -17,12 +17,23 @@ observeEvent(input$messageFromAce, {
       if(length(input$messageFromAce$isSaved)>0){ 
         aceId<-input$messageFromAce$id
         editOption$.saved <- input$messageFromAce$isSaved
+        tabId<-aceID2TabID(aceId)
+        setFileDescSaved(tabId, input$messageFromAce$isSaved)
+        savePage(tabId)
       }
+      if(length(input$messageFromAce$docFilePath)>0 ){
+        docFilePath<-unlist(input$messageFromAce$docFilePath)
+        tabId<-aceID2TabID(aceId)
+        cat( "docFilePath=",docFilePath,"\n")
+        setFileDescPath(tabId, docFilePath)
+        savePage(tabId)
+      }
+     
       
       if(
         sender %in% c( 
           'cmd.file.new', 'cmd.tabChange', 'cmd.openFileNow', 
-          'cmd.commit', 'cmd.add.column', 'cmd.add.asset', 'cmd.saveFileNow' 
+          'cmd.commit', 'cmd.add.column', 'cmd.add.asset' #, 'cmd.saveFileNow' 
           )
       ){#not sure if cmd.saveFileNow should be here, infact, cannot find sender issuing this.
         processMssgFromAceMssgPageIn(sender, input$messageFromAce)

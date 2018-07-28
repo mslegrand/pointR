@@ -51,6 +51,8 @@ insertPreProcPtEntry<-function(
   )
   preProcDB$points<-bind_rows( temp1, temp2)
   serverAssetDB$ptScriptSel=names(newScript)[1]
+  # possibly we should save page?
+  savePage(pageId=tab_Id )
 }
 
 setPreProcPtScript<-function(tab_Id, tib_Name, pt_Column_Name,  cmd_name, newScript){
@@ -76,5 +78,14 @@ getPreProcPtScript<-reactive({
 
   temp
 })
+
+getPreProcPtEntries<-function(pageId){
+  # cat("getPreProcPtEntries::pageId=",pageId,"\n")
+  # cat("nrow(preProcDB$points)=",nrow(preProcDB$points),"\n")
+  # print(preProcDB$points)
+  ptpts<-filter(preProcDB$points, tabId==pageId)
+  #print(ptpts)
+  ptpts
+}
 
 

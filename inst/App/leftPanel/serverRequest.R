@@ -1,16 +1,21 @@
 request<-reactiveValues(
   code=NULL, 
-  mode='ptr',
+  #mode='ptr',
   sender='startup',
   tabs=NULL
 )
 
 observeEvent(request$sender,{
     if(request$sender=='startup'){
-      cmdFileNewPtR()
       sampleDnippets<-paste(system.file('App', package='pointR'), 'templates', 'sampleShapes.dnippets', sep='/')
-      cat(sampleDnippets)
       loadDndSnippets(sampleDnippets)
+      for( n in editOption$dnippetsFiles){
+        loadDndSnippets(n)
+      }
+      #cmdFileNewPtR()
+      #add the dndSnipppets previously stored
+      restoreWorkSpace()
+      #
     }
 }, priority=100)
 
@@ -27,10 +32,10 @@ popTab<-reactive({
   tab
 })
 
-
-getMode<-reactive({
-  request$mode
-})
+# 
+# getMode<-reactive({
+#   request$mode
+# })
 
 getCode<-reactive({
   request$code
