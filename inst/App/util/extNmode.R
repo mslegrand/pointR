@@ -6,8 +6,8 @@ extMode.TB<-tibble(
   mode=c('ptr', 'ptrrmd', 'snippets', 'dnippets', 'txt')
 )
 
-pathExt2mode<-function(pathName){
-  mode<-extMode.TB[extMode.TB$ext==fileExt,]$mode
+pathExt2mode<-function(pathExt){
+  mode<-extMode.TB[extMode.TB$ext==pathExt,]$mode
   if(length(mode)==0){
     mode='txt'
   }
