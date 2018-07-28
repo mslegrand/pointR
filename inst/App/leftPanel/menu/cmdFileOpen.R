@@ -57,7 +57,7 @@ openFileNow<-function(fileName){
     if(nchar(src)>0){
       mssg$error<-""
       tabName<-basename(fileName)
-      fileExt<-tail(splitByPattern(pathName, '\\.'),1)
+      fileExt<-tail(splitByPattern(fileName, '\\.'),1)
       mode<-pathExt2mode(fileExt)
       #cat('openFileNow:: fileName=', format(fileName),"\n")
       #mode<-'txt'
