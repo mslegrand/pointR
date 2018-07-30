@@ -10,8 +10,8 @@ observeEvent(request$sender,{
       #Todo: make this workspace dependent
       sampleDnippets<-paste(system.file('App', package='pointR'), 'templates', 'sampleShapes.dnippets', sep='/')
       loadDndSnippets(sampleDnippets)
-      for( n in editOption$dnippetsFiles){
-        loadDndSnippets(n)
+      for( datapath in editOption$dnippetsFiles){
+        loadDndSnippets(datapath)
       }
       
       

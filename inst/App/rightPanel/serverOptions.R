@@ -107,9 +107,15 @@ removeFromRecentFiles<-function(filePath){
   editOption$recentFiles<-tmp
 }
 
-addToDnippetsFiles<-function(filePath){
+removeFromDnippetsFiles<-function(filePath){
   tmp<-editOption$dnippetsFiles
   tmp<-tmp[tmp!=filePath]
+  editOption$dnippetsFiles<-tmp
+}
+
+addToDnippetsFiles<-function(filePath){
+  tmp<-editOption$dnippetsFiles
+  tmp<-unique(c(tmp, filePath))
   editOption$dnippetsFiles<-tmp
 }
 
