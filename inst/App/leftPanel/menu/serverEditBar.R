@@ -184,7 +184,7 @@ observeEvent( input$editNavBar, {
 
 # keep file menu save uptodate
 observeEvent(getFileSavedStatus(),{
-  # cat("\n*****************************getFileSavedStatus()=",getFileSavedStatus(),"\n")
+  cat("\n*****************************getFileSavedStatus()=",getFileSavedStatus(),"\n")
   if(getFileSavedStatus()==FALSE){
     # set dmdm file save active
     enableDMDM(
