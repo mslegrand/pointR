@@ -46,7 +46,8 @@ initialPtrAceOptions<-function(
     autoComplete='live',
     autoCompleteList=autoCompleteList,
     acejs=acejs,
-    docFilePath=docFilePath
+    docFilePath=docFilePath,
+    initSaved=initSaved
   )
   rtv<-paste0('ptRaceInit(',toJSON(options),');')
   # cat('initialPtrAceOptions:: options')
