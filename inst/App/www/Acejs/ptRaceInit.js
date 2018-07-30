@@ -2,6 +2,7 @@
       function UMD(){
         ace.UndoManager.call(this);
         this.$ok=[];
+        this.$initiallySaved=false;
       }
       //ud.$ok=[];
       UMD.prototype=Object.create(ace.UndoManager.prototype);
@@ -13,10 +14,27 @@
           this.$ok.push( this.$undoStack.length); 
           //return(this);
         }
-        
       };
       //ud.setOk=function(){ this.$ok.push( this.$undoStack.length); };
       //ud.pop2Ok=function(){
+      
+      // kludge to fix initial save state
+      UMD.prototype.isSaved = function(){ 
+        if(this.$undoStack.length === 0){
+          return this.$initiallySaved;
+        } else {
+          return this.isClean();
+        }
+      };
+     UMD.prototype.setSaved = function(){ 
+        if(this.$undoStack.length === 0){
+          this.$initiallySaved=true;
+        } else {
+          this.markClean();
+        }
+      };      
+      
+      
       
       UMD.prototype.pop2Ok = function(){
         var udlen= this.$undoStack.length;
@@ -56,6 +74,8 @@
                 return(text);
         }
       };
+      
+      
 
 function ptRaceInit(data){
   console.log("---------------------ptRaceInit(data)-------------------------------");
@@ -96,6 +116,7 @@ function ptRaceInit(data){
     console.log('session is null');
   }*/
   
+  
   if(!!data.docFilePath){
     console.log('setting  docFilePath=' + data.docFilePath);
     $el.data('docFilePath', data.docFilePath);
@@ -134,10 +155,12 @@ function ptRaceInit(data){
       
       
       var ud = new UMD(); 
-      
+      if(!!data.initSaved){
+          ud.$initiallySaved=data.initSaved;
+      }      
       //console.log('initial undo :' + JSON.stringify(ud));
       theEditor.getSession().setUndoManager(ud);
-      
+
       
       //console.log( JSON.stringify(ud));
       
