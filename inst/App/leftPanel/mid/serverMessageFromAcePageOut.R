@@ -1,6 +1,7 @@
 processMssgFromAceMssgPageOut<-function(sender, mssg){
   id<-mssg$id
-  saved<-mssg$isSaved
+  saved<-unlist(mssg$isSaved)
+ 
   if( !saved || sender %in% c('fileCmd.saveAs','fileCmd.saveNow', 'buttonCmd.rmdViewer') ) { #need to save
     docFilePath<-unlist(mssg$docFilePath)
     if(docFilePath=='?' || sender=='fileCmd.saveAs'){ # file unnamed : fileSaveAs
