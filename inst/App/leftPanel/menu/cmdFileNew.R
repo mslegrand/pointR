@@ -11,7 +11,7 @@ cmdFileNewPtR<-function(fileCmd="newPtrTibScript"){
     #aceId<-tabName2AceId(tabId)
     addFileTab(title=tabName, txt=src,  docFilePath="?", mode='ptr',fileSaveStatus=FALSE)
     delay(500, 
-      updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE, setDocFileSaved=FALSE, ok=TRUE )
+      updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
     )
     mssg$error<-""
 }
@@ -22,7 +22,7 @@ cmdFileNewRmd<-function(){
   tabName<-getNextAnonymousFileName()
   addFileTab(title=tabName, txt=src,  docFilePath="?", mode='ptrrmd', fileSaveStatus=FALSE)
   delay(500,
-        updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE, setDocFileSaved=FALSE, ok=TRUE )
+        updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
   )
   mssg$error<-""
 }
@@ -33,7 +33,7 @@ cmdFileNewIOSlides<-function(){
   tabName<-getNextAnonymousFileName()
   addFileTab(title=tabName, txt=src,  docFilePath="?", mode='ptrrmd', fileSaveStatus=FALSE)
   delay(500,
-        updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE, setDocFileSaved=FALSE, ok=TRUE )
+        updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
   )
   mssg$error<-""
 }
@@ -45,7 +45,7 @@ cmdFileNewSnippet<-function(){
   tabName<-getNextAnonymousFileName()
   addFileTab(title=tabName, txt=src,  docFilePath="?", mode='snippets', fileSaveStatus=FALSE)
   delay(500,
-        updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE, setDocFileSaved=FALSE, ok=TRUE )
+        updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
   )
   mssg$error<-""
 }
@@ -55,7 +55,7 @@ cmdFileNewTxt<-function(){
   tabName<-getNextAnonymousFileName()
   addFileTab(title=tabName, txt=src,  docFilePath="?", mode='text', fileSaveStatus=FALSE)
   delay(500,
-        updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE, setDocFileSaved=FALSE, ok=TRUE )
+        updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
   )
   mssg$error<-""
 }
@@ -66,7 +66,7 @@ cmdDndSnippetNew<-function(){
   tabName<-getNextAnonymousFileName()
   addFileTab(title=tabName, txt=src,  docFilePath="?", mode='dnippets', fileSaveStatus=FALSE)
   delay(500,
-        updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE, setDocFileSaved=FALSE, ok=TRUE )
+        updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
   )
   mssg$error<-""
 }
@@ -77,7 +77,7 @@ cmdNewIOSlides<-function(){
   tabName<-getNextAnonymousFileName()
   addFileTab(title=tabName, txt=src,  docFilePath="?", mode='ptrrmd')
   delay(500,
-        updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE, setDocFileSaved=FALSE, ok=TRUE )
+        updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
   )
   mssg$error<-""
 }
