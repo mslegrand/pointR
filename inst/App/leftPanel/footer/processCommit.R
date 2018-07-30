@@ -13,15 +13,32 @@ src2sourceType<-function(src){  #not used !!
 
 processCommit<-reactive({
   clearErrorMssg()
-
-  cat('ProcessCommit: request$mode=',format(request$mode),"\n")
-  if( identical(request$mode, 'ptr')){
-    processSvgR()
-  } else if(  identical(request$mode, 'ptrrmd') ){
-    processKnit()
-  } else if( identical(request$mode, 'dnippets')){
-    processDnip()
+  mode<-getMode()
+  if(length(mode)==0){
+    return(NULL)
+   # mode='ptr'
   }
+  cat("class(mode)=" ,class(mode),"\n")
+  cat('ProcessCommit: mode=',format(mode),"\n")
+  if( identical(mode, 'ptr')){
+    processSvgR()
+  } else if(  identical(mode, 'ptrrmd') ){
+    processKnit()
+  } else if( identical(mode, 'dnippets')){
+    processDnip()
+  } else if (identical(mode, 'text')){
+    panels$sourceType<-textPanelTag
+  } else if (identical(mode, 'snippets')){
+    panels$sourceType<-snippetPanelTag
+  } else {
+    browser()
+  }
+  if(!hasError()){
+    tabId<-input$pages
+    cat("tabId=",tabId,"\n")
+    savePage(tabId)
+  }
+  
 
 })
 

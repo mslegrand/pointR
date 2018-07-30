@@ -14,6 +14,7 @@ observeEvent( input$closeTab, {
       } else {
         tabId<-aceID2TabID(id)
       }
+      #removeFileDesc(tabId)
       setTabRequest(sender="fileCmd.close", tabs=tabId)
     }
 })

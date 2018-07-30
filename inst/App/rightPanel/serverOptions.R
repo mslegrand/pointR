@@ -6,14 +6,15 @@ editOption<-reactiveValues(
   tabType=defaultOpts [['tabType']],
   currentFilePath=defaultOpts [['currentFilePath']],
   useTribbleFormat= defaultOpts[['useTribbleFormat']],
+  dnippetsFiles=defaultOpts[['dnippetsFiles']],
   recentFiles=defaultOpts [['recentFiles']], 
   .saved=TRUE
 )
 
 
-history<-reactiveValues(
-  recentFileMenuCount=0
-)
+# history<-reactiveValues(
+#   recentFileMenuCount=0
+# )
 
 
 getCurrentFile<-reactive({
@@ -36,7 +37,7 @@ getFileNameStatus<-reactive({
 })
 
 # TO REVISE!!!
-getFileSavedStatus<-reactive({editOption$.saved})
+#getFileSavedStatus<-reactive({editOption$.saved})
 
 setCurrentFilePath<-function(filePath){
   editOption$currentFilePath<-filePath
@@ -104,6 +105,18 @@ removeFromRecentFiles<-function(filePath){
   tmp<-editOption$recentFiles[]
   tmp<-tmp[tmp!=filePath]
   editOption$recentFiles<-tmp
+}
+
+removeFromDnippetsFiles<-function(filePath){
+  tmp<-editOption$dnippetsFiles
+  tmp<-tmp[tmp!=filePath]
+  editOption$dnippetsFiles<-tmp
+}
+
+addToDnippetsFiles<-function(filePath){
+  tmp<-editOption$dnippetsFiles
+  tmp<-unique(c(tmp, filePath))
+  editOption$dnippetsFiles<-tmp
 }
 
 

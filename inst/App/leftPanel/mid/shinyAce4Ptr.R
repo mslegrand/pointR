@@ -28,7 +28,8 @@ initialPtrAceOptions<-function(
   useTabs="Use Soft Tabs",
   cursorId=NULL, 
   hotkeys=NULL,
-  docFilePath='?'
+  docFilePath='?',
+  initSaved=FALSE
 )
 {
   sanitizeId <- function(id){
@@ -45,7 +46,8 @@ initialPtrAceOptions<-function(
     autoComplete='live',
     autoCompleteList=autoCompleteList,
     acejs=acejs,
-    docFilePath=docFilePath
+    docFilePath=docFilePath,
+    initSaved=initSaved
   )
   rtv<-paste0('ptRaceInit(',toJSON(options),');')
   # cat('initialPtrAceOptions:: options')
@@ -66,7 +68,8 @@ shinyAce4Ptr <- function(
     selectionId=NULL, 
     cursorId=NULL, 
     hotkeys=NULL,
-    docFilePath=docFilePath
+    docFilePath=docFilePath,
+    initSaved=initSaved
   ){
   # cat('shinyAce4Ptr:: outputId=',outputId,"\n")
     saceList<-aceEditor(
@@ -83,7 +86,8 @@ shinyAce4Ptr <- function(
       autoComplete=autoComplete, 
       autoCompleteList=autoCompleteList,
       debounce=debounce, selectionId=selectionId, cursorId=cursorId, hotkeys=hotkeys, 
-      docFilePath=docFilePath
+      docFilePath=docFilePath,
+      initSaved=initSaved
     )
     
     

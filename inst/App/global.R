@@ -38,7 +38,7 @@ list.entry.at.index<-function(ll, indx){
 
 r_pkgs<-c('shiny','shinyjs', 'R.utils', 'svgR', 'shinyAce', 'stringr', 'jsonlite', 
           'shinyDMDMenu', 'shinyFiles', 'shinythemes', 'colourpicker', 'shinyWidgets', 
-          'bsplus','shinyjqui', 'knitr')
+          'bsplus','shinyjqui', 'knitr', 'tidyverse')
 sapply(r_pkgs, library, character.only=TRUE)
 
 #library("RColorBrewer")
@@ -61,6 +61,7 @@ preprocChoices<-c("onNewPt",  "onMovePt", "onMoveMat")
 #----begin external resources loaded prior to server------------
 
 source("util/configIO.R") # must be loaded prior to alles
+source("util/extNmode.R") 
 source("util/format.R") 
 source("util/utilParser.R")
 source("util/utilptR.R")

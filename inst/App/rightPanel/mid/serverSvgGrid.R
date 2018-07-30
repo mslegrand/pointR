@@ -28,7 +28,7 @@ setSvgGrid<-function(show,color,dx,dy){
 
 
 observeEvent( input$Hspacing, {
-  browser()
+  # browser()
   dx<-as.numeric(input$Hspacing)
   svgGrid$dx=dx
   

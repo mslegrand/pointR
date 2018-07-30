@@ -8,10 +8,11 @@ addDrippets<-function(dnName, dnippets, select=dnName ){
   drippetSelection$current<-c(drippetSelection$current, select)
 }
 
-observeEvent(c( drippetSelection$all, request$mode, input$pages),{
+observeEvent(c( drippetSelection$all,  input$pages),{
+  mode<-getMode()
   updateAwesomeCheckboxGroup(session, inputId="selectedDDDnippets", choices = names(drippetSelection$all),
                              selected = drippetSelection$current, inline = FALSE, status = "primary")
-  if(length(input$pages) && length(drippetSelection$all)>0 && identical(request$mode,'ptr') ){
+  if(length(input$pages) && length(drippetSelection$all)>0 && identical(getMode(),'ptr') ){
     showElement('selectedDnippetButtonBoxContainer')
   } else {
     hideElement('selectedDnippetButtonBoxContainer')

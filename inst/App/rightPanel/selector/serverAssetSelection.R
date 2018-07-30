@@ -24,7 +24,7 @@ getSelIndex<-reactive({
 })
 
 observeEvent(getTibNRow(),{
-  if(identical(request$mode,'ptR') && length(names(getPtDefs()$tib))>0 ){
+  if(identical(getMode(),'ptR') && length(names(getPtDefs()$tib))>0 ){
     sendPtRManagerMessage(  sender='tibNrow', rowCountChange=TRUE)
   }
 })
@@ -138,6 +138,16 @@ resetSelectedTibbleName<-function(tibs, name){
       if( selectedAsset$name==transformTag){
         selectedAsset$transformType='translate'
       }
+}
+
+
+setSelectedAssetFromAce<-function( reqSelector){
+  # updatEle<- c('name', 'ptColName', 'rowIndex', 'matCol', 'colName')
+  cat('names of reqSelector:', paste(names(reqSelector), collapse=", "),"\n" )
+  for(n in names(reqSelector)){
+    stopifnot({n %in% names(selectedAsset)})
+    selectedAsset[[n]]<-reqSelector[[n]]
+  }
 }
 
 updateSelected<-function( name, rowIndex, columnName, matCol,  ptColName, selIndex, transformType ){

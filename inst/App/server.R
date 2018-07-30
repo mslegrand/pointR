@@ -44,12 +44,16 @@ shinyServer(function(input, output,session) {
   source("leftPanel/serverSendPtRManagerMessage.R",              local=TRUE) 
   source("leftPanel/serverOutputMssg.R",                         local=TRUE) 
   source("leftPanel/mid/serverAce.R",                            local=TRUE) 
+  source("leftPanel/mid/serverSendMessage2Ace.R",                local=TRUE) 
+  source("leftPanel/mid/serverMessageFromAcePageIn.R",           local=TRUE) 
+  source("leftPanel/mid/serverMessageFromAcePageOut.R",          local=TRUE) 
   source("leftPanel/helpSVG.R",                                  local=TRUE)
   source("leftPanel/tabs/serverFileTabs.R",                      local=TRUE) 
   
   
   #------------------fileIO----------------------------------
   source("fileIO/serverGenShinyFilesSaveObservers.R",            local=TRUE)
+  source("fileIO/serverFileDescriptor.R",                        local=TRUE)
   
 #------------------rightPanel--------------------------------
   source("rightPanel/selector/serverAssetSelectionDB.R",         local=TRUE)

@@ -1,11 +1,12 @@
 
 
 cmdFileQuit<-reactive({
-  if(is.null(input$pages)){
-    cmdQuitNow()
-  } else {
-    sendFileTabsMessage(sender= 'fileCmd.quit', getAllTabIds=runif(1))
-  }
+  cmdQuitNow()
+  # if(is.null(input$pages)){
+  #   cmdQuitNow()
+  # } else {
+  #   sendFileTabsMessage(sender= 'fileCmd.quit', getAllTabIds=runif(1))
+  # }
   
 })
 

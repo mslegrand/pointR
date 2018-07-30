@@ -15,11 +15,11 @@ pages<- reactiveValues(
 )
 
 
-getNextAnonymousFileName<-function(){
-  newFileName<-paste0("Anonymous ", pages$fileNameCount)
-  pages$fileNameCount<-pages$fileNameCount+1
-  newFileName
-}
+# getNextAnonymousFileName<-function(){
+#   newFileName<-paste0("Anonymous ", pages$fileNameCount)
+#   pages$fileNameCount<-pages$fileNameCount+1
+#   newFileName
+# }
 
 getNextTabId<-function(){
   tabId<-paste0("PTR-TABID", pages$tabIdCount)
@@ -49,12 +49,13 @@ tabTitleRfn<-function(tabName, tabId, docFilePath){
 closeTabNow<-function(tabId2X){
   serverAssetDB$tib<-filter(serverAssetDB$tib, tabId!=tabId2X)
   handler$choices<-filter(handler$choices, tabId!=tabId2X)
+  removeFileDesc(tabId2X)
   removeTab(inputId = "pages", tabId2X)
 }
 
 # TODO!!!! , add input parameters for:  mode, autocomplete
 # fontsize should be read from options 
-addFileTab<-function(title, txt,  docFilePath='?', mode='ptr'){
+addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FALSE){
   # cat("addFileTab:: mode=",mode,"\n")
   tabId<-getNextTabId()
   # cat("addFileTab:: tabId",tabId,"\n")
@@ -62,12 +63,15 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr'){
   # cat("addFileTab:: aceId",aceId,"\n")
   # cat("addFileTab:: docFilePath",format(docFilePath),"\n")
   # !!!TODO add docFilePath to recentFiles (if !='?')
+  
+  addFileDesc(pageId=tabId, docFilePath=docFilePath, fileSaveStatus, fileMode=mode)
+  
   if(mode=='ptr'){
     divClass="cAceContainer"
   } else {
     divClass="cAceRmdContainer"
   }
-  ptpreprocId=tabID2prePtProc(tabId)
+  # ptpreprocId=tabID2prePtProc(tabId)
   appendTab(
     inputId = "pages",
     tabPanel( #tabId,
@@ -90,7 +94,8 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr'){
             else
               NULL
             ,
-            docFilePath=docFilePath
+            docFilePath=docFilePath,
+            initSaved=fileSaveStatus
           )
         ),
       value=tabId
@@ -114,6 +119,7 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr'){
   #   #immediate=FALSE,
   #   session=session
   # )
+  return(tabId)
 }
 
 getAceEditorId<-reactive({
@@ -124,6 +130,7 @@ getAceEditorId<-reactive({
 #  triggers doc has been changed.
 observeEvent(input$pages,{
   tabId<-input$pages 
+  cat('observeEvent:: input.pages')
   sendFileTabsMessage(selected=tabId)
   
   aceId<-tabID2aceID(tabId)

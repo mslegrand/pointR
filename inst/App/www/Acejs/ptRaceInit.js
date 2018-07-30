@@ -2,6 +2,7 @@
       function UMD(){
         ace.UndoManager.call(this);
         this.$ok=[];
+        this.$initiallySaved=false;
       }
       //ud.$ok=[];
       UMD.prototype=Object.create(ace.UndoManager.prototype);
@@ -13,10 +14,27 @@
           this.$ok.push( this.$undoStack.length); 
           //return(this);
         }
-        
       };
       //ud.setOk=function(){ this.$ok.push( this.$undoStack.length); };
       //ud.pop2Ok=function(){
+      
+      // kludge to fix initial save state
+      UMD.prototype.isSaved = function(){ 
+        if(this.$undoStack.length === 0){
+          return this.$initiallySaved;
+        } else {
+          return this.isClean();
+        }
+      };
+     UMD.prototype.setSaved = function(){ 
+        if(this.$undoStack.length === 0){
+          this.$initiallySaved=true;
+        } else {
+          this.markClean();
+        }
+      };      
+      
+      
       
       UMD.prototype.pop2Ok = function(){
         var udlen= this.$undoStack.length;
@@ -56,28 +74,27 @@
                 return(text);
         }
       };
+      
+      
 
 function ptRaceInit(data){
   console.log("---------------------ptRaceInit(data)-------------------------------");
   console.log(typeof(data));
   ace.require("UndoManager");
   var id = data.id;
-  console.log("ptRaceInit:: data.id=" + data.id + ":");
-  console.log("ptRaceInit:: data.id[0]=" +data.id[0] +":");
+  //console.log("ptRaceInit:: data.id=" + data.id + ":");
+  //console.log("ptRaceInit:: data.id[0]=" +data.id[0] +":");
+  //console.log("ptRaceInit:: data.initSaved=" +JSON.stringify(data.initSaved)); 
   var mode = data.mode;
   var $el = $('#' + id);
-  console.log($el.attr());
-  console.log($el.attr());
+  //console.log($el.attr());
+  //console.log($el.attr());
   //console.log('JSON.stringify($el.data)')
   var theEditor = $el.data('aceEditor'); 
   var autoComplete = data.autoComplete[0];
   var autoCompleteList=data.autoCompleteList;
-  console.log('autoCompleteList=', JSON.stringify(autoCompleteList));
-  /*if(!!editorVar){
-    console.log('editorVar=' + editorVar);
-  } else {
-    console.log('editorVar is null');
-  }*/
+  //console.log('autoCompleteList=', JSON.stringify(autoCompleteList));
+  
   if(!!theEditor){
     console.log('found theEditor');
   } else {
@@ -89,19 +106,12 @@ function ptRaceInit(data){
   } else {
     console.log('mode is null');
   }
-  /*var mySession = editorVar.getSession();
-  if(!!mySession){
-    console.log('found session');
-  } else {
-    console.log('session is null');
-  }*/
+  
   
   if(!!data.docFilePath){
-    console.log('setting  docFilePath=' + data.docFilePath);
+    //console.log('setting  docFilePath=' + data.docFilePath);
     $el.data('docFilePath', data.docFilePath);
   }
-  
-  //$el.data('lastSavedLen', 0); //may need to revisit
   
     if(mode == 'ptr' || mode=='ptrrmd' || mode=='dnippets'){ 
       data.acejs= data.acejs[0];
@@ -134,15 +144,14 @@ function ptRaceInit(data){
       
       
       var ud = new UMD(); 
-      
+      if(!!data.initSaved){
+          ud.$initiallySaved=data.initSaved;
+          console.log('---->undo manager .$initiallySaved=' + ud.$initiallySaved);
+      }      
       //console.log('initial undo :' + JSON.stringify(ud));
       theEditor.getSession().setUndoManager(ud);
       
-      
-      //console.log( JSON.stringify(ud));
-      
-      
-       theEditor.commands.addCommand({
+      theEditor.commands.addCommand({
         name: 'commitSource',
         bindKey: {win: 'Ctrl-Shift-Enter', mac: 'Command-Shift-Enter'},
         exec: function(editor) {
@@ -208,10 +217,6 @@ function ptRaceInit(data){
         e.stop();
      });
  
-    //} else {
-    //  theEditor.getSession().setMode('ace/mode/' + data.mode);  // shinyAce init
-    //}
-    
     
     $el.droppable({
 
@@ -229,8 +234,6 @@ function ptRaceInit(data){
         'txt=' + JSON.stringify(txt)
       );
       $el.data('aceEditor').moveCursorToPosition(pos);
-      //editor.session.insert(pos, txt);
-      //editor.insert(txt);
       $el.data('aceEditor').focus();
 	    var tab_press= jQuery.Event('keydown', {which: 88});
        

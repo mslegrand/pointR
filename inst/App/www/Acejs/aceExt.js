@@ -120,7 +120,15 @@ function getAceMode(ed){
   mode = mode.substr(mode.lastIndexOf('/') + 1);
   return mode;
 }
-
+/*
+function getSaveStatus(ed){
+  if(! ud.canUndo() ){
+    return ud.startClean;
+  } else {
+    return ud.isSaved();
+  }
+}
+*/
 
 Shiny.addCustomMessageHandler(
   "shinyAceExt",
@@ -176,7 +184,10 @@ Shiny.addCustomMessageHandler(
         if(!!data.setDocFileSaved){
           ud=editor.getSession().getUndoManager();
           // $el.data('docFileSaved',ud.$undoStack.length);
-          ud.markClean();
+          //ud.markClean();
+          if( data.setDocFileSaved===true){
+            ud.setSaved();
+          }
         }
         
         //console.log( '$el.data(docFilePath)=',JSON.stringify( $el.data('docFilePath') ));
@@ -289,7 +300,7 @@ Shiny.addCustomMessageHandler(
           {
              code :  editor.getSession().getValue(),
              //dirty: editor.getSession().getUndoManager().dirtyCounter,
-             isSaved: ud.isClean(),
+             isSaved: ud.isSaved(),
              sender : data.sender,
              id:id
           });
@@ -303,7 +314,7 @@ Shiny.addCustomMessageHandler(
              sender : data.sender,
              id : id,
              //dirty: editor.getSession().getUndoManager().dirtyCounter,
-             isSaved: ud.isClean(),
+             isSaved: ud.isSaved(),
              rnd : randomString(5)
           });
        }
@@ -367,7 +378,7 @@ Shiny.addCustomMessageHandler(
                  sender : data.sender,
                  id : id,
                  //dirty: editor.getSession().getUndoManager().dirtyCounter,
-                 isSaved: ud.isClean(),
+                 isSaved: ud.isSaved(),
                  selector: data.selector,
                  rnd : randomString(5)
               } );   
@@ -410,7 +421,7 @@ Shiny.addCustomMessageHandler(
              id : id,
              mode: aceMode,
              //dirty: editor.getSession().getUndoManager().dirtyCounter,
-             isSaved: ud.isClean(),
+             isSaved: ud.isSaved(),
              rnd : randomString(5)
           });
         }
@@ -445,7 +456,7 @@ Shiny.addCustomMessageHandler(
              id : id,
              //dirty: editor.getSession().getUndoManager().dirtyCounter,
              mode: aceMode,
-             isSaved: ud.isClean(),
+             isSaved: ud.isSaved(),
              auxValue: auxValue,
              rnd : randomString(5)
           });
@@ -461,7 +472,7 @@ Shiny.addCustomMessageHandler(
              id : id,
              dirty: editor.getSession().getUndoManager().dirtyCounter,
              //saved: $el.data('docFileSaved')==editor.getSession().getUndoManager().$undoStack.length,
-             isSaved: ud.isClean(),
+             isSaved: ud.isSaved(),
              docFilePath: $el.data('docFilePath'),
              rnd : randomString(5)
           });
@@ -474,7 +485,7 @@ Shiny.addCustomMessageHandler(
           if(! data.oldFilePath){
             data.oldFilePath='?';
           }
-          //console.log('getDoc:: docFileSaved=' +JSON.stringify(ud.isClean()) );
+          //console.log('getDoc:: docFileSaved=' +JSON.stringify(ud.isSaved()) );
           Shiny.onInputChange('messageFromAce', 
           {
              code :  editor.getSession().getValue(),
@@ -482,7 +493,7 @@ Shiny.addCustomMessageHandler(
              id : id,
              //dirty: editor.getSession().getUndoManager().dirtyCounter,
              //saved: undoLen===saveLen,
-             isSaved: ud.isClean(),
+             isSaved: ud.isSaved(),
              docFilePath: $el.data('docFilePath'),
              priorFilePath: data.oldFilePath,
              rnd : randomString(5)

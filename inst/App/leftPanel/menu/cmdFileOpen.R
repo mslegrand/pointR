@@ -57,26 +57,28 @@ openFileNow<-function(fileName){
     if(nchar(src)>0){
       mssg$error<-""
       tabName<-basename(fileName)
+      fileExt<-tail(splitByPattern(fileName, '\\.'),1)
+      mode<-pathExt2mode(fileExt)
       #cat('openFileNow:: fileName=', format(fileName),"\n")
-      mode<-'txt'
-      if( grepl("*.ptr$", fileName, ignore.case = T)){
-        mode<-'ptr'
-      }
-      if( grepl("*.r$", fileName, ignore.case = T)){
-        mode<-'ptr'
-      }
-      if( grepl("*.Rmd$", fileName, ignore.case = T)){
-        mode<-'ptrrmd'
-      }
-      if( grepl("*.snippets$", fileName, ignore.case = T)){
-        mode<-'snippets'
-      }
-      if( grepl("*.dnippets$", fileName, ignore.case = T)){
-        mode<-'dnippets'
-      }
+      #mode<-'txt'
+      # if( grepl("*.ptr$", fileName, ignore.case = T)){
+      #   mode<-'ptr'
+      # }
+      # if( grepl("*.r$", fileName, ignore.case = T)){
+      #   mode<-'ptr'
+      # }
+      # if( grepl("*.Rmd$", fileName, ignore.case = T)){
+      #   mode<-'ptrrmd'
+      # }
+      # if( grepl("*.snippets$", fileName, ignore.case = T)){
+      #   mode<-'snippets'
+      # }
+      # if( grepl("*.dnippets$", fileName, ignore.case = T)){
+      #   mode<-'dnippets'
+      # }
       #if ptr mode, try to parse, if not parsable, get Error, set choices=R, error, and do error report????
     
-      addFileTab(title=tabName, txt=src, docFilePath= fileName, mode=mode)
+      addFileTab(title=tabName, txt=src, docFilePath= fileName, mode=mode, TRUE)
       #here we get the code and set the doc status as saved, 
       delay(500,
             updateAceExt(id=getAceEditorId(), sender='cmd.openFileNow', getValue= TRUE, setDocFileSaved=TRUE, ok=TRUE )
