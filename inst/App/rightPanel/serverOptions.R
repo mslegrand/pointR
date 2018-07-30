@@ -12,9 +12,9 @@ editOption<-reactiveValues(
 )
 
 
-history<-reactiveValues(
-  recentFileMenuCount=0
-)
+# history<-reactiveValues(
+#   recentFileMenuCount=0
+# )
 
 
 getCurrentFile<-reactive({
