@@ -2,17 +2,32 @@
 fileDescDB<-reactiveVal(
   tibble(
     tabId='bogus',
-    isSaved=TRUE,
+    isSaved=FALSE,
     filePath="?",
+    anonNo =1,
     mode='ptr'
   )[0,]
 )
 
+getNextAnonymousFileName<-reactive({
+  paste('Anonymous',getNextAnonFileNum())
+})
+
+getNextAnonFileNum<-reactive({
+  tb<-fileDescDB()
+  num<-max(c(0,filter(tb, filePath=="?")$anonNo))+1
+  num
+})
 
 # to be called from serverFileTab.R::addFileTab
 addFileDesc<-function( pageId, docFilePath, fileSaveStatus, fileMode){
+  if(identical(docFilePath,"?")){
+    anonNo<-getNextAnonFileNum()
+  } else {
+    anonNo<-0
+  }
   tb<-tibble(tabId=pageId, isSaved=fileSaveStatus,  
-             filePath=docFilePath, mode=fileMode)
+             filePath=docFilePath, anonNo, mode=fileMode)
   fd<- fileDescDB()
   fd<-bind_rows(fd,tb)
   fileDescDB(fd)
@@ -36,7 +51,7 @@ setFileDescPath<-function(pageId, filePath){
   cat(" setFileDescPath::pageId=", format(pageId),"\n")
   cat(" setFileDescPath::filePath=", format(filePath),"\n")
   tb<-fileDescDB()
-  tb[identical(tb$tabId, pageId),"filePath"]<-filePath
+  tb[tb$tabId== pageId,"filePath"]<-filePath
   cat("tb$filePath=",tb$filePath,"\n")
   fileDescDB(tb)
   cat("fileDescDB()$filePath=",fileDescDB()$filePath,"\n")
@@ -46,11 +61,38 @@ setFileDescSaved<-function(pageId, fileSaveStatus){
   cat(" setFileDescPath::pageId=", format(pageId),"\n")
   cat(" setFileDescPath::fileSaveStatus=", format(fileSaveStatus),"\n")
   cat(" setFileDescPath::class(fileSaveStatus)=", format(class(fileSaveStatus)),"\n")
-  tb<-fileDescDB()
-  tb[identical(tb$tabId, pageId),"isSaved"]<-fileSaveStatus  
-  fileDescDB(tb)
+  fd<-fileDescDB()
+  tmp<-filter(fd, tabId==pageId)
+  if(nrow(tmp)>0){
+    # if(tmp$filePath=='?'){
+    #   fileSaveStatus<-FALSE
+    #   cat("revised setFileDescPath::fileSaveStatus=", format(fileSaveStatus),"\n")
+    # }
+    fd[fd$tabId==pageId,"isSaved"]<-fileSaveStatus 
+    fileDescDB(fd) 
+    print(fd)
+  }
+  
 }
 
+getFileSavedStatus<-reactive({
+  pageId<-input$pages
+  if(!is.null(pageId)){
+    fd<-fileDescDB()
+    tmp<-filter(fd, tabId==pageId)
+    cat('nrow(tmp)=',format(nrow(tmp)),"\n")
+    if(nrow(tmp)==1){
+      cat('tmp$isSaved=',tmp$isSaved,"\n")
+      tmp$isSaved
+    } else {
+      cat('returning F\n')
+      FALSE
+    }
+  } else {
+    cat('pageId is NULL\n')
+    TRUE
+  }
+})
 
 # to be called when tab is closed
 # a tab can be closed in one of two ways:
@@ -185,20 +227,21 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
   #              fileSaveStatus=fileSaveStatus
   #   )
   # }
-  pages$tabIdCount=1
+  #pages$tabIdCount=1
   for(page in wsPages){
     # extract the serverAsset portion and add
     tabId=page$fileDescriptor.tabId
+   
     aceId<-tabID2aceID(tabId)
     mode=page$fileDescriptor.mode
     docFilePath=page$fileDescriptor.filePath
-    fileSaveStatus=page$fileDescriptor.isSaved
+    fileSaveStatus=page$fileDescriptor.isSaved 
+    cat('tabId=',tabId, 'isSaved=',fileSaveStatus,"\n" )
     txt=page$code
-    tabName<-getNextAnonymousFileName()
     if(!identical(docFilePath, "?")){
-      title=baseName(docFilePath)
+      title=basename(docFilePath)
     } else {
-      title=tabName
+      title=paste('Anonymous', page$fileDescriptor.anonNo)
     }
     #missing the addFileDesc
     if(mode=='ptr'){
@@ -226,7 +269,8 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
             else
               NULL
             ,
-            docFilePath=docFilePath
+            docFilePath=docFilePath,
+            initSaved=fileSaveStatus
           )
         ),
         value=tabId
@@ -235,13 +279,29 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
     restoreAssetState(tabId)
     #updateAceExt(id=aceId, sender='cmd.tabChange', roleBack=FALSE, setfocus=TRUE, getValue=TRUE)
     updateTabsetPanel(session, inputId='pages', selected=tabId)
-    sendFileTabsMessage(resize=runif(1))
-    #updateAceExt(id=getAceEditorId(), sender='cmd.tabChange', getValue= TRUE, setDocFileSaved=TRUE, ok=TRUE )
+    #updateAceExt(id=aceId, sender='cmd.tabChange', getValue= TRUE )
+    #browser()
+    #Sys.sleep(.5)
+    #delay(500,updateAceExt(id=aceId, sender='cmd.tabChange', getValue= TRUE ))
+    
+   # delay(500,
+      
+      
+ #  )
     # 
     # delay(500,
     #       updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE, setDocFileSaved=TRUE, ok=TRUE )
     # )
   }
+  delay(500,{
+    for(page in wsPages){
+      tabId=page$fileDescriptor.tabId
+      fileSaveStatus=page$fileDescriptor.isSaved 
+      savedStatus<-ifelse(fileSaveStatus, 'saved', 'notSaved')
+      sendFileTabsMessage(resize=runif(1), tabId=tabId, savedStatus= savedStatus)
+    }
+  })
+  
   # now set selection and resize
   # if(length(wsPages)>0){
   #   tabId<-wsPages[[1]]$fileDescriptor.tabId
@@ -273,57 +333,57 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
 #   #unlink(tmpWSDir, recursive=T)
 # }
 
-loadPage<-function( filePath ){
-  page<-readRDS(filePath)
-  file.remove(filePath)
-  src<-page$code
-  docFilePath<-page$fileDescriptor.filePath
-  mode<-page$fileDescriptor.mode
-  title<-page$fileDescriptor.filePath
-  isSaved<-page$fileDescriptor.isSaved
-  if(title=="?"){
-    title<-getNextAnonymousFileName()
-    isSaved<-FALSE
-  } 
-  pageId<-addFileTab(title=title, txt=src, docFilePath= docFilePath, mode=mode, fileSaveStatus=isSaved)
-  # may need to pause here and wait for tabId to get updated 
-  #(or some other way of getting the tabid just added)
-  # next update selectedAsset?
-  
-  # delay(500,
-  #       {
-  
-  # A better approach might be is to store back into the respective databases, then 
-  # and pull from the db.
-  
-  
-          selectionList=list()
-          page$assetSelection.tabId<-pageId
-          for(n in names(serverAssetDB$tib )){
-            nn<-paste0('assetSelection.', n)
-            val<-page[[nn]]
-            if(is.null(val)){
-              val<-NA
-            }
-            selectionList[[n]]<-val
-          }
-          serverAssetDB$tib<-bind_rows(serverAssetDB$tib, selectionList)
-          # update preproc if available
-          if(!is.null(page$preprocScripts.tabId)){
-            page$preprocScripts.tabId<-pageId
-            insertPreProcPtEntry(
-              tab_Id=page$assetSelection.tabId, 
-              tib_Name=page$preprocScripts.tibName, 
-              pt_Column_Name=page$preprocScripts.ptColName, 
-              newScript=preprocScripts.script
-            )
-          }
-          
-          # now save back into temp dir ( to be moved back to soon)
-          cat('---> savePage(', pageId,")\n")
-          savePage(pageId)
-        # }
-  # )
-    
-  
-}
+# loadPage<-function( filePath ){
+#   page<-readRDS(filePath)
+#   file.remove(filePath)
+#   src<-page$code
+#   docFilePath<-page$fileDescriptor.filePath
+#   mode<-page$fileDescriptor.mode
+#   title<-page$fileDescriptor.filePath
+#   isSaved<-page$fileDescriptor.isSaved
+#   if(title=="?"){
+#     title<-getNextAnonymousFileName()
+#     isSaved<-FALSE
+#   } 
+#   pageId<-addFileTab(title=title, txt=src, docFilePath= docFilePath, mode=mode, fileSaveStatus=isSaved)
+#   # may need to pause here and wait for tabId to get updated 
+#   #(or some other way of getting the tabid just added)
+#   # next update selectedAsset?
+#   
+#   # delay(500,
+#   #       {
+#   
+#   # A better approach might be is to store back into the respective databases, then 
+#   # and pull from the db.
+#   
+#   
+#           selectionList=list()
+#           page$assetSelection.tabId<-pageId
+#           for(n in names(serverAssetDB$tib )){
+#             nn<-paste0('assetSelection.', n)
+#             val<-page[[nn]]
+#             if(is.null(val)){
+#               val<-NA
+#             }
+#             selectionList[[n]]<-val
+#           }
+#           serverAssetDB$tib<-bind_rows(serverAssetDB$tib, selectionList)
+#           # update preproc if available
+#           if(!is.null(page$preprocScripts.tabId)){
+#             page$preprocScripts.tabId<-pageId
+#             insertPreProcPtEntry(
+#               tab_Id=page$assetSelection.tabId, 
+#               tib_Name=page$preprocScripts.tibName, 
+#               pt_Column_Name=page$preprocScripts.ptColName, 
+#               newScript=preprocScripts.script
+#             )
+#           }
+#           
+#           # now save back into temp dir ( to be moved back to soon)
+#           cat('---> savePage(', pageId,")\n")
+#           savePage(pageId)
+#         # }
+#   # )
+#     
+#   
+# }
