@@ -55,7 +55,7 @@ closeTabNow<-function(tabId2X){
 
 # TODO!!!! , add input parameters for:  mode, autocomplete
 # fontsize should be read from options 
-addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=TRUE){
+addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FALSE){
   # cat("addFileTab:: mode=",mode,"\n")
   tabId<-getNextTabId()
   # cat("addFileTab:: tabId",tabId,"\n")
