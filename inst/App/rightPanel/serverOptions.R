@@ -37,7 +37,7 @@ getFileNameStatus<-reactive({
 })
 
 # TO REVISE!!!
-getFileSavedStatus<-reactive({editOption$.saved})
+#getFileSavedStatus<-reactive({editOption$.saved})
 
 setCurrentFilePath<-function(filePath){
   editOption$currentFilePath<-filePath

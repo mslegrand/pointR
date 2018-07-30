@@ -15,11 +15,11 @@ pages<- reactiveValues(
 )
 
 
-getNextAnonymousFileName<-function(){
-  newFileName<-paste0("Anonymous ", pages$fileNameCount)
-  pages$fileNameCount<-pages$fileNameCount+1
-  newFileName
-}
+# getNextAnonymousFileName<-function(){
+#   newFileName<-paste0("Anonymous ", pages$fileNameCount)
+#   pages$fileNameCount<-pages$fileNameCount+1
+#   newFileName
+# }
 
 getNextTabId<-function(){
   tabId<-paste0("PTR-TABID", pages$tabIdCount)

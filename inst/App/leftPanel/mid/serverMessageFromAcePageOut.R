@@ -14,10 +14,11 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
       code<-mssg$code
       # !!!TODO!!! if write fails revert.
       writeLines(code, docFilePath)
-      
+      tabId<-aceID2TabID(id) 
+      setFileDescSaved(tabId, TRUE)
       updateAceExt(id, sender,  setDocFileSaved=TRUE)
       editOption$.saved<-TRUE
-      tabId<-popTab()
+      
       if(request$sender %in% c('fileCmd.close', 'fileCmd.quit')){
         addToRecentFiles(mssg$docFilePath)
         closeTabNow(tabId)

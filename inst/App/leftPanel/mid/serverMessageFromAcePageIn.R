@@ -27,10 +27,10 @@ processMssgFromAceMssgPageIn<-function(sender, mssg){
   # }
   # At this point, either mode=='ptr' or sender is commit and mode is 'ptrrmd' or 'dnippets'
   #request$mode<-mssg$mode
-  if(sender %in% c(
-    'cmd.tabChange', 'cmd.file.new', 'cmd.openFileNow',
-    'cmd.commit', 'cmd.add.column', 'cmd.add.asset' #,  'cmd.saveFileNow'  
-  )){
+  # if(sender %in% c(
+  #   'cmd.tabChange', 'cmd.file.new', 'cmd.openFileNow',
+  #   'cmd.commit', 'cmd.add.column', 'cmd.add.asset' #,  'cmd.saveFileNow'  
+  # )){
     processCommit() # this sets the sourceType
     cat("sender = ", format(sender),"\n")
     cat("assetName = ", format(getAssetName()),"\n")
@@ -65,5 +65,5 @@ processMssgFromAceMssgPageIn<-function(sender, mssg){
       # end assetUpdate:
       
     }
-  }
+  # }
 }
