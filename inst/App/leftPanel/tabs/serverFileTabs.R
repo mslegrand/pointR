@@ -94,7 +94,8 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=TR
             else
               NULL
             ,
-            docFilePath=docFilePath
+            docFilePath=docFilePath,
+            initSaved=fileSaveStatus
           )
         ),
       value=tabId
