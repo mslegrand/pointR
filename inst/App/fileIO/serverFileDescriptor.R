@@ -54,15 +54,18 @@ setFileDescPath<-function(pageId, filePath){
 }
 
 setFileDescSaved<-function(pageId, fileSaveStatus){
-  fd<-fileDescDB()
-  tmp<-filter(fd, tabId==pageId)
-  if(nrow(tmp)>0){
-
-    fd[fd$tabId==pageId,"isSaved"]<-fileSaveStatus 
-    fileDescDB(fd) 
-    print(fd)
+  if(!is.null(pageId)){
+      fileSaveStatus<-unlist(fileSaveStatus)
+      cat('setFileDescSaved:: pageId=', pageId, ' fileSaveStatus=', fileSaveStatus, "\n")
+      fd<-fileDescDB()
+      tmp<-filter(fd, tabId==pageId)
+      if(nrow(tmp)>0){
+        fd[fd$tabId==pageId,"isSaved"]<-fileSaveStatus 
+        fileDescDB(fd) 
+        print(fd)
+      }
   }
-  
+
 }
 
 getFileSavedStatus<-reactive({
@@ -72,6 +75,7 @@ getFileSavedStatus<-reactive({
     tmp<-filter(fd, tabId==pageId)
     cat('nrow(tmp)=',format(nrow(tmp)),"\n")
     if(nrow(tmp)==1){
+      cat('pageId=', format(pageId),"\n")
       cat('tmp$isSaved=',tmp$isSaved,"\n")
       tmp$isSaved
     } else {
@@ -127,7 +131,10 @@ savePage<-function(pageId, path=getWorkSpaceDir()){
 restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
   
   wsPages<-list()
-  fileWSPaths<-dir(workSpaceDir, full.names = T)
+  fileWSPaths<-dir(workSpaceDir, pattern='PTR-TABID', full.names = T)
+  if(length(fileWSPaths)==0){
+    return(FALSE)
+  }
   # 1. load all pages into a list.
   for(filePath in fileWSPaths){
     page<-readRDS(filePath)
@@ -244,7 +251,7 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
     }
   })
   
- 
+  return(TRUE)
  
 }
 
