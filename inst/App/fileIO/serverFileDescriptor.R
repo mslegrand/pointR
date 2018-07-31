@@ -112,10 +112,12 @@ savePage<-function(pageId, path=getWorkSpaceDir()){
     fileName=paste0(path,"/",pageId,".rda")
     asel<-reactiveValuesToList(selectedAsset)
     fileDescriptor=getFileDescriptor(pageId)
+    backdrop=getPageBackDrop(pageId)
     rtv<-c(
       fileDescriptor=getFileDescriptor(pageId),
       code=getCode(),
-      assetSelection=asel
+      assetSelection=asel,
+      backdrop=backdrop
     )
     
     ppE<-getPreProcPtEntries(pageId)
@@ -135,6 +137,7 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
   if(length(fileWSPaths)==0){
     return(FALSE)
   }
+  # browser()
   # 1. load all pages into a list.
   for(filePath in fileWSPaths){
     page<-readRDS(filePath)
@@ -152,17 +155,30 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
     saveRDS(object=page, file = newFilePath)
   }
   #4. iterate through pages and add to serverAssetDB$tib
+  # --- serverAssetDB
   tib<-serverAssetDB$tib
+  pattern<-"^assetSelection."
   for(page in wsPages){
-    # extract the serverAsset portion and add
-    asi<-grep("^assetSelection.", names(page))
-    tibAs<-page[asi]
-    tn<-gsub('^assetSelection.', '', names(tibAs))
-    names(tibAs)<-tn
-    tibAs<-as.tibble(tibAs)
+    tibAs<-page[ grep(pattern, names(page)) ]
+    names(tibAs)<-gsub(pattern, '', names(tibAs))
+    #tibAs<-as.tibble(tibAs)
     tib<-bind_rows(tib, tibAs)
   }
   serverAssetDB$tib<-tib
+  
+  # --- backDropDB
+  tib<-backDropDB()
+  pattern<-"^backdrop."
+  for(page in wsPages){
+    tibAs<-page[ grep(pattern, names(page)) ]
+    names(tibAs)<-gsub(pattern, '', names(tibAs))
+    #tibAs<-as.tibble(tibAs)
+    tib<-bind_rows(tib, tibAs)
+  }
+  # browser()
+  backDropDB(tib)
+  
+  # --- preProcDB
   tib<-preProcDB$points
   for(page in wsPages){
     # extract the serverAsset portion and add
@@ -176,6 +192,7 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
     }
   }
   preProcDB$points<-tib
+  # ------- fileDescDB
   tib<-fileDescDB()
   for(page in wsPages){
     # extract the serverAsset portion and add
