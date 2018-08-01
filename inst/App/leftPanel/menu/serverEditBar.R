@@ -254,18 +254,3 @@ observeEvent(editOption$tabSize, {
 
 
 #----------------------------------------------
-
-observeEvent(input$modalGridSpacingCancel, {
-  removeModal()
-}) 
-
-observeEvent(input$modalGridSpacingOk, {
-  setSvgGrid(
-    pageId=input$pages,
-    dx= as.numeric(input$selectGridDX),
-    dy= as.numeric(input$selectGridDY)
-  )
-  editOption$tabSize<-input$selectIndentSize
-  savePage(input$pages)
-  removeModal()
-})

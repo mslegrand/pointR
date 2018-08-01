@@ -90,8 +90,21 @@ observeEvent(input$pages,{
       renameDMDM(session,  "plotNavBar",  "cmdHideGrid", "Show Grid",newValue="cmdShowGrid")
     }
   }
-
-  
 })
 
+
+observeEvent(input$modalGridSpacingCancel, {
+  removeModal()
+}) 
+
+observeEvent(input$modalGridSpacingOk, {
+  setSvgGrid(
+    pageId=input$pages,
+    dx= as.numeric(input$selectGridDX),
+    dy= as.numeric(input$selectGridDY)
+  )
+  editOption$tabSize<-input$selectIndentSize
+  savePage(input$pages)
+  removeModal()
+})
 
