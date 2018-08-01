@@ -1,40 +1,97 @@
 # -----------Grid ------------- 
 
-svgGrid<-reactiveValues(
-  show=FALSE,
-  dx=50,
-  dy=50,
-  color='lightgrey'
+svgGridDB<-reactiveVal(
+  tibble(
+    tabId='bogus',
+    show=FALSE,
+    dx=50,
+    dy=50,
+    color='lightgrey'
+  )[0,]
+
 )
 
+# getSvgGrid<-reactive({
+#   as.list(svgGridDb())
+#   reactiveValuesToList(svgGrid)
+# })
+
+
+getPageSvgGrid<-function(pageId){
+  if(!is.null(pageId)){
+    tb<-svgGridDB()
+    rtv<-as.list(filter(tb, tabId==pageId))
+    if(any(sapply(rtv, length)==0)){
+      rtv<-list( show=FALSE, dx=50, dy=50, color='lightgrey')
+    }
+  } else {
+    rtv<-list( show=FALSE, dx=50, dy=50, color='lightgrey')
+  }
+  return(rtv)
+}
+
 getSvgGrid<-reactive({
-  reactiveValuesToList(svgGrid)
+  getPageSvgGrid(input$pages)
 })
 
-setSvgGrid<-function(show,color,dx,dy){
+setSvgGrid<-function(pageId, show,color,dx,dy){
+  if(length(pageId)==0){
+    return(NULL)
+  }
+  tb<-svgGridDB()
+  tt<-as.list(filter(tb, tabId==pageId))
+  if(length(tt$tabId)==0){ #default color if no row
+    tt<-list(
+      tabId=pageId,
+      show=FALSE,
+      dx=50,
+      dy=50,
+      color='lightgrey'
+    )
+  }
   if(!missing(show)){
-    svgGrid$show<-show
+    tt$show<-show
   }
   if(!missing(color)){
-    svgGrid$color<-color
+    tt$color<-color
   }
   if(!missing(dx)){
-    svgGrid$dx<-dx
+    tt$dx<-dx
   }
   if(!missing(dy)){
-    svgGrid$dy<-dy
+    tt$dy<-dy
   }
+  tb<-filter(tb,tabId!=pageId)
+  tb<-bind_rows(tb,tt)
+  svgGridDB(tb)
+  savePage(input$pages)
 }
 
 
 observeEvent( input$Hspacing, {
   # browser()
   dx<-as.numeric(input$Hspacing)
-  svgGrid$dx=dx
-  
+  setSvgGrid(pageId=input$pages, dx=dx)
 })
 
 observeEvent( input$Vspacing, {
   dy<-as.numeric(input$Vspacing)
-  svgGrid$dy=dy
+  setSvgGrid(pageId=input$pages, dy=dy)
 })
+
+#color show done in cmd
+
+observeEvent(input$pages,{
+  tb<-getSvgGrid()
+  if(length(tb$show)>0){
+    if(tb$show){
+      renameDMDM(session,  "plotNavBar", "cmdShowGrid", "Hide Grid", newValue="cmdHideGrid")
+    }else{
+      renameDMDM(session,  "plotNavBar",  "cmdHideGrid", "Show Grid",newValue="cmdShowGrid")
+    }
+  }
+
+  
+})
+
+

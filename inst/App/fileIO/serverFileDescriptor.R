@@ -113,11 +113,15 @@ savePage<-function(pageId, path=getWorkSpaceDir()){
     asel<-reactiveValuesToList(selectedAsset)
     fileDescriptor=getFileDescriptor(pageId)
     backdrop=getPageBackDrop(pageId)
+    grid=getPageSvgGrid(pageId)
+    # cat('backdrop saving:::\n')
+    # print(backdrop)
     rtv<-c(
       fileDescriptor=getFileDescriptor(pageId),
       code=getCode(),
       assetSelection=asel,
-      backdrop=backdrop
+      backdrop=backdrop,
+      grid=grid
     )
     
     ppE<-getPreProcPtEntries(pageId)
@@ -177,6 +181,17 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
   }
   # browser()
   backDropDB(tib)
+  # ---grid---
+  tib<-svgGridDB()
+  pattern<-"^grid."
+  for(page in wsPages){
+    tibAs<-page[ grep(pattern, names(page)) ]
+    names(tibAs)<-gsub(pattern, '', names(tibAs))
+    #tibAs<-as.tibble(tibAs)
+    tib<-bind_rows(tib, tibAs)
+  }
+  # browser()
+  svgGridDB(tib)
   
   # --- preProcDB
   tib<-preProcDB$points
