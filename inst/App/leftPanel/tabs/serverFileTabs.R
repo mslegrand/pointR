@@ -65,7 +65,7 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FA
   # !!!TODO add docFilePath to recentFiles (if !='?')
   
   addFileDesc(pageId=tabId, docFilePath=docFilePath, fileSaveStatus, fileMode=mode)
-  
+  setUseTribble( pageId=tabId, value=TRUE)
   if(mode=='ptr'){
     divClass="cAceContainer"
   } else {

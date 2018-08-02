@@ -24,7 +24,10 @@ shinyServer(function(input, output,session) {
     if(is.null(getCode()) || nchar(getCode())==0){
       return(NULL)
     }  
-    ptDefs<-ex.getPtDefs(getCode(), useTribbleFormat=editOption$useTribbleFormat ) 
+    useTribbleFormat<- getUseTribble()
+    #cat('useTribbleFormat=',format(useTribbleFormat),"\n")
+   # ptDefs<-ex.getPtDefs(getCode(), useTribbleFormat=editOption$useTribbleFormat ) 
+    ptDefs<-ex.getPtDefs(getCode(), useTribbleFormat=useTribbleFormat) 
     ptDefs
   })  
   
@@ -98,6 +101,7 @@ shinyServer(function(input, output,session) {
   
 #---------------leftPanel--------------------------
   source("leftPanel/footer/processCommit.R",                    local=TRUE)
+  source("leftPanel/footer/useTribble.R",                       local=TRUE)
   source("leftPanel/footer/processKnit.R",                      local=TRUE)
   source("leftPanel/footer/processDnip.R",                      local=TRUE)
   source("leftPanel/footer/serverButtons.R",                    local=TRUE)

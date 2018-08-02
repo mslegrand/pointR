@@ -62,7 +62,7 @@ setFileDescSaved<-function(pageId, fileSaveStatus){
       if(nrow(tmp)>0){
         fd[fd$tabId==pageId,"isSaved"]<-fileSaveStatus 
         fileDescDB(fd) 
-        print(fd)
+        #print(fd)
       }
   }
 
@@ -114,14 +114,17 @@ savePage<-function(pageId, path=getWorkSpaceDir()){
     fileDescriptor=getFileDescriptor(pageId)
     backdrop=getPageBackDrop(pageId)
     grid=getPageSvgGrid(pageId)
-    # cat('backdrop saving:::\n')
-    # print(backdrop)
+    trib<-getPageUseTribble(pageId)
+    
+    cat('savePage::: saving trib\n')
+    print(trib)
     rtv<-c(
       fileDescriptor=getFileDescriptor(pageId),
       code=getCode(),
       assetSelection=asel,
       backdrop=backdrop,
-      grid=grid
+      grid=grid,
+      trib=trib
     )
     
     ppE<-getPreProcPtEntries(pageId)
@@ -179,8 +182,8 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
     #tibAs<-as.tibble(tibAs)
     tib<-bind_rows(tib, tibAs)
   }
-  # browser()
   backDropDB(tib)
+  
   # ---grid---
   tib<-svgGridDB()
   pattern<-"^grid."
@@ -190,8 +193,23 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
     #tibAs<-as.tibble(tibAs)
     tib<-bind_rows(tib, tibAs)
   }
-  # browser()
   svgGridDB(tib)
+  # cat("svgGRid::\n")
+  # print(svgGridDB())
+  
+  #--- tribbleDB
+  tib<-useTribbleFormatDB()
+  pattern<-"^trib."
+  for(page in wsPages){
+    tibAs<-page[ grep(pattern, names(page)) ]
+    names(tibAs)<-gsub(pattern, '', names(tibAs))
+    #tibAs<-as.tibble(tibAs)
+    tib<-bind_rows(tib, tibAs)
+  }
+  useTribbleFormatDB(tib)
+  cat('useTribbleFormatDB::\n')
+  print(useTribbleFormatDB())
+  
   
   # --- preProcDB
   tib<-preProcDB$points
