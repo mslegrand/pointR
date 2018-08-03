@@ -71,6 +71,7 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FA
   } else {
     divClass="cAceRmdContainer"
   }
+  addNewPage2dnippetsDB(tabId)
   # ptpreprocId=tabID2prePtProc(tabId)
   appendTab(
     inputId = "pages",

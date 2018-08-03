@@ -9,18 +9,19 @@ observeEvent(request$sender,{
     if(request$sender=='startup'){
       #Todo: make this workspace dependent
       sampleDnippets<-paste(system.file('App', package='pointR'), 'templates', 'sampleShapes.dnippets', sep='/')
+     
+      # for( datapath in editOption$dnippetsFiles){
+      #   loadDndSnippets(datapath)
+      # }
       loadDndSnippets(sampleDnippets)
-      for( datapath in editOption$dnippetsFiles){
-        loadDndSnippets(datapath)
-      }
-      
       
       #cmdFileNewPtR()
       #add the dndSnipppets previously stored
       success<-restoreWorkSpace()
       if(!success){
         cmdFileNewPtR()
-      }
+      } 
+      
       #
     }
 }, priority=100)

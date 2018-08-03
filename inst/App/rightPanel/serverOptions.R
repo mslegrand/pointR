@@ -113,11 +113,12 @@ removeFromDnippetsFiles<-function(filePath){
   editOption$dnippetsFiles<-tmp
 }
 
-addToDnippetsFiles<-function(filePath){
-  tmp<-editOption$dnippetsFiles
-  tmp<-unique(c(tmp, filePath))
-  editOption$dnippetsFiles<-tmp
-}
+# addToDnippetsFiles<-function(filePath){
+#   importDnippet2DB(filePath)
+#   # tmp<-editOption$dnippetsFiles
+#   # tmp<-unique(c(tmp, filePath))
+#   # editOption$dnippetsFiles<-tmp
+# }
 
 
               

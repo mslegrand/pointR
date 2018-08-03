@@ -262,7 +262,7 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
       divClass="cAceRmdContainer"
     }
     #addFileDesc(pageId=tabId, docFilePath=docFilePath, fileSaveStatus, fileMode=mode)
-    
+   
     appendTab(
       inputId = "pages",
       tabPanel( #tabId,
@@ -297,6 +297,7 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
       tabId=page$fileDescriptor.tabId
       fileSaveStatus=page$fileDescriptor.isSaved 
       savedStatus<-ifelse(fileSaveStatus, 'saved', 'notSaved')
+      addNewPage2dnippetsDB(tabId)
       sendFileTabsMessage(resize=runif(1), tabId=tabId, savedStatus= savedStatus)
     }
   })

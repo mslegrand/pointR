@@ -29,7 +29,7 @@ getWorkSpaceDir<-function(){
   workSpaceDir<-paste0(dirPath,"/",'workspace')
 }
 
-dnippetsDirPath<-function(){
+dnippetsDirPath<-function(){ #!!! not used???
   opPath<-optionDirPath()
   dirPath<-paste(opPath,'drippets',sep='/')
   if(!file.exists(dirPath)){
