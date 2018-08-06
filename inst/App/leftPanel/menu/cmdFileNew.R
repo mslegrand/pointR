@@ -72,12 +72,12 @@ cmdDndSnippetNew<-function(){
 }
 
 
-cmdNewIOSlides<-function(){
-  src<-ioslidesTemplate
-  tabName<-getNextAnonymousFileName()
-  addFileTab(title=tabName, txt=src,  docFilePath="?", mode='ptrrmd')
-  delay(500,
-        updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
-  )
-  mssg$error<-""
-}
+# cmdNewIOSlides<-function(){
+#   src<-ioslidesTemplate
+#   tabName<-getNextAnonymousFileName()
+#   addFileTab(title=tabName, txt=src,  docFilePath="?", mode='ptrrmd')
+#   delay(500,
+#         updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
+#   )
+#   mssg$error<-""
+# }

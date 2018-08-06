@@ -65,6 +65,13 @@ setFileDescSaved<-function(pageId, fileSaveStatus){
   }
 }
 
+
+getAllNamedUnsavedFiles<-reactive({
+  fd<-fileDescDB()
+  fd<-filter(fd, isSaved==FALSE & filePath!="?")
+  fd
+})
+
 getFileSavedStatus<-reactive({
   pageId<-input$pages
   if(!is.null(pageId)){
