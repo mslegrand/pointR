@@ -24,13 +24,10 @@ cmdQuitNow<-reactive({
 
 
 fileQuitModal<-function(choices){
-  # doOk<-"shinyjs.triggerButtonOnEnter(event,\"commitNewCol\")"
-  # doCancel
-  
+  # doQuit<-"shinyjs.triggerButtonOnEnter(event,\"quitNow\")"
   modalDialog( 
     # onkeypress=doQuit, 
     span('The following named files have unsaved changes.'), 
-    #span('Check to save'), 
     div( class='ptR2',
          prettyCheckboxGroup(
            inputId = "namedUnsavedFilesChBox",
@@ -41,7 +38,7 @@ fileQuitModal<-function(choices){
     ),
     footer = tagList(
       actionButton("checkAll", "Save All and Exit"),
-      actionButton("quitNow", "Save Selected and Exit")
+      actionButton("quitNow",  "Save Selected and Exit")
     )
   ) 
 } 
@@ -65,7 +62,6 @@ observeEvent(input$checkAll,{
 
 observeEvent(input$quitNow,{
   selection<-input$namedUnsavedFilesChBox
-  
   removeModal()
   saveDnippetsFileNames()
   savePage(input$pages)
