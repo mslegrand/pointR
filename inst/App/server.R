@@ -57,6 +57,8 @@ shinyServer(function(input, output,session) {
   #------------------fileIO----------------------------------
   source("fileIO/serverGenShinyFilesSaveObservers.R",            local=TRUE)
   source("fileIO/serverFileDescriptor.R",                        local=TRUE)
+  source("fileIO/serverLoadWorkSpace.R",                         local=TRUE)
+  source("fileIO/serverPage2Workspace.R",                        local=TRUE)
   
 #------------------rightPanel--------------------------------
   source("rightPanel/selector/serverAssetSelectionDB.R",         local=TRUE)
@@ -119,6 +121,7 @@ shinyServer(function(input, output,session) {
   source("leftPanel/dnippets/serverDnippetCntrl.R",             local=TRUE)
   source("leftPanel/dnippets/serverDnippetToolBar.R",           local=TRUE)
   source("leftPanel/dnippets/serverDnippetsDB.R",               local=TRUE)
+  source("leftPanel/dnippets/serverSaveDnippets.R",             local=TRUE)
   source("leftPanel/menu/cmdFileDnippet.R",                     local=TRUE)
   source("leftPanel/menu/cmdAbout.R",                           local=TRUE)
   source("leftPanel/menu/serverEditBar.R",                      local=TRUE)

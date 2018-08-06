@@ -12,9 +12,10 @@ loadDndSnippets<-function(datapath){
   
   dnName<-basename(datapath)
   # adds to selection
-  #addDrippets( dnName, dnippets, select=dnName )
-  addDnippets2AllDnippets( dnName, dnippets )
-  addDnippetPath2DB(dnName, datapath )
+  #The first 2 are almost the same thing, recording path and dname
+  add2DnippetsSelectionAll( dnName, dnippets )
+  add2DnippetDBPath(dnName, datapath )
+  #This sets the dname default value for existing pages (no effect on pages not yet loaded)
   add2DnippetChoices(dnName, TRUE)
 }
 

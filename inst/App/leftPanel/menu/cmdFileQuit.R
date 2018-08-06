@@ -1,6 +1,8 @@
 
 
 cmdFileQuit<-reactive({
+  saveDnippetsFileNames()
+  savePage(input$pages)
   cmdQuitNow()
   # if(is.null(input$pages)){
   #   cmdQuitNow()
