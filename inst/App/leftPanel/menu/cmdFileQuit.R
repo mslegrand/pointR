@@ -4,12 +4,6 @@ cmdFileQuit<-reactive({
   saveDnippetsFileNames()
   savePage(input$pages)
   cmdQuitNow()
-  # if(is.null(input$pages)){
-  #   cmdQuitNow()
-  # } else {
-  #   sendFileTabsMessage(sender= 'fileCmd.quit', getAllTabIds=runif(1))
-  # }
-  
 })
 
 cmdQuitNow<-reactive({
