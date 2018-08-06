@@ -12,7 +12,7 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
       sendPtRManagerMessage( sender=sender, saveFile=TRUE,  target=target, tabId=tabId )
     } else { 
       # write file
-      cat('sender=',sender, "id=", mssg$id,"\n")
+      
       code<-mssg$code
       # !!!TODO!!! if write fails revert.
       writeLines(code, docFilePath)
@@ -25,7 +25,7 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
       if(sender %in% 'fileCmd.quit'){
        # pop off tab and exit from this
         tabId=popTab()
-        cat('popped tabId=',tabId,"\n")
+        
       } else if (sender %in% c('fileCmd.close')){
         addToRecentFiles(mssg$docFilePath)
         closeTabNow(tabId)
