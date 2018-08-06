@@ -170,12 +170,12 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
       
       if(is.null(tabId)){ browser() }
       addNewPage2dnippetsDB(tabId)
-      cat('#18 restoreWorkSpace\n')
+      # cat('#18 restoreWorkSpace\n')
       sendFileTabsMessage(resize=runif(1), tabId=tabId, savedStatus= savedStatus)
-      cat('#19 restoreWorkSpace\n')
+      # cat('#19 restoreWorkSpace\n')
     }
   })
-  cat('<---< restoreWorkSpace\n')
+  # cat('<---< restoreWorkSpace\n')
   return(TRUE)
   
 }

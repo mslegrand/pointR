@@ -7,7 +7,6 @@ useTribbleFormatDB<-reactiveVal(
 )
 
 getPageUseTribble<-function(pageId){
-  # cat('getPageUseTribble:: pageId=', format(pageId),"\n")
   if(!is.null(pageId)){
     tb<-useTribbleFormatDB()
     rtv<-as.list(filter(tb, tabId==pageId))
@@ -33,9 +32,7 @@ getUseTribble<-reactive({
 })
 
 setUseTribble<-function(pageId, value){
-  # cat("setUseTribble:: pageId=",format(pageId), " value= ", format(value) , "\n")
   if(!is.null(pageId)){
-    # cat("setUseTribble2:: pageId=",format(pageId), " value= ", format(value) , "\n")
     tb<-useTribbleFormatDB()
     tt<-filter(tb, tabId==pageId)
     if(nrow(tt)>0){
