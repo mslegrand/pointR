@@ -56,13 +56,11 @@ setFileDescPath<-function(pageId, filePath){
 setFileDescSaved<-function(pageId, fileSaveStatus){
   if(!is.null(pageId)){
       fileSaveStatus<-unlist(fileSaveStatus)
-      cat('setFileDescSaved:: pageId=', pageId, ' fileSaveStatus=', fileSaveStatus, "\n")
       fd<-fileDescDB()
       tmp<-filter(fd, tabId==pageId)
       if(nrow(tmp)>0){
         fd[fd$tabId==pageId,"isSaved"]<-fileSaveStatus 
         fileDescDB(fd) 
-        #print(fd)
       }
   }
 
@@ -73,17 +71,12 @@ getFileSavedStatus<-reactive({
   if(!is.null(pageId)){
     fd<-fileDescDB()
     tmp<-filter(fd, tabId==pageId)
-    cat('nrow(tmp)=',format(nrow(tmp)),"\n")
     if(nrow(tmp)==1){
-      cat('pageId=', format(pageId),"\n")
-      cat('tmp$isSaved=',tmp$isSaved,"\n")
       tmp$isSaved
     } else {
-      cat('returning F\n')
       FALSE
     }
   } else {
-    cat('pageId is NULL\n')
     TRUE
   }
 })

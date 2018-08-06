@@ -1,6 +1,6 @@
 
 restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
-  cat('>---> restoreWorkSpace\n')
+  # cat('>---> restoreWorkSpace\n')
   wsPages<-list()
   fileWSPaths<-dir(workSpaceDir, pattern='PTR-TABID', full.names = T)
 
@@ -24,7 +24,6 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
     
     saveRDS(object=page, file = newFilePath)
   }
-  cat('#3 restoreWorkSpace\n')
   #4. iterate through pages and add to serverAssetDB$tib
   # --- serverAssetDB
   tib<-serverAssetDB$tib
@@ -163,12 +162,8 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
         value=tabId
       )
     )
-    
     restoreAssetState(tabId)
-    #updateAceExt(id=aceId, sender='cmd.tabChange', roleBack=FALSE, setfocus=TRUE, getValue=TRUE)
-    cat('#15 restoreWorkSpace\n')
     updateTabsetPanel(session, inputId='pages', selected=tabId)
-    cat('#16 restoreWorkSpace\n')
   }
   delay(500,{
     for(page in wsPages){

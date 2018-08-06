@@ -18,9 +18,9 @@ dnippetsDB<-reactiveValues(
 # }
 
 add2DnippetDBPath<-function(dnName, datapath){
-  cat('entering add2DnippetDBPath\n')
+  # cat('entering add2DnippetDBPath\n')
   dnippetsDB$paths<-bind_rows(dnippetsDB$paths, list(fullpath=datapath, dname=dnName ) )
-  cat('exiting add2DnippetDBPath\n')
+  # cat('exiting add2DnippetDBPath\n')
 }
 
 # Note:: Adds column to usage: this requires at least one page to be loaded

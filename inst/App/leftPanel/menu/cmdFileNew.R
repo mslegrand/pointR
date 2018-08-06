@@ -40,7 +40,7 @@ cmdFileNewIOSlides<-function(){
 
 
 cmdFileNewSnippet<-function(){
-  cat('cmdFileNewSnippet\n')
+  # cat('cmdFileNewSnippet\n')
   src<-fileTemplates[[ "snippetTemplate.snippets" ]] #rmdTemplate
   tabName<-getNextAnonymousFileName()
   addFileTab(title=tabName, txt=src,  docFilePath="?", mode='snippets', fileSaveStatus=FALSE)
