@@ -2,7 +2,7 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
   id<-mssg$id
   saved<-unlist(mssg$isSaved)
  
-  if( !saved || sender %in% c('fileCmd.saveAs','fileCmd.saveNow', 'buttonCmd.rmdViewer') ) { #need to save
+  if( !saved || sender %in% c('fileCmd.saveAs','fileCmd.saveNow', 'buttonCmd.rmdViewer', 'fileCmd.quit') ) { #need to save
     docFilePath<-unlist(mssg$docFilePath)
     if(docFilePath=='?' || sender=='fileCmd.saveAs'){ # file unnamed : fileSaveAs
       tabId<-aceID2TabID(id)
@@ -12,6 +12,7 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
       sendPtRManagerMessage( sender=sender, saveFile=TRUE,  target=target, tabId=tabId )
     } else { 
       # write file
+      
       code<-mssg$code
       # !!!TODO!!! if write fails revert.
       writeLines(code, docFilePath)
@@ -19,12 +20,17 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
       setFileDescSaved(tabId, TRUE)
       updateAceExt(id, sender,  setDocFileSaved=TRUE)
       editOption$.saved<-TRUE
-      
-      if(request$sender %in% c('fileCmd.close', 'fileCmd.quit')){
+      setFileDescSaved(pageId=tabId, fileSaveStatus=TRUE )
+      savePage(tabId)
+      if(sender %in% 'fileCmd.quit'){
+       # pop off tab and exit from this
+        tabId=popTab()
+        
+      } else if (sender %in% c('fileCmd.close')){
         addToRecentFiles(mssg$docFilePath)
         closeTabNow(tabId)
       } else { 
-        if( identical(request$sender, 'buttonCmd.rmdViewer')){
+        if( identical(sender, 'buttonCmd.rmdViewer')){
           
           rmarkdown::render(docFilePath )
           htmlPath<-sub('\\.Rmd$','\\.html',docFilePath)
@@ -42,7 +48,7 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
       browseURL(htmlPath)
     }
     tabId<-popTab()
-    if(request$sender%in% c('fileCmd.close', 'fileCmd.quit') ){
+    if(request$sender%in% c('fileCmd.close') ){
       addToRecentFiles(mssg$docFilePath)
       closeTabNow(tabId)
     }

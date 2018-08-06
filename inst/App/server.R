@@ -24,7 +24,10 @@ shinyServer(function(input, output,session) {
     if(is.null(getCode()) || nchar(getCode())==0){
       return(NULL)
     }  
-    ptDefs<-ex.getPtDefs(getCode(), useTribbleFormat=editOption$useTribbleFormat ) 
+    useTribbleFormat<- getUseTribble()
+    #cat('useTribbleFormat=',format(useTribbleFormat),"\n")
+   # ptDefs<-ex.getPtDefs(getCode(), useTribbleFormat=editOption$useTribbleFormat ) 
+    ptDefs<-ex.getPtDefs(getCode(), useTribbleFormat=useTribbleFormat) 
     ptDefs
   })  
   
@@ -54,6 +57,8 @@ shinyServer(function(input, output,session) {
   #------------------fileIO----------------------------------
   source("fileIO/serverGenShinyFilesSaveObservers.R",            local=TRUE)
   source("fileIO/serverFileDescriptor.R",                        local=TRUE)
+  source("fileIO/serverLoadWorkSpace.R",                         local=TRUE)
+  source("fileIO/serverPage2Workspace.R",                        local=TRUE)
   
 #------------------rightPanel--------------------------------
   source("rightPanel/selector/serverAssetSelectionDB.R",         local=TRUE)
@@ -98,6 +103,7 @@ shinyServer(function(input, output,session) {
   
 #---------------leftPanel--------------------------
   source("leftPanel/footer/processCommit.R",                    local=TRUE)
+  source("leftPanel/footer/useTribble.R",                       local=TRUE)
   source("leftPanel/footer/processKnit.R",                      local=TRUE)
   source("leftPanel/footer/processDnip.R",                      local=TRUE)
   source("leftPanel/footer/serverButtons.R",                    local=TRUE)
@@ -112,8 +118,10 @@ shinyServer(function(input, output,session) {
   source("leftPanel/menu/cmdOptionsTheme.R",                    local=TRUE)
   source("leftPanel/menu/cmdOptionsFontSize.R",                 local=TRUE)  
   source("leftPanel/menu/cmdFileSnippet.R",                     local=TRUE)
-  source("leftPanel/dnippets/serverDnippetToolBar.R",           local=TRUE)
   source("leftPanel/dnippets/serverDnippetCntrl.R",             local=TRUE)
+  source("leftPanel/dnippets/serverDnippetToolBar.R",           local=TRUE)
+  source("leftPanel/dnippets/serverDnippetsDB.R",               local=TRUE)
+  source("leftPanel/dnippets/serverSaveDnippets.R",             local=TRUE)
   source("leftPanel/menu/cmdFileDnippet.R",                     local=TRUE)
   source("leftPanel/menu/cmdAbout.R",                           local=TRUE)
   source("leftPanel/menu/serverEditBar.R",                      local=TRUE)

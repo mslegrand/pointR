@@ -18,8 +18,8 @@ processCommit<-reactive({
     return(NULL)
    # mode='ptr'
   }
-  cat("class(mode)=" ,class(mode),"\n")
-  cat('ProcessCommit: mode=',format(mode),"\n")
+  # cat("class(mode)=" ,class(mode),"\n")
+  # cat('ProcessCommit: mode=',format(mode),"\n")
   if( identical(mode, 'ptr')){
     processSvgR()
   } else if(  identical(mode, 'ptrrmd') ){
@@ -35,7 +35,7 @@ processCommit<-reactive({
   }
   if(!hasError()){
     tabId<-input$pages
-    cat("tabId=",tabId,"\n")
+    # cat("tabId=",tabId,"\n")
     savePage(tabId)
   }
   
@@ -87,9 +87,9 @@ processSvgR<-reactive({
         #   h<-svg$root$getAttr('height')
         #   #set WH in selected...
         # }
-        cat("class(svg)=",class(svg),"\n")
+        # cat("class(svg)=",class(svg),"\n")
         output<-captureOutput(eval(parsedCode))
-        cat("class(output)=",class(output),"\n")
+        # cat("class(output)=",class(output),"\n")
         output<-paste( output, collapse="\n" )
         output<-paste("Output:",output,sep="\n")
         setCapturedMssg(output)

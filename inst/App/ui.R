@@ -97,7 +97,7 @@ shinyUI(
                                     inline = TRUE, status='success')
              ),
              absolutePanel( right=25, bottom=0, id='selectedDnippetButtonBoxContainer',
-                 dropdown( 
+                 dropdown( inputId='drippetSelectionDropdown',
                    div( class='backPanel',
                         h5('Dnippet Selection', style='color:white;'),
                        awesomeCheckboxGroup(

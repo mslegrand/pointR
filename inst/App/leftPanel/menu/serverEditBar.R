@@ -184,7 +184,7 @@ observeEvent( input$editNavBar, {
 
 # keep file menu save uptodate
 observeEvent(getFileSavedStatus(),{
-  cat("\n*****************************getFileSavedStatus()=",getFileSavedStatus(),"\n")
+  # cat("\n*****************************getFileSavedStatus()=",getFileSavedStatus(),"\n")
   if(getFileSavedStatus()==FALSE){
     # set dmdm file save active
     enableDMDM(
@@ -231,13 +231,7 @@ output$fileName <- renderText({
 })
 
 # -----------ACE EDITOR------------------------
-# observeEvent(
-#   getCode(), {
-#     if(mssg$error==""){
-#       updateAceEditor( session,"source", value=getCode() ) 
-#     }
-#   }
-# )
+
 
 observeEvent(editOption$fontSize, {
   updateAceEditor(session, getAceEditorId(), fontSize=as.numeric(editOption$fontSize) )
@@ -254,16 +248,3 @@ observeEvent(editOption$tabSize, {
 
 
 #----------------------------------------------
-
-observeEvent(input$modalGridSpacingCancel, {
-  removeModal()
-}) 
-
-observeEvent(input$modalGridSpacingOk, {
-  setSvgGrid(
-    dx= as.numeric(input$selectGridDX),
-    dy= as.numeric(input$selectGridDY)
-  )
-  editOption$tabSize<-input$selectIndentSize
-  removeModal()
-})

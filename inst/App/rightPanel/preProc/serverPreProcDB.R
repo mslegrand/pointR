@@ -75,16 +75,11 @@ getPreProcPtScript<-reactive({
   if(length(temp)==3){
     names(temp)<-x$cmd
   }
-
   temp
 })
 
 getPreProcPtEntries<-function(pageId){
-  # cat("getPreProcPtEntries::pageId=",pageId,"\n")
-  # cat("nrow(preProcDB$points)=",nrow(preProcDB$points),"\n")
-  # print(preProcDB$points)
   ptpts<-filter(preProcDB$points, tabId==pageId)
-  #print(ptpts)
   ptpts
 }
 

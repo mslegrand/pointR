@@ -2,7 +2,7 @@
 sendFileTabsMessage<-function(...){ 
   data<- list(...) 
   if(length(data)>0){
-    cat("sendFileTabsMessage::", paste(data, collapse = ', '),"\n")
+    # cat("sendFileTabsMessage::", paste(data, collapse = ', '),"\n")
     session$sendCustomMessage( type = "scrollManager",  data )
   }
 }
@@ -65,12 +65,14 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FA
   # !!!TODO add docFilePath to recentFiles (if !='?')
   
   addFileDesc(pageId=tabId, docFilePath=docFilePath, fileSaveStatus, fileMode=mode)
-  
+  setUseTribble( pageId=tabId, value=TRUE)
   if(mode=='ptr'){
     divClass="cAceContainer"
   } else {
     divClass="cAceRmdContainer"
   }
+  if(is.null(tabId)){ browser() }
+  addNewPage2dnippetsDB(tabId)
   # ptpreprocId=tabID2prePtProc(tabId)
   appendTab(
     inputId = "pages",
@@ -130,7 +132,6 @@ getAceEditorId<-reactive({
 #  triggers doc has been changed.
 observeEvent(input$pages,{
   tabId<-input$pages 
-  cat('observeEvent:: input.pages')
   sendFileTabsMessage(selected=tabId)
   
   aceId<-tabID2aceID(tabId)
@@ -141,13 +142,9 @@ observeEvent(input$pages,{
 
 # updated by scrollManager and relays sender with tabs to request
 observeEvent(input$tabManager,{
-  # cat("observer input$tabManager\n")
   tabs=unlist(input$tabManager$tabs)
-  # cat('tabs=',format(tabs),"\n")
   sender=input$tabManager$sender
-  # cat('sender=',format(sender),"\n")
   setTabRequest(sender=sender, tabs=tabs)
-  # cat("leaving tabManager observer------------------\n")
 })
 
 # request$tabs is updated by either
@@ -160,7 +157,6 @@ observeEvent(request$tabs, {
     sender<-getSender()
     aceId<-tabID2aceID(tabId)
     updateAceExt( id=aceId, sender=sender, getDoc=TRUE)
-    # saveFile(tabId)
   } else {
     if(getSender()=='fileCmd.quit'){
       cmdQuitNow()

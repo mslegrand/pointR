@@ -7,7 +7,7 @@ serverAssetDB<-reactiveValues(
     columnName="NULL",  # currently used only by tibbleEditor and could be placed there.
     matCol=0,           # colIndex of the current matrix.
     ptColName="NULL",   # !!! KLUDGE for now. should this default to last col?
-    selIndex=1,         # only used when current col is points, 
+    selIndex=1,         # only used when current col is points,
     transformType='Translate',
     ptScriptSel=preprocChoices[1]
   )[0,]

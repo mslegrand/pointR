@@ -1,14 +1,16 @@
 
 #--tibble box
-observeEvent(input$useTribble,{
-  useTribble<-ifelse(input$useTribble=='Tribble',TRUE,FALSE)
-  if(editOption$useTribbleFormat!=useTribble){
-    editOption$useTribbleFormat=useTribble
-    newPtDefs<-getPtDefs()
-    sender='useTibble'
-    updateAceExtDef(newPtDefs, sender=sender)
-  }
-})
+# observeEvent(input$useTribble,{
+#   useTribble<-ifelse(input$useTribble=='Tribble',TRUE,FALSE)
+#   if(editOption$useTribbleFormat!=useTribble){
+#     editOption$useTribbleFormat=useTribble
+#     newPtDefs<-getPtDefs()
+#     sender='useTibble'
+#     updateAceExtDef(newPtDefs, sender=sender)
+#   }
+# })
+
+
 
 #---commit  button----- 
 observe({

@@ -9,18 +9,19 @@ observeEvent(input$plotNavBar, {
   
   if(cmd == 'cmdShowGrid'){
     renameDMDM(session,  "plotNavBar", "cmdShowGrid", "Hide Grid", newValue="cmdHideGrid")
-    setSvgGrid(show=TRUE)
+    setSvgGrid(input$pages, show=TRUE)
   }
   
   if(cmd == 'cmdHideGrid'){
     renameDMDM(session,  "plotNavBar",  "cmdHideGrid", "Show Grid",newValue="cmdShowGrid")
-    setSvgGrid(show=FALSE)
+    setSvgGrid(input$pages, show=FALSE)
   }
   
   if(cmd == 'cmdAdjustGridSpacing'){
     spacingChoices<-c(.01, .05, .1, .5 ,1, 5,50,100,500)
-    choiceDX<-svgGrid$dx
-    choiceDY<-svgGrid$dy
+    sgrid<-getSvgGrid()
+    choiceDX<-sgrid$dx
+    choiceDY<-sgrid$dy
     modalGridSpacing <- function() {
       modalDialog(
             selectInput( "selectGridDX", "Horizontal Spacing", spacingChoices,
