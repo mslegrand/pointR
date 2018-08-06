@@ -8,7 +8,6 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
     return(FALSE)
   }
   
-  
   # 1. load all pages into a list.
   for(filePath in fileWSPaths){
     page<-readRDS(filePath)
@@ -24,6 +23,7 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
     
     saveRDS(object=page, file = newFilePath)
   }
+  
   #4. iterate through pages and add to serverAssetDB$tib
   # --- serverAssetDB
   tib<-serverAssetDB$tib
@@ -31,7 +31,6 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
   for(page in wsPages){
     tibAs<-page[ grep(pattern, names(page)) ]
     names(tibAs)<-gsub(pattern, '', names(tibAs))
-    #tibAs<-as.tibble(tibAs)
     tib<-bind_rows(tib, tibAs)
   }
   serverAssetDB$tib<-tib
@@ -42,7 +41,6 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
   for(page in wsPages){
     tibAs<-page[ grep(pattern, names(page)) ]
     names(tibAs)<-gsub(pattern, '', names(tibAs))
-    #tibAs<-as.tibble(tibAs)
     tib<-bind_rows(tib, tibAs)
   }
   backDropDB(tib)
@@ -53,7 +51,6 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
   for(page in wsPages){
     tibAs<-page[ grep(pattern, names(page)) ]
     names(tibAs)<-gsub(pattern, '', names(tibAs))
-    #tibAs<-as.tibble(tibAs)
     tib<-bind_rows(tib, tibAs)
   }
   svgGridDB(tib)
@@ -64,7 +61,6 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
   for(page in wsPages){
     tibAs<-page[ grep(pattern, names(page)) ]
     names(tibAs)<-gsub(pattern, '', names(tibAs))
-    #tibAs<-as.tibble(tibAs)
     tib<-bind_rows(tib, tibAs)
   }
   useTribbleFormatDB(tib)
@@ -81,14 +77,15 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
   
   # --- preProcDB
   tib<-preProcDB$points
+  pattern<-"^preprocScripts."
   for(page in wsPages){
     # extract the serverAsset portion and add
-    asi<-grep("^preprocScripts.", names(page))
+    asi<-grep(pattern, names(page))
     if(length(asi)>0){
       tibAs<-page[asi]
-      tn<-gsub('^preprocScripts.', '', names(tibAs))
+      tn<-gsub(pattern, '', names(tibAs))
       names(tibAs)<-tn
-      tibAs<-as.tibble(tibAs)
+      # tibAs<-as.tibble(tibAs)
       tib<-bind_rows(tib, tibAs)
     }
   }
@@ -96,14 +93,15 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
   
   # ------- fileDescDB
   tib<-fileDescDB()
+  pattern<-"^fileDescriptor."
   for(page in wsPages){
     # extract the serverAsset portion and add
-    asi<-grep("^fileDescriptor.", names(page))
+    asi<-grep(pattern, names(page))
     if(length(asi)>0){
       tibAs<-page[asi]
-      tn<-gsub('^fileDescriptor.', '', names(tibAs))
+      tn<-gsub(pattern, '', names(tibAs))
       names(tibAs)<-tn
-      tibAs<-as.tibble(tibAs)
+      # tibAs<-as.tibble(tibAs)
       tib<-bind_rows(tib, tibAs)
     }
   }
@@ -128,14 +126,12 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
     } else {
       title=paste('Anonymous', page$fileDescriptor.anonNo)
     }
-    #missing the addFileDesc
     
     if(mode=='ptr'){
       divClass="cAceContainer"
     } else {
       divClass="cAceRmdContainer"
     }
-    #addFileDesc(pageId=tabId, docFilePath=docFilePath, fileSaveStatus, fileMode=mode)
     
     appendTab(
       inputId = "pages",
