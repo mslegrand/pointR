@@ -7,14 +7,10 @@ useTribbleFormatDB<-reactiveVal(
 )
 
 getPageUseTribble<-function(pageId){
-  cat('getPageUseTribble:: pageId=', format(pageId),"\n")
+  # cat('getPageUseTribble:: pageId=', format(pageId),"\n")
   if(!is.null(pageId)){
     tb<-useTribbleFormatDB()
-    cat('getPageUseTribble:: tibble=')
-    print(tb)
     rtv<-as.list(filter(tb, tabId==pageId))
-    cat('rtvAslist=')
-    print(rtv)
     if(any(sapply(rtv, length)==0)){
       rtv<-list(value=TRUE)
     } 
@@ -37,10 +33,9 @@ getUseTribble<-reactive({
 })
 
 setUseTribble<-function(pageId, value){
-  cat("setUseTribble:: pageId=",format(pageId), " value= ", format(value) , "\n")
+  # cat("setUseTribble:: pageId=",format(pageId), " value= ", format(value) , "\n")
   if(!is.null(pageId)){
-    #browser()
-    cat("setUseTribble2:: pageId=",format(pageId), " value= ", format(value) , "\n")
+    # cat("setUseTribble2:: pageId=",format(pageId), " value= ", format(value) , "\n")
     tb<-useTribbleFormatDB()
     tt<-filter(tb, tabId==pageId)
     if(nrow(tt)>0){
@@ -49,7 +44,6 @@ setUseTribble<-function(pageId, value){
       tt<-tibble(tabId=pageId, value=value)
     }
     tb<-bind_rows( filter(tb, tabId!=pageId),  tt)
-    print(tb)
     useTribbleFormatDB(tb)
   }
 }
@@ -57,9 +51,6 @@ setUseTribble<-function(pageId, value){
 observeEvent(input$useTribble,{
   useTribble<-ifelse(input$useTribble=='Tribble',TRUE,FALSE)
   if(!identical(useTribble,getUseTribble() )){
-    #editOption$useTribbleFormat=useTribble
-    #browser()
-    cat('useTribble =', useTribble, "\n")
     setUseTribble(pageId=input$pages,value=useTribble)
     newPtDefs<-getPtDefs()
     sender='useTibble'
