@@ -24,7 +24,6 @@ observeEvent(c( getDnippetsAll(), dnippetsDB$usage, input$pages),{
     selected<-getDnippetsSelected()
     dnippets<-dnippetSelection$all[selected]
     dnippets<-unlist(dnippets,recursive=F)
-    # cat("sendPtRManagerMessage cmd.dnippet.file.load\n")
     names(dnippets)<-NULL
     if(length(dnippets)==0){
       sendPtRManagerMessage(sender='cmd.dnippet.file.load', removeDrippets=runif(1));

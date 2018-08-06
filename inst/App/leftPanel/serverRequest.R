@@ -1,6 +1,5 @@
 request<-reactiveValues(
   code=NULL, 
-  #mode='ptr',
   sender='startup',
   tabs=NULL
 )
@@ -8,22 +7,12 @@ request<-reactiveValues(
 observeEvent(request$sender,{
     if(request$sender=='startup'){
       #Todo: make this workspace dependent
-      cat(">---> startup")
-      cat('readDnippetsFileNams')
+      # cat(">---> startup")
+      # cat('readDnippetsFileNams')
       readDnippetsFileNames()
-      cat('now to saveDnippetsFileNames\n')
+      # cat('now to saveDnippetsFileNames\n')
       saveDnippetsFileNames()
-      # for( datapath in editOption$dnippetsFiles){
-      #   loadDndSnippets(datapath)
-      # }    
-      # for( datapath in editOption$dnippetsFiles){
-      #   loadDndSnippets(datapath)
-      # }
-     
-      #loadDndSnippets(sampleDnippets)
-      
-      #cmdFileNewPtR()
-      #add the dndSnipppets previously stored
+    
       success<-restoreWorkSpace()
       if(!success){
         cmdFileNewPtR()
