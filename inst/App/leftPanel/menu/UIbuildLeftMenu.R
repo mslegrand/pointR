@@ -19,14 +19,22 @@ buildLeftMenu<-function(version){
         shinyDMDMenu::menuItem('R ioslides presentation', value='newIOSlides'),
         menuDivider(),
         shinyDMDMenu::menuItem('Snippets',            value='newSnippets'),
-        shinyDMDMenu::menuItem("Dnippets",           value="newDndSnippetsFile")#,
+        shinyDMDMenu::menuItem("Dnippets",            value="newDndSnippetsFile")#,
         # menuDivider(),
         # 
         # shinyDMDMenu::menuItem('Plain Text Doc', value='newText')
       ),
+      menuDropdown('New Project',
+        shinyDMDMenu::menuItem('Basic PointR Project', value='newBasicProject'),
+        shinyDMDMenu::menuItem('Custom Shiny Control', value='customControl')
+      ),
+      menuDropdown("Recent Projects"),
       menuDivider(),
-      shinyDMDMenu::menuItem("Open"),
+      shinyDMDMenu::menuItem("Open File", value='openFile'),
       menuDropdown("Recent Files"),
+      menuDivider( id='recentProjDivider'),
+      shinyDMDMenu::menuItem("Open Project...", value='openProject'),
+      
       menuDivider(),
       menuDropdown(
         "Import",
@@ -40,10 +48,11 @@ buildLeftMenu<-function(version){
       shinyDMDMenu::menuItem("Save As...", value="saveAs"),
       shinyDMDMenu::menuItem("Save  All", value="saveAll"),
       menuDivider(),
+      shinyDMDMenu::menuItem("Print", value="print"),
+      menuDivider(),
       shinyDMDMenu::menuItem("Close", value="close"),
       shinyDMDMenu::menuItem("Close All", value="closeAll"),
-      menuDivider(),
-      shinyDMDMenu::menuItem("Print", value="print"),
+      shinyDMDMenu::menuItem("Close Project", value="closeProject"),
       menuDivider(),
       shinyDMDMenu::menuItem("Quit", value="quit")
     ),

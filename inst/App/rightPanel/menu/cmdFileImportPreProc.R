@@ -36,8 +36,8 @@ loadPrePoints<-function(datapath){
 observeEvent(input$buttonPreProcPtImport,{
   fp.dt<-parseFilePaths(c(wd='~'), input$buttonPreProcPtImport)
   if(length(fp.dt)>0 && nrow(fp.dt)){
-    
     datapath<-as.character(fp.dt$datapath[1])
+    datapath<-gsub(pattern = '^NA/', "~/", datapath)
     # cat('loading ', datapath,"\n")
     loadPrePoints(datapath)
   }

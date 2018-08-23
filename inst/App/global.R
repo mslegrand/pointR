@@ -36,7 +36,7 @@ list.entry.at.index<-function(ll, indx){
 }
 
 
-r_pkgs<-c('shiny','shinyjs', 'R.utils', 'svgR', 'shinyAce', 'stringr', 'jsonlite', 
+r_pkgs<-c('shiny','shinyjs', 'R.utils', 'svgR', 'shinyAce', 'stringr', 'jsonlite', 'fs',
           'shinyDMDMenu', 'shinyFiles', 'shinythemes', 'colourpicker', 'shinyWidgets', 
           'bsplus','shinyjqui', 'knitr', 'tidyverse')
 sapply(r_pkgs, library, character.only=TRUE)

@@ -9,8 +9,8 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
       ext<-mode2pathExt( getMode() )
       ext<-shinyFiles:::formatFiletype(ext)
       target<-saveButtonFileNames[[getMode()]]
-      sendPtRManagerMessage( sender=sender, saveFile=TRUE,  target=target, tabId=tabId )
-    } else { 
+      sendPtRManagerMessage( sender=sender, saveFile=TRUE,  target=target, tabId=tabId ) #triggers shinyFiles
+    } else { # has legitmate path
       # write file
       
       code<-mssg$code
@@ -18,18 +18,18 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
       writeLines(code, docFilePath)
       tabId<-aceID2TabID(id) 
       setFileDescSaved(tabId, TRUE)
-      updateAceExt(id, sender,  setDocFileSaved=TRUE)
-      editOption$.saved<-TRUE
-      setFileDescSaved(pageId=tabId, fileSaveStatus=TRUE )
-      savePage(tabId)
+      updateAceExt(id, sender,  setDocFileSaved=TRUE)  # extranious, remove???
+      editOption$.saved<-TRUE  # extranious, remove???
+      setFileDescSaved(pageId=tabId, fileSaveStatus=TRUE ) # already done, remove???
+      savePage(tabId) 
       if(sender %in% 'fileCmd.quit'){
        # pop off tab and exit from this
         tabId=popTab()
         
-      } else if (sender %in% c('fileCmd.close')){
+      } else if (sender %in% c('fileCmd.close')){ # if not saved and closing
         addToRecentFiles(mssg$docFilePath)
         closeTabNow(tabId)
-      } else { 
+      } else { # had path and is neither quit nor close nor saveAs; so is rmdViewer or saveNow
         if( identical(sender, 'buttonCmd.rmdViewer')){
           
           rmarkdown::render(docFilePath )

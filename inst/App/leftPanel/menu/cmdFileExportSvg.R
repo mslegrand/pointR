@@ -13,6 +13,7 @@ observeEvent(input$buttonExportSVG,{
   fp.dt<-parseSavePath(c(wd='~'), input$buttonExportSVG)
   if(length(fp.dt)>0 && nrow(fp.dt)){
     fileName<-as.character(fp.dt$datapath[1])
+    fileName<-gsub(pattern = '^NA/', "~/", fileName)
     src<- getCode()
     # cat("buttonExportSVG::parse\n")
     parsedCode<-parse(text=src)

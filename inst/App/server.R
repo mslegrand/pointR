@@ -31,13 +31,45 @@ shinyServer(function(input, output,session) {
     ptDefs
   })  
   
+  shinyFileChooseX<-function (input, id, updateFreq = 2000, session = getSession(),    ...) 
+  {
+    fileGet <- do.call(shinyFiles:::fileGetter, list(...))
+    currentDir <- list()
+    return(observe({
+      dir <- input[[paste0(id, "-modal")]]
+      cat('\n**************** modalid is ',paste0(id, "-modal","\n"))
+      print(dir)
+      if (is.null(dir) || is.na(dir)) {
+        dir <- list(dir = "")
+        cat('-----------dir is NULL\n---------')
+      } else {
+        cat('-----------dir is \n---------')
+        print(dir)
+        dir <- list(dir = dir$path, root = dir$root)
+      }
+
+      dir$dir <- do.call(file.path, as.list(dir$dir))
+      newDir  <- do.call("fileGet", dir)
+      if (!identical(currentDir, newDir)) {
+        currentDir <<- newDir
+        cat('\n\n------newDir=------------------------------------------------\n')
+        print(newDir)
+        cat('\n\n------currentDir=------------------------------------------------\n')
+        print(currentDir)
+        session$sendCustomMessage("shinyFiles", list(id = id, 
+                                                     dir = newDir))
+      }
+      invalidateLater(updateFreq, session)
+    }))
+  }
   
-  shinyFileChoose(input, "buttonFileOpen",           session=session, roots=c(wd="~") ) #hidden
-  shinyFileChoose(input, "buttonSnippetImport",      session=session, roots=c(wd="~"),  filetypes=c('snippets') ) #hidden
-  shinyFileChoose(input, "buttonDnippetImport",      session=session, roots=c(wd="~"),  filetypes=c('dnippets') ) #hidden
-  shinyFileChoose(input, "buttonPreProcPtImport",    session=session, roots=c(wd="~"),  filetypes=c('preprocpts') ) #hidden
-  shinyFileSave(input,   "buttonExportSVG",          session=session, roots=c(wd="~")  ) #hidden
-  shinyFileSave(input,   "buttonExportPreproc",      session=session, roots=c(wd="~")  ) #hidden
+  shinyFileChoose(input, "buttonFileOpen",           session=session, roots=c(home="~"),  filetypes=c('R','PTR','SVGR') ) #hidden
+  shinyFileChoose(input, "buttonFileOpenProject",    session=session, roots=c(home="~"),  filetypes=c('pprj') ) #hidden
+  shinyFileChoose(input, "buttonSnippetImport",      session=session, roots=c(home="~"),  filetypes=c('snippets') ) #hidden
+  shinyFileChoose(input, "buttonDnippetImport",      session=session, roots=c(home="~"),  filetypes=c('dnippets') ) #hidden
+  shinyFileChoose(input, "buttonPreProcPtImport",    session=session, roots=c(home="~"),  filetypes=c('preprocpts') ) #hidden
+  shinyFileSave(input,   "buttonExportSVG",          session=session, roots=c(home="~")  ) #hidden
+  shinyFileSave(input,   "buttonExportPreproc",      session=session, roots=c(homed="~") ) #hidden
   
 
 
@@ -112,8 +144,16 @@ shinyServer(function(input, output,session) {
   source("leftPanel/menu/cmdFileSave.R",                        local=TRUE)  
   source("leftPanel/menu/cmdFileNew.R",                         local=TRUE)  
   source("leftPanel/menu/cmdFileClose.R",                       local=TRUE)  
+  source("leftPanel/menu/cmdFileOpenProject.R",                 local=TRUE)  
   source("leftPanel/menu/cmdFileOpen.R",                        local=TRUE)  
-  source("leftPanel/menu/cmdFileQuit.R",                        local=TRUE)  
+  source("leftPanel/menu/cmdFileQuit.R",                        local=TRUE) 
+  
+  source("leftPanel/pproj/pprojUtil.R",                         local=TRUE)  
+  source("leftPanel/pproj/pprojNew.R",                          local=TRUE)  
+  source("leftPanel/pproj/pprojOpen.R",                         local=TRUE)   
+  source("leftPanel/pproj/pprojClose.R",                        local=TRUE)  
+  source("leftPanel/pproj/pprojModalNew.R",                     local=TRUE)  
+  
   source("leftPanel/menu/cmdFileExportSvg.R",                   local=TRUE) 
   source("leftPanel/menu/cmdOptionsTheme.R",                    local=TRUE)
   source("leftPanel/menu/cmdOptionsFontSize.R",                 local=TRUE)  

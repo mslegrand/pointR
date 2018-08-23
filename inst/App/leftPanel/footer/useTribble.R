@@ -10,7 +10,8 @@ getPageUseTribble<-function(pageId){
   if(!is.null(pageId)){
     tb<-useTribbleFormatDB()
     rtv<-as.list(filter(tb, tabId==pageId))
-    if(any(sapply(rtv, length)==0)){
+    #if(length(rtv)>0 && any(sapply(rtv, length)==0)){
+    if( any(sapply(rtv, length)==0)){
       rtv<-list(value=TRUE)
     } 
   } else{

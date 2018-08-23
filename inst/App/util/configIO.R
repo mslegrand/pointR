@@ -19,15 +19,59 @@ optionDirPath<-function(){
   dirPath
 }
 
-getWorkSpaceDir<-function(){
-  dirPath<-optionDirPath()
-  workSpaceDir<-paste0(dirPath,"/",'workspace')
+
+initialFileDescDB<-function(){tibble(
+  tabId='bogus',
+  isSaved=FALSE,
+  filePath="?",
+  anonNo =1,
+  mode='ptr'
+)[0,]
 }
 
-getWorkSpaceDir<-function(){
-  dirPath<-optionDirPath()
-  workSpaceDir<-paste0(dirPath,"/",'workspace')
+
+# initialDnippetsDBUsage<-function(){
+#   tibble(tabId='bogus')[0,]
+# }
+
+initialPreprocDB<-function(){
+  points=tibble( tabId="bogus", tibName="bogus", ptColName='bogus', cmd="bogus", script='bogus')[0,]
+  points
 }
+
+initialTribbleDB<-function(){
+  tibble(
+    tabId='bogus',
+    show=FALSE,
+    dx=50,
+    dy=50,
+    color='lightgrey'
+  )[0,]
+}
+
+initialSvgGridDB<-function(){
+  tibble(
+    tabId='bogus',
+    show=FALSE,
+    dx=50,
+    dy=50,
+    color='lightgrey'
+  )[0,]
+}
+
+initialBackDropDB<-function(){
+  tibble(
+    tabId='bogus',
+    color='white',
+    checked=TRUE
+  )[0,]
+}
+
+
+
+# used by loader
+
+
 
 dnippetsDirPath<-function(){ #!!! not used???
   opPath<-optionDirPath()
@@ -38,7 +82,7 @@ dnippetsDirPath<-function(){ #!!! not used???
   dirPath
 }
 
-snippetsDirPath<-function(){
+snippetsDirPath<-function(){  #!!! not used???
   opPath<-optionDirPath()
   dirPath<-paste(opPath,'snippets',sep='/')
   if(!file.exists(dirPath)){
@@ -72,7 +116,10 @@ readOptionsJSON<-function(){
     tabType="Use Soft Tabs",
     useTribbleFormat=TRUE,
     dnippetsFiles=NULL,
-    recentFiles=NULL
+    recentFiles=NULL,
+    recentProjects=NULL,
+    currentProjectDirectory=NULL,
+    currentProjectName=NULL
   )
   
   try({

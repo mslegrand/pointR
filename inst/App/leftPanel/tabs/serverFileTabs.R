@@ -38,7 +38,10 @@ tabID2prePtProc<-function(tabId){
 }
 
 
-closeRfn<-function(tabId){paste0("event.stopPropagation();Shiny.onInputChange('closeTab',  {id:'",tabId,"', type: 'tabId'} ); return false")}
+closeRfn<-function(tabId){
+  paste0("event.stopPropagation();Shiny.onInputChange('closeTab',  {id:'",tabId,"', type: 'tabId'} ); return false")
+}
+
 tabTitleRfn<-function(tabName, tabId, docFilePath){
   span(
     bs_embed_tooltip(span(tabName, "class"="tabTitle"), title=docFilePath),
@@ -89,8 +92,9 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FA
             outputId = aceId,  
             value=txt,
             mode=mode, 
-            theme=defaultOpts["theme"],
-            fontSize=defaultOpts["fontSize"], autoComplete="enabled",
+            theme=editOption$theme, 
+            fontSize=editOption$fontSize,
+            autoComplete="enabled",
             if(mode=='ptR')
               autoCompleteList =list(names(svgR:::eleDefs))
             else

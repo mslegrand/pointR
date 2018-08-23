@@ -26,9 +26,18 @@ observeEvent( input$editNavBar, {
       cmdFileNewIOSlides()
       dirtyDMDM(session, "editNavBar")
     }
-    if(fileCmd=="Open"){ #-----open 
+    if(fileCmd=="openFile"){ #-----open 
       cmdFileOpen()
       dirtyDMDM(session, "editNavBar")
+    }
+    if(fileCmd=="newBasicProject"){
+      showModal(newProjModal())
+      dirtyDMDM(session, "editNavBar")
+    }
+    if(fileCmd=="openProject"){ #-----open
+      dirtyDMDM(session, "editNavBar") 
+      cmdFileOpenProject()
+      # dirtyDMDM(session, "editNavBar")
     }
     if(fileCmd=="saveAs"){ #-----save
       cmdFileSaveAs()
@@ -51,6 +60,12 @@ observeEvent( input$editNavBar, {
       #cat(' fileCmd=="closeAll" \n')
       cmdFileCloseAll()
       dirtyDMDM(session, "editNavBar")
+    }
+    if(fileCmd=="closeProject"){
+      #cat(' fileCmd=="closeAll" \n')
+      closeCurrentProj()
+      dirtyDMDM(session, "editNavBar")
+      delay(500, {request$sender='startup'})
     }
     if(fileCmd=="quit"){
       # cat(' fileCmd=="quit" \n')
@@ -158,11 +173,11 @@ observeEvent( input$editNavBar, {
       dirtyDMDM(session, "editNavBar")
     }
     
-    if(grepl("recent-",fileCmd)){
-
+    if(grepl("recentFile-",fileCmd)){
       #get the filename
-      fileName<-sub("recent-","",fileCmd)
+      fileName<-sub("recentFile-","",fileCmd)
       #if file fails to exist remove
+      dirtyDMDM(session, "editNavBar")
       if(!file.exists(fileName)){
         # remove from recentFiles
         #send alert message 
@@ -173,7 +188,32 @@ observeEvent( input$editNavBar, {
       } else {
         openFileNow(fileName)
       }
-      dirtyDMDM(session, "editNavBar")
+      
+    }
+    
+    if(grepl("recentProj-",fileCmd)){
+      cat('>---> recentProjects\n')
+      #get the name
+      name<-sub("recentProj-","",fileCmd)
+      #cat('>---> recentProjects: name=', format(name),"\n")
+      #if file fails to exist remove
+      if(!file.exists(name)){
+        # remove from projects
+        #send alert message 
+        showNotification("Project Not Found.")
+        rf<-editOption$recentProjects
+        rf<-rf[-which(rf==name)]
+        editOption$recentProjects<-rf
+        dirtyDMDM(session, "editNavBar")
+      } else {
+        projName<-basename(name)
+        pathToProj<-dirname(name)
+        #pathToProj<-path_rel(pathToProj, path_home() )
+        dirtyDMDM(session, "editNavBar")
+        openProj(projName, pathToProj )
+      }
+      # cat('<---< recentProjects:\n')
+      
     }
     
     

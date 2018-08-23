@@ -5,6 +5,11 @@ request<-reactiveValues(
 )
 
 observeEvent(request$sender,{
+    cat(">---> request$sender\n")
+    
+    sender<-request$sender
+    #print("class(sender)" , class(sender),"\n")
+    
     if(request$sender=='startup'){
       #Todo: make this workspace dependent
       # cat(">---> startup")
@@ -18,8 +23,15 @@ observeEvent(request$sender,{
         cmdFileNewPtR()
       } 
       
-      #
+      disableDMDM(
+        session, 
+        menuBarId="editNavBar", 
+        entry="customControl"
+      )
+      #dirtyDMDM(session, "editNavBar")
+      cat("<---< startup\n")
     }
+  cat("<---< request$sender\n")
 }, priority=100)
 
 setTabRequest<-function(sender, tabs){
