@@ -1,26 +1,35 @@
 
 restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
-  # cat('>---> restoreWorkSpace\n')
-  wsPages<-list()
+  cat('>---> restoreWorkSpace\n')
+  
   fileWSPaths<-dir(workSpaceDir, pattern='PTR-TABID', full.names = T)
 
   if(length(fileWSPaths)==0){
     return(FALSE)
   }
-  
+  wsPages<-list()
+  pages$tabIdCount<-1
+  # browser()
   # 1. load all pages into a list.
   for(filePath in fileWSPaths){
     page<-readRDS(filePath)
-    # 3. assign tabIds to each page
+    # A. assign tabIds to each page
     id=getNextTabId()
     # substitute value ending in tabId with id
     tbid<-grep("tabId$", names(page))
     page[tbid]<-id
-    wsPages<-c(wsPages, list(id=page))
-    # 2 remove filePath file
+    wsPages[[id]]<-page
+  } 
+  
+  # 2 remove filePath file
+  for(filePath in fileWSPaths){
     file.remove(filePath)
+  }
+  
+  # 3 write pages
+  for(id in names(wsPages)){
     newFilePath<-paste0(workSpaceDir,"/",id,".rda")
-    
+    page<-wsPages[[id]]
     saveRDS(object=page, file = newFilePath)
   }
   
