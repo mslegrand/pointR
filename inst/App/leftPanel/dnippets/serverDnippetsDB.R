@@ -6,6 +6,13 @@ dnippetsDB<-reactiveValues(
   )
 )
 
+resetDnippetsDB<-function(){
+  dnippetsDB$usage=tibble(tabId='bogus')[0,]
+  dnippetsDB$paths=tibble(fullpath="datapath", dname="dnName" )[0,]
+}
+
+# resetDnippetsDB() # on startup
+
 # addToDnippetsFiles adds filePath to editOption$dnippetsFiles
  
 # addDnippet2DB<-function(filePath){
