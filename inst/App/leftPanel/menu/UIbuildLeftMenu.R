@@ -50,8 +50,8 @@ buildLeftMenu<-function(version){
       menuDivider(),
       shinyDMDMenu::menuItem("Print", value="print"),
       menuDivider(),
-      shinyDMDMenu::menuItem("Close", value="close"),
-      shinyDMDMenu::menuItem("Close All", value="closeAll"),
+      shinyDMDMenu::menuItem("Close File", value="close"),
+      shinyDMDMenu::menuItem("Close All Files", value="closeAll"),
       shinyDMDMenu::menuItem("Close Project", value="closeProject"),
       menuDivider(),
       shinyDMDMenu::menuItem("Quit", value="quit")
