@@ -83,6 +83,7 @@ buildLeftMenu<-function(version){
         shinyDMDMenu::menuItem(HTML("<li><a  href=\"https://www.w3.org/TR/SVG/intro.html\"  target=\"_blank\" >W3C SVG reference</a></li>"))
       ),
       shinyDMDMenu::menuItem("About", value="aboutCmd")
-    )
+    ), 
+    menuItem('project: none',value="project")
   )
 }

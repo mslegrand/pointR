@@ -270,6 +270,19 @@ output$fileName <- renderText({
   paste("Editing", fileName)
 })
 
+#----project---------------
+observeEvent( editOption$currentProjectName, {
+  if(length(editOption$currentProjectName)==0){
+    title='project: <none>'
+    disableDMDM(session, "editNavBar", 'closeProject')
+  } else {
+    title=paste0('project: ', editOption$currentProjectName)
+    enableDMDM(session, "editNavBar", 'closeProject')
+  }
+  renameDMDM(session, menuBarId="editNavBar", 
+                       entry='project', newLabel=title, newValue='project')
+  
+}, ignoreNULL = FALSE)
 # -----------ACE EDITOR------------------------
 
 

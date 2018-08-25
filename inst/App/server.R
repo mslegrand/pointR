@@ -70,7 +70,7 @@ shinyServer(function(input, output,session) {
   shinyFileChoose(input, "buttonPreProcPtImport",    session=session, roots=c(home="~"),  filetypes=c('preprocpts') ) #hidden
   shinyFileSave(input,   "buttonExportSVG",          session=session, roots=c(home="~")  ) #hidden
   shinyFileSave(input,   "buttonExportPreproc",      session=session, roots=c(homed="~") ) #hidden
-  
+  disableDMDM(session, "editNavBar", 'project')
 
 
 
