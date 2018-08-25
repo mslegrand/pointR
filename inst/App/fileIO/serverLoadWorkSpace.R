@@ -14,24 +14,25 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
   for(filePath in fileWSPaths){
     page<-readRDS(filePath)
     # A. assign tabIds to each page
-    id=getNextTabId()
-    # substitute value ending in tabId with id
-    tbid<-grep("tabId$", names(page))
-    page[tbid]<-id
+    # id=getNextTabId()
+    id=basename(filePath)
+    # # substitute value ending in tabId with id
+    # tbid<-grep("tabId$", names(page))
+    # page[tbid]<-id
     wsPages[[id]]<-page
   } 
   
-  # 2 remove filePath file
-  for(filePath in fileWSPaths){
-    file.remove(filePath)
-  }
-  
-  # 3 write pages
-  for(id in names(wsPages)){
-    newFilePath<-paste0(workSpaceDir,"/",id,".rda")
-    page<-wsPages[[id]]
-    saveRDS(object=page, file = newFilePath)
-  }
+  # # 2 remove filePath file
+  # for(filePath in fileWSPaths){
+  #   file.remove(filePath)
+  # }
+  # 
+  # # 3 write pages
+  # for(id in names(wsPages)){
+  #   newFilePath<-paste0(workSpaceDir,"/",id,".rda")
+  #   page<-wsPages[[id]]
+  #   saveRDS(object=page, file = newFilePath)
+  # }
   
   #4. iterate through pages and add to serverAssetDB$tib
   # --- serverAssetDB
