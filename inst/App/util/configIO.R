@@ -134,6 +134,20 @@ readOptionsJSON<-function(){
 
 defaultOpts<-readOptionsJSON()
 
+
+if(!is.null(getShinyOption("initialPointRProject"))){
+  initialPointRProject<-getShinyOption("initialPointRProject")
+  defaultOpts$currentProjectName=basename(initialPointRProject)
+  defaultOpts$currentProjectDirectory=dirname(initialPointRProject)
+}
+
+# if(!is.null(initialPointRProject)){
+#   defaultOpts$currentProjectDirectory=dirname(initialPointRProject ) 
+#   defaultOpts$currentProjectName=basename( initialPointRProject)
+# }
+
+
+
 toggleTabType<-function(type){
   tabType<-c("Use Soft Tabs", "Use Hard Tabs")
   indx<-which(type==tabType)
