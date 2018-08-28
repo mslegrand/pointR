@@ -12,7 +12,7 @@
 #  for the time being we just close
 closeCurrentProj<-function(){
   cat('>---> closeCurrentProj\n')
-  saveDnippetsFileNames()
+  saveDnippetsFileNames() 
   savePage(input$pages)
   addToRecentProjects(editOption$currentProjectDirectory, editOption$currentProjectName )
   # iterate throug open tabs and close

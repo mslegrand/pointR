@@ -15,3 +15,5 @@ observeEvent(input$buttonFileOpenProject,{
     openProj(projName, pathToProj)
   }
 })
+
+

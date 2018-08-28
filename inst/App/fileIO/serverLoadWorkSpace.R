@@ -8,7 +8,6 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
     return(FALSE)
   }
   wsPages<-list()
-  pages$tabIdCount<-1
   # browser()
   # 1. load all pages into a list.
   for(filePath in fileWSPaths){

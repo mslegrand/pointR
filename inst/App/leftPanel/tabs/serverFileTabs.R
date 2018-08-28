@@ -7,11 +7,10 @@ sendFileTabsMessage<-function(...){
   }
 }
 
-
+#tracks the naming for unnamed pages
 pages<- reactiveValues(
   fileName='',
-  fileNameCount=1,
-  tabIdCount=1
+  fileNameCount=1
 )
 
 
