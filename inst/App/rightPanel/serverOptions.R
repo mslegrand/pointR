@@ -7,8 +7,8 @@ editOption$.saved=TRUE
 #'  2 readDnippetsFileNames
 #'  3 restoreWorkSpace
 #'  4 savePage
-getWorkSpaceDir<-reactive({
-  cat('editOption$currentProjectName=', editOption$currentProjectName, "\n")
+getDirPath<-reactive({
+  cat('editOption$currentProjectName=',      editOption$currentProjectName, "\n")
   cat('editOption$currentProjectDirectory=', editOption$currentProjectDirectory, "\n")
   
   if(!is.null(editOption$currentProjectName) && !is.null(editOption$currentProjectDirectory)){
@@ -21,9 +21,15 @@ getWorkSpaceDir<-reactive({
   } else {
     dirPath<-optionDirPath()
   }
+  dirPath
+})
+
+getWorkSpaceDir<-reactive({
+  dirPath<-getDirPath()  
   resetShinyFilesIOPaths(dirPath)
   workSpaceDir<-file.path(dirPath,'workspace')
 })
+  
 
 # used by cmdFileExportSvg.R; serverEditBar.R; serverOptions.R
 getCurrentFile<-reactive({
