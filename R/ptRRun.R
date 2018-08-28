@@ -3,6 +3,7 @@
 #' @export
 ptRRun<-function(pointRProject=NULL){
   #clear out any noise
+  library(shiny)
   shinyOptions(initialPointRProject=pointRProject)
 
   
