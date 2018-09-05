@@ -45,7 +45,7 @@ observeEvent(input$messageFromAce, {
 
       
     }
-}, priority = 90, ignoreNULL = TRUE, ignoreInit = TRUE)
+}, priority = 90, ignoreNULL = TRUE, ignoreInit = TRUE, label='serverAce.R:: messageFromAce')
 
 
 
