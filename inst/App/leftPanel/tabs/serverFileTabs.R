@@ -21,8 +21,6 @@ pages<- reactiveValues(
 # }
 
 getNextTabId<-function(){
-  # tabId<-paste0("PTR-TABID", pages$tabIdCount)
-  # pages$tabIdCount<-pages$tabIdCount+1
   tabId<-basename(tempfile('PTR-TABID'))
   tabId
 }
