@@ -54,14 +54,14 @@ observeEvent(input$useTribble,{
     sender='useTibble'
     updateAceExtDef(newPtDefs, sender=sender)
   }
-})
+}, label= "useTribble")
 
 
 observeEvent(input$pages,{
   value<-getUseTribble()
   choice<-ifelse(value, "Tribble", "Tibble")
   updateAwesomeRadio(session, inputId="useTribble",  selected=choice)
-}, ignoreNULL = TRUE)
+}, ignoreNULL = TRUE, label='pages')
 
 
 

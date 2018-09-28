@@ -27,7 +27,7 @@ observe({
 #---commit  button----- 
 observeEvent(input$writeNOpen ,{
   setTabRequest(sender='buttonCmd.rmdViewer', tabs=input$pages)
-})
+}, label= "writeNOpen")
 
 
 

@@ -214,10 +214,11 @@ observeEvent( input$editNavBar, {
         # pathToProj<-path_rel(pathToProj, path_home() )
         openProj(projName, pathToProj )
       }
+      dirtyDMDM(session, "editNavBar")
       # cat('<---< recentProjects:\n')
     }
   }
-}) 
+}, label='editNavBar') 
 
 # keep file menu save uptodate
 observeEvent(getFileSavedStatus(),{

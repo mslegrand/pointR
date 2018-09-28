@@ -1,13 +1,15 @@
 
-restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
+restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir(), pprjPath=getProjectFullPath() ){
   cat('>---> restoreWorkSpace\n')
   
   fileWSPaths<-dir(workSpaceDir, pattern='PTR-TABID', full.names = T)
-
+  
   if(length(fileWSPaths)==0){
+    cat("workSpaceDir = ",format(workSpaceDir), "\n")
     return(FALSE)
   }
   wsPages<-list()
+  
   # browser()
   # 1. load all pages into a list.
   for(filePath in fileWSPaths){
@@ -20,7 +22,17 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
     # page[tbid]<-id
     wsPages[[id]]<-page
   } 
-  
+  # load project.pprj
+  # browser()
+  # if(length(pprjPath)>0){
+  #   pprj<-read_json(pprjPath)
+  #   if(!identical(pprj$pathToProj, getWorkSpaceDir())){
+  #     for(page in wsPages){
+  #       fp<-page$fileDescriptor.filePath
+  #       page$fileDescriptor.filePath<-gsub(getWorkSpaceDir(), pprj$pathToProj, fp)
+  #     }
+  #   }
+  # }
   # # 2 remove filePath file
   # for(filePath in fileWSPaths){
   #   file.remove(filePath)
@@ -167,6 +179,9 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir() ){
         value=tabId
       )
     )
+    if(!(tabId %in% serverAssetDB$tib$tabId) ){
+      stop('tabId=', tabId, 'not found in serverAssetDB$tib$tabId')
+    }
     restoreAssetState(tabId)
     updateTabsetPanel(session, inputId='pages', selected=tabId)
   }
