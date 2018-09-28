@@ -2,11 +2,13 @@
 editOption<-do.call(reactiveValues, defaultOpts)
 editOption$.saved=TRUE
 
+#' getDirPath returns the path to the project, or .ptR if no project
 #' used by 
 #'  1 saveDnippetsFileNames
 #'  2 readDnippetsFileNames
 #'  3 restoreWorkSpace
 #'  4 savePage
+#'  
 getDirPath<-reactive({
   cat('editOption$currentProjectName=',      editOption$currentProjectName, "\n")
   cat('editOption$currentProjectDirectory=', editOption$currentProjectDirectory, "\n")
@@ -24,10 +26,22 @@ getDirPath<-reactive({
   dirPath
 })
 
+observeEvent(getDirPath(),{
+  resetShinyFilesIOPaths(getDirPath())
+})
+
 getWorkSpaceDir<-reactive({
   dirPath<-getDirPath()  
-  resetShinyFilesIOPaths(dirPath)
-  workSpaceDir<-file.path(dirPath,'workspace')
+  workSpaceDir<-file.path(dirPath,'.workspace')
+})
+
+getProjectFullPath<-reactive({
+  if(!is.null(editOption$currentProjectName) && !is.null(editOption$currentProjectDirectory)){
+    #projName<-paste0(editOption$currentProjectName, ".pprj")
+    file.path(editOption$currentProjectDirectory, editOption$currentProjectName)
+  } else {
+    NULL
+  }
 })
   
 
@@ -152,13 +166,12 @@ observeEvent( editOption$recentProjects ,{
   # cat('recent Projects:\n')
   # print(rp)
   removeDMDM( session=session, menuBarId="editNavBar", entry=rplabel)
-  cat('recent Projects:  1\n')
+  # cat('recent Projects:  1\n')
   # remove any non-existing entries
   rp<-rp[file.exists(rp)]
   #add back
-  cat('recent Projects:  2\n')
+  #cat('recent Projects:  2\n')
   if(length(rp)>0){ 
-    
     values<-paste('recentProj',rp,sep="-")
     labels<-rp
     
@@ -172,7 +185,7 @@ observeEvent( editOption$recentProjects ,{
     #   print(submenu[[i]])
     # }
     insertAfterDMDM(session, menuBarId = "editNavBar", entry="openProject", submenu= submenu)
-    cat('recent Projects:  7\n')
+    #cat('recent Projects:  7\n')
   }
   cat('<---< observeEvent::editOption$recentProjects\n')
 })

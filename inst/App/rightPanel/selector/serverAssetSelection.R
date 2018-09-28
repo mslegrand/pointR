@@ -19,6 +19,8 @@ selectedAsset <- reactiveValues(
 )
 
 
+
+
 getSelIndex<-reactive({
   selectedAsset$selIndex
 })
@@ -27,7 +29,7 @@ observeEvent(getTibNRow(),{
   if(identical(getMode(),'ptR') && length(names(getPtDefs()$tib))>0 ){
     sendPtRManagerMessage(  sender='tibNrow', rowCountChange=TRUE)
   }
-})
+}, label='serverAssetSelection:: getTibNRow()')
 
 getAssetName<-reactive({selectedAsset$name}) #allow to be null only if tib is null  
 getTibTabId<-reactive({ selectedAsset$tabId})

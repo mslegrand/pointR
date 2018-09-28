@@ -64,6 +64,8 @@ observeEvent( input$editNavBar, {
     if(fileCmd=="closeProject"){
       #cat(' fileCmd=="closeAll" \n')
       closeCurrentProj()
+      editOption$currentProjectDirectory<-NULL
+      editOption$currentProjectName<-NULL
       dirtyDMDM(session, "editNavBar")
       delay(500, {request$sender='startup'})
     }
@@ -197,6 +199,7 @@ observeEvent( input$editNavBar, {
       name<-sub("recentProj-","",fileCmd)
       #cat('>---> recentProjects: name=', format(name),"\n")
       #if file fails to exist remove
+      dirtyDMDM(session, "editNavBar")
       if(!file.exists(name)){
         # remove from projects
         #send alert message 
@@ -204,22 +207,16 @@ observeEvent( input$editNavBar, {
         rf<-editOption$recentProjects
         rf<-rf[-which(rf==name)]
         editOption$recentProjects<-rf
-        dirtyDMDM(session, "editNavBar")
       } else {
         projName<-basename(name)
         pathToProj<-dirname(name)
-        #pathToProj<-path_rel(pathToProj, path_home() )
-        dirtyDMDM(session, "editNavBar")
+        cat('recentFiles:: pathToProj', format(pathToProj),"\n")
+        # pathToProj<-path_rel(pathToProj, path_home() )
         openProj(projName, pathToProj )
       }
       # cat('<---< recentProjects:\n')
-      
     }
-    
-    
-    
   }
-  
 }) 
 
 # keep file menu save uptodate

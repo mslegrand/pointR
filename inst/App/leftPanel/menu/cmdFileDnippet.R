@@ -7,6 +7,7 @@ cmdDnippetImport<-function(){
 # then calls addDrippets to add to drippet toolbar
 loadDndSnippets<-function(datapath, startup=FALSE){
   cat('>---> loadDndSnippets\n')
+  # browser()
   dnippetText<-paste(readLines(datapath), collapse = "\n")
   dnippetList<-dripplets2List2(dnippetText) # contains hint, snippet, logo where logo has been processed into SVG
   dnippets<-getDnippets4ToolBar(dnippetList) # minor reshape
@@ -15,10 +16,10 @@ loadDndSnippets<-function(datapath, startup=FALSE){
   # adds to selection
   #The first 2 are almost the same thing, recording path and dname
   add2DnippetsSelectionAll( dnName, dnippets )
-  add2DnippetDBPath(dnName, datapath )
+  add2DnippetDBPath( dnName, datapath )
   #This sets the dname default value for existing pages (no effect on pages not yet loaded)
-  if(!identical(startup,TRUE)){
-    add2DnippetChoices(dnName, TRUE)
+  if( !identical( startup, TRUE ) ){
+    add2DnippetChoices( dnName, TRUE )
   }
   
   cat('<---< loadDndSnippets\n')

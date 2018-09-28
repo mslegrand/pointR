@@ -1,9 +1,10 @@
 
 processMssgFromAceMssgPageIn<-function(sender, mssg){
-
+    cat('>---> processMssgFromAceMssgPageIn\n')
     processCommit() # this sets the sourceType
-    # cat("sender = ", format(sender),"\n")
-    # cat("assetName = ", format(getAssetName()),"\n")
+    cat("sender = ", format(sender),"\n")
+    cat("assetName = ", format(getAssetName()),"\n")
+    cat('about to fry\n')
     if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset') && !is.null(getAssetName())){ 
       #if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset', 'cmd.saveFileNow') && !is.null(getAssetName())){ 
       if(sender=='cmd.add.asset'){
@@ -13,28 +14,34 @@ processMssgFromAceMssgPageIn<-function(sender, mssg){
         # cat('getAssetName()=', format(getAssetName()), "\n")
       }
       tibs<-getPtDefs()$tib
-      # cat('name=',format(name),"\n")
-      # cat("ace invoking resetSelectedTibbleName\n")
-      # cat('names of tibs:',format(names(tibs)), "!\n")
+      cat('name=',format(name),"\n")
+      cat("ace invoking resetSelectedTibbleName\n")
+      cat('names of tibs:',format(names(tibs)), "!\n")
       resetSelectedTibbleName(tibs=tibs, name=name)
     } else { 
       
       tttid<-input$pages;
+      cat('hhh\n')
       if(length(input$pages) >0 && 
          nchar(input$pages)>0 && 
          !identical(selectedAsset$tabId, input$pages) 
       ){
-        #cat('storeAssetState\n')
+        cat('--storeAssetState\n')
         storeAssetState()
-        #cat("restoreAssetState\n")
+        cat("--restoreAssetState\n")
+        # browser()
         restoreAssetState(input$pages)
+        cat('--savePage\n')
+        # browser()
         savePage(input$pages) # require for new page that was not committed
         
       } else{
+        # browser() # browser here disrupts the rendering.
         # cat('hello world\n')
         # cat( "length(input$pages)=" ,  length(input$pages), "\n")
         # cat( "format(input$pages)=" ,  format(tttid), "\n")
       }
+      cat('<---< processMssgFromAceMssgPageIn\n')
       # end assetUpdate:
     }
 }
