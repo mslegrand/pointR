@@ -40,10 +40,12 @@ initResourcePaths <- function() {
 # }
 
 
-r_pkgs<-c('shiny','shinyjs', 'R.utils', 'svgR', 'shinyAce', 'stringr', 'jsonlite', 'fs',
+
+sapply(
+       c('shiny','shinyjs', 'R.utils', 'svgR', 'shinyAce', 'stringr', 'jsonlite', 'fs',
           'shinyDMDMenu', 'shinyFiles', 'shinythemes', 'colourpicker', 'shinyWidgets', 
-          'bsplus','shinyjqui', 'knitr', 'tidyverse')
-sapply(r_pkgs, library, character.only=TRUE)
+          'bsplus','shinyjqui', 'knitr', 'tidyverse'), 
+       library, character.only=TRUE)
 
 #library("RColorBrewer")
 # options(shiny.error = recover)
