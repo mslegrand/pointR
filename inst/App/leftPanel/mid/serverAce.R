@@ -49,7 +49,7 @@ cat(">----> messageFromAce\n")
           )
       ){
         # cat('kkkk\n')
-        # processMssgFromAceMssgPageOut(sender, input$messageFromAce) 
+        processMssgFromAceMssgPageOut(sender, input$messageFromAce) 
       }
       # cat('sender=',format(input$messageFromAce$sender),'\n')
       # cat('llll\n')
