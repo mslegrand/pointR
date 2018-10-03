@@ -1,10 +1,12 @@
 
   modes2filetypes=list(ptr="R",ptrrmd="Rmd",text="txt", snippets="snippets", dnippets="dnippets")
+  #modes2filetypes=list(ptrrmd="Rmd",text="txt", snippets="snippets", dnippets="dnippets")
   
   getExtenstionList<-function(ext){
     tmp<-modes2filetypes
     names(tmp)<-unlist(tmp)
     tmp<-c(tmp[tmp==ext], tmp[tmp!=ext], '*'="")
+    # tmp<-c(tmp[tmp==ext])
     tmp
   }
   
@@ -13,6 +15,8 @@
   
   saveButtonFileNames<-paste0('buttonFileSave', modes2filetypes)
   names(saveButtonFileNames )<-names(modes2filetypes )
+  
+  saveButtonFileNames2<-saveButtonFileNames[-1]
   
   genShinySaveFilesButtons<-function(){
     saveButtonFileTypes<-names(type2ExtensionList)

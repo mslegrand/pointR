@@ -47,6 +47,7 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir(), pprjPath=getProjectF
   
   #4. iterate through pages and add to serverAssetDB$tib
   # --- serverAssetDB
+  # browser()
   tib<-serverAssetDB$tib
   pattern<-"^assetSelection."
   for(page in wsPages){

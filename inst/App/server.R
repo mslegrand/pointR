@@ -56,8 +56,41 @@ shinyServer(function(input, output,session) {
         print(newDir)
         cat('\n\n------currentDir=------------------------------------------------\n')
         print(currentDir)
-        session$sendCustomMessage("shinyFiles", list(id = id, 
-                                                     dir = newDir))
+        session$sendCustomMessage("shinyFiles", list(id = id,  dir = newDir))
+      }
+      invalidateLater(updateFreq, session)
+    }))
+  }
+  
+  
+  shinyFileSaveX<-function (input, id, updateFreq = 2000, session = getSession(), 
+            ...) 
+  {
+    #fileGet <- do.call("fileGetter", list(...))
+    fileGet <- do.call(shinyFiles:::fileGetter, list(...))
+    #dirCreate <- do.call("dirCreator", list(...))
+    dirCreate <- do.call(shinyFiles:::dirCreator, list(...))
+    currentDir <- list()
+    lastDirCreate <- NULL
+    return(observe({
+      dir <- input[[paste0(id, "-modal")]]
+      createDir <- input[[paste0(id, "-newDir")]]
+      if (!identical(createDir, lastDirCreate)) {
+        dirCreate(createDir$name, createDir$path, createDir$root)
+        dir$path <- c(dir$path, createDir$name)
+        lastDirCreate <<- createDir
+      }
+      if (is.null(dir) || is.na(dir)) {
+        dir <- list(dir = "")
+      } else {
+        dir <- list(dir = dir$path, root = dir$root)
+      }
+      dir$dir <- do.call(file.path, as.list(dir$dir))
+      newDir <- do.call(shinyFiles:::fileGetter, dir)
+      if (!identical(currentDir, newDir) && newDir$exist) {
+        currentDir <<- newDir
+        cat('newDir==',newDir,"\n")
+        session$sendCustomMessage("shinySave", list(id = id, dir = newDir))
       }
       invalidateLater(updateFreq, session)
     }))
@@ -69,8 +102,18 @@ shinyServer(function(input, output,session) {
   shinyFileChoose(input, "buttonDnippetImport",      session=session, roots=c(home="~"),  filetypes=c('dnippets') ) #hidden
   shinyFileChoose(input, "buttonPreProcPtImport",    session=session, roots=c(home="~"),  filetypes=c('preprocpts') ) #hidden
   shinyFileSave(input,   "buttonExportSVG",          session=session, roots=c(home="~")  ) #hidden
-  shinyFileSave(input,   "buttonExportPreproc",      session=session, roots=c(homed="~") ) #hidden
+  shinyFileSave(input,   "buttonExportPreproc",      session=session, roots=c(home="~") ) #hidden
+  
+  # shinyFileSave(input, "buttonFileSaveR",            session=session, roots=c(home="~")  ) #hidden
+  # shinyFileSave(input, "buttonFileSaveRmd" ,         session=session, roots=c(home="~"))
+  # shinyFileSave(input, "buttonFileSavetxt" ,         session=session, roots=c(home="~"))
+  # shinyFileSave(input, "buttonFileSavesnippets" ,    session=session, roots=c(home="~"))
+  # shinyFileSave(input, "buttonFileSavednippets" ,    session=session, roots=c(home="~"))
   disableDMDM(session, "editNavBar", 'project')
+  
+  # lapply(unname(saveButtonFileNames), function(n){
+  #   shinyFileSave(input, n,   session=session, roots=c(wd="~"))
+  # })
 
 
 

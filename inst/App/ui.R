@@ -54,13 +54,13 @@ shinyUI(
         class="split-pane-component", 
         #-------left bootstrapPage begin ---------
         bootstrapPage( 
-          
+          genShinyOpenFilesButtons(),
+          genShinySaveFilesButtons(),
           #-----left menu begin---------------
           buildLeftMenu(version),
           #-------left menu end------------
           #-------left content begin--------
-          genShinyOpenFilesButtons(),
-          genShinySaveFilesButtons(),
+
           div( id='aceTabSet', class="container",
                tabsetPanel(id='pages')
           ),

@@ -1,7 +1,7 @@
 
 genShinySaveFilesServerConnection<-function(input, session){
   lapply(saveButtonFileNames, function(n){
-    shinyFileSave(input, n,   session=session, roots=c(wd="~") )
+    shinyFileSave(input, n,   session=session, roots=c(home="~") )
   })
 }
 
@@ -23,7 +23,7 @@ genShinySaveFilesObservers<-function(input, session){
           #cat('=======shinyFiles SAVE observer=============\n')
           
           datapath<-as.character(fp.dt$datapath[1])
-          
+          datapath<-gsub(pattern = '^NA/', "~/", datapath)
           # TODO!!!  add oldPath to recentFiles (this assumes that we can do a saveAs)
           #  The safest time is after the file has been saved under the new path, but that
           #  means the old filePath needs to be kept just a little longer ...

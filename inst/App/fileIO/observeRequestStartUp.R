@@ -20,6 +20,7 @@ observeEvent(request$sender,{
       menuBarId="editNavBar", 
       entry="customControl"
     )
+    resetShinyFilesIOPaths(getDirPath()) #lets just force this to happen
     #dirtyDMDM(session, "editNavBar")
     cat("<---< request startup\n")
   }

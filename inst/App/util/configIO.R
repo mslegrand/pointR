@@ -108,8 +108,6 @@ toggleTabType<-function(type){
 }
 
 
-
-
 readTemplate<-function(name="rTemplate.R"){
   path<-find.package('pointR')
   templateFilePath<-filePath(path, "App","templates",name)

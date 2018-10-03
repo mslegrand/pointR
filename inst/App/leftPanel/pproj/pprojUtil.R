@@ -66,7 +66,7 @@ setSfDir<-function(sf_id, path, root="home"){
       '],"root":"home"});'
     )
   }
-  # cat(jscode,"\n")
+   cat(jscode,"\n")
   jscode
 }
 
@@ -81,7 +81,7 @@ resetShinyFilesIOPaths<-function(pathToProj){
   
   cat('pathToProj=', format(pathToProj),"\n")
   
-  fileIOIds<-c("buttonFileOpen", "buttonSnippetImport","buttonDnippetImport",
+  fileIOIds<-c("buttonFileOpen", "buttonSnippetImport","buttonDnippetImport", "buttonFileSaveR",
                "buttonPreProcPtImport","buttonExportSVG","buttonExportPreproc")
   # first set to root
   for(id in c(fileIOIds, saveButtonFileNames)){
@@ -91,7 +91,8 @@ resetShinyFilesIOPaths<-function(pathToProj){
   Sys.sleep(.3)
   # next set to pathToProj
   for(id in c(fileIOIds, saveButtonFileNames)){
-    jscode<-setSfDir(id, pathToProj)
+    jscode<-setSfDir(id, path=pathToProj)
+    #cat('resetting id=',id,' to path=', pathToProj, "\n")
     runjs(jscode)
   }
   cat( "<---< resetShinyFilesIOPaths\n")
