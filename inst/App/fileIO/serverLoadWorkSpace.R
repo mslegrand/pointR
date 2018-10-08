@@ -1,16 +1,15 @@
 
 restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir(), pprjPath=getProjectFullPath() ){
-  cat('>---> restoreWorkSpace\n')
+  # cat('>---> restoreWorkSpace\n')
   
   fileWSPaths<-dir(workSpaceDir, pattern='PTR-TABID', full.names = T)
   
   if(length(fileWSPaths)==0){
-    cat("workSpaceDir = ",format(workSpaceDir), "\n")
+    # cat("workSpaceDir = ",format(workSpaceDir), "\n")
     return(FALSE)
   }
   wsPages<-list()
   
-  # browser()
   # 1. load all pages into a list.
   for(filePath in fileWSPaths){
     page<-readRDS(filePath)
@@ -23,7 +22,7 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir(), pprjPath=getProjectF
     wsPages[[id]]<-page
   } 
   # load project.pprj
-  # browser()
+ 
   # if(length(pprjPath)>0){
   #   pprj<-read_json(pprjPath)
   #   if(!identical(pprj$pathToProj, getWorkSpaceDir())){
@@ -47,7 +46,6 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir(), pprjPath=getProjectF
   
   #4. iterate through pages and add to serverAssetDB$tib
   # --- serverAssetDB
-  # browser()
   tib<-serverAssetDB$tib
   pattern<-"^assetSelection."
   for(page in wsPages){
@@ -123,7 +121,6 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir(), pprjPath=getProjectF
       tibAs<-page[asi]
       tn<-gsub(pattern, '', names(tibAs))
       names(tibAs)<-tn
-      # tibAs<-as.tibble(tibAs)
       tib<-bind_rows(tib, tibAs)
     }
   }
@@ -134,13 +131,9 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir(), pprjPath=getProjectF
     tabId=page$fileDescriptor.tabId
     
     aceId<-tabID2aceID(tabId)
-    
     mode=page$fileDescriptor.mode
-    
     docFilePath=page$fileDescriptor.filePath
-    
     fileSaveStatus=page$fileDescriptor.isSaved 
-    
     txt=page$code
     
     if(!identical(docFilePath, "?")){
@@ -195,9 +188,7 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir(), pprjPath=getProjectF
       
       if(is.null(tabId)){ browser() }
       addNewPage2dnippetsDB(tabId)
-      # cat('#18 restoreWorkSpace\n')
       sendFileTabsMessage(resize=runif(1), tabId=tabId, savedStatus= savedStatus)
-      # cat('#19 restoreWorkSpace\n')
     }
   })
   # cat('<---< restoreWorkSpace\n')
