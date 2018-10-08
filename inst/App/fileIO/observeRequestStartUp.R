@@ -1,20 +1,18 @@
 observeEvent(request$sender,{
   if(identical(request$sender,'startup')){ 
-    cat(">---> request startup\n")
-    #Todo: make this workspace dependent
-    # cat(">---> startup")
-    cat('readDnippetsFileNames\n')
+    #cat(">---> request startup\n")
+    # cat('readDnippetsFileNames\n')
     readDnippetsFileNames()
-    cat('now to saveDnippetsFileNames\n')
+    # cat('now to saveDnippetsFileNames\n')
     saveDnippetsFileNames()
-    cat('now to restoreWorkSpace\n')
+    # cat('now to restoreWorkSpace\n')
     success<-restoreWorkSpace()
-    cat('success=',format(success),"\n")
+    # cat('success=',format(success),"\n")
     if(!success){
-      cat('now to cmdFileNewPtR\n')
+      # cat('now to cmdFileNewPtR\n')
       cmdFileNewPtR()
     } 
-    cat('now to disableDMD\n')
+    # cat('now to disableDMD\n')
     disableDMDM(
       session, 
       menuBarId="editNavBar", 
@@ -22,6 +20,6 @@ observeEvent(request$sender,{
     )
     resetShinyFilesIOPaths(getDirPath()) #lets just force this to happen
     #dirtyDMDM(session, "editNavBar")
-    cat("<---< request startup\n")
+    # cat("<---< request startup\n")
   }
 }, priority=100)
