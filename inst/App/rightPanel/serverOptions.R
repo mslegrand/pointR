@@ -10,8 +10,8 @@ editOption$.saved=TRUE
 #'  4 savePage
 #'  
 getDirPath<-reactive({
-  cat('editOption$currentProjectName=',      editOption$currentProjectName, "\n")
-  cat('editOption$currentProjectDirectory=', editOption$currentProjectDirectory, "\n")
+  # cat('editOption$currentProjectName=',      editOption$currentProjectName, "\n")
+  # cat('editOption$currentProjectDirectory=', editOption$currentProjectDirectory, "\n")
   
   if(!is.null(editOption$currentProjectName) && !is.null(editOption$currentProjectDirectory)){
     dirPath<-editOption$currentProjectDirectory

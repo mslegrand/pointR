@@ -1,6 +1,6 @@
 
 observeEvent(input$messageFromAce, {
-cat(">----> messageFromAce\n")
+# cat(">----> messageFromAce\n")
     if(
       length(input$messageFromAce$code)>0 &&
       length(input$messageFromAce$sender)>0
@@ -54,7 +54,7 @@ cat(">----> messageFromAce\n")
       # cat('sender=',format(input$messageFromAce$sender),'\n')
       # cat('llll\n')
     }
-  cat("<----< messageFromAce\n")
+  # cat("<----< messageFromAce\n")
 }, priority = 90, ignoreNULL = TRUE, ignoreInit = TRUE, label='messageFromAce')
 
 
