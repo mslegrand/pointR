@@ -8,12 +8,7 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
       tabId<-aceID2TabID(id)
       ext<-mode2pathExt( getMode() )
       ext<-shinyFiles:::formatFiletype(ext)
-      # if(identical(getMode(),"ptr")){
-      #   target<-"buttonFileSaveR"
-      # } else {
-        target<-saveButtonFileNames[[getMode()]]
-      # }
-      
+      target<-saveButtonFileNames[[getMode()]]
       sendPtRManagerMessage( sender=sender, saveFile=TRUE,  target=target, tabId=tabId ) #triggers shinyFiles
     } else { # has legitmate path
       # write file
