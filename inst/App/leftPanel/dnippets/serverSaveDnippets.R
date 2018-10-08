@@ -9,7 +9,6 @@ readDnippetsFileNames<-function(path=getWorkSpaceDir()){
   fileName=paste0(path,"/loadedDnippets.rda")
   if(file.exists(fileName)){
     tb<-readRDS(file = fileName)
-    #1. need the names to be unique
     fullpaths=unique(tb$fullpath)
   } else {
     fullpaths<-NULL
@@ -21,6 +20,6 @@ readDnippetsFileNames<-function(path=getWorkSpaceDir()){
   for(fp in fullpaths){
     loadDndSnippets(fp, startup=TRUE)
   }
-  #2. need to load each.
+  
   
 }

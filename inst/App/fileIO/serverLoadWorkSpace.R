@@ -105,7 +105,6 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir(), pprjPath=getProjectF
       tibAs<-page[asi]
       tn<-gsub(pattern, '', names(tibAs))
       names(tibAs)<-tn
-      # tibAs<-as.tibble(tibAs)
       tib<-bind_rows(tib, tibAs)
     }
   }
