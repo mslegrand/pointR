@@ -3,12 +3,13 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir(), pprjPath=getProjectF
   # cat('>---> restoreWorkSpace\n')
   
   fileWSPaths<-dir(workSpaceDir, pattern='PTR-TABID', full.names = T)
-  
   if(length(fileWSPaths)==0){
     # cat("workSpaceDir = ",format(workSpaceDir), "\n")
     return(FALSE)
   }
   wsPages<-list()
+  
+
   
   # 1. load all pages into a list.
   for(filePath in fileWSPaths){
@@ -45,85 +46,173 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir(), pprjPath=getProjectF
   # }
   
   #4. iterate through pages and add to serverAssetDB$tib
-  # --- serverAssetDB
-  tib<-serverAssetDB$tib
-  pattern<-"^assetSelection."
-  for(page in wsPages){
-    tibAs<-page[ grep(pattern, names(page)) ]
-    names(tibAs)<-gsub(pattern, '', names(tibAs))
-    tib<-bind_rows(tib, tibAs)
-  }
-  serverAssetDB$tib<-tib
   
-  # --- backDropDB
-  tib<-backDropDB()
-  pattern<-"^backdrop."
-  for(page in wsPages){
-    tibAs<-page[ grep(pattern, names(page)) ]
-    names(tibAs)<-gsub(pattern, '', names(tibAs))
-    tib<-bind_rows(tib, tibAs)
-  }
+  # # --- serverAssetDB
+  # tib<-NULL #serverAssetDB$tib
+  # pattern<-"^assetSelection."
+  # for(page in wsPages){
+  #   tibAs<-page[ grep(pattern, names(page)) ]
+  #   names(tibAs)<-gsub(pattern, '', names(tibAs))
+  #   tibAs[sapply(tibAs,is.null)]<-NA
+  #   tryCatch({tib<-bind_rows(tib, tibAs)}, error=function(e){
+  #     # if(inherits( tib, 'tbl_df')){ 
+  #     #   cat('glimpse\n')
+  #     #   glimpse(tib )
+  #     #   cat("ncol(tib)=",ncol(tib),"\n")
+  #     #   #cat(names('names(tib)=', paste(names(tib),collapse=","), "\n"))
+  #     #   cat("nrow(tib)=",nrow(tib),"\n")
+  #     # } else { print(format(tib))}
+  #     # cat("class(tibAs) =" , class(tibAs), "\n")
+  #     # print('tibAs=')
+  #     # print(format(tibAs))
+  #     # cat("names(tibAs)=",names(tibAs),"\n")
+  #     e<-c(e,"\n", traceback())
+  #     stop(e)
+  #   })
+  # }
+  # serverAssetDB$tib<-tib
+  # 
+  # # --- backDropDB
+  # tib<-backDropDB()
+  # pattern<-"^backdrop."
+  # for(page in wsPages){
+  #   tibAs<-page[ grep(pattern, names(page)) ]
+  #   names(tibAs)<-gsub(pattern, '', names(tibAs))
+  #   tryCatch({tib<-bind_rows(tib, tibAs)}, error=function(e){
+  #     print(pattern)
+  #     print(format(tib))
+  #     print(format(tibAs))
+  #     e<-c(e,traceback())
+  #     stop(e)
+  #   })
+  # }
+  # backDropDB(tib)
+  # 
+  # # ---grid---
+  # tib<-svgGridDB()
+  # pattern<-"^grid."
+  # for(page in wsPages){
+  #   tibAs<-page[ grep(pattern, names(page)) ]
+  #   names(tibAs)<-gsub(pattern, '', names(tibAs))
+  #   tryCatch({tib<-bind_rows(tib, tibAs)}, error=function(e){
+  #     print(pattern)
+  #     print(format(tib))
+  #     print(format(tibAs))
+  #     e<-c(e,traceback())
+  #     stop(e)
+  #   })
+  # }
+  # svgGridDB(tib)
+  # 
+  # #--- tribbleDB
+  # tib<-useTribbleFormatDB()
+  # pattern<-"^trib."
+  # for(page in wsPages){
+  #   tibAs<-page[ grep(pattern, names(page)) ]
+  #   names(tibAs)<-gsub(pattern, '', names(tibAs))
+  #   tryCatch({tib<-bind_rows(tib, tibAs)}, error=function(e){
+  #     print(pattern)
+  #     print(format(tib))
+  #     print(format(tibAs))
+  #     e<-c(e,traceback())
+  #     stop(e)
+  #   })
+  # }
+  # useTribbleFormatDB(tib)
+  # 
+  # #--- dnippetsDB
+  # tib<-dnippetsDB$usage
+  # pattern<-"^dnip."
+  # for(page in wsPages){
+  #   tibAs<-page[ grep(pattern, names(page)) ]
+  #   names(tibAs)<-gsub(pattern, '', names(tibAs))
+  #   tryCatch({tib<-bind_rows(tib, tibAs)}, error=function(e){
+  #     print(pattern)
+  #     print(format(tib))
+  #     print(format(tibAs))
+  #     e<-c(e,traceback())
+  #     stop(e)
+  #   })
+  # }
+  # dnippetsDB$usage<-tib
+  # 
+  # # --- preProcDB
+  # tib<-preProcDB$points
+  # pattern<-"^preprocScripts."
+  # for(page in wsPages){
+  #   # extract the serverAsset portion and add
+  #   asi<-grep(pattern, names(page))
+  #   if(length(asi)>0){
+  #     tibAs<-page[asi]
+  #     tn<-gsub(pattern, '', names(tibAs))
+  #     names(tibAs)<-tn
+  #     tryCatch({tib<-bind_rows(tib, tibAs)}, error=function(e){
+  #       print(pattern)
+  #       print(format(tib))
+  #       print(format(tibAs))
+  #       e<-c(e,traceback())
+  #       stop(e)
+  #     })
+  #   }
+  # }
+  # preProcDB$points<-tib
+  # 
+  # # ------- fileDescDB
+  # tib<-fileDescDB()
+  # pattern<-"^fileDescriptor."
+  # for(page in wsPages){
+  #   # extract the serverAsset portion and add
+  #   asi<-grep(pattern, names(page))
+  #   if(length(asi)>0){
+  #     tibAs<-page[asi]
+  #     tn<-gsub(pattern, '', names(tibAs))
+  #     names(tibAs)<-tn
+  #     tryCatch({tib<-bind_rows(tib, tibAs)}, error=function(e){
+  #       print(pattern)
+  #       print(format(tib))
+  #       print(format(tibAs))
+  #       e<-c(e,"\n",traceback())
+  #       stop(e)
+  #     })
+  #   }
+  # }
+  # fileDescDB(tib)
+  
+  
+  extractDBFromPages<-function(wsPages, pattern, initTib){
+    for(page in wsPages){
+      tibAs<-page[ grep(pattern, names(page)) ]
+      if(length(tibAs)>0){
+        names(tibAs)<-gsub(pattern, '', names(tibAs))
+        tibAs[sapply(tibAs,is.null)]<-NA
+        tryCatch({initTib<-bind_rows(initTib, tibAs)}, error=function(e){
+          stop('failure with pattern=',pattern, "and page=\n")
+        })
+      }
+    }
+    return(initTib)
+  }  
+ 
+  serverAssetDB$tib<-extractDBFromPages(wsPages, "^assetSelection.", initTib=initialServerAsset() )
+  
+  tib<-extractDBFromPages(wsPages, "^backdrop.", initTib=initialBackDropDB() )
   backDropDB(tib)
   
-  # ---grid---
-  tib<-svgGridDB()
-  pattern<-"^grid."
-  for(page in wsPages){
-    tibAs<-page[ grep(pattern, names(page)) ]
-    names(tibAs)<-gsub(pattern, '', names(tibAs))
-    tib<-bind_rows(tib, tibAs)
-  }
+  tib<-extractDBFromPages(wsPages, "^grid.", initTib=initialSvgGridDB()  )
   svgGridDB(tib)
   
-  #--- tribbleDB
-  tib<-useTribbleFormatDB()
-  pattern<-"^trib."
-  for(page in wsPages){
-    tibAs<-page[ grep(pattern, names(page)) ]
-    names(tibAs)<-gsub(pattern, '', names(tibAs))
-    tib<-bind_rows(tib, tibAs)
-  }
+  tib<-extractDBFromPages(wsPages, "^trib.", initTib=initialTribbleDB())
   useTribbleFormatDB(tib)
   
-  #--- dnippetsDB
-  tib<-dnippetsDB$usage
-  pattern<-"^dnip."
-  for(page in wsPages){
-    tibAs<-page[ grep(pattern, names(page)) ]
-    names(tibAs)<-gsub(pattern, '', names(tibAs))
-    tib<-bind_rows(tib, tibAs)
-  }
-  dnippetsDB$usage<-tib
+  dnippetsDB$usage<-extractDBFromPages(wsPages, "^dnip.", initTib=tibble(tabId='bogus')[0,] )
   
-  # --- preProcDB
-  tib<-preProcDB$points
-  pattern<-"^preprocScripts."
-  for(page in wsPages){
-    # extract the serverAsset portion and add
-    asi<-grep(pattern, names(page))
-    if(length(asi)>0){
-      tibAs<-page[asi]
-      tn<-gsub(pattern, '', names(tibAs))
-      names(tibAs)<-tn
-      tib<-bind_rows(tib, tibAs)
-    }
-  }
-  preProcDB$points<-tib
+  preProcDB$points<-extractDBFromPages(wsPages, "^preprocScripts.", initTib=initialPreprocDB())
   
-  # ------- fileDescDB
-  tib<-fileDescDB()
-  pattern<-"^fileDescriptor."
-  for(page in wsPages){
-    # extract the serverAsset portion and add
-    asi<-grep(pattern, names(page))
-    if(length(asi)>0){
-      tibAs<-page[asi]
-      tn<-gsub(pattern, '', names(tibAs))
-      names(tibAs)<-tn
-      tib<-bind_rows(tib, tibAs)
-    }
-  }
+  tib<-extractDBFromPages(wsPages, "^fileDescriptor.", initTib=initialFileDescDB() )
   fileDescDB(tib)
+  
+  
+  
   
   for(page in wsPages){
     # extract the serverAsset portion and add
@@ -173,6 +262,7 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir(), pprjPath=getProjectF
       )
     )
     if(!(tabId %in% serverAssetDB$tib$tabId) ){
+      browser()
       stop('tabId=', tabId, 'not found in serverAssetDB$tib$tabId')
     }
     restoreAssetState(tabId)

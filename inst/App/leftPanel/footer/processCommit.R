@@ -18,8 +18,8 @@ processCommit<-reactive({
     return(NULL)
    # mode='ptr'
   }
-  # cat("class(mode)=" ,class(mode),"\n")
-  # cat('ProcessCommit: mode=',format(mode),"\n")
+  #cat("class(mode)=" ,class(mode),"\n")
+  #cat('ProcessCommit: mode=',format(mode),"\n")
   if( identical(mode, 'ptr')){
     processSvgR()
   } else if(  identical(mode, 'ptrrmd') ){
