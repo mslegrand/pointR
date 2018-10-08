@@ -11,14 +11,12 @@
 # - observeEvent of *customFileDialog*
 #  for the time being we just close
 closeCurrentProj<-function(){
-  cat('>---> closeCurrentProj\n')
+  # cat('>---> closeCurrentProj\n')
   saveDnippetsFileNames() 
   savePage(input$pages)
   # browser()
   if(!is.null(editOption$currentProjectName)){
     addToRecentProjects(editOption$currentProjectDirectory, editOption$currentProjectName )
-    # editOption$currentProjectDirectory<-NULL
-    # editOption$currentProjectName<-NULL
   }
   # iterate throug open tabs and close
   # addToRecentFiles(mssg$docFilePath)
@@ -46,7 +44,7 @@ closeCurrentProj<-function(){
   useTribbleFormatDB( initialTribbleDB() )
   backDropDB( initialBackDropDB() )
   svgGridDB( initialSvgGridDB() )
-  cat('<---< closeCurrentProj\n')
+  # cat('<---< closeCurrentProj\n')
 }
 
 setSfDir<-function(sf_id, path, root="home"){
@@ -66,12 +64,12 @@ setSfDir<-function(sf_id, path, root="home"){
       '],"root":"home"});'
     )
   }
-   cat(jscode,"\n")
+   # cat(jscode,"\n")
   jscode
 }
 
 resetShinyFilesIOPaths<-function(pathToProj){
-  cat( ">---> resetShinyFilesIOPaths\n")
+  # cat( ">---> resetShinyFilesIOPaths\n")
   if( identical(pathToProj, optionDirPath())){
     pathToProj<-path_home()
   } else {
@@ -79,7 +77,7 @@ resetShinyFilesIOPaths<-function(pathToProj){
     pathToProj<-paste0("~/",pathToProj)
   }
   
-  cat('pathToProj=', format(pathToProj),"\n")
+  # cat('pathToProj=', format(pathToProj),"\n")
   
   fileIOIds<-c("buttonFileOpen", "buttonSnippetImport","buttonDnippetImport", "buttonFileSaveR",
                "buttonPreProcPtImport","buttonExportSVG","buttonExportPreproc")
@@ -92,10 +90,9 @@ resetShinyFilesIOPaths<-function(pathToProj){
   # next set to pathToProj
   for(id in c(fileIOIds, saveButtonFileNames)){
     jscode<-setSfDir(id, path=pathToProj)
-    #cat('resetting id=',id,' to path=', pathToProj, "\n")
     runjs(jscode)
   }
-  cat( "<---< resetShinyFilesIOPaths\n")
+  # cat( "<---< resetShinyFilesIOPaths\n")
 }
 
 

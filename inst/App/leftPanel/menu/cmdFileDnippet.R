@@ -6,8 +6,7 @@ cmdDnippetImport<-function(){
 # loads the drippets given the datapath
 # then calls addDrippets to add to drippet toolbar
 loadDndSnippets<-function(datapath, startup=FALSE){
-  cat('>---> loadDndSnippets\n')
-  # browser()
+  # cat('>---> loadDndSnippets\n')
   dnippetText<-paste(readLines(datapath), collapse = "\n")
   dnippetList<-dripplets2List2(dnippetText) # contains hint, snippet, logo where logo has been processed into SVG
   dnippets<-getDnippets4ToolBar(dnippetList) # minor reshape
@@ -22,7 +21,7 @@ loadDndSnippets<-function(datapath, startup=FALSE){
     add2DnippetChoices( dnName, TRUE )
   }
   
-  cat('<---< loadDndSnippets\n')
+  # cat('<---< loadDndSnippets\n')
 }
 
 observeEvent(input$buttonDnippetImport,{
