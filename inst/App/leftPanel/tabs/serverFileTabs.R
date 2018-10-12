@@ -93,7 +93,7 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FA
             theme=editOption$theme, 
             fontSize=editOption$fontSize,
             autoComplete="enabled",
-            if(mode=='ptR')
+            if(mode=='ptr')
               autoCompleteList =list(names(svgR:::eleDefs))
             else
               NULL

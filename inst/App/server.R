@@ -21,81 +21,15 @@ shinyServer(function(input, output,session) {
   
   # extract points from user code
   getPtDefs<- reactive({ 
-    if(is.null(getCode()) || nchar(getCode())==0 || !identical(getMode(), 'ptR')  ){
+    if(is.null(getCode()) || nchar(getCode())==0 || !identical(getMode(), 'ptr')  ){
       return(NULL)
     }  
     useTribbleFormat<- getUseTribble()
-    #cat('useTribbleFormat=',format(useTribbleFormat),"\n")
-   # ptDefs<-ex.getPtDefs(getCode(), useTribbleFormat=editOption$useTribbleFormat ) 
     ptDefs<-ex.getPtDefs(getCode(), useTribbleFormat=useTribbleFormat) 
     ptDefs
   })  
   
-  shinyFileChooseX<-function (input, id, updateFreq = 2000, session = getSession(),    ...) 
-  {
-    fileGet <- do.call(shinyFiles:::fileGetter, list(...))
-    currentDir <- list()
-    return(observe({
-      dir <- input[[paste0(id, "-modal")]]
-      cat('\n**************** modalid is ',paste0(id, "-modal","\n"))
-      print(dir)
-      if (is.null(dir) || is.na(dir)) {
-        dir <- list(dir = "")
-        cat('-----------dir is NULL\n---------')
-      } else {
-        cat('-----------dir is \n---------')
-        print(dir)
-        dir <- list(dir = dir$path, root = dir$root)
-      }
 
-      dir$dir <- do.call(file.path, as.list(dir$dir))
-      newDir  <- do.call("fileGet", dir)
-      if (!identical(currentDir, newDir)) {
-        currentDir <<- newDir
-        cat('\n\n------newDir=------------------------------------------------\n')
-        print(newDir)
-        cat('\n\n------currentDir=------------------------------------------------\n')
-        print(currentDir)
-        session$sendCustomMessage("shinyFiles", list(id = id,  dir = newDir))
-      }
-      invalidateLater(updateFreq, session)
-    }))
-  }
-  
-  
-  shinyFileSaveX<-function (input, id, updateFreq = 2000, session = getSession(), 
-            ...) 
-  {
-    #fileGet <- do.call("fileGetter", list(...))
-    fileGet <- do.call(shinyFiles:::fileGetter, list(...))
-    #dirCreate <- do.call("dirCreator", list(...))
-    dirCreate <- do.call(shinyFiles:::dirCreator, list(...))
-    currentDir <- list()
-    lastDirCreate <- NULL
-    return(observe({
-      dir <- input[[paste0(id, "-modal")]]
-      createDir <- input[[paste0(id, "-newDir")]]
-      if (!identical(createDir, lastDirCreate)) {
-        dirCreate(createDir$name, createDir$path, createDir$root)
-        dir$path <- c(dir$path, createDir$name)
-        lastDirCreate <<- createDir
-      }
-      if (is.null(dir) || is.na(dir)) {
-        dir <- list(dir = "")
-      } else {
-        dir <- list(dir = dir$path, root = dir$root)
-      }
-      dir$dir <- do.call(file.path, as.list(dir$dir))
-      newDir <- do.call(shinyFiles:::fileGetter, dir)
-      if (!identical(currentDir, newDir) && newDir$exist) {
-        currentDir <<- newDir
-        cat('newDir==',newDir,"\n")
-        session$sendCustomMessage("shinySave", list(id = id, dir = newDir))
-      }
-      invalidateLater(updateFreq, session)
-    }))
-  }
-  
   shinyFileChoose(input, "buttonFileOpen",           session=session, roots=c(home="~"),  filetypes=c('R','PTR','SVGR') ) #hidden
   shinyFileChoose(input, "buttonFileOpenProject",    session=session, roots=c(home="~"),  filetypes=c('pprj') ) #hidden
   shinyFileChoose(input, "buttonSnippetImport",      session=session, roots=c(home="~"),  filetypes=c('snippets') ) #hidden
@@ -104,17 +38,7 @@ shinyServer(function(input, output,session) {
   shinyFileSave(input,   "buttonExportSVG",          session=session, roots=c(home="~")  ) #hidden
   shinyFileSave(input,   "buttonExportPreproc",      session=session, roots=c(home="~") ) #hidden
   
-  # shinyFileSave(input, "buttonFileSaveR",            session=session, roots=c(home="~")  ) #hidden
-  # shinyFileSave(input, "buttonFileSaveRmd" ,         session=session, roots=c(home="~"))
-  # shinyFileSave(input, "buttonFileSavetxt" ,         session=session, roots=c(home="~"))
-  # shinyFileSave(input, "buttonFileSavesnippets" ,    session=session, roots=c(home="~"))
-  # shinyFileSave(input, "buttonFileSavednippets" ,    session=session, roots=c(home="~"))
   disableDMDM(session, "editNavBar", 'project')
-  
-  # lapply(unname(saveButtonFileNames), function(n){
-  #   shinyFileSave(input, n,   session=session, roots=c(wd="~"))
-  # })
-
 
 
 #------------------leftPanel--------------------------------

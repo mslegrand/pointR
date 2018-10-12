@@ -249,7 +249,7 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir(), pprjPath=getProjectF
             mode=mode,
             theme=defaultOpts["theme"],
             fontSize=defaultOpts["fontSize"], autoComplete="enabled",
-            if(mode=='ptR')
+            if(mode=='ptr')
               autoCompleteList =list(names(svgR:::eleDefs))
             else
               NULL
