@@ -2,6 +2,7 @@
 processMssgFromAceMssgPageIn<-function(sender, mssg){
     # cat('>---> processMssgFromAceMssgPageIn\n')
     processCommit() # this sets the sourceType
+    reOrgPanels(id=getAceEditorId(), mode= getMode() )
     # cat("sender = ", format(sender),"\n")
     # cat("assetName = ", format(getAssetName()),"\n")
     if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset') && !is.null(getAssetName())){ 
@@ -17,9 +18,8 @@ processMssgFromAceMssgPageIn<-function(sender, mssg){
       # cat("ace invoking resetSelectedTibbleName\n")
       # cat('names of tibs:',format(names(tibs)), "!\n")
       resetSelectedTibbleName(tibs=tibs, name=name)
-    } else { 
+    } else { # else covers: 'cmd.file.new', 'cmd.tabChange', 'cmd.openFileNow', 
       
-      tttid<-input$pages;
       # cat('hhh\n')
       if(length(input$pages) >0 && 
          nchar(input$pages)>0 && 

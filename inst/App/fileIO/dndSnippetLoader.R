@@ -151,7 +151,90 @@ row2DrippletBlockIndices<-function(lineNo){
 
 
 #test
-
-
-
-
+# 
+# src<-'
+# ---
+# title: "Dnd Snippet"
+# author: "Anonymous"
+# date:   "TODAY"
+# output: dnd_snippet
+# ---
+# 
+# - Individual drippets are seperate by lines consisting of three or more stars (*)
+# - Each drippet consists of 3 entries, with each entry having a title and a value (block)
+#     - The title consists of a single line followed by a colon (:)
+#         - titles are *POPUP*, *SNIPPET*, *SVGR*
+#         - The values are blocks defined by 3 backtics *````*
+# - Two drippets are shown below to help you get started
+# 
+# 
+# *********************
+# 
+# 
+# POPUP
+# ```
+# Ellipse
+# ```
+# SNIPPET
+# ```
+# ellipse(
+#   cxy=${1:WH/2},
+#   rxy=${2:WH/4},
+#   fill=${3:\'orange\'},
+#   stroke=${4:\'blue\'},
+#   stroke.width=${0:3}
+# )
+# ```
+# SVGR
+# ```
+# library(svgR)
+# WH<-c(48,32)
+# ptR<-list(
+#   x=matrix(0,2,0)
+# )
+# svgR(wh=WH,
+#   ellipse(
+#     cxy=WH/2,
+#     rxy=WH/4,
+#     fill=\'none\',
+#     stroke=\'#00FFFF\',
+#     stroke.width=2
+#   )
+# )
+# ```
+# *********************
+# 
+# POPUP
+# ```
+# Assign Point Matrix
+# ```
+# SNIPPET
+# ```
+# =matrix(${1:0},2,${0:0})
+# ```
+# SVGR
+# ```
+# library(svgR)
+# WH<-c(48,32)
+# ptR<-list(
+#   x=matrix(0,2,0)
+# )
+# X=c(.2,.4,.6,.8)
+# svgR(wh=WH, stroke.width=2, stroke="#00FFFF",  fille="none",
+# polyline(points=c(WH)*c(c(.3,.1),c(.1,.1), c(.1,.9), c(.3,.9))),
+# polyline(points=c(WH)*c(c(.7,.1),c(.9,.1), c(.9,.9), c(.7,.9))),
+# lapply( X, function(x){
+#   list(
+#     line(xy1=WH*c(x,.3),xy2=WH*c(x,.4)),
+#     line(xy1=WH*c(x,.6),xy2=WH*c(x,.7)))
+# })
+# 
+# )
+# ```
+# ******************
+# '
+# 
+# 
+# 
+# src<-dripplets2Rmd(src)
+# knit2html(text = src, fragment.only = TRUE, quiet = TRUE)

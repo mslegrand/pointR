@@ -211,9 +211,8 @@ observeEvent(atLeast2Rows(),{
   }
 })
 
-observeEvent(c(getAceEditorId(), getMode()),{
-  id<-getAceEditorId()
-  
+
+reOrgPanels<-function(id, mode){
   if(length(id)==0){
     hideElement("TopRightPanel")
     hideElement("snippetToolBarContainer")
@@ -256,10 +255,62 @@ observeEvent(c(getAceEditorId(), getMode()),{
     showElement("aceTabSet")
     showElement("midRightPanels")
   }
-  processCommit()
-},
-label='PanelCoordinator.R:: c(getAceEditorId(), getMode())'
-)
+}
+
+# observeEvent(c(getAceEditorId(), getMode()),{
+#   id<-getAceEditorId()
+#   # if(!identical(selectedAsset$tabId, input$pages)){
+#   #   return()
+#   # }
+#   if(length(id)==0){
+#     hideElement("TopRightPanel")
+#     hideElement("snippetToolBarContainer")
+#     hideElement("aceToobarTop1")
+#     hideElement("aceToobarTop2")
+#     hideElement("useTribble")
+#     hideElement("commit")
+#     addClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
+#     hideElement("aceTabSet")
+#     hideElement("midRightPanels")
+#     hideElement("BottomRightPanel")
+#     showElement("logo.right")
+#     showElement("logo.left")
+#   } else {
+#     hideElement("logo.right")
+#     hideElement("logo.left")
+#     # editing ptr
+#     if(identical(getMode(),'ptr')){
+#       showElement("BottomRightPanel")
+#       showElement("TopRightPanel")
+#       showElement("snippetToolBarContainer")
+#       showElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble
+#       addClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
+#       addClass( id= 'midRightPanels', class='ctop140')
+#     } else { # editing other
+#       removeClass( id= 'midRightPanels', class='ctop140')
+#       hideElement("TopRightPanel")
+#       hideElement("snippetToolBarContainer")
+#       hideElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble
+#       if(identical(getMode(),'ptrrmd')){
+#         removeClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
+#       }
+#       else{
+#         addClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
+#       }
+#     }
+#     showElement("aceToobarTop1")
+#     showElement("aceToobarTop2")
+#     showElement("commit")
+#     showElement("aceTabSet")
+#     showElement("midRightPanels")
+#   }
+#    cat('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n')
+#   # processCommit()
+# },
+# label='PanelCoordinator.R:: c(getAceEditorId(), getMode())'
+# )
+# 
+
 
 observeEvent( getRightMidPanel(), {
   panel<-getRightMidPanel()
