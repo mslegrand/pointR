@@ -21,7 +21,7 @@ shinyServer(function(input, output,session) {
   
   # extract points from user code
   getPtDefs<- reactive({ 
-    if(is.null(getCode()) || nchar(getCode())==0){
+    if(is.null(getCode()) || nchar(getCode())==0 || !identical(getMode(), 'ptR')  ){
       return(NULL)
     }  
     useTribbleFormat<- getUseTribble()
