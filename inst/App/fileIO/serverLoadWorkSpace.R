@@ -192,9 +192,9 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir(), pprjPath=getProjectF
     }
     return(initTib)
   }  
- 
-  serverAssetDB$tib<-extractDBFromPages(wsPages, "^assetSelection.", initTib=initialServerAsset() )
-  
+  #browser()
+  serverAssetDB$tib<-extractDBFromPages(wsPages, "^assetSelection.", initTib=initialServerAssetDB() )
+  #browser()
   tib<-extractDBFromPages(wsPages, "^backdrop.", initTib=initialBackDropDB() )
   backDropDB(tib)
   
