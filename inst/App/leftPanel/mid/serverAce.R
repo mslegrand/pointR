@@ -1,5 +1,6 @@
 
 observeEvent(input$messageFromAce, {
+# cat(">----> messageFromAce\n")
     if(
       length(input$messageFromAce$code)>0 &&
       length(input$messageFromAce$sender)>0
@@ -24,9 +25,6 @@ observeEvent(input$messageFromAce, {
         setFileDescSaved(tabId, input$messageFromAce$isSaved)
         savePage(tabId)
       }
-      
-     
-      
       if(
         sender %in% c( 
           'cmd.file.new', 'cmd.tabChange', 'cmd.openFileNow', 
@@ -35,17 +33,15 @@ observeEvent(input$messageFromAce, {
       ){#not sure if cmd.saveFileNow should be here, infact, cannot find sender issuing this.
         processMssgFromAceMssgPageIn(sender, input$messageFromAce)
       } 
-      
       if( sender %in% c( 
           'fileCmd.save', 'fileCmd.close', 'fileCmd.saveAs', 'fileCmd.quit' , 'fileCmd.saveNow', 'buttonCmd.rmdViewer'
           )
       ){
         processMssgFromAceMssgPageOut(sender, input$messageFromAce) 
       }
-
-      
     }
-}, priority = 90, ignoreNULL = TRUE, ignoreInit = TRUE)
+  # cat("<----< messageFromAce\n")
+}, priority = 90, ignoreNULL = TRUE, ignoreInit = TRUE, label='messageFromAce')
 
 
 

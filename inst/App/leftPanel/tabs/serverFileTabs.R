@@ -7,11 +7,10 @@ sendFileTabsMessage<-function(...){
   }
 }
 
-
+#tracks the naming for unnamed pages
 pages<- reactiveValues(
   fileName='',
-  fileNameCount=1,
-  tabIdCount=1
+  fileNameCount=1
 )
 
 
@@ -22,8 +21,7 @@ pages<- reactiveValues(
 # }
 
 getNextTabId<-function(){
-  tabId<-paste0("PTR-TABID", pages$tabIdCount)
-  pages$tabIdCount<-pages$tabIdCount+1
+  tabId<-basename(tempfile('PTR-TABID'))
   tabId
 }
 
@@ -141,7 +139,7 @@ observeEvent(input$pages,{
   aceId<-tabID2aceID(tabId)
   updateAceExt(id=aceId, sender='cmd.tabChange', roleBack=FALSE, setfocus=TRUE, getValue=TRUE)
   #triggerRefresh('cmd.commit', rollBack=FALSE) # seems to trigger the redraw of the screen (uses getValue=TRUE)
-}, ignoreNULL = TRUE)
+}, ignoreNULL = TRUE, label='pages2')
 
 
 # updated by scrollManager and relays sender with tabs to request
@@ -149,7 +147,7 @@ observeEvent(input$tabManager,{
   tabs=unlist(input$tabManager$tabs)
   sender=input$tabManager$sender
   setTabRequest(sender=sender, tabs=tabs)
-})
+}, label='tabManager')
 
 # request$tabs is updated by either
 #  1. input$tabManager or 
@@ -166,6 +164,6 @@ observeEvent(request$tabs, {
       cmdQuitNow()
     }
   }
-})
+}, label='request$tabs')
 
 

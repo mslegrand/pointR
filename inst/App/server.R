@@ -56,8 +56,41 @@ shinyServer(function(input, output,session) {
         print(newDir)
         cat('\n\n------currentDir=------------------------------------------------\n')
         print(currentDir)
-        session$sendCustomMessage("shinyFiles", list(id = id, 
-                                                     dir = newDir))
+        session$sendCustomMessage("shinyFiles", list(id = id,  dir = newDir))
+      }
+      invalidateLater(updateFreq, session)
+    }))
+  }
+  
+  
+  shinyFileSaveX<-function (input, id, updateFreq = 2000, session = getSession(), 
+            ...) 
+  {
+    #fileGet <- do.call("fileGetter", list(...))
+    fileGet <- do.call(shinyFiles:::fileGetter, list(...))
+    #dirCreate <- do.call("dirCreator", list(...))
+    dirCreate <- do.call(shinyFiles:::dirCreator, list(...))
+    currentDir <- list()
+    lastDirCreate <- NULL
+    return(observe({
+      dir <- input[[paste0(id, "-modal")]]
+      createDir <- input[[paste0(id, "-newDir")]]
+      if (!identical(createDir, lastDirCreate)) {
+        dirCreate(createDir$name, createDir$path, createDir$root)
+        dir$path <- c(dir$path, createDir$name)
+        lastDirCreate <<- createDir
+      }
+      if (is.null(dir) || is.na(dir)) {
+        dir <- list(dir = "")
+      } else {
+        dir <- list(dir = dir$path, root = dir$root)
+      }
+      dir$dir <- do.call(file.path, as.list(dir$dir))
+      newDir <- do.call(shinyFiles:::fileGetter, dir)
+      if (!identical(currentDir, newDir) && newDir$exist) {
+        currentDir <<- newDir
+        cat('newDir==',newDir,"\n")
+        session$sendCustomMessage("shinySave", list(id = id, dir = newDir))
       }
       invalidateLater(updateFreq, session)
     }))
@@ -69,8 +102,18 @@ shinyServer(function(input, output,session) {
   shinyFileChoose(input, "buttonDnippetImport",      session=session, roots=c(home="~"),  filetypes=c('dnippets') ) #hidden
   shinyFileChoose(input, "buttonPreProcPtImport",    session=session, roots=c(home="~"),  filetypes=c('preprocpts') ) #hidden
   shinyFileSave(input,   "buttonExportSVG",          session=session, roots=c(home="~")  ) #hidden
-  shinyFileSave(input,   "buttonExportPreproc",      session=session, roots=c(homed="~") ) #hidden
+  shinyFileSave(input,   "buttonExportPreproc",      session=session, roots=c(home="~") ) #hidden
+  
+  # shinyFileSave(input, "buttonFileSaveR",            session=session, roots=c(home="~")  ) #hidden
+  # shinyFileSave(input, "buttonFileSaveRmd" ,         session=session, roots=c(home="~"))
+  # shinyFileSave(input, "buttonFileSavetxt" ,         session=session, roots=c(home="~"))
+  # shinyFileSave(input, "buttonFileSavesnippets" ,    session=session, roots=c(home="~"))
+  # shinyFileSave(input, "buttonFileSavednippets" ,    session=session, roots=c(home="~"))
   disableDMDM(session, "editNavBar", 'project')
+  
+  # lapply(unname(saveButtonFileNames), function(n){
+  #   shinyFileSave(input, n,   session=session, roots=c(wd="~"))
+  # })
 
 
 
@@ -126,7 +169,7 @@ shinyServer(function(input, output,session) {
   source("rightPanel/menu/serverPlotBar.R",                      local=TRUE)
   source("rightPanel/serverPanelCoordinator.R",                  local=TRUE)
   source("rightPanel/serverPanelDispatch.R",                     local=TRUE)
-  source("rightPanel/serverOptions.R",                           local=TRUE) 
+  source("rightPanel/serverOptions.R",                           local=TRUE) # set initially by copying from configIO
   source("rightPanel/selector/serverWidgetHandler.R",            local=TRUE)
   source("rightPanel/serverDisplayOptions.R",                    local=TRUE)
   source("rightPanel/selector/serverAssetSelection.R",           local=TRUE)
@@ -165,4 +208,40 @@ shinyServer(function(input, output,session) {
   source("leftPanel/menu/cmdFileDnippet.R",                     local=TRUE)
   source("leftPanel/menu/cmdAbout.R",                           local=TRUE)
   source("leftPanel/menu/serverEditBar.R",                      local=TRUE)
+  source("fileIO/observeRequestStartUp.R",                      local=TRUE)
+  
+  # tmpVars<-c("%AND%", "assertConsistantTibPair", "bar1", "bar2", "buildHToolBar", 
+  #            "buildLeftMenu", "buildRightMenu", "charColType", "choices2ColType", 
+  #            "codeTemplate", "colLine2charPos", "colLine2charPositions", "defaultOpts", 
+  #            "defTag", "dnippetsDirPath", "drippetdirectoryPath", "dripplets2List", 
+  #            "dripplets2List2", "dripplets2Rmd", "errorPanelTag", "ex.getPtDefs", 
+  #            "extMode.TB", "extractColType", "extractColumnIndex", "extractDripplet", 
+  #            "extractPositions", "extractSafeRowColIndex", "extractTagDF", 
+  #            "extractVal", "fileTemplates", "fileTemplatesNames", "fmtMat", 
+  #            "fmtTibble", "fmtTibbleList", "fmtTribble", "genShinyOpenFilesButtons", 
+  #            "genShinySaveFilesButtons", "getcumCharLines", "getDef", "getDefPos", 
+  #            "getExtenstionList", "getNCharLines", "getParseDataFrame", "getTibColClass", 
+  #            "imageBlockIndices", "initialBackDropDB", "initialFileDescDB", 
+  #            "initialPreprocDB", "initialPtrAceOptions", "initialServerAsset", 
+  #            "initialServerAssetDB", "initialSvgGridDB", "initialTribbleDB", 
+  #            "initResourcePaths", "isBooleanString", "isColorString", "isInteger", 
+  #            "isIntegerString", "isNumericString", "isPercentageString", "isPoints", 
+  #            "list.entry.at.index", "listColType", "lowerBd", "mode2pathExt", 
+  #            "modes2filetypes", "moduleEdAsset", "moduleEdAssetUI", "moduleEdTib", 
+  #            "moduleEdTibUI", "moduleEdTransform", "moduleEdTransformUI", 
+  #            "moduleFooterRight", "moduleFooterRightUI", "moduleLog", "moduleLogUI", 
+  #            "modulePlotSVGr", "modulePlotSVGrUI", "moduleRowDND", "moduleRowDNDUI", 
+  #            "newPointPreprocessor", "optionDirPath", "optionFile", "pathExt2mode", 
+  #            "preprocChoices", "ptDef2ReplacementList", "pts2Integers", "r_pkgs", 
+  #            "readOptionsJSON", "readTemplate", "rmdPanelTag", "row2DrippletBlock", 
+  #            "row2DrippletBlockIndices", "RPanelTag", "saveButtonFileNames", 
+  #            "shinyAce4Ptr", "snippetPanelTag", "snippetsDirPath", "stop.unless", 
+  #            "svgPanelTag", "svgToolsScript", "tagTib", "textPanelTag", "tibTag", 
+  #            "tid2replacementCoord", "toggleTabType", "toStrPtR0", "toStrPtR0.character", 
+  #            "toStrPtR0.default", "toStrPtR0.list", "toStrPtR0.matrix", "toStrPtR0.numeric", 
+  #            "transformTag", "type2ExtensionList", "upperBd", "usingDraggable", 
+  #            "val2ColType", "validateTibLists", "version", "versionCheck", 
+  #            "writeOptionsJSON")
+  #on.exit(rm(list=list(tmpVars)))
+  
 })

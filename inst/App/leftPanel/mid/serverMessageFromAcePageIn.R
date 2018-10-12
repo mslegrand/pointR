@@ -1,7 +1,8 @@
 
 processMssgFromAceMssgPageIn<-function(sender, mssg){
-
+    # cat('>---> processMssgFromAceMssgPageIn\n')
     processCommit() # this sets the sourceType
+    reOrgPanels(id=getAceEditorId(), mode= getMode() )
     # cat("sender = ", format(sender),"\n")
     # cat("assetName = ", format(getAssetName()),"\n")
     if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset') && !is.null(getAssetName())){ 
@@ -17,24 +18,23 @@ processMssgFromAceMssgPageIn<-function(sender, mssg){
       # cat("ace invoking resetSelectedTibbleName\n")
       # cat('names of tibs:',format(names(tibs)), "!\n")
       resetSelectedTibbleName(tibs=tibs, name=name)
-    } else { 
+    } else { # else covers: 'cmd.file.new', 'cmd.tabChange', 'cmd.openFileNow', 
       
-      tttid<-input$pages;
+      # cat('hhh\n')
       if(length(input$pages) >0 && 
          nchar(input$pages)>0 && 
          !identical(selectedAsset$tabId, input$pages) 
       ){
-        #cat('storeAssetState\n')
+        # cat('--storeAssetState\n')
         storeAssetState()
-        #cat("restoreAssetState\n")
+        # cat("--restoreAssetState\n")
         restoreAssetState(input$pages)
+        # cat('--savePage\n')
         savePage(input$pages) # require for new page that was not committed
         
       } else{
-        # cat('hello world\n')
-        # cat( "length(input$pages)=" ,  length(input$pages), "\n")
-        # cat( "format(input$pages)=" ,  format(tttid), "\n")
       }
+      # cat('<---< processMssgFromAceMssgPageIn\n')
       # end assetUpdate:
     }
 }

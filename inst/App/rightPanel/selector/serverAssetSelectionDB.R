@@ -1,17 +1,19 @@
 
-serverAssetDB<-reactiveValues(
-  tib=tibble(
-    tabId="NULL",
-    name="NULL",
-    rowIndex=1,         # row in tibble
-    columnName="NULL",  # currently used only by tibbleEditor and could be placed there.
-    matCol=0,           # colIndex of the current matrix.
-    ptColName="NULL",   # !!! KLUDGE for now. should this default to last col?
-    selIndex=1,         # only used when current col is points,
-    transformType='Translate',
-    ptScriptSel=preprocChoices[1]
-  )[0,]
-)
+# serverAssetDB<-reactiveValues(
+#   tib=tibble(
+#     tabId="NULL",
+#     name="NULL",
+#     rowIndex=1,         # row in tibble
+#     columnName="NULL",  # currently used only by tibbleEditor and could be placed there.
+#     matCol=0,           # colIndex of the current matrix.
+#     ptColName="NULL",   # !!! KLUDGE for now. should this default to last col?
+#     selIndex=1,         # only used when current col is points,
+#     transformType='Translate',
+#     ptScriptSel=preprocChoices[1]
+#   )[0,]
+# )
+
+serverAssetDB<-reactiveValues( tib=initialServerAssetDB() )
 
 
 storeAssetState<-function(){ 
@@ -24,25 +26,40 @@ storeAssetState<-function(){
   serverAssetDB$tib<-bind_rows(tmp1, as.tibble(selectionList))
 }
 
+#~ @param nextTabId
+#~ @section sets selectedAsset according to  entry corresponding to tabId==nextTabId
 
+# the call to getRightPanelChoices is problematic:
+#  if an error state occurs, choice is errorPanelTag, ouch
+#  otherwise depends on getSourceType and getptDefs
+#  sourceType is set in commit (for svgR, R, ...), thus
+#  sourceType may be invalid during the call to restoreWorkSpace.
+#  The only justification would be if nextTabId is in serverAssetDB$tib
 restoreAssetState<-function(nextTabId){
-  row.tib<-filter(serverAssetDB$tib, tabId==nextTabId)
-  if(nrow(row.tib)==0){
-    choices<-getRightPanelChoices()
-    row.tib<-newAssetSelection(tabId=nextTabId, choices=choices, tibs=getPtDefs()$tib)
+  if(length(nextTabId)==1 && !is.na(nextTabId)){
+       # browser()
+       if(nrow(serverAssetDB$tib)>0){
+         row.tib<-filter(serverAssetDB$tib, tabId==nextTabId)
+       } else {
+         row.tib<-serverAssetDB$tib
+       }
+      if(nrow(row.tib)==0){
+       #  browser()
+        choices<-getRightPanelChoices() # this is suspect
+        row.tib<-newAssetSelection(tabId=nextTabId, choices=choices, tibs=getPtDefs()$tib)
+      }
+      if(!is.null(row.tib)){
+        lapply(names(row.tib), function(n){
+          v<-row.tib[[n]][1]
+          if(is.na(v)){v<-NULL} 
+          selectedAsset[[n]]<-v
+        } )
+      }
   }
-  if(!is.null(row.tib)){
-    lapply(names(row.tib), function(n){
-      v<-row.tib[[n]][1]
-      if(is.na(v)){
-        v<-NULL
-      } 
-      selectedAsset[[n]]<-v
-    } )
-  }
+ 
 }
 
-
+# called only by restoreAssetState
 newAssetSelection<-function( tabId, choices, tibs){
   if( length(tabId)==0 || length(choices)==0){
     return( NULL)

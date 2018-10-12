@@ -11,18 +11,7 @@ resetDnippetsDB<-function(){
   dnippetsDB$paths=tibble(fullpath="datapath", dname="dnName" )[0,]
 }
 
-# resetDnippetsDB() # on startup
 
-# addToDnippetsFiles adds filePath to editOption$dnippetsFiles
- 
-# addDnippet2DB<-function(filePath){
-#   dname<-basename(filePath)
-#   if(!dname %in% names(dnippetsDB$usage)){
-#       val<-rep(TRUE, max(1, nrow(dnippetsDB$usage)))
-#       dnippetsDB$usage[[dname]]=val
-#       dnippetsDB$paths<-bindrows(dnippetsDB$paths, list(fullpath=filePath, dname=dname ) )(file)
-#   }
-# }
 
 add2DnippetDBPath<-function(dnName, datapath){
   # cat('entering add2DnippetDBPath\n')

@@ -35,14 +35,22 @@ addFileDesc<-function( pageId, docFilePath, fileSaveStatus, fileMode){
 
 
 getMode<-reactive({
-  fd<-fileDescDB()
-  fd[fd$tabId==input$pages,]$mode
+  if(!is.null(input$pages)){ # to avoid warning
+    fd<-fileDescDB()
+    fd[fd$tabId==input$pages,]$mode
+  } else {
+    NULL
+  }
 })
   
 
-getFileDescriptor<-function(pageId){
-  fd<-fileDescDB()
-  fd[fd$tabId==pageId,] #or use filter
+getFileDescriptor<-function(pageId){ 
+  if(!is.null(pageId)){  # not really needed since caller checks for null pageId!!!
+      fd<-fileDescDB()
+      fd[fd$tabId==pageId,] #or use filter
+  } else {
+    NULL
+  }
 }
 
 # to be called from 

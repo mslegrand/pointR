@@ -12,14 +12,15 @@ src2sourceType<-function(src){  #not used !!
 
 
 processCommit<-reactive({
+  cat(">---> processCommit\n")
   clearErrorMssg()
   mode<-getMode()
   if(length(mode)==0){
     return(NULL)
    # mode='ptr'
   }
-  # cat("class(mode)=" ,class(mode),"\n")
-  # cat('ProcessCommit: mode=',format(mode),"\n")
+  cat("class(mode)=" ,class(mode),"\n")
+  cat('ProcessCommit: mode=',format(mode),"\n")
   if( identical(mode, 'ptr')){
     processSvgR()
   } else if(  identical(mode, 'ptrrmd') ){
@@ -36,32 +37,42 @@ processCommit<-reactive({
   if(!hasError()){
     tabId<-input$pages
     # cat("tabId=",tabId,"\n")
+    cat('>---> processCommit::savePage\n')
     savePage(tabId)
+    cat('<---< processCommit::savePage\n')
   }
-  
-
+  cat("<---< processCommit\n")
 })
 
 
 processSvgR<-reactive({
   src<-request$code
-  # cat('processSvgR::\n')
+  cat('>----> processSvgR::\n')
   if(length(src)==1){
     ptRList<-getPtDefs()$tib
     tryCatch({
       lines<-strsplit(src,"\n") 
       lines<-lines[[1]]
+      cat('ptRPos\n')
       ptRPos<-grep("^\\s*ptR<-",lines)
+      cat('svgRPos\n')
       svgRPos<-grep("^\\s*svgR\\(",lines)
+      cat('done\n')
       if(length(svgRPos)==0){ # just R code I guess
+        cat('>a\n')
         setSourceType(sourceType=RPanelTag) #
+        cat('<a\n')
       } else {
+        cat('>b\n')
         setSourceType(sourceType=svgPanelTag) #SVG code
       }
       if(length(ptRPos)>1 || length(svgRPos)>1){
+        cat('>c\n')
         base::stop("Bad File: Multiple  ptR lists or svgR calls")
+        cat('<c\n')
       }
       if(length(ptRPos)>=1 && length(svgRPos)>=1 && !(ptRPos[1]<svgRPos[1])){
+        cat('>d\n')
         base::stop("Bad File: ptR list must come prior to svgR call")
       }
       
@@ -69,17 +80,19 @@ processSvgR<-reactive({
         #test for error and capture output
         # capture capture output as mssg
         env<-new.env()
+        cat('>f\n')
         parsedCode<-parse(text=src)
         output<-lapply(parsedCode, function(x){
           captureOutput(eval(x, envir=env))
         })
+        cat('>g\n')
         output<-paste( unlist(output), collapse="\n" )
         output<-paste("Output:",output,sep="\n")
         setCapturedMssg(output)
         setSourceType(sourceType=RPanelTag) #no error, just R code
       } else { # presume to be svgR code
         # next check if it can be run
-        #cat("processCommit::captureOutput2\n")
+        # cat("processCommit::captureOutput2\n")
         parsedCode<-parse(text=src) 
         # svg<-eval(parsedCode)
         # if(identical(class(svg),'svgDoc')){
@@ -87,6 +100,7 @@ processSvgR<-reactive({
         #   h<-svg$root$getAttr('height')
         #   #set WH in selected...
         # }
+        cat('>h\n')
         # cat("class(svg)=",class(svg),"\n")
         output<-captureOutput(eval(parsedCode))
         # cat("class(output)=",class(output),"\n")
@@ -95,18 +109,23 @@ processSvgR<-reactive({
         setCapturedMssg(output)
         setSourceType(sourceType=svgPanelTag) #SVG code
       }
+      cat('>ii\n')
         # passed so far
         # no error occured so all systems go!!!!
         #remove all removeAllMarkers from ace since all sys go.
         updateAceExt( id= getAceEditorId(), sender='commit.removeMarkers', removeAllMarkers='removeAllMarkers', setOk=TRUE)
     }, #end of try
     error=function(e){ 
+      cat('eeeek\n')
         #Error handler for commit
         if(all(!str_detect(e,'Output:'))){
           e<-c(e,traceback())
         }
+        cat(src,"\n\n")
+        print(e)
         err<-paste(unlist(e), collapse="\n", sep="\n")
         #try to locate where the error occured
+        print(err)
         if(str_detect(err, 'parse')){
           m<-str_match(err, ":([0-9]+):([0-9]+):")
           if(length(m)==3){
@@ -129,6 +148,7 @@ processSvgR<-reactive({
       } #end of error handler
     ) #end of tryCatch 
   } #end of if(length==1)
+  cat('<----< processSvgR::\n')
 })
 
 

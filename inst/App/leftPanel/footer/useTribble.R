@@ -10,7 +10,6 @@ getPageUseTribble<-function(pageId){
   if(!is.null(pageId)){
     tb<-useTribbleFormatDB()
     rtv<-as.list(filter(tb, tabId==pageId))
-    #if(length(rtv)>0 && any(sapply(rtv, length)==0)){
     if( any(sapply(rtv, length)==0)){
       rtv<-list(value=TRUE)
     } 
@@ -54,14 +53,14 @@ observeEvent(input$useTribble,{
     sender='useTibble'
     updateAceExtDef(newPtDefs, sender=sender)
   }
-})
+}, label= "useTribble")
 
 
 observeEvent(input$pages,{
   value<-getUseTribble()
   choice<-ifelse(value, "Tribble", "Tibble")
   updateAwesomeRadio(session, inputId="useTribble",  selected=choice)
-}, ignoreNULL = TRUE)
+}, ignoreNULL = TRUE, label='pages')
 
 
 

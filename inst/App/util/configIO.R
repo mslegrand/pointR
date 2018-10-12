@@ -12,61 +12,12 @@ optionDirPath<-function(){
   if(!file.exists(dirPath)){
     dir.create(dirPath)
   }
-  workSpaceDir<-paste0(dirPath,"/",'workspace')
+  workSpaceDir<-paste0(dirPath,"/",'.workspace')
   if(!file.exists(workSpaceDir)){
     dir.create(workSpaceDir)
   }
   dirPath
 }
-
-
-initialFileDescDB<-function(){tibble(
-  tabId='bogus',
-  isSaved=FALSE,
-  filePath="?",
-  anonNo =1,
-  mode='ptr'
-)[0,]
-}
-
-
-# initialDnippetsDBUsage<-function(){
-#   tibble(tabId='bogus')[0,]
-# }
-
-initialPreprocDB<-function(){
-  points=tibble( tabId="bogus", tibName="bogus", ptColName='bogus', cmd="bogus", script='bogus')[0,]
-  points
-}
-
-initialTribbleDB<-function(){
-  tibble(
-    tabId='bogus',
-    show=FALSE,
-    dx=50,
-    dy=50,
-    color='lightgrey'
-  )[0,]
-}
-
-initialSvgGridDB<-function(){
-  tibble(
-    tabId='bogus',
-    show=FALSE,
-    dx=50,
-    dy=50,
-    color='lightgrey'
-  )[0,]
-}
-
-initialBackDropDB<-function(){
-  tibble(
-    tabId='bogus',
-    color='white',
-    checked=TRUE
-  )[0,]
-}
-
 
 
 # used by loader
@@ -124,9 +75,11 @@ readOptionsJSON<-function(){
   
   try({
     file<-paste(optionDirPath(),"ptRProfile.json", sep="/")
-    tmp<-read_json(file)
-    defaultOpts[names(tmp)]<-tmp
-    defaultOpts[["currentFilePath"]]<-""
+    if(file.exists(file)){
+      tmp<-read_json(file)
+      defaultOpts[names(tmp)]<-tmp
+      defaultOpts[["currentFilePath"]]<-""
+    }
   })
   opts<-sapply(defaultOpts,unlist, USE.NAMES = T, simplify = F )
   opts
@@ -134,13 +87,25 @@ readOptionsJSON<-function(){
 
 defaultOpts<-readOptionsJSON()
 
+
+if(!is.null(getShinyOption("initialPointRProject"))){
+  initialPointRProject<-getShinyOption("initialPointRProject")
+  defaultOpts$currentProjectName<-basename(initialPointRProject)
+  defaultOpts$currentProjectDirectory<-dirname(initialPointRProject)
+}
+
+# if(!is.null(initialPointRProject)){
+#   defaultOpts$currentProjectDirectory=dirname(initialPointRProject ) 
+#   defaultOpts$currentProjectName=basename( initialPointRProject)
+# }
+
+
+
 toggleTabType<-function(type){
   tabType<-c("Use Soft Tabs", "Use Hard Tabs")
   indx<-which(type==tabType)
   ifelse(indx==2,"Use Soft Tabs", "Use Hard Tabs" )
 }
-
-
 
 
 readTemplate<-function(name="rTemplate.R"){
