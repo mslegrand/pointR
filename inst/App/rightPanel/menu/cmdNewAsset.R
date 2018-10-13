@@ -35,7 +35,7 @@ observeEvent(input$commitNewAsset, {
     # updateAce and set selection to this column
     #sender<-'cmd.add.column'
     sender<-'cmd.add.asset'
-    updateAceExtDef(newPtDefs, sender=sender, selector=list( assetName = newAssetName   ) )
+    updateAceExtDef(newPtDefs, sender=sender, selector=list( name = newAssetName   ) )
     
     removeModal() #close dialog
   }

@@ -11,10 +11,11 @@ observeEvent(input$messageFromAce, {
       aceId<-input$messageFromAce$id
       tabId<-aceID2TabID(aceId)
       clearErrorMssg()
-      if(!is.null(input$messageFromAce$selector) && !is.null(input$messageFromAce$code) ){
+      if(!is.null(input$messageFromAce$selector) && !is.null(input$messageFromAce$code)  ){
         reqSelector<-input$messageFromAce$selector
         setSelectedAssetFromAce(reqSelector)
       }
+      
       if(length(input$messageFromAce$docFilePath)>0 ){
         docFilePath<-unlist(input$messageFromAce$docFilePath)
         setFileDescPath(tabId, docFilePath)
@@ -39,6 +40,7 @@ observeEvent(input$messageFromAce, {
       ){
         processMssgFromAceMssgPageOut(sender, input$messageFromAce) 
       }
+      
     }
   # cat("<----< messageFromAce\n")
 }, priority = 90, ignoreNULL = TRUE, ignoreInit = TRUE, label='messageFromAce')

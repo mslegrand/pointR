@@ -105,10 +105,7 @@ extractDripplet<-function(dr ){
 #' Returns list of character vectors named with names'hint', 'snip', 'logo' representing a drippet
 dripplets2List2<-function(drps){
   drps<-unlist(str_split(drps,pattern = '\\*{3,}'))
-  # tmpdir=tempdir()
-  # tmpdir='drippets'
   drps<-lapply(drps, function(dr){
-    # rtv<-extractDripplet(dr, tmpdir)
     rtv<-extractDripplet(dr)
     rtv
   })
