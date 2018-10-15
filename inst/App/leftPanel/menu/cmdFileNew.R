@@ -9,10 +9,15 @@ cmdFileNewPtR<-function(fileCmd="newPtrTibScript"){
     src<-fileTemplates[[ templateName ]] #ptR template
     tabName<-getNextAnonymousFileName()
     #aceId<-tabName2AceId(tabId)
-    addFileTab(title=tabName, txt=src,  docFilePath="?", mode='ptr',fileSaveStatus=FALSE)
-    delay(500, 
-      updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
-    )
+    cat('cmdFileNewPtR:: addFileTab\n')
+    tabId<-addFileTab(title=tabName, txt=src,  docFilePath="?", mode='ptr',fileSaveStatus=FALSE)
+    cat('cmdFileNewPtR:: delay\n')
+    # delay(500, 
+    #   {cat('updateAceExt:: delay\n')
+    aceId<-tabID2aceID(tabId)
+    updateAceExt(id=aceId, sender='cmd.file.new', getValue= TRUE,  ok=TRUE, selector=list(name='x') )
+      #}
+    # )
     mssg$error<-""
 }
 

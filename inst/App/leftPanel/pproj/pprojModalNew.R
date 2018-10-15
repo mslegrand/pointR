@@ -1,9 +1,10 @@
 # ---beging code to inserted in ptR-------------------------------
 newProjModal <- function(failed = 0, mssg=NULL, datapath=NULL, projectName=NULL) {
-  shinyDirChoose(input, id='browseForDir', roots=c(wd='~'), filetypes='')
+  #shinyDirChoose(input, id='browseForDir', roots=c(wd='~'), filetypes='')
+  shinyDirChoose(input, id='browseForDir', roots=c(wd='~'))
   observeEvent(input$browseForDir,{
     datapath<-parseDirPath(c(wd='~'), input$browseForDir)
-    if(length(datapath)==0 && nchar(datapath)==0){
+    if(length(datapath)==0 || nchar(datapath)==0 ){
       datapath='~'
     } else{
       updateTextInput(session,inputId = "parentProjDirectoryName", value=datapath)
@@ -30,8 +31,7 @@ newProjModal <- function(failed = 0, mssg=NULL, datapath=NULL, projectName=NULL)
          )),
     div( style="display:inline-block",
          shinyDirButton(id= 'browseForDir', label="browse", title='Browse...', FALSE)
-    )
-    ,
+    ),
     footer = tagList(
       modalButton("Cancel"),
       actionButton("modalNewProjOk", "OK")

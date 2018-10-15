@@ -73,7 +73,7 @@ shinyUI(
               buildHToolBar(bar2)
            ),
           absolutePanel(id="logo.left", top=145, left=0, width="100%", img(src="ptR/pointRLogo.SVG") ),
-           div( id='snippetToolBarContainer', "class"="cSnippetToolBarContainer", #draggable=FALSE ,
+          div( id='snippetToolBarContainer', "class"="cSnippetToolBarContainer", #draggable=FALSE ,
                 tags$ul( id='dndSnippetList', "class"="cSnippetToolBarList",
                   NULL
                 ),

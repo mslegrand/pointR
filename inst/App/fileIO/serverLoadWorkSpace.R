@@ -1,10 +1,10 @@
 
 restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir(), pprjPath=getProjectFullPath() ){
-  # cat('>---> restoreWorkSpace\n')
+  cat('>---> restoreWorkSpace\n')
   
   fileWSPaths<-dir(workSpaceDir, pattern='PTR-TABID', full.names = T)
   if(length(fileWSPaths)==0){
-    # cat("workSpaceDir = ",format(workSpaceDir), "\n")
+    cat("workSpaceDir = ",format(workSpaceDir), "\n")
     return(FALSE)
   }
   wsPages<-list()
@@ -213,7 +213,7 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir(), pprjPath=getProjectF
   
   
   
-  
+  tabId<-'bogus'
   for(page in wsPages){
     # extract the serverAsset portion and add
     tabId=page$fileDescriptor.tabId
@@ -265,13 +265,19 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir(), pprjPath=getProjectF
       browser()
       stop('tabId=', tabId, 'not found in serverAssetDB$tib$tabId')
     }
-    restoreAssetState(tabId)
+    
+    cat('here we are!!!!\n')
+    #restoreAssetState(tabId)
     updateTabsetPanel(session, inputId='pages', selected=tabId)
   }
-  delay(500,{
+  
+  aceId=tabID2aceID(tabId)
+  cat('aceId=',format(aceId),'\n')
+  updateAceExt(id=  aceId, sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
+  #delay(500,{
     for(page in wsPages){
-      
       tabId=page$fileDescriptor.tabId
+      cat('page in wsPages:: tabId=',tabId,"\n")
       fileSaveStatus=page$fileDescriptor.isSaved 
       savedStatus<-ifelse(fileSaveStatus, 'saved', 'notSaved')
       
@@ -279,8 +285,9 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir(), pprjPath=getProjectF
       addNewPage2dnippetsDB(tabId)
       sendFileTabsMessage(resize=runif(1), tabId=tabId, savedStatus= savedStatus)
     }
-  })
-  # cat('<---< restoreWorkSpace\n')
+  #})
+  updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
+  cat('<---< restoreWorkSpace\n')
   return(TRUE)
   
 }

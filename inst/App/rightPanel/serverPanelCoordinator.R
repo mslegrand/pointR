@@ -35,6 +35,7 @@ getNameType<-reactive({
     errorPanelTag
   } else {
     if(!is.null(getAssetName())){
+      # browser()
       if( getAssetName() %in% names(getPtDefs()$tib) ){
         tibTag
       } else if(getAssetName()==transformTag && usingTransformDraggable()) { 
@@ -73,6 +74,7 @@ getColumnType<-reactive({
 #    serverEdTib to set transform panel
 getPlotState<-reactive({
   nameType<-getNameType()
+  cat('nameType=',nameType,"\n")
   if(identical(nameType,tibTag)){
     colType<-getColumnType()
     if(identical(colType,'point')){
@@ -116,7 +118,7 @@ getRightMidPanel<-reactive({
 
 getRightPanelChoices<-reactive({ # includes names of tibs
   # cat('getRightPanelChoices', format(getSourceType()),"\n")
-  if(hasError()){ # error: set to  errorPanel
+  if(hasError() ){ # error: set to  errorPanel
     choices<-errorPanelTag
   } else if( getSourceType()==RPanelTag){
     choices=RPanelTag
@@ -132,6 +134,7 @@ getRightPanelChoices<-reactive({ # includes names of tibs
     }
     choices<-c(choices, svgPanelTag, RPanelTag)
   } 
+  cat("choices=", paste(choices, collapse=", "),"\n")
   choices
 },
 label= 'c(getAceEditorId(), getMode())'

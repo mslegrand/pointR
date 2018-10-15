@@ -56,7 +56,6 @@ restoreAssetState<-function(nextTabId){
         } )
       }
   }
- 
 }
 
 # called only by restoreAssetState

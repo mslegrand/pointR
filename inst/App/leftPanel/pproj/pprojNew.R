@@ -1,5 +1,7 @@
 
 newProj<-function(projName, parentDir, projType="generic"){
+  cat('>---> newProj\n')
+  
   closeCurrentProj()
   # test for write permissions
   # specific to  new proj
@@ -25,10 +27,10 @@ newProj<-function(projName, parentDir, projType="generic"){
   fullpathProjName=file.path(pathToProj, projName)
   write_json(ptRproj, fullpathProjName, pretty=4)
   
-  delay( 50, {
+  #delay( 50, {
     setUpProj(projName, pathToProj, projType="generic")
     #invoke startup
     request$sender<-'startup'
-  })  
+  #})  
 } 
 
