@@ -3,7 +3,7 @@ Shiny.addCustomMessageHandler(
   "ptRManager",
   function(data){
     console.log('-----------Entering ptRManager------------\n');
-    console.log(JSON.stringify(data));
+    // console.log(JSON.stringify(data));
     if(!!data.openFile){
       //console.log('about to trigger open\n');
       if( data.sender==='cmd.openFileNow'){
@@ -18,23 +18,23 @@ Shiny.addCustomMessageHandler(
     } //end data.openFile
     if(!!data.saveFile){
       var sender=data.sender;
-      console.log('data.saveFile:: sender=' + sender);
+      // console.log('data.saveFile:: sender=' + sender);
       var tabId = data.tabId;
-      console.log('data.saveFile:: tabId=' + tabId);
+      // console.log('data.saveFile:: tabId=' + tabId);
       //get title from tabId and stabs
       var title=stabs.getTitleGivendataValue(tabId);
-      console.log('ptRManager:: title= ' + JSON.stringify(title));
+      // console.log('ptRManager:: title= ' + JSON.stringify(title));
       
       if(!!data.target){
-        console.log('save target=' + data.target); 
+        // console.log('save target=' + data.target); 
       } 
       
       $('#' + data.target).trigger('click');
       $("h4.sF-title.modal-title").text( 'Save '+ title +' as ...');
       
       if(sender==='fileCmd.close' || sender==='fileCmd.quit'){
-        console.log("sender is close or quit\n");
-        console.log('data.saveFile:: sender=' + sender);
+        // console.log("sender is close or quit\n");
+        // console.log('data.saveFile:: sender=' + sender);
         $("#sF-cancelButton").text( "Close Without Saving");
         $('#' + data.target).on('cancel', function(event){
             Shiny.onInputChange(data.target, { 
@@ -43,8 +43,8 @@ Shiny.addCustomMessageHandler(
               rnd: Math.random().toString(36).substring(7)});
         });
       } else {
-        console.log("sender is neither close or quit\n");
-        console.log('data.saveFile:: sender=' + sender);
+        // console.log("sender is neither close or quit\n");
+        // console.log('data.saveFile:: sender=' + sender);
         $("#sF-cancelButton").text( "Cancel Save");
         $('#' + data.target).on('cancel', function(event){
           Shiny.onInputChange(data.target, {

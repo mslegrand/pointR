@@ -92,7 +92,7 @@ ScollableTabs.prototype.getTitleGivendataValue = function( dataValue){
 };
 
 ScollableTabs.prototype.toggleSaveState = function( tabId, state){
-  console.log('title='+ $(this.containerId +" div ul li a[data-value='" + tabId + "'] span span.tabTitle").text().trim());
+  // console.log('title='+ $(this.containerId +" div ul li a[data-value='" + tabId + "'] span span.tabTitle").text().trim());
   $(this.containerId +" div ul li a[data-value='" + tabId + "'] span span.tabTitle").toggleClass('star', state) ;
   return true;
 };
@@ -273,7 +273,7 @@ $(document).ready(function(){
   
   $('#editNavBar').mousedown(function(){
     var paths=stabs.getAllDocPaths();
-    console.log(JSON.stringify(paths));
+    // console.log(JSON.stringify(paths));
   });
 });
 
@@ -281,7 +281,7 @@ Shiny.addCustomMessageHandler(
   "scrollManager",
   function(data){
     console.log("----------entering  scrollManager------------");
-    console.log("data is" + JSON.stringify(data));
+    // console.log("data is" + JSON.stringify(data));
     if(!!data.resize){
       //console.log('resize here');
       $(window).resize();
@@ -290,23 +290,23 @@ Shiny.addCustomMessageHandler(
       stabs.scrollIntoView(data.selected);
     }
     if(!!data.tabId){ //aka tabId
-      console.log("data.tabId="+ data.tabId);
+      // console.log("data.tabId="+ data.tabId);
       if(!!data.title){
         stabs.resetTitleGivendataValue( data.title, data.tabId);
         stabs.reAdjust();
       }
-      console.log("data.savedStatus=" + JSON.stringify(data.savedStatus));
-      console.log("!!data.savedStatus=" + JSON.stringify(!!data.savedStatus));
+      // console.log("data.savedStatus=" + JSON.stringify(data.savedStatus));
+      // console.log("!!data.savedStatus=" + JSON.stringify(!!data.savedStatus));
       if(!!data.savedStatus){
-        console.log("data.savedStatus="+ data.savedStatus);
+        // console.log("data.savedStatus="+ data.savedStatus);
         stabs.toggleSaveState(data.tabId, data.savedStatus!=='saved');
       }
     }
     
     if(!!data.getAllTabIds){
       var tabIds = stabs.getAllTabValues();
-      console.log('getAllTabIds=' + data.getAllTabIds );
-      console.log(JSON.stringify(tabIds));
+      // console.log('getAllTabIds=' + data.getAllTabIds );
+      // console.log(JSON.stringify(tabIds));
       Shiny.onInputChange('tabManager', {
         tabs:tabIds, 
         sender: data.sender, 
