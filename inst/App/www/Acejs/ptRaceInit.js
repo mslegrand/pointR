@@ -246,6 +246,28 @@ function ptRaceInit(data){
     }
   });
   
+  var geRandomString = function(length) {
+                var text = '';
+                var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                for(var i = 0; i < length; i++) {
+                    text += possible.charAt(Math.floor(Math.random() * possible.length));
+              }
+              return text;
+            };
+            
+/*  Shiny.onInputChange('messageFromAce', 
+          {
+             code :  theEditor.getSession().getValue(),
+             sender : 'cmd.file.new',
+             id : data.id,
+             //dirty: editor.getSession().getUndoManager().dirtyCounter,
+             mode: data.mode,
+             isSaved: ud.isSaved(),
+             rnd : geRandomString(5)
+          }
+    );
+*/
+
 }
 
 
