@@ -138,7 +138,7 @@ Shiny.addCustomMessageHandler(
         );
         var id = data.id;
         
-        
+        //---------------id check------------------
         if(id.length===0 || id==='bogus'){ // nothing to process
           Shiny.onInputChange('messageFromAce', 
           {
@@ -154,10 +154,38 @@ Shiny.addCustomMessageHandler(
         }
         console.log('ace id =' + JSON.stringify(id));
         var $el = $('#' + id);
+        if(!$el){
+          console.log('cannot find #id');
+        }
+        console.log('id=' + JSON.stringify(id) );
+        var sender=data.sender;
+        console.log('sender =' + JSON.stringify(sender));
+        
+
         var editor = $el.data('aceEditor'); 
+        
+        //---------------editor check------------------
+        if(!!editor){
+          console.log('found editor');
+        } else {
+          console.log('editor is null');
+//          if(!!data.errCnt){
+//            data.errCnt=data.errCnt-1;
+//          } else {
+//            data.errCnt=10;
+//          }
+//          console.log('data.errCnt=' + data.errCnt);
+//          if(data.errCnt>0){
+//            console.log('sending to retryMssg2Ace');
+//            Shiny.onInputChange('retryMssg2Ace', data);
+//          }
+          return false;
+        }  
+        
+       
         var Range = ace.require("ace/range").Range;
         var ud =  editor.getSession().getUndoManager();
-        var sender=data.sender;
+        
         var auxValue="";
         
         var HighlightedLines;
@@ -165,14 +193,8 @@ Shiny.addCustomMessageHandler(
         aceMode = aceMode.substr(aceMode.lastIndexOf('/') + 1);
         
         
-        console.log('id=' + id );
-        console.log('sender =' + sender);
-        if(!!editor){
-          console.log('found editor');
-        } else {
-          console.log('editor is null');
-        }
-        
+
+        //---------------setDocFilePath------------------
         if(!!data.setDocFilePath){ 
           data.oldFilePath=$el.data('docFilePath');
           console.log('setting  docFilePath=' + data.setDocFilePath);
@@ -181,6 +203,7 @@ Shiny.addCustomMessageHandler(
           //$el.data('docFileSaved',-1);
         }
         
+        //---------------setDocFileSaved------------------
         if(!!data.setDocFileSaved){
           ud=editor.getSession().getUndoManager();
           // $el.data('docFileSaved',ud.$undoStack.length);
@@ -192,6 +215,7 @@ Shiny.addCustomMessageHandler(
         
         //console.log( '$el.data(docFilePath)=',JSON.stringify( $el.data('docFilePath') ));
         
+        //---------------ptRMode------------------
         if(!!data.ptRMode){ 
           editor.getSession().setMode({path: "ace/mode/ptr", v: Date.now()});
           editor.setBehavioursEnabled(true);
@@ -203,7 +227,7 @@ Shiny.addCustomMessageHandler(
         //  console.log( 'mode is = ' + JSON.stringify( mode ) );
         //}
 
-        
+        //---------------addMarker------------------
         if (!!data.addMarker ){
           var pos = data.addMarker;
           var row1 = pos[0]; 
@@ -217,6 +241,7 @@ Shiny.addCustomMessageHandler(
           ptr_HighlightedLines.push(mid); 
         }
         
+        //---------------tbMssg------------------
         if(!!data.tbMssg){
           console.log('!!data.tbMssg=' + data.tbMssg);
           if(data.tbMssg==='print'){
@@ -234,12 +259,13 @@ Shiny.addCustomMessageHandler(
         }
         
         
-        
+        //---------------tabSize------------------
         if(!!data.tabSize){
           //editor.getSession().setUseSoftTabs(true);
           editor.getSession().setTabSize( data.tabSize );
         }
         
+        //---------------resetElementColor------------------
         if(!!data.resetElementColor){
           $.each(data.resetElementColor, function(key,element){
             var rule=getStyleRule(key);
@@ -247,14 +273,17 @@ Shiny.addCustomMessageHandler(
            });
         }
         
+        //---------------toggleWhiteSpace------------------
         if(!!data.toggleWhiteSpace){
           editor.setShowInvisibles(!editor.getShowInvisibles());
         }
         
+        //---------------toggleTabType------------------
         if(!!data.toggleTabType){
           editor.session.setUseSoftTabs(!editor.session.getUseSoftTabs());
         }
         
+        //---------------snippets------------------
         if(!!data.snippets){
           var snippetManager = ace.require("ace/snippets").snippetManager;
           var m = snippetManager.files[editor.session.$mode.$id];
@@ -266,7 +295,7 @@ Shiny.addCustomMessageHandler(
           snippetManager.register(m.snippets);
         }
         
- 
+        //---------------setfocus------------------
         if(!!data.setfocus){
           editor.focus();
         }
@@ -279,6 +308,7 @@ Shiny.addCustomMessageHandler(
           });
         }
         
+        //---------------getKeyboardShortcuts------------------
         if(!!data.getKeyboardShortcuts){
           //var kb=ace.ext.get_editor_keyboard_shortcuts.getEditorKeybordShortcuts(editor);
           //Shiny.onInputChange("keyBoardHelp",kb);
@@ -289,7 +319,8 @@ Shiny.addCustomMessageHandler(
             
           }
           // update a given Range
-       
+          
+       //---------------getLastOK------------------
        if(!!data.getLastOK){
           ud=editor.getSession().getUndoManager();
           if( ud.$ok.length>0 ){ // only replace if we can roll back to a good state
@@ -320,7 +351,7 @@ Shiny.addCustomMessageHandler(
        }
 */
 
-       //---------------------------------
+       //---------------replacement------------------
         if(!!data.replacement){
           //console.log("\n\nEntering data.replacement");
           var replacement = data.replacement;
@@ -390,7 +421,7 @@ Shiny.addCustomMessageHandler(
           }        
         }
         
-        //-------------------
+        //---------setOk----------
         if(!!data.setOk){
           //console.log("\ndata.setOk");
           editor.getSession().getUndoManager().setOk();
@@ -403,8 +434,7 @@ Shiny.addCustomMessageHandler(
           
         }
         
-        //----------------------------
-        
+        //-------------setValue---------------
         if(!!data.setValue){
           editor.getSession().setValue(data.setValue);
           if(!!data.ok){
@@ -427,7 +457,6 @@ Shiny.addCustomMessageHandler(
         }
         
         //------------getValue----------------------------
-        
         if(!!data.getValue){
           if(['cmd.file.new'].indexOf(sender)>=0){
             //console.log('sender is cmd.file.new, should do editor.find');
