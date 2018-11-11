@@ -2,8 +2,22 @@
 returnValue4ModuleEdAsset<-callModule(
   module=moduleEdAsset,
   id="edAssetCh",
-  name=reactive({ if(hasError()){ errorPanelTag } else{ getAssetName()}}),
-  nameChoices=getRightPanelChoices
+  name=reactive({    
+    cat('>--->returnValue4ModuleEdAsset::callModule\n')
+    cat('returnValue4ModuleEdAsset:: next:: getAssetName \n')
+    if(hasError()){ rtv<-errorPanelTag } else{ rtv<-getAssetName()}
+    print(rtv)
+    rtv
+  }),
+  
+  nameChoices={ reactive({
+    cat('>--->returnValue4ModuleEdAsset::callModule\n')
+    cat('returnValue4ModuleEdAsset:: next:: getRightPanelChoices\n')
+    rtv<-getRightPanelChoices()
+    print(rtv)
+    cat('returnValue4ModuleEdAsset:: after:: getRightPanelChoices\n')
+    rtv
+  })}
 )
 
 #name

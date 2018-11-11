@@ -9,7 +9,7 @@ cmdSnippetUnload<-function(){
 
 observeEvent(input$buttonSnippetImport,{
   # cat('input$buttonSnippetImport\n')
-  fp.dt<-parseFilePaths(c(wd='~'), input$buttonSnippetImport)
+  fp.dt<-parseFilePaths(c(home='~'), input$buttonSnippetImport)
   if(length(fp.dt)>0 && nrow(fp.dt)){
     datapath<-as.character(fp.dt$datapath[1])
     datapath<-gsub(pattern = '^NA/', "~/", datapath)

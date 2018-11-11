@@ -1,9 +1,9 @@
 # ---beging code to inserted in ptR-------------------------------
 newProjModal <- function(failed = 0, mssg=NULL, datapath=NULL, projectName=NULL) {
   #shinyDirChoose(input, id='browseForDir', roots=c(wd='~'), filetypes='')
-  shinyDirChoose(input, id='browseForDir', roots=c(wd='~'))
+  shinyDirChoose(input, id='browseForDir', roots=c(home='~'))
   observeEvent(input$browseForDir,{
-    datapath<-parseDirPath(c(wd='~'), input$browseForDir)
+    datapath<-parseDirPath(c(home='~'), input$browseForDir)
     if(length(datapath)==0 || nchar(datapath)==0 ){
       datapath='~'
     } else{

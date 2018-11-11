@@ -1,11 +1,16 @@
 
-restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir(), pprjPath=getProjectFullPath() ){
+#restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir(), pprjPath=getProjectFullPath(), session=getSession() ){
+restoreWorkSpace<-reactive({
   cat('>---> restoreWorkSpace\n')
-  
+  # browser()
+  workSpaceDir=getWorkSpaceDir()
+  prjPath=getProjectFullPath()
   fileWSPaths<-dir(workSpaceDir, pattern='PTR-TABID', full.names = T)
   if(length(fileWSPaths)==0){
     cat("workSpaceDir = ",format(workSpaceDir), "\n")
-    return(FALSE)
+    cat(" length(fileWSPaths)==0 \n")
+    cat('<---< restoreWorkSpace\n')
+    return(NULL)
   }
   wsPages<-list()
   
@@ -179,45 +184,45 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir(), pprjPath=getProjectF
   # fileDescDB(tib)
   
   
+  # extractDBFromPages<-function(wsPages, pattern, initTib){
+  #   for(page in wsPages){
+  #     tibAs<-page[ grep(pattern, names(page)) ]
+  #     if(length(tibAs)>0){
+  #       names(tibAs)<-gsub(pattern, '', names(tibAs))
+  #       tibAs[sapply(tibAs,is.null)]<-NA
+  #       tryCatch({initTib<-bind_rows(initTib, tibAs)}, error=function(e){
+  #         stop('failure with pattern=',pattern, "and page=\n")
+  #       })
+  #     }
+  #   }
+  #   return(initTib)
+  # } 
+  
+  
   extractDBFromPages<-function(wsPages, pattern, initTib){
-    for(page in wsPages){
+    rtv<-lapply(wsPages, function(page){
       tibAs<-page[ grep(pattern, names(page)) ]
       if(length(tibAs)>0){
         names(tibAs)<-gsub(pattern, '', names(tibAs))
         tibAs[sapply(tibAs,is.null)]<-NA
-        tryCatch({initTib<-bind_rows(initTib, tibAs)}, error=function(e){
-          stop('failure with pattern=',pattern, "and page=\n")
-        })
       }
-    }
-    return(initTib)
+      tibAs
+    })
+    rtv<-bind_rows( rtv)
+    rtv
   }  
-  #browser()
-  serverAssetDB$tib<-extractDBFromPages(wsPages, "^assetSelection.", initTib=initialServerAssetDB() )
-  #browser()
-  tib<-extractDBFromPages(wsPages, "^backdrop.", initTib=initialBackDropDB() )
-  backDropDB(tib)
   
-  tib<-extractDBFromPages(wsPages, "^grid.", initTib=initialSvgGridDB()  )
-  svgGridDB(tib)
   
-  tib<-extractDBFromPages(wsPages, "^trib.", initTib=initialTribbleDB())
-  useTribbleFormatDB(tib)
-  
-  dnippetsDB$usage<-extractDBFromPages(wsPages, "^dnip.", initTib=tibble(tabId='bogus')[0,] )
-  
-  preProcDB$points<-extractDBFromPages(wsPages, "^preprocScripts.", initTib=initialPreprocDB())
-  
-  tib<-extractDBFromPages(wsPages, "^fileDescriptor.", initTib=initialFileDescDB() )
-  fileDescDB(tib)
-  
+
   
   
   tabId<-'bogus'
+  mode<-'ptr'
+  txt<-NULL
   for(page in wsPages){
     # extract the serverAsset portion and add
     tabId=page$fileDescriptor.tabId
-    
+    cat('page$fileDescriptor.tabId=',format(page$fileDescriptor.tabId),"\n")
     aceId<-tabID2aceID(tabId)
     mode=page$fileDescriptor.mode
     docFilePath=page$fileDescriptor.filePath
@@ -237,58 +242,138 @@ restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir(), pprjPath=getProjectF
     }
     
     appendTab(
-      inputId = "pages",
-      tabPanel( #tabId,
-        title<-tabTitleRfn(title, tabId, docFilePath), # maybe we should save title in fileDescriptor?
+      inputId = "pages", select=TRUE,
+      tabPanel( 
+        title=tabTitleRfn(title, tabId, docFilePath), # maybe we should save title in fileDescriptor?
         div(
           class=divClass,
           overflow= "hidden",inline=FALSE,
           shinyAce4Ptr(
             outputId = aceId,
-            value=txt,
-            mode=mode,
-            theme=defaultOpts["theme"],
-            fontSize=defaultOpts["fontSize"], autoComplete="enabled",
-            if(mode=='ptr')
+            value    = txt,
+            mode     = mode,
+            theme    = defaultOpts["theme"],
+            fontSize = defaultOpts["fontSize"], autoComplete="enabled",
+            if(mode=='ptr'){
               autoCompleteList =list(names(svgR:::eleDefs))
-            else
+            } else {
               NULL
-            ,
-            docFilePath=docFilePath,
-            initSaved=fileSaveStatus
+            },
+            docFilePath =docFilePath,
+            initSaved   =fileSaveStatus
           )
         ),
         value=tabId
       )
     )
-    if(!(tabId %in% serverAssetDB$tib$tabId) ){
-      browser()
-      stop('tabId=', tabId, 'not found in serverAssetDB$tib$tabId')
-    }
+    # if(!(tabId %in% serverAssetDB$tib$tabId) ){
+    #   browser()
+    #   stop('tabId=', tabId, 'not found in serverAssetDB$tib$tabId')
+    # }
     
-    cat('here we are!!!!\n')
+    # delay(500,{
+    #   updateAceExt(id=  aceId, sender='cmd.file.new', mode=mode, getValue= TRUE,  ok=TRUE )
+    # }
+    #)
+    
+    # cat('here we are!!!!\n')
+    # cat('tabId=',format(tabId),"\n")
+    # xyz<-input$pages
+    # cat('input$pages=',format(xyz),"\n")
     #restoreAssetState(tabId)
-    updateTabsetPanel(session, inputId='pages', selected=tabId)
   }
   
-  aceId=tabID2aceID(tabId)
-  cat('aceId=',format(aceId),'\n')
-  updateAceExt(id=  aceId, sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
-  #delay(500,{
-    for(page in wsPages){
-      tabId=page$fileDescriptor.tabId
-      cat('page in wsPages:: tabId=',tabId,"\n")
-      fileSaveStatus=page$fileDescriptor.isSaved 
-      savedStatus<-ifelse(fileSaveStatus, 'saved', 'notSaved')
-      
-      if(is.null(tabId)){ browser() }
-      addNewPage2dnippetsDB(tabId)
-      sendFileTabsMessage(resize=runif(1), tabId=tabId, savedStatus= savedStatus)
-    }
-  #})
-  updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
-  cat('<---< restoreWorkSpace\n')
-  return(TRUE)
+  # delay(3000,
+  #       { updateTabsetPanel(session, inputId='pages', selected=tabId)})
   
-}
+   # browser()
+  
+  # aceId=tabID2aceID(tabId)
+  # cat('aceId=',format(aceId),'\n')  
+
+  # 
+  # cat('code=',format(txt),"\n")
+  # request$code<-txt
+   # updateAceExt(id=aceId, sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
+  # updateAceExt(id=aceId, sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
+  
+  
+  
+  
+  # dt=500 # delay
+  # delay(500,{
+  #   for(page in wsPages){
+  #     tabId=page$fileDescriptor.tabId
+  #     cat('page in wsPages:: tabId=',tabId,"\n")
+  #     fileSaveStatus=page$fileDescriptor.isSaved 
+  #     savedStatus<-ifelse(fileSaveStatus, 'saved', 'notSaved')
+  #     
+  #     if(is.null(tabId)){ browser() }
+  #     #addNewPage2dnippetsDB(tabId)
+  #     sendFileTabsMessage(resize=runif(1), tabId=tabId, savedStatus= savedStatus)
+  #     aceId=tabID2aceID(tabId)
+  #     updateAceExt(id=aceId, sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
+  #   }
+  # })
+  
+  #browser()
+  # delay(3000,{
+  
+  serverAssetDB$tib<-extractDBFromPages(wsPages, "^assetSelection.", initTib=initialServerAssetDB() )
+
+  # browser()
+  tib<-extractDBFromPages(wsPages, "^backdrop.", initTib=initialBackDropDB() )
+  backDropDB(tib)
+
+  tib<-extractDBFromPages(wsPages, "^grid.", initTib=initialSvgGridDB()  )
+  svgGridDB(tib)
+
+  tib<-extractDBFromPages(wsPages, "^trib.", initTib=initialTribbleDB())
+  useTribbleFormatDB(tib)
+
+  dnippetsDB$usage<-extractDBFromPages(wsPages, "^dnip.", initTib=tibble(tabId='bogus')[0,] )
+
+  preProcDB$points<-extractDBFromPages(wsPages, "^preprocScripts.", initTib=initialPreprocDB())
+
+  tib<-extractDBFromPages(wsPages, "^fileDescriptor.", initTib=initialFileDescDB() )
+  fileDescDB(tib)  
+  
+  cat("tabId=",tabId,"\n")
+  cat('input$pages=',format(input$pages),"\n")
+  
+  # delay(5000,{
+  #   cat('2 input$pages=',format(input$pages),"\n")
+  #   restoreAssetState(tabId)
+  #   reOrgPanels(id=tabID2aceID(tabId), mode= mode )
+  #   processCommit()
+  # })
+  
+  # 
+  #Sys.sleep(3)
+  
+  
+    
+    #updateAceExt(id=  tabID2aceID(tabId), sender='cmd.file.new', mode=mode, getValue= TRUE,  ok=TRUE )
+  
+  
+  
+    #updateAceExt(id=  aceId, sender='cmd.file.new', mode=mode, getValue= TRUE,  ok=TRUE )
+  #})
+  
+  # })
+
+  
+
+  # dt2<-(1+length(wsPages))*dt
+  # dt2<-2000
+  # delay(dt2,{
+  #   updateAceExt(id=aceId, sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
+  # })
+  
+  #updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
+  cat('<---< restoreWorkSpace\n')
+  return(aceId)
+})
+  
+  # need add observer for aceId in pages??
 

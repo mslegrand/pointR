@@ -17,13 +17,16 @@ serverAssetDB<-reactiveValues( tib=initialServerAssetDB() )
 
 
 storeAssetState<-function(){ 
-  selectionList<-isolate(reactiveValuesToList(selectedAsset, all.names=TRUE))
+  cat(">----> storeAssetState\n")
+  selectionList<-reactiveValuesToList(selectedAsset, all.names=TRUE)
   if(is.null(selectionList$tabId) || identical(selectedAsset$tabId,'bogus')){
+    cat('nothing to store\n')
     return()
   }
   selectionList[sapply(selectionList,is.null)]<-NA
   tmp1<-filter(serverAssetDB$tib, tabId!=selectionList$tabId)
   serverAssetDB$tib<-bind_rows(tmp1, as.tibble(selectionList))
+  cat("<----< storeAssetState\n")
 }
 
 #~ @param nextTabId
@@ -37,6 +40,7 @@ storeAssetState<-function(){
 #  The only justification would be if nextTabId is in serverAssetDB$tib
 restoreAssetState<-function(nextTabId){
   if(length(nextTabId)==1 && !is.na(nextTabId)){
+    cat('>---> restoreAssetState\n')
        # browser()
        if(nrow(serverAssetDB$tib)>0){
          row.tib<-filter(serverAssetDB$tib, tabId==nextTabId)
@@ -45,7 +49,9 @@ restoreAssetState<-function(nextTabId){
        }
       if(nrow(row.tib)==0){
        #  browser()
+        cat('restoreAssetState:: next:: getRightPanelChoices\n')
         choices<-getRightPanelChoices() # this is suspect
+        cat('restoreAssetState choices=',choices,"\n")
         row.tib<-newAssetSelection(tabId=nextTabId, choices=choices, tibs=getPtDefs()$tib)
       }
       if(!is.null(row.tib)){
@@ -55,11 +61,13 @@ restoreAssetState<-function(nextTabId){
           selectedAsset[[n]]<-v
         } )
       }
+    cat('<---< restoreAssetState\n')
   }
 }
 
 # called only by restoreAssetState
 newAssetSelection<-function( tabId, choices, tibs){
+  cat('>---> newAssetSelection\n')
   if( length(tabId)==0 || length(choices)==0){
     return( NULL)
   }
@@ -93,6 +101,7 @@ newAssetSelection<-function( tabId, choices, tibs){
       transformType='translate'
     }
   }
+  
   selection=list(
     tabId=tabId,
     name=name,
@@ -104,4 +113,6 @@ newAssetSelection<-function( tabId, choices, tibs){
     transformType='Translate',
     ptScriptSel=preprocChoices[1]
   )
+  cat('<---< newAssetSelection\n')
+  selection
 }

@@ -13,13 +13,19 @@ returnValue4ModuleEdTib<-callModule(
     # cat('Input name to tibEditor is=',format(rtv),'\n')
     rtv
   }),
-  nameChoices=getRightPanelChoices,
+  nameChoices=reactive({
+      cat('nameChoices in callModule::returnValue4ModuleEdTib\n')
+      cat('returnValue4ModuleEdTib:: next:: getRightPanelChoices\n')
+      rtv<-getRightPanelChoices()
+      cat('returnValue4ModuleEdTib:: after:: getRightPanelChoices\n')
+      rtv
+  }),
   getRowIndex=reactive({            if( getTibEditState()==TRUE ){ getTibRow() } else { NULL } }),
   getTibNRow=reactive({             if( getTibEditState()==TRUE ){ getTibNRow() } else { NULL } }),
   matColIndex=reactive({            if( getTibEditState()==TRUE ){ getTibMatCol() } else { NULL } }),
   matColIndexChoices=reactive({     if( getTibEditState()==TRUE ){ getTibMatColChoices() } else { NULL } }),
-  getMatColIndex=reactive({            if( getTibEditState()==TRUE ){ getTibMatCol() } else { NULL } }),
-  getMatColMax=reactive({ if( getTibEditState()==TRUE ){ getTibMatColMax() } else { NULL }}),
+  getMatColIndex=reactive({         if( getTibEditState()==TRUE ){ getTibMatCol() } else { NULL } }),
+  getMatColMax=reactive({           if( getTibEditState()==TRUE ){ getTibMatColMax() } else { NULL }}),
   getColumnName= reactive({         if( getTibEditState()==TRUE ){ getTibColumnName() } else { NULL } }),
   getColumnNameChoices=reactive({   if( getTibEditState()==TRUE ){ getTibColumnNameChoices() } else { NULL } }),
   getTibEntry=reactive({            if( getTibEditState()==TRUE ){ getTibEntry() } else { NULL } }),
@@ -57,14 +63,15 @@ getSafeSelection<-function(selection, choices){ #anybody using this???
 
 observeEvent(returnValue4ModuleEdTib$selectedWidget(), {
   if( getTibEditState()==TRUE && !is.null( returnValue4ModuleEdTib$selectedWidget() )){
-    # cat("\n-----------returnValue4ModuleEdTib$selectedWidget--------------------\n")
-    # cat("selectedWidget=",format( returnValue4ModuleEdTib$selectedWidget() )," tabId=",format(input$pages),"\n\n")
+    cat("\n-----------returnValue4ModuleEdTib$selectedWidget--------------------\n")
+    cat("selectedWidget=",format( returnValue4ModuleEdTib$selectedWidget() )," tabId=",format(input$pages),"\n\n")
     updateWidgetChoicesRow( selectedWidget=returnValue4ModuleEdTib$selectedWidget())
   }
 })
 
 observeEvent(returnValue4ModuleEdTib$transformType(),{
   if( getPlotState()==transformTag){
+    cat("\n-----------returnValue4ModuleEdTib$transformType--------------------\n")
       tt<-returnValue4ModuleEdTib$transformType()
       if(!is.null(tt) && tt!=getTransformType() ){
         updateSelected( transformType= tt)

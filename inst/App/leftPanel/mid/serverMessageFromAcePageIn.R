@@ -1,40 +1,52 @@
 
 processMssgFromAceMssgPageIn<-function(sender, mssg){
-    # cat('>---> processMssgFromAceMssgPageIn\n')
-    processCommit() # this sets the sourceType
-    reOrgPanels(id=getAceEditorId(), mode= getMode() )
-    # cat("sender = ", format(sender),"\n")
+    cat('>---> processMssgFromAceMssgPageIn\n')
+    
+    #reOrgPanels(id=mssg$id, mode= getMode() )
+    cat("sender = ", format(sender),"\n")
     # cat("assetName = ", format(getAssetName()),"\n")
     if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset') && !is.null(getAssetName())){ 
       #if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset', 'cmd.saveFileNow') && !is.null(getAssetName())){ 
+      processCommit() # this sets the sourceType
       if(sender=='cmd.add.asset'){
         name=mssg$selector$assetName
       } else {
         name=getAssetName() # 'cmd.commit', 'cmd.add.column'
-        # cat('getAssetName()=', format(getAssetName()), "\n")
+         cat('getAssetName()=', format(getAssetName()), "\n")
       }
       tibs<-getPtDefs()$tib
-      # cat('name=',format(name),"\n")
-      # cat("ace invoking resetSelectedTibbleName\n")
-      # cat('names of tibs:',format(names(tibs)), "!\n")
+       cat('name=',format(name),"\n")
+       cat("ace invoking resetSelectedTibbleName\n")
+       cat('names of tibs:',format(names(tibs)), "!\n")
       resetSelectedTibbleName(tibs=tibs, name=name)
-    } else { # else covers: 'cmd.file.new', 'cmd.tabChange', 'cmd.openFileNow', 
+    } else { # else covers: 'cmd.file.new', 'cmd.tabChange', 'cmd.openFileNow', p
+
+# getMode -----------------------------------------------------------------
+
       
       # cat('hhh\n')
       if(length(input$pages) >0 && 
          nchar(input$pages)>0 && 
          !identical(selectedAsset$tabId, input$pages) 
       ){
-        # cat('--storeAssetState\n')
+        
+         cat('--storeAssetState\n')
         storeAssetState()
-        # cat("--restoreAssetState\n")
-        restoreAssetState(input$pages)
-        # cat('--savePage\n')
+         cat("--restoreAssetState\n")
+        processCommit() # this sets the sourceType
+        cat('--reOrgPanels')
+        reOrgPanels(id=mssg$id, mode= mode )
+        restoreAssetState(input$pages) #copies from db to assetSelection
+         cat('--savePage\n')
         savePage(input$pages) # require for new page that was not committed
+         
         
       } else{
+        # kill all
       }
-      # cat('<---< processMssgFromAceMssgPageIn\n')
+      reOrgPanels(id=mssg$id, mode= getMode() )
+      
       # end assetUpdate:
-    }
+    } 
+    cat('<---< processMssgFromAceMssgPageIn\n\n')
 }

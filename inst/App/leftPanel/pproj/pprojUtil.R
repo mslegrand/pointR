@@ -31,6 +31,7 @@ closeCurrentProj<-function(){
   writeOptionsJSON(opts)
   
   # close all open tabs
+  stopifnot('tabId' %in% fileDescDB() )
   tabIds<-fileDescDB()$tabId
   for( tabId in tabIds){
     removeTab(inputId = "pages", tabId)
@@ -44,6 +45,7 @@ closeCurrentProj<-function(){
   useTribbleFormatDB( initialTribbleDB() )
   backDropDB( initialBackDropDB() )
   svgGridDB( initialSvgGridDB() )
+  serverAssetDB$tib<-initialServerAsset()
   # cat('<---< closeCurrentProj\n')
 }
 
@@ -69,7 +71,7 @@ setSfDir<-function(sf_id, path, root="home"){
 }
 
 resetShinyFilesIOPaths<-function(pathToProj){
-  # cat( ">---> resetShinyFilesIOPaths\n")
+  cat( ">---> resetShinyFilesIOPaths\n")
   if( identical(pathToProj, optionDirPath())){
     pathToProj<-path_home()
   } else {
@@ -77,7 +79,7 @@ resetShinyFilesIOPaths<-function(pathToProj){
     pathToProj<-paste0("~/",pathToProj)
   }
   
-  # cat('pathToProj=', format(pathToProj),"\n")
+  cat('pathToProj=', format(pathToProj),"\n")
   
   fileIOIds<-c("buttonFileOpen", "buttonSnippetImport","buttonDnippetImport", "buttonFileSaveR",
                "buttonPreProcPtImport","buttonExportSVG","buttonExportPreproc")
@@ -92,7 +94,7 @@ resetShinyFilesIOPaths<-function(pathToProj){
     jscode<-setSfDir(id, path=pathToProj)
     runjs(jscode)
   }
-  # cat( "<---< resetShinyFilesIOPaths\n")
+  cat( "<---< resetShinyFilesIOPaths\n")
 }
 
 

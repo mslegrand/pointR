@@ -35,22 +35,33 @@ addFileDesc<-function( pageId, docFilePath, fileSaveStatus, fileMode){
 
 
 getMode<-reactive({
-  if(!is.null(input$pages)){ # to avoid warning
-    fd<-fileDescDB()
-    fd[fd$tabId==input$pages,]$mode
+  cat('>---> getMode\n')
+  tabId<-input$pages # getTibTabId()
+  if(is.null(tabId) || identical(tabId, 'bogus')){
+    mode<-NULL
   } else {
-    NULL
+    fd<-fileDescDB()
+    stopifnot('tabId' %in% names(fd))
+    mode<-fd[fd$tabId==input$pages,]$mode
   }
+  cat('mode is ', format(mode),"\n")
+  cat('<---< getMode\n')
+  mode
 })
   
 
 getFileDescriptor<-function(pageId){ 
+  cat('>---> getFileDescriptor\n')
   if(!is.null(pageId)){  # not really needed since caller checks for null pageId!!!
       fd<-fileDescDB()
-      fd[fd$tabId==pageId,] #or use filter
+      print(fd)
+      rtv<-fd[fd$tabId==pageId,] #or use filter
+      print(rtv)
   } else {
-    NULL
+    rtv<-NULL
   }
+  cat('<---< getFileDescriptor\n')
+  rtv
 }
 
 # to be called from 
@@ -63,36 +74,48 @@ setFileDescPath<-function(pageId, filePath){
 
 setFileDescSaved<-function(pageId, fileSaveStatus){
   if(!is.null(pageId)){
+      cat('>---> setFileDescSaved\n')
       fileSaveStatus<-unlist(fileSaveStatus)
       fd<-fileDescDB()
+      stopifnot('tabId' %in% names(fd))
       tmp<-filter(fd, tabId==pageId)
       if(nrow(tmp)>0){
         fd[fd$tabId==pageId,"isSaved"]<-fileSaveStatus 
         fileDescDB(fd) 
       }
+      cat('<---< setFileDescSaved\n')
   }
 }
 
 
 getAllNamedUnsavedFiles<-reactive({
+  cat('>---> getAllNamedUnsavedFiles\n')
   fd<-fileDescDB()
   fd<-filter(fd, isSaved==FALSE & filePath!="?")
+  cat('<---< getAllNamedUnsavedFiles\n')
   fd
 })
 
 getFileSavedStatus<-reactive({
+  cat('>---> getFileSavedStatus\n')
   pageId<-input$pages
   if(!is.null(pageId)){
     fd<-fileDescDB()
+    stopifnot('tabId' %in% names(fd))
+    print('fd22=')
+    print(fd)
     tmp<-filter(fd, tabId==pageId)
+    print(tmp)
     if(nrow(tmp)==1){
-      tmp$isSaved
+      rtv<-tmp$isSaved
     } else {
-      FALSE
+      rtv<-FALSE
     }
   } else {
-    TRUE
+    rtv<-TRUE
   }
+  cat('<---< getFileSavedStatus\n')
+  rtv
 })
 
 # to be called when tab is closed
@@ -105,10 +128,14 @@ getFileSavedStatus<-reactive({
 # and then forwarded to ace. Ace picks this up and issues a closeTabNow(tabId)
 # so removeFileDesc should be called from closeTabNow(tabId)
 removeFileDesc<-function(pageId, path=getWorkSpaceDir() ){
+  cat('>---> removeFileDesc\n')
   fdDB<-fileDescDB()
-  fdDB<-filter(fdDB, !identical(tabId, pageId))
+  stopifnot('tabId' %in% names(fdDB))
+  # fdDB<-filter(fdDB, !identical(tabId, pageId))
+  fdDB<-filter(fdDB, tabId!=pageId)
   fileDescDB(fdDB)
   fileName=paste0(path,"/",pageId,".rda")
   file.remove(fileName)
+  cat('<---< removeFileDesc\n')
 }
 

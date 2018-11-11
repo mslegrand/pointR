@@ -26,7 +26,8 @@ getSelIndex<-reactive({
 })
 
 observeEvent(getTibNRow(),{
-  if(identical(getMode(),'ptR') && length(names(getPtDefs()$tib))>0 ){
+  if(!is.null(getPtDefs()$tib) && length(names(getPtDefs()$tib))>0 ){
+  # if(identical(getMode(),'ptR') && length(names(getPtDefs()$tib))>0 ){
     sendPtRManagerMessage(  sender='tibNrow', rowCountChange=TRUE)
   }
 }, label='serverAssetSelection:: getTibNRow()')
@@ -82,11 +83,13 @@ getTibMatColMax<-reactive({
 #    1. serverEdtib to reset the name when the selection changes
 #    2. serveAce to reset name when we have a file->New or file->Open
 resetSelectedTibbleName<-function(tibs, name){
+    cat('>---f-> resetSelectedTibbleName\n')
     if(hasError()){
+      cat('<---f-< resetSelectedTibbleName\n')
       return(NULL) # never change selection when in error state
     }
       choices<-getRightPanelChoices()
-      #cat("resetSelectedTibbleName:: choices=", paste(choices, collapse=", "),"\n")
+      cat("resetSelectedTibbleName:: choices=", paste(choices, collapse=", "),"\n")
       if(is.null(name) || !(name %in% choices)){
         name<-getAssetName() #pick the last name
       }
@@ -140,6 +143,7 @@ resetSelectedTibbleName<-function(tibs, name){
       if( selectedAsset$name==transformTag){
         selectedAsset$transformType='translate'
       }
+      cat('<---f-< resetSelectedTibbleName\n')
 }
 
 

@@ -24,6 +24,14 @@ initResourcePaths <- function() {
   return(NULL)
 }
 
+allGood<-function(...) {
+  all(sapply(list(...),length)!=0) && !any(sapply(list(...),is.na)!=0)
+}
+
+notNull<-function(...) {
+  all(sapply(list(...),length)!=0) 
+}
+
 # list.entry.at.index<-function(ll, indx){
 #   if(!is(ll,'list')){
 #     return(NULL)

@@ -18,7 +18,7 @@ genShinySaveFilesObservers<-function(input, session){
           setTabRequest(sender=NULL, tabs=NULL)
         }
       } else { 
-        fp.dt<-parseSavePath(c(wd='~'), rtList)
+        fp.dt<-parseSavePath(c(home='~'), rtList)
         if(length(fp.dt)>0 && nrow(fp.dt)>0){
           #cat('=======shinyFiles SAVE observer=============\n')
           

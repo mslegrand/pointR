@@ -1,25 +1,32 @@
 observeEvent(request$sender,{
   if(identical(request$sender,'startup')){ 
-    #cat(">---> request startup\n")
-    # cat('readDnippetsFileNames\n')
+    # browser()
+    cat(">---> request startup\n")
+    cat('reOrgPanels\n')
+    reOrgPanels(id=NULL, mode=NULL)
+    
+     cat('readDnippetsFileNames\n')
     readDnippetsFileNames()
-    # cat('now to saveDnippetsFileNames\n')
+     cat('now to saveDnippetsFileNames\n')
     saveDnippetsFileNames()
-    # cat('now to restoreWorkSpace\n')
-    success<-restoreWorkSpace()
-    # cat('success=',format(success),"\n")
-    if(!success){
-      # cat('now to cmdFileNewPtR\n')
+     cat('now to restoreWorkSpace\n')
+    aceId<-restoreWorkSpace()
+     cat('aceId=',format(aceId),"\n")
+    if(is.null(aceId)){
+      cat('now to cmdFileNewPtR\n')
       cmdFileNewPtR()
-    } 
-    # cat('now to disableDMD\n')
+    } else {
+      #updateAceExt(id=aceId, sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
+    }
+    cat('now to disableDMD\n')
     disableDMDM(
       session, 
       menuBarId="editNavBar", 
       entry="customControl"
     )
-    resetShinyFilesIOPaths(getDirPath()) #lets just force this to happen
+    # updateAceExt(id=aceId, sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
+    # resetShinyFilesIOPaths(getDirPath()) #lets just force this to happen
     #dirtyDMDM(session, "editNavBar")
-    # cat("<---< request startup\n")
+    cat("<---< request startup\n\n")
   }
 }, priority=100)

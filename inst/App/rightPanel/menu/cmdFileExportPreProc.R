@@ -5,7 +5,7 @@ cmdPreProcPtsExport<-function(){
 
 
 observeEvent(input$buttonExportPreproc,{
-  fp.dt<-parseSavePath(c(wd='~'), input$buttonExportPreproc)
+  fp.dt<-parseSavePath(c(home='~'), input$buttonExportPreproc)
   if(length(fp.dt)>0 ){
     fileName<-as.character(fp.dt$datapath[1])
     scripts<-getPreProcPtScript()

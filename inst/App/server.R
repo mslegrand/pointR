@@ -12,7 +12,9 @@ shinyServer(function(input, output,session) {
   
   
   triggerRefresh<-function(sender, rollBack=TRUE, auxValue=FALSE){ # to be used to force a code refresh???
+    cat(">---> triggerRefresh\n")
     updateAceExt(id= getAceEditorId(), sender=sender, getValue=TRUE, rollBack=rollBack, auxValue=auxValue )
+    cat("<---< triggerRefresh\n")
   }
   
   
@@ -20,10 +22,12 @@ shinyServer(function(input, output,session) {
   getRightMenuCmd<-reactive({input$plotNavBar$item})
   
   # extract points from user code
-  getPtDefs<- reactive({ 
+  #getPtDefs<- eventReactive(c(getCode(),input$pages), { # may need to add tab change??? or change back to reactive
+  getPtDefs<- reactive({
     if(is.null(getCode()) || nchar(getCode())==0 || !identical(getMode(), 'ptr')  ){
       return(NULL)
     }  
+    # browser()
     useTribbleFormat<- getUseTribble()
     ptDefs<-ex.getPtDefs(getCode(), useTribbleFormat=useTribbleFormat) 
     ptDefs

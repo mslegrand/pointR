@@ -10,12 +10,15 @@ src2sourceType<-function(src){  #not used !!
 }
 
 
-
+# uses to mode, input$pages
+# called exclusively by processMssgFromAceMssgPageIn
 processCommit<-reactive({
   cat(">---> processCommit\n")
   clearErrorMssg()
+  
   mode<-getMode()
   if(length(mode)==0){
+    browser()
     return(NULL)
   }
   # cat("class(mode)=" ,class(mode),"\n")
@@ -27,18 +30,18 @@ processCommit<-reactive({
   } else if( identical(mode, 'dnippets')){
     processDnip()
   } else if (identical(mode, 'text')){
-    panels$sourceType<-textPanelTag
+    setSourceType(textPanelTag)
   } else if (identical(mode, 'snippets')){
-    panels$sourceType<-snippetPanelTag
+    setSourceType(snippetPanelTag)
   } else {
     browser()
   }
   if(!hasError()){
     tabId<-input$pages
     # cat("tabId=",tabId,"\n")
-    # cat('>---> processCommit::savePage\n')
+    cat('>---> processCommit::savePage\n')
     savePage(tabId)
-    # cat('<---< processCommit::savePage\n')
+    cat('<---< processCommit::savePage\n')
   }
   cat("<---< processCommit\n")
 })

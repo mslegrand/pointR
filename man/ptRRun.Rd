@@ -4,7 +4,7 @@
 \alias{ptRRun}
 \title{starts the app}
 \usage{
-ptRRun()
+ptRRun(pointRProject = NULL)
 }
 \description{
 starts the app

@@ -22,10 +22,10 @@ getPageSvgGrid<-function(pageId){
     tb<-svgGridDB()
     rtv<-as.list(filter(tb, tabId==pageId))
     if(any(sapply(rtv, length)==0)){
-      rtv<-list( show=FALSE, dx=50, dy=50, color='lightgrey')
+      rtv<-list( tabId=pageId, show=FALSE, dx=50, dy=50, color='lightgrey')
     }
   } else {
-    rtv<-list( show=FALSE, dx=50, dy=50, color='lightgrey')
+    rtv<-list( tabId=pageId, show=FALSE, dx=50, dy=50, color='lightgrey')
   }
   return(rtv)
 }
@@ -82,6 +82,7 @@ observeEvent( input$Vspacing, {
 #color show done in cmd
 
 observeEvent(input$pages,{
+  cat(">---> input$pages 5\n")
   tb<-getSvgGrid()
   if(length(tb$show)>0){
     if(tb$show){
@@ -90,6 +91,7 @@ observeEvent(input$pages,{
       renameDMDM(session,  "plotNavBar",  "cmdHideGrid", "Show Grid",newValue="cmdShowGrid")
     }
   }
+  cat("<---< input$pages 5\n")
 })
 
 

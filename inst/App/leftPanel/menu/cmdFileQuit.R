@@ -9,7 +9,6 @@ cmdFileQuit<-reactive({
   } else {
     cmdQuitNow()
   }
-  
 })
 
 cmdQuitNow<-reactive({
@@ -50,6 +49,7 @@ observeEvent(input$checkAll,{
   saveDnippetsFileNames()
   savePage(input$pages)
   # now put tabs on tab list and save all
+  cat('>---> checkAll\n')
   selection<-getAllNamedUnsavedFiles()$tabId
   if(length(selection)==0){
     cmdQuitNow()
@@ -57,7 +57,7 @@ observeEvent(input$checkAll,{
     #iterate over each tab id selection and save each, then quit 
     setTabRequest(sender='fileCmd.quit', tabs=selection)
   }
-  
+  cat('<---< checkAll\n')
 })
 
 observeEvent(input$quitNow,{

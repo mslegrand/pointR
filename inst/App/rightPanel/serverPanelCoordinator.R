@@ -6,11 +6,11 @@ panels<-reactiveValues(
   #  sourceType = 'svgPanelTag'  means svgR code
   #  sourceType = 'RPanelTag' means plain R code or error
   #  sourceType is set from processCommit  
-  sourceType=svgPanelTag 
+  sourceType=textPanelTag 
 )
 
-observeEvent( panels$sourceType,{
-  if(identical(panels$sourceType, svgPanelTag)){
+observeEvent( getSourceType(),{
+  if(identical(getSourceType(), svgPanelTag)){
     enableDMDM(session, "editNavBar", "Export as SVG")
   } else {
     disableDMDM(session, "editNavBar", "Export as SVG")
@@ -31,23 +31,28 @@ getSourceType<-reactive({
 # 'tib' if it is the name of an existing tibble
 #  otherwise
 getNameType<-reactive({
+  cat('>---> getNameType\n')
   if(hasError()){
-    errorPanelTag
+    rtv<-errorPanelTag
   } else {
     if(!is.null(getAssetName())){
       # browser()
       if( getAssetName() %in% names(getPtDefs()$tib) ){
-        tibTag
-      } else if(getAssetName()==transformTag && usingTransformDraggable()) { 
+        rtv<-tibTag
+      } else if( identical(getAssetName(),transformTag) && usingTransformDraggable()) { 
         # return transformTag if transformTag and usingTransformDraggable()
-        transformTag
+        rtv<-transformTag
       } else {
-        getAssetName()
+        rtv<-RPanelTag
+        #rtv<-getAssetName()
       }
     } else { # RPanelTag whenever getAssetName is NULL???
-      RPanelTag
+      rtv<-RPanelTag
     }
+    cat('rtv=',format(rtv),"\n")
+    cat("<---< getNameType\n")
   }
+  rtv
 })
 
 #returns the type of column, which can be 'point', 'list', 'numeric', 'colourable', 'value'
@@ -90,7 +95,7 @@ getPlotState<-reactive({
 # returns true iff editing tib contents
 getTibEditState<-reactive({
   #cat("getTibEditState::getPlotState()=",format(getPlotState()),"\n")
-  (panels$sourceType)==svgPanelTag && 
+  getSourceType()==svgPanelTag && 
     !is.null(getPlotState()) && 
     getPlotState() %in%  c("point", "value", "matrix")
 })
@@ -118,26 +123,38 @@ getRightMidPanel<-reactive({
 
 getRightPanelChoices<-reactive({ # includes names of tibs
   # cat('getRightPanelChoices', format(getSourceType()),"\n")
+  cat(">---> getRightPanelChoices\n")
+  # browser()
+  cat('getSourceType()=', format(getSourceType()),'\n')
+  # browser()
   if(hasError() ){ # error: set to  errorPanel
     choices<-errorPanelTag
-  } else if( getSourceType()==RPanelTag){
-    choices=RPanelTag
-  } else if( getSourceType()==rmdPanelTag){
-    choices=c( rmdPanelTag, RPanelTag )
-  } else if( getSourceType()==snippetPanelTag){
-    choices=snippetPanelTag
-  } else { # ptRPanel (names of ptDefs not null), svgRPanel, 
-    ptDefs<-getPtDefs()
-    choices<-names(getPtDefs()$tib)
-    if( usingTransformDraggable() ){
-      choices<-c(choices, transformTag)
+  } else {
+    sourceType<-getSourceType()
+    if( identical(sourceType,RPanelTag) ){
+      choices=RPanelTag
+    } else if( identical(sourceType, rmdPanelTag) ){
+      choices=c( rmdPanelTag, RPanelTag )
+    } else if( identical(sourceType, snippetPanelTag ) ){
+      choices=snippetPanelTag
+    } else if( getSourceType()==svgPanelTag){ 
+      # browser()
+      ptDefs<-getPtDefs()
+      # browser()
+      choices<-names(getPtDefs()$tib)
+      if( usingTransformDraggable() ){
+        choices<-c(choices, transformTag)
+      }
+      choices<-c(choices, svgPanelTag, RPanelTag)
+    } else{
+      choices<-textPanelTag
     }
-    choices<-c(choices, svgPanelTag, RPanelTag)
   } 
   cat("choices=", paste(choices, collapse=", "),"\n")
+  cat("<---< getRightPanelChoices\n")
   choices
 },
-label= 'c(getAceEditorId(), getMode())'
+label= 'getRightPanelChoices'
 )
 
 
@@ -216,7 +233,10 @@ observeEvent(atLeast2Rows(),{
 
 
 reOrgPanels<-function(id, mode){
-  if(length(id)==0){
+  cat(">---> reOrgPanels\n")
+  cat('id=',format(id),"\n")
+  cat('mode=',format(mode),"\n")
+  if(length(id)==0 || length(mode)==0){
     hideElement("TopRightPanel")
     hideElement("snippetToolBarContainer")
     hideElement("aceToobarTop1")
@@ -233,23 +253,23 @@ reOrgPanels<-function(id, mode){
     hideElement("logo.right")
     hideElement("logo.left")
     # editing ptr
-    if(identical(getMode(),'ptr')){
+    if(identical(mode,'ptr')){
       showElement("BottomRightPanel")
       showElement("TopRightPanel")
       showElement("snippetToolBarContainer")
       showElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble
-      addClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
-      addClass( id= 'midRightPanels', class='ctop140')
+      addCssClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
+      addCssClass( id= 'midRightPanels', class='ctop140')
     } else { # editing other
-      removeClass( id= 'midRightPanels', class='ctop140')
+      removeCssClass( id= 'midRightPanels', class='ctop140')
       hideElement("TopRightPanel")
       hideElement("snippetToolBarContainer")
       hideElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble
-      if(identical(getMode(),'ptrrmd')){
-        removeClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
+      if(identical(mode,'ptrrmd')){
+        removeCssClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
       }
       else{
-        addClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
+        addCssClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
       }
     }
     showElement("aceToobarTop1")
@@ -258,6 +278,7 @@ reOrgPanels<-function(id, mode){
     showElement("aceTabSet")
     showElement("midRightPanels")
   }
+  cat("<---< reOrgPanels\n")
 }
 
 # observeEvent(c(getAceEditorId(), getMode()),{

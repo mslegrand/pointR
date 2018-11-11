@@ -30,10 +30,19 @@ setBackDrop<-function(pageId, checked, color){
 
 
 observeEvent(input$pages,{
-  bd<-getBackDrop()
-  updateColourInput(session , inputId="backdropColour", value=bd$color)
-  updateCheckboxInput(session, inputId="solidBackdrop", value=!bd$checked)
-})
+  cat(">---> input$pages 4\n")
+  if(length(input$pages)>0){
+      
+    cat('input$pages=',format(input$pages),"\n")
+    
+      bd<-getPageBackDrop(input$pages)
+      print(bd)
+    updateColourInput(session , inputId="backdropColour", value=bd$color)
+    updateCheckboxInput(session, inputId="solidBackdrop", value=!bd$checked)
+  }
+
+  cat("<---< input$pages 4\n")
+}, ignoreNULL=TRUE)
 
 observeEvent(input$solidBackdrop,{
   checked<-!input$solidBackdrop
@@ -51,10 +60,10 @@ getPageBackDrop<-function(pageId){
     tb<-backDropDB()
     rtv<-as.list(filter(tb, tabId==pageId))
     if(any(sapply(rtv, length)==0)){
-      rtv<-list(color='white', checked=FALSE)
+      rtv<-list(tabId=pageId, color='white', checked=FALSE)
     }
   } else {
-    rtv<-list(color='white', checked=FALSE)
+    rtv<-list(tabId=pageId, color='white', checked=FALSE)
   }
   return(rtv)
 }

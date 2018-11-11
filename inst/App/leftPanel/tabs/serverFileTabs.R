@@ -7,7 +7,7 @@ sendFileTabsMessage<-function(...){
   }
 }
 
-#tracks the naming for unnamed pages
+# tracks the naming for unnamed pages
 pages<- reactiveValues(
   fileName='',
   fileNameCount=1
@@ -48,18 +48,25 @@ tabTitleRfn<-function(tabName, tabId, docFilePath){
 }
 
 closeTabNow<-function(tabId2X){
+  stopifnot('tabId' %in% names(serverAssetDB$tib))
   serverAssetDB$tib<-filter(serverAssetDB$tib, tabId!=tabId2X)
+  stopifnot('tabId' %in% names(handler$choices))
   handler$choices<-filter(handler$choices, tabId!=tabId2X)
   removeFileDesc(tabId2X)
   removeTab(inputId = "pages", tabId2X)
 }
+
+
+
+
+
 
 # TODO!!!! , add input parameters for:  mode, autocomplete
 # fontsize should be read from options 
 addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FALSE){
   # cat("addFileTab:: mode=",mode,"\n")
   tabId<-getNextTabId()
-  # cat("addFileTab:: tabId",tabId,"\n")
+  cat("addFileTab:: tabId",format(tabId),"\n")
   aceId<-tabID2aceID(tabId)
   # cat("addFileTab:: aceId",aceId,"\n")
   # cat("addFileTab:: docFilePath",format(docFilePath),"\n")
@@ -78,7 +85,7 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FA
   appendTab(
     inputId = "pages",
     tabPanel( #tabId,
-      title<-tabTitleRfn(title, tabId, docFilePath),
+      title=tabTitleRfn(title, tabId, docFilePath),
       #span(title, span( " " , class='icon-cancel', onclick=closeRfn(tabId))  ), 
       #title=span(title, span( " " , class='icon-cancel', onclick=closeRfn(tabId))  ), 
       #span(tabId,  actionButton(inputId=paste0("but",tabId), label="", class='icon-cancel') ), 
@@ -105,10 +112,14 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FA
       value=tabId
     )
   )
+  # cat('tabId=',format(tabId),"\n")
+  # xyz<-input$pages
+  # cat('serverFileTabs.R:: input$pages=',format(xyz),"\n")
   
   updateTabsetPanel(session,inputId = 'pages', selected = tabId)
   
   sendFileTabsMessage(resize=runif(1))
+  # updateAceExt(id=aceId, sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
 
   # insertEDinPP(ptpreprocId)
   
@@ -133,12 +144,15 @@ getAceEditorId<-reactive({
 
 #  triggers doc has been changed.
 observeEvent(input$pages,{
-  tabId<-input$pages 
+  cat(">---> input$pages 2\n")
+  tabId<-input$pages
+  cat('tabId=',format(tabId),'\n')
   sendFileTabsMessage(selected=tabId)
-  
+  # browser()
   aceId<-tabID2aceID(tabId)
   updateAceExt(id=aceId, sender='cmd.tabChange', roleBack=FALSE, setfocus=TRUE, getValue=TRUE)
   #triggerRefresh('cmd.commit', rollBack=FALSE) # seems to trigger the redraw of the screen (uses getValue=TRUE)
+  cat("<---< input$pages 2\n")
 }, ignoreNULL = TRUE, label='pages2')
 
 
@@ -156,6 +170,7 @@ observeEvent(input$tabManager,{
 observeEvent(request$tabs, {
   if(length(request$tabs)>0){
     tabId<-peekTab()
+    cat('tabId22=',format(tabId),'\n')
     sender<-getSender()
     aceId<-tabID2aceID(tabId)
     updateAceExt( id=aceId, sender=sender, getDoc=TRUE)

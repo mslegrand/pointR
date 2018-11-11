@@ -3,7 +3,7 @@ processKnit<-reactive({
   cat(">---> processKnit\n")
   clearErrorMssg()
   src<-request$code
-  panels$sourceType<-rmdPanelTag
+  setSourceType(rmdPanelTag)
   
   if(length(src)==1 && nchar(src)>0){
     if(grepl("output: dnd_snippet",src)){

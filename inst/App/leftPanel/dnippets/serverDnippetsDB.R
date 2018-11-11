@@ -36,6 +36,7 @@ add2DnippetChoices<-function(dnName, value=TRUE){
 getPageDnippetsDB<-function(pageId){
   # cat('\n>----> entering getPageDnippetsDB with pageId=',format(pageId),'\n')
   if(!is.null(pageId)){
+    stopifnot('tabId' %in% names(dnippetsDB$usage))
     rtv<-as.list(filter(dnippetsDB$usage,tabId==pageId))
   } else {
     rtv<-NULL
@@ -50,12 +51,12 @@ getDnippetsUsageVec<-reactive({
 })
 
 getDnippetsSelected<-reactive({
-  # cat('\n>---> entering getDnippetsSelected\n')
+  cat('\n>---> entering getDnippetsSelected\n')
   alles<-getDnippetsAll()
   val<-getPageDnippetsDB(input$pages)
   val[['tabId']]<-NULL
   val<-unlist(val)
-  #cat('<---<  getDnippetsSelected\n')
+  cat('<---<  getDnippetsSelected\n')
   alles[val==TRUE]
 })
 
@@ -71,6 +72,7 @@ setDnippetsSelected<-function(pageId, selected){
   tmp[match(selected, nms, 0)]<-TRUE
   names(tmp)<-nms
   tbb<-c(list(tabId=pageId), as.list(tmp))
+  stopifnot('tabId' %in% names(dnippetsDB$usage))
   tbc<-filter(dnippetsDB$usage, tabId!=pageId)
   dnippetsDB$usage<-bind_rows(tbc,tbb)
   # cat('<---< entering setDnippetsSelected\n\n')

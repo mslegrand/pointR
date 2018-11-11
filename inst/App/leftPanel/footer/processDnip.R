@@ -3,7 +3,7 @@ processDnip<-reactive({
   cat(">---> processDnip\n")
   clearErrorMssg()
   src<-request$code
-  panels$sourceType<-rmdPanelTag
+  setSourceType(rmdPanelTag)
   if(length(src)==1 && nchar(src)>0){
     
     tryCatch({
