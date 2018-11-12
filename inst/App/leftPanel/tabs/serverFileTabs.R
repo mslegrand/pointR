@@ -147,13 +147,15 @@ observeEvent(input$pages,{
   cat(">---> input$pages 2\n")
   tabId<-input$pages
   cat('tabId=',format(tabId),'\n')
-  sendFileTabsMessage(selected=tabId)
-  # browser()
+  # if(!allGood(tabId)){ browser() }
+  if(!is.null(tabId)){
+    sendFileTabsMessage(selected=tabId)
+  }
   aceId<-tabID2aceID(tabId)
   updateAceExt(id=aceId, sender='cmd.tabChange', roleBack=FALSE, setfocus=TRUE, getValue=TRUE)
   #triggerRefresh('cmd.commit', rollBack=FALSE) # seems to trigger the redraw of the screen (uses getValue=TRUE)
   cat("<---< input$pages 2\n")
-}, ignoreNULL = TRUE, label='pages2')
+},  ignoreNULL = FALSE, label='pages2')
 
 
 # updated by scrollManager and relays sender with tabs to request
