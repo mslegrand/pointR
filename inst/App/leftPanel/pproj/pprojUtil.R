@@ -31,7 +31,7 @@ closeCurrentProj<-function(){
   writeOptionsJSON(opts)
   
   # close all open tabs
-  stopifnot('tabId' %in% fileDescDB() )
+  # stopifnot('tabId' %in% names(fileDescDB()) )
   tabIds<-fileDescDB()$tabId
   for( tabId in tabIds){
     removeTab(inputId = "pages", tabId)
