@@ -35,7 +35,7 @@ processMssgFromAceMssgPageIn<-function(sender, mssg){
          cat("--restoreAssetState\n")
         processCommit() # this sets the sourceType
         cat('--reOrgPanels')
-        reOrgPanels(id=mssg$id, mode= mode )
+        reOrgPanels(id=mssg$id, mode= getMode() )
         restoreAssetState(input$pages) #copies from db to assetSelection
          cat('--savePage\n')
         savePage(input$pages) # require for new page that was not committed
