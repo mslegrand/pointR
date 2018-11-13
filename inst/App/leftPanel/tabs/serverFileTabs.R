@@ -150,9 +150,12 @@ observeEvent(input$pages,{
   # if(!allGood(tabId)){ browser() }
   if(!is.null(tabId)){
     sendFileTabsMessage(selected=tabId)
-  }
-  aceId<-tabID2aceID(tabId)
+    aceId<-tabID2aceID(tabId)
   updateAceExt(id=aceId, sender='cmd.tabChange', roleBack=FALSE, setfocus=TRUE, getValue=TRUE)
+  } else {
+    reOrgPanels(id=NULL, mode=NULL)
+  }
+  
   #triggerRefresh('cmd.commit', rollBack=FALSE) # seems to trigger the redraw of the screen (uses getValue=TRUE)
   cat("<---< input$pages 2\n")
 },  ignoreNULL = FALSE, label='pages2')
