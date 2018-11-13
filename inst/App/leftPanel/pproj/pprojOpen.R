@@ -5,7 +5,7 @@ openProj<-function(projName, pathToProj, projType="generic"){
   closeCurrentProj() # this needs to complete prior to loading new proj
   
 
-  delay(50,{  
+  # delay(50,{  
       cat('projName=', format(projName), " pathToProj=", format(pathToProj), "\n")
       pathToProj<-gsub(pattern = '^NA/', "~/", pathToProj)
       fullpathProjName=file.path(pathToProj, projName)
@@ -17,7 +17,7 @@ openProj<-function(projName, pathToProj, projType="generic"){
       setUpProj(projName, pathToProj, projType="generic")
       #invoke startup
       request$sender<-'startup'
-  })
+  # })
   cat("<---< openProj\n")
 } 
 
