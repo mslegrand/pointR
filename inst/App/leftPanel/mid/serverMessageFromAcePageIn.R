@@ -23,7 +23,9 @@ processMssgFromAceMssgPageIn<-function(sender, mssg){
 
 # getMode -----------------------------------------------------------------
 
-      
+      if(sender %in% c('cmd.file.new',  'cmd.openFileNow')){
+        base::stop('ace sender=',sender,"\n")
+      }
       # cat('hhh\n')
       if(length(input$pages) >0 && 
          nchar(input$pages)>0 && 
