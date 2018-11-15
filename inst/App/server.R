@@ -54,6 +54,7 @@ shinyServer(function(input, output,session) {
   source("leftPanel/mid/serverMessageFromAcePageIn.R",           local=TRUE) 
   source("leftPanel/mid/serverMessageFromAcePageOut.R",          local=TRUE) 
   source("leftPanel/helpSVG.R",                                  local=TRUE)
+  source("leftPanel/tabs/serverNewPage.R",                       local=TRUE)
   source("leftPanel/tabs/serverFileTabs.R",                      local=TRUE) 
   
   

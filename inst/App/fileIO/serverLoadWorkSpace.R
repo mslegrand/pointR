@@ -41,15 +41,17 @@ restoreWorkSpace<-reactive({
   tabId<-'bogus'
   mode<-'ptr'
   txt<-NULL
+  aceId<-'bogus'
   for(page in wsPages){
     # extract the serverAsset portion and add
     tabId=page$fileDescriptor.tabId
     cat('page$fileDescriptor.tabId=',format(page$fileDescriptor.tabId),"\n")
-    aceId<-tabID2aceID(tabId)
+    # aceId<-tabID2aceID(tabId)
     mode=page$fileDescriptor.mode
     docFilePath=page$fileDescriptor.filePath
-    fileSaveStatus=page$fileDescriptor.isSaved 
+    fileSaveStatus=page$fileDescriptor.isSaved
     txt=page$code
+    # newPage(tabId,txt)
     
     if(!identical(docFilePath, "?")){
       title=basename(docFilePath)
@@ -57,38 +59,43 @@ restoreWorkSpace<-reactive({
       title=paste('Anonymous', page$fileDescriptor.anonNo)
     }
     
-    if(mode=='ptr'){
-      divClass="cAceContainer"
-    } else {
-      divClass="cAceRmdContainer"
-    }
+    aceId<-newPage(tabId=tabId, title=title, txt=txt,
+                   docFilePath=docFilePath, mode=mode,
+                   fileSaveStatus=fileSaveStatus)
     
-    appendTab(
-      inputId = "pages", select=TRUE,
-      tabPanel( 
-        title=tabTitleRfn(title, tabId, docFilePath), # maybe we should save title in fileDescriptor?
-        div(
-          class=divClass,
-          overflow= "hidden",inline=FALSE,
-          shinyAce4Ptr(
-            outputId = aceId,
-            value    = txt,
-            mode     = mode,
-            theme    = defaultOpts["theme"],
-            fontSize = defaultOpts["fontSize"], autoComplete="enabled",
-            if(mode=='ptr'){
-              autoCompleteList =list(names(svgR:::eleDefs))
-            } else {
-              NULL
-            },
-            docFilePath =docFilePath,
-            initSaved   =fileSaveStatus
-          )
-        ),
-        value=tabId
-      )
-    )
-    
+    # aceId<-tabID2aceID(tabId)
+    # if(mode=='ptr'){
+    #   divClass="cAceContainer"
+    # } else {
+    #   divClass="cAceRmdContainer"
+    # }
+    # 
+    # appendTab(
+    #   inputId = "pages", select=TRUE,
+    #   tabPanel(
+    #     title=tabTitleRfn(title, tabId, docFilePath), # maybe we should save title in fileDescriptor?
+    #     div(
+    #       class=divClass,
+    #       overflow= "hidden",inline=FALSE,
+    #       shinyAce4Ptr(
+    #         outputId = aceId,
+    #         value    = txt,
+    #         mode     = mode,
+    #         theme    = defaultOpts["theme"],
+    #         fontSize = defaultOpts["fontSize"], autoComplete="enabled",
+    #         if(mode=='ptr'){
+    #           autoCompleteList =list(names(svgR:::eleDefs))
+    #         } else {
+    #           NULL
+    #         },
+    #         docFilePath =docFilePath,
+    #         initSaved   =fileSaveStatus
+    #       )
+    #     ),
+    #     value=tabId
+    #   )
+    # )
+
   }
   
   serverAssetDB$tib<-extractDBFromPages(wsPages, "^assetSelection.", initTib=initialServerAssetDB() )
@@ -112,7 +119,7 @@ restoreWorkSpace<-reactive({
   cat("tabId=",tabId,"\n")
   cat('input$pages=',format(input$pages),"\n")
   
-
+  # aceId<-tabID2aceID(tabId)
   cat('<---< restoreWorkSpace\n')
   return(aceId)
 })
