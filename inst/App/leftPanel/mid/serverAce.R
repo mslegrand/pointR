@@ -46,8 +46,8 @@ observeEvent(input$messageFromAce, {
       sender<-input$messageFromAce$sender
       request$sender<-sender
       aceId<-input$messageFromAce$id
-      cat('aceId=',format(aceId),"\n")
-      cat('sender=',format(sender),"\n")
+      # cat('aceId=',format(aceId),"\n")
+      # cat('sender=',format(sender),"\n")
       tabId<-aceID2TabID(aceId)
       clearErrorMssg()
       # browser()
@@ -57,22 +57,22 @@ observeEvent(input$messageFromAce, {
       if(length(input$messageFromAce$docFilePath)>0 ){
         
         docFilePath<-unlist(input$messageFromAce$docFilePath)
-        cat('docFilePath=',docFilePath,"\n")
-        cat('calling setFileDescPath(',tabId,", ",docFilePath,")\n")
+        # cat('docFilePath=',docFilePath,"\n")
+        # cat('calling setFileDescPath(',tabId,", ",docFilePath,")\n")
         setFileDescPath(tabId, docFilePath)
-        cat('calling savePage(',tabId,")\n")
+        # cat('calling savePage(',tabId,")\n")
         savePage(tabId)
       }
       if(length(input$messageFromAce$isSaved)>0){ 
         editOption$.saved <- input$messageFromAce$isSaved
-        print(editOption$.saved)
-        cat('calling setFileDescSaved(',tabId,", ", format(editOption$.saved), ")\n")
+        # print(editOption$.saved)
+        # cat('calling setFileDescSaved(',tabId,", ", format(editOption$.saved), ")\n")
         setFileDescSaved(tabId, editOption$.saved)
         savePage(tabId)
       }
       if(!is.null(input$messageFromAce$selector) && !is.null(input$messageFromAce$code)  ){
           reqSelector<-input$messageFromAce$selector
-          cat('calling setSelectedAssetFromAce(reqSelector)\n')
+          # cat('calling setSelectedAssetFromAce(reqSelector)\n')
           setSelectedAssetFromAce(reqSelector)
       }
       if(

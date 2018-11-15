@@ -2,23 +2,23 @@ observeEvent(request$sender,{
   if(identical(request$sender,'startup')){ 
     # browser()
     cat(">---> request startup\n")
-    cat('reOrgPanels\n')
+    # cat('reOrgPanels\n')
     reOrgPanels(id=NULL, mode=NULL)
     
-     cat('readDnippetsFileNames\n')
+     # cat('readDnippetsFileNames\n')
     readDnippetsFileNames()
-     cat('now to saveDnippetsFileNames\n')
+     # cat('now to saveDnippetsFileNames\n')
     saveDnippetsFileNames()
-     cat('now to restoreWorkSpace\n')
+     # cat('now to restoreWorkSpace\n')
     aceId<-restoreWorkSpace()
-     cat('aceId=',format(aceId),"\n")
+     # cat('aceId=',format(aceId),"\n")
     if(is.null(aceId)){
-      cat('now to cmdFileNewPtR\n')
+      # cat('now to cmdFileNewPtR\n')
       cmdFileNewPtR()
     } else {
       #updateAceExt(id=aceId, sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
     }
-    cat('now to disableDMD\n')
+    # cat('now to disableDMD\n')
     disableDMDM(
       session, 
       menuBarId="editNavBar", 

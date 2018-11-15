@@ -116,8 +116,8 @@ restoreWorkSpace<-reactive({
   tib<-extractDBFromPages(wsPages, "^fileDescriptor.", initTib=initialFileDescDB() )
   fileDescDB(tib)  
   
-  cat("tabId=",tabId,"\n")
-  cat('input$pages=',format(input$pages),"\n")
+  # cat("tabId=",tabId,"\n")
+  # cat('input$pages=',format(input$pages),"\n")
   
   # aceId<-tabID2aceID(tabId)
   cat('<---< restoreWorkSpace\n')

@@ -104,7 +104,7 @@ getFileSavedStatus<-reactive({
     stopifnot('tabId' %in% names(fd))
     # print(fd)
     tmp<-filter(fd, tabId==pageId)
-    print(tmp)
+    # print(tmp)
     if(nrow(tmp)==1){
       rtv<-tmp$isSaved
     } else {
