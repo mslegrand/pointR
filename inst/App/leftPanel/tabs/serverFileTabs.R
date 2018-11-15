@@ -67,51 +67,57 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FA
   # cat("addFileTab:: mode=",mode,"\n")
   tabId<-getNextTabId()
   cat("addFileTab:: tabId",format(tabId),"\n")
-  aceId<-tabID2aceID(tabId)
+  
   # cat("addFileTab:: aceId",aceId,"\n")
   # cat("addFileTab:: docFilePath",format(docFilePath),"\n")
   # !!!TODO add docFilePath to recentFiles (if !='?')
-  
+  if(is.null(tabId)){ browser() }
   addFileDesc(pageId=tabId, docFilePath=docFilePath, fileSaveStatus, fileMode=mode)
   setUseTribble( pageId=tabId, value=TRUE)
-  if(mode=='ptr'){
-    divClass="cAceContainer"
-  } else {
-    divClass="cAceRmdContainer"
-  }
-  if(is.null(tabId)){ browser() }
   addNewPage2dnippetsDB(tabId)
-  # ptpreprocId=tabID2prePtProc(tabId)
-  appendTab(
-    inputId = "pages",
-    tabPanel( #tabId,
-      title=tabTitleRfn(title, tabId, docFilePath),
-      #span(title, span( " " , class='icon-cancel', onclick=closeRfn(tabId))  ), 
-      #title=span(title, span( " " , class='icon-cancel', onclick=closeRfn(tabId))  ), 
-      #span(tabId,  actionButton(inputId=paste0("but",tabId), label="", class='icon-cancel') ), 
-      #checkboxInput(tabId, tabId, FALSE),
-      div(
-        class=divClass,
-        overflow= "hidden",inline=FALSE,
-        shinyAce4Ptr(
-            outputId = aceId,  
-            value=txt,
-            mode=mode, 
-            theme=editOption$theme, 
-            fontSize=editOption$fontSize,
-            autoComplete="enabled",
-            if(mode=='ptr')
-              autoCompleteList =list(names(svgR:::eleDefs))
-            else
-              NULL
-            ,
-            docFilePath=docFilePath,
-            initSaved=fileSaveStatus
-          )
-        ),
-      value=tabId
-    )
-  )
+  
+  aceId<-newPage(tabId=tabId, title=title, txt=txt,
+                 docFilePath=docFilePath, mode=mode,
+                 fileSaveStatus=fileSaveStatus)
+  
+  # if(mode=='ptr'){
+  #   divClass="cAceContainer"
+  # } else {
+  #   divClass="cAceRmdContainer"
+  # }
+  # aceId<-tabID2aceID(tabId)
+  # 
+  # # ptpreprocId=tabID2prePtProc(tabId)
+  # appendTab(
+  #   inputId = "pages",
+  #   tabPanel( #tabId,
+  #     title=tabTitleRfn(title, tabId, docFilePath),
+  #     #span(title, span( " " , class='icon-cancel', onclick=closeRfn(tabId))  ), 
+  #     #title=span(title, span( " " , class='icon-cancel', onclick=closeRfn(tabId))  ), 
+  #     #span(tabId,  actionButton(inputId=paste0("but",tabId), label="", class='icon-cancel') ), 
+  #     #checkboxInput(tabId, tabId, FALSE),
+  #     div(
+  #       class=divClass,
+  #       overflow= "hidden",inline=FALSE,
+  #       shinyAce4Ptr(
+  #           outputId = aceId,  
+  #           value=txt,
+  #           mode=mode, 
+  #           theme=editOption$theme, 
+  #           fontSize=editOption$fontSize,
+  #           autoComplete="enabled",
+  #           if(mode=='ptr')
+  #             autoCompleteList =list(names(svgR:::eleDefs))
+  #           else
+  #             NULL
+  #           ,
+  #           docFilePath=docFilePath,
+  #           initSaved=fileSaveStatus
+  #         )
+  #       ),
+  #     value=tabId
+  #   )
+  # )
   # cat('tabId=',format(tabId),"\n")
   # xyz<-input$pages
   # cat('serverFileTabs.R:: input$pages=',format(xyz),"\n")
