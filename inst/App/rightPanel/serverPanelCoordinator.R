@@ -43,8 +43,8 @@ getNameType<-reactive({
         # return transformTag if transformTag and usingTransformDraggable()
         rtv<-transformTag
       } else {
-        rtv<-RPanelTag
-        #rtv<-getAssetName()
+        #rtv<-RPanelTag 
+        rtv<-getAssetName()
       }
     } else { # RPanelTag whenever getAssetName is NULL???
       rtv<-RPanelTag
@@ -94,7 +94,7 @@ getPlotState<-reactive({
 
 # returns true iff editing tib contents
 getTibEditState<-reactive({
-  #cat("getTibEditState::getPlotState()=",format(getPlotState()),"\n")
+  cat("getTibEditState::getPlotState()=",format(getPlotState()),"\n")
   getSourceType()==svgPanelTag && 
     !is.null(getPlotState()) && 
     getPlotState() %in%  c("point", "value", "matrix")
@@ -111,22 +111,20 @@ getTibEditState<-reactive({
 getRightMidPanel<-reactive({
   if(hasError()){
     rtv<-errorPanelTag
-  } else if (panels$sourceType %in% c( RPanelTag, rmdPanelTag, textPanelTag, snippetPanelTag)){
+  } else if (panels$sourceType %in% c( rmdPanelTag, textPanelTag, snippetPanelTag)){
     rtv<-panels$sourceType
   } else {
     rtv<-getPlotState()
   }
+  cat('getRightMidPanel=',format(rtv),'\n')
   rtv
 })
 
 
 
 getRightPanelChoices<-reactive({ # includes names of tibs
-  # cat('getRightPanelChoices', format(getSourceType()),"\n")
   cat(">---> getRightPanelChoices\n")
-  # browser()
   cat('getSourceType()=', format(getSourceType()),'\n')
-  # browser()
   if(hasError() ){ # error: set to  errorPanel
     choices<-errorPanelTag
   } else {
@@ -138,9 +136,7 @@ getRightPanelChoices<-reactive({ # includes names of tibs
     } else if( identical(sourceType, snippetPanelTag ) ){
       choices=snippetPanelTag
     } else if( getSourceType()==svgPanelTag){ 
-      # browser()
       ptDefs<-getPtDefs()
-      # browser()
       choices<-names(getPtDefs()$tib)
       if( usingTransformDraggable() ){
         choices<-c(choices, transformTag)
@@ -234,8 +230,8 @@ observeEvent(atLeast2Rows(),{
 
 reOrgPanels<-function(id, mode){
   cat(">---> reOrgPanels\n")
-  cat('id=',format(id),"\n")
-  cat('mode=',format(mode),"\n")
+  # cat('id=',format(id),"\n")
+  # cat('mode=',format(mode),"\n")
   if(length(id)==0 || length(mode)==0){
     hideElement("TopRightPanel")
     hideElement("snippetToolBarContainer")
@@ -281,61 +277,6 @@ reOrgPanels<-function(id, mode){
   cat("<---< reOrgPanels\n")
 }
 
-# observeEvent(c(getAceEditorId(), getMode()),{
-#   id<-getAceEditorId()
-#   # if(!identical(selectedAsset$tabId, input$pages)){
-#   #   return()
-#   # }
-#   if(length(id)==0){
-#     hideElement("TopRightPanel")
-#     hideElement("snippetToolBarContainer")
-#     hideElement("aceToobarTop1")
-#     hideElement("aceToobarTop2")
-#     hideElement("useTribble")
-#     hideElement("commit")
-#     addClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
-#     hideElement("aceTabSet")
-#     hideElement("midRightPanels")
-#     hideElement("BottomRightPanel")
-#     showElement("logo.right")
-#     showElement("logo.left")
-#   } else {
-#     hideElement("logo.right")
-#     hideElement("logo.left")
-#     # editing ptr
-#     if(identical(getMode(),'ptr')){
-#       showElement("BottomRightPanel")
-#       showElement("TopRightPanel")
-#       showElement("snippetToolBarContainer")
-#       showElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble
-#       addClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
-#       addClass( id= 'midRightPanels', class='ctop140')
-#     } else { # editing other
-#       removeClass( id= 'midRightPanels', class='ctop140')
-#       hideElement("TopRightPanel")
-#       hideElement("snippetToolBarContainer")
-#       hideElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble
-#       if(identical(getMode(),'ptrrmd')){
-#         removeClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
-#       }
-#       else{
-#         addClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
-#       }
-#     }
-#     showElement("aceToobarTop1")
-#     showElement("aceToobarTop2")
-#     showElement("commit")
-#     showElement("aceTabSet")
-#     showElement("midRightPanels")
-#   }
-#    cat('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n')
-#   # processCommit()
-# },
-# label='PanelCoordinator.R:: c(getAceEditorId(), getMode())'
-# )
-# 
-
-
 observeEvent( getRightMidPanel(), {
   panel<-getRightMidPanel()
   if( !is.null(panel) && panel %in% c('point','matrix')){
@@ -351,23 +292,21 @@ observeEvent( getRightMidPanel(), {
       entry="Point Preprocessor"
     )    
   }
-})
-
-
+}, label='getRightMidPanel')
 
 observeEvent( c(getRightMidPanel(), hasPtScript() ), {
   if( !is.null(getRightMidPanel()) && 
       (getRightMidPanel() %in% c('point','matrix')) &&
       hasPtScript() 
   ){
-    removeClass( id='PtPreProcDiv', class="hiddenPanel")
+    removeCssClass( id='PtPreProcDiv', class="hiddenPanel")
     enableDMDM( session, menuBarId="plotNavBar", entry="cmdExportPP")
     enableDMDM( session, menuBarId="plotNavBar", entry="cmdRemovePP")
   } else {
-    addClass( id='PtPreProcDiv', class="hiddenPanel")
+    addCssClass( id='PtPreProcDiv', class="hiddenPanel")
     disableDMDM( session, menuBarId="plotNavBar", entry="cmdExportPP")
     disableDMDM( session, menuBarId="plotNavBar", entry="cmdRemovePP")
   }
 }, 
-label='PanelCoordinator.R:: c(getRightMidPanel(), hasPtScript(), input$pages)' 
+label='PanelCoordinator.R:: c(getRightMidPanel(), hasPtScript())' 
 )
