@@ -97,16 +97,16 @@
   text-align:center;
   cursor:pointer;
   display:none;
-  padding:3px;
+  padding:2px;
   
   white-space:nowrap;
   vertical-align:middle;
   
   
-  border-width: 4px;
+  border-width: 2px;
   border-style: ridge;
   color: white;
-  background: #0000CC;
+  background: #0000AC;
 }
 
 .scroller-right{
