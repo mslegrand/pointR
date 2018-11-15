@@ -155,16 +155,14 @@ observeEvent(input$pages,{
   cat('tabId=',format(tabId),'\n')
   # if(!allGood(tabId)){ browser() }
   if(!is.null(tabId)){
-    sendFileTabsMessage(selected=tabId)
+    # sendFileTabsMessage(selected=tabId, resize=runif(1))
     aceId<-tabID2aceID(tabId)
-  updateAceExt(id=aceId, sender='cmd.tabChange', roleBack=FALSE, setfocus=TRUE, getValue=TRUE)
+    updateAceExt(id=aceId, sender='cmd.tabChange', roleBack=FALSE, setfocus=TRUE, getValue=TRUE)
   } else {
     reOrgPanels(id=NULL, mode=NULL)
   }
-  
-  #triggerRefresh('cmd.commit', rollBack=FALSE) # seems to trigger the redraw of the screen (uses getValue=TRUE)
-  cat("<---< input$pages 2\n")
-},  ignoreNULL = FALSE, label='pages2')
+   cat("<---< input$pages 2\n")
+},  ignoreNULL = FALSE, ignoreInit = FALSE, label='pages2')
 
 
 # updated by scrollManager and relays sender with tabs to request

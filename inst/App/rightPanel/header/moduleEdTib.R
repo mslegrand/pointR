@@ -239,10 +239,10 @@ moduleEdTib<-function(input, output, session,
   #---asset name---
   observeEvent(c( name(), nameChoices() ), { #update the name
     if( !is.null(name()) && name()==transformTag ){
-      cat('transformPanelContainer show \n')
+      # cat('transformPanelContainer show \n')
       showElement('transformPanelContainer')
     } else {
-      cat('transformPanelContainer hide \n')
+      # cat('transformPanelContainer hide \n')
       hideElement('transformPanelContainer')
     }
     # toggleElement(
@@ -257,10 +257,10 @@ moduleEdTib<-function(input, output, session,
       # cat('moduleEdTib observer:: name()=', format(name()),"\n")
       
       if(length(nameChoices())>0 && !is.null(name()) && nchar(name())>0 && !(name() %in% c( transformTag, RPanelTag, errorPanelTag, svgPanelTag)) ){
-        cat('headEdTib show\n')
+        # cat('headEdTib show\n')
         showElement('headEdTib')
       } else {
-        cat('headEdTib hide\n')
+        # cat('headEdTib hide\n')
         hideElement('headEdTib')
         hideElement(ns('headEdTib'))
       }
@@ -274,7 +274,7 @@ moduleEdTib<-function(input, output, session,
 
   observeEvent( getTransformType(), {
     nm<-name()
-    cat('getTransformType()\n')
+    # cat('getTransformType()\n')
     if(!is.null(name()) && name()==transformTag){
       updateTabsetPanel(session, input$transformType, selected=getTransformType() )
     }
@@ -291,7 +291,7 @@ moduleEdTib<-function(input, output, session,
   })
   
   observeEvent( input$entryValue, {
-    cat('input$entryValue\n')
+    # cat('input$entryValue\n')
     val<-input$entryValue
     if(!is.null(val) && nchar(val)>0){
       entry$result<-val
@@ -299,7 +299,7 @@ moduleEdTib<-function(input, output, session,
   })
   
   observeEvent( input$entrySlider ,{
-    cat('input$entrySlider\n')
+    # cat('input$entrySlider\n')
     val<-input$entrySlider
     if(!is.null(val) && nchar(val)>0){
       entry$result<-val
@@ -321,7 +321,7 @@ moduleEdTib<-function(input, output, session,
   })
   
   observeEvent( input$entryColour ,{
-    cat('input$entryColour\n')
+    # cat('input$entryColour\n')
     val<-input$entryColour
     if(!is.null(val) && nchar(val)>0){
       entry$result<-val

@@ -79,7 +79,7 @@ getColumnType<-reactive({
 #    serverEdTib to set transform panel
 getPlotState<-reactive({
   nameType<-getNameType()
-  cat('nameType=',nameType,"\n")
+  # cat('nameType=',nameType,"\n")
   if(identical(nameType,tibTag)){
     colType<-getColumnType()
     if(identical(colType,'point')){
@@ -94,7 +94,7 @@ getPlotState<-reactive({
 
 # returns true iff editing tib contents
 getTibEditState<-reactive({
-  cat("getTibEditState::getPlotState()=",format(getPlotState()),"\n")
+  # cat("getTibEditState::getPlotState()=",format(getPlotState()),"\n")
   getSourceType()==svgPanelTag && 
     !is.null(getPlotState()) && 
     getPlotState() %in%  c("point", "value", "matrix")
@@ -116,7 +116,7 @@ getRightMidPanel<-reactive({
   } else {
     rtv<-getPlotState()
   }
-  cat('getRightMidPanel=',format(rtv),'\n')
+  # cat('getRightMidPanel=',format(rtv),'\n')
   rtv
 })
 
@@ -124,7 +124,7 @@ getRightMidPanel<-reactive({
 
 getRightPanelChoices<-reactive({ # includes names of tibs
   cat(">---> getRightPanelChoices\n")
-  cat('getSourceType()=', format(getSourceType()),'\n')
+  # cat('getSourceType()=', format(getSourceType()),'\n')
   if(hasError() ){ # error: set to  errorPanel
     choices<-errorPanelTag
   } else {
@@ -146,7 +146,7 @@ getRightPanelChoices<-reactive({ # includes names of tibs
       choices<-textPanelTag
     }
   } 
-  cat("choices=", paste(choices, collapse=", "),"\n")
+  # cat("choices=", paste(choices, collapse=", "),"\n")
   cat("<---< getRightPanelChoices\n")
   choices
 },

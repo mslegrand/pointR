@@ -15,7 +15,7 @@ returnValue4ModuleEdAsset<-callModule(
     # cat('returnValue4ModuleEdAsset:: next:: getRightPanelChoices\n')
     rtv<-getRightPanelChoices()
     # print(rtv)
-    cat('returnValue4ModuleEdAsset:: after:: getRightPanelChoices\n')
+    # cat('returnValue4ModuleEdAsset:: after:: getRightPanelChoices\n')
     rtv
   })}
 )
