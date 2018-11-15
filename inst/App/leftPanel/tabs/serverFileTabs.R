@@ -122,7 +122,7 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FA
   # xyz<-input$pages
   # cat('serverFileTabs.R:: input$pages=',format(xyz),"\n")
   
-  updateTabsetPanel(session,inputId = 'pages', selected = tabId)
+  # updateTabsetPanel(session,inputId = 'pages', selected = tabId)
   
   sendFileTabsMessage(resize=runif(1))
   # updateAceExt(id=aceId, sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
