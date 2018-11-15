@@ -268,7 +268,7 @@ moduleEdTib<-function(input, output, session,
       #   id='headEdTib' ,
       #   condition=!(name() %in% c( transformTag, RPanelTag, errorPanelTag, svgPanelTag))
       # )
-    cat('byre\n')
+    # cat('byre\n')
     
   }) 
 
