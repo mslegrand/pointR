@@ -242,8 +242,8 @@ reOrgPanels<-function(id, mode){
     hideElement("aceToobarTop1")
     hideElement("aceToobarTop2")
     hideElement("useTribble")
-    hideElement("commit")
-    addClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
+    hideElement("commitButton")
+    addCssClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
     hideElement("aceTabSet")
     hideElement("midRightPanels")
     hideElement("BottomRightPanel")
@@ -274,7 +274,7 @@ reOrgPanels<-function(id, mode){
     }
     showElement("aceToobarTop1")
     showElement("aceToobarTop2")
-    showElement("commit")
+    showElement("commitButton")
     showElement("aceTabSet")
     showElement("midRightPanels")
   }
