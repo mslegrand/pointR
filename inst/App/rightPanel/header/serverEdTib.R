@@ -14,10 +14,10 @@ returnValue4ModuleEdTib<-callModule(
     rtv
   }),
   nameChoices=reactive({
-      cat('nameChoices in callModule::returnValue4ModuleEdTib\n')
-      cat('returnValue4ModuleEdTib:: next:: getRightPanelChoices\n')
+      # cat('nameChoices in callModule::returnValue4ModuleEdTib\n')
+      # cat('returnValue4ModuleEdTib:: next:: getRightPanelChoices\n')
       rtv<-getRightPanelChoices()
-      cat('returnValue4ModuleEdTib:: after:: getRightPanelChoices\n')
+      # cat('returnValue4ModuleEdTib:: after:: getRightPanelChoices\n')
       rtv
   }),
   getRowIndex=reactive({            if( getTibEditState()==TRUE ){ getTibRow() } else { NULL } }),

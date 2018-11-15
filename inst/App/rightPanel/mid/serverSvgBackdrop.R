@@ -33,10 +33,10 @@ observeEvent(input$pages,{
   cat(">---> input$pages 4\n")
   if(length(input$pages)>0){
       
-    cat('input$pages=',format(input$pages),"\n")
+    # cat('input$pages=',format(input$pages),"\n")
     
       bd<-getPageBackDrop(input$pages)
-      print(bd)
+      # print(bd)
     updateColourInput(session , inputId="backdropColour", value=bd$color)
     updateCheckboxInput(session, inputId="solidBackdrop", value=!bd$checked)
   }
