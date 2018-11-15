@@ -44,7 +44,7 @@ getMode<-reactive({
     stopifnot('tabId' %in% names(fd))
     mode<-fd[fd$tabId==input$pages,]$mode
   }
-  cat('mode is ', format(mode),"\n")
+  # cat('mode is ', format(mode),"\n")
   cat('<---< getMode\n')
   mode
 })
@@ -54,9 +54,9 @@ getFileDescriptor<-function(pageId){
   cat('>---> getFileDescriptor\n')
   if(!is.null(pageId)){  # not really needed since caller checks for null pageId!!!
       fd<-fileDescDB()
-      print(fd)
+      # print(fd)
       rtv<-fd[fd$tabId==pageId,] #or use filter
-      print(rtv)
+      # print(rtv)
   } else {
     rtv<-NULL
   }
@@ -102,8 +102,7 @@ getFileSavedStatus<-reactive({
   if(!is.null(pageId)){
     fd<-fileDescDB()
     stopifnot('tabId' %in% names(fd))
-    print('fd22=')
-    print(fd)
+    # print(fd)
     tmp<-filter(fd, tabId==pageId)
     print(tmp)
     if(nrow(tmp)==1){

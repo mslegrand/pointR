@@ -81,9 +81,9 @@ openFileNow<-function(fileName){
     
       addFileTab(title=tabName, txt=src, docFilePath= fileName, mode=mode, fileSaveStatus=TRUE)
       #here we get the code and set the doc status as saved, 
-      delay(500,
-            updateAceExt(id=getAceEditorId(), sender='cmd.openFileNow', getValue= TRUE, setDocFileSaved=TRUE, ok=TRUE )
-      )
+      # delay(500,
+      #       updateAceExt(id=getAceEditorId(), sender='cmd.openFileNow', getValue= TRUE, setDocFileSaved=TRUE, ok=TRUE )
+      # )
       
     }
   }

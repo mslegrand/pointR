@@ -3,6 +3,7 @@ src2sourceType<-function(src){  #not used !!
   lines<-lines[[1]]
   svgRPos<-grep("^\\s*svgR\\(",lines)
   if(length(svgRPos)==0){ # just R code I guess
+    # browser()
     setSourceType(sourceType=RPanelTag) #
   } else {
     setSourceType(sourceType=svgPanelTag) #SVG code
@@ -61,6 +62,7 @@ processSvgR<-reactive({
       svgRPos<-grep("^\\s*svgR\\(",lines)
       # cat('done\n')
       if(length(svgRPos)==0){ # just R code I guess
+        # browser()
         setSourceType(sourceType=RPanelTag) #
       } else {
         setSourceType(sourceType=svgPanelTag) #SVG code
