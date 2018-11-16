@@ -41,7 +41,7 @@ processMssgFromAceMssgPageIn<-function(sender, mssg){
         restoreAssetState(input$pages) #copies from db to assetSelection
          cat('--savePage\n')
         savePage(input$pages) # require for new page that was not committed
-         
+        sendFileTabsMessage(selected=input$pages, resize=runif(1)) 
         
       } else{
         # kill all

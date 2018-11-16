@@ -155,7 +155,7 @@ observeEvent(input$pages,{
   cat('tabId=',format(tabId),'\n')
   # if(!allGood(tabId)){ browser() }
   if(!is.null(tabId)){
-    # sendFileTabsMessage(selected=tabId, resize=runif(1))
+    #sendFileTabsMessage(selected=tabId, resize=runif(1))
     aceId<-tabID2aceID(tabId)
     updateAceExt(id=aceId, sender='cmd.tabChange', roleBack=FALSE, setfocus=TRUE, getValue=TRUE)
   } else {
