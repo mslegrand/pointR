@@ -135,9 +135,9 @@ observeEvent( returnValue4ModuleRtFtr$tagPt(), {
   matCol<-getTibMatCol()
 
   m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]
-  if(ncol(m)<1){
-    return(NULL) # bail if matrix of points is empty
-  }
+  # if(ncol(m)<1){
+  #   return(NULL) # bail if matrix of points is empty
+  # }
   ptDefs$mats[selection]<-FALSE # no longer a matrix input!
   tib<-ptDefs$tib[[selection]] #get the tib
   tib<-tagTib(tib, getTibPtColPos(), row, matCol)
