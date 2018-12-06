@@ -1,7 +1,7 @@
 observeEvent(request$sender,{
   if(identical(request$sender,'startup')){ 
     # browser()
-    cat(">---> request startup\n")
+    cat_list<<-c( cat_list,">---> request startup\n")
     # cat('reOrgPanels\n')
     reOrgPanels(id=NULL, mode=NULL)
     
@@ -27,6 +27,6 @@ observeEvent(request$sender,{
     # updateAceExt(id=aceId, sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
     # resetShinyFilesIOPaths(getDirPath()) #lets just force this to happen
     #dirtyDMDM(session, "editNavBar")
-    cat("<---< request startup\n\n")
+    cat_list<<-c( cat_list,"<---< request startup\n\n")
   }
 }, priority=100)

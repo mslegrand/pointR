@@ -7,9 +7,11 @@
 
 #---begin server--------------
 shinyServer(function(input, output,session) {
-
+  cat_list <- c()
+  exportTestValues(catList=cat_list)
 # Reactive values----------
-  
+  source("util/reOrgPanels.R", local=TRUE ) 
+  reOrgPanels(id=NULL, mode=NULL)
   
   triggerRefresh<-function(sender, rollBack=TRUE, auxValue=FALSE){ # to be used to force a code refresh???
     cat(">---> triggerRefresh\n")
@@ -172,5 +174,9 @@ shinyServer(function(input, output,session) {
   #            "val2ColType", "validateTibLists", "version", "versionCheck", 
   #            "writeOptionsJSON")
   #on.exit(rm(list=list(tmpVars)))
+  
+  exportTestValues( request.sender=request$sender)
+  exportTestValues(request.code=request$code)
+  exportTestValues(selectedAsset.tabId=selectedAsset$tabId)
   
 })
