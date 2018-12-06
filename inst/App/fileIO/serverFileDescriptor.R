@@ -66,7 +66,9 @@ getFileDescriptor<-function(pageId){
 
 # to be called from 
 # where is the filePath reset?
-setFileDescPath<-function(pageId, filePath){
+setFileDescPath<-function(pageId, filePath, pathToProj){
+  # filePath<-path_rel(filePath,pathToProj)
+  # browser()
   tb<-fileDescDB()
   tb[tb$tabId== pageId,"filePath"]<-filePath
   fileDescDB(tb)

@@ -15,7 +15,7 @@ restoreWorkSpace<-reactive({
   wsPages<-list()
   
 
-  
+  ptRproj<-pprj()
   # 1. load all pages into a list.
   for(filePath in fileWSPaths){
     page<-readRDS(filePath)
@@ -49,6 +49,10 @@ restoreWorkSpace<-reactive({
     # aceId<-tabID2aceID(tabId)
     mode=page$fileDescriptor.mode
     docFilePath=page$fileDescriptor.filePath
+    # browser()
+    if(!is.null(ptRproj$pathToProj)){
+      docFilePath<-sub( ptRproj$pathToProj, editOption$currentProjectDirectory, docFilePath)
+    }
     fileSaveStatus=page$fileDescriptor.isSaved
     txt=page$code
     # newPage(tabId,txt)
@@ -118,7 +122,13 @@ restoreWorkSpace<-reactive({
   
   # cat("tabId=",tabId,"\n")
   # cat('input$pages=',format(input$pages),"\n")
-  
+  #ptRproj<-pprj()
+  if(!is.null(ptRproj)){
+    ptRproj$pathToProj<-editOption$currentProjectDirectory
+    ptRproj$projName<-editOption$currentProjectName
+    fullpathProjName=file.path(ptRproj$pathToProj, ptRproj$projName)
+    write_json(ptRproj, fullpathProjName) 
+  }
   # aceId<-tabID2aceID(tabId)
   cat('<---< restoreWorkSpace\n')
   return(aceId)

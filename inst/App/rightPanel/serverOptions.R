@@ -2,6 +2,8 @@
 editOption<-do.call(reactiveValues, defaultOpts)
 editOption$.saved=TRUE
 
+pprj<-reactiveVal(NULL)
+
 #' getDirPath returns the path to the project, or .ptR if no project
 #' used by 
 #'  1 saveDnippetsFileNames

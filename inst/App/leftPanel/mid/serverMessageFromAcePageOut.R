@@ -15,6 +15,7 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
       
       code<-mssg$code
       # !!!TODO!!! if write fails revert.
+      # browser()
       writeLines(code, docFilePath)
       tabId<-aceID2TabID(id) 
       setFileDescSaved(tabId, TRUE)
@@ -36,7 +37,7 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
           htmlPath<-sub('\\.Rmd$','\\.html',docFilePath)
           browseURL(htmlPath)
         }
-        addToRecentFiles(mssg$priorFilePath)
+        addToRecentFiles(mssg$docFilePath)
         title=as.character(tabTitleRfn( tabName=basename(docFilePath ), tabId=tabId, docFilePath=docFilePath ))
         sendFileTabsMessage(title=title, tabId=tabId)
       }

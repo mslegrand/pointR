@@ -15,6 +15,7 @@ closeCurrentProj<-function(){
   saveDnippetsFileNames() 
   savePage(input$pages)
   # browser()
+  pprj(NULL)
   if(!is.null(editOption$currentProjectName)){
     addToRecentProjects(editOption$currentProjectDirectory, editOption$currentProjectName )
   }
@@ -70,16 +71,20 @@ setSfDir<-function(sf_id, path, root="home"){
   jscode
 }
 
+# called whenever dirPath changes
+# sets shinyFiles to use pathToProj
 resetShinyFilesIOPaths<-function(pathToProj){
   cat( ">---> resetShinyFilesIOPaths\n")
-  if( identical(pathToProj, optionDirPath())){
+  cat('1 pathToProj=', format(pathToProj),"\n")
+  # browser()
+  if( identical(pathToProj, optionDirPath())){ # optionDirPath is the .ptR directory
     pathToProj<-path_home()
   } else {
     pathToProj<-path_rel(pathToProj, path_home() )
-    pathToProj<-paste0("~/",pathToProj)
+    pathToProj<-paste0("~/",pathToProj) # do we really want to do this???
   }
   
-  cat('pathToProj=', format(pathToProj),"\n")
+  cat('2 pathToProj=', format(pathToProj),"\n")
   
   fileIOIds<-c("buttonFileOpen", "buttonSnippetImport","buttonDnippetImport", "buttonFileSaveR",
                "buttonPreProcPtImport","buttonExportSVG","buttonExportPreproc")
@@ -101,6 +106,8 @@ resetShinyFilesIOPaths<-function(pathToProj){
 setUpProj<-function(projName, pathToProj, projType="generic"){
   editOption$currentProjectDirectory=pathToProj
   editOption$currentProjectName=projName
+  # setwd(pathToProj) # do this in getDirPath instead???
+  # pathToProj= ~/AA/ffffff 
   # remove from recent projects
   removeFromRecentProjects(projDir=pathToProj, projName=projName)
   # 5. save editOptions (aleady done closeCurrentProj)

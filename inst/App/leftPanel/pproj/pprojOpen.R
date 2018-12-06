@@ -1,4 +1,10 @@
 
+# example
+# pathToProj = '~/AA/XX'
+# projName='XX.pprj'
+# fullpathProjName='~/AA/XX/XX.pprj'
+
+
 openProj<-function(projName, pathToProj, projType="generic"){
   cat(">---> openProj\n")
   
@@ -10,8 +16,11 @@ openProj<-function(projName, pathToProj, projType="generic"){
       pathToProj<-gsub(pattern = '^NA/', "~/", pathToProj)
       fullpathProjName=file.path(pathToProj, projName)
       cat( "fullpathProjName=", fullpathProjName, "\n" )
-      # !!!! pprj below is not currently used !!!!
-      pprj<-read_json(fullpathProjName) 
+      # !!!! pprj below is now used !!!!
+      # browser()
+      ptRproj<-read_json(fullpathProjName) 
+      pprj(ptRproj)
+      # save pprj and use during loading of workspace (to be invoked by startup)
       
       # should we use projName=pathToProj, projPath
       setUpProj(projName, pathToProj, projType="generic")
