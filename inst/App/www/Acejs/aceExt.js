@@ -511,9 +511,9 @@ Shiny.addCustomMessageHandler(
         if(!!data.getDoc){ 
           //var undoLen=editor.getSession().getUndoManager().$undoStack.length;
           //var saveLen= $el.data('docFileSaved');
-          if(! data.oldFilePath){
-            data.oldFilePath='?';
-          }
+          //if(! data.oldFilePath){
+          //  data.oldFilePath='?';
+          //}
           //console.log('getDoc:: docFileSaved=' +JSON.stringify(ud.isSaved()) );
           Shiny.onInputChange('messageFromAce', 
           {
@@ -524,7 +524,7 @@ Shiny.addCustomMessageHandler(
              //saved: undoLen===saveLen,
              isSaved: ud.isSaved(),
              docFilePath: $el.data('docFilePath'),
-             priorFilePath: data.oldFilePath,
+             //priorFilePath: data.oldFilePath,
              rnd : randomString(5)
           });
         }
