@@ -124,6 +124,8 @@ shinyServer(function(input, output,session) {
   
   source("leftPanel/pproj/pprojUtil.R",                         local=TRUE)  
   source("leftPanel/pproj/pprojNew.R",                          local=TRUE)  
+  source("leftPanel/pproj/pprojModalClone.R",                   local=TRUE)  
+  
   source("leftPanel/pproj/pprojOpen.R",                         local=TRUE)   
   source("leftPanel/pproj/pprojClose.R",                        local=TRUE)  
   source("leftPanel/pproj/pprojModalNew.R",                     local=TRUE)  

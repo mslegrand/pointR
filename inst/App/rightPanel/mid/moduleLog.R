@@ -21,6 +21,9 @@ moduleLog<-function(
         txt=""
       }
       txt
+    } else {
+      txt=cat(format(panelName()))
     }
+    txt
   })
 }

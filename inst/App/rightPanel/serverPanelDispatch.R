@@ -25,43 +25,43 @@ output$BottomRightPanel<-renderUI({
 output$MidRightPanel<-renderUI({
   
   chosenRightMidPanel<-getRightMidPanel()
-  # cat("chosenRightMidPanel=",format(chosenRightMidPanel),"\n")
+  cat("chosenRightMidPanel=",format(chosenRightMidPanel),"\n")
   if (chosenRightMidPanel=='point'){
-    #cat("chosenRightMidPanel=1\n")
+    cat("chosenRightMidPanel=1\n")
     modulePlotSVGrUI("svgPointsMod", input, output)
   } else if (chosenRightMidPanel=='value'){
-    #cat("chosenRightMidPanel=2\n")
+    cat("chosenRightMidPanel=2\n")
     modulePlotSVGrUI("svgTagValsMod", input, output)
   } else if (chosenRightMidPanel=='matrix'){
-    #cat("chosenRightMidPanel=3\n")
+    cat("chosenRightMidPanel=3\n")
     modulePlotSVGrUI("svgTagDragMod", input, output)
   } else if (chosenRightMidPanel == transformTag ){
-    #cat("chosenRightMidPanel=4\n")
+    cat("chosenRightMidPanel=4\n")
     modulePlotSVGrUI("svgTransformMod", input, output)
   } else if( chosenRightMidPanel == svgPanelTag ){
-    #cat("chosenRightMidPanel=5\n")
+    cat("chosenRightMidPanel=5\n")
     modulePlotSVGrUI("svgPointsMod", input, output)
   } else if( chosenRightMidPanel == errorPanelTag ){
-    # cat('about to"errLogMod"\n')
-    #cat("chosenRightMidPanel=6\n")
+     cat('about to"errLogMod"\n')
+    cat("chosenRightMidPanel=6\n")
     moduleLogUI("errLogMod", input, output)
   } else if (chosenRightMidPanel ==  RPanelTag ){
-    # cat('about to"capturedLogMod"\n')
-    #cat("chosenRightMidPanel=7\n")
+     cat('about to"capturedLogMod"\n')
+    cat("chosenRightMidPanel=7\n")
     moduleLogUI("capturedLogMod", input, output)
   } else if( chosenRightMidPanel == rmdPanelTag ){
-    #cat("chosenRightMidPanel=8\n")
+    cat("chosenRightMidPanel=8\n")
     modulePlotRmdUI("rmdMod", input, output)
   } else if(chosenRightMidPanel == textPanelTag){
-    #cat("chosenRightMidPanel=9\n")
+    cat("chosenRightMidPanel=9\n")
     div( img(src="ptR/pointRLogo.SVG") ) 
     #Todo add something about sponsors.
   }  else if(chosenRightMidPanel == snippetPanelTag){
-    #cat("chosenRightMidPanel=10\n")
+    cat("chosenRightMidPanel=10\n")
     div( img(src="ptR/pointRLogo.SVG") ) 
     #Todo add something about sponsors.
   } else {
-    #cat("chosenRightMidPanel=11\n")
+    cat("chosenRightMidPanel=11\n")
     div( img(src="ptR/pointRLogo.SVG"))
   }
   

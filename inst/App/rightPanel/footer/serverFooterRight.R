@@ -4,7 +4,11 @@ returnValue4ModuleRtFtr<-callModule(
   id="footerRight",
   getTibEditState= getTibEditState,
   getPointMax=getPointMax,
-  getPanelState=getRightMidPanel ,
+  getPanelState=reactive({
+    cat('>----> getPanelState\n'); rtv<-getRightMidPanel(); 
+    cat( "getPanelState= ", getRightMidPanel(),"\n" );
+    cat('<----< getPanelState\n');rtv
+  }),
   hasPtScript=hasPtScript 
 )
 

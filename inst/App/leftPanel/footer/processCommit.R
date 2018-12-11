@@ -14,7 +14,7 @@ src2sourceType<-function(src){  #not used !!
 # uses to mode, input$pages
 # called exclusively by processMssgFromAceMssgPageIn
 processCommit<-reactive({
-  cat(">---> processCommit\n")
+  cat_list<<-c( cat_list,">---> processCommit\n")
   clearErrorMssg()
   
   mode<-getMode()
@@ -40,11 +40,11 @@ processCommit<-reactive({
   if(!hasError()){
     tabId<-input$pages
     # cat("tabId=",tabId,"\n")
-    cat('>---> processCommit::savePage\n')
+    cat_list<<-c( cat_list,'>---> processCommit::savePage\n')
     savePage(tabId)
-    cat('<---< processCommit::savePage\n')
+    cat_list<<-c( cat_list,'<---< processCommit::savePage\n')
   }
-  cat("<---< processCommit\n")
+  cat_list<<-c( cat_list,"<---< processCommit\n")
 })
 
 

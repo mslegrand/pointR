@@ -34,6 +34,10 @@ observeEvent( input$editNavBar, {
       showModal(newProjModal())
       dirtyDMDM(session, "editNavBar")
     }
+    if(fileCmd=="newCloneProject"){
+      showModal(cloneProjModal())
+      dirtyDMDM(session, "editNavBar")
+    }
     if(fileCmd=="openProject"){ #-----open
       dirtyDMDM(session, "editNavBar") 
       cmdFileOpenProject()

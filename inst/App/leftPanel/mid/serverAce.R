@@ -59,7 +59,7 @@ observeEvent(input$messageFromAce, {
         docFilePath<-unlist(input$messageFromAce$docFilePath)
         # cat('docFilePath=',docFilePath,"\n")
         # cat('calling setFileDescPath(',tabId,", ",docFilePath,")\n")
-        setFileDescPath(tabId, docFilePath)
+        setFileDescPath(tabId, docFilePath, pathToProj= editOption$currentProjectDirectory)
         # cat('calling savePage(',tabId,")\n")
         savePage(tabId)
       }

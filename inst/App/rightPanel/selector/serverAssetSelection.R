@@ -20,7 +20,6 @@ selectedAsset <- reactiveValues(
 
 
 
-
 getSelIndex<-reactive({
   selectedAsset$selIndex
 })

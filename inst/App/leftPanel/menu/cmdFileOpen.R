@@ -51,7 +51,7 @@ observeEvent(input$buttonFileOpen,{
 openFileNow<-function(fileName){
   # cat("openFileNow:: enter\n")
   if(length(fileName)>0 && nchar(fileName)>0){ 
-    src<-paste(readLines(fileName), collapse = "\n")
+    src<-paste(readLines(fileName), collapse = "\n") #this assumes absolute path unless we have getwd()==projDir
     removeFromRecentFiles(fileName)
     setCurrentFilePath(fileName) # should this be replaced by shinyFiles???
     setwd(dirname(fileName))  # should this be replaced by shinyFiles???

@@ -9,17 +9,28 @@ hasPtScript<-reactiveVal(FALSE, label='hasPtScript' )
 
 observeEvent(c(preProcDB$points, input$pages, getTibTabId(), getAssetName(), getTibColumnName()),{
   if(!is.null(input$pages) && identical( getTibTabId(), input$pages )){
-    newVal<-nrow(filter(preProcDB$points, tabId==getTibTabId() & tibName==getAssetName() & ptColName== getTibColumnName()))>0
+    cat('>---> oe: preProcDB$points, input$pages, getTibTabId(), getAssetName(), getTibColumnName()\n')
+    newVal<-(
+      !is.null(preProcDB$points) &&
+        !is.null(getTibTabId()) &&
+        !is.null(getAssetName()) &&
+        !is.null(getTibColumnName()) && 
+        nrow(filter(preProcDB$points, tabId==getTibTabId() & tibName==getAssetName() & ptColName== getTibColumnName()))>0
+      
+    )
     hasPtScript(newVal)
+    cat('<---< oe: preProcDB$points, input$pages, getTibTabId(), getAssetName(), getTibColumnName()\n')
   }
 })
 
 
 removePreProcPtEntry<-function(tab_Id, tib_Name, pt_Column_Name){
+  cat(">---> removePreProPtEntry\n")
   temp1<-filter(
     preProcDB$points, 
     !(tabId==tab_Id & tibName==tib_Name &  ptColName==pt_Column_Name)           
-  )  
+  ) 
+  cat("<---< removePreProPtEntry\n")
   preProcDB$points<-temp1
 }
 
@@ -33,7 +44,7 @@ insertPreProcPtEntry<-function(
   ){
   
   # todo addd tests for newScript (is character...)
- 
+  cat(">---> insertPreProcPtEntry\n")
   temp2<-tibble( 
     tabId=rep(tab_Id,length(newScript)), 
     tibName=rep(tib_Name, length(newScript)), 
@@ -53,20 +64,24 @@ insertPreProcPtEntry<-function(
   serverAssetDB$ptScriptSel=names(newScript)[1]
   # possibly we should save page?
   savePage(pageId=tab_Id )
+  cat("<---< insertPreProcPtEntry\n")
 }
 
 setPreProcPtScript<-function(tab_Id, tib_Name, pt_Column_Name,  cmd_name, newScript){
+  cat(">---> setPreProcPtScript\n")
   preProcDB$points[ 
       preProcDB$points$tabId==tab_Id &
       preProcDB$points$tibName==tib_Name &
       preProcDB$points$ptColName==pt_Column_Name &
       preProcDB$points$cmd==cmd_name  
      ,"script"]<-newScript
+  cat("<---< setPreProcPtScript\n")
 }
 
 
 
 getPreProcPtScript<-reactive({
+  cat(">---> getPreProcPtScript\n")
   tab_Id=getTibTabId()
   tib_Name= getAssetName()
   pt_Column_Name= getTibColumnName()
@@ -75,11 +90,14 @@ getPreProcPtScript<-reactive({
   if(length(temp)==3){
     names(temp)<-x$cmd
   }
+  cat("<---< getPreProcPtScript\n")
   temp
 })
 
 getPreProcPtEntries<-function(pageId){
+  cat(">---> getPreProcPtEntries\n")
   ptpts<-filter(preProcDB$points, tabId==pageId)
+  cat("<---< getPreProcPtEntries\n")
   ptpts
 }
 

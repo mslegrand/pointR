@@ -23,7 +23,7 @@ openProj<-function(projName, pathToProj, projType="generic"){
       # save pprj and use during loading of workspace (to be invoked by startup)
       
       # should we use projName=pathToProj, projPath
-      setUpProj(projName, pathToProj, projType="generic")
+      setUpProj(projName, pathToProj, projType=projType)
       #invoke startup
       request$sender<-'startup'
   # })

@@ -59,11 +59,11 @@ observeEvent(input$useTribble,{
 
 
 observeEvent(input$pages,{
-  cat(">---> input$pages 3\n")
+  cat_list<<-c( cat_list,">---> input$pages 3\n")
   value<-getUseTribble()
   choice<-ifelse(value, "Tribble", "Tibble")
   updateAwesomeRadio(session, inputId="useTribble",  selected=choice)
-  cat("<---< input$pages 3\n")
+  cat_list<<-c( cat_list,"<---< input$pages 3\n")
 }, ignoreNULL = TRUE, label='pages')
 
 

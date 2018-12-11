@@ -1,6 +1,6 @@
 observeEvent(request$sender,{
   if(identical(request$sender,'startup')){ 
-    # browser()
+    
     cat_list<<-c( cat_list,">---> request startup\n")
     # cat('reOrgPanels\n')
     reOrgPanels(id=NULL, mode=NULL)

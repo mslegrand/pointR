@@ -25,8 +25,9 @@ buildLeftMenu<-function(version){
         # shinyDMDMenu::menuItem('Plain Text Doc', value='newText')
       ),
       menuDropdown('New Project',
-        shinyDMDMenu::menuItem('Basic PointR Project', value='newBasicProject'),
-        shinyDMDMenu::menuItem('Custom Shiny Control', value='customControl')
+        shinyDMDMenu::menuItem('New Empty Project', value='newBasicProject'),
+        shinyDMDMenu::menuItem('Clone of Existing Project', value='newCloneProject'),
+        shinyDMDMenu::menuItem('Custom Shiny Control Project', value='customControl')
       ),
       menuDropdown("Recent Projects"),
       menuDivider(),

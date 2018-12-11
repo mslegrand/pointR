@@ -65,6 +65,7 @@ getNameType<-reactive({
 # and use it only for whether or not the column is a 'points' column.
 getColumnType<-reactive({
   colName<-getTibColumnName()
+  cat('colName=',format('colName'),'\n')
   columnValues<-getTib()[[colName]]
   if(!is.null(columnValues)){
     return(extractColType(columnValues))
@@ -78,27 +79,34 @@ getColumnType<-reactive({
 #    getRightMidPanel
 #    serverEdTib to set transform panel
 getPlotState<-reactive({
+  cat(">----> getPlotState\n")
   nameType<-getNameType()
-  # cat('nameType=',nameType,"\n")
+  cat('nameType=',nameType,"\n")
   if(identical(nameType,tibTag)){
     colType<-getColumnType()
     if(identical(colType,'point')){
-      c('point', 'matrix')[ getSelIndex() ]
+      rtv<-c('point', 'matrix')[ getSelIndex() ]
     } else {
-      'value'
+      rtv<-'value'
     }
   } else {
-    nameType
+    rtv<-nameType
   }
+  cat("<----< getPlotState\n")
+  rtv
 })
 
 # returns true iff editing tib contents
 getTibEditState<-reactive({
   # cat("getTibEditState::getPlotState()=",format(getPlotState()),"\n")
-  getSourceType()==svgPanelTag && 
+  cat(">----> getTibEditState\n")
+  rtv<-getSourceType()==svgPanelTag && 
     !is.null(getPlotState()) && 
     getPlotState() %in%  c("point", "value", "matrix")
-})
+  cat("<----< getTibEditState\n")
+  rtv
+}
+)
 
 # used  by
 # server.R:: ptrDisplayScript
@@ -109,6 +117,7 @@ getTibEditState<-reactive({
 # returns:
 #  RPanelTag, rmdPanelTag, or oneof point, matrix, value, if ptR
 getRightMidPanel<-reactive({
+  cat(">---> getRightMidPanel\n")
   if(hasError()){
     rtv<-errorPanelTag
   } else if (panels$sourceType %in% c( rmdPanelTag, textPanelTag, snippetPanelTag)){
@@ -116,7 +125,8 @@ getRightMidPanel<-reactive({
   } else {
     rtv<-getPlotState()
   }
-  # cat('getRightMidPanel=',format(rtv),'\n')
+  cat('getRightMidPanel=',format(rtv),'\n')
+  cat("<---< getRightMidPanel\n")
   rtv
 })
 
@@ -228,54 +238,6 @@ observeEvent(atLeast2Rows(),{
 })
 
 
-reOrgPanels<-function(id, mode){
-  cat(">---> reOrgPanels\n")
-  # cat('id=',format(id),"\n")
-  # cat('mode=',format(mode),"\n")
-  if(length(id)==0 || length(mode)==0){
-    hideElement("TopRightPanel")
-    hideElement("snippetToolBarContainer")
-    hideElement("aceToobarTop1")
-    hideElement("aceToobarTop2")
-    hideElement("useTribble")
-    hideElement("commitButton")
-    addCssClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
-    hideElement("aceTabSet")
-    hideElement("midRightPanels")
-    hideElement("BottomRightPanel")
-    showElement("logo.right")
-    showElement("logo.left")
-  } else {
-    hideElement("logo.right")
-    hideElement("logo.left")
-    # editing ptr
-    if(identical(mode,'ptr')){
-      showElement("BottomRightPanel")
-      showElement("TopRightPanel")
-      showElement("snippetToolBarContainer")
-      showElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble
-      addCssClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
-      addCssClass( id= 'midRightPanels', class='ctop140')
-    } else { # editing other
-      removeCssClass( id= 'midRightPanels', class='ctop140')
-      hideElement("TopRightPanel")
-      hideElement("snippetToolBarContainer")
-      hideElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble
-      if(identical(mode,'ptrrmd')){
-        removeCssClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
-      }
-      else{
-        addCssClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
-      }
-    }
-    showElement("aceToobarTop1")
-    showElement("aceToobarTop2")
-    showElement("commitButton")
-    showElement("aceTabSet")
-    showElement("midRightPanels")
-  }
-  cat("<---< reOrgPanels\n")
-}
 
 observeEvent( getRightMidPanel(), {
   panel<-getRightMidPanel()

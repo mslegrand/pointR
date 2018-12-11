@@ -8,10 +8,10 @@ sendFileTabsMessage<-function(...){
 }
 
 # tracks the naming for unnamed pages
-pages<- reactiveValues(
-  fileName='',
-  fileNameCount=1
-)
+# pages<- reactiveValues(
+#   fileName='',
+#   fileNameCount=1
+# )
 
 
 # getNextAnonymousFileName<-function(){
@@ -179,9 +179,11 @@ observeEvent(input$tabManager,{
 observeEvent(request$tabs, {
   if(length(request$tabs)>0){
     tabId<-peekTab()
-    cat('tabId22=',format(tabId),'\n')
+    cat('oe::request$tabs tabId=',format(tabId),'\n')
     sender<-getSender()
+    cat('oe::request$tabs sender=',format(sender),'\n')
     aceId<-tabID2aceID(tabId)
+    cat('oe::request$tabs aceId=',format(aceId),'\n')
     updateAceExt( id=aceId, sender=sender, getDoc=TRUE)
   } else {
     if(getSender()=='fileCmd.quit'){

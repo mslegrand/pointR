@@ -12,6 +12,7 @@ moduleFooterRight<-function(input, output, session,
   
   output$footer<-renderUI({
     footerPanelState<-getPanelState()
+    # browser()
     if(hasPtScript()){
       leftPtButtons= 50
     } else {
@@ -56,6 +57,9 @@ moduleFooterRight<-function(input, output, session,
               )
             )
           } else if (footerPanelState=='value'){
+            NULL
+          } else {
+            NULL
           }
       
     } else {

@@ -31,7 +31,7 @@ processMssgFromAceMssgPageIn<-function(sender, mssg){
          nchar(input$pages)>0 && 
          !identical(selectedAsset$tabId, input$pages) 
       ){
-        
+        # browser()
          cat('--storeAssetState\n')
         storeAssetState()
          cat("--restoreAssetState\n")

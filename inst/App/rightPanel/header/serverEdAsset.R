@@ -26,7 +26,7 @@ observeEvent(returnValue4ModuleEdAsset$name(),{
   
   if( is.null(getAssetName())  || name==getAssetName() ){ return(NULL) } #bail if moduleEdAsset did not change name
   if( !(name %in% c(errorPanelTag) )){
-    # cat('returnValue4ModuleEdAsset$name()= ', name, '\n')
+    cat('returnValue4ModuleEdAsset$name()= ', name, '\n')
     if(name==transformTag){
       updateSelected(name=transformTag)
     } else  {
