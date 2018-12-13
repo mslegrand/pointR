@@ -25,9 +25,9 @@ buildLeftMenu<-function(version){
         # shinyDMDMenu::menuItem('Plain Text Doc', value='newText')
       ),
       menuDropdown('New Project',
-        shinyDMDMenu::menuItem('New Empty Project', value='newBasicProject'),
+        shinyDMDMenu::menuItem('New Basic Project', value='newBasicProject'),
         shinyDMDMenu::menuItem('Clone of Existing Project', value='newCloneProject'),
-        shinyDMDMenu::menuItem('Custom Shiny Control Project', value='customControl')
+        shinyDMDMenu::menuItem('svgR-based ShinyInput Control Project', value='customControl')
       ),
       menuDropdown("Recent Projects"),
       menuDivider(),
@@ -36,12 +36,7 @@ buildLeftMenu<-function(version){
       menuDivider( id='recentProjDivider'),
       shinyDMDMenu::menuItem("Open Project...", value='openProject'),
       
-      menuDivider(),
-      menuDropdown(
-        "Import",
-        shinyDMDMenu::menuItem("Snippet",   value="importSnippetFile"),
-        shinyDMDMenu::menuItem("Dnippet",   value='importDndSnippetsFile')
-      ),
+
       menuDivider(),
       shinyDMDMenu::menuItem("Export as SVG"),
       menuDivider(),
@@ -71,6 +66,12 @@ buildLeftMenu<-function(version){
         shinyDMDMenu::menuItem("Adjust Tabs",       value="adjustTabs"),
         shinyDMDMenu::menuItem("Show White Space"),
         shinyDMDMenu::menuItem(defaultOpts$tabType)
+      ),
+      menuDivider(),
+      menuDropdown(
+        "Import",
+        shinyDMDMenu::menuItem("Snippet",   value="importSnippetFile"),
+        shinyDMDMenu::menuItem("Dnippet",   value='importDndSnippetsFile')
       )
     ),
     menuDropdown(
