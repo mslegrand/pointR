@@ -288,7 +288,7 @@ Shiny.addCustomMessageHandler(
           var snippetManager = ace.require("ace/snippets").snippetManager;
           var m = snippetManager.files[editor.session.$mode.$id];
           m.snippetText = data.snippets;
-          if (m.snippets){
+          if (!!m.snippets){
             snippetManager.unregister(m.snippets);
           }
           m.snippets = snippetManager.parseSnippetFile(m.snippetText, m.scope);
