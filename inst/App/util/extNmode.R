@@ -2,8 +2,8 @@
 
 
 extMode.TB<-tibble(
-  ext=c('R', 'Rmd', 'snippets', 'dnippets', 'txt'),
-  mode=c('ptr', 'ptrrmd', 'snippets', 'dnippets', 'txt')
+  ext=c('R', 'Rmd', 'snippets', 'dnippets', 'txt', 'js'),
+  mode=c('ptr', 'ptrrmd', 'snippets', 'dnippets', 'txt', 'javascript')
 )
 
 pathExt2mode<-function(pathExt){

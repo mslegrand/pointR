@@ -36,7 +36,7 @@ shinyServer(function(input, output,session) {
   })  
   
 
-  shinyFileChoose(input, "buttonFileOpen",           session=session, roots=c(home="~"),  filetypes=c('R','PTR','SVGR') ) #hidden
+  shinyFileChoose(input, "buttonFileOpen",           session=session, roots=c(home="~"),  filetypes=c('R','PTR','SVGR','js') ) #hidden
   shinyFileChoose(input, "buttonFileOpenProject",    session=session, roots=c(home="~"),  filetypes=c('pprj') ) #hidden
   shinyFileChoose(input, "buttonSnippetImport",      session=session, roots=c(home="~"),  filetypes=c('snippets') ) #hidden
   shinyFileChoose(input, "buttonDnippetImport",      session=session, roots=c(home="~"),  filetypes=c('dnippets') ) #hidden

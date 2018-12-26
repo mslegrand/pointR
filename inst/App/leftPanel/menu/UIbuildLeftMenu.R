@@ -19,6 +19,7 @@ buildLeftMenu<-function(version){
         shinyDMDMenu::menuItem('R ioslides presentation', value='newIOSlides'),
         menuDivider(),
         shinyDMDMenu::menuItem('Snippets',            value='newSnippets'),
+        shinyDMDMenu::menuItem('Javascript',            value='newJavascript'),
         shinyDMDMenu::menuItem("Dnippets",            value="newDndSnippetsFile")#,
         # menuDivider(),
         # 

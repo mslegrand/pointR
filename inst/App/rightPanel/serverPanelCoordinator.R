@@ -120,7 +120,7 @@ getRightMidPanel<-reactive({
   cat(">---> getRightMidPanel\n")
   if(hasError()){
     rtv<-errorPanelTag
-  } else if (panels$sourceType %in% c( rmdPanelTag, textPanelTag, snippetPanelTag)){
+  } else if (panels$sourceType %in% c( rmdPanelTag, textPanelTag, snippetPanelTag, javascriptPanelTag) ){
     rtv<-panels$sourceType
   } else {
     rtv<-getPlotState()

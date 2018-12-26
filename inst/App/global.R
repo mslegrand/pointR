@@ -68,6 +68,7 @@ RPanelTag='RPanel'
 svgPanelTag<-'svgPanel'
 rmdPanelTag<-'rmdPanel'
 textPanelTag<-'textPanel'
+javascriptPanelTag<-'javascriptPanel'
 snippetPanelTag<-'snippetPanel'
 tibTag<-'tib'
 

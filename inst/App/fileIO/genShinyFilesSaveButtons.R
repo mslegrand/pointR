@@ -1,5 +1,5 @@
 
-  modes2filetypes=list(ptr="R",ptrrmd="Rmd",text="txt", snippets="snippets", dnippets="dnippets")
+  modes2filetypes=list(ptr="R",ptrrmd="Rmd",text="txt", snippets="snippets", dnippets="dnippets", javascript='js')
 
   getExtenstionList<-function(ext){
     tmp<-modes2filetypes

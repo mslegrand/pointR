@@ -66,6 +66,16 @@ cmdFileNewTxt<-function(){
   mssg$error<-""
 }
 
+cmdFileNewJavascript<-function(){
+  src<-"// Javascript"
+  tabName<-getNextAnonymousFileName()
+  addFileTab(title=tabName, txt=src,  docFilePath="?", mode='javascript', fileSaveStatus=FALSE)
+  # delay(500,
+  #       updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
+  # )
+  mssg$error<-""
+}
+
 cmdDndSnippetNew<-function(){
   src<-fileTemplates[[ "dndSnippetTemplate.dnippets" ]] #rmdTemplate
   src<-sub('\ndate: "TODAY"', paste0('\ndate:\ndate: "', Sys.Date(),'"'), src)

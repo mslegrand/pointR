@@ -5,13 +5,17 @@ observeEvent( input$editNavBar, {
   fileCmd<-getLeftMenuCmd()
   
   if(length(fileCmd)>0){
+    
     if( fileCmd %in% c("newPtrTibScript", "newPtRMatScript", "newPtRSVGScript", "newRScript" )){ #-----new
       cmdFileNewPtR(fileCmd)
       dirtyDMDM(session, "editNavBar")
     }
-    
     if(fileCmd=="newRmd"){ #-----open 
       cmdFileNewRmd()
+      dirtyDMDM(session, "editNavBar")
+    }
+    if(fileCmd=="newJavascript"){ #-----open 
+      cmdFileNewJavascript()
       dirtyDMDM(session, "editNavBar")
     }
     if(fileCmd=="newSnippets"){ #-----open 
@@ -244,7 +248,6 @@ observeEvent(getFileSavedStatus(),{
     )
     status<-'saved'
   }
-  # cat("status=",status,"\n")
   if(!is.null(input$pages)){
       sendFileTabsMessage( tabId=input$pages, sender='savedStatus', savedStatus=status)
   }

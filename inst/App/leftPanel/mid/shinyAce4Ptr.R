@@ -56,20 +56,20 @@ initialPtrAceOptions<-function(
 }
 
 shinyAce4Ptr <- function(
-    outputId="source", #editor 
-    value="",
-    height="100%",
-    theme="chrome",
-    fontSize=16,
-    mode="ptr",
-    autoComplete= "enabled",
-    autoCompleteList=NULL,
+    outputId="source", # assigned aceId editor 
+    value="", # assigned text
+    height="100%", 
+    theme="chrome", #assigned defaultOpts["theme"]
+    fontSize=16,# assigned defaultOpts["fontSize"]
+    mode="ptr", #assigned
+    autoComplete= "enabled", #asssigned enabled
+    autoCompleteList=NULL, #assigned names(svgR:::eledefs) when mode is 'ptr
     debounce=1000, 
     selectionId=NULL, 
     cursorId=NULL, 
     hotkeys=NULL,
-    docFilePath=docFilePath,
-    initSaved=initSaved
+    docFilePath=docFilePath, #assigned
+    initSaved=initSaved #assigned
   ){
   # cat('shinyAce4Ptr:: outputId=',outputId,"\n")
     saceList<-aceEditor(
@@ -102,6 +102,14 @@ shinyAce4Ptr <- function(
     ptrList<-list(
       tags$script(type="text/javascript", HTML(js2))
     )
+
+# saceList[[2]] provided what?
+ # 1. drag and drop : moved to ptRaceInit.js
+ # 2. set focus
+ # 3. set selection
+ # 4. insert snippets
+ # 5. set some keystroke reponses
+ 
 #     saceList[[2]]<-jqui_droppable(
 #         saceList[[2]],
 #         operation="enable",
