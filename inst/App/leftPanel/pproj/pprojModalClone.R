@@ -1,6 +1,6 @@
 # ---beging code to inserted in ptR-------------------------------
 cloneProjModal <- function(failed = 0, mssg=NULL, datapath=NULL, projectName=NULL, clonepath=NULL) {
-  #shinyDirChoose(input, id='browseForDir', roots=c(wd='~'), filetypes='')
+  
   shinyDirChoose(input, id='browseForDir', roots=c(home='~'))
   observeEvent(input$browseForDir,{
     datapath<-parseDirPath(c(home='~'), input$browseForDir)
@@ -10,20 +10,15 @@ cloneProjModal <- function(failed = 0, mssg=NULL, datapath=NULL, projectName=NUL
       updateTextInput(session,inputId = "parentProjDirectoryName", value=datapath)
     }
   })
-  # shinyFileChoose(input, id='browseForClone', roots=c(home='~'))
+  
   shinyFileChoose(input, "browseForClone",    session=session, roots=c(home="~"),  filetypes=c('pprj') ) #hidden
   fp.dt<-parseFilePaths(c(home='~'), input$browseForClone)
   if(length(fp.dt)>0 && nrow(fp.dt)){
     datapath<-as.character(fp.dt$datapath[1])
     datapath<-gsub(pattern = '^NA/', "~/", datapath)
     updateTextInput(session,inputId = "templateProjName", value=datapath)
-    #pathToProj<-dirname(datapath) # converts the ~/ to /home/user/
-    #
-    # pathToProj<-path_rel(pathToProj, path_home() )
-    # pathToProj<-paste0("~/",pathToProj)
-    # projName<-basename(datapath)
-    # openProj(projName, pathToProj)
   }
+  
   observeEvent(input$browseForClone,{
     fp.dt<-parseFilePaths(c(home='~'), input$browseForClone)
     if(length(fp.dt)>0 && nrow(fp.dt)){
@@ -32,6 +27,7 @@ cloneProjModal <- function(failed = 0, mssg=NULL, datapath=NULL, projectName=NUL
       updateTextInput(session,inputId = "templateProjName", value=datapath)
     }
   })
+  
   modalDialog(
     h2('Create a new pointR project by cloning an existing pointR project'),
     if(failed==1){
@@ -117,33 +113,25 @@ observeEvent(input$modalCloneProjOk, {
     pattern<-gsub('\\.pprj$','', basename(input$templateProjName))
     projName<-gsub('\\.pprj$','',projName) 
     projNameExt<-paste0(projName,'.pprj')
-    #targetDir<-path_join(c(pathToProj, pattern ))
-    #targetDir<-pathToProj
-    #fullpathProjName<-path_join(c(pathToProj, pattern, paste0(pattern,".pprj") ))
+    
+    
      # 0. close current project
     closeCurrentProj()
     # 1. clone project
-    # targetDir<-tempdir(check=TRUE)
-    fullpathProjName<-copyAndRenameProject(pattern, templatePath, projName, pathToProjParent=pathToProjParent )
-    #dir_copy(path_join(c(targetDir, projName)), pathToProj)
-    
+    fullpathProjName<-copyAndRenameProject(
+      pattern=pattern, 
+      templatePath=templatePath, 
+      projName=projName, 
+      pathToProjParent=pathToProjParent 
+    )
     # 2. open cloned project
-    #fullpathProjName<-path_join(c(pathToProj, projName, projNameExt))
     ptRproj<-read_json(fullpathProjName) 
-    
     pprj(ptRproj)
     # 3. 
     pathToProj<-path_join(c(pathToProjParent,projName))
     setUpProj(projName=projNameExt, pathToProj=pathToProj, projType='cloned')
     #invoke startup
     request$sender<-'startup'
-    # try to add file and workspace, if not writable , return fail
-    # newProj(projectName, datapath, projType="generic")
-    
-    # 1 cd to datapath
-    # 2 create new file with name = input$modalProjName
-    #   2.5 may need to put in request, since it will need to add windows.
-    # 3 register in recent projects.
     
     removeModal() 
   }

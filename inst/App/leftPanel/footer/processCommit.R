@@ -34,7 +34,13 @@ processCommit<-reactive({
     setSourceType(textPanelTag)
   } else if (identical(mode, 'snippets')){
     setSourceType(snippetPanelTag)
-  } else {
+  } 
+  else if (identical(mode, 'javascript')){
+    setSourceType(javascriptPanelTag)
+    # do nothing
+    cat('mode is javascript\n')
+  }
+  else {
     browser()
   }
   if(!hasError()){

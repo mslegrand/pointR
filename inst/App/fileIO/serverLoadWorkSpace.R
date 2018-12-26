@@ -1,15 +1,15 @@
 
 #restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir(), pprjPath=getProjectFullPath(), session=getSession() ){
 restoreWorkSpace<-reactive({
-  cat('>---> restoreWorkSpace\n')
-  # browser()
+  # cat('>---> restoreWorkSpace\n')
+  
   workSpaceDir=getWorkSpaceDir()
   prjPath=getProjectFullPath()
   fileWSPaths<-dir(workSpaceDir, pattern='PTR-TABID', full.names = T)
   if(length(fileWSPaths)==0){
-    cat("workSpaceDir = ",format(workSpaceDir), "\n")
-    cat(" length(fileWSPaths)==0 \n")
-    cat('<---< restoreWorkSpace\n')
+    # cat("workSpaceDir = ",format(workSpaceDir), "\n")
+    # cat(" length(fileWSPaths)==0 \n")
+    # cat('<---< restoreWorkSpace\n')
     return(NULL)
   }
   wsPages<-list()
@@ -45,17 +45,17 @@ restoreWorkSpace<-reactive({
   for(page in wsPages){
     # extract the serverAsset portion and add
     tabId=page$fileDescriptor.tabId
-    cat('page$fileDescriptor.tabId=',format(page$fileDescriptor.tabId),"\n")
-    # aceId<-tabID2aceID(tabId)
+    # cat('page$fileDescriptor.tabId=',format(page$fileDescriptor.tabId),"\n")
+    
     mode=page$fileDescriptor.mode
     docFilePath=page$fileDescriptor.filePath
-    # browser()
+    
     if(!is.null(ptRproj$pathToProj)){
       docFilePath<-sub( ptRproj$pathToProj, editOption$currentProjectDirectory, docFilePath)
     }
     fileSaveStatus=page$fileDescriptor.isSaved
     txt=page$code
-    # newPage(tabId,txt)
+    
     
     if(!identical(docFilePath, "?")){
       title=basename(docFilePath)
@@ -63,43 +63,11 @@ restoreWorkSpace<-reactive({
       title=paste('Anonymous', page$fileDescriptor.anonNo)
     }
     
-    aceId<-newPage(tabId=tabId, title=title, txt=txt,
-                   docFilePath=docFilePath, mode=mode,
-                   fileSaveStatus=fileSaveStatus)
-    
-    # aceId<-tabID2aceID(tabId)
-    # if(mode=='ptr'){
-    #   divClass="cAceContainer"
-    # } else {
-    #   divClass="cAceRmdContainer"
-    # }
-    # 
-    # appendTab(
-    #   inputId = "pages", select=TRUE,
-    #   tabPanel(
-    #     title=tabTitleRfn(title, tabId, docFilePath), # maybe we should save title in fileDescriptor?
-    #     div(
-    #       class=divClass,
-    #       overflow= "hidden",inline=FALSE,
-    #       shinyAce4Ptr(
-    #         outputId = aceId,
-    #         value    = txt,
-    #         mode     = mode,
-    #         theme    = defaultOpts["theme"],
-    #         fontSize = defaultOpts["fontSize"], autoComplete="enabled",
-    #         if(mode=='ptr'){
-    #           autoCompleteList =list(names(svgR:::eleDefs))
-    #         } else {
-    #           NULL
-    #         },
-    #         docFilePath =docFilePath,
-    #         initSaved   =fileSaveStatus
-    #       )
-    #     ),
-    #     value=tabId
-    #   )
-    # )
-
+    aceId<-newPage(
+      tabId=tabId, title=title, txt=txt,
+      docFilePath=docFilePath, mode=mode,
+      fileSaveStatus=fileSaveStatus
+    )
   }
   
   serverAssetDB$tib<-extractDBFromPages(wsPages, "^assetSelection.", initTib=initialServerAssetDB() )
@@ -120,17 +88,15 @@ restoreWorkSpace<-reactive({
   tib<-extractDBFromPages(wsPages, "^fileDescriptor.", initTib=initialFileDescDB() )
   fileDescDB(tib)  
   
-  # cat("tabId=",tabId,"\n")
-  # cat('input$pages=',format(input$pages),"\n")
   #ptRproj<-pprj()
   if(!is.null(ptRproj)){
     ptRproj$pathToProj<-editOption$currentProjectDirectory
     ptRproj$projName<-editOption$currentProjectName
     fullpathProjName=file.path(ptRproj$pathToProj, ptRproj$projName)
     write_json(ptRproj, fullpathProjName) 
-  }
-  # aceId<-tabID2aceID(tabId)
-  cat('<---< restoreWorkSpace\n')
+  } 
+  
+  # cat('<---< restoreWorkSpace\n')
   return(aceId)
 })
   

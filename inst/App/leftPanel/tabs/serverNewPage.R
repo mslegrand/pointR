@@ -7,6 +7,7 @@
 
 # gets what we need from fileDescDB()
 newPage<-function(tabId, title, txt, docFilePath, mode,  fileSaveStatus ){
+  cat('>---> newPage\n')
   if(is.null(tabId)){
     cat('big probs\n')
     stop()
@@ -23,7 +24,7 @@ newPage<-function(tabId, title, txt, docFilePath, mode,  fileSaveStatus ){
   # } else {
   #   title=paste('Anonymous', page$fileDescriptor.anonNo)
   # }
-  
+  cat('newPage mode= ',format(mode),'\n')
   if(mode=='ptr'){
     divClass="cAceContainer"
   } else {
@@ -41,10 +42,11 @@ newPage<-function(tabId, title, txt, docFilePath, mode,  fileSaveStatus ){
           value    = txt,
           mode     = mode,
           theme    = defaultOpts["theme"],
-          fontSize = defaultOpts["fontSize"], autoComplete="enabled",
+          fontSize = defaultOpts["fontSize"], 
+          autoComplete="enabled",
           if(mode=='ptr'){
             autoCompleteList =list(names(svgR:::eleDefs))
-          } else {
+          } else { # handle js mode, ... here
             NULL
           },
           docFilePath =docFilePath,
@@ -54,7 +56,7 @@ newPage<-function(tabId, title, txt, docFilePath, mode,  fileSaveStatus ){
       value=tabId
     )
   )
-
+  cat('<---< newPage\n')
   aceId
 } 
 

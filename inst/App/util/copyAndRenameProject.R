@@ -54,6 +54,15 @@ copyAndRenameProject<-function(pattern, templatePath, projName, pathToProjParent
       saveRDS(pg, page)
     }
   }
+  page<-path_join(c(workspace, "loadedDnippets.rda"))
+  if(file_exists(page)){
+    pg<-readRDS( page)
+    fd<-pg$fullpath
+    fd<-gsub( templatePath, pathToProj, fd)
+    fd<-gsub(pattern, projName, fd)
+    pg$fullpath<-fd
+    saveRDS(pg, page)
+  }
   
   # finally we replace the .pprj
   projNameExt<-paste0(projName,'.pprj')
