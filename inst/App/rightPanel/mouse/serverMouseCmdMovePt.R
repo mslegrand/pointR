@@ -34,7 +34,7 @@ mouseCmdMovePt<- function(mssg){
       validateTibLists(getPtDefs()$tib, tibs) 
       newPtDefs$tib<-tibs
       if(!is.null(newPtDefs)){ #update only upon success
-        updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx+1))
+        updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx))
       }
     },error=function(e){
       e<-c('preproErr',unlist(e))
@@ -44,7 +44,7 @@ mouseCmdMovePt<- function(mssg){
   } else {
     newPtDefs$tib[[selection]][[ rowIndex, getTibPtColPos() ]][,matColIndx]<-newPt
     if(!is.null(newPtDefs)){ #update only upon success
-      updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx+1))
+      updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx))
     }
   }
 }
