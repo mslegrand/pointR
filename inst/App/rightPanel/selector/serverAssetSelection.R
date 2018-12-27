@@ -34,7 +34,6 @@ observeEvent(getTibNRow(),{
 getAssetName<-reactive({selectedAsset$name}) #allow to be null only if tib is null  
 getTibTabId<-reactive({ selectedAsset$tabId})
 getTibColumnName<-reactive({ selectedAsset$columnName })
-#getTib<-reactive({ getAssetName() %AND% getPtDefs()$tib[[ getAssetName() ]] })
 getTib<-reactive({ getPtDefs() %$$% 'tib' %$$%  getAssetName() })
 
 getTibPtColPos<-reactive({ which(names(getTib())==selectedAsset$ptColName )})
@@ -50,14 +49,9 @@ atLeast2Rows<-reactive({
   getTibEditState()==TRUE && nrow(getPtDefs()$tib[[getAssetName()]])>1
 })
 
-getTibRow<-reactive({
-  # cat('getTibRow()=',format( selectedAsset$rowIndex),"\n");
-  selectedAsset$rowIndex})
+getTibRow<-reactive({selectedAsset$rowIndex})
 
-getTibMatCol<-reactive({ 
-  # cat('getTibMatCol::', format(selectedAsset$matCol), "\n")
-  selectedAsset$matCol 
-})
+getTibMatCol<-reactive({ selectedAsset$matCol })
 getTibPtsNCol<-reactive({ sapply(getTibPts(),ncol)}  )
 
 getTransformType<-reactive({ 
@@ -149,8 +143,6 @@ resetSelectedTibbleName<-function(tibs, name){
 
 
 setSelectedAssetFromAce<-function( reqSelector){
-  # updatEle<- c('name', 'ptColName', 'rowIndex', 'matCol', 'colName')
-  #cat('names of reqSelector:', paste(names(reqSelector), collapse=", "),"\n" )
   for(n in names(reqSelector)){
     stopifnot({n %in% names(selectedAsset)})
     selectedAsset[[n]]<-reqSelector[[n]]
@@ -175,7 +167,6 @@ updateSelected<-function( name, rowIndex, columnName, matCol,  ptColName, selInd
   }
   if(!missing(columnName)){
     selectedAsset$columnName=columnName
-    #if(!is.null(getColumnType()) && getColumnType()=='point'){
     if(identical(getColumnType(), 'point')){
       selectedAsset$ptColName<-columnName
       if(!is.null(selectedAsset$row) && !is.null(columnName ) && !is.null(selectedAsset$name )){
@@ -198,39 +189,16 @@ updateSelected<-function( name, rowIndex, columnName, matCol,  ptColName, selInd
   }
 } 
 
-getTibColumnNameChoices<-reactive({
-  # tib<-getTib()
-  # choices<-tib %AND% names(tib)
-  choices<-names( getTib() )
-  choices
-})
+getTibColumnNameChoices<-reactive({ names( getTib() ) })
 
 getTibEntry<-reactive({
-  # cat("serverSelection:: -----Entering-----getTibEntry::----------------\n")
-  #if( !is.null(getColumnType()) && getColumnType()=='point'){
   if( identical(getColumnType(), 'point')){
     return( c('point','matrix')[getSelIndex()] )
   } 
-  # name<-getAssetName()
-  # if(is.null(name)){ return( NULL)}
-  # rowNum<-getTibRow()
-  # if(is.null(rowNum)){ return( NULL)}
-  # columnName<-getTibColumnName()
-  # #tib<-name %AND% getPtDefs()$tib[[name]]
-  # tib<- getPtDefs() %$$% 'tib' %$$% name
-  # #columnValues<- columnName %AND% tib[[columnName]]
-  # columnValues<-  tib %$$% columnName
-  # if(is.null(columnValues)){ return( NULL)}
-  # 
   rowNum<-getTibRow()
   if(is.null(rowNum)){ return( NULL)}
   columnValues<-getTibEntryChoices()
-  #trows<-columnValues %AND% length(columnValues)
-  trows<- length(columnValues)
-  #entryOk<-trows %AND% rowNum %AND% (if(1<=rowNum && rowNum<=trows){ TRUE } else { NULL})
-  #if(!is.null(entryOk)){
-  if(1<=rowNum && rowNum<=trows){
-     #entry<- as.list(tib[[columnName]])[[rowNum]]
+  if(1<=rowNum && rowNum<=length(columnValues) ){
     entry<-columnValues[[rowNum]]
   } else {
     entry<-NULL
@@ -239,41 +207,23 @@ getTibEntry<-reactive({
 })
 
 getTibEntryChoices<-reactive({
-  # cat("\n-----Entering-----getTibEntryChoices::----------------\n")
-  #  !is.null(getColumnType()) && getColumnType()=='point'){
   if( identical(getColumnType(), 'point')){
     return( c('point', 'matrix'))
   } 
-  # name<-getAssetName()
-  # columnName<-getTibColumnName()
-  # tib<-name %AND% getPtDefs()$tib[[name]]
-  # columnValues<- columnName %AND% tib[[columnName]]
-  # getPtDefs() %$$% 'tib' %$$%  getAssetName()
   columnValues<-getTib() %$$%  getTibColumnName()
   if(!is.null(columnValues)){
     columnValues <-  as.list(columnValues)
   }
-  #columnValues <-columnValues %AND%  as.list(columnValues)
   columnValues
 })
 
 
-getTibPts<-reactive({ 
-  # cat("serverSelection:: -----Entering-----getTibPts::----------------\n")
-  # ptCol<-selectedAsset$ptColName
-  # tib<-getTib()
-  # pts <- tib %AND% ptCol %AND% tib[[ptCol]]
-  pts <- getTib() %$$% selectedAsset$ptColName
-  
-  pts
-})
-
+getTibPts<-reactive({getTib() %$$% selectedAsset$ptColName})
 
 # todo refactor to return only last (or a pair)
 getTibMatColChoices<-reactive({ 
   rowNum<-getTibRow()
   pts<-getTibPts()
-
   if(is.null(pts) || is.null(rowNum) || rowNum<1 || rowNum>length(pts)){
     rtv<-NULL
   } else {

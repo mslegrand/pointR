@@ -17,12 +17,6 @@ initResourcePaths <- function() {
   HTML("")
 }
 
-# `%AND%` <- function(x, y) {
-#   if (!is.null(x) && !is.na(x))
-#     if (!is.null(y) && !is.na(y))
-#       return(y)
-#   return(NULL)
-# }
 
 `%$$%`<-function(x,y){
   if(is.null(x) || is.na(x) || is.null(y) ){ 
@@ -39,20 +33,6 @@ allGood<-function(...) {
 notNull<-function(...) {
   all(sapply(list(...),length)!=0) 
 }
-
-# list.entry.at.index<-function(ll, indx){
-#   if(!is(ll,'list')){
-#     return(NULL)
-#   }
-#   if(!(class(indx) %in% c('integer', 'numeric'))){ 
-#     return(NULL)
-#   } 
-#   if(!(indx>=1 && indx<= length(ll))){
-#     return(NULL)
-#   }
-#   ll[[indx]] 
-# }
-
 
 
 sapply(
