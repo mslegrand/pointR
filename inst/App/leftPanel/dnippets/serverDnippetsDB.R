@@ -51,12 +51,12 @@ getDnippetsUsageVec<-reactive({
 })
 
 getDnippetsSelected<-reactive({
-  cat('\n>---> entering getDnippetsSelected\n')
+  # cat('\n>---> entering getDnippetsSelected\n')
   alles<-getDnippetsAll()
   val<-getPageDnippetsDB(input$pages)
   val[['tabId']]<-NULL
   val<-unlist(val)
-  cat('<---<  getDnippetsSelected\n')
+  # cat('<---<  getDnippetsSelected\n')
   alles[val==TRUE]
 })
 

@@ -74,8 +74,8 @@ setSfDir<-function(sf_id, path, root="home"){
 # called whenever dirPath changes
 # sets shinyFiles to use pathToProj
 resetShinyFilesIOPaths<-function(pathToProj){
-  cat( ">---> resetShinyFilesIOPaths\n")
-  cat('1 pathToProj=', format(pathToProj),"\n")
+  # cat( ">---> resetShinyFilesIOPaths\n")
+  # cat('1 pathToProj=', format(pathToProj),"\n")
   # browser()
   if( identical(pathToProj, optionDirPath())){ # optionDirPath is the .ptR directory
     pathToProj<-path_home()
@@ -84,7 +84,7 @@ resetShinyFilesIOPaths<-function(pathToProj){
     pathToProj<-paste0("~/",pathToProj) # do we really want to do this???
   }
   
-  cat('2 pathToProj=', format(pathToProj),"\n")
+  # cat('2 pathToProj=', format(pathToProj),"\n")
   
   fileIOIds<-c("buttonFileOpen", "buttonSnippetImport","buttonDnippetImport", "buttonFileSaveR",
                "buttonPreProcPtImport","buttonExportSVG","buttonExportPreproc")

@@ -202,7 +202,7 @@ observeEvent( input$editNavBar, {
     }
     
     if(grepl("recentProj-",fileCmd)){
-      cat('>---> recentProjects\n')
+      # cat('>---> recentProjects\n')
       #get the name
       name<-sub("recentProj-","",fileCmd)
       #cat('>---> recentProjects: name=', format(name),"\n")
@@ -218,7 +218,7 @@ observeEvent( input$editNavBar, {
       } else {
         projName<-basename(name)
         pathToProj<-dirname(name)
-        cat('recentFiles:: pathToProj', format(pathToProj),"\n")
+        # cat('recentFiles:: pathToProj', format(pathToProj),"\n")
         # pathToProj<-path_rel(pathToProj, path_home() )
         openProj(projName, pathToProj )
       }

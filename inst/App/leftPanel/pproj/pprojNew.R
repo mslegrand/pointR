@@ -1,6 +1,6 @@
 
 newProj<-function(projName, parentDir, projType="generic"){
-    cat('>---> newProj\n')
+    # cat('>---> newProj\n')
     
     closeCurrentProj()
     # todo!!! test for write permissions
