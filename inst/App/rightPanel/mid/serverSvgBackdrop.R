@@ -30,7 +30,7 @@ setBackDrop<-function(pageId, checked, color){
 
 
 observeEvent(input$pages,{
-  cat(">---> input$pages 4\n")
+  # cat(">---> input$pages 4\n")
   if(length(input$pages)>0){
       
     # cat('input$pages=',format(input$pages),"\n")
@@ -41,7 +41,7 @@ observeEvent(input$pages,{
     updateCheckboxInput(session, inputId="solidBackdrop", value=!bd$checked)
   }
 
-  cat("<---< input$pages 4\n")
+  # cat("<---< input$pages 4\n")
 }, ignoreNULL=TRUE)
 
 observeEvent(input$solidBackdrop,{

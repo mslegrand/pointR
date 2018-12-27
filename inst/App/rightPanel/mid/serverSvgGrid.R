@@ -82,7 +82,7 @@ observeEvent( input$Vspacing, {
 #color show done in cmd
 
 observeEvent(input$pages,{
-  cat(">---> input$pages 5\n")
+  # cat(">---> input$pages 5\n")
   tb<-getSvgGrid()
   if(length(tb$show)>0){
     if(tb$show){
@@ -91,7 +91,7 @@ observeEvent(input$pages,{
       renameDMDM(session,  "plotNavBar",  "cmdHideGrid", "Show Grid",newValue="cmdShowGrid")
     }
   }
-  cat("<---< input$pages 5\n")
+  # cat("<---< input$pages 5\n")
 })
 
 

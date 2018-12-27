@@ -282,12 +282,12 @@ moduleEdTib<-function(input, output, session,
 
   #---the next collection of observers are used to return for the entry value---
   observeEvent( input$entryRadio ,{
-    cat('>---> input$entryRadio\n')
+    # cat('>---> input$entryRadio\n')
     val<- input$entryRadio
     if(!is.null(val) && nchar(val)>0){
         entry$result<-val
     }
-    cat('<---< checkAll\n')
+    # cat('<---< checkAll\n')
   })
   
   observeEvent( input$entryValue, {

@@ -63,22 +63,22 @@ getSafeSelection<-function(selection, choices){ #anybody using this???
 
 observeEvent(returnValue4ModuleEdTib$selectedWidget(), {
   if( getTibEditState()==TRUE && !is.null( returnValue4ModuleEdTib$selectedWidget() )){
-    cat("\n-----------returnValue4ModuleEdTib$selectedWidget--------------------\n")
-    cat("selectedWidget=",format( returnValue4ModuleEdTib$selectedWidget() )," tabId=",format(input$pages),"\n\n")
+    # cat("\n-----------returnValue4ModuleEdTib$selectedWidget--------------------\n")
+    # cat("selectedWidget=",format( returnValue4ModuleEdTib$selectedWidget() )," tabId=",format(input$pages),"\n\n")
     updateWidgetChoicesRow( selectedWidget=returnValue4ModuleEdTib$selectedWidget())
   }
 })
 
 observeEvent(returnValue4ModuleEdTib$transformType(),{
-  cat(">--->oe modedtib$transformType\n")
+  # cat(">--->oe modedtib$transformType\n")
   if( getPlotState()==transformTag){
-    cat("\n-----------returnValue4ModuleEdTib$transformType--------------------\n")
+    # cat("\n-----------returnValue4ModuleEdTib$transformType--------------------\n")
       tt<-returnValue4ModuleEdTib$transformType()
       if(!is.null(tt) && tt!=getTransformType() ){
         updateSelected( transformType= tt)
       }
   }
-  cat("<---<oe modedtib$transformType\n")
+  # cat("<---<oe modedtib$transformType\n")
 })
 
 

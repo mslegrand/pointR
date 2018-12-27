@@ -13,11 +13,11 @@ modulePlotRmd<-function(input, output, session,
       #src<-getCode()
       src<-request$code
       if(grepl("output: dnd_snippet",src)){
-        cat("founds\n")
-        cat('>--> dripplets2Rmd\n')
+        # cat("founds\n")
+        # cat('>--> dripplets2Rmd\n')
         src<-dripplets2Rmd(src)
-        cat(src)
-        cat('<--< dripplets2Rmd\n')
+        # cat(src)
+        # cat('<--< dripplets2Rmd\n')
       }
       #  knit2html(text = src, fragment.only = FALSE, quiet = TRUE)
       div( style='background-color: #FFFFFF;',
