@@ -7,7 +7,7 @@
 
 # gets what we need from fileDescDB()
 newPage<-function(tabId, title, txt, docFilePath, mode,  fileSaveStatus ){
-  cat('>---> newPage\n')
+  # cat('>---> newPage\n')
   if(is.null(tabId)){
     cat('big probs\n')
     stop()
@@ -24,7 +24,7 @@ newPage<-function(tabId, title, txt, docFilePath, mode,  fileSaveStatus ){
   # } else {
   #   title=paste('Anonymous', page$fileDescriptor.anonNo)
   # }
-  cat('newPage mode= ',format(mode),'\n')
+  # cat('newPage mode= ',format(mode),'\n')
   if(mode=='ptr'){
     divClass="cAceContainer"
   } else {
@@ -56,7 +56,7 @@ newPage<-function(tabId, title, txt, docFilePath, mode,  fileSaveStatus ){
       value=tabId
     )
   )
-  cat('<---< newPage\n')
+  # cat('<---< newPage\n')
   aceId
 } 
 

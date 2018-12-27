@@ -5,7 +5,7 @@ cmdFileOpenProject<-function(){
 }
 
 observeEvent(input$buttonFileOpenProject,{
-  cat("observe input$buttonFileOpen:: enter\n")
+  # cat("observe input$buttonFileOpen:: enter\n")
   fp.dt<-parseFilePaths(c(home='~'), input$buttonFileOpenProject)
   if(length(fp.dt)>0 && nrow(fp.dt)){
     datapath<-as.character(fp.dt$datapath[1])

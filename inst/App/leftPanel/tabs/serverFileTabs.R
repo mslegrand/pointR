@@ -66,7 +66,7 @@ closeTabNow<-function(tabId2X){
 addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FALSE){
   # cat("addFileTab:: mode=",mode,"\n")
   tabId<-getNextTabId()
-  cat("addFileTab:: tabId",format(tabId),"\n")
+  # cat("addFileTab:: tabId",format(tabId),"\n")
   
   # cat("addFileTab:: aceId",aceId,"\n")
   # cat("addFileTab:: docFilePath",format(docFilePath),"\n")
@@ -150,9 +150,9 @@ getAceEditorId<-reactive({
 
 #  triggers doc has been changed.
 observeEvent(input$pages,{
-  cat(">---> input$pages 2\n")
+  # cat(">---> input$pages 2\n")
   tabId<-input$pages
-  cat('tabId=',format(tabId),'\n')
+  # cat('tabId=',format(tabId),'\n')
   # if(!allGood(tabId)){ browser() }
   if(!is.null(tabId)){
     #sendFileTabsMessage(selected=tabId, resize=runif(1))
@@ -161,7 +161,7 @@ observeEvent(input$pages,{
   } else {
     reOrgPanels(id=NULL, mode=NULL)
   }
-   cat("<---< input$pages 2\n")
+   # cat("<---< input$pages 2\n")
 },  ignoreNULL = FALSE, ignoreInit = FALSE, label='pages2')
 
 
@@ -179,11 +179,11 @@ observeEvent(input$tabManager,{
 observeEvent(request$tabs, {
   if(length(request$tabs)>0){
     tabId<-peekTab()
-    cat('oe::request$tabs tabId=',format(tabId),'\n')
+    # cat('oe::request$tabs tabId=',format(tabId),'\n')
     sender<-getSender()
-    cat('oe::request$tabs sender=',format(sender),'\n')
+    # cat('oe::request$tabs sender=',format(sender),'\n')
     aceId<-tabID2aceID(tabId)
-    cat('oe::request$tabs aceId=',format(aceId),'\n')
+    # cat('oe::request$tabs aceId=',format(aceId),'\n')
     updateAceExt( id=aceId, sender=sender, getDoc=TRUE)
   } else {
     if(getSender()=='fileCmd.quit'){

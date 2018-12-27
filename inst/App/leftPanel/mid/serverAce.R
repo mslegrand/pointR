@@ -37,7 +37,7 @@
 
 
 observeEvent(input$messageFromAce, {
- cat("\n>----> messageFromAce", '*****       sender=',format(input$messageFromAce$sender),"\n")
+ # cat("\n>----> messageFromAce", '*****       sender=',format(input$messageFromAce$sender),"\n")
     if(
       length(input$messageFromAce$code)>0 &&
       length(input$messageFromAce$sender)>0
@@ -92,7 +92,7 @@ observeEvent(input$messageFromAce, {
       }
       
     }
-   cat("<----< messageFromAce",'*****       sender=',format(input$messageFromAce$sender),"\n\n")
+   # cat("<----< messageFromAce",'*****       sender=',format(input$messageFromAce$sender),"\n\n")
 }, priority = 90, ignoreNULL = TRUE, ignoreInit = TRUE, label='messageFromAce')
 
 

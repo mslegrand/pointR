@@ -1,9 +1,9 @@
 
 processMssgFromAceMssgPageIn<-function(sender, mssg){
-    cat('>---> processMssgFromAceMssgPageIn\n')
+    # cat('>---> processMssgFromAceMssgPageIn\n')
     
     #reOrgPanels(id=mssg$id, mode= getMode() )
-    cat("sender = ", format(sender),"\n")
+    # cat("sender = ", format(sender),"\n")
     # cat("assetName = ", format(getAssetName()),"\n")
     if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset') && !is.null(getAssetName())){ 
       #if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset', 'cmd.saveFileNow') && !is.null(getAssetName())){ 
@@ -12,12 +12,12 @@ processMssgFromAceMssgPageIn<-function(sender, mssg){
         name=mssg$selector$assetName
       } else {
         name=getAssetName() # 'cmd.commit', 'cmd.add.column'
-         cat('getAssetName()=', format(getAssetName()), "\n")
+         # cat('getAssetName()=', format(getAssetName()), "\n")
       }
       tibs<-getPtDefs()$tib
-       cat('name=',format(name),"\n")
-       cat("ace invoking resetSelectedTibbleName\n")
-       cat('names of tibs:',format(names(tibs)), "!\n")
+       # cat('name=',format(name),"\n")
+       # cat("ace invoking resetSelectedTibbleName\n")
+       # cat('names of tibs:',format(names(tibs)), "!\n")
       resetSelectedTibbleName(tibs=tibs, name=name)
     } else { # else covers: 'cmd.file.new', 'cmd.tabChange', 'cmd.openFileNow', p
 
@@ -32,14 +32,14 @@ processMssgFromAceMssgPageIn<-function(sender, mssg){
          !identical(selectedAsset$tabId, input$pages) 
       ){
         # browser()
-         cat('--storeAssetState\n')
+         # cat('--storeAssetState\n')
         storeAssetState()
-         cat("--restoreAssetState\n")
+         # cat("--restoreAssetState\n")
         processCommit() # this sets the sourceType
-        cat('--reOrgPanels')
+        # cat('--reOrgPanels')
         reOrgPanels(id=mssg$id, mode= getMode() )
         restoreAssetState(input$pages) #copies from db to assetSelection
-         cat('--savePage\n')
+         # cat('--savePage\n')
         savePage(input$pages) # require for new page that was not committed
         sendFileTabsMessage(selected=input$pages, resize=runif(1)) 
         
@@ -50,5 +50,5 @@ processMssgFromAceMssgPageIn<-function(sender, mssg){
       
       # end assetUpdate:
     } 
-    cat('<---< processMssgFromAceMssgPageIn\n\n')
+    # cat('<---< processMssgFromAceMssgPageIn\n\n')
 }

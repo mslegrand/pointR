@@ -99,7 +99,7 @@ resetShinyFilesIOPaths<-function(pathToProj){
     jscode<-setSfDir(id, path=pathToProj)
     runjs(jscode)
   }
-  cat( "<---< resetShinyFilesIOPaths\n")
+  # cat( "<---< resetShinyFilesIOPaths\n")
 }
 
 

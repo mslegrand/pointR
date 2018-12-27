@@ -17,7 +17,7 @@ updateAceExtDef<-function(newPtDef, sender, selector=list() ){
 }
 
 updateAceExt<-function(id, sender, ... ){
-  cat('>---> updateAceExt id=',format(id),"sender=",format(sender),"\n")
+  # cat('>---> updateAceExt id=',format(id),"sender=",format(sender),"\n")
   data<-list(...)
   # cat('data\n')
   # print(data)
@@ -25,7 +25,7 @@ updateAceExt<-function(id, sender, ... ){
   if(length(data)>0){
     if(length(id)==0){
        #cat('ace id is null\ngiving up sending\n') 
-       cat('ace id is null\nsending with aceId as "bogus"\n') 
+       # cat('ace id is null\nsending with aceId as "bogus"\n') 
        # return(NULL)
       id='bogus'
     }
@@ -49,6 +49,6 @@ updateAceExt<-function(id, sender, ... ){
     }
     
   }
-  cat('<---< updateAceExt id=',format(id),"sender=",format(sender),"\n")
+  # cat('<---< updateAceExt id=',format(id),"sender=",format(sender),"\n")
 }
 

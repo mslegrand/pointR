@@ -8,7 +8,7 @@ cmdFileCloseAll<-function(){
 
 observeEvent( input$closeTab, {
     if( !is.null(input$closeTab$id) ){
-      cat('>---> input$closeTab\n')
+      # cat('>---> input$closeTab\n')
       id<-input$closeTab$id
       if(input$closeTab$type=='tabId'){
         tabId<-id
@@ -17,7 +17,7 @@ observeEvent( input$closeTab, {
       }
       #removeFileDesc(tabId)
       setTabRequest(sender="fileCmd.close", tabs=tabId)
-      cat('<---< input$closeTab\n')
+      # cat('<---< input$closeTab\n')
     }
 } , label= "input$closeTab")
 
