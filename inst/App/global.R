@@ -17,11 +17,19 @@ initResourcePaths <- function() {
   HTML("")
 }
 
-`%AND%` <- function(x, y) {
-  if (!is.null(x) && !is.na(x))
-    if (!is.null(y) && !is.na(y))
-      return(y)
-  return(NULL)
+# `%AND%` <- function(x, y) {
+#   if (!is.null(x) && !is.na(x))
+#     if (!is.null(y) && !is.na(y))
+#       return(y)
+#   return(NULL)
+# }
+
+`%$$%`<-function(x,y){
+  if(is.null(x) || is.na(x) || is.null(y) ){ 
+    NULL
+  } else {
+    x[[y]]
+  }		
 }
 
 allGood<-function(...) {
