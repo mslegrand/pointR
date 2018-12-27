@@ -38,7 +38,7 @@ processCommit<-reactive({
   else if (identical(mode, 'javascript')){
     setSourceType(javascriptPanelTag)
     # do nothing
-    cat('mode is javascript\n')
+    # cat('mode is javascript\n')
   }
   else {
     browser()
