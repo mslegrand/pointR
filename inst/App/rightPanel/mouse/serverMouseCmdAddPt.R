@@ -71,7 +71,7 @@ mouseCmdAddPt<-function(mssg){
       },error=function(e){
         e<-c('preproErr',e)
         err<-paste(unlist(e), collapse="\n", sep="\n")
-        cat(err)
+        # cat(err)
         alert(err)
       })
     } else { #no prepoc

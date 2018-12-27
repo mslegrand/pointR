@@ -31,7 +31,7 @@ getSourceType<-reactive({
 # 'tib' if it is the name of an existing tibble
 #  otherwise
 getNameType<-reactive({
-  cat('>---> getNameType\n')
+  # cat('>---> getNameType\n')
   if(hasError()){
     rtv<-errorPanelTag
   } else {
@@ -49,8 +49,8 @@ getNameType<-reactive({
     } else { # RPanelTag whenever getAssetName is NULL???
       rtv<-RPanelTag
     }
-    cat('rtv=',format(rtv),"\n")
-    cat("<---< getNameType\n")
+    # cat('rtv=',format(rtv),"\n")
+    # cat("<---< getNameType\n")
   }
   rtv
 })
@@ -65,7 +65,7 @@ getNameType<-reactive({
 # and use it only for whether or not the column is a 'points' column.
 getColumnType<-reactive({
   colName<-getTibColumnName()
-  cat('colName=',format('colName'),'\n')
+  # cat('colName=',format('colName'),'\n')
   columnValues<-getTib()[[colName]]
   if(!is.null(columnValues)){
     return(extractColType(columnValues))
@@ -79,9 +79,9 @@ getColumnType<-reactive({
 #    getRightMidPanel
 #    serverEdTib to set transform panel
 getPlotState<-reactive({
-  cat(">----> getPlotState\n")
+  # cat(">----> getPlotState\n")
   nameType<-getNameType()
-  cat('nameType=',nameType,"\n")
+  # cat('nameType=',nameType,"\n")
   if(identical(nameType,tibTag)){
     colType<-getColumnType()
     if(identical(colType,'point')){
@@ -92,18 +92,18 @@ getPlotState<-reactive({
   } else {
     rtv<-nameType
   }
-  cat("<----< getPlotState\n")
+  # cat("<----< getPlotState\n")
   rtv
 })
 
 # returns true iff editing tib contents
 getTibEditState<-reactive({
   # cat("getTibEditState::getPlotState()=",format(getPlotState()),"\n")
-  cat(">----> getTibEditState\n")
+  # cat(">----> getTibEditState\n")
   rtv<-getSourceType()==svgPanelTag && 
     !is.null(getPlotState()) && 
     getPlotState() %in%  c("point", "value", "matrix")
-  cat("<----< getTibEditState\n")
+  # cat("<----< getTibEditState\n")
   rtv
 }
 )
@@ -117,7 +117,7 @@ getTibEditState<-reactive({
 # returns:
 #  RPanelTag, rmdPanelTag, or oneof point, matrix, value, if ptR
 getRightMidPanel<-reactive({
-  cat(">---> getRightMidPanel\n")
+  # cat(">---> getRightMidPanel\n")
   if(hasError()){
     rtv<-errorPanelTag
   } else if (panels$sourceType %in% c( rmdPanelTag, textPanelTag, snippetPanelTag, javascriptPanelTag) ){
@@ -125,15 +125,15 @@ getRightMidPanel<-reactive({
   } else {
     rtv<-getPlotState()
   }
-  cat('getRightMidPanel=',format(rtv),'\n')
-  cat("<---< getRightMidPanel\n")
+  # cat('getRightMidPanel=',format(rtv),'\n')
+  # cat("<---< getRightMidPanel\n")
   rtv
 })
 
 
 
 getRightPanelChoices<-reactive({ # includes names of tibs
-  cat(">---> getRightPanelChoices\n")
+  # cat(">---> getRightPanelChoices\n")
   # cat('getSourceType()=', format(getSourceType()),'\n')
   if(hasError() ){ # error: set to  errorPanel
     choices<-errorPanelTag
@@ -157,7 +157,7 @@ getRightPanelChoices<-reactive({ # includes names of tibs
     }
   } 
   # cat("choices=", paste(choices, collapse=", "),"\n")
-  cat("<---< getRightPanelChoices\n")
+  # cat("<---< getRightPanelChoices\n")
   choices
 },
 label= 'getRightPanelChoices'

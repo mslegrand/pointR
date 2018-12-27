@@ -1,7 +1,6 @@
 # user util for matrix move preprossesing
 moveMatrix<-function(dxy=getDxy(), location=getLocation()  ){
   tibs<-location$tibs
-  cat('aaa\n')
   if( !is.null(tibs) &&
       is_scalar_character(location$assetName) && 
       location$assetName %in% names(tibs) 

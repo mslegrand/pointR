@@ -14,7 +14,7 @@ pprj<-reactiveVal(NULL)
 getDirPath<-reactive({
   # cat('editOption$currentProjectName=',      editOption$currentProjectName, "\n")
   # cat('editOption$currentProjectDirectory=', editOption$currentProjectDirectory, "\n")
-  cat('>---> getDirPath\n')
+  # cat('>---> getDirPath\n')
   if(!is.null(editOption$currentProjectName) && !is.null(editOption$currentProjectDirectory)){
     dirPath<-editOption$currentProjectDirectory
     if(!file.exists(dirPath)){
@@ -25,14 +25,14 @@ getDirPath<-reactive({
   } else {
     dirPath<-optionDirPath()
   }
-  cat('<---< getDirPath\n')
+  # cat('<---< getDirPath\n')
   dirPath
 })
 
 observeEvent(getDirPath(),{
-  cat('\n>---> observeEvent getDirPath()\n')
+  # cat('\n>---> observeEvent getDirPath()\n')
     resetShinyFilesIOPaths(getDirPath())
-  cat('<---< observeEvent getDirPath()\n\n')
+  # cat('<---< observeEvent getDirPath()\n\n')
 })
 
 getWorkSpaceDir<-reactive({
@@ -165,7 +165,7 @@ removeFromRecentProjects<-function(projDir, projName){
 
 
 observeEvent( editOption$recentProjects ,{
-  cat('>---> observeEvent::editOption$recentProjects\n')
+  # cat('>---> observeEvent::editOption$recentProjects\n')
   rp<-unlist(editOption$recentProjects)
   rplabel="Recent Projects"
   # cat('recent Projects:\n')
@@ -192,7 +192,7 @@ observeEvent( editOption$recentProjects ,{
     insertAfterDMDM(session, menuBarId = "editNavBar", entry="openProject", submenu= submenu)
     #cat('recent Projects:  7\n')
   }
-  cat('<---< observeEvent::editOption$recentProjects\n')
+  # cat('<---< observeEvent::editOption$recentProjects\n')
 })
 
 
