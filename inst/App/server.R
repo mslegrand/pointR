@@ -14,9 +14,9 @@ shinyServer(function(input, output,session) {
   reOrgPanels(id=NULL, mode=NULL)
   
   triggerRefresh<-function(sender, rollBack=TRUE, auxValue=FALSE){ # to be used to force a code refresh???
-    cat(">---> triggerRefresh\n")
+    # cat(">---> triggerRefresh\n")
     updateAceExt(id= getAceEditorId(), sender=sender, getValue=TRUE, rollBack=rollBack, auxValue=auxValue )
-    cat("<---< triggerRefresh\n")
+    # cat("<---< triggerRefresh\n")
   }
   
   
