@@ -54,7 +54,7 @@ restoreWorkSpace<-reactive({
       docFilePath<-sub( ptRproj$pathToProj, editOption$currentProjectDirectory, docFilePath)
     }
     fileSaveStatus=page$fileDescriptor.isSaved
-    txt=page$code
+    txt=page$code 
     
     
     if(!identical(docFilePath, "?")){

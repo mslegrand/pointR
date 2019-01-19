@@ -1,6 +1,5 @@
 // ace customizations
-var ptr_HighlightedLines=[]; // todo: integrate back into editoR
-                            // using $el.data('highlightedLines')
+
 var helpSvgRQuery = function(topic, address){
   var mssg= {queryTopic:topic, queryAddress:address };
   Shiny.onInputChange("helpSvgRMssg", mssg );
@@ -88,32 +87,6 @@ function PrintR(editoR){
   });
 }
 
-function previousBookMark(ed){
-                var curRow=ed.getCursorPosition().row;// getCursorPosition().row
-                if(curRow>0){
-                    var breakpoints=ed.getSession().getBreakpoints().slice(0,curRow-1);
-                    var nextRow=breakpoints.lastIndexOf('ace_breakpoint');
-                    if(nextRow>=0){
-                      //var rng=new Range(curRow,0, nextRow,0);
-                      //ed.revealRange(rng, true);
-                      ed.gotoLine(nextRow);
-                    }
-                }
-}
-
-function nextBookMark(ed){
-    var curRow=ed.getCursorPosition().row;// getCursorPosition().row
-              var breakpoints=ed.getSession().getBreakpoints().slice(curRow+1);
-              // iterate over breakpoints starting at curRow+1 and 
-              // stop and process if any
-              var nextRow=breakpoints.indexOf('ace_breakpoint');
-              if(nextRow>=0){
-                //var rng=new Range(curRow,0,curRow+1+nextRow,0);
-                //editor.revealRange(rng, true);
-                
-                ed.gotoLine(nextRow);
-              }
-}   
 
 function getAceMode(ed){
   var mode = editor.getSession().$modeId;
@@ -133,6 +106,55 @@ function getSaveStatus(ed){
 Shiny.addCustomMessageHandler(
   "shinyAceExt",
       function(data) { 
+        // define some useful aux functions
+        
+        function previousBookMark(editor){
+          var curRow=editor.getCursorPosition().row;// getCursorPosition().row
+          if(curRow>0){
+              var breakpoints=editor.getSession().getBreakpoints().slice(0,curRow);
+              //console.log('breakpoints='+ JSON.stringify(breakpoints));
+              var nextRow=breakpoints.lastIndexOf('ace_breakpoint');
+              //console.log('nextRow='+ JSON.stringify(nextRow));
+              if(nextRow>=0){
+                editor.gotoLine(nextRow+1);
+              }
+          }
+        }
+  
+        function nextBookMark(editor){
+              var curRow=editor.getCursorPosition().row;// getCursorPosition().row
+              //console.log('curRow='+ JSON.stringify(curRow));
+              var breakpoints=editor.getSession().getBreakpoints().slice(curRow+1);
+              //console.log('breakpoints='+ JSON.stringify(breakpoints));
+              var nextRow=1+breakpoints.indexOf('ace_breakpoint');
+              //console.log('nextRow='+ JSON.stringify(nextRow));
+              if(nextRow>=1){
+                editor.gotoLine(curRow+1+nextRow);
+              }
+        } 
+        
+        function clearAllMarkers($el, editor){
+          var bmarkers=editor.getSession().$backMarkers;
+          //console.log('clearing bmarkers  ='+ JSON.stringify(bmarkers));
+          var markers=$el.data('errorMarkerArray');
+          //console.log('clearing markers  ='+ JSON.stringify(markers));
+          for(var i=0; i<markers.length;i++){
+            mid=markers[i];
+            //console.log('mid='+JSON.stringify(mid));
+            editor.getSession().removeMarker(mid);
+          }
+          bmarkers=editor.getSession().$backMarkers;
+          //console.log('after clearing bmarkers  ='+ JSON.stringify(bmarkers));
+          
+          //function fn(mid, index){
+            //editor1.session.removeMarker(markerId)
+            
+          //}
+          //markers.foreach(fn);
+        }
+        // end of aux functions
+        
+        //
         console.log(
           '------------Entering  aceExt.js customMessageHandler-------------------------------- '
         );
@@ -238,7 +260,14 @@ Shiny.addCustomMessageHandler(
               'ace_error-marker', 
               'line', true
           );
-          ptr_HighlightedLines.push(mid); 
+          console.log('mid='+JSON.stringify(mid));
+          var errorsMark=$el.data('errorMarkerArray');
+           console.log('errorsMark1='+JSON.stringify(errorsMark));
+          errorsMark.push(mid);
+          console.log('errorsMark2='+JSON.stringify(errorsMark));
+          $el.data('errorMarkerArray', errorsMark);
+          var markers=$el.data('errorMarkerArray');
+          console.log('after adding markers='+ JSON.stringify(markers));
         }
         
         //---------------tbMssg------------------
@@ -250,6 +279,10 @@ Shiny.addCustomMessageHandler(
             editor.getSession().clearBreakpoints();
           }else if(data.tbMssg==='nextBookMark' ){
             nextBookMark(editor);
+
+            
+            
+            
           }else if(data.tbMssg==='previousBookMark' ){
             previousBookMark(editor);
           } else {
@@ -425,6 +458,7 @@ Shiny.addCustomMessageHandler(
         if(!!data.setOk){
           //console.log("\ndata.setOk");
           editor.getSession().getUndoManager().setOk();
+          clearAllMarkers($el, editor);
           /*
           console.log('setOk fin: editor.getSession().getUndoManager()$undoStack.length=' + 
                 editor.getSession().getUndoManager().$undoStack.length);

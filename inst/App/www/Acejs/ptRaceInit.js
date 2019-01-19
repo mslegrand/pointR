@@ -107,6 +107,7 @@ function ptRaceInit(data){
     console.log('mode is null');
   }
   
+  $el.data('errorMarkerArray', []);
   
   if(!!data.docFilePath){
     //console.log('setting  docFilePath=' + data.docFilePath);
