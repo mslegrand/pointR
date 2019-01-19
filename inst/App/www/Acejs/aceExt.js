@@ -106,15 +106,13 @@ function getSaveStatus(ed){
 Shiny.addCustomMessageHandler(
   "shinyAceExt",
       function(data) { 
-        // define some useful aux functions
+        //----------- define some useful aux functions--------------
         
         function previousBookMark(editor){
           var curRow=editor.getCursorPosition().row;// getCursorPosition().row
           if(curRow>0){
               var breakpoints=editor.getSession().getBreakpoints().slice(0,curRow);
-              //console.log('breakpoints='+ JSON.stringify(breakpoints));
               var nextRow=breakpoints.lastIndexOf('ace_breakpoint');
-              //console.log('nextRow='+ JSON.stringify(nextRow));
               if(nextRow>=0){
                 editor.gotoLine(nextRow+1);
               }
@@ -123,11 +121,8 @@ Shiny.addCustomMessageHandler(
   
         function nextBookMark(editor){
               var curRow=editor.getCursorPosition().row;// getCursorPosition().row
-              //console.log('curRow='+ JSON.stringify(curRow));
               var breakpoints=editor.getSession().getBreakpoints().slice(curRow+1);
-              //console.log('breakpoints='+ JSON.stringify(breakpoints));
               var nextRow=1+breakpoints.indexOf('ace_breakpoint');
-              //console.log('nextRow='+ JSON.stringify(nextRow));
               if(nextRow>=1){
                 editor.gotoLine(curRow+1+nextRow);
               }
@@ -135,24 +130,14 @@ Shiny.addCustomMessageHandler(
         
         function clearAllMarkers($el, editor){
           var bmarkers=editor.getSession().$backMarkers;
-          //console.log('clearing bmarkers  ='+ JSON.stringify(bmarkers));
           var markers=$el.data('errorMarkerArray');
-          //console.log('clearing markers  ='+ JSON.stringify(markers));
           for(var i=0; i<markers.length;i++){
             mid=markers[i];
-            //console.log('mid='+JSON.stringify(mid));
             editor.getSession().removeMarker(mid);
           }
           bmarkers=editor.getSession().$backMarkers;
-          //console.log('after clearing bmarkers  ='+ JSON.stringify(bmarkers));
-          
-          //function fn(mid, index){
-            //editor1.session.removeMarker(markerId)
-            
-          //}
-          //markers.foreach(fn);
         }
-        // end of aux functions
+        //-------------- end of aux functions------------------
         
         //
         console.log(
@@ -191,16 +176,6 @@ Shiny.addCustomMessageHandler(
           console.log('found editor');
         } else {
           console.log('editor is null');
-//          if(!!data.errCnt){
-//            data.errCnt=data.errCnt-1;
-//          } else {
-//            data.errCnt=10;
-//          }
-//          console.log('data.errCnt=' + data.errCnt);
-//          if(data.errCnt>0){
-//            console.log('sending to retryMssg2Ace');
-//            Shiny.onInputChange('retryMssg2Ace', data);
-//          }
           return false;
         }  
         
@@ -221,23 +196,17 @@ Shiny.addCustomMessageHandler(
           data.oldFilePath=$el.data('docFilePath');
           console.log('setting  docFilePath=' + data.setDocFilePath);
           $el.data('docFilePath', data.setDocFilePath);
-          //ud.markClean();
-          //$el.data('docFileSaved',-1);
         }
         
         //---------------setDocFileSaved------------------
         if(!!data.setDocFileSaved){
           ud=editor.getSession().getUndoManager();
-          // $el.data('docFileSaved',ud.$undoStack.length);
-          //ud.markClean();
           if( data.setDocFileSaved===true){
             ud.setSaved();
           }
         }
         
-        //console.log( '$el.data(docFilePath)=',JSON.stringify( $el.data('docFilePath') ));
-        
-        //---------------ptRMode------------------
+         //---------------ptRMode------------------
         if(!!data.ptRMode){ 
           editor.getSession().setMode({path: "ace/mode/ptr", v: Date.now()});
           editor.setBehavioursEnabled(true);
@@ -249,7 +218,7 @@ Shiny.addCustomMessageHandler(
         //  console.log( 'mode is = ' + JSON.stringify( mode ) );
         //}
 
-        //---------------addMarker------------------
+        //---------------add Error Marker------------------
         if (!!data.addMarker ){
           var pos = data.addMarker;
           var row1 = pos[0]; 
@@ -279,10 +248,6 @@ Shiny.addCustomMessageHandler(
             editor.getSession().clearBreakpoints();
           }else if(data.tbMssg==='nextBookMark' ){
             nextBookMark(editor);
-
-            
-            
-            
           }else if(data.tbMssg==='previousBookMark' ){
             previousBookMark(editor);
           } else {
