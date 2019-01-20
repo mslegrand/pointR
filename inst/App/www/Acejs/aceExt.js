@@ -220,22 +220,22 @@ Shiny.addCustomMessageHandler(
 
         //---------------add Error Marker------------------
         if (!!data.addMarker ){
-          var pos = data.addMarker;
-          var row1 = pos[0]; 
-          var col1 = pos[1]; 
-          var row2 = row1+1; 
-          var mid= editor.getSession().addMarker(
+          let pos = data.addMarker;
+          let row1 = pos[0]; 
+          let col1 = pos[1]; 
+          let row2 = row1+1; 
+          let mid= editor.getSession().addMarker(
               new Range(row1, 0, row2, 1), 
               'ace_error-marker', 
               'line', true
           );
           console.log('mid='+JSON.stringify(mid));
-          var errorsMark=$el.data('errorMarkerArray');
+          let errorsMark=$el.data('errorMarkerArray');
            console.log('errorsMark1='+JSON.stringify(errorsMark));
           errorsMark.push(mid);
           console.log('errorsMark2='+JSON.stringify(errorsMark));
           $el.data('errorMarkerArray', errorsMark);
-          var markers=$el.data('errorMarkerArray');
+          let markers=$el.data('errorMarkerArray');
           console.log('after adding markers='+ JSON.stringify(markers));
         }
         
