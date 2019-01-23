@@ -1,6 +1,6 @@
 # initialized by defaultOpts in configIO.R
 editOption<-do.call(reactiveValues, defaultOpts)
-editOption$.saved=TRUE
+#editOption$.saved=TRUE
 
 pprj<-reactiveVal(NULL)
 
@@ -74,7 +74,7 @@ getFileNameStatus<-reactive({
     editOption$currentFilePath!="./"
 })
 
-# TO REVISE!!!
+# revised to use fileDescriptor: fileDescDB
 #getFileSavedStatus<-reactive({editOption$.saved})
 
 # invoked by cmdFileOpen and cmdFileExportSvg.R

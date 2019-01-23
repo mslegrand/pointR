@@ -19,12 +19,12 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
       writeLines(code, docFilePath)
       tabId<-aceID2TabID(id) 
       
-      setFileDescSaved(tabId, TRUE)
+      # setFileDescSaved(tabId, TRUE)
       updateAceExt(id, sender,  setDocFileSaved=TRUE)  # resets undomanger, but doesn't return anything
-      editOption$.saved<-TRUE  # extranious, remove???
+      # editOption$.saved<-TRUE  # extranious, remove???
       setFileDescSaved(pageId=tabId, fileSaveStatus=TRUE ) # already done, remove???
       
-      savePage(tabId) 
+      savePage(tabId) # saves page to workspace
       if(sender %in% 'fileCmd.quit'){
        # pop off tab and exit from this
         tabId=popTab()

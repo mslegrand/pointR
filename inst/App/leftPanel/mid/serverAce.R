@@ -1,40 +1,4 @@
 
-# observe({
-#   data<-input$retryMssg2Ace
-#   isolate({
-#     cat('>---> oe:: retryMssg2Ace\n')
-#     print(data)
-#   })
-#   if(!identical(data$errCnt,0)){
-#       session$sendCustomMessage(
-#         type = "shinyAceExt",
-#         data
-#       )
-#       invalidateLater(300)
-#   }
-#   isolate({cat('<---< oe:: retryMssg2Ace\n')})
-# })
-
-
-# observeEvent(input$retryMssg2Ace,{
-#   data<-input$retryMssg2Ace
-#   cat('>---> input$retryMssg2Ace\n')
-#   cat('data$id=', data$id,'\n')
-#   cat('data$errCnt=',data$errCnt,'\n')
-#   cat('data$sender=',data$sender,'\n')
-#   cat("class(data)=",class(data),"\n")
-#   n<-as.numeric(data$errCnt)
-#   data$errCnt<-n-1
-#   cat(paste(names(data), collapse=", "),"\n")
-#   print(data)
-#   Sys.sleep(.3)
-#   # delay( 1000, {
-#     cat('sending to shinyAceExt\n')
-#     session$sendCustomMessage( type = "shinyAceExt", data )
-#   #}) 
-#   cat('<---< input$retryMssg2Ace\n')
-# },priority = 85, ignoreNULL = TRUE, ignoreInit = TRUE, label='retryMssg2Ace')
-
 
 observeEvent(input$messageFromAce, {
  # cat("\n>----> messageFromAce", '*****       sender=',format(input$messageFromAce$sender),"\n")
@@ -63,12 +27,13 @@ observeEvent(input$messageFromAce, {
         # cat('calling savePage(',tabId,")\n")
         savePage(tabId)
       }
-      if(length(input$messageFromAce$isSaved)>0){ 
-        editOption$.saved <- input$messageFromAce$isSaved
+      if(length(input$messageFromAce$isSaved)>0){ #ace gets isSaved from the undomanager
+        #editOption$.saved <- input$messageFromAce$isSaved
         # print(editOption$.saved)
         # cat('calling setFileDescSaved(',tabId,", ", format(editOption$.saved), ")\n")
-        setFileDescSaved(tabId, editOption$.saved)
-        savePage(tabId)
+        #setFileDescSaved(tabId, editOption$.saved)
+        setFileDescSaved(tabId, input$messageFromAce$isSaved)
+        savePage(tabId) #saves page to workspace
       }
       if(!is.null(input$messageFromAce$selector) && !is.null(input$messageFromAce$code)  ){
           reqSelector<-input$messageFromAce$selector
