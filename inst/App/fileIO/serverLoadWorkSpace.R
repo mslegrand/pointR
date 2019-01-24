@@ -44,6 +44,7 @@ restoreWorkSpace<-reactive({
   aceId<-'bogus'
   for(page in wsPages){
     # extract the serverAsset portion and add
+    
     tabId=page$fileDescriptor.tabId
     # cat('page$fileDescriptor.tabId=',format(page$fileDescriptor.tabId),"\n")
     
@@ -53,6 +54,7 @@ restoreWorkSpace<-reactive({
     if(!is.null(ptRproj$pathToProj)){
       docFilePath<-sub( ptRproj$pathToProj, editOption$currentProjectDirectory, docFilePath)
     }
+    
     fileSaveStatus=page$fileDescriptor.isSaved
     txt=page$code 
     

@@ -6,29 +6,27 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
     docFilePath<-unlist(mssg$docFilePath)
     if(docFilePath=='?' || sender=='fileCmd.saveAs'){ # file unnamed : fileSaveAs
       tabId<-aceID2TabID(id)
+      
       ext<-mode2pathExt( getMode() )
       ext<-shinyFiles:::formatFiletype(ext)
       target<-saveButtonFileNames[[getMode()]]
       sendPtRManagerMessage( sender=sender, saveFile=TRUE,  target=target, tabId=tabId ) #triggers shinyFiles
     } else { # has legitmate path
       # write file
-      
       code<-mssg$code
       # !!!TODO!!! if write fails revert.
-      # browser()
+
       writeLines(code, docFilePath)
       tabId<-aceID2TabID(id) 
       
-      # setFileDescSaved(tabId, TRUE)
-      updateAceExt(id, sender,  setDocFileSaved=TRUE)  # resets undomanger, but doesn't return anything
-      # editOption$.saved<-TRUE  # extranious, remove???
-      setFileDescSaved(pageId=tabId, fileSaveStatus=TRUE ) # already done, remove???
-      
+      modeFromPath<-pathExt2mode(tools::file_ext(docFilePath)) # ---- reset mode if has changed! 
+      updateAceExt(id, sender,  setDocFileSaved=TRUE, setMode=modeFromPath)  # resets undomanger, and possibly mode, but doesn't return anything
+      setFileDescSaved(pageId=tabId, fileSaveStatus=TRUE ) # save status 
+      setFileDescMode(pageId=tabId,newMode=modeFromPath) # update mode in descriptor
       savePage(tabId) # saves page to workspace
       if(sender %in% 'fileCmd.quit'){
        # pop off tab and exit from this
         tabId=popTab()
-        
       } else if (sender %in% c('fileCmd.close')){ # if not saved and closing
         addToRecentFiles(mssg$docFilePath)
         closeTabNow(tabId)

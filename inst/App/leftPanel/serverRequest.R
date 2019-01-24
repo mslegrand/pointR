@@ -1,13 +1,15 @@
 request<-reactiveValues(
   code=NULL, 
   sender='startup',
-  tabs=NULL
+  tabs=NULL,
+  trigger=0
 )
 
 
 setTabRequest<-function(sender, tabs){
   request$sender<-sender
   request$tabs<-tabs
+  request$trigger<-sample(10^6,1)
 }
 
 getSender<-reactive({request$sender})
@@ -18,10 +20,6 @@ popTab<-reactive({
   tab
 })
 
-# 
-# getMode<-reactive({
-#   request$mode
-# })
 
 getCode<-reactive({
   request$code

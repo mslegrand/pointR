@@ -7,6 +7,5 @@
 # 3 write the file
 cmdFileSaveAs<-function(){
   # sendPtRManagerMessage( id=tabId,  sender='cmd.saveFileAs', saveFile=TRUE, closing=!is.null(request$closeTab), type='R')
-  
   setTabRequest(sender="fileCmd.saveAs", tabs=input$pages)
 }

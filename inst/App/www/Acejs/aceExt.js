@@ -206,7 +206,15 @@ Shiny.addCustomMessageHandler(
           }
         }
         
-         //---------------ptRMode------------------
+        if(!!data.setMode){
+          if(aceMode!=data.setMode){
+                 console.log('setting  mode=' + data.setMode);
+                editor.getSession().setMode({path: "ace/mode/" +data.setMode, v: Date.now()});
+                editor.setBehavioursEnabled(true);
+          }
+        } 
+        
+        //---------------ptRMode------------------
         if(!!data.ptRMode){ 
           editor.getSession().setMode({path: "ace/mode/ptr", v: Date.now()});
           editor.setBehavioursEnabled(true);

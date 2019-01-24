@@ -43,6 +43,10 @@ getMode<-reactive({
     fd<-fileDescDB()
     stopifnot('tabId' %in% names(fd))
     mode<-fd[fd$tabId==input$pages,]$mode
+    # if(identical(mode,'txt')){ #temp kludge for 'txt'
+    #   mode<-'text' 
+    #   fd[fd$tabId== input$pages,"mode"]<-mode
+    # }
   }
   # cat('mode is ', format(mode),"\n")
   # cat('<---< getMode\n')
@@ -71,6 +75,13 @@ setFileDescPath<-function(pageId, filePath, pathToProj){
   # browser()
   tb<-fileDescDB()
   tb[tb$tabId== pageId,"filePath"]<-filePath
+  #tb[tb$tabId== pageId,"mode"]<-pathExt2mode(pathToProj)
+  fileDescDB(tb)
+}
+
+setFileDescMode<-function(pageId, newMode){
+  tb<-fileDescDB()
+  tb[tb$tabId== pageId,"mode"]<-newMode
   fileDescDB(tb)
 }
 

@@ -30,7 +30,8 @@ processCommit<-reactive({
     processKnit()
   } else if( identical(mode, 'dnippets')){
     processDnip()
-  } else if (identical(mode, 'text')){
+  } else if (identical(mode, 'text') #||identical(mode, 'txt') 
+             ){
     setSourceType(textPanelTag)
   } else if (identical(mode, 'snippets')){
     setSourceType(snippetPanelTag)

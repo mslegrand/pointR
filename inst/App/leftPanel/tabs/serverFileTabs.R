@@ -176,7 +176,7 @@ observeEvent(input$tabManager,{
 #  1. input$tabManager or 
 #  2. ace 
 # if non-empty, first request with 1st tab forwarded to ace (save/close/saveAs) 
-observeEvent(request$tabs, {
+observeEvent(c(request$trigger,request$tabs), {
   if(length(request$tabs)>0){
     tabId<-peekTab()
     # cat('oe::request$tabs tabId=',format(tabId),'\n')
