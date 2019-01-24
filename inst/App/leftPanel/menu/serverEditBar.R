@@ -50,7 +50,6 @@ observeEvent( input$editNavBar, {
     if(fileCmd=="saveAs"){ #-----save
       dirtyDMDM(session, "editNavBar")
       cmdFileSaveAs()
-      
     } 
     if(fileCmd=="Save"){ #-----save
       cmdFileSave()
