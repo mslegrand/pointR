@@ -65,6 +65,7 @@ preprocChoices<-c("onNewPt",  "onMovePt", "onMoveMat")
 #----begin external resources loaded prior to server------------
 # must be loaded prior to alles
 source("util/configIO.R") 
+source("util/loadTemplates.R") 
 source("util/dbInitiatizers.R") 
 source("util/extNmode.R") 
 source("util/format.R") 

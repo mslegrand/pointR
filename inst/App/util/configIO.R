@@ -1,8 +1,12 @@
 
-# this option file is being pushed to "~", maybe not such a 
-#good idea
 
+# globals declared here are
 
+# defaultOpts
+# fileTemplatesNames
+# fileTemplates
+
+# this is used to locate the user pointR options dir
 optionDirPath<-function(){
   dirPath<-switch(Sys.info()[['sysname']],
          Windows= '%localappdata%/ptR',
@@ -18,39 +22,6 @@ optionDirPath<-function(){
   }
   dirPath
 }
-
-
-# used by loader
-
-
-
-dnippetsDirPath<-function(){ #!!! not used???
-  opPath<-optionDirPath()
-  dirPath<-paste(opPath,'drippets',sep='/')
-  if(!file.exists(dirPath)){
-    dir.create(dirPath)
-  }
-  dirPath
-}
-
-snippetsDirPath<-function(){  #!!! not used???
-  opPath<-optionDirPath()
-  dirPath<-paste(opPath,'snippets',sep='/')
-  if(!file.exists(dirPath)){
-    dir.create(dirPath)
-  }
-  dirPath
-}
-
-
-optionFile<-paste(path.expand("~"),".ptRProfile.csv",sep="/")
-
-
-writeOptionsJSON<-function(opts){
-  file<-paste(optionDirPath(),"ptRProfile.json", sep="/")
-  write_json(opts, file, pretty=4)
-}
-
 
 # Load initial options to the global defaultOpts 
 # prior to the the running the session
@@ -85,7 +56,42 @@ readOptionsJSON<-function(){
   opts
 } #execute now!
 
-defaultOpts<-readOptionsJSON()
+defaultOpts<-readOptionsJSON() #this is the intial user options
+
+
+
+
+# used by loader
+
+dnippetsDirPath<-function(){ #!!! not used???
+  opPath<-optionDirPath()
+  dirPath<-paste(opPath,'drippets',sep='/')
+  if(!file.exists(dirPath)){
+    dir.create(dirPath)
+  }
+  dirPath
+}
+
+snippetsDirPath<-function(){  #!!! not used???
+  opPath<-optionDirPath()
+  dirPath<-paste(opPath,'snippets',sep='/')
+  if(!file.exists(dirPath)){
+    dir.create(dirPath)
+  }
+  dirPath
+}
+
+
+# specifies where to look for the ptR profile
+# optionFile<-paste(path.expand("~"),".ptRProfile.csv",sep="/")
+
+
+writeOptionsJSON<-function(opts){
+  file<-paste(optionDirPath(),"ptRProfile.json", sep="/")
+  write_json(opts, file, pretty=4)
+}
+
+
 
 
 if(!is.null(getShinyOption("initialPointRProject"))){
@@ -94,13 +100,6 @@ if(!is.null(getShinyOption("initialPointRProject"))){
   defaultOpts$currentProjectDirectory<-dirname(initialPointRProject)
 }
 
-# if(!is.null(initialPointRProject)){
-#   defaultOpts$currentProjectDirectory=dirname(initialPointRProject ) 
-#   defaultOpts$currentProjectName=basename( initialPointRProject)
-# }
-
-
-
 toggleTabType<-function(type){
   tabType<-c("Use Soft Tabs", "Use Hard Tabs")
   indx<-which(type==tabType)
@@ -108,13 +107,3 @@ toggleTabType<-function(type){
 }
 
 
-readTemplate<-function(name="rTemplate.R"){
-  path<-find.package('pointR')
-  templateFilePath<-filePath(path, "App","templates",name)
-  lines<-readLines(templateFilePath)
-  src<-paste(lines,collapse="\n")
-  src
-}
-
-fileTemplatesNames<-dir(filePath(find.package('pointR'), "App","templates"))
-fileTemplates<-sapply( fileTemplatesNames, readTemplate)
