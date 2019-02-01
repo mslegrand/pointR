@@ -3,8 +3,6 @@
 # globals declared here are
 
 # defaultOpts
-# fileTemplatesNames
-# fileTemplates
 
 # this is used to locate the user pointR options dir
 optionDirPath<-function(){
@@ -60,50 +58,53 @@ defaultOpts<-readOptionsJSON() #this is the intial user options
 
 
 
-
-# used by loader
-
-dnippetsDirPath<-function(){ #!!! not used???
-  opPath<-optionDirPath()
-  dirPath<-paste(opPath,'drippets',sep='/')
-  if(!file.exists(dirPath)){
-    dir.create(dirPath)
-  }
-  dirPath
-}
-
-snippetsDirPath<-function(){  #!!! not used???
-  opPath<-optionDirPath()
-  dirPath<-paste(opPath,'snippets',sep='/')
-  if(!file.exists(dirPath)){
-    dir.create(dirPath)
-  }
-  dirPath
-}
-
-
-# specifies where to look for the ptR profile
-# optionFile<-paste(path.expand("~"),".ptRProfile.csv",sep="/")
-
-
-writeOptionsJSON<-function(opts){
-  file<-paste(optionDirPath(),"ptRProfile.json", sep="/")
-  write_json(opts, file, pretty=4)
-}
-
-
-
-
 if(!is.null(getShinyOption("initialPointRProject"))){
   initialPointRProject<-getShinyOption("initialPointRProject")
   defaultOpts$currentProjectName<-basename(initialPointRProject)
   defaultOpts$currentProjectDirectory<-dirname(initialPointRProject)
 }
 
-toggleTabType<-function(type){
-  tabType<-c("Use Soft Tabs", "Use Hard Tabs")
-  indx<-which(type==tabType)
-  ifelse(indx==2,"Use Soft Tabs", "Use Hard Tabs" )
+
+# we might want to move this under the server
+writeOptionsJSON<-function(opts){
+  file<-paste(optionDirPath(),"ptRProfile.json", sep="/")
+  write_json(opts, file, pretty=4)
 }
+
+
+# used by loader
+
+# dnippetsDirPath<-function(){ #!!! not used???
+#   opPath<-optionDirPath()
+#   dirPath<-paste(opPath,'drippets',sep='/')
+#   if(!file.exists(dirPath)){
+#     dir.create(dirPath)
+#   }
+#   dirPath
+# }
+# 
+# snippetsDirPath<-function(){  #!!! not used???
+#   opPath<-optionDirPath()
+#   dirPath<-paste(opPath,'snippets',sep='/')
+#   if(!file.exists(dirPath)){
+#     dir.create(dirPath)
+#   }
+#   dirPath
+# }
+
+
+# specifies where to look for the ptR profile
+# optionFile<-paste(path.expand("~"),".ptRProfile.csv",sep="/")
+
+
+
+
+
+
+# toggleTabType<-function(type){
+#   tabType<-c("Use Soft Tabs", "Use Hard Tabs")
+#   indx<-which(type==tabType)
+#   ifelse(indx==2,"Use Soft Tabs", "Use Hard Tabs" )
+# }
 
 

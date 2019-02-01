@@ -1,56 +1,12 @@
 
 
-
-# getTibColClass<-function(tib){
-#   sapply(tib, function(j)class(tib[[1,j]]))
-# }
+# used solely in fmtTribble
 getTibColClass<-function(tib){ #used by fmtTribble
   colTypes<-sapply(1:ncol(tib), function(j)class(tib[[j]]))
   mats<-sapply(1:ncol(tib), function(j)"matrix"==class(tib[[1,j]]))
   colTypes[mats]<-'matrix'
   colTypes
 }
-
-
-# formatMatrix<-function(pts){
-#   if(length(pts)==0 ){
-#     fpts<-'list()'
-#   } else{
-#     tmp<-as.integer(unlist(pts)) #force to have only integers numbers as points
-#     tmp<-matrix(tmp,2)
-#     fpts<-apply(tmp, 2, function(x)paste(x,collapse=","))
-#     fpts<-paste0("c(",fpts,")")
-#     fpts<-paste(fpts, collapse=",")
-#   }
-#   sp<-"  "
-#   fpts<-paste0("matrix( ","c( ", fpts, " ), 2",")")
-#   return(fpts)
-# }
-
-
-
-
-# 
-# toStrPtR<-function(x,...){ UseMethod("toStrPtR") }
-# 
-# toStrPtR.default<-function(x,...){ toString(x,...) }
-# toStrPtR.character<-function(x, ...){
-#   toString(shQuote(x), ...)
-# }
-# toStrPtR.matrix<-function(x, digits=0, ...){
-#   if(length(x)==0){
-#     "matrix(0,2,0)"
-#   } else {
-#     tmp<-as.numeric(format(x, digits, ...))
-#     tmp<-matrix(tmp,2)
-#     fpts<-apply(tmp, 2, function(x)paste(x,collapse=","))
-#     fpts<-paste0("c(",fpts,")")
-#     fpts<-paste(fpts, collapse=",")
-#     paste0("matrix( c(",fpts,"), 2)")
-#   }
-# 
-# }
-
 
 toStrPtR0<-function(x,...){ UseMethod("toStrPtR0") }
 
@@ -72,6 +28,7 @@ toStrPtR0.numeric<-function(x, digits=0, ...){
   }
 }
 
+# used by fmtMat
 toStrPtR0.matrix<-function(x, digits=0, ...){
   if(length(x)==0){
     "matrix(0,2,0)"
@@ -86,29 +43,6 @@ toStrPtR0.matrix<-function(x, digits=0, ...){
 
 }
 
-
-# 
-# pfmt<-function(x){
-#   UseMethod("pfmt")
-# }
-# 
-# pfmt.default<-function(x, ...){
-#   paste("c(", toStrPtR(x, ...), ")" )
-# }
-# 
-# pfmt.list<-function(x, digits=0, ...){
-#   temp<-sapply(x, function(y) pfmt(y,  ...))
-#   temp<-paste0(temp, collapse=", ")
-#   paste0("list(", temp, ")")
-# }
-# 
-# pfmt.matrix<-function(x, digits=0, ...){
-#   toStrPtR0.matrix(x,digits, ...)
-# }
-# 
-
-
-
 toStrPtR0.list<-function(x, digits=0, ...){
   temp<-sapply(x, function(y) toStrPtR0(y,  ...))
   temp<-paste0(temp, collapse=", ")
@@ -122,6 +56,7 @@ toStrPtR0.list<-function(x, digits=0, ...){
 # get indices of candidats: which =='matrix'
 # the set tib to be cbind( tib[[,-ind]], tib[[,ind]])
 # to do: tibble name 
+# used by fmtTibbleList (below)
 fmtTribble<-function(tib, tibName, movePtsBack=TRUE, indent="  ", ...){
   #this moves the points to the rear
   n=2 # indent factor of 2 tabs
@@ -156,6 +91,7 @@ fmtTribble<-function(tib, tibName, movePtsBack=TRUE, indent="  ", ...){
   tmp
 }
 
+# used by fmtTibbleList (below)
 fmtTibble<-function(tib, tibName, is.mat=FALSE, indent="  ", ...){
   n=2
   indentName<-paste0(rep(indent, n=n),collapse="")
@@ -170,6 +106,7 @@ fmtTibble<-function(tib, tibName, is.mat=FALSE, indent="  ", ...){
   tmp<-paste0(indent,tibName,'=tibble(\n',tmp,"\n",indent,")")
 }
 
+# used only by fmtTibbleList (below)
 fmtMat<-function(tib, tibName, indent="  ", ...){ 
   n=2 # indent factor of 2 tabs
   indentName<-paste0(rep(indent, n=n),collapse="")
@@ -178,7 +115,7 @@ fmtMat<-function(tib, tibName, indent="  ", ...){
   tmp  
 }
 
-
+# used only by ptDef2ReplacementList
 fmtTibbleList<-function(tibList, mats, as.Tribble){
   as.Tribble<-unlist(as.Tribble)
   tmp<-sapply(names(tibList), function(nm){

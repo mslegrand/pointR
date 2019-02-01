@@ -1,5 +1,4 @@
-
-
+# defines global extMode.TB 
 
 extMode.TB<-tibble(
   ext=c('R', 'Rmd', 'snippets', 'dnippets', 'txt', 'js'),
