@@ -13,7 +13,8 @@ shinyServer(function(input, output,session) {
   # utility functions
   source("util/dbInitiatizers.R") 
   source("util/extNmode.R") 
-  source("util/format.R") 
+  source("util/format.R")
+  source("util/utilParser.R")
 # Reactive values----------
   source("util/reOrgPanels.R", local=TRUE ) 
   reOrgPanels(id=NULL, mode=NULL)
