@@ -6,16 +6,17 @@ reOrgPanels<-function(id, mode){
   # cat('id=',format(id),"\n")
   # cat('mode=',format(mode),"\n")
   if(length(id)==0 || length(mode)==0){
+    
     hideElement("TopRightPanel")
     hideElement("snippetToolBarContainer")
     hideElement("aceToobarTop1")
     hideElement("aceToobarTop2")
     hideElement("useTribble")
     hideElement("commitButton")
-    addCssClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
     hideElement("aceTabSet")
     hideElement("midRightPanels")
     hideElement("BottomRightPanel")
+    addCssClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
     showElement("logo.right")
     showElement("logo.left")
   } else {

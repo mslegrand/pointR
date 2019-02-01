@@ -1,14 +1,16 @@
 
-colLine2charPos<-function(nCharLines, lineNum, colNum){ #not needed!!!
-  colNum + sum(nCharLines[1:(lineNum-1)])
-}
 
+# colLine2charPos<-function(nCharLines, lineNum, colNum){ #not needed!!!
+#   colNum + sum(nCharLines[1:(lineNum-1)])
+# }
+
+# used solely by extractPositions (below)
 colLine2charPositions<-function(csnCharLines, lineNums, colNums){ 
   colNums + csnCharLines[lineNums]
 }
 
-
-#todo?? make reactive expr: parseDataFrame<-reactive({getParseDataFrame(user$code)})
+# used solely by utilptR.R:: ptDef2ReplacementList, getDefPos
+#?? make reactive expr: parseDataFrame<-reactive({getParseDataFrame(user$code)})
 getParseDataFrame<-function(txt){
   # cat('getParseDataFrame: 0\n')
   ep<-parse(text=txt, keep.source = T)
@@ -24,7 +26,7 @@ getParseDataFrame<-function(txt){
   p.df
 }
 
-
+#  used solely by getcumCharLines (below)
 getNCharLines<-function(txt){
   lines<-strsplit(txt,"\n")
   nCharLines<-sapply(lines, nchar)
@@ -34,13 +36,15 @@ getNCharLines<-function(txt){
   nCharLines
 }
 
-#todo?? make reactive expr: codeLineCnt<-reactive({getNCharLines(user$code)})
+#?? make reactive expr: codeLineCnt<-reactive({getNCharLines(user$code)})
+
+# used solely by utilptR.R::  getDefPos
 getcumCharLines<-function(txt){
   nCharLines<-getNCharLines(txt)
   csnCharLines<-cumsum(c(0,nCharLines))
 }
 
-
+# used solely by utilptR.R:: ptDef2ReplacementList, getDefPos
 extractTagDF<-function(p.df, tag="ptR"){
   df1<-subset(p.df, token=='SYMBOL' & text ==tag & ggid==0)
  
@@ -59,6 +63,7 @@ extractTagDF<-function(p.df, tag="ptR"){
   g.df<-subset(p.df, id==tag.gid)
 }
 
+# used solely by utilptR.R::  getDefPos
 extractPositions<-function(csnCharLines, df){
   pos1<-colLine2charPositions(csnCharLines, df$line1, df$col1)
   pos2<-colLine2charPositions(csnCharLines, df$line2, df$col2)
