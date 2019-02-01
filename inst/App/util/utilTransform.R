@@ -1,4 +1,6 @@
-#helper fn
+
+# Not used!!!
+#helper fn 
 stop.unless<-function(expr, mssg){
   if(!(expr)){
     stop(mssg, call.=FALSE)
@@ -8,10 +10,9 @@ stop.unless<-function(expr, mssg){
 
 
 
-# used by server.R:output$svghtml
-# detects transforms with draggable and 
-# returns a modified copy of txt with
-# tid for the Draggable
+# sole caller: getCodeTransform(r)  in plotBarTransform
+# 
+# detects transforms with draggable and returns a modified copy of txt with tid for the Draggable
 usingDraggable<-function(txt, transformType){
   if(is.null(transformType)){
     return(txt)
@@ -82,28 +83,7 @@ usingDraggable<-function(txt, transformType){
   src
 }
 
-
-# the tid (transform id) 
-# ASSUMES the transform is on a single line (not a good idea)
-# row is the line, start, end are the character positions
-# This is grouped into a single string.
-#
-# tr2src finds the location in src and replaces everthing
-# between the 2 boundries with trDefDelta
-# tr2src<-function( src, tid, trDefDelta ){
-#   strsplit(tid,'-')[[1]]->coords
-#   as.numeric(coords[2])->row
-#   as.numeric(coords[3])->start
-#   as.numeric(coords[4])->end
-#   lines<-strsplit(src,"\n")[[1]]
-#   line<-lines[[row]]
-#   pre<-substr(line,1,start-1)
-#   post<-substr(line, end+1, nchar(line))
-#   line<-paste0(pre, trDefDelta, post)
-#   lines[row]<-line
-#   paste(lines, collapse="\n")
-# }
-
+# sole caller: mouseCmdTransform
 tid2replacementCoord<-function(tid){
   strsplit(tid,'-')[[1]]->coords
   as.numeric(coords[2])->row
