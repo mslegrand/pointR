@@ -9,6 +9,11 @@
 shinyServer(function(input, output,session) {
   cat_list <- c()
   exportTestValues(catList=cat_list)
+  
+  # utility functions
+  source("util/dbInitiatizers.R") 
+  source("util/extNmode.R") 
+  source("util/format.R") 
 # Reactive values----------
   source("util/reOrgPanels.R", local=TRUE ) 
   reOrgPanels(id=NULL, mode=NULL)
