@@ -13,17 +13,6 @@ observeEvent(input$commitMssg, {
   # cat('<---< input$input$commitMssg\n')
 })
 
-# observe({
-#   c(input$commitButton,input$commitMssg )
-#  
-#   # commitButton is button
-#   isolate({
-#     cat('>---> input$commitButton, input$commitMssg\n')
-#     sender='cmd.commit'
-#     triggerRefresh(sender, rollBack=FALSE)
-#     cat('<---< input$commitButton, input$commitMssg\n')
-#   })
-# })
 
 #---commit rmdView button----- 
 observeEvent(input$writeNOpen ,{

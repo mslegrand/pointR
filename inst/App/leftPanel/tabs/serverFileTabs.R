@@ -2,23 +2,10 @@
 sendFileTabsMessage<-function(...){ 
   data<- list(...) 
   if(length(data)>0){
-    # cat("sendFileTabsMessage::", paste(data, collapse = ', '),"\n")
     session$sendCustomMessage( type = "scrollManager",  data )
   }
 }
 
-# tracks the naming for unnamed pages
-# pages<- reactiveValues(
-#   fileName='',
-#   fileNameCount=1
-# )
-
-
-# getNextAnonymousFileName<-function(){
-#   newFileName<-paste0("Anonymous ", pages$fileNameCount)
-#   pages$fileNameCount<-pages$fileNameCount+1
-#   newFileName
-# }
 
 getNextTabId<-function(){
   tabId<-basename(tempfile('PTR-TABID'))
@@ -66,11 +53,7 @@ closeTabNow<-function(tabId2X){
 addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FALSE){
   # cat("addFileTab:: mode=",mode,"\n")
   tabId<-getNextTabId()
-  # cat("addFileTab:: tabId",format(tabId),"\n")
   
-  # cat("addFileTab:: aceId",aceId,"\n")
-  # cat("addFileTab:: docFilePath",format(docFilePath),"\n")
-  # !!!TODO add docFilePath to recentFiles (if !='?')
   if(is.null(tabId)){ browser() }
   addFileDesc(pageId=tabId, docFilePath=docFilePath, fileSaveStatus, fileMode=mode)
   setUseTribble( pageId=tabId, value=TRUE)
@@ -80,66 +63,9 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FA
                  docFilePath=docFilePath, mode=mode,
                  fileSaveStatus=fileSaveStatus)
   
-  # if(mode=='ptr'){
-  #   divClass="cAceContainer"
-  # } else {
-  #   divClass="cAceRmdContainer"
-  # }
-  # aceId<-tabID2aceID(tabId)
-  # 
-  # # ptpreprocId=tabID2prePtProc(tabId)
-  # appendTab(
-  #   inputId = "pages",
-  #   tabPanel( #tabId,
-  #     title=tabTitleRfn(title, tabId, docFilePath),
-  #     #span(title, span( " " , class='icon-cancel', onclick=closeRfn(tabId))  ), 
-  #     #title=span(title, span( " " , class='icon-cancel', onclick=closeRfn(tabId))  ), 
-  #     #span(tabId,  actionButton(inputId=paste0("but",tabId), label="", class='icon-cancel') ), 
-  #     #checkboxInput(tabId, tabId, FALSE),
-  #     div(
-  #       class=divClass,
-  #       overflow= "hidden",inline=FALSE,
-  #       shinyAce4Ptr(
-  #           outputId = aceId,  
-  #           value=txt,
-  #           mode=mode, 
-  #           theme=editOption$theme, 
-  #           fontSize=editOption$fontSize,
-  #           autoComplete="enabled",
-  #           if(mode=='ptr')
-  #             autoCompleteList =list(names(svgR:::eleDefs))
-  #           else
-  #             NULL
-  #           ,
-  #           docFilePath=docFilePath,
-  #           initSaved=fileSaveStatus
-  #         )
-  #       ),
-  #     value=tabId
-  #   )
-  # )
-  # cat('tabId=',format(tabId),"\n")
-  # xyz<-input$pages
-  # cat('serverFileTabs.R:: input$pages=',format(xyz),"\n")
-  
-  # updateTabsetPanel(session,inputId = 'pages', selected = tabId)
   
   sendFileTabsMessage(resize=runif(1))
-  # updateAceExt(id=aceId, sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
-
-  # insertEDinPP(ptpreprocId)
   
-  # selector='#cXX' #paste0( '#',NS("footerRight")('cXX'))
-  # cat('selector=',selector,'\n')
-  # ui=newPointPreprocessor(id=ptpreprocId)
-  # #ui=textInput("txttxt", "Insert some text")
-  # insertUI(
-  #   selector=selector,
-  #   where='beforeEnd',
-  #   ui=ui,
-  #   #immediate=FALSE,
-  #   session=session
-  # )
   return(tabId)
 }
 
@@ -152,10 +78,8 @@ getAceEditorId<-reactive({
 observeEvent(input$pages,{
   # cat(">---> input$pages 2\n")
   tabId<-input$pages
-  # cat('tabId=',format(tabId),'\n')
   # if(!allGood(tabId)){ browser() }
   if(!is.null(tabId)){
-    #sendFileTabsMessage(selected=tabId, resize=runif(1))
     aceId<-tabID2aceID(tabId)
     updateAceExt(id=aceId, sender='cmd.tabChange', roleBack=FALSE, setfocus=TRUE, getValue=TRUE)
   } else {
@@ -179,11 +103,8 @@ observeEvent(input$tabManager,{
 observeEvent(c(request$trigger,request$tabs), {
   if(length(request$tabs)>0){
     tabId<-peekTab()
-    # cat('oe::request$tabs tabId=',format(tabId),'\n')
     sender<-getSender()
-    # cat('oe::request$tabs sender=',format(sender),'\n')
     aceId<-tabID2aceID(tabId)
-    # cat('oe::request$tabs aceId=',format(aceId),'\n')
     updateAceExt( id=aceId, sender=sender, getDoc=TRUE)
   } else {
     if(getSender()=='fileCmd.quit'){

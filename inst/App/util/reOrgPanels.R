@@ -1,3 +1,5 @@
+#todo:: rewrite with sapply or loop
+
 
 reOrgPanels<-function(id, mode){
   # cat(">---> reOrgPanels\n")
