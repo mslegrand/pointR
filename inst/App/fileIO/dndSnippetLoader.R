@@ -1,17 +1,20 @@
 
 
-imageBlockIndices<-function(temp){
-  unlist(str_split(temp, '\n'))->lines
-  pose<-grep('^```', lines)
-  posb<-1+grep('^SVGR', lines)
-  indx<-which(pose %in% posb)
-  posx<-pose[indx]
-  posy<-pose[indx+1]
-  rtv<-rbind(posx,posy)
-  rtv
-}
 
+
+# used by processKnit, processDnip, plotRmd
 dripplets2Rmd<-function( drps ){
+  imageBlockIndices<-function(temp){
+    unlist(str_split(temp, '\n'))->lines
+    pose<-grep('^```', lines)
+    posb<-1+grep('^SVGR', lines)
+    indx<-which(pose %in% posb)
+    posx<-pose[indx]
+    posy<-pose[indx+1]
+    rtv<-rbind(posx,posy)
+    rtv
+  }
+  
   drps<-str_replace_all(drps, "svgR\\(", 'temp<-svgR(')
   m<-imageBlockIndices(drps)
   # print(m)
@@ -36,34 +39,37 @@ dripplets2Rmd<-function( drps ){
   drps
 }
 
-extractVal<-function(x,pattern){
-  # cat('extractVal\n')
-  rtv<-str_match_all(x,pattern)
-  # print(rtv)
-  rtv<-rtv[[1]]
-  if(length(rtv)>0){
-    rtv<-rtv[1,2]
-  } else {
-    rtv<-NULL
-  }
-  rtv
-}
+
 
 # NOT USED!!!
-dripplets2List<-function(drps){
-  drps<-str_split(drps,pattern = '\\*{3,}')
-  drps<-drps[[1]]
-  
-  i<-1
-  drps<-lapply(drps, function(dr){
-    rtv<-list()
-    # cat(i, 'hint\n')
-    rtv$hint<-    extractVal(dr, "(?:\nPOPUP\n```\n)(.+)(?:\n```\n)")
-    # cat(i, 'snippet\n')
-    rtv$snippet<- extractVal(dr, "(?:\nSNIPPET\\s*\n```\\s*\n)(.+)(?:\n```\\s*\n)")
-    rtv
-  })
-}
+# dripplets2List<-function(drps){
+#   
+#   extractVal<-function(x,pattern){
+#     # cat('extractVal\n')
+#     rtv<-str_match_all(x,pattern)
+#     # print(rtv)
+#     rtv<-rtv[[1]]
+#     if(length(rtv)>0){
+#       rtv<-rtv[1,2]
+#     } else {
+#       rtv<-NULL
+#     }
+#     rtv
+#   }
+#   
+#   drps<-str_split(drps,pattern = '\\*{3,}')
+#   drps<-drps[[1]]
+#   
+#   i<-1
+#   drps<-lapply(drps, function(dr){
+#     rtv<-list()
+#     # cat(i, 'hint\n')
+#     rtv$hint<-    extractVal(dr, "(?:\nPOPUP\n```\n)(.+)(?:\n```\n)")
+#     # cat(i, 'snippet\n')
+#     rtv$snippet<- extractVal(dr, "(?:\nSNIPPET\\s*\n```\\s*\n)(.+)(?:\n```\\s*\n)")
+#     rtv
+#   })
+# }
 
 #' @param dr, a section of a drippet text file representing a single drippet
 #' @return a named character vector, with each component representation a piece of the drippet
@@ -99,10 +105,12 @@ extractDripplet<-function(dr ){
   rtv
 }
 
+
 #' @param drps text from drippet file
 #' @return list of drippet tripples (named character vectors)
 #' 
 #' Returns list of character vectors named with names'hint', 'snip', 'logo' representing a drippet
+#' uses in cmdFileDnippet.R
 dripplets2List2<-function(drps){
   drps<-unlist(str_split(drps,pattern = '\\*{3,}'))
   drps<-lapply(drps, function(dr){
@@ -112,39 +120,39 @@ dripplets2List2<-function(drps){
   drps
 }
 
-row2DrippletBlock<-function(lineNo){
-  unlist(str_split(temp, '\n'))->lines
-  pose<-grep('^```', lines)
-  posb<-1+grep('^SVGR', lines)
-  indx<-which(pose %in% posb)
-  posx<-pose[indx]
-  posy<-pose[indx+1]
-  
-  indxx<-which((posx <=row) & (row<=posy))
-  if(length(indxx)>0){
-    rtv<-paste(lines[(posx[indxx]+1):(posy[indxx]-1)], collapse="\n")
-  } else {
-    rtv<-NULL
-  }
-  rtv
-}
+# row2DrippletBlock<-function(lineNo){
+#   unlist(str_split(temp, '\n'))->lines
+#   pose<-grep('^```', lines)
+#   posb<-1+grep('^SVGR', lines)
+#   indx<-which(pose %in% posb)
+#   posx<-pose[indx]
+#   posy<-pose[indx+1]
+#   
+#   indxx<-which((posx <=row) & (row<=posy))
+#   if(length(indxx)>0){
+#     rtv<-paste(lines[(posx[indxx]+1):(posy[indxx]-1)], collapse="\n")
+#   } else {
+#     rtv<-NULL
+#   }
+#   rtv
+# }
 
-row2DrippletBlockIndices<-function(lineNo){
-  unlist(str_split(temp, '\n'))->lines
-  pose<-grep('^```', lines)
-  posb<-1+grep('^SVGR', lines)
-  indx<-which(pose %in% posb)
-  posx<-pose[indx]
-  posy<-pose[indx+1]
-  
-  indxx<-which((posx <=row) & (row<=posy))
-  if(length(indxx)>0){
-    rtv<-c((posx[indxx]+1),(posy[indxx]-1))
-  } else {
-    rtv<-NULL
-  }
-  rtv
-}
+# row2DrippletBlockIndices<-function(lineNo){
+#   unlist(str_split(temp, '\n'))->lines
+#   pose<-grep('^```', lines)
+#   posb<-1+grep('^SVGR', lines)
+#   indx<-which(pose %in% posb)
+#   posx<-pose[indx]
+#   posy<-pose[indx+1]
+#   
+#   indxx<-which((posx <=row) & (row<=posy))
+#   if(length(indxx)>0){
+#     rtv<-c((posx[indxx]+1),(posy[indxx]-1))
+#   } else {
+#     rtv<-NULL
+#   }
+#   rtv
+# }
 
 
 #test

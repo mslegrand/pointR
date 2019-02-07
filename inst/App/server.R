@@ -19,6 +19,8 @@ shinyServer(function(input, output,session) {
   source("util/utilTibble.R")
   source("util/utilColumnType.R")
   source("util/utilTransform.R")
+  source("util/copyAndRenameProject.R")
+  source("fileIO/dndSnippetLoader.R")
   
 # Reactive values----------
   source("util/reOrgPanels.R", local=TRUE ) 
