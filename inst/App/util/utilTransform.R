@@ -14,7 +14,9 @@ stop.unless<-function(expr, mssg){
 # 
 # detects transforms with draggable and returns a modified copy of txt with tid for the Draggable
 usingDraggable<-function(txt, transformType){
-  if(is.null(transformType)){
+  cat('transformType=', format(transformType),"\n")
+  
+  if(is.null(transformType) || is.null(txt) || !grepl('draggable',txt )){
     return(txt)
   }
   if(transformType=='Scale'){
