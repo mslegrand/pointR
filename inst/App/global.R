@@ -60,27 +60,19 @@ javascriptPanelTag<-'javascriptPanel'
 snippetPanelTag<-'snippetPanel'
 tibTag<-'tib'
 
+
 preprocChoices<-c("onNewPt",  "onMovePt", "onMoveMat")
 
 #----begin external resources loaded prior to server------------
 # must be loaded prior to alles
 source("util/configIO.R") 
 source("util/loadTemplates.R") 
-# source("util/dbInitiatizers.R") 
-# source("util/extNmode.R") 
-# source("util/format.R") 
-# source("util/utilParser.R")
-# source("util/utilptR.R")
-# source("util/utilTibble.R")
-# source("util/utilColumnType.R")
-# source("util/utilTransform.R")
-# source("util/copyAndRenameProject.R")
-# source("fileIO/dndSnippetLoader.R")
+
+#---used to build the UI portion
 source("fileIO/genShinyFilesOpenButtons.R")
 source("fileIO/genShinyFilesSaveButtons.R")
 source("leftPanel/menu/UIbuildLeftMenu.R")
 source("leftPanel/toolbar/buildLeftHToolBarUI.R")
-source("rightPanel/preProc/preProcValidate.R")
 source("rightPanel/preProc/pointPreprocessor.R")
 source("rightPanel/menu/buildRightMenuUI.R")
 source("leftPanel/mid/shinyAce4Ptr.R")
