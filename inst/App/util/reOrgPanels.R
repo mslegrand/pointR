@@ -41,10 +41,15 @@ reOrgPanels<-function(id, mode){
       else{
         addCssClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
       }
+      
     }
     showElement("aceToobarTop1")
     showElement("aceToobarTop2")
-    showElement("commitButton")
+    if(identical(mode,'javascript')){ 
+      hideElement("commitButton") 
+    } else {
+      showElement("commitButton")
+    }
     showElement("aceTabSet")
     showElement("midRightPanels")
   }
