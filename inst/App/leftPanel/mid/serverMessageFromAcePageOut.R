@@ -15,7 +15,6 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
       # write file
       code<-mssg$code  # !!!TODO!!! if write fails revert.
       
-
       writeLines(code, docFilePath)
       tabId<-aceID2TabID(id) 
       
@@ -23,9 +22,11 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
       modeFromPath<-pathExt2mode(tools::file_ext(docFilePath)) # ---- reset mode if has changed! 
       
       updateAceExt(id, sender,  setDocFileSaved=TRUE, setMode=modeFromPath)  # resets undomanger, and possibly mode, but doesn't return anything
-      setFileDescSaved(pageId=tabId, fileSaveStatus=TRUE ) # save status 
-      if(!identical(oldeMode,modeFromPath)){
-        
+      setFileDescSaved(pageId=tabId, fileSaveStatus=TRUE ) # save status
+      if(identical(oldeMode,modeFromPath)){
+        modeChanged<-FALSE
+      } else {
+        modeChanged<-TRUE # mode was changed
         setFileDescMode(pageId=tabId,newMode=modeFromPath) # update mode in descriptor
         if(identical(modeFromPath,'ptr') && !(sender %in% c('fileCmd.close','fileCmd.quit'))){
           tibs<-getPtDefs()$tib
@@ -34,22 +35,10 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
             resetSelectedTibbleName(tibs=tibs, name=name)
             storeAssetState()
             selectionList<-reactiveValuesToList(selectedAsset, all.names=TRUE)
-            print(selectionList)
-            # setTrigger('redraw')
           }
-          
-          # ptDefs<-ex.getPtDefs(code, useTribbleFormat=TRUE)
-          # updateSelected(name=RPanelTag)
-          #browser()
-          # storeAssetState()
-          # cat("--restoreAssetState\n")
           processCommit() # this sets the sourceType
-          # cat('--reOrgPanels')
           reOrgPanels(id=mssg$id, mode= getMode() )
           storeAssetState()
-            # browser()
-          # restoreAssetState(input$pages) #copies from db to assetSelection
-          
         }
         setTrigger('redraw')
       }
@@ -66,7 +55,12 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
           rmarkdown::render(docFilePath )
           htmlPath<-sub('\\.Rmd$','\\.html',docFilePath)
           browseURL(htmlPath)
+        } else { #was save Now
+          if(modeChanged){
+            updateAceExt(id=id, sender='cmd.tabChange', roleBack=FALSE, setfocus=TRUE, getValue=TRUE)
+          }
         }
+        
         addToRecentFiles(mssg$docFilePath)
         title=as.character(tabTitleRfn( tabName=basename(docFilePath ), tabId=tabId, docFilePath=docFilePath ))
         sendFileTabsMessage(title=title, tabId=tabId)
