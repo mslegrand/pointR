@@ -23,7 +23,7 @@ restoreWorkSpace<-reactive({
     id=basename(filePath)
     wsPages[[id]]<-page
   } 
-  
+ 
    extractDBFromPages<-function(wsPages, pattern, initTib){
     rtv<-lapply(wsPages, function(page){
       tibAs<-page[ grep(pattern, names(page)) ]

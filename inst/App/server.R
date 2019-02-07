@@ -18,6 +18,7 @@ shinyServer(function(input, output,session) {
   source("util/utilptR.R")
   source("util/utilTibble.R")
   source("util/utilColumnType.R")
+  source("util/utilTransform.R")
   
 # Reactive values----------
   source("util/reOrgPanels.R", local=TRUE ) 

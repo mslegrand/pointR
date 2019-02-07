@@ -43,6 +43,7 @@ genShinySaveFilesObservers<-function(input, session){
           #      If sender==close, removeTab
           #      ow. update tab title
           sender=request$sender
+          
           if(request$sender=='fileCmd.saveAs'){
             sender='fileCmd.saveNow'
           }
