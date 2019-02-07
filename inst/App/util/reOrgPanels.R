@@ -30,26 +30,26 @@ reOrgPanels<-function(id, mode){
       showElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble
       addCssClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
       addCssClass( id= 'midRightPanels', class='ctop140')
-    } else { # editing other
+    } else { # editing other: 'ptrrmd', 'snippets', 'dnippets', 'text', 'javascript'
       removeCssClass( id= 'midRightPanels', class='ctop140')
       hideElement("TopRightPanel")
       hideElement("snippetToolBarContainer")
       hideElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble
+      # now consider which mode it is
       if(identical(mode,'ptrrmd')){
         removeCssClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
       }
       else{
         addCssClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
       }
-      
+      if(mode %in% c('ptrrmd', 'dnippets')){
+        showElement("commitButton")
+      } else { # mode is one of 'snippets', 'text', 'javascript'
+        hideElement("commitButton")
+      }
     }
     showElement("aceToobarTop1")
     showElement("aceToobarTop2")
-    if(identical(mode,'javascript')){ 
-      hideElement("commitButton") 
-    } else {
-      showElement("commitButton")
-    }
     showElement("aceTabSet")
     showElement("midRightPanels")
   }
