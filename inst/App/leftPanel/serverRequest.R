@@ -5,6 +5,22 @@ request<-reactiveValues(
   trigger=0
 )
 
+trigger<-reactiveValues(
+  redraw=0
+)
+
+setTrigger<-function(what="redraw"){
+  trigger[[what]]<-sample(10^9,1)
+}
+getCode4Rendering<-eventReactive( trigger$redraw, {
+  getCode()
+})
+
+getCode4RenderingTransform<-eventReactive( trigger$redraw, {
+  src<-getCode()
+  src<-usingDraggable(src, getTransformType())
+  src
+})
 
 setTabRequest<-function(sender, tabs){
   request$sender<-sender
