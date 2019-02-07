@@ -131,7 +131,11 @@ resetSelectedTibbleName<-function(tibs, name){
           if(!is.null(selectedAsset$ptColName)){
             selectedAsset$columnName<-selectedAsset$ptColName
           } else {
-            selectedAsset$columnName=names(tib[1])
+            if(length(tib)>0){
+              selectedAsset$columnName=tail(names(tib),1)
+            } else {
+              selectedAsset$columnName=NULL
+            }
           }
         }
       }
