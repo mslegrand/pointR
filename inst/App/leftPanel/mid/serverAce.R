@@ -6,7 +6,7 @@ observeEvent(input$messageFromAce, {
       length(input$messageFromAce$code)>0 &&
       length(input$messageFromAce$sender)>0
     ){
-      request$code<-input$messageFromAce$code
+      request$code<-input$messageFromAce$code # only place where request$code is set
       sender<-input$messageFromAce$sender
       request$sender<-sender
       aceId<-input$messageFromAce$id
@@ -44,16 +44,18 @@ observeEvent(input$messageFromAce, {
         sender %in% c( 
           'cmd.file.new', 'cmd.tabChange', 'cmd.openFileNow', 
           'cmd.commit', 'cmd.add.column', 'cmd.add.asset' #, 'cmd.saveFileNow' 
-          )
+          ) # these all should redraw viewport
       ){#not sure if cmd.saveFileNow should be here, infact, cannot find sender issuing this.
         
         processMssgFromAceMssgPageIn(sender, input$messageFromAce)
-      } 
-      if( sender %in% c( 
+      } else if( 
+        sender %in% c( 
           'fileCmd.save', 'fileCmd.close', 'fileCmd.saveAs', 'fileCmd.quit' , 'fileCmd.saveNow', 'buttonCmd.rmdViewer'
           )
       ){
         processMssgFromAceMssgPageOut(sender, input$messageFromAce) 
+      } else {
+        setTrigger('redraw')
       }
       
     }

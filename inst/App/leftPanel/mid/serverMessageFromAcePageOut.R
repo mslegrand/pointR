@@ -1,7 +1,7 @@
 processMssgFromAceMssgPageOut<-function(sender, mssg){
   id<-mssg$id
   saved<-unlist(mssg$isSaved)
- 
+  
   if( !saved || sender %in% c('fileCmd.saveAs','fileCmd.saveNow', 'buttonCmd.rmdViewer', 'fileCmd.quit') ) { #need to save
     docFilePath<-unlist(mssg$docFilePath)
     if(docFilePath=='?' || sender=='fileCmd.saveAs'){ # file unnamed : fileSaveAs
@@ -13,16 +13,46 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
       sendPtRManagerMessage( sender=sender, saveFile=TRUE,  target=target, tabId=tabId ) #triggers shinyFiles
     } else { # has legitmate path
       # write file
-      code<-mssg$code
-      # !!!TODO!!! if write fails revert.
+      code<-mssg$code  # !!!TODO!!! if write fails revert.
+      
 
       writeLines(code, docFilePath)
       tabId<-aceID2TabID(id) 
       
+      oldeMode<-getMode()
       modeFromPath<-pathExt2mode(tools::file_ext(docFilePath)) # ---- reset mode if has changed! 
+      
       updateAceExt(id, sender,  setDocFileSaved=TRUE, setMode=modeFromPath)  # resets undomanger, and possibly mode, but doesn't return anything
       setFileDescSaved(pageId=tabId, fileSaveStatus=TRUE ) # save status 
-      setFileDescMode(pageId=tabId,newMode=modeFromPath) # update mode in descriptor
+      if(!identical(oldeMode,modeFromPath)){
+        
+        setFileDescMode(pageId=tabId,newMode=modeFromPath) # update mode in descriptor
+        if(identical(modeFromPath,'ptr') && !(sender %in% c('fileCmd.close','fileCmd.quit'))){
+          tibs<-getPtDefs()$tib
+          if(length(names(tibs))>0){
+            name<-tail(names(tibs))
+            resetSelectedTibbleName(tibs=tibs, name=name)
+            storeAssetState()
+            selectionList<-reactiveValuesToList(selectedAsset, all.names=TRUE)
+            print(selectionList)
+            # setTrigger('redraw')
+          }
+          
+          # ptDefs<-ex.getPtDefs(code, useTribbleFormat=TRUE)
+          # updateSelected(name=RPanelTag)
+          #browser()
+          # storeAssetState()
+          # cat("--restoreAssetState\n")
+          processCommit() # this sets the sourceType
+          # cat('--reOrgPanels')
+          reOrgPanels(id=mssg$id, mode= getMode() )
+          storeAssetState()
+            # browser()
+          # restoreAssetState(input$pages) #copies from db to assetSelection
+          
+        }
+        setTrigger('redraw')
+      }
       savePage(tabId) # saves page to workspace
       if(sender %in% 'fileCmd.quit'){
        # pop off tab and exit from this

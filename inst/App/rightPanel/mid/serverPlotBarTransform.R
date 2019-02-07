@@ -2,10 +2,11 @@
 
 
 
-getCodeTransform<-reactive({
-  src<-getCode()
-  src<-usingDraggable(src, selectedAsset$transformType)
-})
+# getCodeTransform<-reactive({
+#   src<-getCode()
+#   src<-usingDraggable(src, getTransformType())
+#   src
+# })
 
 
 statusPlotTransform<-callModule(
@@ -20,7 +21,7 @@ statusPlotTransform<-callModule(
   getSVGWH,
   getSvgGrid,
   getBackDrop,
-  getCode = getCodeTransform,
+  getCode = getCode4RenderingTransform,
   getErrorMssg,
   getTibNRow=getTibNRow,
   insert.end=",NULL"

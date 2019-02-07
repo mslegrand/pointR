@@ -10,8 +10,8 @@ modulePlotRmd<-function(input, output, session,
   
   output$rmd_Html <- renderUI({ 
     if(getPanelName() %in% rmdPanelTag){
-      #src<-getCode()
-      src<-request$code
+      src<-getCode()
+      # src<-request$code
       if(grepl("output: dnd_snippet",src)){
         # cat("founds\n")
         # cat('>--> dripplets2Rmd\n')
@@ -34,5 +34,5 @@ rmdModuleList<-callModule(
   module=modulePlotRmd, 
   id="rmdMod", 
   getPanelName=getRightMidPanel,
-  getCode=getCode 
+  getCode=getCode4Rendering
 )

@@ -12,5 +12,6 @@ observeEvent(returnValue4ModuleEdTransform$type(),{
   if(!(hasError() && !is.null(type) && !identical(type, getTransformType() )) ){
     # cat("Again type=",format(type),"\n")
     updateSelected(transformType=type)
+    setTrigger('redraw')
   }
 })

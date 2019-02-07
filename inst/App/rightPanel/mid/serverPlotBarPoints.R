@@ -108,7 +108,7 @@ statusPlotPoint<-callModule(
   getSVGWH,
   getSvgGrid,
   getBackDrop,
-  getCode,
+  getCode4Rendering,
   getErrorMssg,
   getTibNRow=getTibNRow,
   insert.end=",showPts.compound()"

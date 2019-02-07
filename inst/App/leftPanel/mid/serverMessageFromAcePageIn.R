@@ -19,6 +19,7 @@ processMssgFromAceMssgPageIn<-function(sender, mssg){
        # cat("ace invoking resetSelectedTibbleName\n")
        # cat('names of tibs:',format(names(tibs)), "!\n")
       resetSelectedTibbleName(tibs=tibs, name=name)
+      
     } else { # else covers: 'cmd.file.new', 'cmd.tabChange', 'cmd.openFileNow', p
 
 # getMode -----------------------------------------------------------------
@@ -39,16 +40,18 @@ processMssgFromAceMssgPageIn<-function(sender, mssg){
         # cat('--reOrgPanels')
         reOrgPanels(id=mssg$id, mode= getMode() )
         restoreAssetState(input$pages) #copies from db to assetSelection
+        # browser()
          # cat('--savePage\n')
         savePage(input$pages) # require for new page that was not committed
         sendFileTabsMessage(selected=input$pages, resize=runif(1)) 
         
-      } else{
-        # kill all
+      } else{ # case: length(input$pages)==0 || identical(selectedAsset$tabId, input$pages) ==TRUE
+        
       }
-      reOrgPanels(id=mssg$id, mode= getMode() )
+      reOrgPanels(id=mssg$id, mode= getMode() ) 
       
       # end assetUpdate:
     } 
+    setTrigger('redraw')
     # cat('<---< processMssgFromAceMssgPageIn\n\n')
 }

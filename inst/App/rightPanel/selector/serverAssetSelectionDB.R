@@ -31,6 +31,7 @@ storeAssetState<-function(){
 
 #~ @param nextTabId
 #~ @section sets selectedAsset according to  entry corresponding to tabId==nextTabId
+# sole caller: processMssgFromAceMssgPageIn
 
 # the call to getRightPanelChoices is problematic:
 #  if an error state occurs, choice is errorPanelTag, ouch
@@ -47,6 +48,9 @@ restoreAssetState<-function(nextTabId){
        } else {
          row.tib<-serverAssetDB$tib
        }
+      if(length(row.tib)==0){
+        browser()
+      }
       if(nrow(row.tib)==0){
        #  browser()
         # cat('restoreAssetState:: next:: getRightPanelChoices\n')
@@ -54,10 +58,12 @@ restoreAssetState<-function(nextTabId){
         # cat('restoreAssetState choices=',choices,"\n")
         row.tib<-newAssetSelection(tabId=nextTabId, choices=choices, tibs=getPtDefs()$tib)
       }
+     # browser()
+    
       if(!is.null(row.tib)){
         lapply(names(row.tib), function(n){
           v<-row.tib[[n]][1]
-          if(is.na(v)){v<-NULL} 
+          if(!is.null(v) && is.na(v)){v<-NULL} 
           selectedAsset[[n]]<-v
         } )
       }

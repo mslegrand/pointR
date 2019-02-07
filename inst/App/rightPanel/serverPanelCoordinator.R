@@ -150,7 +150,7 @@ getRightPanelChoices<-reactive({ # includes names of tibs
       choices<-names(getPtDefs()$tib)
       if( usingTransformDraggable() ){
         choices<-c(choices, transformTag)
-      }
+      } 
       choices<-c(choices, svgPanelTag, RPanelTag)
     } else{
       choices<-textPanelTag
@@ -217,11 +217,12 @@ is.tibName<-function(x){ !is.null(x) || x==errorPanelTag || x==transformTag}
 
 
 usingTransformDraggable<-reactive({
-  length(getCode()) >0 &&
-    nchar(getCode())>0 &&
+  code<-getCode()
+  length(code) >0 &&
+    nchar(code)>0 &&
     ( 
-      grepl("class\\s*=\\s*'draggable'",getCode() ) || 
-        grepl('class\\s*=\\s*"draggable"',getCode() )
+      grepl("class\\s*=\\s*'draggable'",code ) || 
+        grepl('class\\s*=\\s*"draggable"',code )
     )
 }) 
 
