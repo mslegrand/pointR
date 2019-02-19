@@ -9,6 +9,9 @@ copyAndRenameProject<-function(pattern, templatePath, projName, pathToProjParent
   }
   dir_create( tempDir )
   dir_copy(templatePath, tempDir)
+  bn<-basename(templatePath)
+  file.rename( path_join(c(tempDir, bn)), path_join(c(tempDir, projName) )  )
+ 
   
   # helper function to sub contentes of file
   subContents<-function(fileName){
