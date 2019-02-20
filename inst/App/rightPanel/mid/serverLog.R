@@ -16,5 +16,14 @@ captLogModuleList<-callModule( #auto  input, output, session
   logMssgs=getCapturedMssg
 )
 
+if(usingElectron){
+  aptRunnerLogModuleList<-callModule( #auto  input, output, session 
+  module=moduleLog, 
+  id="aptRunnerLogMod", 
+  panelName=getRightMidPanel,
+  logMssgs=getAptRunnerMssg
+  )
+}
+
 
 

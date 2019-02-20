@@ -64,6 +64,15 @@ if(!is.null(getShinyOption("initialPointRProject"))){
   defaultOpts$currentProjectDirectory<-dirname(initialPointRProject)
 }
 
+if(!is.null(getShinyOption("electron"))){
+  usingElectron<-TRUE
+  ptRPath<-find.package('pointR') # TODO replace 
+} else {
+  usingElectron<-FALSE
+  ptRPath<-find.package('pointR')
+}
+
+
 
 # we might want to move this under the server
 writeOptionsJSON<-function(opts){

@@ -1,9 +1,55 @@
+if(!!window.sendToElectron){
+  window.ipcRenderer.on( 'appRunner', function(event, arg1, arg2){
+    Shiny.onInputChange('appStatus', 
+      {
+          mssg:  arg1, 
+          tabId: arg2,
+          rnd:Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5)
+      });
+  });
+  
+    window.ipcRenderer.on( 'appRunnerLog', function(event, arg1, arg2){
+    //alert('appRunnerLog=' + JSON.stringify( arg1));
+    //console.log('appRunnerLog=' + JSON.stringify( arg1));
+    //alert('appRunnerLog=' + JSON.stringify( arg2));
+    Shiny.onInputChange('appLog', 
+      {
+          mssg:  arg1, 
+          tabId: arg2,
+          rnd:Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5)
+      });
+  });
+  
+  window.ipcRenderer.on( 'appCloseCmd', function(event, arg){
+    console.log('about to close');
+    $('#ptRQuit').trigger('click');
+  });
+  
+}
 
 Shiny.addCustomMessageHandler(
   "ptRManager",
   function(data){
     console.log('-----------Entering ptRManager------------\n');
     // console.log(JSON.stringify(data));
+    if(data.sender==="cmd.electron"){
+      if(!!data.app2RunPath){
+        if(!!window.sendToElectron){
+          window.sendToElectron('cmdAppRun',data.app2RunPath, data.tabId);
+        }
+      }
+    }
+    if(data.sender==="closePtRWindowNow"){
+      console.log('inside data.closePtRWindowNow');
+      if(!!window.sendToElectron ){ 
+        console.log('about to send confirmation');
+        var confirmation=window.sendExitConfirmation();
+        //window.ipcRenderer.sendSync('confirmExit', true);
+        console.log('confirmation recieved '+ JSON.stringify(confirmation));
+      }
+      console.log('invoking window.close');
+      window.close();
+    }
     if(!!data.openFile){
       //console.log('about to trigger open\n');
       if( data.sender==='cmd.openFileNow'){

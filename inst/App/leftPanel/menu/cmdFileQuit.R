@@ -15,8 +15,10 @@ cmdQuitNow<-reactive({
   opts<-isolate(reactiveValuesToList((editOption)))
   opts<-sapply(opts,unlist, USE.NAMES = T, simplify = F )
   writeOptionsJSON(opts)
-  js$closeWindow()
+  #js$closeWindow()
+  sendPtRManagerMessage(sender='closePtRWindowNow', now=TRUE)
   Sys.sleep(1)
+  
   stopApp()
 })
 

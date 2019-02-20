@@ -91,6 +91,10 @@ shinyUI(
              absolutePanel( id='rmdBrowserButtonPanel', left=120, bottom=0,  class='hiddenPanel',
                 actionButton("writeNOpen", label = "Open in Browser") %>% bs_embed_tooltip(title = "Save as Html then Open in Browser")
              ),
+             if(usingElectron){
+               absolutePanel( id='runAppPanel', left=5, bottom=0,   class='hiddenPanel',
+                              actionButton("writeNRunApp", label = "Run App") %>% bs_embed_tooltip(title = "Save then Run App"))
+             },
              absolutePanel( left=150, bottom=-10,
                awesomeRadio('useTribble', NULL, choices=c('Tribble','Tibble'),
                                     selected = "Tribble", 

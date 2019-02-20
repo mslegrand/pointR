@@ -19,5 +19,44 @@ observeEvent(input$writeNOpen ,{
   setTabRequest(sender='buttonCmd.rmdViewer', tabs=input$pages)
 }, label= "writeNOpen")
 
+appRunner<-reactiveValues(
+  tabId="",
+  log=""
+)
+  
+if(usingElectron){
+
+  observeEvent(input$writeNRunApp ,{
+    # cat('>-----> input$writeNRunApp')
+    pageId<-input$pages
+    appRunner$tabId<-pageId
+    appRunner$log<-""
+    app2RunPath<-getFileDescriptor(pageId)$filePath
+    #app2RunPath<-"/home/sup/svgRHabitat/ptR-Master/widget" # TODO!!! edit/refactor this
+    sendPtRManagerMessage(sender='cmd.electron', app2RunPath=app2RunPath, tabId=pageId)
+  }, label= "writeNRunApp")
+  
+  observeEvent(input$appStatus,{
+    if(identical(input$appStatus$mssg,'loaded')){
+      #appRunner$log<-""
+      appRunner$tabId<-input$appStatus$tabId
+      disable("writeNRunApp")
+    } else {
+      #appRunner$log<-""
+      enable("writeNRunApp")
+    }
+  }, label="appStatus")
+  
+  observeEvent(input$appLog,{
+    # cat('>---> input$appLog\n')
+    # cat("class(input$appLog$mssg )=" , class(input$appLog$mssg ), "\n")
+    appRunner$log<-c(appRunner$log, input$appLog$mssg)
+    # cat("input$appLog$mssg=" , input$appLog$mssg , "\n")
+    # cat(appRunner$log)
+    # cat('<---< input$appLog\n')
+  }, label="appLog")
+  
+}
+
 
 

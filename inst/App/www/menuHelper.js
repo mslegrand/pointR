@@ -1,4 +1,19 @@
-shinyjs.closeWindow = function() { window.close(); };
+
+
+shinyjs.closeWindow = function() { 
+  console.log('inside shinyjs.closeWindow');
+/*  if(!!window.sendToElectron ){ 
+    console.log('about to send confirmation');
+    var confirmation='no'; //window.sendExitConfirmation();
+    //window.ipcRenderer.sendSync('confirmExit', true);
+    console.log('confirmation recieved '+ JSON.stringify(confirmation));
+  }
+*/  
+  console.log('invoking window.close');
+  window.close();
+};
+
+
 
 shinyjs.disableTab = function(name) {
 var tab = $('.nav li a[data-value=' + name + ']');
