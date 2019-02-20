@@ -120,7 +120,7 @@ getRightMidPanel<-reactive({
   # cat(">---> getRightMidPanel\n")
   if(hasError()){
     rtv<-errorPanelTag
-  } else if (panels$sourceType %in% c( rmdPanelTag, textPanelTag, snippetPanelTag, javascriptPanelTag) ){
+  } else if (panels$sourceType %in% c( rmdPanelTag, textPanelTag, snippetPanelTag, javascriptPanelTag, appPanelTag) ){
     rtv<-panels$sourceType
   } else {
     rtv<-getPlotState()
@@ -141,6 +141,8 @@ getRightPanelChoices<-reactive({ # includes names of tibs
     sourceType<-getSourceType()
     if( identical(sourceType,RPanelTag) ){
       choices=RPanelTag
+    } else if( identical(sourceType,appPanelTag) ){
+      choices=appPanelTag
     } else if( identical(sourceType, rmdPanelTag) ){
       choices=c( rmdPanelTag, RPanelTag )
     } else if( identical(sourceType, snippetPanelTag ) ){

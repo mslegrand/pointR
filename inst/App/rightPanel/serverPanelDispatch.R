@@ -23,7 +23,7 @@ output$BottomRightPanel<-renderUI({
 })
 
 output$MidRightPanel<-renderUI({
-  
+  # cat(">---> output$MidRightPanel\n")
   chosenRightMidPanel<-getRightMidPanel()
   # cat("chosenRightMidPanel=",format(chosenRightMidPanel),"\n")
   if (chosenRightMidPanel=='point'){
@@ -46,9 +46,16 @@ output$MidRightPanel<-renderUI({
     # cat("chosenRightMidPanel=6\n")
     moduleLogUI("errLogMod", input, output)
   } else if (chosenRightMidPanel ==  RPanelTag ){
-     # cat('about to"capturedLogMod"\n')
+    # cat('about to"capturedLogMod"\n')
     # cat("chosenRightMidPanel=7\n")
     moduleLogUI("capturedLogMod", input, output)
+  } else if (chosenRightMidPanel ==  appPanelTag ){
+    if(usingElectron){
+      # cat('************ inside output$MidRightPanel: aptRunner***************\n')
+      moduleLogUI("aptRunnerLogMod", input, output)
+    } else {
+      div( img(src="ptR/pointRLogo.SVG") )
+    }
   } else if( chosenRightMidPanel == rmdPanelTag ){
     # cat("chosenRightMidPanel=8\n")
     modulePlotRmdUI("rmdMod", input, output)

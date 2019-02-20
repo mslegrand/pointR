@@ -27,6 +27,7 @@ reOrgPanels<-function(id, mode){
       showElement("BottomRightPanel")
       showElement("TopRightPanel")
       showElement("snippetToolBarContainer")
+      showElement("commitButton")
       showElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble
       addCssClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
       addCssClass( id= 'midRightPanels', class='ctop140')
@@ -41,6 +42,12 @@ reOrgPanels<-function(id, mode){
       }
       else{
         addCssClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
+      }
+      if(identical(mode,'app')){
+        removeCssClass( id= "runAppPanel", class="hiddenPanel")
+      }
+      else{
+        addCssClass( id= "runAppPanel", class="hiddenPanel")
       }
       if(mode %in% c('ptrrmd', 'dnippets')){
         showElement("commitButton")

@@ -15,10 +15,10 @@ moduleLog<-function(
   logMssgs
 ){
   output$out_log<-renderText({ 
-    if(panelName() %in% c( errorPanelTag, RPanelTag)){
+    if(panelName() %in% c( errorPanelTag, RPanelTag, appPanelTag)){
       txt<-logMssgs()
       if(length(txt)==0){
-        txt=""
+        txt="no text"
       }
       txt
     } else {

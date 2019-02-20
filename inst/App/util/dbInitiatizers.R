@@ -9,10 +9,6 @@ initialFileDescDB<-function(){tibble(
 }
 
 
-# initialDnippetsDBUsage<-function(){
-#   tibble(tabId='bogus')[0,]
-# }
-
 initialPreprocDB<-function(){
   points=tibble( tabId="bogus", tibName="bogus", ptColName='bogus', cmd="bogus", script='bogus')[0,]
   points

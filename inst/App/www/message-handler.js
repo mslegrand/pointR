@@ -4,3 +4,4 @@ Shiny.addCustomMessageHandler("testmessage",
     alert(JSON.stringify(message));
   }
 );
+
