@@ -42,6 +42,11 @@ observeEvent( input$editNavBar, {
       showModal(cloneProjModal())
       dirtyDMDM(session, "editNavBar")
     }
+    if(fileCmd=="newSimpleInputWidget"){
+      showModal(newProjShinyCntrlModal())
+      dirtyDMDM(session, "editNavBar")
+    }
+    
     if(fileCmd=="openProject"){ #-----open
       dirtyDMDM(session, "editNavBar") 
       cmdFileOpenProject()

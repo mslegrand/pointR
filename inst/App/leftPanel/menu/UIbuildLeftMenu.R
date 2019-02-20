@@ -28,7 +28,7 @@ buildLeftMenu<-function(version){
       menuDropdown('New Project',
         shinyDMDMenu::menuItem('New Basic Project', value='newBasicProject'),
         shinyDMDMenu::menuItem('Clone of Existing Project', value='newCloneProject'),
-        shinyDMDMenu::menuItem('svgR-based ShinyInput Control Project', value='customControl')
+        shinyDMDMenu::menuItem('svgR-based ShinyInput Control', value='newSimpleInputWidget')
       ),
       menuDropdown("Recent Projects"),
       menuDivider(),
@@ -51,7 +51,7 @@ buildLeftMenu<-function(version){
       shinyDMDMenu::menuItem("Close All Files", value="closeAll"),
       shinyDMDMenu::menuItem("Close Project", value="closeProject"),
       menuDivider(),
-      shinyDMDMenu::menuItem("Quit", value="quit")
+      shinyDMDMenu::menuItem("Quit", value="quit", id='ptRQuit')
     ),
     # menuDropdown('Tibble',
     #              shinyDMDMenu::menuItem('New Tibble', value='cmdNewTibble'),

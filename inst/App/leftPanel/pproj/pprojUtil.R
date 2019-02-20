@@ -103,7 +103,7 @@ resetShinyFilesIOPaths<-function(pathToProj){
 }
 
 
-setUpProj<-function(projName, pathToProj, projType="generic"){
+setUpProj<-function(projName, pathToProj, projType="generic"){ #currently projType not used 
   editOption$currentProjectDirectory=pathToProj
   editOption$currentProjectName=projName
   # setwd(pathToProj) # do this in getDirPath instead???
