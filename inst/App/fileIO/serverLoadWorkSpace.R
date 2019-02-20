@@ -22,7 +22,8 @@ restoreWorkSpace<-reactive({
     # A. assign tabIds to each page
     id=basename(filePath)
     wsPages[[id]]<-page
-  } 
+  }
+  #browser()
  
    extractDBFromPages<-function(wsPages, pattern, initTib){
     rtv<-lapply(wsPages, function(page){
@@ -56,7 +57,16 @@ restoreWorkSpace<-reactive({
     }
     
     fileSaveStatus=page$fileDescriptor.isSaved
-    txt=page$code 
+    txt=page$code
+    if(fileSaveStatus==TRUE && file.exists(docFilePath)){ 
+      tryCatch(
+        {txt<-paste(readLines(docFilePath), collapse="\n")},
+        error=function(e){
+          cat("Unable to read file:", paste(e, collapse="\n"))
+        }
+      )
+    } 
+     
     
     
     if(!identical(docFilePath, "?")){
