@@ -27,6 +27,12 @@ color: #00ffff;
 border-radius: 24px; 
 font-size: 12px;
 }
+.btn:disabled{
+background-color: #222244; 
+color: #008888; 
+border-radius: 24px; 
+font-size: 12px;
+}
 .backPanel{
 background-color: #4f6a8c; 
 padding-top: 0;
