@@ -17,7 +17,7 @@ processCommit<-reactive({
   cat_list<<-c( cat_list,">---> processCommit\n")
   clearErrorMssg()
   
-  mode<-getMode()
+  mode<-getModeX()
   if(length(mode)==0){
     browser()
     return(NULL)
@@ -38,8 +38,9 @@ processCommit<-reactive({
   } 
   else if (identical(mode, 'javascript')){
     setSourceType(javascriptPanelTag)
-    # do nothing
-    # cat('mode is javascript\n')
+  }
+  else if (identical(mode, 'app')){
+    setSourceType(appPanelTag)
   }
   else {
     browser()

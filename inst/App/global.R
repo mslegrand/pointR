@@ -58,6 +58,7 @@ rmdPanelTag<-'rmdPanel'
 textPanelTag<-'textPanel'
 javascriptPanelTag<-'javascriptPanel'
 snippetPanelTag<-'snippetPanel'
+appPanelTag<-'appPanel'
 tibTag<-'tib'
 
 

@@ -43,16 +43,38 @@ getMode<-reactive({
     fd<-fileDescDB()
     stopifnot('tabId' %in% names(fd))
     mode<-fd[fd$tabId==input$pages,]$mode
-    # if(identical(mode,'txt')){ #temp kludge for 'txt'
-    #   mode<-'text' 
-    #   fd[fd$tabId== input$pages,"mode"]<-mode
-    # }
+    
   }
-  # cat('mode is ', format(mode),"\n")
-  # cat('<---< getMode\n')
   mode
 })
-  
+
+# in getModeX we need to insert flag to enable/disable appmode
+# we could use shinyjs to query a property of a (hidden) node?
+# or use ptR.js to do an on.change ?
+# Or update a reactive on change of a given node or property
+getModeX<-reactive({
+  cat(">---> getModeX\n")
+  pageId<-input$pages 
+  if(is.null(pageId) || identical(pageId, 'bogus')){
+    mode<-NULL
+  } else {
+    fd<-fileDescDB()
+    stopifnot('tabId' %in% names(fd))
+    mode<-fd[fd$tabId==pageId,]$mode
+    if(identical(mode,'ptr')){
+      docFilePath<-fd[fd$tabId== pageId,]$filePath
+      if(!is.null(docFilePath) && !is.na(docFilePath)){
+        docFilePath<-tolower(basename(docFilePath))
+        if(identical(docFilePath,'app.r')){
+          mode<-'app'
+        }
+      }
+    }
+  }
+  cat('mode=', format(mode),"\n")
+  cat("<---< getModeX\n")
+  mode
+})  
 
 getFileDescriptor<-function(pageId){ 
   # cat('>---> getFileDescriptor\n')

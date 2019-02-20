@@ -38,7 +38,7 @@ processMssgFromAceMssgPageIn<-function(sender, mssg){
          # cat("--restoreAssetState\n")
         processCommit() # this sets the sourceType
         # cat('--reOrgPanels')
-        reOrgPanels(id=mssg$id, mode= getMode() )
+        reOrgPanels(id=mssg$id, mode= getModeX() )
         restoreAssetState(input$pages) #copies from db to assetSelection
         # browser()
          # cat('--savePage\n')
@@ -48,7 +48,7 @@ processMssgFromAceMssgPageIn<-function(sender, mssg){
       } else{ # case: length(input$pages)==0 || identical(selectedAsset$tabId, input$pages) ==TRUE
         
       }
-      reOrgPanels(id=mssg$id, mode= getMode() ) 
+      reOrgPanels(id=mssg$id, mode= getModeX() ) 
       
       # end assetUpdate:
     } 

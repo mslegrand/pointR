@@ -37,7 +37,7 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
             selectionList<-reactiveValuesToList(selectedAsset, all.names=TRUE)
           }
           processCommit() # this sets the sourceType
-          reOrgPanels(id=mssg$id, mode= getMode() )
+          reOrgPanels(id=mssg$id, mode= getModeX() )
           storeAssetState()
         }
         setTrigger('redraw')

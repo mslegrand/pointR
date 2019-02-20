@@ -32,7 +32,7 @@ observeEvent(c( getDnippetsAll(), dnippetsDB$usage, input$pages),{
     }
   }
   
-  if(length(input$pages) && length(getDnippetsAll())>0 && identical(getMode(),'ptr') ){
+  if(length(input$pages) && length(getDnippetsAll())>0 && identical(getModeX(),'ptr') ){
     showElement('selectedDnippetButtonBoxContainer')
   } else {
     hideElement('selectedDnippetButtonBoxContainer')
