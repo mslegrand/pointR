@@ -139,6 +139,7 @@ shinyServer(function(input, output,session) {
   source("leftPanel/pproj/pprojUtil.R",                         local=TRUE)  
   source("leftPanel/pproj/pprojNew.R",                          local=TRUE)  
   source("leftPanel/pproj/pprojModalClone.R",                   local=TRUE)  
+  source("leftPanel/pproj/pprojModalNewCntrl.R",                   local=TRUE)  
   
   source("leftPanel/pproj/pprojOpen.R",                         local=TRUE)   
   source("leftPanel/pproj/pprojClose.R",                        local=TRUE)  
@@ -191,6 +192,7 @@ shinyServer(function(input, output,session) {
   #            "writeOptionsJSON")
   #on.exit(rm(list=list(tmpVars)))
   
+
   exportTestValues( request.sender=request$sender)
   exportTestValues(request.code=request$code)
   exportTestValues(selectedAsset.tabId=selectedAsset$tabId)
