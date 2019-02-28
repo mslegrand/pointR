@@ -7,7 +7,7 @@ cmdSVGHelp<-function(query){
 #----trigger help popup from F1
 observeEvent(input$helpMssg, {
   query<-input$helpMssg$query
-  editorId<-input$editorId # !!! NOT USED
+  # editorId<-input$editorId # !!! NOT USED
   if(length(query)>0 && nchar(query)>0){
     helpsvgR$html<-svgQueryTopic2Help(query)
     showModal( modalHelp() )
@@ -139,6 +139,8 @@ svgQueryTopic2Help<-function(query){
     )
     close(txtConnection)
   }
+  # browser()
+  html[1]<-sub("<title>R: Element Generators Indexed by Category</title>", "", html[1])
   html<-paste(html,collapse="\n")
   html
   
