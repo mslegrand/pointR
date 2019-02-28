@@ -79,12 +79,21 @@ buildLeftMenu<-function(version){
       "Help",
       shinyDMDMenu::menuItem("Editor ShortCuts"),
       shinyDMDMenu::menuItem("Element Reference"),
-      menuDropdown(
-        "Useful Links", 
-        shinyDMDMenu::menuItem(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/User_Guide.html\"  target=\"_blank\" >svgR User Guide </a></li>")),
-        shinyDMDMenu::menuItem(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/\"  target=\"_blank\" >io.svgR</a></li>")),
-        shinyDMDMenu::menuItem(HTML("<li><a  href=\"https://www.w3.org/TR/SVG/intro.html\"  target=\"_blank\" >W3C SVG reference</a></li>"))
-      ),
+      if(usingElectron){
+        menuDropdown(
+          "Useful Links", 
+          shinyDMDMenu::menuItem(HTML("svgR User Guide")),
+          shinyDMDMenu::menuItem(HTML("io.svgR")),
+          shinyDMDMenu::menuItem(HTML("W3C SVG reference"))
+        )
+      } else{
+        menuDropdown(
+          "Useful Links", 
+          shinyDMDMenu::menuItem(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/User_Guide.html\"  target=\"_blank\" >svgR User Guide </a></li>")),
+          shinyDMDMenu::menuItem(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/\"  target=\"_blank\" >io.svgR</a></li>")),
+          shinyDMDMenu::menuItem(HTML("<li><a  href=\"https://www.w3.org/TR/SVG/intro.html\"  target=\"_blank\" >W3C SVG reference</a></li>"))
+        )
+      },
       shinyDMDMenu::menuItem("About", value="aboutCmd")
     ), 
     menuItem('project: none',value="project")

@@ -181,10 +181,27 @@ observeEvent( input$editNavBar, {
       dirtyDMDM(session, "editNavBar")
     }
     
-
     if(fileCmd=="aboutCmd"){
       cmdAbout()
       dirtyDMDM(session, "editNavBar")
+    }
+    
+    if(usingElectron){
+      if(identical(fileCmd,"svgR User Guide")){
+        href='http://mslegrand.github.io/svgR/User_Guide.html'
+        sendPtRManagerMessage(sender='cmd.electron', openLink= href)
+        dirtyDMDM(session, "editNavBar")
+      }
+      if(identical(fileCmd,"io.svgR")){
+        href='http://mslegrand.github.io/svgR'
+        sendPtRManagerMessage(sender='cmd.electron',  openLink= href)
+        dirtyDMDM(session, "editNavBar")
+      }
+      if(identical(fileCmd,"W3C SVG reference")){
+        href='https://www.w3.org/TR/SVG/intro.html'
+        sendPtRManagerMessage(sender='cmd.electron',  openLink= href)
+        dirtyDMDM(session, "editNavBar")
+      }
     }
     
     if(grepl("recentFile-",fileCmd)){
