@@ -196,5 +196,9 @@ shinyServer(function(input, output,session) {
   exportTestValues( request.sender=request$sender)
   exportTestValues(request.code=request$code)
   exportTestValues(selectedAsset.tabId=selectedAsset$tabId)
+  if(usingElectron){
+    sendPtRManagerMessage(sender='cmd.electron', version=version)
+  } 
+  
   
 })

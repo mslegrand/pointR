@@ -38,6 +38,11 @@ Shiny.addCustomMessageHandler(
           window.sendToElectron('cmdAppRun',data.app2RunPath, data.tabId);
         }
       }
+      if(!!data.version){
+        if(!!window.sendToElectron){
+          window.sendToElectron('cmdSetTitle','pointR --Version:', data.version);
+        }
+      }
     }
     if(data.sender==="closePtRWindowNow"){
       console.log('inside data.closePtRWindowNow');

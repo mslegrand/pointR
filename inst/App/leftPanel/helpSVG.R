@@ -139,7 +139,7 @@ svgQueryTopic2Help<-function(query){
     )
     close(txtConnection)
   }
-  # browser()
+  
   html[1]<-sub("<title>R: Element Generators Indexed by Category</title>", "", html[1])
   html<-paste(html,collapse="\n")
   html

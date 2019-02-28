@@ -38,7 +38,6 @@ shinyUI(
         tags$script(src = 'ptR/snippetScroll.js' ),
         tags$script(src = 'ptR/rowScroll.js' ),
         tags$script(src = 'ptR/ptRManager.js' )
-        
       )
     ),
     
@@ -57,7 +56,7 @@ shinyUI(
           genShinyOpenFilesButtons(),
           genShinySaveFilesButtons(),
           #-----left menu begin---------------
-          buildLeftMenu(version),
+          buildLeftMenu(if(usingElectron){""} else {version}),
           #-------left menu end------------
           #-------left content begin--------
 

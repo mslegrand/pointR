@@ -3,7 +3,7 @@
 
 .global <- new.env()
 
-version="v.0.3.9.17"
+version=paste0("v.", read.dcf(system.file('DESCRIPTION', package='pointR'))[,'Version'])
 
 
 
