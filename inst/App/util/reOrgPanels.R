@@ -32,6 +32,7 @@ reOrgPanels<-function(id, mode){
       addCssClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
       if(usingElectron){
         addCssClass( id= "runAppPanel", class="hiddenPanel")
+        addCssClass( id= "stopAppPanel", class="hiddenPanel")
       }
       addCssClass( id= 'midRightPanels', class='ctop140')
     } else { # editing other: 'ptrrmd', 'snippets', 'dnippets', 'text', 'javascript'
@@ -48,10 +49,12 @@ reOrgPanels<-function(id, mode){
       }
       if(usingElectron){
         if(identical(mode,'app')){
-          removeCssClass( id= "runAppPanel", class="hiddenPanel")
+          removeCssClass( id= "runAppPanel", class="hiddenPanel") 
+          removeCssClass( id= "stopAppPanel", class="hiddenPanel")
         }
         else{
           addCssClass( id= "runAppPanel", class="hiddenPanel")
+          addCssClass( id= "stopAppPanel", class="hiddenPanel")
         }
       }
       if(mode %in% c('ptrrmd', 'dnippets')){

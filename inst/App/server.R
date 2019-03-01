@@ -198,6 +198,7 @@ shinyServer(function(input, output,session) {
   exportTestValues(selectedAsset.tabId=selectedAsset$tabId)
   if(usingElectron){
     sendPtRManagerMessage(sender='cmd.electron', version=version)
+    disable("stopShinyApp")
   } 
   
   

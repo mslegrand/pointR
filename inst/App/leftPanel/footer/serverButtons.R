@@ -35,15 +35,27 @@ if(usingElectron){
     #app2RunPath<-"/home/sup/svgRHabitat/ptR-Master/widget" # TODO!!! edit/refactor this
     sendPtRManagerMessage(sender='cmd.electron', app2RunPath=app2RunPath, tabId=pageId)
   }, label= "writeNRunApp")
+ 
+  observeEvent(input$stopShinyApp ,{
+    # cat('>-----> input$writeNRunApp')
+    # pageId<-input$pages
+    # appRunner$tabId<-pageId
+    # appRunner$log<-""
+    #app2RunPath<-getFileDescriptor(pageId)$filePath
+    #app2RunPath<-"/home/sup/svgRHabitat/ptR-Master/widget" # TODO!!! edit/refactor this
+    sendPtRManagerMessage(sender='cmd.electron', app2stop=appRunner$tabId)
+  }, label= "stopShinyApp")
   
   observeEvent(input$appStatus,{
     if(identical(input$appStatus$mssg,'loaded')){
       #appRunner$log<-""
       appRunner$tabId<-input$appStatus$tabId
       disable("writeNRunApp")
+      enable("stopShinyApp")
     } else {
       #appRunner$log<-""
       enable("writeNRunApp")
+      disable("stopShinyApp")
     }
   }, label="appStatus")
   

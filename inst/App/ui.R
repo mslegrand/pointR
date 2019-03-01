@@ -92,9 +92,15 @@ shinyUI(
              ),
              if(usingElectron){
                absolutePanel( id='runAppPanel', left=5, bottom=0,   class='hiddenPanel',
-                              actionButton("writeNRunApp", label = "Run App") %>% bs_embed_tooltip(title = "Save then Run App"))
+                              actionButton("writeNRunApp", label = "Run App") %>% bs_embed_tooltip(title = "Save and then Run App")
+               )
              },
-             absolutePanel( left=150, bottom=-10,
+             if(usingElectron){
+               absolutePanel( id='stopAppPanel', left=150, bottom=0,   class='hiddenPanel',
+                              actionButton("stopShinyApp", label = "Stop App", style="font-weight: 800; color: white; background-color: red; ") %>% bs_embed_tooltip(title = "Stop Shiny App")
+              )
+             },
+             absolutePanel( left=180, bottom=-10,
                awesomeRadio('useTribble', NULL, choices=c('Tribble','Tibble'),
                                     selected = "Tribble", 
                                     inline = TRUE, status='success')
