@@ -1,6 +1,6 @@
 # pointR
 
-**pointR** is a *shiny-based* minimalist ide for R scripting using svgR
+**pointR** is an R package providing a *shiny-based* minimalist ide for R scripting using svgR
 - ***Videos on pointR*** can be found at http://mslegrand.github.io/pointRmedia/.
 - ***Related information*** can be found at http://mslegrand.github.io/svgR/.
 - ***Rambling thoughts*** can be found on the wiki at https://github.com/mslegrand/pointR/wiki
