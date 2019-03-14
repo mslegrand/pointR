@@ -67,4 +67,15 @@ observeEvent(input$pages,{
 }, ignoreNULL = TRUE, label='input-pages-tibble-choice')
 
 
+# need to toggle "tribblePanel" visibility 
+# using existences of ptDefs in code.
+
+observeEvent(getPtDefs(),{
+  if(length(names(getPtDefs()$tib))==0){
+    hideElement('tribblePanel')
+  } else {
+    showElement('tribblePanel')
+  }
+})
+
 
