@@ -25,7 +25,9 @@ newPage<-function(tabId, title, txt, docFilePath, mode,  fileSaveStatus ){
   #   title=paste('Anonymous', page$fileDescriptor.anonNo)
   # }
   # cat('newPage mode= ',format(mode),'\n')
-  if(mode=='ptr'){
+  cat('title=',title,"\n")
+  if(mode=='ptr' && !title %in% c('app.R','App.R')){
+    
     divClass="cAceContainer"
   } else {
     divClass="cAceRmdContainer"

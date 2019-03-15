@@ -25,7 +25,7 @@ storeAssetState<-function(){
   }
   selectionList[sapply(selectionList,is.null)]<-NA
   tmp1<-filter(serverAssetDB$tib, tabId!=selectionList$tabId)
-  serverAssetDB$tib<-bind_rows(tmp1, as.tibble(selectionList))
+  serverAssetDB$tib<-bind_rows(tmp1, as_tibble(selectionList))
   # cat("<----< storeAssetState\n")
 }
 
