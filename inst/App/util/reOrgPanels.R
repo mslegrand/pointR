@@ -2,9 +2,7 @@
 
 
 reOrgPanels<-function(id, mode){
-  # cat(">---> reOrgPanels\n")
-  # cat('id=',format(id),"\n")
-  # cat('mode=',format(mode),"\n")
+  log.fin(reOrgPanels)
   if(length(id)==0 || length(mode)==0){
     
     hideElement("TopRightPanel")
@@ -68,5 +66,5 @@ reOrgPanels<-function(id, mode){
     showElement("aceTabSet")
     showElement("midRightPanels")
   }
-  # cat("<---< reOrgPanels\n")
+  log.fout(reOrgPanels)
 }
