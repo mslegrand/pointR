@@ -21,6 +21,13 @@ optionDirPath<-function(){
   dirPath
 }
 
+# we might want to move this under the server
+writeOptionsJSON<-function(opts){
+  file<-paste(optionDirPath(),"ptRProfile.json", sep="/")
+  write_json(opts, file, pretty=4)
+}
+
+
 # Load initial options to the global defaultOpts 
 # prior to the the running the session
 # Subsequently the reactive editOption will be 
@@ -54,15 +61,34 @@ readOptionsJSON<-function(){
   opts
 } #execute now!
 
-defaultOpts<-readOptionsJSON() #this is the intial user options
 
-
+defaultOpts<-readOptionsJSON() #this is the initial user options
 
 if(!is.null(getShinyOption("initialPointRProject"))){
   initialPointRProject<-getShinyOption("initialPointRProject")
   defaultOpts$currentProjectName<-basename(initialPointRProject)
   defaultOpts$currentProjectDirectory<-dirname(initialPointRProject)
 }
+
+initialProj<-NULL
+# check on defaultOptsProject existence
+if(is.null(defaultOpts$currentProjectName) || 
+   is.null(defaultOpts$currentProjectDirectory) ||
+  !file.exists(file.path(defaultOpts$currentProjectDirectory, defaultOpts$currentProjectName))
+  ){
+    defaultOpts$currentProjectName<-NULL
+    defaultOpts$currentProjectDirectory<-NULL
+} else {
+  try({
+     fullpathProjName=file.path(defaultOpts$currentProjectDirectory, defaultOpts$currentProjectName)
+     initialProj<-read_json(fullpathProjName) 
+  })
+}
+  
+
+
+# server will copy defaultOpts to reactiveValue: editOption
+
 
 if(!is.null(getShinyOption("electron"))){
   usingElectron<-TRUE
@@ -74,11 +100,6 @@ if(!is.null(getShinyOption("electron"))){
 
 
 
-# we might want to move this under the server
-writeOptionsJSON<-function(opts){
-  file<-paste(optionDirPath(),"ptRProfile.json", sep="/")
-  write_json(opts, file, pretty=4)
-}
 
 
 # used by loader

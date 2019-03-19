@@ -2,6 +2,7 @@
 
 
 reOrgPanels<-function(id, mode){
+ 
   log.fin(reOrgPanels)
   if(length(id)==0 || length(mode)==0){
     

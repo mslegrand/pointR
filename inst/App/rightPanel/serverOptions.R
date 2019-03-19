@@ -2,7 +2,11 @@
 editOption<-do.call(reactiveValues, defaultOpts)
 #editOption$.saved=TRUE
 
-pprj<-reactiveVal(NULL)
+# if there is a project, we should read and initialize pprj
+# we could use openProj to get the value, or ?
+
+
+pprj<-reactiveVal(initialProj)
 
 #' getDirPath returns the path to the project, or .ptR if no project
 #' used by 

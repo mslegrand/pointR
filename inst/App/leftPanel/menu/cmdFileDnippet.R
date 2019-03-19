@@ -5,6 +5,8 @@ cmdDnippetImport<-function(){
 
 # loads the drippets given the datapath
 # then calls addDrippets to add to drippet toolbar
+# 1. wrap in  tryCatch
+# 2. if dn name is sampleShapes , read from App/templates
 loadDndSnippets<-function(datapath, startup=FALSE){
   # cat('>---> loadDndSnippets\n')
   dnippetText<-paste(readLines(datapath), collapse = "\n")
