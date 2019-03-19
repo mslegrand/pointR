@@ -1,6 +1,6 @@
 
 newProj<-function(projName, parentDir, projType="generic"){
-    # cat('>---> newProj\n')
+    log.fin(newProj)
     
     closeCurrentProj()
     # todo!!! test for write permissions
@@ -30,6 +30,6 @@ newProj<-function(projName, parentDir, projType="generic"){
     setUpProj(projName, pathToProj, projType="generic")
     #6 invoke startup
     request$sender<-'startup'
-
+    log.fout(newProj)
 } 
 

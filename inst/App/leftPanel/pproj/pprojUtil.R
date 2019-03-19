@@ -11,22 +11,15 @@
 # - observeEvent of *customFileDialog*
 #  for the time being we just close
 closeCurrentProj<-function(){
-  # cat('>---> closeCurrentProj\n')
+
   saveDnippetsFileNames() 
   savePage(input$pages)
-  # browser()
+
   pprj(NULL)
   if(!is.null(editOption$currentProjectName)){
     addToRecentProjects(editOption$currentProjectDirectory, editOption$currentProjectName )
   }
-  # iterate throug open tabs and close
-  # addToRecentFiles(mssg$docFilePath)
-  #save editOptions
   
-  # if(!is.null(editOption$currentProjectName)){
-  #   #opts$recentProjects<-c(opts$recentProjects,opts$currentProjectName)
-  #   editOption$currentProjectName<-NULL
-  # }
   opts<-isolate(reactiveValuesToList((editOption)))
   opts<-sapply(opts,unlist, USE.NAMES = T, simplify = F )
   writeOptionsJSON(opts)
@@ -38,7 +31,7 @@ closeCurrentProj<-function(){
     removeTab(inputId = "pages", tabId)
   }  
   # reinit dbs
-  #dnippetsDB$usage<-initialDnippetsDBUsage()
+
   resetDnippetsDB()
   preProcDB$points<-initialPreprocDB()
   fileDescDB(initialFileDescDB())
@@ -47,11 +40,10 @@ closeCurrentProj<-function(){
   backDropDB( initialBackDropDB() )
   svgGridDB( initialSvgGridDB() )
   serverAssetDB$tib<-initialServerAsset()
-  # cat('<---< closeCurrentProj\n')
+
 }
 
 setSfDir<-function(sf_id, path, root="home"){
-  # cat("sf_id=",sf_id,'path=',format(path),"\n")
   if(is.null(path)){
     jscode<-paste0(
       'Shiny.onInputChange("',sf_id,'-modal", {null} );'
@@ -67,25 +59,19 @@ setSfDir<-function(sf_id, path, root="home"){
       '],"root":"home"});'
     )
   }
-   # cat(jscode,"\n")
   jscode
 }
 
 # called whenever dirPath changes
 # sets shinyFiles to use pathToProj
 resetShinyFilesIOPaths<-function(pathToProj){
-  # cat( ">---> resetShinyFilesIOPaths\n")
-  # cat('1 pathToProj=', format(pathToProj),"\n")
-  # browser()
+  log.fin(resetShinyFilesIOPaths)
   if( identical(pathToProj, optionDirPath())){ # optionDirPath is the .ptR directory
     pathToProj<-path_home()
   } else {
     pathToProj<-path_rel(pathToProj, path_home() )
     pathToProj<-paste0("~/",pathToProj) # do we really want to do this???
   }
-  
-  # cat('2 pathToProj=', format(pathToProj),"\n")
-  
   fileIOIds<-c("buttonFileOpen", "buttonSnippetImport","buttonDnippetImport", "buttonFileSaveR",
                "buttonPreProcPtImport","buttonExportSVG","buttonExportPreproc")
   # first set to root
@@ -99,7 +85,7 @@ resetShinyFilesIOPaths<-function(pathToProj){
     jscode<-setSfDir(id, path=pathToProj)
     runjs(jscode)
   }
-  # cat( "<---< resetShinyFilesIOPaths\n")
+  log.fout(resetShinyFilesIOPaths)
 }
 
 
