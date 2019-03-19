@@ -1,15 +1,11 @@
 
 #restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir(), pprjPath=getProjectFullPath(), session=getSession() ){
 restoreWorkSpace<-reactive({
-  # cat('>---> restoreWorkSpace\n')
   
   workSpaceDir=getWorkSpaceDir()
   prjPath=getProjectFullPath()
   fileWSPaths<-dir(workSpaceDir, pattern='PTR-TABID', full.names = T)
   if(length(fileWSPaths)==0){
-    # cat("workSpaceDir = ",format(workSpaceDir), "\n")
-    # cat(" length(fileWSPaths)==0 \n")
-    # cat('<---< restoreWorkSpace\n')
     return(NULL)
   }
   wsPages<-list()
@@ -23,7 +19,7 @@ restoreWorkSpace<-reactive({
     id=basename(filePath)
     wsPages[[id]]<-page
   }
-  #browser()
+  
  
    extractDBFromPages<-function(wsPages, pattern, initTib){
     rtv<-lapply(wsPages, function(page){
@@ -47,7 +43,6 @@ restoreWorkSpace<-reactive({
     # extract the serverAsset portion and add
     
     tabId=page$fileDescriptor.tabId
-    # cat('page$fileDescriptor.tabId=',format(page$fileDescriptor.tabId),"\n")
     
     mode=page$fileDescriptor.mode
     docFilePath=page$fileDescriptor.filePath
@@ -67,8 +62,6 @@ restoreWorkSpace<-reactive({
       )
     } 
      
-    
-    
     if(!identical(docFilePath, "?")){
       title=basename(docFilePath)
     } else {
@@ -108,7 +101,6 @@ restoreWorkSpace<-reactive({
     write_json(ptRproj, fullpathProjName) 
   } 
   
-  # cat('<---< restoreWorkSpace\n')
   return(aceId)
 })
   

@@ -1,11 +1,7 @@
-# initialized by defaultOpts in configIO.R
+# defaultOpts initialized  in configIO.R
 editOption<-do.call(reactiveValues, defaultOpts)
-#editOption$.saved=TRUE
 
-# if there is a project, we should read and initialize pprj
-# we could use openProj to get the value, or ?
-
-
+# defauinitialProjltOpts initialized  in configIO.R
 pprj<-reactiveVal(initialProj)
 
 #' getDirPath returns the path to the project, or .ptR if no project
@@ -16,9 +12,6 @@ pprj<-reactiveVal(initialProj)
 #'  4 savePage
 #'  
 getDirPath<-reactive({
-  # cat('editOption$currentProjectName=',      editOption$currentProjectName, "\n")
-  # cat('editOption$currentProjectDirectory=', editOption$currentProjectDirectory, "\n")
-  # cat('>---> getDirPath\n')
   if(!is.null(editOption$currentProjectName) && !is.null(editOption$currentProjectDirectory)){
     dirPath<-editOption$currentProjectDirectory
     if(!file.exists(dirPath)){
@@ -29,14 +22,11 @@ getDirPath<-reactive({
   } else {
     dirPath<-optionDirPath()
   }
-  # cat('<---< getDirPath\n')
   dirPath
 })
 
 observeEvent(getDirPath(),{
-  # cat('\n>---> observeEvent getDirPath()\n')
     resetShinyFilesIOPaths(getDirPath())
-  # cat('<---< observeEvent getDirPath()\n\n')
 })
 
 getWorkSpaceDir<-reactive({
@@ -46,7 +36,6 @@ getWorkSpaceDir<-reactive({
 
 getProjectFullPath<-reactive({
   if(!is.null(editOption$currentProjectName) && !is.null(editOption$currentProjectDirectory)){
-    #projName<-paste0(editOption$currentProjectName, ".pprj")
     file.path(editOption$currentProjectDirectory, editOption$currentProjectName)
   } else {
     NULL
