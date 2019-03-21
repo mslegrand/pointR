@@ -8,17 +8,11 @@ cmdFileNewPtR<-function(fileCmd="newPtrTibScript"){
     templateName<-templateChoices[[fileCmd]]
     src<-fileTemplates[[ templateName ]] #ptR template
     tabName<-getNextAnonymousFileName()
-    #aceId<-tabName2AceId(tabId)
-    # cat('cmdFileNewPtR:: addFileTab\n')
+    
     tabId<-addFileTab(title=tabName, txt=src,  docFilePath="?", mode='ptr',fileSaveStatus=FALSE)
-    # cat('cmdFileNewPtR:: delay\n')
-    # delay(500, 
-    #   {cat('updateAceExt:: delay\n')
-    # cat('tabId...', format(tabId),'\n')
+    
     aceId<-tabID2aceID(tabId)
-    # updateAceExt(id=aceId, sender='cmd.file.new', getValue= TRUE,  ok=TRUE, selector=list(name='x') )
-      #}
-    # )
+    
     mssg$error<-""
 }
 
@@ -27,9 +21,7 @@ cmdFileNewRmd<-function(){
   src<-sub('\ndate: "TODAY"', paste0('\ndate: "', Sys.Date(),'"'), src)
   tabName<-getNextAnonymousFileName()
   addFileTab(title=tabName, txt=src,  docFilePath="?", mode='ptrrmd', fileSaveStatus=FALSE)
-  # delay(500,
-  #       updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
-  # )
+ 
   mssg$error<-""
 }
 
@@ -38,21 +30,17 @@ cmdFileNewIOSlides<-function(){
   src<-sub('\ndate: "TODAY"', paste0('\ndate: "', Sys.Date(),'"'), src)
   tabName<-getNextAnonymousFileName()
   addFileTab(title=tabName, txt=src,  docFilePath="?", mode='ptrrmd', fileSaveStatus=FALSE)
-  # delay(500,
-  #       updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
-  # )
+  
   mssg$error<-""
 }
 
 
 cmdFileNewSnippet<-function(){
-  # cat('cmdFileNewSnippet\n')
+  
   src<-fileTemplates[[ "snippetTemplate.snippets" ]] #rmdTemplate
   tabName<-getNextAnonymousFileName()
   addFileTab(title=tabName, txt=src,  docFilePath="?", mode='snippets', fileSaveStatus=FALSE)
-  # delay(500,
-  #       updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
-  # )
+  
   mssg$error<-""
 }
 
@@ -60,9 +48,7 @@ cmdFileNewTxt<-function(){
   src<-"A plain text document"
   tabName<-getNextAnonymousFileName()
   addFileTab(title=tabName, txt=src,  docFilePath="?", mode='text', fileSaveStatus=FALSE)
-  # delay(500,
-  #       updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
-  # )
+  
   mssg$error<-""
 }
 
@@ -70,9 +56,7 @@ cmdFileNewJavascript<-function(){
   src<-"// Javascript"
   tabName<-getNextAnonymousFileName()
   addFileTab(title=tabName, txt=src,  docFilePath="?", mode='javascript', fileSaveStatus=FALSE)
-  # delay(500,
-  #       updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
-  # )
+  
   mssg$error<-""
 }
 
@@ -81,10 +65,7 @@ cmdDndSnippetNew<-function(){
   src<-sub('\ndate: "TODAY"', paste0('\ndate:\ndate: "', Sys.Date(),'"'), src)
   tabName<-getNextAnonymousFileName()
   addFileTab(title=tabName, txt=src,  docFilePath="?", mode='dnippets', fileSaveStatus=FALSE)
-  # delay(500,
-  #       updateAceExt(id=  getAceEditorId(), sender='cmd.file.new', getValue= TRUE,  ok=TRUE )
-  # )
-  mssg$error<-""
+  #  mssg$error<-""
 }
 
 
