@@ -81,7 +81,7 @@ if(is.null(defaultOpts$currentProjectName) ||
 } else {
   try({
      fullpathProjName=file.path(defaultOpts$currentProjectDirectory, defaultOpts$currentProjectName)
-     initialProj<-read_json(fullpathProjName) 
+     initialProj<-read_json(fullpathProjName, simplifyVector = TRUE) 
   })
 }
   

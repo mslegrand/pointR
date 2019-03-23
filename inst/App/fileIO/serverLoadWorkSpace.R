@@ -98,7 +98,7 @@ restoreWorkSpace<-reactive({
     ptRproj$pathToProj<-editOption$currentProjectDirectory
     ptRproj$projName<-editOption$currentProjectName
     fullpathProjName=file.path(ptRproj$pathToProj, ptRproj$projName)
-    write_json(ptRproj, fullpathProjName) 
+    write_json(ptRproj, fullpathProjName, pretty=4) 
   } 
   
   return(aceId)

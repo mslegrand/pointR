@@ -32,6 +32,31 @@ observeEvent(input$buttonDnippetImport,{
   if(length(fp.dt)>0 && nrow(fp.dt)){
     datapath<-as.character(fp.dt$datapath[1])
     datapath<-gsub(pattern = '^NA/', "~/", datapath)
-    loadDndSnippets(datapath)
+    # if this is a project, copy to resource
+    ptRproj<-pprj()
+    if(!is.null(ptRproj$pathToProj) && dir.exists( ptRproj$pathToProj )){
+      
+      resourceDir<-path_join(c(editOption$currentProjectDirectory,'resources'))
+      if(!dir.exists(resourceDir)){
+        dir.create(resourceDir) # eventuall will remove this.
+      }
+      # copy over
+      file.copy(datapath, resourceDir)
+      
+      # add to loadedDnippets.rda
+      # fileName=path_join(c(path,'loadedDnippets.rda'))
+      # add to dnippet db
+      dname=path_file(datapath)
+      dndspath<-path_join(c(resourceDir,dname))
+      add2DnippetDBPath(dname, dndspath)
+      # save database
+      saveDnippetsFileNames()
+      #load
+      loadDndSnippets(dndspath)
+    } else { # not a project
+      loadDndSnippets(datapath) # !!! need to rethink this
+    }
+    
+    
   }
 })

@@ -11,7 +11,7 @@ openProj<-function(projName, pathToProj, projType="generic"){
     closeCurrentProj() # this needs to complete prior to loading new proj
     pathToProj<-gsub(pattern = '^NA/', "~/", pathToProj)
     fullpathProjName=file.path(pathToProj, projName)
-    ptRproj<-read_json(fullpathProjName) 
+    ptRproj<-read_json(fullpathProjName, simplifyVector = TRUE) 
     pprj(ptRproj)
     setUpProj(projName, pathToProj, projType=projType)
     #invoke startup

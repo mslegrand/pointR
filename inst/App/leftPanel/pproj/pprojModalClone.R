@@ -125,7 +125,7 @@ observeEvent(input$modalCloneProjOk, {
       pathToProjParent=pathToProjParent 
     )
     # 2. open cloned project
-    ptRproj<-read_json(fullpathProjName) 
+    ptRproj<-read_json(fullpathProjName,simplifyVector = TRUE) 
     pprj(ptRproj)
     # 3. 
     pathToProj<-path_join(c(pathToProjParent,projName))

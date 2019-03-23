@@ -6,48 +6,76 @@ saveDnippetsFileNames<-function(path=getWorkSpaceDir()){
 }
 
 
-# TODO!!! rewrite *readDnippetsFileNames* to make projects dnippets files relocatable
+
+# the usage of a dnippets db is dubious, since we are now
+# keeping all dnippets in the resources dir. 
+# A simpler more elegant solution is to just load all in dnps the resources dir.
+# But for non-projects it is not clear what the behaviour should be.
+
 readDnippetsFileNames<-function(path=getWorkSpaceDir()){
   # read in the contents of the workspace dnippets db file
-  fileName=paste0(path,"/loadedDnippets.rda")
+  
+  fileName=path_join(c(path,'loadedDnippets.rda'))
   if(file.exists(fileName)){ 
     tb<-readRDS(file = fileName) #tb is the previously saved dnippetsDB:  has 2 fields
     # usage; a tibble with names = tabId
     # paths; a tibble: with names=c("fullpath", "dname" )
-    fullpaths<-tb$fullpath
   } else {
-    fullpaths<-NULL
+    tb<-tibble(fullpath="",dname="")[0,]
   }
-  if(length(fullpaths)>0){
-   # browser()
-    prjPath=getProjectFullPath() # obtains path from serverOptions:: editOptions
-    # pprj is populated with the full project path during the calls to 
+  
+  prjPath=getProjectFullPath() # obtains path from serverOptions:: editOptions
+  ptRproj<-pprj() # The internal settings
+   # pprj is populated with the full project path during the calls to 
     # - openProj
     # - modalNewShinyCntrlProjOk
     # - input$modalCloneProjOk
     # -  during initial startup.
-    #
-    ptRproj<-pprj() # 
-    if(!is.null(ptRproj$pathToProj)){ #ptRproj is set when open
-      fullpaths<-sub( ptRproj$pathToProj, editOption$currentProjectDirectory, fullpaths)
-    }
-    tb$fullpath<-fullpaths
-    # prune any entries that do not exist
-    if(nrow(tb)>0){
-      tb<-filter(tb, file.exists(fullpath))
-    }
-    fullpaths<-tb$fullpath
-  }
 
-  # if there is none availabe, use templates
-  if(length(fullpaths)==0){
-    # problem: if package is moved (or code on another machine) this path may become invalid.
-    fullpaths<-paste(system.file('App', package='pointR'), 'templates', 'sampleShapes.dnippets', sep='/')
-    tb<-tibble(fullpath=fullpaths, dname= 'sampleShapes.dnippets')
-  } 
+      
+  if(!is.null(ptRproj$pathToProj)){  # we have a project so we adjust tb$fullpaths
+      # first insure we have a resource dir
+      resourceDir<-path_join(c(editOption$currentProjectDirectory,'resources'))
+      if(!dir.exists(resourceDir)){
+        dir.create(resourceDir)
+      }
+      # next adjust tibble tb as needed
+      if(nrow(tb)>0){
+        fullpaths<-tb$fullpath
+        # reset paths to reside under resources
+        fullpaths<-sub( ptRproj$pathToProj, editOption$currentProjectDirectory, fullpaths)
+        # extract full paths not under -editOption$currentProjectDirectory/resouces
+        indx<-grep(resourceDir, fullpaths) #indx are the indices of resources now properly located
+        # move the files (if any)
+        if(length(indx)>0){
+          tomove<-fullpaths[-indx]
+          if(length(tomove)>0){
+            file.copy(tomove, resourceDir)
+            # replace tomove by target in fullPaths
+            dnipNames<-path_file(tomove )
+            fullpaths[-indx]<- sapply( path_file(dnipNames), function(x) path_join(c(resourceDir,x)) )
+          }
+        }
+        tb$fullpath<-fullpaths
+      }
+      
+      snippetAppPath<-path_join(c(system.file('App', package='pointR'), 'templates', 'sampleShapes.dnippets'))
+      if(nrow(tb)>0){
+        tb<-filter(tb, file.exists(fullpath))   # prune any entries that do not exist
+        tb<-filter(tb, fullpath!=snippetAppPath) # prune snippet that points to app
+      } 
+      if(nrow(tb)==0){
+        tomove<-snippetAppPath
+        file.copy(tomove, resourceDir)
+        tb<-tibble( fullpath=path_join(c(resourceDir,'sampleShapes.dnippets' )) , dname='sampleShapes.dnippets' )
+      }
+  }  
+  
+  # if not inside a project, perform no modifications of tb (at least for now)
+  # save changes 
   saveRDS(tb, fileName)
-  # resave if changes
-  for(fp in unique(fullpaths)){
+  # load DndSnippets
+  for(fp in unique(tb$fullpath)){
     loadDndSnippets(fp, startup=TRUE)
   }
 }
