@@ -17,16 +17,16 @@ serverAssetDB<-reactiveValues( tib=initialServerAssetDB() )
 
 
 storeAssetState<-function(){ 
-  # cat(">----> storeAssetState\n")
+  #log.fin(storeAssetState)
   selectionList<-reactiveValuesToList(selectedAsset, all.names=TRUE)
   if(is.null(selectionList$tabId) || identical(selectedAsset$tabId,'bogus')){
-    cat('nothing to store\n')
+    #cat('nothing to store\n')
     return()
   }
   selectionList[sapply(selectionList,is.null)]<-NA
   tmp1<-filter(serverAssetDB$tib, tabId!=selectionList$tabId)
   serverAssetDB$tib<-bind_rows(tmp1, as_tibble(selectionList))
-  # cat("<----< storeAssetState\n")
+  #log.fout(storeAssetState)
 }
 
 #~ @param nextTabId
@@ -41,7 +41,7 @@ storeAssetState<-function(){
 #  The only justification would be if nextTabId is in serverAssetDB$tib
 restoreAssetState<-function(nextTabId){
   if(length(nextTabId)==1 && !is.na(nextTabId)){
-    # cat('>---> restoreAssetState\n')
+    # log.fin(restoreAssetState)
        # browser()
        if(nrow(serverAssetDB$tib)>0){
          row.tib<-filter(serverAssetDB$tib, tabId==nextTabId)
@@ -52,14 +52,10 @@ restoreAssetState<-function(nextTabId){
         browser()
       }
       if(nrow(row.tib)==0){
-       #  browser()
-        # cat('restoreAssetState:: next:: getRightPanelChoices\n')
-        choices<-getRightPanelChoices() # this is suspect
-        # cat('restoreAssetState choices=',choices,"\n")
+        choices<-getRightPanelChoices() 
+        
         row.tib<-newAssetSelection(tabId=nextTabId, choices=choices, tibs=getPtDefs()$tib)
       }
-     # browser()
-    
       if(!is.null(row.tib)){
         lapply(names(row.tib), function(n){
           v<-row.tib[[n]][1]
@@ -67,13 +63,13 @@ restoreAssetState<-function(nextTabId){
           selectedAsset[[n]]<-v
         } )
       }
-    # cat('<---< restoreAssetState\n')
+    # log.fout(restoreAssetState)
   }
 }
 
 # called only by restoreAssetState
 newAssetSelection<-function( tabId, choices, tibs){
-  # cat('>---> newAssetSelection\n')
+  # log.fin(newAssetSelection)
   if( length(tabId)==0 || length(choices)==0){
     return( NULL)
   }
@@ -119,6 +115,6 @@ newAssetSelection<-function( tabId, choices, tibs){
     transformType='Translate',
     ptScriptSel=preprocChoices[1]
   )
-  # cat('<---< newAssetSelection\n')
+  # log.fout(newAssetSelection)
   selection
 }

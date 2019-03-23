@@ -1,7 +1,6 @@
 
 
 modalSaveOrContinue <- function() {
-  #cat("modalSaveOrContinue:: Enter\n")
   modalDialog(
     span("File has unsaved changes. Continue or Save?"), 
     footer = tagList(

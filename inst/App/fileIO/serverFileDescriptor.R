@@ -53,7 +53,7 @@ getMode<-reactive({
 # or use ptR.js to do an on.change ?
 # Or update a reactive on change of a given node or property
 getModeX<-reactive({
-  cat(">---> getModeX\n")
+  log.fin(getModeX)
   pageId<-input$pages 
   if(is.null(pageId) || identical(pageId, 'bogus')){
     mode<-NULL
@@ -71,8 +71,8 @@ getModeX<-reactive({
       }
     }
   }
-  cat('mode=', format(mode),"\n")
-  cat("<---< getModeX\n")
+  log.val(mode)
+  log.fout(getModeX)
   mode
 })  
 
