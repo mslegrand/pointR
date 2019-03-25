@@ -12,7 +12,7 @@ shinyServer(function(input, output,session) {
   
 # utility functions---------------
   source("util/dbInitiatizers.R") 
-  source("util/extNmode.R") 
+  
   source("util/format.R")
   source("util/utilParser.R")
   source("util/utilptR.R")
@@ -52,9 +52,9 @@ shinyServer(function(input, output,session) {
 
   shinyFileChoose(input, "buttonFileOpen",           session=session, roots=c(home="~"),  filetypes=c('R','PTR','SVGR','js') ) #hidden
   shinyFileChoose(input, "buttonFileOpenProject",    session=session, roots=c(home="~"),  filetypes=c('pprj') ) #hidden
-  shinyFileChoose(input, "buttonSnippetImport",      session=session, roots=c(home="~"),  filetypes=c('snippets') ) #hidden
-  shinyFileChoose(input, "buttonDnippetImport",      session=session, roots=c(home="~"),  filetypes=c('dnippets') ) #hidden
-  shinyFileChoose(input, "buttonPreProcPtImport",    session=session, roots=c(home="~"),  filetypes=c('preprocpts') ) #hidden
+  shinyFileChoose(input, "buttonSnippetImport",      session=session, roots=c(home="~"),  filetypes=c('snip') ) #hidden
+  shinyFileChoose(input, "buttonDnippetImport",      session=session, roots=c(home="~"),  filetypes=c('dnds') ) #hidden
+  shinyFileChoose(input, "buttonPreProcPtImport",    session=session, roots=c(home="~"),  filetypes=c('pppt') ) #hidden
   shinyFileSave(input,   "buttonExportSVG",          session=session, roots=c(home="~")  ) #hidden
   shinyFileSave(input,   "buttonExportPreproc",      session=session, roots=c(home="~") ) #hidden
   
