@@ -48,6 +48,7 @@ observeEvent(input$buttonDnippetImport,{
       # add to dnippet db
       dname=path_file(datapath)
       dndspath<-path_join(c(resourceDir,dname))
+      dname=sub('\\.dnds$','',dname)
       add2DnippetDBPath(dname, dndspath)
       # save database
       saveDnippetsFileNames()
