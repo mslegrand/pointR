@@ -1,9 +1,15 @@
+# dnippetsDB has 2 entries: usage and paths
+# paths consists of datapath and dname
+# datapath tells where to look for dname
+# dname should contain the short names for all availble dnippets
+# usage is a tibble whose columns are tabId and the dnames
+# for example: 'tabId', 'shapes', 'arrows'
+# the tabId column consists of the ids of the pages
+# the columns for the dnames are booleans
+
 dnippetsDB<-reactiveValues(
-  usage=tibble(
-    tabId='bogus'
-  )[0,],
-  paths=tibble(
-  )
+  usage=tibble(tabId='bogus')[0,],
+  paths=tibble(fullpath="datapath", dname="dnName" )[0,]
 )
 
 resetDnippetsDB<-function(){
@@ -12,7 +18,9 @@ resetDnippetsDB<-function(){
 }
 
 add2DnippetDBPath<-function(dnName, datapath){
-  dnippetsDB$paths<-bind_rows(dnippetsDB$paths, list(fullpath=datapath, dname=dnName ) )
+  if(! datapath %in% dnippetsDB$paths$fullpath){ #donot add if already there
+    dnippetsDB$paths<-bind_rows(dnippetsDB$paths, list(fullpath=datapath, dname=dnName ) )
+  }
 }
 
 # Note:: Adds column to usage: this requires at least one page to be loaded
@@ -66,11 +74,13 @@ setDnippetsSelected<-function(pageId, selected){
 }
 
 addNewPage2dnippetsDB<-function(pageId){
+  log.fin(addNewPage2dnippetsDB)
   dn<-dnippetsDB$paths$dname
   if(length(pageId)>0 && !(pageId %in% dnippetsDB$usage$tabId)){
     tbb<-structure(as.list(rep_along(dn,TRUE)), names= dn)
     tbb[['tabId']]=pageId
     dnippetsDB$usage<-bind_rows(dnippetsDB$usage,tbb)
   }
+  log.fout(addNewPage2dnippetsDB)
 }
 
