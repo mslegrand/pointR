@@ -2,9 +2,7 @@
 processMssgFromAceMssgPageIn<-function(sender, mssg){
     # cat('>---> processMssgFromAceMssgPageIn\n')
     
-    #reOrgPanels(id=mssg$id, mode= getMode() )
-    # cat("sender = ", format(sender),"\n")
-    # cat("assetName = ", format(getAssetName()),"\n")
+    
     if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset') && !is.null(getAssetName())){ 
       #if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset', 'cmd.saveFileNow') && !is.null(getAssetName())){ 
       processCommit() # this sets the sourceType

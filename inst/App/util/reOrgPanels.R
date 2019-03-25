@@ -4,6 +4,9 @@
 reOrgPanels<-function(id, mode){
  
   log.fin(reOrgPanels)
+  # if(length(mode)>1){
+  #   browser()
+  # }
   if(length(id)==0 || length(mode)==0){
     
     hideElement("TopRightPanel")
