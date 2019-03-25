@@ -20,6 +20,7 @@ newProj<-function(projName, parentDir, projType="generic"){
       projName=projName,
       projType=projType
     )
+    pprj(ptRproj)
     # 4. write pproj
     fullpathProjName=file.path(pathToProj, projName)
     write_json(ptRproj, fullpathProjName, pretty=4)
