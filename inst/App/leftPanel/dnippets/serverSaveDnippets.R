@@ -1,8 +1,10 @@
 
 saveDnippetsFileNames<-function(path=getWorkSpaceDir()){
+  log.fin(saveDnippetsFileNames)
   fileName=paste0(path,"/loadedDnippets.rda")
   rtv<-dnippetsDB$paths
   saveRDS(object=rtv, file = fileName)
+  log.fout(saveDnippetsFileNames)
 }
 
 
@@ -14,7 +16,7 @@ saveDnippetsFileNames<-function(path=getWorkSpaceDir()){
 
 readDnippetsFileNames<-function(path=getWorkSpaceDir()){
   # read in the contents of the workspace dnippets db file
-  
+  log.fin(readDnippetsFileNames)
   fileName=path_join(c(path,'loadedDnippets.rda'))
   if(file.exists(fileName)){ 
     tb<-readRDS(file = fileName) #tb is the previously saved dnippetsDB:  has 2 fields
@@ -24,6 +26,8 @@ readDnippetsFileNames<-function(path=getWorkSpaceDir()){
     tb<-tibble(fullpath="",dname="")[0,]
   }
   
+  sampleDnippetPath<-path_join(c(system.file('App', package='pointR'), 'templates', 'sampleShapes.dnds'))
+  
   prjPath=getProjectFullPath() # obtains path from serverOptions:: editOptions
   ptRproj<-pprj() # The internal settings
    # pprj is populated with the full project path during the calls to 
@@ -32,7 +36,8 @@ readDnippetsFileNames<-function(path=getWorkSpaceDir()){
     # - input$modalCloneProjOk
     # -  during initial startup.
 
-      
+   #browser()
+   
   if(!is.null(ptRproj$pathToProj)){  # we have a project so we adjust tb$fullpaths
       # first insure we have a resource dir
       resourceDir<-path_join(c(editOption$currentProjectDirectory,'resources'))
@@ -59,23 +64,28 @@ readDnippetsFileNames<-function(path=getWorkSpaceDir()){
         tb$fullpath<-fullpaths
       }
       
-      snippetAppPath<-path_join(c(system.file('App', package='pointR'), 'templates', 'sampleShapes.dnippets'))
       if(nrow(tb)>0){
         tb<-filter(tb, file.exists(fullpath))   # prune any entries that do not exist
-        tb<-filter(tb, fullpath!=snippetAppPath) # prune snippet that points to app
+        tb<-filter(tb, fullpath!=sampleDnippetPath) # prune and dnippet that points to app
       } 
       if(nrow(tb)==0){
-        tomove<-snippetAppPath
+        tomove<-sampleDnippetPath
         file.copy(tomove, resourceDir)
-        tb<-tibble( fullpath=path_join(c(resourceDir,'sampleShapes.dnippets' )) , dname='sampleShapes.dnippets' )
+        tb<-tibble( fullpath=path_join(c(resourceDir,'sampleShapes.dnds' )) , dname='sampleShapes' )
       }
-  }  
+  } else { # we do not have a project, but if tb is null, lets load anyway
+    if(nrow(tb)==0){
+      tb<-tibble( fullpath=sampleDnippetPath , dname='sampleShapes' )
+    }
+ } 
   
   # if not inside a project, perform no modifications of tb (at least for now)
+  
   # save changes 
   saveRDS(tb, fileName)
   # load DndSnippets
   for(fp in unique(tb$fullpath)){
     loadDndSnippets(fp, startup=TRUE)
   }
+  log.fout(readDnippetsFileNames)
 }
