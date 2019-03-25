@@ -1,7 +1,7 @@
 
 #restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir(), pprjPath=getProjectFullPath(), session=getSession() ){
 restoreWorkSpace<-reactive({
-  
+  log.fin(restoreWorkSpace)
   workSpaceDir=getWorkSpaceDir()
   prjPath=getProjectFullPath()
   fileWSPaths<-dir(workSpaceDir, pattern='PTR-TABID', full.names = T)
@@ -100,7 +100,7 @@ restoreWorkSpace<-reactive({
     fullpathProjName=file.path(ptRproj$pathToProj, ptRproj$projName)
     write_json(ptRproj, fullpathProjName, pretty=4) 
   } 
-  
+  log.fout(restoreWorkSpace)
   return(aceId)
 })
   
