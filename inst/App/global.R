@@ -68,6 +68,7 @@ preprocChoices<-c("onNewPt",  "onMovePt", "onMoveMat")
 # must be loaded prior to alles
 source("util/configIO.R") 
 source("util/loadTemplates.R") 
+source("util/extNmode.R") 
 source("util/logger.R")
 
 #---used to build the UI portion
