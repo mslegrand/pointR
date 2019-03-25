@@ -18,7 +18,7 @@ processCommit<-reactive({
   clearErrorMssg()
   
   mode<-getModeX()
-  if(length(mode)==0){
+  if(length(mode)!=1){
     browser()
     return(NULL)
   }
