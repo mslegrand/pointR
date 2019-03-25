@@ -18,11 +18,10 @@ buildLeftMenu<-function(version){
         shinyDMDMenu::menuItem('R markdown doc', value='newRmd'),
         shinyDMDMenu::menuItem('R ioslides presentation', value='newIOSlides'),
         menuDivider(),
-        shinyDMDMenu::menuItem('Snippets',            value='newSnippets'),
         shinyDMDMenu::menuItem('Javascripts',            value='nwJavascript'),
-        shinyDMDMenu::menuItem("Drag&Drop Snippets",            value="newDndSnippetsFile")#,
+        shinyDMDMenu::menuItem('Snippets',            value='newSnippets'),
+        shinyDMDMenu::menuItem("Drag&Drop",            value="newDndSnippetsFile")
         # menuDivider(),
-        # 
         # shinyDMDMenu::menuItem('Plain Text Doc', value='newText')
       ),
       menuDropdown('New Project',
@@ -72,7 +71,7 @@ buildLeftMenu<-function(version){
       menuDropdown(
         "Import Addin",
         shinyDMDMenu::menuItem("Snippets",   value="importSnippetFile"),
-        shinyDMDMenu::menuItem("Drag&Drop Snippets",   value='importDndSnippetsFile')
+        shinyDMDMenu::menuItem("Drag&Drops",   value='importDndSnippetsFile')
       )
     ),
     menuDropdown(
