@@ -7,8 +7,8 @@
 
 #---begin server--------------
 shinyServer(function(input, output,session) {
-  cat_list <- c()
-  exportTestValues(catList=cat_list)
+  # cat_list <- c()
+  # exportTestValues(catList=cat_list)
   
 # utility functions---------------
   source("util/dbInitiatizers.R") 

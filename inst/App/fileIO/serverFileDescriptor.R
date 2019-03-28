@@ -71,7 +71,7 @@ getModeX<-reactive({
       }
     }
   }
-  log.val(mode)
+  #log.val(mode)
   log.fout(getModeX)
   mode
 })  
