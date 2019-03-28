@@ -1,7 +1,7 @@
 # ---beging code to inserted in ptR-------------------------------
 newProjShinyCntrlModal <- function(failed = 0, mssg=NULL, datapath=NULL, projectName=NULL) {
   #shinyDirChoose(input, id='browseForDir', roots=c(wd='~'), filetypes='')
-  cat('>----> newProjShinyCntrlModal\n')
+  # cat('>----> newProjShinyCntrlModal\n')
   shinyDirChoose(input, id='browseForDir', roots=c(home='~'))
   observeEvent(input$browseForDir,{
     datapath<-parseDirPath(c(home='~'), input$browseForDir)
@@ -11,7 +11,7 @@ newProjShinyCntrlModal <- function(failed = 0, mssg=NULL, datapath=NULL, project
       updateTextInput(session,inputId = "parentProjDirectoryName", value=datapath)
     }
   })
-  cat('>----> modalDialog\n')
+  # cat('>----> modalDialog\n')
   modalDialog(
     h2('Create a new Shiny Custom Input Project'),
     div(
@@ -98,7 +98,7 @@ observeEvent(input$modalNewShinyCntrlProjOk, {
     
     # 0. close current project
     closeCurrentProj()
-    
+    browser()
     # 1. clone project
     fullpathProjName<-copyAndRenameProject(
       pattern=pattern, 

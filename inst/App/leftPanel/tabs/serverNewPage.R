@@ -25,7 +25,7 @@ newPage<-function(tabId, title, txt, docFilePath, mode,  fileSaveStatus ){
   #   title=paste('Anonymous', page$fileDescriptor.anonNo)
   # }
   # cat('newPage mode= ',format(mode),'\n')
-  cat('title=',title,"\n")
+  # cat('title=',title,"\n")
   if(mode=='ptr' && !title %in% c('app.R','App.R')){
     divClass="cAceContainer"
   } else {
@@ -61,35 +61,3 @@ newPage<-function(tabId, title, txt, docFilePath, mode,  fileSaveStatus ){
   aceId
 } 
 
-# then addFileTab would look like
-
-# addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FALSE){
-#  
-#   addFileDesc(pageId=tabId, docFilePath=docFilePath, fileSaveStatus, fileMode=mode)
-#   setUseTribble( pageId=tabId, value=TRUE)
-#   addNewPage2dnippetsDB(tabId)
-#   addPage(tabId, txt)
-#   updateTabsetPanel(session,inputId = 'pages', selected = tabId)
-#   
-# }
-
-# while the loop in serverLoadWorkSpace would become
-
-# for(page in wsPages){
-#   tabId<-page$fileDescriptor.tabId
-#   addPage(tabId, txt)
-#   restoreAssetState(tabId)
-#   updateTabsetPanel(session, inputId='pages', selected=tabId)
-# }  
-# delay(500,{
-#   for(page in wsPages){
-#     tabId=page$fileDescriptor.tabId
-#     cat('page in wsPages:: tabId=',tabId,"\n")
-#     fileSaveStatus=page$fileDescriptor.isSaved 
-#     savedStatus<-ifelse(fileSaveStatus, 'saved', 'notSaved')
-#     
-#     if(is.null(tabId)){ browser() }
-#     addNewPage2dnippetsDB(tabId)
-#     sendFileTabsMessage(resize=runif(1), tabId=tabId, savedStatus= savedStatus)
-#   }
-# })
