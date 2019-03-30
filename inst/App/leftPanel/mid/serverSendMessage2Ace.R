@@ -17,7 +17,6 @@ updateAceExtDef<-function(newPtDef, sender, selector=list() ){
 }
 
 updateAceExt<-function(id, sender, ... ){
-  
   data<-list(...)
   if(is.null(sender)){stop('null sender')}
   if(length(data)>0){
