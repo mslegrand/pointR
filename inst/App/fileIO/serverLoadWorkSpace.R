@@ -12,11 +12,17 @@ restoreWorkSpace<-reactive({
   
 
   ptRproj<-pprj()
+  
   # 1. load all pages into a list.
   for(filePath in fileWSPaths){
     page<-readRDS(filePath)
     # A. assign tabIds to each page
     id=basename(filePath)
+    if(!is.null(ptRproj$pathToProj)){
+      docFilePath=page$fileDescriptor.filePath
+      page$fileDescriptor.filePath<-sub( ptRproj$pathToProj, editOption$currentProjectDirectory, docFilePath)
+      saveRDS(page,filePath)
+    }
     wsPages[[id]]<-page
   }
   
@@ -47,9 +53,6 @@ restoreWorkSpace<-reactive({
     mode=page$fileDescriptor.mode
     docFilePath=page$fileDescriptor.filePath
     
-    if(!is.null(ptRproj$pathToProj)){
-      docFilePath<-sub( ptRproj$pathToProj, editOption$currentProjectDirectory, docFilePath)
-    }
     
     fileSaveStatus=page$fileDescriptor.isSaved
     txt=page$code
@@ -91,6 +94,7 @@ restoreWorkSpace<-reactive({
   preProcDB$points<-extractDBFromPages(wsPages, "^preprocScripts.", initTib=initialPreprocDB())
 
   tib<-extractDBFromPages(wsPages, "^fileDescriptor.", initTib=initialFileDescDB() )
+  print(tib)
   fileDescDB(tib)  
   
   #ptRproj<-pprj()

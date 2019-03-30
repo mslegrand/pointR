@@ -88,6 +88,7 @@ observeEvent(input$modalNewShinyCntrlProjOk, {
     templateName<-input$prjTmplName
     templatePath<- projTemplatesPaths[templateName] # the clone path of this project.
     templateName.pprj<-'widget.pprj' #namesassigned to the .pprj
+    
     pathToProjParent<-datapath # input$parentProjDirectoryName # parent directory of new project
     projName<-projectName # input$modalProjName # the name of of new project
     
@@ -98,13 +99,18 @@ observeEvent(input$modalNewShinyCntrlProjOk, {
     
     # 0. close current project
     closeCurrentProj()
-    browser()
+    
     # 1. clone project
+    # fullpathProjName<-copyAndRenameProject(
+    #   pattern=pattern, 
+    #   templatePath=templatePath, 
+    #   projName=projName, 
+    #   pathToProjParent=pathToProjParent 
+    # )
     fullpathProjName<-copyAndRenameProject(
-      pattern=pattern, 
-      templatePath=templatePath, 
-      projName=projName, 
-      pathToProjParent=pathToProjParent 
+      sourceProject= path_join(c(templatePath, 'widget.pprj')),
+      targetName=projName,
+      pathToTargetParent=pathToProjParent
     )
     # 2. open cloned project
     ptRproj<-read_json(fullpathProjName, simplifyVector = TRUE) 
