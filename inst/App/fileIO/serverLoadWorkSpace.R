@@ -94,10 +94,8 @@ restoreWorkSpace<-reactive({
   preProcDB$points<-extractDBFromPages(wsPages, "^preprocScripts.", initTib=initialPreprocDB())
 
   tib<-extractDBFromPages(wsPages, "^fileDescriptor.", initTib=initialFileDescDB() )
-  print(tib)
   fileDescDB(tib)  
   
-  #ptRproj<-pprj()
   if(!is.null(ptRproj)){
     ptRproj$pathToProj<-editOption$currentProjectDirectory
     ptRproj$projName<-editOption$currentProjectName
