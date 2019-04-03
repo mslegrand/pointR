@@ -18,8 +18,8 @@ buildLeftMenu<-function(version){
         shinyDMDMenu::menuItem('R markdown doc', value='newRmd'),
         shinyDMDMenu::menuItem('R ioslides presentation', value='newIOSlides'),
         menuDivider(),
-        shinyDMDMenu::menuItem('Javascripts',            value='nwJavascript'),
-        shinyDMDMenu::menuItem('Snippets',            value='newSnippets'),
+        shinyDMDMenu::menuItem('Javascript',            value='newJavascript'),
+        shinyDMDMenu::menuItem('Snippet',            value='newSnippets'),
         shinyDMDMenu::menuItem("Drag&Drop",            value="newDndSnippetsFile")
         # menuDivider(),
         # shinyDMDMenu::menuItem('Plain Text Doc', value='newText')
