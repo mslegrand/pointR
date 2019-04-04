@@ -26,7 +26,9 @@ newPage<-function(tabId, title, txt, docFilePath, mode,  fileSaveStatus ){
   # }
   # cat('newPage mode= ',format(mode),'\n')
   # cat('title=',title,"\n")
-  if(mode=='ptr' && !title %in% c('app.R','App.R')){
+  if(mode=='javascript'){
+    divClass="cAceContainer"
+  } else if(mode=='ptr' && !title %in% c('app.R','App.R')){
     divClass="cAceContainer"
   } else {
     divClass="cAceRmdContainer"

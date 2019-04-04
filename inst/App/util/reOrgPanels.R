@@ -21,7 +21,7 @@ reOrgPanels<-function(id, mode){
     addCssClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
     showElement("logo.right")
     showElement("logo.left")
-  } else {
+  } else { # id and mode defined
     hideElement("logo.right")
     hideElement("logo.left")
     # editing ptr
@@ -38,9 +38,15 @@ reOrgPanels<-function(id, mode){
       }
       addCssClass( id= 'midRightPanels', class='ctop140')
     } else { # editing other: 'ptrrmd', 'snippets', 'dnippets', 'text', 'javascript'
+      if(identical(mode,'javascript')){
+        showElement("snippetToolBarContainer")
+      } else {
+        hideElement("snippetToolBarContainer")
+      }
+      
       removeCssClass( id= 'midRightPanels', class='ctop140')
       hideElement("TopRightPanel")
-      hideElement("snippetToolBarContainer")
+      
       hideElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble
       # now consider which mode it is
       if(identical(mode,'ptrrmd')){
@@ -69,6 +75,6 @@ reOrgPanels<-function(id, mode){
     showElement("aceToobarTop2")
     showElement("aceTabSet")
     showElement("midRightPanels")
-  }
+  } # end id and mode defined
   log.fout(reOrgPanels)
 }

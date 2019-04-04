@@ -11,9 +11,10 @@ add2DnippetsSelectionAll<-function(dnName, dnippets ){
 
 observeEvent(c( getDnippetsAll(), dnippetsDB$usage, input$pages),{
   if(!is.null(input$pages)){
+    log.fin(c( getDnippetsAll(), getDnippetsSelected(), input$pages))
     mode<-getMode()
-    # cat("\n>-----> observeEvent(c( getDnippetsAll(), getDnippetsSelected(), input$pages):\n"  )
     all<-getDnippetsAll()
+   # browser()
     updateAwesomeCheckboxGroup(session, 
        inputId="selectedDDDnippets", 
        choices  = getDnippetsAll(),
@@ -32,20 +33,23 @@ observeEvent(c( getDnippetsAll(), dnippetsDB$usage, input$pages),{
     }
   }
   
-  if(length(input$pages) && length(getDnippetsAll())>0 && identical( getModeX(),'ptr') ){
+  if(length(input$pages) && length(getDnippetsAll())>0 && 
+    any(sapply(c('ptr','javascript'), function(x)identical( getModeX(),x )))
+  ){
     showElement('selectedDnippetButtonBoxContainer')
   } else {
     hideElement('selectedDnippetButtonBoxContainer')
   }
-  # cat("<-----< observeEvent(c( getDnippetsAll(), getDnippetsSelected(), input$pages):\n\n"  )
+  log.fout(c( getDnippetsAll(), getDnippetsSelected(), input$pages))
 }, label='getDnippetsAll+usage+pages')
 
 observeEvent(input$selectedDDDnippets,{
   if(!is.null(input$pages)){
-    # cat("\n>---> observeEvent(input$selectedDDDnippets\n")
+    log.fin(input$selectedDDDnippets)
     selected=input$selectedDDDnippets
+    # browser()
     setDnippetsSelected(input$pages , selected)
-    # cat("<---<  observeEvent(input$selectedDDDnippets\n\n")
+    log.fout(input$selectedDDDnippets)
   }
   
 }, ignoreInit = FALSE, ignoreNULL = FALSE, label='selectedDDDnippets')
