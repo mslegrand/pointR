@@ -42,14 +42,14 @@ storeAssetState<-function(){
 restoreAssetState<-function(nextTabId){
   if(length(nextTabId)==1 && !is.na(nextTabId)){
     # log.fin(restoreAssetState)
-       # browser()
+      
        if(nrow(serverAssetDB$tib)>0){
          row.tib<-filter(serverAssetDB$tib, tabId==nextTabId)
        } else {
          row.tib<-serverAssetDB$tib
        }
       if(length(row.tib)==0){
-        browser()
+        cat(" length(row.tib)==0\n"); browser() #should never happen
       }
       if(nrow(row.tib)==0){
         choices<-getRightPanelChoices() 

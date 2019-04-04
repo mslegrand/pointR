@@ -18,7 +18,6 @@ observeEvent( getSourceType(),{
 })
 
 setSourceType<-function( sourceType ){
-  # cat('setting sourceType to ',format(sourceType),"\n")
   panels$sourceType=sourceType
 }
 

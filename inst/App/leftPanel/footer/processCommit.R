@@ -19,7 +19,7 @@ processCommit<-reactive({
   
   mode<-getModeX()
   if(length(mode)!=1){
-    browser()
+    cat('missing mode\n'); browser()
     return(NULL)
   }
   # cat("class(mode)=" ,class(mode),"\n")
@@ -43,7 +43,7 @@ processCommit<-reactive({
     setSourceType(appPanelTag)
   }
   else {
-    browser()
+    cat("unknown mode\n"); browser()
   }
   if(!hasError()){
     tabId<-input$pages

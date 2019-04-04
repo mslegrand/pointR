@@ -55,7 +55,7 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FA
   # cat("addFileTab:: mode=",mode,"\n")
   tabId<-getNextTabId()
   
-  if(is.null(tabId)){ browser() }
+  if(is.null(tabId)){ cat("tabId is null\n"); browser() }
   addFileDesc(pageId=tabId, docFilePath=docFilePath, fileSaveStatus, fileMode=mode)
   setUseTribble( pageId=tabId, value=TRUE)
   addNewPage2dnippetsDB(tabId)

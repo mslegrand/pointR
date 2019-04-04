@@ -66,7 +66,7 @@ readDnippetsFileNames<-function(path=getWorkSpaceDir()){
       
       if(nrow(tb)>0){
         tb<-filter(tb, file.exists(fullpath))   # prune any entries that do not exist
-        tb<-filter(tb, fullpath!=sampleDnippetPath) # prune and dnippet that points to app
+        tb<-filter(tb, fullpath!=sampleDnippetPath) # prune and dnippet that points to sampleDnippet inside project/app dir
       } 
       if(nrow(tb)==0){
         tomove<-sampleDnippetPath
