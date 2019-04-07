@@ -283,30 +283,23 @@ Shiny.addCustomMessageHandler(
     console.log("----------entering  scrollManager------------");
     // console.log("data is" + JSON.stringify(data));
     if(!!data.resize){
-      //console.log('resize here');
       $(window).resize();
     }
     if(!!data.selected){
       stabs.scrollIntoView(data.selected);
     }
     if(!!data.tabId){ //aka tabId
-      // console.log("data.tabId="+ data.tabId);
       if(!!data.title){
         stabs.resetTitleGivendataValue( data.title, data.tabId);
         stabs.reAdjust();
       }
-      // console.log("data.savedStatus=" + JSON.stringify(data.savedStatus));
-      // console.log("!!data.savedStatus=" + JSON.stringify(!!data.savedStatus));
       if(!!data.savedStatus){
-        // console.log("data.savedStatus="+ data.savedStatus);
         stabs.toggleSaveState(data.tabId, data.savedStatus!=='saved');
       }
     }
     
     if(!!data.getAllTabIds){
       var tabIds = stabs.getAllTabValues();
-      // console.log('getAllTabIds=' + data.getAllTabIds );
-      // console.log(JSON.stringify(tabIds));
       Shiny.onInputChange('tabManager', {
         tabs:tabIds, 
         sender: data.sender, 
