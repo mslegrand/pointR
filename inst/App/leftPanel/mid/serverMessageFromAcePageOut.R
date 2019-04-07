@@ -1,8 +1,22 @@
 processMssgFromAceMssgPageOut<-function(sender, mssg){
   id<-mssg$id
   saved<-unlist(mssg$isSaved)
+  # some confusion
+  #  fileCmd.save vs fileCmd.saveNow vs fileCmd.saveAs
+  #  the request$sender is populated (sender+tabs) by either
+  #    1. "fileCmd.save" (by menu cmds cmdFileSave or cmdFileSaveAll)
+  #    2. "fileCmd.saveAs" (by menu cmds cmdFileSaveAs)
+  #  "fileCmd.saveNow" is 
+  #    1. issued by fileSaveObserver directly to ace, so name is established by a saveButtonFile dialog
+  #    2. saveButtonFile dialog is triggered by ace sending to ptRManager a saveFile and tabId
+  #    3. ace sends (#2) to ptManager only upon 
+  #          a. when receiving "fileCmd.saveAs" or 
+  #          b. receiving a tabId with ? for docFilePath and for sender that is ...
+  #    4. 
   
-  if( !saved || sender %in% c('fileCmd.saveAs','fileCmd.saveNow', 'buttonCmd.rmdViewer', 'fileCmd.quit') ) { #need to save
+  log.fin(processMssgFromAceMssgPageOut)
+  
+  if( !saved || sender %in% c('fileCmd.save', 'fileCmd.saveAs','fileCmd.saveNow', 'buttonCmd.rmdViewer', 'fileCmd.quit') ) { #need to save
     docFilePath<-unlist(mssg$docFilePath)
     if(docFilePath=='?' || sender=='fileCmd.saveAs'){ # file unnamed : fileSaveAs
       tabId<-aceID2TabID(id)
@@ -10,8 +24,8 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
       ext<-mode2pathExt( getMode() )
       ext<-shinyFiles:::formatFiletype(ext)
       target<-saveButtonFileNames[[getMode()]]
-      sendPtRManagerMessage( sender=sender, saveFile=TRUE,  target=target, tabId=tabId ) #triggers shinyFiles
-    } else { # has legitmate path
+      sendPtRManagerMessage( sender=sender, saveFile=TRUE,  target=target, tabId=tabId ) # triggers shinyFiles
+    } else { # has legitmate path:: docFilePath!='?' && sender in c('fileCmd.save', 'fileCmd.saveNow', 'buttonCmd.rmdViewer', 'fileCmd.quit')
       # write file
       code<-mssg$code  # !!!TODO!!! if write fails revert.
       
@@ -43,6 +57,9 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
         setTrigger('redraw')
       }
       savePage(tabId) # saves page to workspace
+      if(sender %in% c('fileCmd.save','fileCmd.saveNow')){
+        tabId=popTab()
+      }
       if(sender %in% 'fileCmd.quit'){
        # pop off tab and exit from this
         tabId=popTab()
@@ -78,4 +95,5 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
       closeTabNow(tabId)
     }
   }
+  log.fout(processMssgFromAceMssgPageOut)
 }

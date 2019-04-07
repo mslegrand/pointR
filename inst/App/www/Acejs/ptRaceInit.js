@@ -239,7 +239,7 @@ function ptRaceInit(data){
   		});
   		
    } 
-   }, 50
+   }, 100
    );
    
    
