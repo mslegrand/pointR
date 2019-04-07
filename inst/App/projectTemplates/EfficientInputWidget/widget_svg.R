@@ -8,16 +8,9 @@ CXY<-c(.5,.9)*WH
 R<-.4*WH[1]
 CMD<-""
 
-if(exists("args")){
-    WH<-args$WH
-    theta0<-args$theta0
-    CXY<-args$CXY
-    R<-args$R
-    CMD=args$CMD
-}
-
-cat("args\n")
-cat(args$CMD)
+if(exists("argv")){
+  list2env(argv, envir = environment())
+} 
 
 
 theta2pos<-function(theta, cxy=CXY, r=R){

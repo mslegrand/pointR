@@ -90,7 +90,9 @@ restoreWorkSpace<-reactive({
   useTribbleFormatDB(tib)
 
   dnippetsDB$usage<-extractDBFromPages(wsPages, "^dnip.", initTib=tibble(tabId='bogus')[0,] )
-
+  dnippetsDB$usage[is.na(dnippetsDB$usage)]<-FALSE # TODO!!! remove when dnippets becomes stable
+  # dnippetsDB$usage<-select(dnippetsDB$usage, -c("sampleShapes.dnippets")) # TODO!!! remove when dnippets becomes stable
+  # browser()
   preProcDB$points<-extractDBFromPages(wsPages, "^preprocScripts.", initTib=initialPreprocDB())
 
   tib<-extractDBFromPages(wsPages, "^fileDescriptor.", initTib=initialFileDescDB() )

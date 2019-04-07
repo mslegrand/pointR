@@ -61,7 +61,7 @@ shinyUI(
           #-------left content begin--------
 
           div( id='aceTabSet', class="container",
-               tabsetPanel(id='pages')
+               tabsetPanel(id='pages') 
           ),
           absolutePanel( id='aceToobarTop1',
               top=75, left=0, width="100%", "class"="headerPanel", draggable=FALSE, height="30px",

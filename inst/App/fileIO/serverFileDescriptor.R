@@ -109,7 +109,7 @@ setFileDescMode<-function(pageId, newMode){
 
 setFileDescSaved<-function(pageId, fileSaveStatus){
   if(!is.null(pageId)){
-      # cat('>---> setFileDescSaved\n')
+    log.fin(setFileDescSaved)
       fileSaveStatus<-unlist(fileSaveStatus)
       fd<-fileDescDB()
       stopifnot('tabId' %in% names(fd))
@@ -118,7 +118,7 @@ setFileDescSaved<-function(pageId, fileSaveStatus){
         fd[fd$tabId==pageId,"isSaved"]<-fileSaveStatus 
         fileDescDB(fd) 
       }
-      # cat('<---< setFileDescSaved\n')
+      log.fout(setFileDescSaved)
   }
 }
 
