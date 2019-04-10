@@ -23,7 +23,7 @@ optionDirPath<-function(){
 
 # we might want to move this under the server
 writeOptionsJSON<-function(opts){
-  file<-paste(optionDirPath(),"ptRProfile.json", sep="/")
+  file<-path_join(c(optionDirPath(),"ptRProfile.json"))
   write_json(opts, file, pretty=4)
 }
 
@@ -51,7 +51,7 @@ defaultOpts<-(function(){
   )
   
   try({
-    file<-paste(optionDirPath(),"ptRProfile.json", sep="/")
+    file<-path_join(c(optionDirPath(),"ptRProfile.json"))
     if(file.exists(file)){
       tmp<-read_json(file)
       defaultOpts[names(tmp)]<-tmp
@@ -97,16 +97,5 @@ if(!is.null(getShinyOption("electron"))){
   usingElectron<-FALSE
   ptRPath<-find.package('pointR')
 }
-
-#----------------------
-
-# specifies where to look for the ptR profile
-# optionFile<-paste(path.expand("~"),".ptRProfile.csv",sep="/")
-
-# toggleTabType<-function(type){
-#   tabType<-c("Use Soft Tabs", "Use Hard Tabs")
-#   indx<-which(type==tabType)
-#   ifelse(indx==2,"Use Soft Tabs", "Use Hard Tabs" )
-# }
 
 

@@ -114,14 +114,13 @@ restoreWorkSpace<-reactive({
     fullpathProjName=file.path(ptRproj$pathToProj, ptRproj$projName)
     write_json(ptRproj, fullpathProjName, pretty=4) 
   } 
-  cat('selectTab=',format(selectedTab),"\n")
   if(!is.null(selectedTab)){
     if(selectedTab %in% tabs ){
       updateTabsetPanel(session, "pages", selected = selectedTab)
       # aceId<-selectedTab
     }
   }
-  cat('aceId=',aceId,"\n")
+  
   
   log.fout(restoreWorkSpace)
   return(aceId)

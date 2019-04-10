@@ -8,8 +8,6 @@ observeEvent(input$messageFromAce, {
         sender<-input$messageFromAce$sender
         request$sender<-sender
         aceId<-input$messageFromAce$id
-        cat('aceId=',format(aceId),"\n")
-        cat('sender=',format(sender),"\n")
         tabId<-aceID2TabID(aceId)
         clearErrorMssg()
         # browser()
