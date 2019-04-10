@@ -1,7 +1,7 @@
 
 saveDnippetsFileNames<-function(path=getWorkSpaceDir()){
   log.fin(saveDnippetsFileNames)
-  fileName=paste0(path,"/loadedDnippets.rda")
+  fileName=path_join(c(path,"loadedDnippets.rda"))
   rtv<-dnippetsDB$paths
   saveRDS(object=rtv, file = fileName)
   log.fout(saveDnippetsFileNames)

@@ -33,7 +33,8 @@ processMssgFromAceMssgPageIn<-function(sender, mssg){
         storeAssetState()
         processCommit() # this sets the sourceType
         reOrgPanels(id=mssg$id, mode= getModeX() )
-        restoreAssetState(input$pages) #copies from db to assetSelection
+        restoreAssetState(input$pages) # copies from db to assetSelection
+        saveCurrentTab(input$pages) # record to file id of current tab
         savePage(input$pages) # require for new page that was not committed
         sendFileTabsMessage(selected=input$pages, resize=runif(1)) 
       } else{ # case: length(input$pages)==0 || identical(selectedAsset$tabId, input$pages) ==TRUE

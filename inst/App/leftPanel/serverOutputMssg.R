@@ -15,12 +15,10 @@ getCapturedMssg<-reactive({
 
 
 getAptRunnerMssg<-reactive({
-    # cat(">---> getAptRunnerMssg\n")
     if(identical(appRunner$tabId,input$pages)){
       rtv<-appRunner$log
     } else {
       rtv<-""
     }
-    # cat("<---< getAptRunnerMssg\n")
     rtv
   })

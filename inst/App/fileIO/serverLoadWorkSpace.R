@@ -13,6 +13,9 @@ restoreWorkSpace<-reactive({
 
   ptRproj<-pprj()
   
+  selectedTab<-readCurrentTab()
+  tabs=c()
+  
   # 1. load all pages into a list.
   for(filePath in fileWSPaths){
     page<-readRDS(filePath)
@@ -45,11 +48,18 @@ restoreWorkSpace<-reactive({
   mode<-'ptr'
   txt<-NULL
   aceId<-'bogus'
+  
+  
   for(page in wsPages){
     # extract the serverAsset portion and add
     
-    tabId=page$fileDescriptor.tabId
     
+    tabId=page$fileDescriptor.tabId
+    tabs<-c(tabs,tabId)
+    # if(identical(page$isSelected, TRUE)){
+    #   selectedTab=tabId
+    # }
+    # cat('selectTab=',format(selectedTab),"\n")
     mode=page$fileDescriptor.mode
     docFilePath=page$fileDescriptor.filePath
     
@@ -104,6 +114,15 @@ restoreWorkSpace<-reactive({
     fullpathProjName=file.path(ptRproj$pathToProj, ptRproj$projName)
     write_json(ptRproj, fullpathProjName, pretty=4) 
   } 
+  cat('selectTab=',format(selectedTab),"\n")
+  if(!is.null(selectedTab)){
+    if(selectedTab %in% tabs ){
+      updateTabsetPanel(session, "pages", selected = selectedTab)
+      # aceId<-selectedTab
+    }
+  }
+  cat('aceId=',aceId,"\n")
+  
   log.fout(restoreWorkSpace)
   return(aceId)
 })

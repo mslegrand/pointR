@@ -21,6 +21,7 @@ shinyServer(function(input, output,session) {
   source("util/utilTransform.R")
   source("util/copyAndRenameProject.R")
   source("fileIO/dndSnippetLoader.R")
+  
   source("rightPanel/preProc/preProcValidate.R")
   
 # Reactive values----------
@@ -115,6 +116,7 @@ shinyServer(function(input, output,session) {
   source("rightPanel/serverPanelCoordinator.R",                  local=TRUE)
   source("rightPanel/serverPanelDispatch.R",                     local=TRUE)
   source("rightPanel/serverOptions.R",                           local=TRUE) # set initially by copying from configIO
+  source("fileIO/currentTabIO.R",                                local=TRUE)
   source("rightPanel/selector/serverWidgetHandler.R",            local=TRUE)
   source("rightPanel/serverDisplayOptions.R",                    local=TRUE)
   source("rightPanel/selector/serverAssetSelection.R",           local=TRUE)

@@ -37,8 +37,9 @@ defaultOpts<-(function(){
     fontSize=16,
     theme="chrome",
     tabSize=2,
-    currentFile="",
-    currentDirectory=".",
+    currentFile="",       # !!! appears to be not used
+    currentDirectory=".", # !!! appears to be not used
+    
     currentFilePath="./",
     tabType="Use Soft Tabs",
     useTribbleFormat=TRUE,
