@@ -34,7 +34,7 @@
           this.$initiallySaved=true;
         } else {
           this.markClean();
-          //this.$savedState=true;
+          // this.$savedState=true;
         }
       };      
       
@@ -57,8 +57,8 @@
             //console.log("lastOkLen" + lastOkLen);
             //console.log("Prior to pop loop: this.$undoStack.length=" + this.$undoStack.length);
             while( this.$undoStack.length>lastOkLen ){
-              //console.log("POPPING");
-              this.undo(true);
+              console.log("POPPING");
+              this.undo(this.$session, true);
             }
             //console.log("this.$undoStack.length=" + this.$undoStack.length);
             this.$redoStack = [];
