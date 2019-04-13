@@ -140,7 +140,7 @@ resetSelectedTibbleName<-function(tibs, name){
         }
       }
       if( selectedAsset$name==transformTag){
-        selectedAsset$transformType='translate'
+        selectedAsset$transformType='Translate'
       }
       # cat('<---f-< resetSelectedTibbleName\n')
 }

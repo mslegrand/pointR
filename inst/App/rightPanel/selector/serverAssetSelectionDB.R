@@ -100,7 +100,7 @@ newAssetSelection<-function( tabId, choices, tibs){
     }
     columnName<-ptColName
     if(name==transformTag){
-      transformType='translate'
+      transformType='Translate'
     }
   }
   
