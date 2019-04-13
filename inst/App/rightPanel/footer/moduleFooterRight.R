@@ -12,7 +12,6 @@ moduleFooterRight<-function(input, output, session,
   
   output$footer<-renderUI({
     footerPanelState<-getPanelState()
-    # browser()
     if(hasPtScript()){
       leftPtButtons= 50
     } else {
@@ -20,7 +19,8 @@ moduleFooterRight<-function(input, output, session,
     }
       
     if(!is.null( footerPanelState )){
-          if (footerPanelState=='point' && length(getPointMax())>0 ){
+          #if (footerPanelState=='point' && length(getPointMax())>0 ){
+            if (footerPanelState=='point'  ){
               absolutePanel( "class"="footerPanel", draggable=FALSE, style="bottom: 0; left: 10px; display:inline-block",
                   absolutePanel(  id='rightFooterPointButtons',  bottom=5,  left=leftPtButtons,
                      actionGroupButtons(

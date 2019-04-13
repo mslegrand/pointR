@@ -3,7 +3,11 @@ returnValue4ModuleRtFtr<-callModule(
   module=moduleFooterRight,
   id="footerRight",
   getTibEditState= getTibEditState,
-  getPointMax=getPointMax,
+  getPointMax=reactive({
+    val<-getPointMax()
+    if(is.na(val)){ val<-NULL}
+    val
+  }),
   getPanelState=reactive({
     # cat('>----> getPanelState\n'); 
     rtv<-getRightMidPanel(); 
@@ -176,8 +180,10 @@ observeEvent( returnValue4ModuleRtFtr$backwardPt(), {
 
 observeEvent( returnValue4ModuleRtFtr$matColLim(), {
   mcl<-returnValue4ModuleRtFtr$matColLim()
-  curVal<-getPointMax()
-  if(!is.null(mcl) && !( identical(mcl,  curVal ))){
+  
+  curVal<-getPointMax() 
+  
+  if( !( identical(mcl,  curVal ))){
       updateWidgetChoicesRow(maxVal= mcl )
    }
 })
