@@ -6,6 +6,7 @@ function PtRPanelTagDrag(svgId){ //currently svgId is not used here
   this.origX = 0;
   this.origY = 0;
   this.svgId=svgId;
+  this.svg=document.querySelector("#" + svgId); 
   this.currentMatrix = 0;
 }
 
@@ -28,8 +29,8 @@ PtRPanelTagDrag.prototype.selectElement = function (evt) {
   var pth = "ptRPlotter_"+this.svgId;
   
   this.selectedElement.setAttributeNS(null, "onmousemove", pth + ".moveElement(evt)");
-  this.selectedElement.setAttributeNS(null, "onmouseout", pth + ".deselectElement(evt)");
-  this.selectedElement.setAttributeNS(null, "onmouseup",  pth + ".deselectElement(evt)");
+  this.svg.setAttributeNS(null, "onmouseout", pth + ".deselectElement(evt)");
+  this.svg.setAttributeNS(null, "onmouseup",  pth + ".deselectElement(evt)");
 };
 
 // translation of an element
