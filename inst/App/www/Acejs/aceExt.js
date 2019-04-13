@@ -159,6 +159,8 @@ Shiny.addCustomMessageHandler(
           });
           return false;
         }
+        
+        //---------------id ok, extract $el and sender------------------
         console.log('ace id =' + JSON.stringify(id));
         var $el = $('#' + id);
         if(!$el){
@@ -168,7 +170,7 @@ Shiny.addCustomMessageHandler(
         var sender=data.sender;
         console.log('sender =' + JSON.stringify(sender));
         
-
+        //---------------extract editor ---------------
         var editor = $el.data('aceEditor'); 
         
         //---------------editor check------------------
@@ -179,7 +181,7 @@ Shiny.addCustomMessageHandler(
           return false;
         }  
         
-       
+        //---------------extract ud check------------------
         var Range = ace.require("ace/range").Range;
         var ud =  editor.getSession().getUndoManager();
         

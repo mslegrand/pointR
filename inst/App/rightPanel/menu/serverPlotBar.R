@@ -63,19 +63,19 @@ observeEvent(input$plotNavBar, {
     showModal( addNewColModal() )
   }
   
-  if(cmd == 'cmdSetMatColMax'){
-    columnName<-getTibColumnName()
-    currentValue<-getPointMax()
-    if(is.null(currentValue)){
-      currentValue=NA
-    } 
-    showModal( setMatColMaxModal(columnName, currentValue) )
-  }
+  # if(cmd == 'cmdSetMatColMax'){
+  #   columnName<-getTibColumnName()
+  #   currentValue<-getPointMax()
+  #   if(is.null(currentValue)){
+  #     currentValue=NA
+  #   } 
+  #   showModal( setMatColMaxModal(columnName, currentValue) )
+  # }
   
-  if(cmd == 'cmdDeleteColumn'){
-    columnName<-getTibColumnName()
-    showModal(deleteColumnModal(columnName))
-  }
+  # if(cmd == 'cmdDeleteColumn'){
+  #   columnName<-getTibColumnName()
+  #   showModal(deleteColumnModal(columnName))
+  # }
   
   if(cmd == 'cmdNewPP'){ # disable unless ...
     columnName<-getTibColumnName()
