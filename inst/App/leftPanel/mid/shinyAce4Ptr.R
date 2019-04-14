@@ -72,6 +72,9 @@ shinyAce4Ptr <- function(
     initSaved=initSaved #assigned
   ){
   # cat('shinyAce4Ptr:: outputId=',outputId,"\n")
+    if(is.null(theme)){
+      theme<-"chrome"
+    }
     saceList<-aceEditor(
       outputId,
       value,

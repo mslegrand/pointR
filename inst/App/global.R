@@ -5,7 +5,10 @@
 
 version=paste0("v.", read.dcf(system.file('DESCRIPTION', package='pointR'))[,'Version'])
 
-
+# for debugging
+containsNA<-function(d){
+  length(d)==0 || any(unlist(sapply(d,is.na)))
+}
 
 initResourcePaths <- function() {
   if (is.null(.global$loaded)) {
