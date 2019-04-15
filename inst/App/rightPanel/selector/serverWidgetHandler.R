@@ -1,12 +1,25 @@
 
 
-handler<-reactiveValues(
-  choices=tibble(tabId='Tab0', name='x',column='y',type='character',minVal=NA, maxVal=NA,step=1, selectedWidget=NA)[0,]
+# handler<-reactiveValues(
+#   choices=initialWidgetDB()
+#   # choices=tibble(tabId='Tab0', name='x',column='y',type='character',minVal=NA, maxVal=NA,step=1, selectedWidget=NA)[0,]
+# )
+
+widgetDB<-reactiveVal(
+  initialWidgetDB()
 )
 
+removePageWidgetDB<-function(pageId){
+  stopifnot('tabId' %in% names(widgetDB()))
+  db<-widgetDB()
+  db<-filter(db, tabId!=pageId)
+  widgetDB(db)
+}
+
+
+
+
 type2WidgetChoices<-function(colType){
-  
-    
  if(!is.null(colType)){
    choices<-list(
      point=c('radio','picker'),
@@ -35,36 +48,90 @@ type2WidgetChoices<-function(colType){
 }
 
 
+getPageWidgetDB<-function(pageId ){
+  db<-widgetDB()
+  filter(db, tabId==pageId )
+}
 
-
-# TODO: populate handler with rows as needed
-# TODO: rewrite to update just minVal or maxVal or step or selectedWidget
-updateWidgetChoicesRow<-function(#tibName, colName, colType, 
-                                 minVal=NA, maxVal=NA, step=1, selectedWidget='radio'){ # use current tib and col
-  #if( missing(tibName)|| missing(colName)){ stop("missing tibName or colName")}
-  tabId<-input$pages
+getRowWidgetDB<-reactive({ 
+  # browser()
+  pageId<-  input$pages
+  if(length(pageId>0)){
+      wdb<-widgetDB()
   tibName<-getAssetName()
   colName<-getTibColumnName()
-  colType<-getColumnType()
+  row<-filter(wdb, tabId==pageId & name==tibName & column==colName)
   
-  if(length(tabId)>0){
+  if(nrow(row)!=1){ #not there or multiple occurances
+    if(nrow(row)>1){ # remove multiple occurances
+      wdb<-filter(wdb, !(tabId==pageId & name==tibName & column==colName))
+    } 
+    # add back a default
+    colType<-getColumnType()
+    widgets<-type2WidgetChoices(colType)
+    selectedWidget<-widgets[1]
+    wdb<-add_row(wdb, tabId=pageId, name=tibName, column=colName,  
+            minVal=NA, maxVal=NA, step=1, 
+            selectedWidget=selectedWidget)
+    widgetDB(wdb)
+    row<-filter(wdb, tabId==pageId & name==tibName & column==colName)
+  } 
+  row
+  }
+
+})
+
+
+# TODO: populate handler with rows as needed: newPage or tabChange or ...
+# TODO: rewrite to update just minVal or maxVal or step or selectedWidget
+updateWidgetChoicesRow<-function(#tibName, colName, colType, 
+  minVal=NA, maxVal=NA, step=1, selectedWidget='radio'){ # use current tib and col
+  pageId<-  input$pages
+  tibName<-getAssetName()
+  colName<-getTibColumnName()
+  
+  
+  log.fin(updateWidgetChoicesRow)
+  if(length(pageId)>0){
     
+    wdb<-widgetDB()
     rowNo<-which(
-        handler$choices$tabId==tabId & 
-        handler$choices$name==tibName & 
-        handler$choices$column==colName
+        wdb$tabId==pageId & 
+        wdb$name==tibName & 
+        wdb$column==colName
     ) 
-    if(length(rowNo)>0){ #not much changes, just replace selected (assuming selected in colVal)
+    if(length(rowNo)==1){ #not much changes, just replace selected (assuming selected in colVal)
       nn<-names(match.call()[-1])
       for(n in nn){
-        handler$choices[[n]][rowNo]<-get(n)
+        wdb[[n]][rowNo]<-get(n)
       }
-    } else { #remove the row
+    } else { # not there, or multiple rows?
+      colType<-getColumnType()
       widgets<-type2WidgetChoices(colType)
-      
-      tmp<-handler$choices[!(handler$choices$tabId==tabId & handler$choices$name==tibName & handler$choices$column==colName),]
-      handler$choices<-add_row(tmp, tabId=tabId, name=tibName, column=colName,  minVal=minVal, maxVal=maxVal, step=step, selectedWidget=selectedWidget)
-    }
+      if(!selectedWidget %in% widgets){
+        selectedWidget<-widgets[1]
+      }
+      tmp<-wdb[!(wdb$tabId==pageId & wdb$name==tibName & wdb$column==colName),] #remove the row  why?
+      wdb<-add_row(wdb, tabId=pageId, name=tibName, column=colName,  minVal=minVal, maxVal=maxVal, step=step, selectedWidget=selectedWidget)
+    }  
+    widgetDB(wdb)
+    log.fout(updateWidgetChoicesRow)
+    # rowNo<-which(
+    #     handler$choices$tabId==tabId & 
+    #     handler$choices$name==tibName & 
+    #     handler$choices$column==colName
+    # ) 
+    # if(length(rowNo)>0){ #not much changes, just replace selected (assuming selected in colVal)
+    #   nn<-names(match.call()[-1])
+    #   for(n in nn){
+    #     handler$choices[[n]][rowNo]<-get(n)
+    #   }
+    # } else { #remove the row
+    #   widgets<-type2WidgetChoices(colType)
+    #   
+    #   tmp<-handler$choices[!(handler$choices$tabId==tabId & handler$choices$name==tibName & handler$choices$column==colName),]
+    #   handler$choices<-add_row(tmp, tabId=tabId, name=tibName, column=colName,  minVal=minVal, maxVal=maxVal, step=step, selectedWidget=selectedWidget)
+    # }
   }
 } 
 
@@ -77,35 +144,51 @@ getWidgetChoices<-reactive({
 
 getWidget<-reactive({
   # cat('entering getWidget\n')
-  widgets<-getWidgetChoices()
-  widget<-widgets[1]
-  colName<-getTibColumnName()
-  columnValues<-getTib()[[colName]]
-  
-  row<-filter(handler$choices, tabId==getTibTabId() , name==getAssetName(), column==getTibColumnName())
-  # cat("getWidget:: nrow=",nrow(row),"\n")
-  if(nrow(row)==1 ){
-    widget<-row$selectedWidget
-    # cat('getWidget:: found widget=',widget,"\n")
-  } else {
-    # cat('getWidget:: widget not found')
-    # cat('getWidget:: 1 default widget=',widget,"\n")
-  } 
-  if( !(widget %in% widgets) ){
-    widget<-widgets[1] # or 'radio'
-  }
-  return(widget)
+  # widgets<-getWidgetChoices()
+  # widget<-widgets[1]
+  # colName<-getTibColumnName()
+  # columnValues<-getTib()[[colName]]
+  # row<-filter(widgetDB(), 
+  #         tabId==getTibTabId() & 
+  #         name==getAssetName() & 
+  #         column==getTibColumnName()
+  # )
+  # if(nrow(row)==0 ){
+  #   selectedWidget<-getWidgetChoices()[1]
+  # } else if(nrow(row)=1 ){ # found
+  #   selectedWidget<-row$selectedWidget
+  #   if( !(selectedWidget %in% widgets) ){ 
+  #     browser()
+  #     selectedWidget<-getWidgetChoices()[1]
+  #   }
+  # } else { # stop
+  #   browser()
+  #   stop('corrupted widgets')
+  # } 
+  # browser()
+  rtv<-getRowWidgetDB()$selectedWidget
+  # browser()
+  rtv
+  #return(selectedWidget)
 })
 
-getWidgetVal<-reactive({
-  tabId<-input$pages
-  row<-filter(handler$choices, tabId==tabId, name==getAssetName(), column==getTibColumnName())
-})
+# getWidgetVal<-reactive({
+#   tabId<-input$pages
+#   # row<-filter(handler$choices, tabId==tabId, name==getAssetName(), column==getTibColumnName())
+#   row<-filter(widgetDB(), tabId==tabId & name==getAssetName() & column==getTibColumnName())
+# })
 
 getPointMax<-reactive({
   # cat('\n---Entering -getPointMax---------\n')
   selectedTabId<-getTibTabId()
-  colMax<-filter(handler$choices, tabId== getTibTabId() , name==getAssetName(), column==getTibColumnName())$maxVal
+
+  colMax<-filter(widgetDB(), 
+              tabId== getTibTabId() & 
+              name == getAssetName()& 
+              column==getTibColumnName()
+  )$maxVal
+  
+  # colMax<-filter(handler$choices, tabId== getTibTabId() , name==getAssetName(), column==getTibColumnName())$maxVal
   if(length(colMax)==0 ){ #or length(colMax)!=1
     NA
   } else {

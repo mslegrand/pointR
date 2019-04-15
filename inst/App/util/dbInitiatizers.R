@@ -64,5 +64,8 @@ initialServerAssetDB<-function(){
   initialServerAsset()[0,]
 }
 
+initialWidgetDB<-function(){
+  tibble(tabId='Tab0', name='x',column='y',type='character',minVal=NA, maxVal=NA,step=1, selectedWidget=NA)[0,]
+}
 
 

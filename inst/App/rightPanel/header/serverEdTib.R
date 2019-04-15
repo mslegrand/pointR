@@ -65,7 +65,12 @@ observeEvent(returnValue4ModuleEdTib$selectedWidget(), {
   if( getTibEditState()==TRUE && !is.null( returnValue4ModuleEdTib$selectedWidget() )){
     # cat("\n-----------returnValue4ModuleEdTib$selectedWidget--------------------\n")
     # cat("selectedWidget=",format( returnValue4ModuleEdTib$selectedWidget() )," tabId=",format(input$pages),"\n\n")
+    
+    log.fin(returnValue4ModuleEdTib$selectedWidget())
+    selectedWidget<-returnValue4ModuleEdTib$selectedWidget()
+    log.val(selectedWidget)
     updateWidgetChoicesRow( selectedWidget=returnValue4ModuleEdTib$selectedWidget())
+    log.fout(returnValue4ModuleEdTib$selectedWidget())
   }
 })
 
