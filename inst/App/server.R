@@ -195,9 +195,9 @@ shinyServer(function(input, output,session) {
   #on.exit(rm(list=list(tmpVars)))
   
 
-  exportTestValues( request.sender=request$sender)
-  exportTestValues(request.code=request$code)
-  exportTestValues(selectedAsset.tabId=selectedAsset$tabId)
+  # exportTestValues( request.sender=request$sender)
+  # exportTestValues(request.code=request$code)
+  # exportTestValues(selectedAsset.tabId=selectedAsset$tabId)
   if(usingElectron){
     sendPtRManagerMessage(sender='cmd.electron', version=version)
     disable("stopShinyApp")

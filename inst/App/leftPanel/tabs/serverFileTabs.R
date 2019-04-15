@@ -37,8 +37,9 @@ tabTitleRfn<-function(tabName, tabId, docFilePath){
 closeTabNow<-function(tabId2X){
   stopifnot('tabId' %in% names(serverAssetDB$tib))
   serverAssetDB$tib<-filter(serverAssetDB$tib, tabId!=tabId2X)
-  stopifnot('tabId' %in% names(handler$choices))
-  handler$choices<-filter(handler$choices, tabId!=tabId2X)
+  # stopifnot('tabId' %in% names(widgetDB())
+  # handler$choices<-filter(handler$choices, tabId!=tabId2X)
+  removePageWidgetDB(tabId2X)
   removeFileDesc(tabId2X)
   removeTab(inputId = "pages", tabId2X)
 }

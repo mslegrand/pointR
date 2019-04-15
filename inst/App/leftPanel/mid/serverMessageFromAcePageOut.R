@@ -48,7 +48,7 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
             name<-tail(names(tibs))
             resetSelectedTibbleName(tibs=tibs, name=name)
             storeAssetState()
-            selectionList<-reactiveValuesToList(selectedAsset, all.names=TRUE)
+            selectionList<-reactiveValuesToList(selectedAsset, all.names=TRUE) # !!! WFT is this??? not used???
           }
           processCommit() # this sets the sourceType
           reOrgPanels(id=mssg$id, mode= getModeX() )

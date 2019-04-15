@@ -11,8 +11,9 @@
 # - observeEvent of *customFileDialog*
 #  for the time being we just close
 closeCurrentProj<-function(){
-
-  saveDnippetsFileNames() 
+  storeAssetState()
+  saveDnippetsFileNames()
+  
   savePage(input$pages)
 
   pprj(NULL)

@@ -46,9 +46,11 @@ getDnippetsUsageVec<-reactive({
 getDnippetsSelected<-reactive({
   alles<-getDnippetsAll()
   val<-getPageDnippetsDB(input$pages)
-  val[['tabId']]<-NULL
-  val<-unlist(val)
-  alles[val==TRUE]
+  val<-names(which(val==TRUE))
+  intersect(alles,val)
+  # val[['tabId']]<-NULL
+  # val<-unlist(val)
+  # alles[val==TRUE]
 })
 
 getDnippetsAll<-reactive({

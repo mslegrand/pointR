@@ -39,7 +39,11 @@ restoreWorkSpace<-reactive({
       }
       tibAs
     })
+    
     rtv<-bind_rows( rtv)
+    if(ncol(rtv)==0){
+      rtv<-initTib
+    }
     rtv
   }  
   
@@ -98,8 +102,14 @@ restoreWorkSpace<-reactive({
 
   tib<-extractDBFromPages(wsPages, "^trib.", initTib=initialTribbleDB())
   useTribbleFormatDB(tib)
+  
+  tib<-extractDBFromPages(wsPages, "^widg.", initTib=initialWidgetDB() )
+  widgetDB(tib)
+  
+  
 
   dnippetsDB$usage<-extractDBFromPages(wsPages, "^dnip.", initTib=tibble(tabId='bogus')[0,] )
+  # browser()
   dnippetsDB$usage[is.na(dnippetsDB$usage)]<-FALSE # TODO!!! remove when dnippets becomes stable
   # dnippetsDB$usage<-select(dnippetsDB$usage, -c("sampleShapes.dnippets")) # TODO!!! remove when dnippets becomes stable
   # browser()
