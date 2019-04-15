@@ -47,7 +47,6 @@ observeEvent(input$selectedDDDnippets,{
   if(!is.null(input$pages)){
     log.fin(input$selectedDDDnippets)
     selected=input$selectedDDDnippets
-    # browser()
     setDnippetsSelected(input$pages , selected)
     log.fout(input$selectedDDDnippets)
   }
