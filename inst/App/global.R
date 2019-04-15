@@ -5,7 +5,10 @@
 
 version=paste0("v.", read.dcf(system.file('DESCRIPTION', package='pointR'))[,'Version'])
 
-
+# for debugging
+containsNA<-function(d){
+  length(d)==0 || any(unlist(sapply(d,is.na)))
+}
 
 initResourcePaths <- function() {
   if (is.null(.global$loaded)) {
@@ -68,6 +71,7 @@ preprocChoices<-c("onNewPt",  "onMovePt", "onMoveMat")
 # must be loaded prior to alles
 source("util/configIO.R") 
 source("util/loadTemplates.R") 
+source("util/extNmode.R") 
 source("util/logger.R")
 
 #---used to build the UI portion

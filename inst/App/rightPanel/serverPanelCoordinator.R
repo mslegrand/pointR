@@ -18,7 +18,6 @@ observeEvent( getSourceType(),{
 })
 
 setSourceType<-function( sourceType ){
-  # cat('setting sourceType to ',format(sourceType),"\n")
   panels$sourceType=sourceType
 }
 
@@ -65,7 +64,6 @@ getNameType<-reactive({
 # and use it only for whether or not the column is a 'points' column.
 getColumnType<-reactive({
   colName<-getTibColumnName()
-  # cat('colName=',format('colName'),'\n')
   columnValues<-getTib()[[colName]]
   if(!is.null(columnValues)){
     return(extractColType(columnValues))

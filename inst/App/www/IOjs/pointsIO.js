@@ -31,8 +31,8 @@ PtRPanelPoints.prototype.selectPoint = function (evt){
   this.currentY = evt.clientY;
   var pth = "ptRPlotter_"+this.svgId;
   this.selectedElement.setAttributeNS(null, "onmousemove",  pth + ".movePoint(evt)");
-  this.selectedElement.setAttributeNS(null, "onmouseout", pth + ".deselectPoint(evt)");
-  this.selectedElement.setAttributeNS(null, "onmouseup",  pth + ".deselectPoint(evt)");
+  this.svg.setAttributeNS(null, "onmouseout", pth + ".deselectPoint(evt)");
+  this.svg.setAttributeNS(null, "onmouseup",  pth + ".deselectPoint(evt)");
 };
 
 PtRPanelPoints.prototype.movePoint = function (evt){
@@ -69,8 +69,8 @@ PtRPanelPoints.prototype.deselectPoint = function (evt){
       id: this.selectedElement.getAttribute("id")
     });
     this.selectedElement.removeAttributeNS(null, "onmousemove");
-    this.selectedElement.removeAttributeNS(null, "onmouseout");
-    this.selectedElement.removeAttributeNS(null, "onmouseup");
+    this.svg.removeAttributeNS(null, "onmouseout");
+    this.svg.removeAttributeNS(null, "onmouseup");
     this.selectedElement = 0;
   }              
 };

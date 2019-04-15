@@ -7,12 +7,14 @@
 
 #---begin server--------------
 shinyServer(function(input, output,session) {
-  cat_list <- c()
-  exportTestValues(catList=cat_list)
+  
+  # debugging tools
+  # cat_list <- c()
+  # exportTestValues(catList=cat_list)
   
 # utility functions---------------
   source("util/dbInitiatizers.R") 
-  source("util/extNmode.R") 
+  
   source("util/format.R")
   source("util/utilParser.R")
   source("util/utilptR.R")
@@ -21,6 +23,7 @@ shinyServer(function(input, output,session) {
   source("util/utilTransform.R")
   source("util/copyAndRenameProject.R")
   source("fileIO/dndSnippetLoader.R")
+  
   source("rightPanel/preProc/preProcValidate.R")
   
 # Reactive values----------
@@ -28,9 +31,7 @@ shinyServer(function(input, output,session) {
   reOrgPanels(id=NULL, mode=NULL)
   
   triggerRefresh<-function(sender, rollBack=TRUE, auxValue=FALSE){ # to be used to force a code refresh???
-    # cat(">---> triggerRefresh\n")
     updateAceExt(id= getAceEditorId(), sender=sender, getValue=TRUE, rollBack=rollBack, auxValue=auxValue )
-    # cat("<---< triggerRefresh\n")
   }
   
   
@@ -50,11 +51,11 @@ shinyServer(function(input, output,session) {
   })  
   
 
-  shinyFileChoose(input, "buttonFileOpen",           session=session, roots=c(home="~"),  filetypes=c('R','PTR','SVGR','js') ) #hidden
+  shinyFileChoose(input, "buttonFileOpen",           session=session, roots=c(home="~"),  filetypes=c('R','PTR','SVGR','js','dnds') ) #hidden
   shinyFileChoose(input, "buttonFileOpenProject",    session=session, roots=c(home="~"),  filetypes=c('pprj') ) #hidden
-  shinyFileChoose(input, "buttonSnippetImport",      session=session, roots=c(home="~"),  filetypes=c('snippets') ) #hidden
-  shinyFileChoose(input, "buttonDnippetImport",      session=session, roots=c(home="~"),  filetypes=c('dnippets') ) #hidden
-  shinyFileChoose(input, "buttonPreProcPtImport",    session=session, roots=c(home="~"),  filetypes=c('preprocpts') ) #hidden
+  shinyFileChoose(input, "buttonSnippetImport",      session=session, roots=c(home="~"),  filetypes=c('snip') ) #hidden
+  shinyFileChoose(input, "buttonDnippetImport",      session=session, roots=c(home="~"),  filetypes=c('dnds') ) #hidden
+  shinyFileChoose(input, "buttonPreProcPtImport",    session=session, roots=c(home="~"),  filetypes=c('pppt') ) #hidden
   shinyFileSave(input,   "buttonExportSVG",          session=session, roots=c(home="~")  ) #hidden
   shinyFileSave(input,   "buttonExportPreproc",      session=session, roots=c(home="~") ) #hidden
   
@@ -115,6 +116,7 @@ shinyServer(function(input, output,session) {
   source("rightPanel/serverPanelCoordinator.R",                  local=TRUE)
   source("rightPanel/serverPanelDispatch.R",                     local=TRUE)
   source("rightPanel/serverOptions.R",                           local=TRUE) # set initially by copying from configIO
+  source("fileIO/currentTabIO.R",                                local=TRUE)
   source("rightPanel/selector/serverWidgetHandler.R",            local=TRUE)
   source("rightPanel/serverDisplayOptions.R",                    local=TRUE)
   source("rightPanel/selector/serverAssetSelection.R",           local=TRUE)
@@ -193,9 +195,9 @@ shinyServer(function(input, output,session) {
   #on.exit(rm(list=list(tmpVars)))
   
 
-  exportTestValues( request.sender=request$sender)
-  exportTestValues(request.code=request$code)
-  exportTestValues(selectedAsset.tabId=selectedAsset$tabId)
+  # exportTestValues( request.sender=request$sender)
+  # exportTestValues(request.code=request$code)
+  # exportTestValues(selectedAsset.tabId=selectedAsset$tabId)
   if(usingElectron){
     sendPtRManagerMessage(sender='cmd.electron', version=version)
     disable("stopShinyApp")

@@ -1,7 +1,7 @@
 
 #restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir(), pprjPath=getProjectFullPath(), session=getSession() ){
 restoreWorkSpace<-reactive({
-  
+  log.fin(restoreWorkSpace)
   workSpaceDir=getWorkSpaceDir()
   prjPath=getProjectFullPath()
   fileWSPaths<-dir(workSpaceDir, pattern='PTR-TABID', full.names = T)
@@ -12,11 +12,20 @@ restoreWorkSpace<-reactive({
   
 
   ptRproj<-pprj()
+  
+  selectedTab<-readCurrentTab()
+  tabs=c()
+  
   # 1. load all pages into a list.
   for(filePath in fileWSPaths){
     page<-readRDS(filePath)
     # A. assign tabIds to each page
     id=basename(filePath)
+    if(!is.null(ptRproj$pathToProj)){
+      docFilePath=page$fileDescriptor.filePath
+      page$fileDescriptor.filePath<-sub( ptRproj$pathToProj, editOption$currentProjectDirectory, docFilePath)
+      saveRDS(page,filePath)
+    }
     wsPages[[id]]<-page
   }
   
@@ -30,7 +39,11 @@ restoreWorkSpace<-reactive({
       }
       tibAs
     })
+    
     rtv<-bind_rows( rtv)
+    if(ncol(rtv)==0){
+      rtv<-initTib
+    }
     rtv
   }  
   
@@ -39,17 +52,21 @@ restoreWorkSpace<-reactive({
   mode<-'ptr'
   txt<-NULL
   aceId<-'bogus'
+  
+  
   for(page in wsPages){
     # extract the serverAsset portion and add
     
-    tabId=page$fileDescriptor.tabId
     
+    tabId=page$fileDescriptor.tabId
+    tabs<-c(tabs,tabId)
+    # if(identical(page$isSelected, TRUE)){
+    #   selectedTab=tabId
+    # }
+    # cat('selectTab=',format(selectedTab),"\n")
     mode=page$fileDescriptor.mode
     docFilePath=page$fileDescriptor.filePath
     
-    if(!is.null(ptRproj$pathToProj)){
-      docFilePath<-sub( ptRproj$pathToProj, editOption$currentProjectDirectory, docFilePath)
-    }
     
     fileSaveStatus=page$fileDescriptor.isSaved
     txt=page$code
@@ -85,22 +102,37 @@ restoreWorkSpace<-reactive({
 
   tib<-extractDBFromPages(wsPages, "^trib.", initTib=initialTribbleDB())
   useTribbleFormatDB(tib)
+  
+  tib<-extractDBFromPages(wsPages, "^widg.", initTib=initialWidgetDB() )
+  widgetDB(tib)
+  
+  
 
   dnippetsDB$usage<-extractDBFromPages(wsPages, "^dnip.", initTib=tibble(tabId='bogus')[0,] )
-
+  # browser()
+  dnippetsDB$usage[is.na(dnippetsDB$usage)]<-FALSE # TODO!!! remove when dnippets becomes stable
+  # dnippetsDB$usage<-select(dnippetsDB$usage, -c("sampleShapes.dnippets")) # TODO!!! remove when dnippets becomes stable
+  # browser()
   preProcDB$points<-extractDBFromPages(wsPages, "^preprocScripts.", initTib=initialPreprocDB())
 
   tib<-extractDBFromPages(wsPages, "^fileDescriptor.", initTib=initialFileDescDB() )
   fileDescDB(tib)  
   
-  #ptRproj<-pprj()
   if(!is.null(ptRproj)){
     ptRproj$pathToProj<-editOption$currentProjectDirectory
     ptRproj$projName<-editOption$currentProjectName
     fullpathProjName=file.path(ptRproj$pathToProj, ptRproj$projName)
-    write_json(ptRproj, fullpathProjName) 
+    write_json(ptRproj, fullpathProjName, pretty=4) 
   } 
+  if(!is.null(selectedTab)){
+    if(selectedTab %in% tabs ){
+      updateTabsetPanel(session, "pages", selected = selectedTab)
+      # aceId<-selectedTab
+    }
+  }
   
+  
+  log.fout(restoreWorkSpace)
   return(aceId)
 })
   

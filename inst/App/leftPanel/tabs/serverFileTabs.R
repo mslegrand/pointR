@@ -37,8 +37,9 @@ tabTitleRfn<-function(tabName, tabId, docFilePath){
 closeTabNow<-function(tabId2X){
   stopifnot('tabId' %in% names(serverAssetDB$tib))
   serverAssetDB$tib<-filter(serverAssetDB$tib, tabId!=tabId2X)
-  stopifnot('tabId' %in% names(handler$choices))
-  handler$choices<-filter(handler$choices, tabId!=tabId2X)
+  # stopifnot('tabId' %in% names(widgetDB())
+  # handler$choices<-filter(handler$choices, tabId!=tabId2X)
+  removePageWidgetDB(tabId2X)
   removeFileDesc(tabId2X)
   removeTab(inputId = "pages", tabId2X)
 }
@@ -48,13 +49,14 @@ closeTabNow<-function(tabId2X){
 
 
 
-# TODO!!!! , add input parameters for:  mode, autocomplete
+# TODO!!!! , add input parameters for:   autocomplete
 # fontsize should be read from options 
 addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FALSE){
+  log.fin(addFileTab)
   # cat("addFileTab:: mode=",mode,"\n")
   tabId<-getNextTabId()
   
-  if(is.null(tabId)){ browser() }
+  if(is.null(tabId)){ cat("tabId is null\n"); browser() }
   addFileDesc(pageId=tabId, docFilePath=docFilePath, fileSaveStatus, fileMode=mode)
   setUseTribble( pageId=tabId, value=TRUE)
   addNewPage2dnippetsDB(tabId)
@@ -65,7 +67,7 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FA
   
   
   sendFileTabsMessage(resize=runif(1))
-  
+  log.fout(addFileTab)
   return(tabId)
 }
 

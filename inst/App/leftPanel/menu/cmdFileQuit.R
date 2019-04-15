@@ -1,6 +1,7 @@
 
 
 cmdFileQuit<-reactive({
+  storeAssetState()
   fd<-getAllNamedUnsavedFiles()
   choices<-fd$filePath
   if(length(choices)>0){
@@ -12,6 +13,7 @@ cmdFileQuit<-reactive({
 })
 
 cmdQuitNow<-reactive({
+  savePage(input$pages)
   opts<-isolate(reactiveValuesToList((editOption)))
   opts<-sapply(opts,unlist, USE.NAMES = T, simplify = F )
   writeOptionsJSON(opts)

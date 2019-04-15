@@ -81,7 +81,7 @@ dripplets2Rmd<-function( drps ){
 #' }
 #extractDripplet<-function(dr, tmpdir=tempdir() ){
 extractDripplet<-function(dr ){
-    temp<-str_trim(unlist(str_split(dr,'\n```')))
+  temp<-str_trim(unlist(str_split(dr,'\n```')))
   if(length(temp)>=6){
     temp<-temp[nchar(temp)>0]
   }
@@ -112,6 +112,7 @@ extractDripplet<-function(dr ){
 #' Returns list of character vectors named with names'hint', 'snip', 'logo' representing a drippet
 #' uses in cmdFileDnippet.R
 dripplets2List2<-function(drps){
+
   drps<-unlist(str_split(drps,pattern = '\\*{3,}'))
   drps<-lapply(drps, function(dr){
     rtv<-extractDripplet(dr)

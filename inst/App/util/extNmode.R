@@ -1,8 +1,11 @@
 # defines global extMode.TB 
 
+
+# extMode.TB is used in ui.R by genShinySaveFilesButtons
+
 extMode.TB<-tibble(
-  ext=c('R', 'Rmd', 'snippets', 'dnippets', 'txt', 'js'),
-  mode=c('ptr', 'ptrrmd', 'snippets', 'dnippets', 'text', 'javascript')
+  ext=c('R', 'Rmd', 'snip', 'dnds', 'txt', 'js', 'css'),
+  mode=c('ptr', 'ptrrmd', 'snippets', 'dnippets', 'text', 'javascript', 'css')
 )
 
 pathExt2mode<-function(pathExt){

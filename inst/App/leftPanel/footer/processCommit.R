@@ -14,12 +14,12 @@ src2sourceType<-function(src){  #not used !!
 # uses to mode, input$pages
 # called exclusively by processMssgFromAceMssgPageIn
 processCommit<-reactive({
-  cat_list<<-c( cat_list,">---> processCommit\n")
+  # cat_list<<-c( cat_list,">---> processCommit\n")
   clearErrorMssg()
   
   mode<-getModeX()
-  if(length(mode)==0){
-    browser()
+  if(length(mode)!=1){
+    cat('missing mode\n'); browser()
     return(NULL)
   }
   # cat("class(mode)=" ,class(mode),"\n")
@@ -43,16 +43,16 @@ processCommit<-reactive({
     setSourceType(appPanelTag)
   }
   else {
-    browser()
+    cat("unknown mode\n"); browser()
   }
   if(!hasError()){
     tabId<-input$pages
     # cat("tabId=",tabId,"\n")
-    cat_list<<-c( cat_list,'>---> processCommit::savePage\n')
+    #cat_list<<-c( cat_list,'>---> processCommit::savePage\n')
     savePage(tabId)
-    cat_list<<-c( cat_list,'<---< processCommit::savePage\n')
+    #cat_list<<-c( cat_list,'<---< processCommit::savePage\n')
   }
-  cat_list<<-c( cat_list,"<---< processCommit\n")
+  #cat_list<<-c( cat_list,"<---< processCommit\n")
 })
 
 

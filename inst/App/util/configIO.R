@@ -23,7 +23,7 @@ optionDirPath<-function(){
 
 # we might want to move this under the server
 writeOptionsJSON<-function(opts){
-  file<-paste(optionDirPath(),"ptRProfile.json", sep="/")
+  file<-path_join(c(optionDirPath(),"ptRProfile.json"))
   write_json(opts, file, pretty=4)
 }
 
@@ -32,13 +32,14 @@ writeOptionsJSON<-function(opts){
 # prior to the the running the session
 # Subsequently the reactive editOption will be 
 # initialize using the value of defaultOpts
-readOptionsJSON<-function(){
+defaultOpts<-(function(){
   defaultOpts<-list(
     fontSize=16,
     theme="chrome",
     tabSize=2,
-    currentFile="",
-    currentDirectory=".",
+    currentFile="",       # !!! appears to be not used
+    currentDirectory=".", # !!! appears to be not used
+    
     currentFilePath="./",
     tabType="Use Soft Tabs",
     useTribbleFormat=TRUE,
@@ -50,7 +51,7 @@ readOptionsJSON<-function(){
   )
   
   try({
-    file<-paste(optionDirPath(),"ptRProfile.json", sep="/")
+    file<-path_join(c(optionDirPath(),"ptRProfile.json"))
     if(file.exists(file)){
       tmp<-read_json(file)
       defaultOpts[names(tmp)]<-tmp
@@ -59,20 +60,18 @@ readOptionsJSON<-function(){
   })
   opts<-sapply(defaultOpts,unlist, USE.NAMES = T, simplify = F )
   opts
-} #execute now!
-
-
-defaultOpts<-readOptionsJSON() #this is the initial user options
-
+})() #execute now!
+ 
+# adjust defaultOpts as needed
 if(!is.null(getShinyOption("initialPointRProject"))){
   initialPointRProject<-getShinyOption("initialPointRProject")
   defaultOpts$currentProjectName<-basename(initialPointRProject)
   defaultOpts$currentProjectDirectory<-dirname(initialPointRProject)
 }
 
-initialProj<-NULL
-# check on defaultOptsProject existence
-if(is.null(defaultOpts$currentProjectName) || 
+initialProj<-NULL # upon startup of server, this copied to pprj
+
+if(is.null(defaultOpts$currentProjectName) || # check on defaultOptsProject existence
    is.null(defaultOpts$currentProjectDirectory) ||
   !file.exists(file.path(defaultOpts$currentProjectDirectory, defaultOpts$currentProjectName))
   ){
@@ -81,60 +80,22 @@ if(is.null(defaultOpts$currentProjectName) ||
 } else {
   try({
      fullpathProjName=file.path(defaultOpts$currentProjectDirectory, defaultOpts$currentProjectName)
-     initialProj<-read_json(fullpathProjName) 
+     initialProj<-read_json(fullpathProjName, simplifyVector = TRUE) 
   })
 }
-  
 
 
-# server will copy defaultOpts to reactiveValue: editOption
+# upon startup of server defaultOpts is copied  to editOption
+# upon startup of server, initialProj copied to pprj
 
 
+# electron option tells pointR whether this is being run from ptR.
 if(!is.null(getShinyOption("electron"))){
   usingElectron<-TRUE
-  ptRPath<-find.package('pointR') # TODO replace 
+  ptRPath<-find.package('pointR') # TODO??? place  pointR inside electron package???
 } else {
   usingElectron<-FALSE
   ptRPath<-find.package('pointR')
 }
-
-
-
-
-
-# used by loader
-
-# dnippetsDirPath<-function(){ #!!! not used???
-#   opPath<-optionDirPath()
-#   dirPath<-paste(opPath,'drippets',sep='/')
-#   if(!file.exists(dirPath)){
-#     dir.create(dirPath)
-#   }
-#   dirPath
-# }
-# 
-# snippetsDirPath<-function(){  #!!! not used???
-#   opPath<-optionDirPath()
-#   dirPath<-paste(opPath,'snippets',sep='/')
-#   if(!file.exists(dirPath)){
-#     dir.create(dirPath)
-#   }
-#   dirPath
-# }
-
-
-# specifies where to look for the ptR profile
-# optionFile<-paste(path.expand("~"),".ptRProfile.csv",sep="/")
-
-
-
-
-
-
-# toggleTabType<-function(type){
-#   tabType<-c("Use Soft Tabs", "Use Hard Tabs")
-#   indx<-which(type==tabType)
-#   ifelse(indx==2,"Use Soft Tabs", "Use Hard Tabs" )
-# }
 
 

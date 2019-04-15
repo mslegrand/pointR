@@ -147,6 +147,8 @@ overflow: hidden;
   background-color: white;
 }
 .footerPanel{
+  position: absolute;
+  z-index:60;
   bottom:5px;
   left:10px; 
   width:100%;

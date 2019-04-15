@@ -28,8 +28,8 @@ PtRPanelTranslate.prototype.selectElement = function(evt) {
   //add eventattrs to element
   this.selectedElement.parentNode.appendChild( this.selectedElement ); //brings to top
   this.selectedElement.setAttributeNS(null, "onmousemove", pth + ".moveElement(evt)");
-  this.selectedElement.setAttributeNS(null, "onmouseout", pth + ".deselectElement(evt)");
-  this.selectedElement.setAttributeNS(null, "onmouseup",  pth + ".deselectElement(evt)");
+  this.svg.setAttributeNS(null, "onmouseout", pth + ".deselectElement(evt)");
+  this.svg.setAttributeNS(null, "onmouseup",  pth + ".deselectElement(evt)");
 };
 
 // translation of an element
@@ -58,8 +58,8 @@ PtRPanelTranslate.prototype.deselectElement = function(evt) {
       id: this.selectedElement.getAttribute("tid")
     });
     this.selectedElement.removeAttributeNS(null, "onmousemove");
-    this.selectedElement.removeAttributeNS(null, "onmouseout");
-    this.selectedElement.removeAttributeNS(null, "onmouseup");
+    this.svg.removeAttributeNS(null, "onmouseout");
+    this.svg.removeAttributeNS(null, "onmouseup");
     this.selectedElement = 0;
     
   }

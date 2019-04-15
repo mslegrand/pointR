@@ -27,6 +27,8 @@ if(!!window.sendToElectron){
   
 }
 
+
+
 Shiny.addCustomMessageHandler(
   "ptRManager",
   function(data){
@@ -186,10 +188,35 @@ $('document').ready(function()
   $('.hiddenButton').hide();
   
 
-  
+  //this is  ctrl+w key fails in browser, but works
   document.addEventListener('keydown', function(event) {
+    if (event.code == 'KeyS' && (event.ctrlKey || event.metaKey)) {
+      //alert('saving!');
+      let $el=$('#editNavBar');
+      if(event.shiftKey){
+        $el.attr('value',"saveAll");
+      } else {
+        $el.attr('value',"Save");
+      }
+  		$el.trigger("change");
+      event.stopPropagation();
+    }
     if (event.code == 'KeyW' && (event.ctrlKey || event.metaKey)) {
-      alert('phew!');
+      //alert('closing!');
+      let $el=$('#editNavBar');
+      if(event.shiftKey){
+        $el.attr('value',"closeAll");
+      } else {
+        $el.attr('value',"close");
+      }
+  		$el.trigger("change");
+      event.stopPropagation();
+    }
+    if (event.code == 'KeyX' && (event.ctrlKey || event.metaKey)) {
+      //alert('closing!');
+      let $el=$('#editNavBar');
+      $el.attr('value',"closeProject");
+  		$el.trigger("change");
       event.stopPropagation();
     }
   });

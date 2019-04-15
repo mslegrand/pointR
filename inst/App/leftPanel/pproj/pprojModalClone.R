@@ -106,26 +106,35 @@ observeEvent(input$modalCloneProjOk, {
   } else {
     # prepare to process
     
-    templatePath<-dirname(input$templateProjName)
+    templatePath<-dirname(input$templateProjName) # clonePath
     pathToProjParent<-input$parentProjDirectoryName
     
     projName<-input$modalProjName
-    pattern<-gsub('\\.pprj$','', basename(input$templateProjName))
-    projName<-gsub('\\.pprj$','',projName) 
-    projNameExt<-paste0(projName,'.pprj')
+    
+    pattern<-gsub('\\.pprj$','', basename(input$templateProjName)) # clone name sans .pprj
+    projName<-gsub('\\.pprj$','',projName) # projName without extension
+    projNameExt<-paste0(projName,'.pprj') # projName with extension
     
     
      # 0. close current project
     closeCurrentProj()
     # 1. clone project
+    # fullpathProjName<-copyAndRenameProject(
+    #   pattern=pattern, # name of clone.pprj wo .pprj
+    #   templatePath=templatePath, # directory containing clone.pprj
+    #   projName=projName, # name of new proj wo .pprj
+    #   pathToProjParent=pathToProjParent # parent directory of new proj dir
+    # )
+    
     fullpathProjName<-copyAndRenameProject(
-      pattern=pattern, 
-      templatePath=templatePath, 
-      projName=projName, 
-      pathToProjParent=pathToProjParent 
+      sourceProject=input$templateProjName, #project to clone
+      targetName=projName, # name of new proj wo .pprj
+      pathToTargetParent=pathToProjParent # parent directory of new proj dir
     )
+    
     # 2. open cloned project
-    ptRproj<-read_json(fullpathProjName) 
+    ptRproj<-read_json(fullpathProjName,simplifyVector = TRUE) 
+    
     pprj(ptRproj)
     # 3. 
     pathToProj<-path_join(c(pathToProjParent,projName))

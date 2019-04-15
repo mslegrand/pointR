@@ -1,4 +1,7 @@
 cmdFileNewPtR<-function(fileCmd="newPtrTibScript"){
+  log.fin(cmdFileNewPtR)
+    
+  
     templateChoices<-list(
       newPtrTibScript=  "ptRTemplate.R",
       newPtRMatScript = "matTemplate.R",
@@ -14,6 +17,7 @@ cmdFileNewPtR<-function(fileCmd="newPtrTibScript"){
     aceId<-tabID2aceID(tabId)
     
     mssg$error<-""
+    log.fout(cmdFileNewPtR)
 }
 
 cmdFileNewRmd<-function(){
@@ -37,7 +41,7 @@ cmdFileNewIOSlides<-function(){
 
 cmdFileNewSnippet<-function(){
   
-  src<-fileTemplates[[ "snippetTemplate.snippets" ]] #rmdTemplate
+  src<-fileTemplates[[ "snippetTemplate.snip" ]] #
   tabName<-getNextAnonymousFileName()
   addFileTab(title=tabName, txt=src,  docFilePath="?", mode='snippets', fileSaveStatus=FALSE)
   
@@ -61,7 +65,7 @@ cmdFileNewJavascript<-function(){
 }
 
 cmdDndSnippetNew<-function(){
-  src<-fileTemplates[[ "dndSnippetTemplate.dnippets" ]] #rmdTemplate
+  src<-fileTemplates[[ "dndSnippetTemplate.dnds" ]] #rmdTemplate
   src<-sub('\ndate: "TODAY"', paste0('\ndate:\ndate: "', Sys.Date(),'"'), src)
   tabName<-getNextAnonymousFileName()
   addFileTab(title=tabName, txt=src,  docFilePath="?", mode='dnippets', fileSaveStatus=FALSE)

@@ -33,6 +33,7 @@ peekTab<-reactive( {request$tabs[1]} )
 popTab<-reactive({
   tab<-request$tabs[1]
   request$tabs<-request$tabs[-1]
+  # ?????   if length(tabs is 0, remove sender?)
   tab
 })
 

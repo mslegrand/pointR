@@ -1,7 +1,7 @@
 # ---beging code to inserted in ptR-------------------------------
 newProjShinyCntrlModal <- function(failed = 0, mssg=NULL, datapath=NULL, projectName=NULL) {
   #shinyDirChoose(input, id='browseForDir', roots=c(wd='~'), filetypes='')
-  cat('>----> newProjShinyCntrlModal\n')
+  # cat('>----> newProjShinyCntrlModal\n')
   shinyDirChoose(input, id='browseForDir', roots=c(home='~'))
   observeEvent(input$browseForDir,{
     datapath<-parseDirPath(c(home='~'), input$browseForDir)
@@ -11,7 +11,7 @@ newProjShinyCntrlModal <- function(failed = 0, mssg=NULL, datapath=NULL, project
       updateTextInput(session,inputId = "parentProjDirectoryName", value=datapath)
     }
   })
-  cat('>----> modalDialog\n')
+  # cat('>----> modalDialog\n')
   modalDialog(
     h2('Create a new Shiny Custom Input Project'),
     div(
@@ -88,6 +88,7 @@ observeEvent(input$modalNewShinyCntrlProjOk, {
     templateName<-input$prjTmplName
     templatePath<- projTemplatesPaths[templateName] # the clone path of this project.
     templateName.pprj<-'widget.pprj' #namesassigned to the .pprj
+    
     pathToProjParent<-datapath # input$parentProjDirectoryName # parent directory of new project
     projName<-projectName # input$modalProjName # the name of of new project
     
@@ -100,14 +101,19 @@ observeEvent(input$modalNewShinyCntrlProjOk, {
     closeCurrentProj()
     
     # 1. clone project
+    # fullpathProjName<-copyAndRenameProject(
+    #   pattern=pattern, 
+    #   templatePath=templatePath, 
+    #   projName=projName, 
+    #   pathToProjParent=pathToProjParent 
+    # )
     fullpathProjName<-copyAndRenameProject(
-      pattern=pattern, 
-      templatePath=templatePath, 
-      projName=projName, 
-      pathToProjParent=pathToProjParent 
+      sourceProject= path_join(c(templatePath, 'widget.pprj')),
+      targetName=projName,
+      pathToTargetParent=pathToProjParent
     )
     # 2. open cloned project
-    ptRproj<-read_json(fullpathProjName) 
+    ptRproj<-read_json(fullpathProjName, simplifyVector = TRUE) 
     pprj(ptRproj)
     # 3. 
     pathToProj<-path_join(c(pathToProjParent,projName))

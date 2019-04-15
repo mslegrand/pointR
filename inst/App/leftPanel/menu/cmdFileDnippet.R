@@ -13,7 +13,7 @@ loadDndSnippets<-function(datapath, startup=FALSE){
     dnippetText<-paste(readLines(datapath), collapse = "\n")
     dnippetList<-dripplets2List2(dnippetText) # contains hint, snippet, logo where logo has been processed into SVG
     dnippets<-getDnippets4ToolBar(dnippetList) # minor reshape
-    
+
     dnName<-basename(datapath)
     # adds to selection
     #The first 2 are almost the same thing, recording path and dname
@@ -32,6 +32,32 @@ observeEvent(input$buttonDnippetImport,{
   if(length(fp.dt)>0 && nrow(fp.dt)){
     datapath<-as.character(fp.dt$datapath[1])
     datapath<-gsub(pattern = '^NA/', "~/", datapath)
-    loadDndSnippets(datapath)
+    # if this is a project, copy to resource
+    ptRproj<-pprj()
+    if(!is.null(ptRproj$pathToProj) && dir.exists( ptRproj$pathToProj )){
+      
+      resourceDir<-path_join(c(editOption$currentProjectDirectory,'resources'))
+      if(!dir.exists(resourceDir)){
+        dir.create(resourceDir) # eventuall will remove this.
+      }
+      # copy over
+      file.copy(datapath, resourceDir)
+      
+      # add to loadedDnippets.rda
+      # fileName=path_join(c(path,'loadedDnippets.rda'))
+      # add to dnippet db
+      dname=path_file(datapath)
+      dndspath<-path_join(c(resourceDir,dname))
+      #dname=sub('\\.dnds$','',dname)
+      add2DnippetDBPath(dname, dndspath)
+      # save database
+      saveDnippetsFileNames()
+      #load
+      loadDndSnippets(dndspath)
+    } else { # not a project
+      loadDndSnippets(datapath) # !!! need to rethink this
+    }
+    
+    
   }
 })

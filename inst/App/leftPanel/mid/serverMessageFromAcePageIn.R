@@ -2,9 +2,7 @@
 processMssgFromAceMssgPageIn<-function(sender, mssg){
     # cat('>---> processMssgFromAceMssgPageIn\n')
     
-    #reOrgPanels(id=mssg$id, mode= getMode() )
-    # cat("sender = ", format(sender),"\n")
-    # cat("assetName = ", format(getAssetName()),"\n")
+    
     if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset') && !is.null(getAssetName())){ 
       #if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset', 'cmd.saveFileNow') && !is.null(getAssetName())){ 
       processCommit() # this sets the sourceType
@@ -32,24 +30,17 @@ processMssgFromAceMssgPageIn<-function(sender, mssg){
          nchar(input$pages)>0 && 
          !identical(selectedAsset$tabId, input$pages) 
       ){
-        # browser()
-         # cat('--storeAssetState\n')
         storeAssetState()
-         # cat("--restoreAssetState\n")
         processCommit() # this sets the sourceType
-        # cat('--reOrgPanels')
         reOrgPanels(id=mssg$id, mode= getModeX() )
-        restoreAssetState(input$pages) #copies from db to assetSelection
-        # browser()
-         # cat('--savePage\n')
+        restoreAssetState(input$pages) # copies from db to assetSelection
+        saveCurrentTab(input$pages) # record to file id of current tab
         savePage(input$pages) # require for new page that was not committed
         sendFileTabsMessage(selected=input$pages, resize=runif(1)) 
-        
       } else{ # case: length(input$pages)==0 || identical(selectedAsset$tabId, input$pages) ==TRUE
         
       }
       reOrgPanels(id=mssg$id, mode= getModeX() ) 
-      
       # end assetUpdate:
     } 
     setTrigger('redraw')
