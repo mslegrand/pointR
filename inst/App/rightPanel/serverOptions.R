@@ -67,64 +67,10 @@ getFileNameStatus<-reactive({
     editOption$currentFilePath!="./"
 })
 
-# revised to use fileDescriptor: fileDescDB
-#getFileSavedStatus<-reactive({editOption$.saved})
-
 # invoked by cmdFileOpen and cmdFileExportSvg.R
 setCurrentFilePath<-function(filePath){
   editOption$currentFilePath<-filePath
 }
-
-# must both add and delete entries.
-# This algorithm is very inefficient
-observeEvent( editOption$recentFiles ,{
-  # One strategy: remove all recentFiles and then reinsert
-  # 1 remove menuDropdown("Recent Files")
-  files<-unlist(editOption$recentFiles)
-  if(!is.null(files)){
-    files<-files[file.exists(files)]
-  }
-  N<-length(files)
-  
-  removeDMDM(
-    session=session, menuBarId="editNavBar", entry="Recent Files")
-  if(N>0){
-    #1 make shortNames
-    L<-str_split(files,"/")
-    N<-length(files)
-    toName<-function(x,n){
-      t<-tail(L[[x]],n=n)
-      paste(rev(t),collapse="~")
-    }
-    dupded<-function(S){
-      sapply(1:length(S), function(i)sum(S==S[i])>1)
-    }
-    D<-rep(T,length.out=N)
-    S<-D
-    n<-0
-    while(any(D)){
-      I<-which(D)
-      n<-n+1
-      S[I]<-sapply(I, function(x)toName(x,n=n) )
-      D<-dupded(S)
-    }
-    menuLabels<-S
-    # 2 make dropdown containing menuItems for each recentFile 
-    label="Recent Files"
-    menuValues<-paste("recentFile",files, sep="-")
-   
-    items<-lapply(1:N, function(i){ 
-      shinyDMDMenu::menuItem( label=menuLabels[i], value=menuValues[i])
-    } )
-    
-    submenu=do.call(function(...){ menuDropdown(label,...) }, items)
-    #3 add dropdown to menu
-    insertAfterDMDM(
-      session, menuBarId = "editNavBar", 
-      entry="openFile", submenu= submenu)
-  }
-})
-
 
 addToRecentFiles<-function(filePath){
   filePath<-unlist(filePath)
@@ -156,52 +102,66 @@ removeFromRecentProjects<-function(projDir, projName){
   editOption$recentProjects<-tmp
 }
 
+mkFileSubMenu<-function(subMenuLabel, prefix, fullFilePaths){
+  files<-unlist(fullFilePaths)
+  if(length(files)>0){
+    files<-files[file.exists(files)]
+  }
+  if(length(files)>0){
+    # 4 make submenu
+    files<-unique(files)
+    values<-paste(prefix,files, sep="-")
+    labels<-basename(files)
+    hints<-files
+    mkmenuitem<-function(label, value, hint){
+      shinyDMDMenu::menuItem(
+        label=label, 
+        value=value,
+        span(hint, class='tooltiptext')
+      )
+    }
+    items<-mapply(mkmenuitem, label=labels, value=values, hint=hints,
+                  SIMPLIFY = FALSE, USE.NAMES = FALSE)
+    submenu=do.call( function(...){ menuDropdown(subMenuLabel,...) }, items)
+  } else{
+    submenu=NULL
+  }
+  submenu  
+}
 
 observeEvent( editOption$recentProjects ,{
-  # cat('>---> observeEvent::editOption$recentProjects\n')
-  rp<-unlist(editOption$recentProjects)
-  rplabel="Recent Projects"
-  # cat('recent Projects:\n')
-  # print(rp)
-  removeDMDM( session=session, menuBarId="editNavBar", entry=rplabel)
-  # cat('recent Projects:  1\n')
-  # remove any non-existing entries
-  rp<-rp[file.exists(rp)]
-  #add back
-  #cat('recent Projects:  2\n')
-  if(length(rp)>0){ 
-    values<-paste('recentProj',rp,sep="-")
-    labels<-rp
-    
-    items<-mapply(shinyDMDMenu::menuItem, label=labels, value=values, SIMPLIFY = FALSE, USE.NAMES = FALSE)
-    
-    submenu=do.call( function(...){ menuDropdown(rplabel,...) }, items)
-    # cat('recent Projects:  6\n')
-    # cat('class(submenu)=',class(submenu), "\n")
-    # cat('length(submenu)=',length(submenu), "\n")
-    # for(i in 1:length(submenu)){
-    #   print(submenu[[i]])
-    # }
-    insertAfterDMDM(session, menuBarId = "editNavBar", entry="openProject", submenu= submenu)
-    #cat('recent Projects:  7\n')
+  # 1 remove submenu
+  subMenuLabel= "Recent Projects"
+  removeDMDM(session=session, menuBarId="editNavBar", entry=subMenuLabel)
+  # 2 get files to populate submenu
+  files<-unlist(editOption$recentProjects)
+  # 3 create submenu
+  submenu<-mkFileSubMenu( subMenuLabel= subMenuLabel, prefix='recentProj', files) 
+  # 4 insertsubmenu
+  if(!is.null(submenu)){
+    insertAfterDMDM(
+      session, menuBarId = "editNavBar", 
+      entry="openProject", submenu= submenu
+    )
   }
-  # cat('<---< observeEvent::editOption$recentProjects\n')
 })
 
 
-
-# removeFromDnippetsFiles<-function(filePath){
-#   tmp<-editOption$dnippetsFiles
-#   tmp<-tmp[tmp!=filePath]
-#   editOption$dnippetsFiles<-tmp
-# }
-
-# addToDnippetsFiles<-function(filePath){
-#   importDnippet2DB(filePath)
-#   # tmp<-editOption$dnippetsFiles
-#   # tmp<-unique(c(tmp, filePath))
-#   # editOption$dnippetsFiles<-tmp
-# }
-
-
-              
+# must both add and delete entries.
+observeEvent( editOption$recentFiles ,{
+  # 1 remove menuDropdown
+  removeDMDM(session=session, menuBarId="editNavBar", entry="Recent Files")
+  # 2 get files to populate submenu
+  files<-unlist(editOption$recentFiles)
+  # 3 create submenu
+  submenu<-mkFileSubMenu( subMenuLabel= "Recent Files", prefix="recentFile", files) 
+  # 4 insertsubmenu
+  if(!is.null(submenu)){
+    insertAfterDMDM(
+      session, menuBarId = "editNavBar", 
+      entry="openFile", submenu= submenu
+    )
+  }
+})
+    
+            
