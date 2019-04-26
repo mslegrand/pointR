@@ -18,7 +18,6 @@ mouseCmdMovePt<- function(mssg){
   matColIndx<-as.numeric(vid[4])
   if( hasPtScript() ){
     txt<-getPreProcPtScript()['onMovePt']
-    # cat(txt)
     tryCatch({ 
       getPoint<-function(){names(newPt)<-c('x','y'); newPt}
       getLocation<-function(){
