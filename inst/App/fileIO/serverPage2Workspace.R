@@ -13,7 +13,7 @@ savePage<-function(pageId, path=getWorkSpaceDir()){
     trib<-getPageUseTribble(pageId)
     dnip<-getPageDnippetsDB(pageId)
     widg<-getPageWidgetDB(pageId)
-    print(widg)
+    # print(widg)
     rtv<-c(
       fileDescriptor=getFileDescriptor(pageId),
       code=getCode(),

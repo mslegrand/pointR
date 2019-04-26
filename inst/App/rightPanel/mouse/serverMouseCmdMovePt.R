@@ -18,9 +18,8 @@ mouseCmdMovePt<- function(mssg){
   matColIndx<-as.numeric(vid[4])
   if( hasPtScript() ){
     txt<-getPreProcPtScript()['onMovePt']
-    # cat(txt)
     tryCatch({ 
-      getPoint<-function(){newPt}
+      getPoint<-function(){names(newPt)<-c('x','y'); newPt}
       getLocation<-function(){
         list(
           assetName=getAssetName(),
@@ -30,7 +29,7 @@ mouseCmdMovePt<- function(mssg){
           tibs=getPtDefs()$tib
         )
       }
-      tibs<-eval(parse(text=txt))
+      tibs<-eval(parse(text=txt), list())
       validateTibLists(getPtDefs()$tib, tibs) 
       newPtDefs$tib<-tibs
       if(!is.null(newPtDefs)){ #update only upon success
