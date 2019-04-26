@@ -1,26 +1,4 @@
 # mouse add points
-
-#// called from mouseCmdAddPt when adding a new point
-addPt2ptDefs<-function(name, row, matCol,  ptDefs, newPt){
-  if(is.numeric(row) && 
-     is.numeric(matCol)  &&
-     row>0 && 
-     length(ptDefs$tib)>0 && 
-     length(ptDefs$tib[[name]])>0 && 
-     row<=nrow(ptDefs$tib[[name]])
-  ){
-    tib<-ptDefs$tib[[name]]
-    col<-getTibPtColPos() #which(names(tib)==ptColName)
-    pts<-tib[[row,col]] 
-    pts<-append(pts,newPt,2*(matCol))
-    tib[[row,col]]<-matrix(pts,2)
-    ptDefs$tib[[name]]<-tib
-  } else {
-    ptDefs<-NULL #failed
-  }
-  ptDefs
-}
-
 mouseCmdAddPt<-function(mssg){
   if(length(mssg$vec)>0){
     vec<- as.numeric(unlist(mssg$vec))
@@ -31,7 +9,6 @@ mouseCmdAddPt<-function(mssg){
   tibs<-getPtDefs()$tib
   
   sender='PointsBar.mouse.add'
-  # browser()
   
   newPt<-vec
   selection<-getAssetName() 
@@ -48,7 +25,6 @@ mouseCmdAddPt<-function(mssg){
         tib[[getTibColumnName()]][[rowIndex]]<-matrix(0,2,0)
         tibs[[selection]]<-tib
         matColIndx<-0
-        # updateAceExtDef(ptDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=1))
     } 
   }
   #{
@@ -86,13 +62,6 @@ mouseCmdAddPt<-function(mssg){
       pts<-matrix(append(pts,newPt,2*(matColIndx)) ,2)
       tibs[[selection]][[getTibColumnName()]][[rowIndex]]<-pts
       newPtDefs$tib<-tibs
-      # newPtDefs<-addPt2ptDefs(
-      #   selection,
-      #   rowIndex,
-      #   matColIndx,
-      #   ptDefs, 
-      #   newPt 
-      # )
       if(!is.null(newPtDefs)){ #update only upon success
         updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx+1))
       }    
