@@ -17,7 +17,6 @@ addPt2ptDefs<-function(name, row, matCol,  ptDefs, newPt){
     ptDefs$tib[[name]]<-tib
   } else {
     ptDefs<-NULL #failed
-    #cat("addPt2ptDefs returning NULL")
   }
   ptDefs
 }
@@ -29,40 +28,47 @@ mouseCmdAddPt<-function(mssg){
   src<-getCode()
   replacementList<-list()
   ptDefs<-getPtDefs() 
-  sender='PointsBar.mouse.add'
+  tibs<-getPtDefs()$tib
   
-  #cat('Enter: mouse cmd add')
+  sender='PointsBar.mouse.add'
+  # browser()
+  
   newPt<-vec
   selection<-getAssetName() 
   rowIndex<-getTibRow()
-  # cat('mouseMssg:: rowIndex=',format(rowIndex),"\n")
   matColIndx<-getTibMatCol()
-  if( length( getPointMax())>1){ stop('getPointMax is too big')}
-  if(!is.na(getPointMax()) &&  matColIndx>=getPointMax() ){
-    # #split here
-    tib<-ptDefs$tib[[selection]]
-    tib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
-    rowIndex<-rowIndex+1
-    tib[[getTibColumnName()]][[rowIndex]]<-matrix(newPt,2)
-    ptDefs$tib[[selection]]<-tib
-    updateAceExtDef(ptDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=1))
-  } else {
-    # no split, jjust add
+  if( length( getPointMax())>1){ stop('getPointMax is too big')} #should never happen
+  if(!is.na(getPointMax()) && getTibMatColMax() >= getPointMax() ){
+    if(matColIndx<getPointMax() ){ # matcol not at end and ptmax for this row is already exceeded
+      # eat this point
+    } else {  #split
+        tib<-tibs[[selection]]
+        tib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
+        rowIndex<-rowIndex+1
+        tib[[getTibColumnName()]][[rowIndex]]<-matrix(0,2,0)
+        tibs[[selection]]<-tib
+        matColIndx<-0
+        # updateAceExtDef(ptDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=1))
+    } 
+  }
+  #{
+    # now  add
     newPtDefs<-ptDefs
     if( hasPtScript() ){ #preproc
       txt<-getPreProcPtScript()['onNewPt']
       tryCatch({
-        getPoint<-function(){newPt}
+        getPoint<-function(){names(newPt)<-c('x','y'); newPt}
+        WH<-getSVGWH()
         getLocation<-function(){
           list(
-            assetName=getAssetName(),
+            assetName=selection,
             columIndex=getTibPtColPos(),
-            rowIndex=getTibRow(),
-            matColIndex=getTibMatCol(),
-            tibs=getPtDefs()$tib
+            rowIndex=rowIndex,
+            matColIndex=matColIndx,
+            tibs=tibs
           )
         }
-        tibs<-eval(parse(text=txt)) # may want to restrict the env to given set of fns: addPt2ptDefs, getSVGWH
+        tibs<-eval(parse(text=txt), list() ) # may want to restrict the env to given set of fns: addPt2ptDefs, getSVGWH
         validateTibLists(getPtDefs()$tib, tibs)
         newPtDefs$tib<-tibs
         if(!is.null(newPtDefs)){ #update only upon success
@@ -75,17 +81,22 @@ mouseCmdAddPt<-function(mssg){
         alert(err)
       })
     } else { #no prepoc
-      newPtDefs<-addPt2ptDefs(
-        selection,
-        rowIndex,
-        matColIndx,
-        ptDefs, 
-        newPt 
-      )
+      tib<-tibs[[selection]]
+      pts<-tib[[getTibColumnName()]][[rowIndex]]
+      pts<-matrix(append(pts,newPt,2*(matColIndx)) ,2)
+      tibs[[selection]][[getTibColumnName()]][[rowIndex]]<-pts
+      newPtDefs$tib<-tibs
+      # newPtDefs<-addPt2ptDefs(
+      #   selection,
+      #   rowIndex,
+      #   matColIndx,
+      #   ptDefs, 
+      #   newPt 
+      # )
       if(!is.null(newPtDefs)){ #update only upon success
         updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx+1))
       }    
     }
-  } #end no split
+  #} #end no split
   
 }

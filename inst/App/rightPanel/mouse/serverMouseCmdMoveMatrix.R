@@ -19,7 +19,7 @@ mouseCmdMoveMatrix<-function(mssg){
       txt<-getPreProcPtScript()['onMoveMat']
       # cat(txt)
       tryCatch({ 
-        getDxy<-function(){dxy}
+        getDxy<-function(){names(dxy)<-c('dx','dy'); dxy}
         getLocation<-function(){
           list(
             assetName=getAssetName(),
@@ -29,7 +29,7 @@ mouseCmdMoveMatrix<-function(mssg){
             tibs=getPtDefs()$tib
           )
         }
-        tibs<-eval(parse(text=txt))
+        tibs<-eval(parse(text=txt), list())
         validateTibLists(getPtDefs()$tib, tibs)
         newPtDefs$tib<-tibs
         matCol<-ncol(tibs[[getAssetName()]][row, getTibPtColPos()] )
