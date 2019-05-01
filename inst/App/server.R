@@ -55,7 +55,7 @@ shinyServer(function(input, output,session) {
   shinyFileChoose(input, "buttonFileOpenProject",    session=session, roots=c(home="~"),  filetypes=c('pprj') ) #hidden
   shinyFileChoose(input, "buttonSnippetImport",      session=session, roots=c(home="~"),  filetypes=c('snip') ) #hidden
   shinyFileChoose(input, "buttonDnippetImport",      session=session, roots=c(home="~"),  filetypes=c('dnds') ) #hidden
-  shinyFileChoose(input, "buttonPreProcPtImport",    session=session, roots=c(home="~"),  filetypes=c('pppt') ) #hidden
+  shinyFileChoose(input, "buttonPreProcPtImport",    session=session, roots=c(home="~"),  filetypes=c('R') ) #hidden
   shinyFileSave(input,   "buttonExportSVG",          session=session, roots=c(home="~")  ) #hidden
   shinyFileSave(input,   "buttonExportPreproc",      session=session, roots=c(home="~") ) #hidden
   

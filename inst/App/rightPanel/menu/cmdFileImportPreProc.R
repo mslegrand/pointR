@@ -4,9 +4,17 @@ cmdPreProcPtsImport<-function(){
 }
 
 loadPrePoints<-function(datapath){
-
+  extractBodyWithComments<-function(fn){
+    tt<-capture.output(print(fn))
+    tt<-tt[-1]
+    tt<-tt[-length(tt)]
+    paste(tt, collapse="\n")
+  }
+  
   tryCatch({
-    preProcList<-unlist(source(datapath, local=T)$value)
+    #preProcList<-unlist(source(datapath, local=T)$value)
+    
+    preProcList<-source(datapath, local=T)$value
     #check preProcList
     if(is.null(preProcList) ||  
        length(preProcList)!=3 ||
@@ -15,6 +23,8 @@ loadPrePoints<-function(datapath){
     ){
       stop('bad preproc')
     }
+    
+    preProcList<-sapply(preProcList, extractBodyWithComments)
     insertPreProcPtEntry(
       tab_Id= getTibTabId(),  
       tib_Name=getAssetName(),
