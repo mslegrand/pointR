@@ -20,16 +20,18 @@ mouseCmdMovePt<- function(mssg){
     txt<-getPreProcPtScript()['onMovePt']
     tryCatch({ 
       getPoint<-function(){names(newPt)<-c('x','y'); newPt}
-      getLocation<-function(){
-        list(
-          assetName=getAssetName(),
-          columIndex=getTibPtColPos(),
-          rowIndex=rowIndex,
-          matColIndex=matColIndx,
+      context<-list(
+          name=getAssetName(),
+          column=getTibPtColPos(),
+          row=rowIndex,
+          ptIndex=matColIndx,
           tibs=getPtDefs()$tib
-        )
-      }
-      tibs<-eval(parse(text=txt), list())
+      )
+      ppenv<-list(
+        keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey),
+        WH=getSVGWH()
+      )
+      tibs<-eval(parse(text=txt), ppenv )
       validateTibLists(getPtDefs()$tib, tibs) 
       newPtDefs$tib<-tibs
       if(!is.null(newPtDefs)){ #update only upon success

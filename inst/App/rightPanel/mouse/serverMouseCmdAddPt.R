@@ -7,8 +7,8 @@ mouseCmdAddPt<-function(mssg){
   replacementList<-list()
   ptDefs<-getPtDefs() 
   tibs<-getPtDefs()$tib
-  
   sender='PointsBar.mouse.add'
+  
   
   newPt<-vec
   selection<-getAssetName() 
@@ -34,17 +34,18 @@ mouseCmdAddPt<-function(mssg){
       txt<-getPreProcPtScript()['onNewPt']
       tryCatch({
         getPoint<-function(){names(newPt)<-c('x','y'); newPt}
-        WH<-getSVGWH()
-        getLocation<-function(){
-          list(
-            assetName=selection,
-            columIndex=getTibPtColPos(),
-            rowIndex=rowIndex,
-            matColIndex=matColIndx,
-            tibs=tibs
-          )
-        }
-        tibs<-eval(parse(text=txt), list() ) # may want to restrict the env to given set of fns: addPt2ptDefs, getSVGWH
+        context<-list(
+          name=getAssetName(),
+          column=getTibPtColPos(),
+          row=rowIndex,
+          ptIndex=matColIndx,
+          tibs=getPtDefs()$tib
+        )
+        ppenv<-list(
+          keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey),
+          WH=getSVGWH()
+        )
+        tibs<-eval(parse(text=txt), ppenv )
         validateTibLists(getPtDefs()$tib, tibs)
         newPtDefs$tib<-tibs
         if(!is.null(newPtDefs)){ #update only upon success

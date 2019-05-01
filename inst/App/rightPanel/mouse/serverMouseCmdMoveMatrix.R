@@ -20,16 +20,18 @@ mouseCmdMoveMatrix<-function(mssg){
       # cat(txt)
       tryCatch({ 
         getDxy<-function(){names(dxy)<-c('dx','dy'); dxy}
-        getLocation<-function(){
-          list(
-            assetName=getAssetName(),
-            columIndex=getTibPtColPos(),
-            rowIndex=row,
-            matColIndex=matColIndx,
-            tibs=getPtDefs()$tib
-          )
-        }
-        tibs<-eval(parse(text=txt), list())
+        context<-list(
+          name=getAssetName(),
+          column=getTibPtColPos(),
+          row=row,
+          ptIndex=matColIndx,
+          tibs=getPtDefs()$tib
+        )
+        ppenv<-list(
+          keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey),
+          WH=getSVGWH()
+        )
+        tibs<-eval(parse(text=txt), ppenv )
         validateTibLists(getPtDefs()$tib, tibs)
         newPtDefs$tib<-tibs
         matCol<-ncol(tibs[[getAssetName()]][row, getTibPtColPos()] )

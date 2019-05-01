@@ -6,8 +6,6 @@ mouseCmdValue<- function(mssg){
   replacementList<-list()
   ptDefs<-getPtDefs() 
   
-  # cat('Enter: mouse cmd value')
-
   sender='tagDrag.mouse'
   tid<-mssg$id
   tmp<-unlist(str_split(tid,"_"))

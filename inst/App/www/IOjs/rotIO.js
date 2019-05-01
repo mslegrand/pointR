@@ -122,9 +122,13 @@ PtRPanelRotate.prototype.deselectElement = function(evt) {
   if(this.selectedElement !== 0){
   
     Shiny.onInputChange("mouseMssg",{
-      cmd: "rotate",
-      vec: this.currentMatrix, // !!! Todo replace with this.currentMatrix
-      id :  this.selectedElement.getAttribute("tid")
+        cmd:      "rotate",
+        vec:      this.currentMatrix, // !!! Todo replace with this.currentMatrix
+        id :      this.selectedElement.getAttribute("tid"),
+        altKey:   !!evt.altKey,
+        shiftKey: !!evt.shiftKey,
+        ctrlKey:  !!evt.ctrlKey,
+        metaKey:  !!evt.metaKey
     });
     this.selectedElement.removeAttributeNS(null, "onmousemove");
     this.svg.removeAttributeNS(null, "onmouseout");
