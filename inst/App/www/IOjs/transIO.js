@@ -53,9 +53,13 @@ PtRPanelTranslate.prototype.deselectElement = function(evt) {
     var movedByY = evt.clientY - this.origY;
     
     Shiny.onInputChange("mouseMssg",{
-      cmd: "trans",
-      vec: this.currentMatrix, 
-      id: this.selectedElement.getAttribute("tid")
+        cmd: "trans",
+        vec: this.currentMatrix, 
+        id: this.selectedElement.getAttribute("tid"),
+        altKey:   !!evt.altKey,
+        shiftKey: !!evt.shiftKey,
+        ctrlKey:  !!evt.ctrlKey,
+        metaKey:  !!evt.metaKey
     });
     this.selectedElement.removeAttributeNS(null, "onmousemove");
     this.svg.removeAttributeNS(null, "onmouseout");

@@ -60,9 +60,13 @@ PtRPanelTagDrag.prototype.deselectElement =  function (evt) {
       
     Shiny.onInputChange("mouseMssg",
       {
-        cmd: "transGrp",
-        vec: [movedByX, movedByY],
-        id : this.selectedElement.getAttribute("tid")
+          cmd: "transGrp",
+          vec: [movedByX, movedByY],
+          id : this.selectedElement.getAttribute("tid"),
+          altKey:   !!evt.altKey,
+          shiftKey: !!evt.shiftKey,
+          ctrlKey:  !!evt.ctrlKey,
+          metaKey:  !!evt.metaKey
       }
     );
     this.selectedElement.removeAttributeNS(null, "onmousemove");

@@ -13,13 +13,22 @@ PtRPanelPoints.prototype.newPoint = function (evt) {
   this.pt.x = evt.clientX;
   this.pt.y = evt.clientY;
   
+  //if (evt.altKey || evt.shiftKey || evt.ctrlKey || evt.metaKey) {
+  //    alert('Hooray!');
+  //}
+  
+  
   // The cursor point, translated into svg coordinates
   var cursorpt =  this.pt.matrixTransform(this.svg.getScreenCTM().inverse());
   Shiny.onInputChange("mouseMssg",
                       {
-                        cmd: "add",
-                        vec: [cursorpt.x, cursorpt.y],
-                        id: "dummyId"
+                        cmd:      "add",
+                        vec:      [cursorpt.x, cursorpt.y],
+                        id:       "dummyId",
+                        altKey:   !!evt.altKey,
+                        shiftKey: !!evt.shiftKey,
+                        ctrlKey:  !!evt.ctrlKey,
+                        metaKey:  !!evt.metaKey
                       }
   );
 };
@@ -64,9 +73,13 @@ PtRPanelPoints.prototype.deselectPoint = function (evt){
     var cursorpt =  this.pt.matrixTransform(this.svg.getScreenCTM().inverse());
     
     Shiny.onInputChange("mouseMssg",{
-      cmd: "move",
-      vec: [cursorpt.x, cursorpt.y],
-      id: this.selectedElement.getAttribute("id")
+        cmd: "move",
+        vec: [cursorpt.x, cursorpt.y],
+        id: this.selectedElement.getAttribute("id"),
+        altKey:   !!evt.altKey,
+        shiftKey: !!evt.shiftKey,
+        ctrlKey:  !!evt.ctrlKey,
+        metaKey:  !!evt.metaKey
     });
     this.selectedElement.removeAttributeNS(null, "onmousemove");
     this.svg.removeAttributeNS(null, "onmouseout");

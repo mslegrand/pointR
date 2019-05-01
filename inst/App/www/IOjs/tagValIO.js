@@ -24,9 +24,13 @@ PtRPanelTagVal.prototype.deselectElement =  function (evt) {
   if(this.selectedElement !== 0){
     Shiny.onInputChange("mouseMssg",
       {
-        cmd: "tagValSelect",
-        vec: [0, 0],
-        id : this.selectedElement.getAttribute("tid")
+          cmd: "tagValSelect",
+          vec: [0, 0],
+          id : this.selectedElement.getAttribute("tid"),
+          altKey:   !!evt.altKey,
+          shiftKey: !!evt.shiftKey,
+          ctrlKey:  !!evt.ctrlKey,
+          metaKey:  !!evt.metaKey
       }
     );
     this.selectedElement.removeAttributeNS(null, "onmouseout");

@@ -118,9 +118,13 @@ PtRPanelScale.prototype.deselectElement = function(evt) {
 
     Shiny.onInputChange("mouseMssg",
     {
-      cmd: "scale",
-      vec: this.currentMatrix,
-      id: tid
+        cmd: "scale",
+        vec: this.currentMatrix,
+        id: tid,
+        altKey:   !!evt.altKey,
+        shiftKey: !!evt.shiftKey,
+        ctrlKey:  !!evt.ctrlKey,
+        metaKey:  !!evt.metaKey
     });
     
     this.selectedElement.removeAttributeNS(null, "onmousemove");
