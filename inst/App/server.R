@@ -56,8 +56,9 @@ shinyServer(function(input, output,session) {
   shinyFileChoose(input, "buttonSnippetImport",      session=session, roots=c(home="~"),  filetypes=c('snip') ) #hidden
   shinyFileChoose(input, "buttonDnippetImport",      session=session, roots=c(home="~"),  filetypes=c('dnds') ) #hidden
   shinyFileChoose(input, "buttonPreProcPtImport",    session=session, roots=c(home="~"),  filetypes=c('R') ) #hidden
-  shinyFileSave(input,   "buttonExportSVG",          session=session, roots=c(home="~")  ) #hidden
-  shinyFileSave(input,   "buttonExportPreproc",      session=session, roots=c(home="~") ) #hidden
+  
+  shinyFileSave(input,   "buttonSvgExport",          session=session, roots=c(home="~")  ) #hidden
+  shinyFileSave(input,   "buttonPreprocPtExport",      session=session, roots=c(home="~") ) #hidden
   
   disableDMDM(session, "editNavBar", 'project')
 
@@ -160,40 +161,7 @@ shinyServer(function(input, output,session) {
   source("leftPanel/menu/serverEditBar.R",                      local=TRUE)
   source("fileIO/observeRequestStartUp.R",                      local=TRUE)
   
-  # tmpVars<-c("%AND%", "assertConsistantTibPair", "bar1", "bar2", "buildHToolBar", 
-  #            "buildLeftMenu", "buildRightMenu", "charColType", "choices2ColType", 
-  #            "codeTemplate", "colLine2charPos", "colLine2charPositions", "defaultOpts", 
-  #            "defTag", "dnippetsDirPath", "drippetdirectoryPath", "dripplets2List", 
-  #            "dripplets2List2", "dripplets2Rmd", "errorPanelTag", "ex.getPtDefs", 
-  #            "extMode.TB", "extractColType", "extractColumnIndex", "extractDripplet", 
-  #            "extractPositions", "extractSafeRowColIndex", "extractTagDF", 
-  #            "extractVal", "fileTemplates", "fileTemplatesNames", "fmtMat", 
-  #            "fmtTibble", "fmtTibbleList", "fmtTribble", "genShinyOpenFilesButtons", 
-  #            "genShinySaveFilesButtons", "getcumCharLines", "getDef", "getDefPos", 
-  #            "getExtenstionList", "getNCharLines", "getParseDataFrame", "getTibColClass", 
-  #            "imageBlockIndices", "initialBackDropDB", "initialFileDescDB", 
-  #            "initialPreprocDB", "initialPtrAceOptions", "initialServerAsset", 
-  #            "initialServerAssetDB", "initialSvgGridDB", "initialTribbleDB", 
-  #            "initResourcePaths", "isBooleanString", "isColorString", "isInteger", 
-  #            "isIntegerString", "isNumericString", "isPercentageString", "isPoints", 
-  #            "list.entry.at.index", "listColType", "lowerBd", "mode2pathExt", 
-  #            "modes2filetypes", "moduleEdAsset", "moduleEdAssetUI", "moduleEdTib", 
-  #            "moduleEdTibUI", "moduleEdTransform", "moduleEdTransformUI", 
-  #            "moduleFooterRight", "moduleFooterRightUI", "moduleLog", "moduleLogUI", 
-  #            "modulePlotSVGr", "modulePlotSVGrUI", "moduleRowDND", "moduleRowDNDUI", 
-  #            "newPointPreprocessor", "optionDirPath", "optionFile", "pathExt2mode", 
-  #            "preprocChoices", "ptDef2ReplacementList", "pts2Integers", "r_pkgs", 
-  #            "readOptionsJSON", "readTemplate", "rmdPanelTag", "row2DrippletBlock", 
-  #            "row2DrippletBlockIndices", "RPanelTag", "saveButtonFileNames", 
-  #            "shinyAce4Ptr", "snippetPanelTag", "snippetsDirPath", "stop.unless", 
-  #            "svgPanelTag", "svgToolsScript", "tagTib", "textPanelTag", "tibTag", 
-  #            "tid2replacementCoord", "toggleTabType", "toStrPtR0", "toStrPtR0.character", 
-  #            "toStrPtR0.default", "toStrPtR0.list", "toStrPtR0.matrix", "toStrPtR0.numeric", 
-  #            "transformTag", "type2ExtensionList", "upperBd", "usingDraggable", 
-  #            "val2ColType", "validateTibLists", "version", "versionCheck", 
-  #            "writeOptionsJSON")
-  #on.exit(rm(list=list(tmpVars)))
-  
+
 
   # exportTestValues( request.sender=request$sender)
   # exportTestValues(request.code=request$code)
