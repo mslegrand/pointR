@@ -15,9 +15,7 @@ mouseCmdMoveMatrix<-function(mssg){
   matColIndx<-ncol(newPtDefs$tib[[selection]][[ row, getTibPtColPos() ]])
   
   if( hasPtScript() ){
-      # cat('hasPtScript:: onMoveMat script:\n')
       txt<-getPreProcPtScript()['onMoveMat']
-      # cat(txt)
       tryCatch({ 
         getDxy<-function(){names(dxy)<-c('dx','dy'); dxy}
         context<-list(

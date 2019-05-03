@@ -53,8 +53,7 @@ shinyUI(
         class="split-pane-component", 
         #-------left bootstrapPage begin ---------
         bootstrapPage( 
-          genShinyOpenFilesButtons(),
-          genShinySaveFilesButtons(),
+          
           #-----left menu begin---------------
           buildLeftMenu(if(usingElectron){""} else {version}),
           #-------left menu end------------
@@ -163,8 +162,10 @@ shinyUI(
               )
           )
         ) #-----right bootstrap page end----------
-      ) #----------right component end---------
+      ), #----------right component end---------
       #-------------right panel end--------------------------------------------------
+      genShinyOpenFilesButtons(), # moved to end because of strange interaction with divider
+      genShinySaveFilesButtons()
     )
   )
 )
