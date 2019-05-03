@@ -10,8 +10,8 @@ saveDnippetsFileNames<-function(path=getWorkSpaceDir()){
 
 
 # the usage of a dnippets db is dubious, since we are now
-# keeping all dnippets in the resources dir. 
-# A simpler more elegant solution is to just load all in dnps the resources dir.
+# keeping all dnippets in the resources/dnds dir. 
+# A simpler more elegant solutionmight be to just load all in dnps the resources/dnds dir.
 # But for non-projects it is not clear what the behaviour should be.
 
 readDnippetsFileNames<-function(path=getWorkSpaceDir()){
@@ -34,15 +34,13 @@ readDnippetsFileNames<-function(path=getWorkSpaceDir()){
     # - openProj
     # - modalNewShinyCntrlProjOk
     # - input$modalCloneProjOk
-    # -  during initial startup.
-
-   #browser()
+    # - during initial startup.
    
   if(!is.null(ptRproj$pathToProj)){  # we have a project so we adjust tb$fullpaths
-      # first insure we have a resource dir
-      resourceDir<-path_join(c(editOption$currentProjectDirectory,'resources'))
-      if(!dir.exists(resourceDir)){
-        dir.create(resourceDir)
+      # first insure we have a dnds dir
+      dndsDir<-path_join(c(editOption$currentProjectDirectory,'resources', 'dnds'))
+      if(!dir.exists(dndsDir)){
+        dir.create(dndsDir, showWarnings = F, recursive=T) # Todo!!! eventually can remove this.
       }
       # next adjust tibble tb as needed
       if(nrow(tb)>0){
@@ -50,15 +48,15 @@ readDnippetsFileNames<-function(path=getWorkSpaceDir()){
         # reset paths to reside under resources
         fullpaths<-sub( ptRproj$pathToProj, editOption$currentProjectDirectory, fullpaths)
         # extract full paths not under -editOption$currentProjectDirectory/resouces
-        indx<-grep(resourceDir, fullpaths) #indx are the indices of resources now properly located
+        indx<-grep(dndsDir, fullpaths) #indx are the indices of resources now properly located
         # move the files (if any)
         if(length(indx)>0){
           tomove<-fullpaths[-indx]
           if(length(tomove)>0){
-            file.copy(tomove, resourceDir)
+            file.copy(tomove, dndsDir)
             # replace tomove by target in fullPaths
             dnipNames<-path_file(tomove )
-            fullpaths[-indx]<- sapply( path_file(dnipNames), function(x) path_join(c(resourceDir,x)) )
+            fullpaths[-indx]<- sapply( path_file(dnipNames), function(x) path_join(c(dndsDir,x)) )
           }
         }
         tb$fullpath<-fullpaths
@@ -70,15 +68,14 @@ readDnippetsFileNames<-function(path=getWorkSpaceDir()){
       } 
       if(nrow(tb)==0){
         tomove<-sampleDnippetPath
-        file.copy(tomove, resourceDir)
-        tb<-tibble( fullpath=path_join(c(resourceDir,'sampleShapes.dnds' )) , dname='sampleShapes' )
+        file.copy(tomove, dndsDir)
+        tb<-tibble( fullpath=path_join(c(dndsDir,'sampleShapes.dnds' )) , dname='sampleShapes' )
       }
   } else { # we do not have a project, but if tb is null, lets load anyway
     if(nrow(tb)==0){
       tb<-tibble( fullpath=sampleDnippetPath , dname='sampleShapes' )
     }
  } 
-  
   # if not inside a project, perform no modifications of tb (at least for now)
   
   # save changes 

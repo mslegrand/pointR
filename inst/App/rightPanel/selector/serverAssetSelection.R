@@ -12,7 +12,7 @@ selectedAsset <- reactiveValues(
   rowIndex=1,
   columnName=NULL, # currently used only by tibbleEditor and could be placed there.
   matCol=0, #
-  ptColName=NULL,      # !!! KLUDGE for now. should this default to last col?
+  ptColName=NULL,      # !!! KLUDGE for now. should this default to last col? probably not
   selIndex=1, # only used is to determine if in matrix or point mode !! 
   transformType='Translate', # TODO!!! replace this with selIndex
   ptScriptSel=preprocChoices[1]
@@ -78,9 +78,8 @@ getTibMatColMax<-reactive({
 #    1. serverEdtib to reset the name when the selection changes
 #    2. serveAce to reset name when we have a file->New or file->Open
 resetSelectedTibbleName<-function(tibs, name){
-    # cat('>---f-> resetSelectedTibbleName\n')
+    # log.fin(resetSelectedTibbleName)
     if(hasError()){
-      # cat('<---f-< resetSelectedTibbleName\n')
       return(NULL) # never change selection when in error state
     }
       choices<-getRightPanelChoices()
@@ -115,7 +114,6 @@ resetSelectedTibbleName<-function(tibs, name){
           entry<-tib[[ptColName]][[rowIndex]]
           matColIndex<-ncol(entry)
           selectedAsset$matCol<-matColIndex
-          # cat('ptColName=',format(ptColName),"\n")
           selectedAsset$ptColName=ptColName 
           if(is.null(selectedAsset$selIndex) || selectedAsset$selIndex!=2){
             #unless selected is 'matrix', set to 'point' 
@@ -142,7 +140,7 @@ resetSelectedTibbleName<-function(tibs, name){
       if( selectedAsset$name==transformTag){
         selectedAsset$transformType='Translate'
       }
-      # cat('<---f-< resetSelectedTibbleName\n')
+      # log.fout(resetSelectedTibbleName)
 }
 
 

@@ -71,10 +71,12 @@ resetShinyFilesIOPaths<-function(pathToProj){
     pathToProj<-path_home()
   } else {
     pathToProj<-path_rel(pathToProj, path_home() )
-    pathToProj<-paste0("~/",pathToProj) # do we really want to do this???
+    pathToProj<-paste0("~/",pathToProj) # !!!TODO:  do we really want to do this???
   }
-  fileIOIds<-c("buttonFileOpen", "buttonSnippetImport","buttonDnippetImport", "buttonFileSaveR",
-               "buttonPreProcPtImport","buttonExportSVG","buttonExportPreproc")
+  fileIOIds<-c("buttonFileOpen",         "buttonFileSaveR",
+               "buttonSnippetImport",    "buttonDnippetImport",
+               "buttonPreProcPtImport",  "buttonPreprocPtExport",
+               "buttonSvgExport")
   # first set to root
   for(id in c(fileIOIds, saveButtonFileNames)){
     jscode<-setSfDir(id, path="")
@@ -83,18 +85,25 @@ resetShinyFilesIOPaths<-function(pathToProj){
   Sys.sleep(.3)
   # next set to pathToProj
   for(id in c(fileIOIds, saveButtonFileNames)){
-    jscode<-setSfDir(id, path=pathToProj)
+    if(id %in% c("buttonPreProcPtImport", "buttonPreprocPtExport")){
+      jscode<-setSfDir(id, path= path_join( c(pathToProj, "resources", 'preProcPts') ))
+    } else if(id %in% c("buttonDnippetImport")){
+      jscode<-setSfDir(id, path= path_join( c(pathToProj, "resources", 'dnds' )))
+    } else if(id %in% c("buttonSnippetImport")){
+      jscode<-setSfDir(id, path= path_join( c(pathToProj, "resources", 'snip' )))
+    } else {
+      jscode<-setSfDir(id, path=pathToProj)
+    }
     runjs(jscode)
   }
+  
   log.fout(resetShinyFilesIOPaths)
 }
 
 
-setUpProj<-function(projName, pathToProj, projType="generic"){ #currently projType not used 
+setUpProj<-function(projName, pathToProj, projType="generic"){ #!!! currently projType not used 
   editOption$currentProjectDirectory=pathToProj
   editOption$currentProjectName=projName
-  # setwd(pathToProj) # do this in getDirPath instead???
-  # pathToProj= ~/AA/ffffff 
   # remove from recent projects
   removeFromRecentProjects(projDir=pathToProj, projName=projName)
   # 5. save editOptions (aleady done closeCurrentProj)
