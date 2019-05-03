@@ -4,27 +4,44 @@ cmdPreProcPtsImport<-function(){
 }
 
 loadPrePoints<-function(datapath){
+  # extractBodyWithComments<-function(fn){
+  #   tt<-capture.output(print(fn))
+  #   tt<-tt[-1] # TODO: refactor for better reliability
+  #   tt<-tt[-length(tt)]  
+  #   tt<-tt[-length(tt)]
+  #   paste(tt, collapse="\n")
+  # }
+  
   extractBodyWithComments<-function(fn){
     tt<-capture.output(print(fn))
-    tt<-tt[-1]
-    tt<-tt[-length(tt)]
-    paste(tt, collapse="\n")
+    tt<-paste(tt, collapse="\n")
+    pos1<-str_locate_all(tt,'\\{')[[1]][1]
+    if(length(pos1)==0) {stop('ill formed preproc')}
+    pos2<-str_locate_all(tt,'\\}')[[1]]
+    if(length(pos2)==0) {stop('ill formed preproc')}
+    pos1<-pos1[1]+1
+    pos2<-pos2[length(pos2)]-1
+    substr(tt,pos1,pos2)
+    
   }
   
   tryCatch({
     #preProcList<-unlist(source(datapath, local=T)$value)
     
     preProcList<-source(datapath, local=T)$value
+    # browser()
     #check preProcList
     if(is.null(preProcList) ||  
        length(preProcList)!=3 ||
        any(match(names(preProcList), preprocChoices   , 0 )==0)
-       # TODO: check for return of eval(parse(text=preProcList[i])) for each i
+      
     ){
-      stop('bad preproc')
+      stop('ill-formed  preprocessor')
+      # todo better message
     }
     
     preProcList<-sapply(preProcList, extractBodyWithComments)
+    # browser()
     insertPreProcPtEntry(
       tab_Id= getTibTabId(),  
       tib_Name=getAssetName(),
@@ -48,7 +65,6 @@ observeEvent(input$buttonPreProcPtImport,{
   if(length(fp.dt)>0 && nrow(fp.dt)){
     datapath<-as.character(fp.dt$datapath[1])
     datapath<-gsub(pattern = '^NA/', "~/", datapath)
-    # cat('loading ', datapath,"\n")
     loadPrePoints(datapath)
   }
 })
