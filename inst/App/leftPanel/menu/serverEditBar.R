@@ -187,9 +187,10 @@ observeEvent( input$editNavBar, {
     }
     
     if(usingElectron){
-      if(identical(fileCmd,"svgR User Guide")){
-        href='http://mslegrand.github.io/svgR/User_Guide.html'
-        sendPtRManagerMessage(sender='cmd.electron', openLink= href)
+      if(identical(fileCmd,"svgRUserGuide")){
+        #href='http://mslegrand.github.io/svgR/User_Guide.html'
+        #sendPtRManagerMessage(sender='cmd.electron', openLink= href)
+        sendPtRManagerMessage(sender='cmd.electron', openWindow= "svgRUserGuide")
         dirtyDMDM(session, "editNavBar")
       }
       if(identical(fileCmd,"io.svgR")){

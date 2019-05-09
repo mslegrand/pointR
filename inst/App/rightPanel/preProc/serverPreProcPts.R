@@ -6,13 +6,15 @@ output$uiPreProcChooser<-renderUI({
   radioGroupButtons(
     inputId = "ptPreProcCmdChoice",
     label = "Action",
-    choices = preprocChoices #,
-    #selected='onNewPt'
+    choices = preprocChoices 
   )
 })
 
 
-
+# updates whenever either
+#  input$pages changes  (input$pages contains the tabId of the current page)
+#  selectedAsset$tabId changes
+# ??? do we really need both of these  ??? !!!
 observeEvent(c(input$pages, getTibTabId()), {
   if(identical(input$pages, getTibTabId())){
     if(hasPtScript()){
@@ -24,9 +26,12 @@ observeEvent(c(input$pages, getTibTabId()), {
   }
 })
 
+# triggered whenever a choicetab changes occurs:
+# This occurs either by the user changing the choice or by
+# a page change and a null choice becoming 1.
 observeEvent(input$ptPreProcCmdChoice, {
   if(
-      (input$ptPreProcCmdChoice %in% preprocChoices) &&  
+      input$ptPreProcCmdChoice %in% preprocChoices &&  
       getRightMidPanel()%in% c('point', 'matrix') 
   ){
     txt= getPreProcPtScript()[input$ptPreProcCmdChoice]
@@ -38,7 +43,7 @@ observeEvent(input$ptPreProcCmdChoice, {
   }
 }, label="serverPreProcPts.R:: input$ptPreProcCmdChoice")
 
-#kludge to have button inside UI, so splitter window is not disturbed.
+# !!! kludge to have button inside UI, so splitter window is not disturbed.
 onclick("commitPtPreProcRequest", click('commitPtPreProc') )
 
 observeEvent( input$commitPtPreProc,{

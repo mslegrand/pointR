@@ -1,7 +1,15 @@
 
+# !!! todo: either
+#   1. add staging area for points, 
+#      and  then refactor so that each script text is 
+#      retained between tabs and all are save upon commit
+#   or
+#   2. replace radio with tab panels, each containing it's own 
+#      instance of ace
+#   Note: 2 retains ace undo between choices, but 1 does not.
 preProcDB<-reactiveValues(
   points=tibble( tabId="bogus", tibName="bogus", ptColName='bogus', cmd="bogus", script='bogus')[0,],
-  matrix=tibble( tabId="bogus", tibName="bogus", ptColName='bogus', cmd="bogus", script='bogus')[0,]
+  matrix=tibble( tabId="bogus", tibName="bogus", ptColName='bogus', cmd="bogus", script='bogus')[0,] # !!! not used????
 )
 
 hasPtScript<-reactiveVal(FALSE, label='hasPtScript' )

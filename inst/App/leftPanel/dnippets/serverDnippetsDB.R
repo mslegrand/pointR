@@ -17,16 +17,21 @@ resetDnippetsDB<-function(){
   dnippetsDB$paths=tibble(fullpath="datapath", dname="dnName" )[0,]
 }
 
-add2DnippetDBPath<-function(dnName, datapath){
-  if(! datapath %in% dnippetsDB$paths$fullpath){ #donot add if already there
-    dnippetsDB$paths<-add_row(dnippetsDB$paths, fullpath=datapath, dname=dnName  )
+add2DnippetDBPath<-function(dndname, dndPath){
+  if( !dndname %in% dnippetsDB$paths$dname){ # add if not there
+    dnippetsDB$paths<-add_row(dnippetsDB$paths, fullpath=dndPath, dname=dndname  )
+  } else { # replace if an entry for this dnd already exists
+    dnippetsDB$paths[dnippetsDB$paths$dname == dndname  , names(dnippetsDB$paths)=='fullpath']<-dndPath
   }
 }
 
 # Note:: Adds column to usage: this requires at least one page to be loaded
-add2DnippetChoices<-function(dnName, value=TRUE){
-  dnippetsDB$usage<-add_column(dnippetsDB$usage, !!dName:=value)
-  saveDnippetsFileNames() # save loaded dnippets even if there are no pages
+add2DnippetChoices<-function(dndName, value=TRUE){
+  # todo!!!  refuse id dnName is already there
+  if(!dndName %in% names(dnippetsDB$usage)){
+      dnippetsDB$usage<-add_column(dnippetsDB$usage, !!dndName:=value)
+      saveDnippetsFileNames() # save loaded dnippets even if there are no pages
+  }
 }
 
 getPageDnippetsDB<-function(pageId){

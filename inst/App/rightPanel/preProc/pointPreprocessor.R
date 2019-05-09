@@ -30,7 +30,7 @@ newPointPreprocessor<-function(
     up=TRUE, right=FALSE,
     animate = animateOptions(
       enter = animations$fading_entrances$fadeInLeftBig,
-      exit = animations$fading_exits$fadeOutRightBig
+      exit  = animations$fading_exits$fadeOutRightBig
     )
   )
   )
