@@ -44,7 +44,8 @@ shinyUI(
     div(
       class="split-pane vertical-percent",
       useShinyjs(),
-      extendShinyjs(script="www/menuHelper.js"), #appears that only close window is used!
+      # extendShinyjs(script="www/menuHelper.js"), 
+      extendShinyjs(script="www/menuHelper.js", functions="triggerButtonOnEnter"), # used in cmdNewColumn.R; cmdNewAsset.R
       
       #-------------left panel begin--------------------------------------------------
       #------- left component begin-----------
