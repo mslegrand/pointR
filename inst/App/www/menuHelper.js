@@ -37,7 +37,7 @@ shinyjs.ignoreClick=function(e) {
 };
 
 
-shinyjs.triggerButtonOnEnter=function(event,buttonId){
+shinyjs.triggerButtonOnEnter=function(event,buttonId){ //cmdNewColumn.R; cmdNewAsset.R
   if(event.keyCode==13){
     $('#' + buttonId).trigger("click");
   }

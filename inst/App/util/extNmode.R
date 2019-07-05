@@ -23,3 +23,15 @@ mode2pathExt<-function(fileMode){
     extMode.TB[extMode.TB$mode==fileMode,]$ext
   }
 }
+
+importExt<-tibble(
+  name=c('dnds', 'preProcPts', 'snip'),
+  ext=c('dnds', 'R', 'snip'),
+  path=c('dnds', 'preProcPts', 'snip')
+)
+
+exportExt<-tibble(
+  name=c( 'PreProcPts', 'SVG'),
+  ext=c( 'R', 'svg'),
+  path=c( 'preProcPts', '')
+)

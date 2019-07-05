@@ -13,6 +13,8 @@ shinyServer(function(input, output,session) {
   # exportTestValues(catList=cat_list)
   
 # utility functions---------------
+  setwd(path_join(c(ptRPath,"App")))
+  cat("--------------begin server-------------\ngetwd()=",getwd(),"\n")
   source("util/dbInitiatizers.R") 
   
   source("util/format.R")

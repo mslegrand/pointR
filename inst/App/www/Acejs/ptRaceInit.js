@@ -171,7 +171,7 @@ function ptRaceInit(data){
       
   theEditor.commands.addCommand({
     name: 'closeWindow',
-    bindKey: {win: 'Ctrl-x', mac: 'Command-x'},
+    bindKey: {win: 'Ctrl-w', mac: 'Command-w'},
     exec: function(editor) {
         event.stopPropagation();
         var randomString = function(length) {
@@ -264,13 +264,14 @@ function ptRaceInit(data){
       'txt=' + JSON.stringify(txt)
     );
     $el.data('aceEditor').moveCursorToPosition(pos);
+    $el.data('aceEditor').clearSelection();
     $el.data('aceEditor').focus();
     var tab_press= jQuery.Event('keydown', {which: 88});
      
     console.log('drop occurred');
      $el.trigger(tab_press);
      var snippetManager = ace.require("ace/snippets").snippetManager;
-    snippetManager.insertSnippet($el.data('aceEditor'), txt);
+     snippetManager.insertSnippet($el.data('aceEditor'), txt);
 
     return true;
   }

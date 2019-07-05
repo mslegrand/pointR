@@ -37,6 +37,14 @@ buildRightMenu<-function(){
         shinyDMDMenu::menuItem('Export', value='cmdExportPP'),
         shinyDMDMenu::menuItem('Remove', value='cmdRemovePP')
       )
+      # ),
+      # shinyDMDMenu::menuDropdown(
+      #   "Attribute Preprocessor",
+      #   shinyDMDMenu::menuItem('New', value='cmdNewAP'),
+      #   shinyDMDMenu::menuItem('Import', value='cmdImportAP'),
+      #   shinyDMDMenu::menuItem('Export', value='cmdExportAP'),
+      #   shinyDMDMenu::menuItem('Remove', value='cmdRemoveAP')
+      # )
     )
   ) #menubar end 
 }

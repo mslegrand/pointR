@@ -207,7 +207,7 @@ $('document').ready(function()
   		$el.trigger("change");
       event.stopPropagation();
     }
-    if (event.code == 'KeyW' && (event.ctrlKey || event.metaKey)) {
+   /* if (event.code == 'KeyW' && (event.ctrlKey || event.metaKey)) {
       //alert('closing!');
       let $el=$('#editNavBar');
       if(event.shiftKey){
@@ -218,7 +218,8 @@ $('document').ready(function()
   		$el.trigger("change");
       event.stopPropagation();
     }
-    if (event.code == 'KeyX' && (event.ctrlKey || event.metaKey)) {
+    */
+    if (event.code == 'KeyT' && (event.ctrlKey || event.metaKey)) {
       //alert('closing!');
       let $el=$('#editNavBar');
       $el.attr('value',"closeProject");

@@ -14,6 +14,7 @@ mouseCmdAddPt<-function(mssg){
   selection<-getAssetName() 
   rowIndex<-getTibRow()
   matColIndx<-getTibMatCol()
+ 
   if( length( getPointMax())>1){ stop('getPointMax is too big')} #should never happen
   if(!is.na(getPointMax()) && getTibMatColMax() >= getPointMax() ){
     if(matColIndx<getPointMax() ){ # matcol not at end and ptmax for this row is already exceeded
@@ -39,15 +40,18 @@ mouseCmdAddPt<-function(mssg){
           column=getTibPtColPos(),
           row=rowIndex,
           ptIndex=matColIndx,
-          tibs=getPtDefs()$tib
+          tibs=tibs
         )
         ppenv<-list(
+          getPoint=getPoint,
+          context=context,
           keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey),
           WH=getSVGWH()
         )
         tibs<-eval(parse(text=txt), ppenv )
         validateTibLists(getPtDefs()$tib, tibs)
         newPtDefs$tib<-tibs
+       
         if(!is.null(newPtDefs)){ #update only upon success
           updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx+1))
         }

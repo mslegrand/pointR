@@ -1,38 +1,67 @@
 # dropdown for preprocessor
 newPointPreprocessor<-function(
-     id='BadWolf',  
-     title='Point Preprocessor'
+     # id='ptPreProcDropDown',  
+     # title='Point Preprocessor'
   )
-{
-  dropdownId= paste0("PtPreProc-",id)
+{ 
+  dropdownId= "ptPreProcDropDown" #paste0("PtPreProc",id)
   absolutePanel( id='PtPreProcDiv', left=5, bottom=5, 
-    dropdown( inputId = dropdownId , 
-    div( id='ptPreProcBackPanel', class='backPanel',
-         div( style="margin:10px; color:white;", 
-              div( style="margin:10px",
-               h5(title, style='color:white;'),
-               div(actionBttn('tmp','tmp'), style="display:none;"),
-               uiOutput("uiPreProcChooser")
+    dropdown( inputId = dropdownId ,  
+      div( id='ptPreProcBackPanel', class='backPanel',
+           div( style='margin-left:20px; color: #00ffff; ', h4(textOutput("ptPreProcSource")) ) ,
+           tabsetPanel(id='ptPreProcpages', 
+                       tabPanel("onNewPt",
+                                div(
+                                  aceEditor(
+                                    outputId='ptPreProcAceonNewPt',
+                                    height = "300px",
+                                    mode='r',
+                                    value="onNewPt"
+                                      #getPreProcPtScript()["onNewPt"]
+                                  )
+                                )
+                       ),
+                       tabPanel("onMovePt",
+                                div(
+                                  aceEditor(
+                                    outputId='ptPreProcAceonMovePt',
+                                    height = "300px",
+                                    mode='r',
+                                    value="onMovePt"
+                                      #getPreProcPtScript()["onMovePt"]
+                                  )
+                                )
+                       ),
+                       tabPanel("onMoveMat",
+                                div(
+                                  aceEditor(
+                                    outputId='ptPreProcAceonMoveMat',
+                                    height = "300px",
+                                    mode='r',
+                                    value="onMoveMat"
+                                      #getPreProcPtScript()["onMoveMat"]
+                                  )
+                                )
+                       )
+           ),
+           div(style="width: 100%; overflow: hidden; margin-top:5px; margin-bottom:5px",
+            div( style="float:left;",
+                actionButton(inputId= "commitPtPreProcButton", label='Commit', class="btn" )
+            ),
+            div( style="float:right;",
+                  actionButton(inputId= "dimissPtPreProcButton", label='Dismiss', class="btn" )
             )
-         ),
-      aceEditor(
-            outputId='ptPreProcAceEditor',
-            height = "300px",
-            mode='r',
-            value='on new' #fileTemplates[['newPtTemplate.R']]
-          ),
-      div( style="margin:10px",
-           span(id= "commitPtPreProcRequest", 'Commit', class="btn" )
+            )
+      ),
+      icon=icon("filter", lib = "glyphicon"), #icon=icon("wrench", lib = "glyphicon"), #icon = icon("toolbox"),
+      status = "primary", width = "400px", size='sm',
+      up=TRUE, right=FALSE,
+      animate = animateOptions(
+        enter = animations$fading_entrances$fadeInLeftBig,
+        exit  = animations$fading_exits$fadeOutRightBig
       )
-    ),
-    icon=icon("filter", lib = "glyphicon"), #icon=icon("wrench", lib = "glyphicon"), #icon = icon("toolbox"),
-    status = "primary", width = "400px", size='sm',
-    up=TRUE, right=FALSE,
-    animate = animateOptions(
-      enter = animations$fading_entrances$fadeInLeftBig,
-      exit  = animations$fading_exits$fadeOutRightBig
     )
-  )
-  )
+  ) 
 }
+
 

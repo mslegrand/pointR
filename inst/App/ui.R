@@ -44,7 +44,8 @@ shinyUI(
     div(
       class="split-pane vertical-percent",
       useShinyjs(),
-      extendShinyjs(script="www/menuHelper.js"), #appears that only close window is used!
+      # extendShinyjs(script="www/menuHelper.js"), 
+      extendShinyjs(script="www/menuHelper.js", functions="triggerButtonOnEnter"), # used in cmdNewColumn.R; cmdNewAsset.R
       
       #-------------left panel begin--------------------------------------------------
       #------- left component begin-----------
@@ -146,7 +147,7 @@ shinyUI(
         bootstrapPage(
           buildRightMenu(),
           absolutePanel(id="logo.left", top=145, left=0, width="100%", img(src="ptR/pointRLogo.SVG") ),
-          div(newPointPreprocessor(id='BadWolf', title='Point Preprocessor')),
+          div(newPointPreprocessor()),
           uiOutput("BottomRightPanel"),
           uiOutput("TopRightPanel"),
           div( id="midRightPanels", class="cMidPanel ctop140",

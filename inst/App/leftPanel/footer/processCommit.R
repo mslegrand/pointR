@@ -14,7 +14,7 @@ src2sourceType<-function(src){  #not used !!
 # uses to mode, input$pages
 # called exclusively by processMssgFromAceMssgPageIn
 processCommit<-reactive({
-  # cat_list<<-c( cat_list,">---> processCommit\n")
+  # log.fin( processCommit)
   clearErrorMssg()
   
   mode<-getModeX()
@@ -22,8 +22,14 @@ processCommit<-reactive({
     cat('missing mode\n'); browser()
     return(NULL)
   }
-  # cat("class(mode)=" ,class(mode),"\n")
-  # cat('ProcessCommit: mode=',format(mode),"\n")
+  if(!is.null(getProjectFullPath()) && dir.exists(getProjectFullPath())){
+    setwd( editOption$currentProjectDirectory)
+  } else {
+    # else set to home
+    setwd("~")
+  }
+  
+  
   if( identical(mode, 'ptr')){
     processSvgR()
   } else if(  identical(mode, 'ptrrmd') ){
@@ -52,7 +58,7 @@ processCommit<-reactive({
     savePage(tabId)
     #cat_list<<-c( cat_list,'<---< processCommit::savePage\n')
   }
-  #cat_list<<-c( cat_list,"<---< processCommit\n")
+  # log.fout( processCommit)
 })
 
 

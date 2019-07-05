@@ -1,3 +1,23 @@
+
+rmdOut<-function(docFilePath){
+  # rmarkdown::render(docFilePath )
+  if(usingElectron==TRUE){
+    docFilePath<-gsub('~',homeDir,docFilePath)
+    rmarkdown::render(docFilePath )
+    href<-sub('\\.Rmd$','\\.html',docFilePath)
+    href<-paste0('file://',href)
+    cat('href=',href,"\n")
+    sendPtRManagerMessage(sender='cmd.electron',  openLink= href)
+  } else {
+    cat('no electron\n')
+    rmarkdown::render(docFilePath )
+    htmlPath<-sub('\\.Rmd$','\\.html',docFilePath)
+    browseURL(htmlPath)
+  }
+  
+}
+
+
 processMssgFromAceMssgPageOut<-function(sender, mssg){
   id<-mssg$id
   saved<-unlist(mssg$isSaved)
@@ -37,6 +57,8 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
       
       updateAceExt(id, sender,  setDocFileSaved=TRUE, setMode=modeFromPath)  # resets undomanger, and possibly mode, but doesn't return anything
       setFileDescSaved(pageId=tabId, fileSaveStatus=TRUE ) # save status
+      
+      # handle mode status change
       if(identical(oldeMode,modeFromPath)){
         modeChanged<-FALSE
       } else {
@@ -56,6 +78,7 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
         }
         setTrigger('redraw')
       }
+      
       savePage(tabId) # saves page to workspace
       if(sender %in% c('fileCmd.save','fileCmd.saveNow')){
         tabId=popTab()
@@ -68,10 +91,11 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
         closeTabNow(tabId)
       } else { # had path and is neither quit nor close nor saveAs; so is rmdViewer or saveNow
         if( identical(sender, 'buttonCmd.rmdViewer')){
-          
-          rmarkdown::render(docFilePath )
-          htmlPath<-sub('\\.Rmd$','\\.html',docFilePath)
-          browseURL(htmlPath)
+          cat('aceOut1:: buttonCmd.rmdViewer\n')
+          rmdOut(docFilePath)
+          # rmarkdown::render(docFilePath )
+          # htmlPath<-sub('\\.Rmd$','\\.html',docFilePath)
+          # browseURL(htmlPath)
         } else { #was save Now
           if(modeChanged){
             updateAceExt(id=id, sender='cmd.tabChange', roleBack=FALSE, setfocus=TRUE, getValue=TRUE)
@@ -85,9 +109,11 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
     }
   } else { #already saved
     if( identical(request$sender, 'buttonCmd.rmdViewer')){
-      rmarkdown::render(docFilePath )
-      htmlPath<-sub('\\.Rmd$','\\.html',docFilePath)
-      browseURL(htmlPath)
+      rmdOut(docFilePath)
+      cat('aceOut1:: buttonCmd.rmdViewer\n')
+      # rmarkdown::render(docFilePath )
+      # htmlPath<-sub('\\.Rmd$','\\.html',docFilePath)
+      # browseURL(htmlPath)
     }
     tabId<-popTab()
     if(request$sender%in% c('fileCmd.close') ){
