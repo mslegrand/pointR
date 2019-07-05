@@ -2,60 +2,28 @@
 getSVGWH<-reactiveVal(c(650,620)) 
 
 
-output$uiPreProcChooser<-renderUI({
-  radioGroupButtons(
-    inputId = "ptPreProcCmdChoice",
-    label = "Action",
-    choices = preprocChoices 
-  )
+
+observeEvent(input$ptPreProcDropDown,{
+  updateAceEditor(session, editorId='ptPreProcAceonNewPt', value=getPreProcPtScript()["onNewPt"])
+  updateAceEditor(session, editorId='ptPreProcAceonMovePt', value=getPreProcPtScript()["onMovePt"])
+  updateAceEditor(session, editorId='ptPreProcAceonMoveMat', value=getPreProcPtScript()["onMoveMat"])
 })
 
-
-# updates whenever either
-#  input$pages changes  (input$pages contains the tabId of the current page)
-#  selectedAsset$tabId changes
-# ??? do we really need both of these  ??? !!!
-observeEvent(c(input$pages, getTibTabId()), {
-  if(identical(input$pages, getTibTabId())){
-    if(hasPtScript()){
-      choice<-input$ptPreProcCmdChoice
-      if(is.null(choice)){ choice<-1}
-      txt= getPreProcPtScript()[choice]
-      updateAceEditor(session, editorId='ptPreProcAceEditor', value=txt)
-    } 
-  }
+observeEvent(input$dimissPtPreProcButton,{
+  click('ptPreProcDropDown')
 })
 
-# triggered whenever a choicetab changes occurs:
-# This occurs either by the user changing the choice or by
-# a page change and a null choice becoming 1.
-observeEvent(input$ptPreProcCmdChoice, {
-  if(
-      input$ptPreProcCmdChoice %in% preprocChoices &&  
-      getRightMidPanel()%in% c('point', 'matrix') 
-  ){
-    txt= getPreProcPtScript()[input$ptPreProcCmdChoice]
-    # cat("serverPreProcPts.R:: input$ptPreProcCmdChoice\n")
-    # cat( "input$ptPreProcCmdChoice=",format(input$ptPreProcCmdChoice),"\n")
-    # cat("txt=",format(txt),"\n" )
-    selectedAsset$ptScriptSel<-input$ptPreProcCmdChoice
-    updateAceEditor(session, editorId='ptPreProcAceEditor', value=txt)
-  }
-}, label="serverPreProcPts.R:: input$ptPreProcCmdChoice")
+output$ptPreProcSource<-renderText('Point Preprocessor')
 
-# !!! kludge to have button inside UI, so splitter window is not disturbed.
-onclick("commitPtPreProcRequest", click('commitPtPreProc') )
-
-observeEvent( input$commitPtPreProc2,{
+observeEvent( input$commitPtPreProcButton,{ 
   if(getRightMidPanel() %in% c('point', 'matrix')){
     
-    log.fin(input$commitPtPreProc)
-    cmd<-input$ptPreProcCmdChoice
-    if(cmd %in% preprocChoices){
-      # cat('cmd=',format(cmd),"\n")
-      newScript=input$ptPreProcAceEditor
-      cat(format(newScript),"\n")
-      selectedAsset$ptScriptSel<-cmd
+    log.fin(input$commitPtPreProcButton)
+    selectedAsset$ptScriptSel<-'onNewPt'
+    
+    for(cmd in c('onNewPt', "onMovePt","onMoveMat")){
+      aceId=paste0("ptPreProcAce", cmd)
+      newScript=input[[aceId]]
       setPreProcPtScript(
         tab_Id=getTibTabId(),
         tib_Name=getAssetName(),
@@ -64,28 +32,7 @@ observeEvent( input$commitPtPreProc2,{
         newScript=newScript
       )
     }
-    log.fout(input$commitPtPreProc)
+    log.fout(input$commitPtPreProcButton)
   }
-}, ignoreNULL = TRUE)
+}, ignoreNULL = TRUE) 
 
-observeEvent( input$commitPtPreProc,{
-  if(getRightMidPanel() %in% c('point', 'matrix')){
-   
-    log.fin(input$commitPtPreProc)
-    cmd<-input$ptPreProcCmdChoice
-    if(cmd %in% preprocChoices){
-      # cat('cmd=',format(cmd),"\n")
-      newScript=input$ptPreProcAceEditor
-      cat(format(newScript),"\n")
-      selectedAsset$ptScriptSel<-cmd
-      setPreProcPtScript(
-        tab_Id=getTibTabId(),
-        tib_Name=getAssetName(),
-        pt_Column_Name=getTibColumnName(),
-        cmd_name=cmd,
-        newScript=newScript
-      )
-    }
-    log.fout(input$commitPtPreProc)
-  }
-}, ignoreNULL = TRUE)

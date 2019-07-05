@@ -147,7 +147,7 @@ shinyUI(
         bootstrapPage(
           buildRightMenu(),
           absolutePanel(id="logo.left", top=145, left=0, width="100%", img(src="ptR/pointRLogo.SVG") ),
-          div(newPointPreprocessor(id='BadWolf', title='Point Preprocessor')),
+          div(newPointPreprocessor()),
           uiOutput("BottomRightPanel"),
           uiOutput("TopRightPanel"),
           div( id="midRightPanels", class="cMidPanel ctop140",
