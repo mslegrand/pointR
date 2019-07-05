@@ -1,5 +1,6 @@
 # user util for point insertion preprossesing
 insertPoint<-function(pt, context=context  ){
+  
   tibs<-context$tibs
   assetName<-context$name
   if( !is.null(tibs) &&

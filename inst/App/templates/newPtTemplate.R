@@ -4,5 +4,5 @@ pt<-getPoint() # pt contains coordinates derived from the mouse click
 
 # apply your point manipulations here
 
-tibs<-insertPoint(pt=pt, location=getLocation() )
+tibs<-insertPoint(pt=pt, context=context )
 tibs # always return tibs
