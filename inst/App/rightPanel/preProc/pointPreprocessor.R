@@ -22,7 +22,8 @@ newPointPreprocessor<-function(
             value='on new' #fileTemplates[['newPtTemplate.R']]
           ),
       div( style="margin:10px",
-           span(id= "commitPtPreProcRequest", 'Commit', class="btn" )
+         # span(id= "commitPtPreProcRequest", 'Commit', class="btn" )
+           actionButton(inputId= "commitPtPreProc2", label='Commit', class="btn" )
       )
     ),
     icon=icon("filter", lib = "glyphicon"), #icon=icon("wrench", lib = "glyphicon"), #icon = icon("toolbox"),

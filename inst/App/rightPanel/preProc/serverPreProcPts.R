@@ -46,14 +46,15 @@ observeEvent(input$ptPreProcCmdChoice, {
 # !!! kludge to have button inside UI, so splitter window is not disturbed.
 onclick("commitPtPreProcRequest", click('commitPtPreProc') )
 
-observeEvent( input$commitPtPreProc,{
+observeEvent( input$commitPtPreProc2,{
   if(getRightMidPanel() %in% c('point', 'matrix')){
-    # cat("\n******input$commitPtPreProc************\n")
+    
+    log.fin(input$commitPtPreProc)
     cmd<-input$ptPreProcCmdChoice
     if(cmd %in% preprocChoices){
       # cat('cmd=',format(cmd),"\n")
       newScript=input$ptPreProcAceEditor
-      # cat(format(newScript),"\n")
+      cat(format(newScript),"\n")
       selectedAsset$ptScriptSel<-cmd
       setPreProcPtScript(
         tab_Id=getTibTabId(),
@@ -63,5 +64,28 @@ observeEvent( input$commitPtPreProc,{
         newScript=newScript
       )
     }
+    log.fout(input$commitPtPreProc)
+  }
+}, ignoreNULL = TRUE)
+
+observeEvent( input$commitPtPreProc,{
+  if(getRightMidPanel() %in% c('point', 'matrix')){
+   
+    log.fin(input$commitPtPreProc)
+    cmd<-input$ptPreProcCmdChoice
+    if(cmd %in% preprocChoices){
+      # cat('cmd=',format(cmd),"\n")
+      newScript=input$ptPreProcAceEditor
+      cat(format(newScript),"\n")
+      selectedAsset$ptScriptSel<-cmd
+      setPreProcPtScript(
+        tab_Id=getTibTabId(),
+        tib_Name=getAssetName(),
+        pt_Column_Name=getTibColumnName(),
+        cmd_name=cmd,
+        newScript=newScript
+      )
+    }
+    log.fout(input$commitPtPreProc)
   }
 }, ignoreNULL = TRUE)
