@@ -29,7 +29,7 @@ Imports:
     shinyjqui
 Suggests:
     testthat
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Remotes: 
   mslegrand/shinyDMDMenu,
   mslegrand/svgR,
