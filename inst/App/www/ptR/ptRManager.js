@@ -219,7 +219,7 @@ $('document').ready(function()
       event.stopPropagation();
     }
     */
-    if (event.code == 'KeyX' && (event.ctrlKey || event.metaKey)) {
+    if (event.code == 'KeyT' && (event.ctrlKey || event.metaKey)) {
       //alert('closing!');
       let $el=$('#editNavBar');
       $el.attr('value',"closeProject");
