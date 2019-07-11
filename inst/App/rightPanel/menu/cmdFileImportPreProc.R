@@ -22,10 +22,7 @@ loadPreProc<-function(datapath){
   }
   
   tryCatch({
-    #preProcList<-unlist(source(datapath, local=T)$value)
-    
     preProcList<-source(datapath, local=T)$value
-    # browser()
     #check preProcList
     if(is.null(preProcList) ||  
        #length(preProcList)!=3 ||
@@ -37,7 +34,7 @@ loadPreProc<-function(datapath){
     }
     
     preProcList<-sapply(preProcList, extractBodyWithComments)
-    # browser()
+   
     insertPreProcPtEntry(
       tab_Id= getTibTabId(),  
       tib_Name=getAssetName(),

@@ -9,10 +9,7 @@ returnValue4ModuleRtFtr<-callModule(
     val
   }),
   getPanelState=reactive({
-    # cat('>----> getPanelState\n'); 
     rtv<-getRightMidPanel(); 
-    # cat( "getPanelState= ", getRightMidPanel(),"\n" );
-    # cat('<----< getPanelState\n');
     rtv
   }),
   hasPtScript=hasPtScript 
@@ -148,61 +145,17 @@ observeEvent( returnValue4ModuleRtFtr$tagPt(), {
   matCol<-getTibMatCol()
 
   m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]
-  # if(ncol(m)<1){
-  #   return(NULL) # bail if matrix of points is empty
-  # }
   ptDefs$mats[selection]<-FALSE # no longer a matrix input!
   tib<-ptDefs$tib[[selection]] #get the tib
   tib<-tagTib(tib, getTibPtColPos(), row, matCol)
   row<-row+1
   matCol<-length(tib[[row, getTibPtColPos()]])/2
   ptDefs$tib[[selection]]<-tib
-  # insert preprocValue here?????
   sender='tagPt'
   tabId<-getTibTabId()
   scripts<-getPreProcOnNewRowScripts(tabId, selection)
   if(length(scripts)>0){
     preprocTrySetAttrValueS(scripts,  ptDefs, row, selection)
-     # 
-     # rowIndex<-row
-     # tryCatch({
-     #   tibs<-ptDefs$tib
-     #   tib<-tibs[[selection]]
-     #   tibColNames<-names(tib)
-     #   if(length(scripts)>0){
-     #       cols<-names(scripts)
-     #       for(columnName in cols){
-     #         txt<-scripts[columnName]
-     #         values<-tib[[columnName]]
-     #         getAttrValue<-function(){values[rowIndex]}
-     #         context<-list(
-     #           name=getAssetName(),
-     #           column=which(tibColNames==columnName),
-     #           row=rowIndex,
-     #           tibs=tibs
-     #         )
-     #         ppenv<-list(
-     #           setAttrValue=setAttrValue,
-     #           getAttrValue=getAttrValue,
-     #           context=context,
-     #           keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey)
-     #         )
-     #         tibs<-eval(parse(text=txt), ppenv )
-     #         validateTibLists(getPtDefs()$tib, tibs)
-     #       }
-     #      
-     #         if(!is.null(tibs)){
-     #         ptDefs$tib<-tibs
-     #         sender='tagPt'
-     #         updateAceExtDef(ptDefs, sender=sender, selector=list( name=context$name, rowIndex=context$row   ) )
-     #       }
-     #    }
-     # }, error=function(e){
-     #   e<-c('preproErr',e)
-     #   err<-paste(unlist(e), collapse="\n", sep="\n")
-     #   # cat(err)
-     #   alert(err)
-     # })
   } else {
     sender='tagPt'
     updateAceExtDef(ptDefs, sender=sender, selector=list(rowIndex=row, matCol=matCol   ) )

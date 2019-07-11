@@ -80,10 +80,6 @@ getTibMatColMax<-reactive({
 #'        cmd.commit
 #'        cmd.add.column
 #'        cmd.add.asset
-#'    
-#'    Q. Does serveAce to reset name when we have a file->New or file->Open?????
-#'    
-#'    A. actually, NO! file->New or file->Open send2ace  cmd.tabChange
 #'
 resetSelectedTibbleName<-function(tibs, name){
     # log.fin(resetSelectedTibbleName)
@@ -191,7 +187,6 @@ updateSelected<-function( name, rowIndex, columnName, matCol,  ptColName, selInd
       } else {
         matCol=0
       }
-      # here is a candiate  location for updating the matCol???
     }
   }
   if(!missing(transformType)){

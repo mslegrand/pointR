@@ -63,25 +63,9 @@ observeEvent(input$plotNavBar, {
     showModal( addNewColModal() )
   }
   
-  # if(cmd == 'cmdSetMatColMax'){
-  #   columnName<-getTibColumnName()
-  #   currentValue<-getPointMax()
-  #   if(is.null(currentValue)){
-  #     currentValue=NA
-  #   } 
-  #   showModal( setMatColMaxModal(columnName, currentValue) )
-  # }
-  
-  # if(cmd == 'cmdDeleteColumn'){
-  #   columnName<-getTibColumnName()
-  #   showModal(deleteColumnModal(columnName))
-  # }
-  
   if(cmd == 'cmdNewPP'){ # disable unless ...
     columnName<-getTibColumnName()
     if( getRightMidPanel()=='point' 
-      #   && 
-      # nrow(filter(preProcDB$points, tabId==getTibTabId() && tibName==getAssetName()))==0
     ){
       newScript = c(
         onNewPt=fileTemplates[['newPtTemplate.R']],
@@ -89,8 +73,6 @@ observeEvent(input$plotNavBar, {
         onMoveMat=fileTemplates[['moveMatTemplate.R']]  
       ) 
       insertPreProcPtEntry(getTibTabId(), getAssetName(), getTibColumnName(), newScript )
-      # txt=fileTemplates[['newPtTemplate.R']]
-      # updateAceEditor(session, editorId='ptPreProcAceEditor', value=txt)
     }
     dirtyDMDM(session, "plotNavBar")
   }

@@ -22,35 +22,3 @@ validateTibLists<-function(tibs1, tibs2){
     assertConsistantTibPair(tibs1[[n]], tibs2[[n]])
   }  
 }
-
-
-# testing 
-# source("inst/App/util/utilColumnType.R")
-# tib1<-tibble(points=list(matrix(1:4,2)), fill=c('red','blue'))
-# tib2<-tibble(points=list(matrix(1:6,2)), fill=c('red','blue'))
-# tib3<-tibble(points=list(matrix(1:6,2)), dril=c('red','blue'))
-# tib4<-tibble(points=1, dril=c('red','blue'))
-# 
-# tryCatch({
-#   assertConsistantTibPair(tib1,tib2)
-#   cat('assertConsistantTibPair(tib1,tib2) ok\n')
-# }, 
-# error = function(e){
-#   cat('assertConsistantTibPair(tib1,tib2) bad\n')
-# })
-# 
-# tryCatch({
-#   assertConsistantTibPair(tib3,tib2)
-#   cat('assertConsistantTibPair(tib3,tib2) bad\n')
-# }, 
-# error = function(e){
-#   cat('assertConsistantTibPair(tib3,tib2) ok\n')
-# })
-# 
-# tryCatch({
-#   assertConsistantTibPair(tib3,tib4)
-#   cat('assertConsistantTibPair(tib3,tib4) bad\n')
-# }, 
-# error = function(e){
-#   cat('assertConsistantTibPair(tib3,tib4) ok\n')
-# })
