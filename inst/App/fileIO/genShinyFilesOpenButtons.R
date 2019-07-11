@@ -8,6 +8,7 @@ genShinyOpenFilesButtons<-function(){
     shinyFilesButton("buttonFileOpenProject", label="", title="Select Project to Open", c('pproj'),                multiple=FALSE,     class='hiddenButton'),
     shinyFilesButton("buttonSnippetImport",   label="", title="Import Snippets",        c('snippets'),             multiple=FALSE,     class='hiddenButton'),
     shinyFilesButton("buttonDnippetImport",   label="", title="Import Dnippets",        c('dnippets'),             multiple=FALSE,     class='hiddenButton'),
-    shinyFilesButton("buttonPreProcPtImport", label="", title="Import PreProcessors for points",    c('R'), multiple=FALSE,   class='hiddenButton')
+    shinyFilesButton("buttonPreProcPtImport", label="", title="Import PreProcessors for points",    c('R'), multiple=FALSE,   class='hiddenButton'),
+    shinyFilesButton("buttonPreProcValImport", label="", title="Import PreProcessors for values",    c('R'), multiple=FALSE,   class='hiddenButton')
   )
 }

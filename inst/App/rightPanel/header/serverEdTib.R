@@ -112,6 +112,7 @@ observeEvent(returnValue4ModuleEdTib$columnName(),{
 #--------EDIT Entry VALUE------------------------------
 observeEvent(returnValue4ModuleEdTib$entryValue(),{
   if( getTibEditState()==TRUE ){
+    log.fin(returnValue4ModuleEdTib$entryValue() )
     entry<-returnValue4ModuleEdTib$entryValue()
     if(length(entry)==0 || is.na(entry) ){
       return(NULL)
@@ -159,6 +160,7 @@ observeEvent(returnValue4ModuleEdTib$entryValue(),{
         updateAceExtDef(newPtDefs, sender=sender, selector=list( name=name, rowIndex=rowIndex, columnName=columnName   ) )
       }
     }
+    log.fout(returnValue4ModuleEdTib$entryValue())
   } 
 },label='EdTib-rtv-entryValue', ignoreNULL = TRUE)
 

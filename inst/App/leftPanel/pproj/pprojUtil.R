@@ -87,7 +87,9 @@ resetShinyFilesIOPaths<-function(pathToProj){
   for(id in c(fileIOIds, saveButtonFileNames)){
     if(id %in% c("buttonPreProcPtImport", "buttonPreprocPtExport")){
       jscode<-setSfDir(id, path= path_join( c(pathToProj, "resources", 'preProcPts') ))
-    } else if(id %in% c("buttonDnippetImport")){
+    } else if(id %in% c("buttonPreProcValImport", "buttonPreprocValExport")){
+      jscode<-setSfDir(id, path= path_join( c(pathToProj, "resources", 'preProcVals') ))
+    }  else if(id %in% c("buttonDnippetImport")){
       jscode<-setSfDir(id, path= path_join( c(pathToProj, "resources", 'dnds' )))
     } else if(id %in% c("buttonSnippetImport")){
       jscode<-setSfDir(id, path= path_join( c(pathToProj, "resources", 'snip' )))

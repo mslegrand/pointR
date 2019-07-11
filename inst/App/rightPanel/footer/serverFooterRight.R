@@ -26,18 +26,21 @@ observeEvent(
   {
     sender='cloneRow'
     ptDefs<-getPtDefs()
-    name<-getAssetName()
-    tib<-ptDefs$tib[[name]]
+    selection<-getAssetName()
+    tib<-ptDefs$tib[[selection]]
     rowIndex<-getTibRow()
     newTib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
     rowIndx=rowIndex+1
     matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
-
     pts<-newTib[[getTibPtColPos()]]
-
-    ptDefs$tib[[name]]<-newTib
-    newPtDefs<-ptDefs
-    updateAceExtDef(newPtDefs, sender=sender, selector=list(rowIndex=rowIndex, matCol=matCol  ) )
+    ptDefs$tib[[selection]]<-newTib
+    tabId<-getTibTabId()
+    scripts<-getPreProcOnNewRowScripts(tabId, selection)
+    if(length(scripts)>0){
+      preprocTrySetAttrValueS(scripts,  ptDefs, rowIndx, selection)
+    } else {
+      updateAceExtDef(ptDefs, sender=sender, selector=list(rowIndex=rowIndex, matCol=matCol  ) )
+    }
   }
 )
 
@@ -140,7 +143,7 @@ observeEvent( returnValue4ModuleRtFtr$tagPt(), {
   src<-getCode()
   selection<-getAssetName()
   ptDefs<-getPtDefs()
-
+  
   row<-getTibRow()
   matCol<-getTibMatCol()
 
@@ -154,9 +157,57 @@ observeEvent( returnValue4ModuleRtFtr$tagPt(), {
   row<-row+1
   matCol<-length(tib[[row, getTibPtColPos()]])/2
   ptDefs$tib[[selection]]<-tib
+  # insert preprocValue here?????
   sender='tagPt'
-  updateAceExtDef(ptDefs, sender=sender, selector=list(rowIndex=row, matCol=matCol   ) )
-}) #end of point InfoList Tag Point,
+  tabId<-getTibTabId()
+  scripts<-getPreProcOnNewRowScripts(tabId, selection)
+  if(length(scripts)>0){
+    preprocTrySetAttrValueS(scripts,  ptDefs, row, selection)
+     # 
+     # rowIndex<-row
+     # tryCatch({
+     #   tibs<-ptDefs$tib
+     #   tib<-tibs[[selection]]
+     #   tibColNames<-names(tib)
+     #   if(length(scripts)>0){
+     #       cols<-names(scripts)
+     #       for(columnName in cols){
+     #         txt<-scripts[columnName]
+     #         values<-tib[[columnName]]
+     #         getAttrValue<-function(){values[rowIndex]}
+     #         context<-list(
+     #           name=getAssetName(),
+     #           column=which(tibColNames==columnName),
+     #           row=rowIndex,
+     #           tibs=tibs
+     #         )
+     #         ppenv<-list(
+     #           setAttrValue=setAttrValue,
+     #           getAttrValue=getAttrValue,
+     #           context=context,
+     #           keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey)
+     #         )
+     #         tibs<-eval(parse(text=txt), ppenv )
+     #         validateTibLists(getPtDefs()$tib, tibs)
+     #       }
+     #      
+     #         if(!is.null(tibs)){
+     #         ptDefs$tib<-tibs
+     #         sender='tagPt'
+     #         updateAceExtDef(ptDefs, sender=sender, selector=list( name=context$name, rowIndex=context$row   ) )
+     #       }
+     #    }
+     # }, error=function(e){
+     #   e<-c('preproErr',e)
+     #   err<-paste(unlist(e), collapse="\n", sep="\n")
+     #   # cat(err)
+     #   alert(err)
+     # })
+  } else {
+    sender='tagPt'
+    updateAceExtDef(ptDefs, sender=sender, selector=list(rowIndex=row, matCol=matCol   ) )
+  }
+}) 
 
 # forward point
 observeEvent( returnValue4ModuleRtFtr$forwardPt(), {

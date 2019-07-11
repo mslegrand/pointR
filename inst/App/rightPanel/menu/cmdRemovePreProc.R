@@ -1,5 +1,6 @@
 
-cmdPreProcPtsRemove<-function(){
+cmdPreProcPtsRemove<-function(pptype){
+  cmdNames<-preprocChoices[[pptype]]
   removePreProcPtEntry(
     tab_Id=getTibTabId(), 
     tib_Name=getAssetName(),

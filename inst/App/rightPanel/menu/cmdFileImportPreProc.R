@@ -32,8 +32,8 @@ loadPrePoints<-function(datapath){
     # browser()
     #check preProcList
     if(is.null(preProcList) ||  
-       length(preProcList)!=3 ||
-       any(match(names(preProcList), preprocChoices   , 0 )==0)
+       #length(preProcList)!=3 ||
+       any(match(names(preProcList), unlist(preprocChoices)   , 0 )==0)
       
     ){
       stop('ill-formed  preprocessor')
