@@ -15,25 +15,24 @@ mouseCmdAddPt<-function(mssg){
   selection<-getAssetName() 
   rowIndex<-getTibRow()
   matColIndx<-getTibMatCol()
- 
+  
   if( length( getPointMax())>1){ stop('getPointMax is too big')} #should never happen
+  pts<-ptDefs[[ selection]][[rowIndex,getTibColPos()]]
   if(!is.na(getPointMax()) && getTibMatColMax() >= getPointMax() ){ #need to split?
-    if(matColIndx<getPointMax() ){ # matcol not at end and ptmax for this row is already exceeded
-      return(NULL) # eat this point
-    } else {  #split
-        tibs<-ptDefs$tib
-        tib<-tibs[[selection]]
-        tib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
-        rowIndex<-rowIndex+1
-        tib[[getTibColumnName()]][[rowIndex]]<-matrix(0,2,0)
-        tibs[[selection]]<-tib
-        matColIndx<-0
-        ptDefs$tib<-tibs
-        # since we just added a new row we must check if we need to
-        # modify (preproc) the values in that row
-      
-        scripts<-getPreProcOnNewRowScripts( getTibTabId(), selection)
-        if(length(scripts)>0){
+      #split
+      tibs<-ptDefs$tib
+      tib<-tibs[[selection]]
+      tib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
+      rowIndex<-rowIndex+1
+      tib[[getTibColumnName()]][[rowIndex]]<-matrix(0,2,0)
+      tibs[[selection]]<-tib
+      matColIndx<-0
+      ptDefs$tib<-tibs
+      # since we just added a new row we must check if we need to
+      # modify (preproc) the values in that row
+    
+      scripts<-getPreProcOnNewRowScripts( getTibTabId(), selection)
+      if(length(scripts)>0){
           newTibs<-tibs # backup tibs, 
           newRowIndx<-rowIndex
           tryCatch({
@@ -64,14 +63,13 @@ mouseCmdAddPt<-function(mssg){
             err<-paste(unlist(e), collapse="\n", sep="\n")
             alert(err)
           })
-        } #endof split
-    } 
+      } #end of scripts
   } # end of split
   
-    # now  add  the point
-    newPtDefs<-ptDefs
-    tibs<-newPtDefs$tib
-    if( hasPtScript() ){ #preproc pts 
+  # now  add  the point
+  newPtDefs<-ptDefs
+  tibs<-newPtDefs$tib
+  if( hasPtScript() ){ #preproc pts 
       txt<-getPreProcPtScript()['onNewPt']
       tryCatch({
         getPoint<-function(){names(newPt)<-c('x','y'); newPt}
@@ -100,7 +98,7 @@ mouseCmdAddPt<-function(mssg){
         # cat(err)
         alert(err)
       })
-    } else { #no prepoc pts
+  } else { #no prepoc pts
       tib<-tibs[[selection]]
       pts<-tib[[getTibColumnName()]][[rowIndex]]
       pts<-matrix(append(pts,newPt,2*(matColIndx)) ,2)
@@ -109,7 +107,7 @@ mouseCmdAddPt<-function(mssg){
       if(!is.null(newPtDefs)){ #update only upon success
         updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx+1))
       }    
-    }
+  }
   #} #end no split
   
 }
