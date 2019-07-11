@@ -120,23 +120,21 @@ observeEvent(input$plotNavBar, {
         onNewRow=fileTemplates[['onRowNewTemplate.R']]
       ) 
       insertPreProcPtEntry(getTibTabId(), getAssetName(), getTibColumnName(), newScript )
-      # txt=fileTemplates[['newPtTemplate.R']]
-      # updateAceEditor(session, editorId='ptPreProcAceEditor', value=txt)
     }
     log.fout(cmd == 'cmdNewAP')
     dirtyDMDM(session, "plotNavBar")
   }
   
   if(cmd == 'cmdImportAP'){ # disable unless ...
-    cmdPreProcPtsImport()
+    cmdPreProcAtsImport()
     dirtyDMDM(session, "plotNavBar")
   }  
   if(cmd=="cmdExportAP"){ #-----save
-    cmdPreProcPtsExport()
+    cmdPreProcAtsExport()
     dirtyDMDM(session, "plotNavBar")
   }   
   if(cmd=="cmdRemoveAP"){ #-----save
-    cmdPreProcPtsRemove('values')
+    cmdPreProcAtsRemove('values')
     dirtyDMDM(session, "plotNavBar")
   } 
   

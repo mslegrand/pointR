@@ -2,16 +2,12 @@
 cmdPreProcPtsImport<-function(){
   click('buttonPreProcPtImport')
 }
+cmdPreProcAtsImport<-function(){
+  click('buttonPreProcAtImport')
+}
 
-loadPrePoints<-function(datapath){
-  # extractBodyWithComments<-function(fn){
-  #   tt<-capture.output(print(fn))
-  #   tt<-tt[-1] # TODO: refactor for better reliability
-  #   tt<-tt[-length(tt)]  
-  #   tt<-tt[-length(tt)]
-  #   paste(tt, collapse="\n")
-  # }
-  
+
+loadPreProc<-function(datapath){
   extractBodyWithComments<-function(fn){
     tt<-capture.output(print(fn))
     tt<-paste(tt, collapse="\n")
@@ -49,7 +45,6 @@ loadPrePoints<-function(datapath){
       newScript=preProcList
     )
     selection<-names(preProcList)[1]
-    updateRadioGroupButtons(session, "ptPreProcCmdChoice", selected=selection )
     txt=preProcList[1]
     updateAceEditor(session, editorId='ptPreProcAceEditor', value=txt)
   }, 
@@ -65,6 +60,15 @@ observeEvent(input$buttonPreProcPtImport,{
   if(length(fp.dt)>0 && nrow(fp.dt)){
     datapath<-as.character(fp.dt$datapath[1])
     datapath<-gsub(pattern = '^NA/', "~/", datapath)
-    loadPrePoints(datapath)
+    loadPreProc(datapath)
+  }
+})
+
+observeEvent(input$buttonPreProcAtImport,{
+  fp.dt<-parseFilePaths(c(home='~'), input$buttonPreProcAtImport)
+  if(length(fp.dt)>0 && nrow(fp.dt)){
+    datapath<-as.character(fp.dt$datapath[1])
+    datapath<-gsub(pattern = '^NA/', "~/", datapath)
+    loadPreProc(datapath)
   }
 })
