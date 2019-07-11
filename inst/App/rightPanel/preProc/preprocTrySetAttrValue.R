@@ -5,7 +5,6 @@ preprocTrySetAttrValue<-function( cmd.Row, ptDefs, rowIndex, selection){
 
   tryCatch({ 
     txt<-getPreProcPtScript()['onChangeRow']
-    #newPtDefs<-ptDefs
     tibs<-ptDefs$tib
     tib<-tibs[[selection]]
     values<-tib[[getTibColumnName()]]
@@ -27,12 +26,7 @@ preprocTrySetAttrValue<-function( cmd.Row, ptDefs, rowIndex, selection){
     )
     tibs<-eval(parse(text=txt), ppenv )
     validateTibLists(getPtDefs()$tib, tibs)
-    #newPtDefs$tib<-tibs
     ptDefs$tib<-tibs
-    # if(!is.null(tibs)){ #update only upon success
-    #   sender='applyTibEdit'
-    #   updateAceExtDef(newPtDefs, sender=sender, selector=list( name=context$name, rowIndex=context$row   ) )
-    # }
     sender='applyTibEdit'
     updateAceExtDef(ptDefs, sender=sender, selector=list( name=context$name, rowIndex=context$row   ) )
   }, error=function(e){
