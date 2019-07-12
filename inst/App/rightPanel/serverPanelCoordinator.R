@@ -79,7 +79,6 @@ getColumnType<-reactive({
 getPlotState<-reactive({
   # cat(">----> getPlotState\n")
   nameType<-getNameType()
-  # cat('nameType=',nameType,"\n")
   if(identical(nameType,tibTag)){
     colType<-getColumnType()
     if(identical(colType,'point')){
@@ -131,8 +130,6 @@ getRightMidPanel<-reactive({
 
 
 getRightPanelChoices<-reactive({ # includes names of tibs
-  # cat(">---> getRightPanelChoices\n")
-  # cat('getSourceType()=', format(getSourceType()),'\n')
   if(hasError() ){ # error: set to  errorPanel
     choices<-errorPanelTag
   } else {
@@ -156,8 +153,6 @@ getRightPanelChoices<-reactive({ # includes names of tibs
       choices<-textPanelTag
     }
   } 
-  # cat("choices=", paste(choices, collapse=", "),"\n")
-  # cat("<---< getRightPanelChoices\n")
   choices
 },
 label= 'getRightPanelChoices'
@@ -242,24 +237,25 @@ observeEvent(atLeast2Rows(),{
 
 observeEvent( getRightMidPanel(), {
   panel<-getRightMidPanel()
-  if( !is.null(panel) && panel %in% c('point','matrix')){
-    enableDMDM(
-      session, 
-      menuBarId="plotNavBar", 
-      entry="Point Preprocessor"
-    )
+  menuBarId="plotNavBar"
+  entry="Attribute Preprocessor"
+  if( identical(panel,'value')){
+    enableDMDM(session, menuBarId=menuBarId, entry=entry)
   } else {
-    disableDMDM(
-      session, 
-      menuBarId="plotNavBar", 
-      entry="Point Preprocessor"
-    )    
+    disableDMDM(session, menuBarId=menuBarId, entry=entry)
+  }
+  entry="Point Preprocessor"
+  if( identical(panel,'point') || identical(panel,'matrix')){
+    enableDMDM(session, menuBarId=menuBarId, entry=entry)
+  } else {
+    disableDMDM(session, menuBarId=menuBarId, entry=entry)
   }
 }, label='getRightMidPanel')
 
+# need to rewrite for cmdExportAP cmdRemoveAP
 observeEvent( c(getRightMidPanel(), hasPtScript() ), {
   if( !is.null(getRightMidPanel()) && 
-      (getRightMidPanel() %in% c('point','matrix')) &&
+      #(getRightMidPanel() %in% c('point','matrix')) &&
       hasPtScript() 
   ){
     removeCssClass( id='PtPreProcDiv', class="hiddenPanel")

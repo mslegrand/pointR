@@ -113,7 +113,7 @@ newAssetSelection<-function( tabId, choices, tibs){
     ptColName=ptColName,
     selIndex=1,
     transformType='Translate',
-    ptScriptSel=preprocChoices[1]
+    ptScriptSel=preprocChoices$points[1]
   )
   # log.fout(newAssetSelection)
   selection

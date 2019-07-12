@@ -15,7 +15,7 @@ selectedAsset <- reactiveValues(
   ptColName=NULL,      # !!! KLUDGE for now. should this default to last col? probably not
   selIndex=1, # only used is to determine if in matrix or point mode !! 
   transformType='Translate', # TODO!!! replace this with selIndex
-  ptScriptSel=preprocChoices[1]
+  ptScriptSel=preprocChoices$points[1] #assigned but not used?
 )
 
 
@@ -35,7 +35,7 @@ getAssetName<-reactive({selectedAsset$name}) #allow to be null only if tib is nu
 getTibTabId<-reactive({ selectedAsset$tabId})
 getTibColumnName<-reactive({ selectedAsset$columnName })
 getTib<-reactive({ getPtDefs() %$$% 'tib' %$$%  getAssetName() })
-
+getTibColPos<-reactive({ which(names(getTib())==selectedAsset$columnName )})
 getTibPtColPos<-reactive({ which(names(getTib())==selectedAsset$ptColName )})
 getTibNRow<-reactive({
   if( getTibEditState()==TRUE ){
@@ -73,10 +73,14 @@ getTibMatColMax<-reactive({
     }
 })
 
-# this is called to reset the tib name when possible 
-# used by 
-#    1. serverEdtib to reset the name when the selection changes
-#    2. serveAce to reset name when we have a file->New or file->Open
+#' this is called to reset the tib name when possible 
+#' used in 2 spots 
+#'    1. serverEdtib to reset the name when the selection changes
+#'    2. **processMssgFromAceMssgPageIn** to handle senders
+#'        cmd.commit
+#'        cmd.add.column
+#'        cmd.add.asset
+#'
 resetSelectedTibbleName<-function(tibs, name){
     # log.fin(resetSelectedTibbleName)
     if(hasError()){
@@ -183,7 +187,6 @@ updateSelected<-function( name, rowIndex, columnName, matCol,  ptColName, selInd
       } else {
         matCol=0
       }
-      # here is a candiate  location for updating the matCol???
     }
   }
   if(!missing(transformType)){

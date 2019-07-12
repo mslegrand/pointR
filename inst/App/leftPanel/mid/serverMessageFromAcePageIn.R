@@ -18,7 +18,7 @@ processMssgFromAceMssgPageIn<-function(sender, mssg){
        # cat('names of tibs:',format(names(tibs)), "!\n")
       resetSelectedTibbleName(tibs=tibs, name=name)
       
-    } else { # else covers: 'cmd.file.new', 'cmd.tabChange', 'cmd.openFileNow', p
+    } else { # else covers: 'cmd.file.new', 'cmd.tabChange', 'cmd.openFileNow',
 
 # getMode -----------------------------------------------------------------
 

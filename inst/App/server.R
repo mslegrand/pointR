@@ -25,7 +25,8 @@ shinyServer(function(input, output,session) {
   source("util/utilTransform.R")
   source("util/copyAndRenameProject.R")
   source("fileIO/dndSnippetLoader.R")
-  
+  source("rightPanel/preProc/preProcSetAttr.R")
+  source("rightPanel/preProc/preprocTrySetAttrValue.R", local=TRUE)
   source("rightPanel/preProc/preProcValidate.R")
   
 # Reactive values----------
@@ -58,9 +59,11 @@ shinyServer(function(input, output,session) {
   shinyFileChoose(input, "buttonSnippetImport",      session=session, roots=c(home="~"),  filetypes=c('snip') ) #hidden
   shinyFileChoose(input, "buttonDnippetImport",      session=session, roots=c(home="~"),  filetypes=c('dnds') ) #hidden
   shinyFileChoose(input, "buttonPreProcPtImport",    session=session, roots=c(home="~"),  filetypes=c('R') ) #hidden
+  shinyFileChoose(input, "buttonPreProcAtImport",    session=session, roots=c(home="~"),  filetypes=c('R') ) #hidden
   
-  shinyFileSave(input,   "buttonSvgExport",          session=session, roots=c(home="~")  ) #hidden
+  shinyFileSave(input,   "buttonSvgExport",           session=session, roots=c(home="~")  ) #hidden
   shinyFileSave(input,   "buttonPreprocPtExport",      session=session, roots=c(home="~") ) #hidden
+  shinyFileSave(input,   "buttonPreprocAtExport",      session=session, roots=c(home="~") ) #hidden
   
   disableDMDM(session, "editNavBar", 'project')
 

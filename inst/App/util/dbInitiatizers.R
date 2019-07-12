@@ -42,8 +42,6 @@ initialBackDropDB<-function(){
   )[0,]
 }
 
-#preprocChoices<-c("onNewPt",  "onMovePt", "onMoveMat")
-
 initialServerAsset<-function(){
   tibble(
     tabId="bogus",
@@ -54,7 +52,7 @@ initialServerAsset<-function(){
     ptColName="bogus",      # !!! KLUDGE for now. should this default to last col?
     selIndex=1, # only used is to determine if in matrix or point mode !! 
     transformType='Translate', # TODO!!! replace this with selIndex
-    ptScriptSel=preprocChoices[1]
+    ptScriptSel=preprocChoices$points[1]
   )
 }
 

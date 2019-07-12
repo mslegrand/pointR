@@ -14,10 +14,7 @@ returnValue4ModuleEdTib<-callModule(
     rtv
   }),
   nameChoices=reactive({
-      # cat('nameChoices in callModule::returnValue4ModuleEdTib\n')
-      # cat('returnValue4ModuleEdTib:: next:: getRightPanelChoices\n')
       rtv<-getRightPanelChoices()
-      # cat('returnValue4ModuleEdTib:: after:: getRightPanelChoices\n')
       rtv
   }),
   getRowIndex=reactive({            if( getTibEditState()==TRUE ){ getTibRow() } else { NULL } }),
@@ -47,25 +44,8 @@ getSafeSelection<-function(selection, choices){ #anybody using this???
   selection
 }
 
-# #name
-# observeEvent(returnValue4ModuleEdTib$name(),{
-#     name<-returnValue4ModuleEdTib$name()
-#     if( name==getAssetName() ){ return(NULL) } #bail if moduleEdTib did not change name
-#     if( !(name %in% c(errorPanelTag) )){
-#       if(name==transformTag){
-#           updateSelected(name=transformTag)
-#       } else  {
-#         tibs<-getPtDefs()$tib
-#         resetSelectedTibbleName(tibs=tibs, name=name)
-#       }
-#     }
-# })
-
 observeEvent(returnValue4ModuleEdTib$selectedWidget(), {
   if( getTibEditState()==TRUE && !is.null( returnValue4ModuleEdTib$selectedWidget() )){
-    # cat("\n-----------returnValue4ModuleEdTib$selectedWidget--------------------\n")
-    # cat("selectedWidget=",format( returnValue4ModuleEdTib$selectedWidget() )," tabId=",format(input$pages),"\n\n")
-    
     log.fin(returnValue4ModuleEdTib$selectedWidget())
     selectedWidget<-returnValue4ModuleEdTib$selectedWidget()
     log.val(selectedWidget)
@@ -75,7 +55,6 @@ observeEvent(returnValue4ModuleEdTib$selectedWidget(), {
 })
 
 observeEvent(returnValue4ModuleEdTib$transformType(),{
-  # cat(">--->oe modedtib$transformType\n")
   if( getPlotState()==transformTag){
     # cat("\n-----------returnValue4ModuleEdTib$transformType--------------------\n")
       tt<-returnValue4ModuleEdTib$transformType()
@@ -83,7 +62,6 @@ observeEvent(returnValue4ModuleEdTib$transformType(),{
         updateSelected( transformType= tt)
       }
   }
-  # cat("<---<oe modedtib$transformType\n")
 })
 
 
@@ -112,11 +90,12 @@ observeEvent(returnValue4ModuleEdTib$columnName(),{
 #--------EDIT Entry VALUE------------------------------
 observeEvent(returnValue4ModuleEdTib$entryValue(),{
   if( getTibEditState()==TRUE ){
+    log.fin(returnValue4ModuleEdTib$entryValue() )
     entry<-returnValue4ModuleEdTib$entryValue()
     if(length(entry)==0 || is.na(entry) ){
       return(NULL)
     }
-    # cat('getColumnType()=',getColumnType(),'\n')
+
     if(getColumnType()=='point'){
       entry<-which(entry==c('point','matrix'))
       if(length(entry)){
@@ -159,6 +138,7 @@ observeEvent(returnValue4ModuleEdTib$entryValue(),{
         updateAceExtDef(newPtDefs, sender=sender, selector=list( name=name, rowIndex=rowIndex, columnName=columnName   ) )
       }
     }
+    log.fout(returnValue4ModuleEdTib$entryValue())
   } 
 },label='EdTib-rtv-entryValue', ignoreNULL = TRUE)
 

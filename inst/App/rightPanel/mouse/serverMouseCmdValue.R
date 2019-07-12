@@ -9,12 +9,17 @@ mouseCmdValue<- function(mssg){
   sender='tagDrag.mouse'
   tid<-mssg$id
   tmp<-unlist(str_split(tid,"_"))
-  row<-as.numeric(tail(tmp,1))
-  selection<-getAssetName() 
+  rowIndex<-as.numeric(tail(tmp,1))
+  selection<-getAssetName()
   
-  m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]
-  matCol<-ncol(m)
+  #--- insert hook here
+  if(hasPtScript() && !is.null(getPreProcPtScript()['onChangeRow'])){
+    preprocTrySetAttrValue('onChangeRow', ptDefs, rowIndex, selection)
+  } else {
+    updateAceExtDef(ptDefs, sender=sender, selector=list( rowIndex=rowIndex))
+  }
   
-  updateAceExtDef(ptDefs, sender=sender, selector=list( rowIndex=row, matCol=matCol))
-
+  #---
+  
+  
 }

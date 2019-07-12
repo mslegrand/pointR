@@ -78,7 +78,7 @@ appPanelTag<-'appPanel'
 tibTag<-'tib'
 
 
-preprocChoices<-c("onNewPt",  "onMovePt", "onMoveMat")
+preprocChoices<-list(points=c("onNewPt",  "onMovePt", "onMoveMat"), values=c('onNewRow', 'onChangeRow'))
 
 #----begin external resources loaded prior to server------------
 # must be loaded prior to alles

@@ -63,28 +63,16 @@ observeEvent(input$plotNavBar, {
     showModal( addNewColModal() )
   }
   
-  # if(cmd == 'cmdSetMatColMax'){
-  #   columnName<-getTibColumnName()
-  #   currentValue<-getPointMax()
-  #   if(is.null(currentValue)){
-  #     currentValue=NA
-  #   } 
-  #   showModal( setMatColMaxModal(columnName, currentValue) )
-  # }
-  
-  # if(cmd == 'cmdDeleteColumn'){
-  #   columnName<-getTibColumnName()
-  #   showModal(deleteColumnModal(columnName))
-  # }
-  
   if(cmd == 'cmdNewPP'){ # disable unless ...
     columnName<-getTibColumnName()
-    if( getRightMidPanel()=='point' && 
-      nrow(filter(preProcDB$points, tabId==getTibTabId() && tibName==getAssetName()))==0
+    if( getRightMidPanel()=='point' 
     ){
-      insertPreProcPtEntry(getTibTabId(), getAssetName(), getTibColumnName() )
-      txt=fileTemplates[['newPtTemplate.R']]
-      updateAceEditor(session, editorId='ptPreProcAceEditor', value=txt)
+      newScript = c(
+        onNewPt=fileTemplates[['newPtTemplate.R']],
+        onMovePt=fileTemplates[['movePtTemplate.R']],
+        onMoveMat=fileTemplates[['moveMatTemplate.R']]  
+      ) 
+      insertPreProcPtEntry(getTibTabId(), getAssetName(), getTibColumnName(), newScript )
     }
     dirtyDMDM(session, "plotNavBar")
   }
@@ -98,7 +86,37 @@ observeEvent(input$plotNavBar, {
     dirtyDMDM(session, "plotNavBar")
   }   
   if(cmd=="cmdRemovePP"){ #-----save
-    cmdPreProcPtsRemove()
+    cmdPreProcPtsRemove('points')
+    dirtyDMDM(session, "plotNavBar")
+  } 
+  
+  if(cmd == 'cmdNewAP'){ # disable unless ...
+    log.fin(cmd == 'cmdNewAP' )
+    columnName<-getTibColumnName()
+    if( identical(getRightMidPanel(),'value') 
+        # && 
+        # nrow(filter(preProcDB$points, tabId==getTibTabId() && tibName==getAssetName()))==0
+    ){
+      newScript = c(
+        onChangeRow=fileTemplates[['onRowChangeTemplate.R']],
+        onNewRow=fileTemplates[['onRowNewTemplate.R']]
+      ) 
+      insertPreProcPtEntry(getTibTabId(), getAssetName(), getTibColumnName(), newScript )
+    }
+    log.fout(cmd == 'cmdNewAP')
+    dirtyDMDM(session, "plotNavBar")
+  }
+  
+  if(cmd == 'cmdImportAP'){ # disable unless ...
+    cmdPreProcAtsImport()
+    dirtyDMDM(session, "plotNavBar")
+  }  
+  if(cmd=="cmdExportAP"){ #-----save
+    cmdPreProcAtsExport()
+    dirtyDMDM(session, "plotNavBar")
+  }   
+  if(cmd=="cmdRemoveAP"){ #-----save
+    cmdPreProcAtsRemove('values')
     dirtyDMDM(session, "plotNavBar")
   } 
   

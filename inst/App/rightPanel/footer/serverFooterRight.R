@@ -9,10 +9,7 @@ returnValue4ModuleRtFtr<-callModule(
     val
   }),
   getPanelState=reactive({
-    # cat('>----> getPanelState\n'); 
     rtv<-getRightMidPanel(); 
-    # cat( "getPanelState= ", getRightMidPanel(),"\n" );
-    # cat('<----< getPanelState\n');
     rtv
   }),
   hasPtScript=hasPtScript 
@@ -26,18 +23,21 @@ observeEvent(
   {
     sender='cloneRow'
     ptDefs<-getPtDefs()
-    name<-getAssetName()
-    tib<-ptDefs$tib[[name]]
+    selection<-getAssetName()
+    tib<-ptDefs$tib[[selection]]
     rowIndex<-getTibRow()
     newTib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
     rowIndx=rowIndex+1
     matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
-
     pts<-newTib[[getTibPtColPos()]]
-
-    ptDefs$tib[[name]]<-newTib
-    newPtDefs<-ptDefs
-    updateAceExtDef(newPtDefs, sender=sender, selector=list(rowIndex=rowIndex, matCol=matCol  ) )
+    ptDefs$tib[[selection]]<-newTib
+    tabId<-getTibTabId()
+    scripts<-getPreProcOnNewRowScripts(tabId, selection)
+    if(length(scripts)>0){
+      preprocTrySetAttrValueS(scripts,  ptDefs, rowIndx, selection)
+    } else {
+      updateAceExtDef(ptDefs, sender=sender, selector=list(rowIndex=rowIndex, matCol=matCol  ) )
+    }
   }
 )
 
@@ -140,14 +140,11 @@ observeEvent( returnValue4ModuleRtFtr$tagPt(), {
   src<-getCode()
   selection<-getAssetName()
   ptDefs<-getPtDefs()
-
+  
   row<-getTibRow()
   matCol<-getTibMatCol()
 
   m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]
-  # if(ncol(m)<1){
-  #   return(NULL) # bail if matrix of points is empty
-  # }
   ptDefs$mats[selection]<-FALSE # no longer a matrix input!
   tib<-ptDefs$tib[[selection]] #get the tib
   tib<-tagTib(tib, getTibPtColPos(), row, matCol)
@@ -155,8 +152,15 @@ observeEvent( returnValue4ModuleRtFtr$tagPt(), {
   matCol<-length(tib[[row, getTibPtColPos()]])/2
   ptDefs$tib[[selection]]<-tib
   sender='tagPt'
-  updateAceExtDef(ptDefs, sender=sender, selector=list(rowIndex=row, matCol=matCol   ) )
-}) #end of point InfoList Tag Point,
+  tabId<-getTibTabId()
+  scripts<-getPreProcOnNewRowScripts(tabId, selection)
+  if(length(scripts)>0){
+    preprocTrySetAttrValueS(scripts,  ptDefs, row, selection)
+  } else {
+    sender='tagPt'
+    updateAceExtDef(ptDefs, sender=sender, selector=list(rowIndex=row, matCol=matCol   ) )
+  }
+}) 
 
 # forward point
 observeEvent( returnValue4ModuleRtFtr$forwardPt(), {
