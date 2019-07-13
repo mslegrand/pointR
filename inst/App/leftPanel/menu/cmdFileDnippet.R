@@ -36,7 +36,7 @@ observeEvent(input$buttonDnippetImport,{
     ptRproj<-pprj()
     if(!is.null(ptRproj$pathToProj) && dir.exists( ptRproj$pathToProj )){
       # check for dnds dir and if not existing, create
-      dndsDir<-path_join(c(editOption$currentProjectDirectory,'resources', 'dnds'))
+      dndsDir<-path_join(c(editOption$currentProjectDirectory, resourceDir, 'dnds'))
       if(!dir.exists(dndsDir)){
         dir.create(dndsDir, showWarnings = F, recursive=T) # TODO!!! eventually can remove this.
       }

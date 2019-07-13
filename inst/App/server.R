@@ -19,7 +19,7 @@ shinyServer(function(input, output,session) {
   
   source("util/format.R")
   source("util/utilParser.R")
-  source("util/utilptR.R")
+  source("util/utilptR.R", local=TRUE)
   source("util/utilTibble.R")
   source("util/utilColumnType.R")
   source("util/utilTransform.R")

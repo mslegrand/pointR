@@ -38,7 +38,7 @@ readDnippetsFileNames<-function(path=getWorkSpaceDir()){
    
   if(!is.null(ptRproj$pathToProj)){  # we have a project so we adjust tb$fullpaths
       # first insure we have a dnds dir
-      dndsDir<-path_join(c(editOption$currentProjectDirectory,'resources', 'dnds'))
+      dndsDir<-path_join(c(editOption$currentProjectDirectory, resourceDir, 'dnds'))
       if(!dir.exists(dndsDir)){
         dir.create(dndsDir, showWarnings = F, recursive=T) # Todo!!! eventually can remove this.
       }
@@ -48,7 +48,7 @@ readDnippetsFileNames<-function(path=getWorkSpaceDir()){
         # reset paths to reside under resources
         fullpaths<-sub( ptRproj$pathToProj, editOption$currentProjectDirectory, fullpaths)
         # extract full paths not under -editOption$currentProjectDirectory/resouces
-        indx<-grep(dndsDir, fullpaths) #indx are the indices of resources now properly located
+        indx<-grep(dndsDir, fullpaths) #indx are the indices of resourceDir now properly located
         # move the files (if any)
         if(length(indx)>0){
           tomove<-fullpaths[-indx]

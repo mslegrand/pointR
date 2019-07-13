@@ -76,6 +76,7 @@ javascriptPanelTag<-'javascriptPanel'
 snippetPanelTag<-'snippetPanel'
 appPanelTag<-'appPanel'
 tibTag<-'tib'
+resourceDir='resources'
 
 
 preprocChoices<-list(points=c("onNewPt",  "onMovePt", "onMoveMat"), values=c('onNewRow', 'onChangeRow'))

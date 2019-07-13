@@ -100,12 +100,12 @@ copyAndRenameProject<-function(sourceProject, targetName, pathToTargetParent ){
  
   # create listing of files to process
   filePaths<-rev(dir_ls(tempDir, recursive = T)) #skips hidden files
-  indx<-grep(path_join(c(tempDir,pattern,'resources')),filePaths)
+  indx<-grep(path_join(c(tempDir,pattern, resourceDir)),filePaths)
   if(length(indx)>0){
     filePaths<-filePaths[-indx] # skip resources
   }
   
-  #filePaths<-filter(filePaths, glob=path_join(c(tempDir,pattern,'resources')), invert=TRUE)
+  #filePaths<-filter(filePaths, glob=path_join(c(tempDir,pattern,resourceDir)), invert=TRUE)
   
  # filePaths<-filePaths[-grep('\\.((pprj)|(dnds))$',tmp)] # skip proj and dnds #!! replace with skip resources
   
