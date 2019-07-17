@@ -33,15 +33,14 @@ observeEvent(input$messageFromAce, {
         }
         if(!is.null(input$messageFromAce$selector) && !is.null(input$messageFromAce$code)  ){
             reqSelector<-input$messageFromAce$selector
-            # cat('calling setSelectedAssetFromAce(reqSelector)\n')
             setSelectedAssetFromAce(reqSelector)
         }
         if(
           sender %in% c( 
-            'cmd.file.new', 'cmd.tabChange', 'cmd.openFileNow', 
-            'cmd.commit', 'cmd.add.column', 'cmd.add.asset' #, 'cmd.saveFileNow' 
+            'cmd.tabChange', #'cmd.openFileNow', 'cmd.file.new', 
+            'cmd.commit', 'cmd.add.column', 'cmd.add.asset' 
             ) # these all should redraw viewport
-        ){#not sure if cmd.saveFileNow should be here, infact, cannot find sender issuing this.
+        ){
           
           processMssgFromAceMssgPageIn(sender, input$messageFromAce)
         } else if( 

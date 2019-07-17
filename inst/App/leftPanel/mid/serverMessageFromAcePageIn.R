@@ -4,7 +4,6 @@ processMssgFromAceMssgPageIn<-function(sender, mssg){
     
     
     if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset') && !is.null(getAssetName())){ 
-      #if(sender %in% c('cmd.commit', 'cmd.add.column', 'cmd.add.asset', 'cmd.saveFileNow') && !is.null(getAssetName())){ 
       processCommit() # this sets the sourceType
       if(sender=='cmd.add.asset'){
         name=mssg$selector$assetName
@@ -13,19 +12,16 @@ processMssgFromAceMssgPageIn<-function(sender, mssg){
          # cat('getAssetName()=', format(getAssetName()), "\n")
       }
       tibs<-getPtDefs()$tib
-       # cat('name=',format(name),"\n")
-       # cat("ace invoking resetSelectedTibbleName\n")
-       # cat('names of tibs:',format(names(tibs)), "!\n")
       resetSelectedTibbleName(tibs=tibs, name=name)
       
-    } else { # else covers: 'cmd.file.new', 'cmd.tabChange', 'cmd.openFileNow',
+    } else { # else covers: 'cmd.tabChange',  # 'cmd.file.new', 'cmd.openFileNow',
 
 # getMode -----------------------------------------------------------------
 
-      if(sender %in% c('cmd.file.new',  'cmd.openFileNow')){
-        base::stop('ace sender=',sender,"\n")
-      }
-      # cat('hhh\n')
+      # if(sender %in% c('cmd.file.new',  'cmd.openFileNow')){
+      #   base::stop('ace sender=',sender,"\n")
+      # }
+      
       if(length(input$pages) >0 && 
          nchar(input$pages)>0 && 
          !identical(selectedAsset$tabId, input$pages) 

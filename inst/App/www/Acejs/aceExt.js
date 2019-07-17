@@ -449,9 +449,9 @@ Shiny.addCustomMessageHandler(
           if(!!data.ok){
             editor.getSession().getUndoManager().setOk();
           }
-          if(['cmd.openFileNow','cmd.file.new'].indexOf(sender)>=0){
-            editor.getSession().clearBreakpoints();
-          }
+          //if(['cmd.openFileNow','cmd.file.new'].indexOf(sender)>=0){
+          //  editor.getSession().clearBreakpoints();
+          //}
           
           Shiny.onInputChange('messageFromAce', 
           {
@@ -467,6 +467,7 @@ Shiny.addCustomMessageHandler(
         
         //------------getValue----------------------------
         if(!!data.getValue){
+          /*
           if(['cmd.file.new'].indexOf(sender)>=0){
             //console.log('sender is cmd.file.new, should do editor.find');
             // select NULL
@@ -474,6 +475,7 @@ Shiny.addCustomMessageHandler(
               editor.find('NULL');
             //}
           }
+          */
           if(!!data.rollBack){
             ud=editor.getSession().getUndoManager();
             if( ud.$ok.length>0 ){ // only replace if we can roll back to a good state

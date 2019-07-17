@@ -2,7 +2,7 @@ Package: pointR
 Type: Package
 Date: 2019-07-05
 Title: pointR
-Version: 0.4.0.11
+Version: 0.4.0.12
 Author: M.S.Legrand
 Maintainer: M.S.Legrand <slegrand3.14@gmail.com>
 Description: pointR is a shiny-based IDE for svgR

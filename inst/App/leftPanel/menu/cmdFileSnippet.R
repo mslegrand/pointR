@@ -13,7 +13,6 @@ observeEvent(input$buttonSnippetImport,{
     datapath<-as.character(fp.dt$datapath[1])
     datapath<-gsub(pattern = '^NA/', "~/", datapath)
     snippetText<-paste(readLines(datapath), collapse = "\n")
-    # cat(snippetText)
     aceId<-getAceEditorId()
     updateAceExt( id=aceId, sender='snippetImport', snippets=snippetText)
   }

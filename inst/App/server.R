@@ -19,7 +19,7 @@ shinyServer(function(input, output,session) {
   
   source("util/format.R")
   source("util/utilParser.R")
-  source("util/utilptR.R")
+  source("util/utilptR.R", local=TRUE)
   source("util/utilTibble.R")
   source("util/utilColumnType.R")
   source("util/utilTransform.R")
@@ -100,6 +100,7 @@ shinyServer(function(input, output,session) {
   source("rightPanel/header/serverEdAsset.R",                    local=TRUE)
   source("rightPanel/mid/serverRowDND.R",                        local=TRUE)
   source("rightPanel/mid/serverPlotBarPoints.R",                 local=TRUE) 
+  source("rightPanel/mid/serverPlotBarSVG.R",                    local=TRUE) 
   source("rightPanel/mid/serverPlotBarTagValues.R",              local=TRUE)  
   source("rightPanel/mid/serverPlotBarTagDrag.R",                local=TRUE)  
   source("rightPanel/mid/serverPlotBarTransform.R",              local=TRUE) 

@@ -14,7 +14,6 @@ newPreProcPanel<-function(label){
 }
 
 preProcTabSetPanel<-function(id='ptPreProcpages' ){
-  #labels=c("onNewPt", "onMovePt", "onMoveMat")
   preprocChoices<-unlist(preprocChoices, use.names = FALSE)
   pptabs<-c(id=id, lapply(preprocChoices,newPreProcPanel))
   do.call(tabsetPanel, pptabs)
@@ -31,10 +30,10 @@ newPointPreprocessor<-function()
                                 preProcTabSetPanel(),
                                 div(style="width: 100%; overflow: hidden; margin-top:5px; margin-bottom:5px",
                                     div( style="float:left;",
-                                         actionButton(inputId= "commitPtPreProcButton", label='Commit', class="btn" )
+                                         actionButton(inputId= "commitPtPreProcButton", label='Commit', class=c("btn") )
                                     ),
                                     div( style="float:right;",
-                                         actionButton(inputId= "dimissPtPreProcButton", label='Dismiss', class="btn" )
+                                         actionButton(inputId= "dimissPtPreProcButton", label='Dismiss', class=c("btn") )
                                     )
                                 )
                            ),

@@ -3,13 +3,14 @@ rmdOut<-function(docFilePath){
   # rmarkdown::render(docFilePath )
   if(usingElectron==TRUE){
     docFilePath<-gsub('~',homeDir,docFilePath)
+    # TODO:: add check for Pandoc!!! 
     rmarkdown::render(docFilePath )
     href<-sub('\\.Rmd$','\\.html',docFilePath)
     href<-paste0('file://',href)
-    cat('href=',href,"\n")
+    
     sendPtRManagerMessage(sender='cmd.electron',  openLink= href)
   } else {
-    cat('no electron\n')
+   
     rmarkdown::render(docFilePath )
     htmlPath<-sub('\\.Rmd$','\\.html',docFilePath)
     browseURL(htmlPath)

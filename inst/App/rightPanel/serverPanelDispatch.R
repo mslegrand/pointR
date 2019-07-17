@@ -39,7 +39,7 @@ output$MidRightPanel<-renderUI({
     modulePlotSVGrUI("svgTransformMod", input, output)
   } else if( chosenRightMidPanel == svgPanelTag ){
     # cat("chosenRightMidPanel=5\n")
-    modulePlotSVGrUI("svgPointsMod", input, output)
+    modulePlotSVGrUI("svgSVGMod", input, output) 
   } else if( chosenRightMidPanel == errorPanelTag ){
      # cat('about to"errLogMod"\n')
     # cat("chosenRightMidPanel=6\n")

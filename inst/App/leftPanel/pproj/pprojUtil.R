@@ -65,7 +65,7 @@ setSfDir<-function(sf_id, path, root="home"){
 
 # called whenever dirPath changes
 # sets shinyFiles to use pathToProj
-resetShinyFilesIOPaths<-function(pathToProj){
+resetShinyFilesIOPaths<-function(pathToProj, resources='resources'){
   log.fin(resetShinyFilesIOPaths)
   if( identical(pathToProj, optionDirPath())){ # optionDirPath is the .ptR directory
     pathToProj<-path_home()
@@ -76,6 +76,7 @@ resetShinyFilesIOPaths<-function(pathToProj){
   fileIOIds<-c("buttonFileOpen",         "buttonFileSaveR",
                "buttonSnippetImport",    "buttonDnippetImport",
                "buttonPreProcPtImport",  "buttonPreprocPtExport",
+               "buttonPreprocAtExport",  "buttonPreProcAtImport",
                "buttonSvgExport")
   # first set to root
   for(id in c(fileIOIds, saveButtonFileNames)){
@@ -86,16 +87,18 @@ resetShinyFilesIOPaths<-function(pathToProj){
   # next set to pathToProj
   for(id in c(fileIOIds, saveButtonFileNames)){
     if(id %in% c("buttonPreProcPtImport", "buttonPreprocPtExport")){
-      jscode<-setSfDir(id, path= path_join( c(pathToProj, "resources", 'preProcPts') ))
-    } else if(id %in% c("buttonPreProcValImport", "buttonPreprocValExport")){
-      jscode<-setSfDir(id, path= path_join( c(pathToProj, "resources", 'preProcVals') ))
-    }  else if(id %in% c("buttonDnippetImport")){
-      jscode<-setSfDir(id, path= path_join( c(pathToProj, "resources", 'dnds' )))
+      #browser()
+      jscode<-setSfDir(id, path= path_join( c(pathToProj, resourceDir, 'preprocPts') ))
+    } else if(id %in% c("buttonPreProcAtImport", "buttonPreprocAtExport")){
+      jscode<-setSfDir(id, path= path_join( c(pathToProj, resourceDir, 'preprocAts') ))
+    } else if(id %in% c("buttonDnippetImport")){
+      jscode<-setSfDir(id, path= path_join( c(pathToProj, resourceDir, 'dnds' )))
     } else if(id %in% c("buttonSnippetImport")){
-      jscode<-setSfDir(id, path= path_join( c(pathToProj, "resources", 'snip' )))
+      jscode<-setSfDir(id, path= path_join( c(pathToProj,resourceDir, 'snip' )))
     } else {
       jscode<-setSfDir(id, path=pathToProj)
     }
+    cat(jscode,'\n')
     runjs(jscode)
   }
   
