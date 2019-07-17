@@ -100,6 +100,7 @@ shinyServer(function(input, output,session) {
   source("rightPanel/header/serverEdAsset.R",                    local=TRUE)
   source("rightPanel/mid/serverRowDND.R",                        local=TRUE)
   source("rightPanel/mid/serverPlotBarPoints.R",                 local=TRUE) 
+  source("rightPanel/mid/serverPlotBarSVG.R",                    local=TRUE) 
   source("rightPanel/mid/serverPlotBarTagValues.R",              local=TRUE)  
   source("rightPanel/mid/serverPlotBarTagDrag.R",                local=TRUE)  
   source("rightPanel/mid/serverPlotBarTransform.R",              local=TRUE) 
