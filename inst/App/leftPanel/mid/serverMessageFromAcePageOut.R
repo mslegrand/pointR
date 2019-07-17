@@ -7,7 +7,7 @@ rmdOut<-function(docFilePath){
     rmarkdown::render(docFilePath )
     href<-sub('\\.Rmd$','\\.html',docFilePath)
     href<-paste0('file://',href)
-    # cat('href=',href,"\n")
+    
     sendPtRManagerMessage(sender='cmd.electron',  openLink= href)
   } else {
    
