@@ -52,7 +52,7 @@ svgToolsScript<-function(type){
     showPts.compound=showPts.compound #should be able to force this
     svgid<-paste0('id="', svgID, '",')
     ptrDisplyScriptTxt<-unlist(ptrDisplayScript())
-    
+
     # transform: modifies src, but omits insert.end
     res<-""
     if(!is.null(codeTxt)){
@@ -61,6 +61,7 @@ svgToolsScript<-function(type){
           svg<-eval(parsedCode)
           w<-svg$root$getAttr('width')
           h<-svg$root$getAttr('height')
+          # browser()
           rtv$WH<-c(w,h)
           svg$root$setAttr('id',svgID)
           if(getSvgGrid()$show==TRUE){ 
@@ -84,9 +85,18 @@ svgToolsScript<-function(type){
           }
           svg$root$prependNode(svgR:::script(ptrDisplyScriptTxt))
           svg$root$prependNode( svgR:::style(".draggable {','cursor: move;','}"))
-          temp<-svgR(showPts.compound())$root$xmlChildren()
-          svg$root$appendChildren(temp)
-          as.character(svg)->svgOut 
+          cat("------------length(showPts.compound())=",length(showPts.compound()),"\n")
+          if(!is.null(showPts.compound()[[2]])){
+            cat(' print(showPts.compound()[[1]])\n')
+            print(showPts.compound()[[1]])
+            cat(' print(showPts.compound()[[2]])\n')
+            print(showPts.compound()[[2]])
+            cat(' temp\n')
+              temp<-svgR(showPts.compound())$root$xmlChildren()
+              print(as.character(temp))
+              svg$root$appendChildren(temp)
+          }
+         as.character(svg)->svgOut 
           res<-HTML(svgOut)
           rtv$status<-list(
             state="PASS",

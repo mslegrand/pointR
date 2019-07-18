@@ -11,12 +11,12 @@ showPts.SVGCmd %<c-% function(
   matColIndex=NULL,
   ptDisplayMode="Normal"
 ){
-  return (NULL)
+  list(NULL)
 } 
 
 
 
-newPtLayer %<c-% function(insert, wh=c(1200,800)){NULL}
+newPtLayerNULL %<c-% function(insert, wh=c(1200,800)){ NULL  }
 
 #===============
 
@@ -26,10 +26,10 @@ statusPlotSVG<-callModule(
   svgID='ptR_SVG_SVG',
   showPts.compound=reactive({
     list(
-      newPtLayer( false, getSVGWH() ),
+      newPtLayerNULL( false, getSVGWH() ),
       showPts.SVGCmd(
-        ptName=getAssetName(), 
-        pts=getTibPts(), 
+        ptName=getAssetName(),
+        pts=getTibPts(),
         rowIndex=getTibRow(),
         matColIndex=getTibMatCol(),
         ptDisplayMode=getDisplayMode()
