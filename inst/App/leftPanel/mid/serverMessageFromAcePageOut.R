@@ -111,7 +111,7 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
   } else { #already saved
     if( identical(request$sender, 'buttonCmd.rmdViewer')){
       rmdOut(docFilePath)
-      cat('aceOut1:: buttonCmd.rmdViewer\n')
+      # cat('aceOut1:: buttonCmd.rmdViewer\n')
       # rmarkdown::render(docFilePath )
       # htmlPath<-sub('\\.Rmd$','\\.html',docFilePath)
       # browseURL(htmlPath)

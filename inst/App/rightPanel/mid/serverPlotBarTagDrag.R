@@ -8,7 +8,8 @@
     ptName=NULL, 
     pts=NULL, 
     rowIndex=NULL,
-    ptDisplayMode 
+    ptDisplayMode,
+    vbScaleFactor=1
     ){
     if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
     
@@ -30,10 +31,9 @@
     mRow<-pts[[rowIndex]]
       
     list( 
-        lapply(offRows, function(i){
+        lapply(offRows, function(i){ #non-selected rows
           m<-pts[[i]]
           if(length(m)==0){
-            
             NULL
           } else {
              g( opacity=opacity[i], 
@@ -41,36 +41,39 @@
              transform="matrix(1 0 0 1 0 0)", 
              onmousedown=onMouseDownTxt,
              tid=paste0("ptR_Tag_",i),
-             lapply(seq(ncol(m)), function(j){
-               list(
-                  circle(cxy=m[,j], r=8),
+             lapply(seq(ncol(m)), function(j){ 
+               pt=m[,j]
+               g(
+                  circle(cxy=c(0,0), r=8),
                   if(ptDisplayMode=="Labeled"){
-                    text( paste(j), cxy=m[,j]+10*c(1,-1),  stroke='black', font.size=12) 
+                    text( paste(i), xy=c(10,-10),  stroke='black', font.size=12)
                   } else {
                     NULL
-                  }
+                  },
+                  transform=list(scale=1/vbScaleFactor,translate=vbScaleFactor*pt)
                )
              })
             )
           }
         }),
         if(length( mRow)==0){
-          
           NULL
-        } else {
+        } else { #selected row=rowIndex
           g( opacity=opacity[rowIndex], 
            fill='purple',
            transform="matrix(1 0 0 1 0 0)", 
            onmousedown=onMouseDownTxt,
            tid=paste0("ptR_Tag_",rowIndex),
            lapply(seq(ncol(mRow)), function(j){
-            list(
-             circle(   cxy=mRow[,j], r=8),
-             if(ptDisplayMode=="Labeled"){
-                  text(paste(j), cxy=mRow[,j]+10*c(1,-1),  stroke='black', font.size=12) #opac)
+             pt=mRow[,j]
+            g(
+                circle(cxy=c(0,0), r=8),
+                if(ptDisplayMode=="Labeled"){
+                    text( paste(rowIndex), xy=c(10,-10),  stroke='black', font.size=12)
                 } else {
-                  NULL
-                }
+                    NULL
+                },
+                transform=list(scale=1/vbScaleFactor,translate=vbScaleFactor*pt)
             )
            })
           )
@@ -86,12 +89,15 @@ statusPlotTagDrag<-callModule(
   id="svgTagDragMod",
   svgID='ptR_SVG_TagDrag',
   showPts.compound=reactive({
-    showPts.dragTag(
+    function(vbScaleFactor){
+      showPts.dragTag(
       ptName=getAssetName(), 
       pts=getTibPts(), 
       rowIndex=getTibRow(),
-      ptDisplayMode=getDisplayMode()  
-    )
+      ptDisplayMode=getDisplayMode(),
+      vbScaleFactor
+      )
+    }
   }),
   ptrDisplayScript = reactive({ svgToolsScript( "TagDrag") }), 
   getSVGWH=getSVGWH,
@@ -99,8 +105,7 @@ statusPlotTagDrag<-callModule(
   getBackDrop=getBackDrop,
   getCode= getCode4Rendering, 
   getErrorMssg=getErrorMssg,
-  getTibNRow=getTibNRow,
-  insert.end=",showPts.compound()"
+  getTibNRow=getTibNRow
 )
 
 observeEvent(c(statusPlotTagDrag$status(),   statusPlotPoint$WH()), {

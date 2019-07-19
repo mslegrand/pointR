@@ -8,8 +8,8 @@ showPts.valTag %<c-% function(
   ptName=NULL, 
   pts=NULL, 
   rowIndex=NULL,
-  ptDisplayMode #,  
-  #tags=NULL
+  ptDisplayMode ,
+  vbScaleFactor=1
   ){
   if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
   onMouseDownTxt<-"ptRPlotter_ptR_SVG_TagVal.selectElement(evt)"
@@ -51,7 +51,6 @@ showPts.valTag %<c-% function(
       }
     }),
     if(length(mRow)==0){
-      # cat('length(mRow)=0\n')
       NULL
     } else {
           g( opacity=opacity[rowIndex], 
@@ -81,12 +80,15 @@ statusPlotTagVal<-callModule(
   id="svgTagValsMod",
   svgID='ptR_SVG_TagVal',
   showPts.compound=reactive({
-    showPts.valTag(
-      ptName=getAssetName(), 
-      pts=getTibPts(), 
-      rowIndex=getTibRow(),
-      ptDisplayMode=getDisplayMode() #, 
-    )
+    function(vbScaleFactor=1){
+      showPts.valTag(
+        ptName=getAssetName(), 
+        pts=getTibPts(), 
+        rowIndex=getTibRow(),
+        ptDisplayMode=getDisplayMode() ,
+        vbScaleFactor
+      )
+    }
   }),
   ptrDisplayScript = reactive({ svgToolsScript( "TagVal") }), 
   getSVGWH,
@@ -94,15 +96,13 @@ statusPlotTagVal<-callModule(
   getBackDrop,
   getCode4Rendering,
   getErrorMssg,
-  getTibNRow=getTibNRow,
-  insert.end=",showPts.compound()"
+  getTibNRow=getTibNRow 
 )
 
 observeEvent(statusPlotTagVal$status(), {
   status<-statusPlotTagVal$status()
   if(status$state!="PASS"){
    mssg$err<-paste(mssg$err, status$message, "cannot plot: code03\n", collapse="\n")
-    # switch to log 
   }
 })
 

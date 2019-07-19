@@ -26,8 +26,7 @@ svgToolsScript<-function(type){
     getBackDrop,
     getCode,
     getErrorMssg, 
-    getTibNRow,
-    insert.end #='showPts.compound()'
+    getTibNRow # doesnot appear
   ){
   ns <- session$ns
   user<-  reactiveValues( code="")
@@ -52,7 +51,7 @@ svgToolsScript<-function(type){
     showPts.compound=showPts.compound #should be able to force this
     svgid<-paste0('id="', svgID, '",')
     ptrDisplyScriptTxt<-unlist(ptrDisplayScript())
-    
+
     # transform: modifies src, but omits insert.end
     res<-""
     if(!is.null(codeTxt)){
@@ -62,6 +61,22 @@ svgToolsScript<-function(type){
           w<-svg$root$getAttr('width')
           h<-svg$root$getAttr('height')
           rtv$WH<-c(w,h)
+          vbWH<-svg$root$getAttr('viewBox')
+          vbWH<-str_split(vbWH,',')
+          vbWH<-unlist(vbWH)[3:4]
+          vbScaleFactor<-1
+          tryCatch({
+            if(length(vbWH)==2  ){
+              vbWH<-as.numeric(vbWH)
+              if(min(vbWH)>0){
+                vbScaleFactor<-mean(rtv$WH/vbWH)
+              } else {
+                vbScaleFactor<-1
+              }
+            } 
+            }, error=function(e){
+              vbScaleFactor<-1
+          }) 
           svg$root$setAttr('id',svgID)
           if(getSvgGrid()$show==TRUE){ 
             dxy<-c( getSvgGrid()$dx, getSvgGrid()$dy)
@@ -84,9 +99,12 @@ svgToolsScript<-function(type){
           }
           svg$root$prependNode(svgR:::script(ptrDisplyScriptTxt))
           svg$root$prependNode( svgR:::style(".draggable {','cursor: move;','}"))
-          temp<-svgR(showPts.compound())$root$xmlChildren()
-          svg$root$appendChildren(temp)
-          as.character(svg)->svgOut 
+            
+          if(!is.null(showPts.compound()) ){
+              temp<-svgR(showPts.compound()(vbScaleFactor))$root$xmlChildren()
+              svg$root$appendChildren(temp)
+          }
+         as.character(svg)->svgOut 
           res<-HTML(svgOut)
           rtv$status<-list(
             state="PASS",

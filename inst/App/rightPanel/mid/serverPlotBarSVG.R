@@ -2,39 +2,13 @@
 
 # ===============BEGIN SERVER Module svgSVGMod=======================
 
-#---------ShowPts----------------------------------
-
-showPts.SVGCmd %<c-% function(
-  ptName, 
-  pts=NULL,  
-  rowIndex=NULL,
-  matColIndex=NULL,
-  ptDisplayMode="Normal"
-){
-  return (NULL)
-} 
-
-
-
-newPtLayer %<c-% function(insert, wh=c(1200,800)){NULL}
-
-#===============
 
 statusPlotSVG<-callModule(
   module=modulePlotSVGr,
   id="svgSVGMod",
   svgID='ptR_SVG_SVG',
   showPts.compound=reactive({
-    list(
-      newPtLayer( false, getSVGWH() ),
-      showPts.SVGCmd(
-        ptName=getAssetName(), 
-        pts=getTibPts(), 
-        rowIndex=getTibRow(),
-        matColIndex=getTibMatCol(),
-        ptDisplayMode=getDisplayMode()
-      )
-    )
+    NULL
   }),
   ptrDisplayScript = reactive({ list("") }), 
   getSVGWH,
@@ -42,8 +16,7 @@ statusPlotSVG<-callModule(
   getBackDrop,
   getCode4Rendering,
   getErrorMssg,
-  getTibNRow=getTibNRow,
-  insert.end=",showPts.compound()"
+  getTibNRow=getTibNRow 
 )
 
 #error handler
