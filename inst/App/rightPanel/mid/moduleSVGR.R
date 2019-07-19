@@ -26,8 +26,7 @@ svgToolsScript<-function(type){
     getBackDrop,
     getCode,
     getErrorMssg, 
-    getTibNRow, # doesnot appear
-    insert.end #='showPts.compound()'
+    getTibNRow # doesnot appear
   ){
   ns <- session$ns
   user<-  reactiveValues( code="")

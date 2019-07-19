@@ -109,8 +109,7 @@ statusPlotTagDrag<-callModule(
   getBackDrop=getBackDrop,
   getCode= getCode4Rendering, 
   getErrorMssg=getErrorMssg,
-  getTibNRow=getTibNRow,
-  insert.end=",showPts.compound()"
+  getTibNRow=getTibNRow
 )
 
 observeEvent(c(statusPlotTagDrag$status(),   statusPlotPoint$WH()), {

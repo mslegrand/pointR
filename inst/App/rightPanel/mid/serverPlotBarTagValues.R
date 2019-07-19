@@ -98,15 +98,13 @@ statusPlotTagVal<-callModule(
   getBackDrop,
   getCode4Rendering,
   getErrorMssg,
-  getTibNRow=getTibNRow,
-  insert.end=",showPts.compound()"
+  getTibNRow=getTibNRow 
 )
 
 observeEvent(statusPlotTagVal$status(), {
   status<-statusPlotTagVal$status()
   if(status$state!="PASS"){
    mssg$err<-paste(mssg$err, status$message, "cannot plot: code03\n", collapse="\n")
-    # switch to log 
   }
 })
 

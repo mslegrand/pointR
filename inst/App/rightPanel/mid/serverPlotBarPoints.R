@@ -12,11 +12,8 @@
       ptDisplayMode="Normal",
       vbScaleFactor
   ){
-    # cat("showPts.PtCmd-----------------------------------------------\n")
-    # cat("class(ptDisplayMode)="  ,  class(ptDisplayMode),"\n")
     if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
     onMouseDownTxt='ptRPlotter_ptR_SVG_Point.selectPoint(evt)'
-    # browser()
     if(is.null(pts) ){ return(NULL) } 
     if(length(unlist(pts))<2){ return(NULL)}
     
@@ -24,7 +21,6 @@
     semitransparent<-0.3
     opacity<-rep(semitransparent, length(pts) )
     opacity[rowIndex]<-1
-    
     
     #form list of  all point renderings
     g(
@@ -70,7 +66,7 @@
       }
  
     })#, #end lapply of points
-    #transform=list(scale=.5)
+  
     ) #end of g
   } #end showPts.PtCmd
 
@@ -100,7 +96,6 @@ statusPlotPoint<-callModule(
   id="svgPointsMod",
   svgID='ptR_SVG_Point',
   showPts.compound=reactive({
-      #newPtLayer( getInsertMode(), getSVGWH() ), # 
     function(vbScaleFactor){
       list(
         newPtLayer( getInsertMode(), getSVGWH() ),
@@ -121,8 +116,7 @@ statusPlotPoint<-callModule(
   getBackDrop,
   getCode4Rendering,
   getErrorMssg,
-  getTibNRow=getTibNRow,
-  insert.end=",showPts.compound()"
+  getTibNRow=getTibNRow
 )
 
 #error handler
