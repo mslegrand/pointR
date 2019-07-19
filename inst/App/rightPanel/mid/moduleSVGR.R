@@ -26,7 +26,7 @@ svgToolsScript<-function(type){
     getBackDrop,
     getCode,
     getErrorMssg, 
-    getTibNRow,
+    getTibNRow, # doesnot appear
     insert.end #='showPts.compound()'
   ){
   ns <- session$ns
@@ -57,12 +57,49 @@ svgToolsScript<-function(type){
     res<-""
     if(!is.null(codeTxt)){
       tryCatch({
+        cat('a\n')
           parsedCode<-parse(text=codeTxt)
           svg<-eval(parsedCode)
           w<-svg$root$getAttr('width')
           h<-svg$root$getAttr('height')
-          # browser()
+          cat('b\n') 
           rtv$WH<-c(w,h)
+          cat('c\n') 
+          vbWH<-svg$root$getAttr('viewBox')
+          vbWH<-str_split(vbWH,',')
+          vbWH<-unlist(vbWH)[3:4]
+          cat('d\n') 
+          vbScaleFactor<-1
+          cat('e\n') 
+          tryCatch({
+            cat('length(vbWH)=',length(vbWH),'\n')
+            if(length(vbWH)==2  ){
+              cat('f\n')
+              vbWH<-as.numeric(vbWH)
+              cat('g\n')
+              print(vbWH)
+              print(min(vbWH))
+              cat('ge\n')
+              if(min(vbWH)>0){
+                cat('h1\n')
+                vbScaleFactor<-mean(rtv$WH/vbWH)
+              } else {
+                cat('h2\n')
+                vbScaleFactor<-1
+              }
+            } else {
+              cat('-----------------vbWH---------------------\n')
+              print(format(vbWH))
+            }
+          }, error=function(e){
+            print(e)
+            vbScaleFactor<-1
+          }
+            
+          ) 
+          
+          cat('========vbScaleFactor=',format(vbScaleFactor),"\n")
+          
           svg$root$setAttr('id',svgID)
           if(getSvgGrid()$show==TRUE){ 
             dxy<-c( getSvgGrid()$dx, getSvgGrid()$dy)
@@ -86,14 +123,15 @@ svgToolsScript<-function(type){
           svg$root$prependNode(svgR:::script(ptrDisplyScriptTxt))
           svg$root$prependNode( svgR:::style(".draggable {','cursor: move;','}"))
           cat("------------length(showPts.compound())=",length(showPts.compound()),"\n")
-          if(!is.null(showPts.compound()[[2]])){
-            cat(' print(showPts.compound()[[1]])\n')
-            print(showPts.compound()[[1]])
-            cat(' print(showPts.compound()[[2]])\n')
-            print(showPts.compound()[[2]])
-            cat(' temp\n')
-              temp<-svgR(showPts.compound())$root$xmlChildren()
-              print(as.character(temp))
+          
+          if(!is.null(showPts.compound()) ){
+            # cat(' print(showPts.compound()[[1]])\n')
+            # print(showPts.compound()[[1]])
+            # cat(' print(showPts.compound()[[2]])\n')
+            # print(showPts.compound()[[2]])
+            # cat(' temp\n')
+              temp<-svgR(showPts.compound()(vbScaleFactor))$root$xmlChildren()
+              # print(as.character(temp))
               svg$root$appendChildren(temp)
           }
          as.character(svg)->svgOut 

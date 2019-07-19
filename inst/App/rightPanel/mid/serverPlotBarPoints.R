@@ -9,13 +9,14 @@
       pts=NULL,  
       rowIndex=NULL,
       matColIndex=NULL,
-      ptDisplayMode="Normal"
+      ptDisplayMode="Normal",
+      vbScaleFactor
   ){
     # cat("showPts.PtCmd-----------------------------------------------\n")
     # cat("class(ptDisplayMode)="  ,  class(ptDisplayMode),"\n")
     if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
     onMouseDownTxt='ptRPlotter_ptR_SVG_Point.selectPoint(evt)'
-    
+    # browser()
     if(is.null(pts) ){ return(NULL) } 
     if(length(unlist(pts))<2){ return(NULL)}
     
@@ -26,7 +27,8 @@
     
     
     #form list of  all point renderings
-    lapply(seq(length(pts)), function(i){
+    g(
+      lapply(seq(length(pts)), function(i){
       m<-pts[[i]]
       if(length(m)==0){ # or !is(m,'matrix')
         NULL
@@ -42,21 +44,24 @@
             if(i==rowIndex && j== matColIndex ){
               circle(class="draggable", 
                      id=id,  
-                     cxy=pt, r=9, fill="yellow", 
+                     cxy=c(0,0), r=9, fill="yellow", 
                      opacity=opacity[i],
                      stroke=colorScheme['selected'], stroke.width=3,
+                     transform=list(scale=1/vbScaleFactor,translate=vbScaleFactor*pt),
                      onmousedown=onMouseDownTxt
               )
             } else { #a non-selected point
               circle(class="draggable", 
                      id=id,  
-                     cxy=pt, r=8, fill=color, opacity=opacity[i],
+                     cxy=c(0,0), r=8, fill=color, opacity=opacity[i],
+                     transform=list(scale=1/vbScaleFactor,translate=vbScaleFactor*pt),
                      onmousedown=onMouseDownTxt
               )
             },
             if(ptDisplayMode=="Labeled"){
-              text(paste0(i,",",j), cxy=pt+10*c(1,-1),  
-                   stroke='black', font.size=12, opacity=1) 
+              text(paste0(i,",",j), xy=c(10,-10),  
+                   stroke='black', font.size=12, opacity=1,
+                   transform=list(scale=1/vbScaleFactor,translate=vbScaleFactor*pt)) 
             } else {
               NULL
             }
@@ -64,7 +69,9 @@
         }) #end lapply of this row
       }
  
-    }) #end lapply of points
+    })#, #end lapply of points
+    #transform=list(scale=.5)
+    ) #end of g
   } #end showPts.PtCmd
 
 
@@ -93,16 +100,20 @@ statusPlotPoint<-callModule(
   id="svgPointsMod",
   svgID='ptR_SVG_Point',
   showPts.compound=reactive({
-    list(
-      newPtLayer( getInsertMode(), getSVGWH() ),
-      showPts.PtCmd(
-        ptName=getAssetName(), 
-        pts=getTibPts(), #getPtDefs()$pts[[getPtName()]],
-        rowIndex=getTibRow(),
-        matColIndex=getTibMatCol(),
-        ptDisplayMode=getDisplayMode()
+      #newPtLayer( getInsertMode(), getSVGWH() ), # 
+    function(vbScaleFactor){
+      list(
+        newPtLayer( getInsertMode(), getSVGWH() ),
+        showPts.PtCmd(
+          ptName=getAssetName(), 
+          pts=getTibPts(), #getPtDefs()$pts[[getPtName()]],
+          rowIndex=getTibRow(),
+          matColIndex=getTibMatCol(),
+          ptDisplayMode=getDisplayMode(),
+          vbScaleFactor=vbScaleFactor
+        )
       )
-    )
+    }
   }),
   ptrDisplayScript = reactive({ svgToolsScript( "Points") }), 
   getSVGWH,

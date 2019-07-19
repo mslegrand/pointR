@@ -25,16 +25,17 @@ statusPlotSVG<-callModule(
   id="svgSVGMod",
   svgID='ptR_SVG_SVG',
   showPts.compound=reactive({
-    list(
-      newPtLayerNULL( false, getSVGWH() ),
-      showPts.SVGCmd(
-        ptName=getAssetName(),
-        pts=getTibPts(),
-        rowIndex=getTibRow(),
-        matColIndex=getTibMatCol(),
-        ptDisplayMode=getDisplayMode()
-      )
-    )
+    #list(
+      #newPtLayerNULL( false, getSVGWH() ),
+      # showPts.SVGCmd(
+      #   ptName=getAssetName(),
+      #   pts=getTibPts(),
+      #   rowIndex=getTibRow(),
+      #   matColIndex=getTibMatCol(),
+      #   ptDisplayMode=getDisplayMode()
+      # )
+    #)
+    NULL
   }),
   ptrDisplayScript = reactive({ list("") }), 
   getSVGWH,

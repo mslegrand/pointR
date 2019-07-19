@@ -8,7 +8,8 @@ showPts.valTag %<c-% function(
   ptName=NULL, 
   pts=NULL, 
   rowIndex=NULL,
-  ptDisplayMode #,  
+  ptDisplayMode ,
+  vbScaleFactor=1
   #tags=NULL
   ){
   if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
@@ -81,12 +82,15 @@ statusPlotTagVal<-callModule(
   id="svgTagValsMod",
   svgID='ptR_SVG_TagVal',
   showPts.compound=reactive({
-    showPts.valTag(
-      ptName=getAssetName(), 
-      pts=getTibPts(), 
-      rowIndex=getTibRow(),
-      ptDisplayMode=getDisplayMode() #, 
-    )
+    function(vbScaleFactor=1){
+      showPts.valTag(
+        ptName=getAssetName(), 
+        pts=getTibPts(), 
+        rowIndex=getTibRow(),
+        ptDisplayMode=getDisplayMode() ,
+        vbScaleFactor
+      )
+    }
   }),
   ptrDisplayScript = reactive({ svgToolsScript( "TagVal") }), 
   getSVGWH,
