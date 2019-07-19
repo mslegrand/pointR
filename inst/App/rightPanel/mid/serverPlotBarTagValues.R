@@ -10,7 +10,6 @@ showPts.valTag %<c-% function(
   rowIndex=NULL,
   ptDisplayMode ,
   vbScaleFactor=1
-  #tags=NULL
   ){
   if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
   onMouseDownTxt<-"ptRPlotter_ptR_SVG_TagVal.selectElement(evt)"
@@ -52,7 +51,6 @@ showPts.valTag %<c-% function(
       }
     }),
     if(length(mRow)==0){
-      # cat('length(mRow)=0\n')
       NULL
     } else {
           g( opacity=opacity[rowIndex], 

@@ -2,13 +2,6 @@
 
 
 
-# getCodeTransform<-reactive({
-#   src<-getCode()
-#   src<-usingDraggable(src, getTransformType())
-#   src
-# })
-
-
 statusPlotTransform<-callModule(
   module=modulePlotSVGr,
   id="svgTransformMod",

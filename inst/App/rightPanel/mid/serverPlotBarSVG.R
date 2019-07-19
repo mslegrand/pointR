@@ -2,14 +2,6 @@
 
 # ===============BEGIN SERVER Module svgSVGMod=======================
 
-#---------ShowPts----------------------------------
-
-
-
-
-
-
-#===============
 
 statusPlotSVG<-callModule(
   module=modulePlotSVGr,

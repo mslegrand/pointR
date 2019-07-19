@@ -45,9 +45,7 @@
                pt=m[,j]
                g(
                   circle(cxy=c(0,0), r=8),
-                  #circle(cxy=m[,j], r=8),
                   if(ptDisplayMode=="Labeled"){
-                    #text( paste(i), cxy=m[,j]+10*c(1,-1),  stroke='black', font.size=12)
                     text( paste(i), xy=c(10,-10),  stroke='black', font.size=12)
                   } else {
                     NULL
@@ -70,10 +68,8 @@
              pt=mRow[,j]
             g(
                 circle(cxy=c(0,0), r=8),
-                #circle(   cxy=mRow[,j], r=8),
                 if(ptDisplayMode=="Labeled"){
                     text( paste(rowIndex), xy=c(10,-10),  stroke='black', font.size=12)
-                    #text(paste(i), cxy=mRow[,j]+10*c(1,-1),  stroke='black', font.size=12) #opac)
                 } else {
                     NULL
                 },
