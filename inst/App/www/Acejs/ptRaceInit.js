@@ -245,6 +245,24 @@ function ptRaceInit(data){
    
  });
  
+ 
+ //------begin:-------stuff to handle custom context menu
+ theEditor.container.addEventListener("contextmenu", function(e) {
+    e.preventDefault();
+    //alert('success!');
+    
+    console.log(e.pageX + "," + e.pageY);
+    $("#cntnr").attr('data-value', '#' + id); // for element use $el
+    $("#cntnr").css("left",e.pageX);
+    $("#cntnr").css("top",e.pageY);
+   // $("#cntnr").hide(100);        
+    $("#cntnr").fadeIn(200,startFocusOut());  
+      
+    
+
+    return false;
+}, false);
+//------end:-------stuff to handle custom context menu
  //  theEditor.session.getUndoManager().reset();
 
     

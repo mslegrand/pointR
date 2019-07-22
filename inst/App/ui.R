@@ -129,6 +129,19 @@ shinyUI(
                  )
              )
              
+          ),
+          div( id ='cntnr', # ace context menu
+               # tag('ul',  list(
+               #   id='items',
+               #   tag('li',list(class='clickMe', 'Copy')),
+               #   tag('li',list(class='clickMe', 'Paste')),
+               #   tag('li',list(class='clickMe', 'Delete'))
+               # )),
+               # hr(class='contexthr'),
+               tag('ul', list(
+                 id='items',
+                 tag('li',list(class='clickMe', 'Lookup element'))
+               ))
           )
           #-------left content end--------
         ) #----end of bootstrapPage
