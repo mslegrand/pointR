@@ -386,10 +386,12 @@ input[type='radio']:checked:after {
   display:none;
   position:fixed;
   border:1px solid #B2B2B2;
-  width:150px;      
+  width:150px;
+  opacity: 1.0;
   background:#F9F9F9;
   box-shadow: 3px 3px 2px #E9E9E9;
   border-radius:4px;
+  z-index: 1500;
 }
 
 .contexthr{ 
@@ -397,8 +399,8 @@ input[type='radio']:checked:after {
   height: 1px; 
   background-color:black;
   border-color:#E4E4E4;
-    color:black;
-  margin:0px;
+  color:black;
+  margin: 0px;
   padding: 0px;
 }
 

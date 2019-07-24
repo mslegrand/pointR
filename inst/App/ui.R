@@ -33,10 +33,11 @@ shinyUI(
         tags$script(src = 'IOjs/rotIO.js' ),
         tags$script(src = 'IOjs/scaleIO.js' ),
         tags$script(src = 'IOjs/tagDragIO.js' ),
-        tags$script(src='shared/jqueryui/jquery-ui.min.js'),
+        tags$script(src = 'shared/jqueryui/jquery-ui.min.js'),
         tags$script(src = 'ptR/scrollTabs.js' ),
         tags$script(src = 'ptR/snippetScroll.js' ),
         tags$script(src = 'ptR/rowScroll.js' ),
+        tags$script(src = 'ptR/contextMenu.js' ),
         tags$script(src = 'ptR/ptRManager.js' )
       )
     ),
@@ -131,16 +132,23 @@ shinyUI(
              
           ),
           div( id ='cntnr', # ace context menu
-               # tag('ul',  list(
-               #   id='items',
-               #   tag('li',list(class='clickMe', 'Copy')),
-               #   tag('li',list(class='clickMe', 'Paste')),
-               #   tag('li',list(class='clickMe', 'Delete'))
-               # )),
-               # hr(class='contexthr'),
+               if(usingElectron){# usingElectron
+                 tagList(
+                 tag('ul',  list(
+                   id='items',
+                   tag('li',list(class='clickMe', span(class='icon-clone'),span('Copy')  )),
+                   tag('li',list(class='clickMe', span(class='icon-scissors'),span('Cut')  )),
+                   tag('li',list(class='clickMe', span(class='icon-paste'),span('Paste')  )),
+                   tag('li',list(class='clickMe', span(class='icon-cancel'),span('Delete')  ))
+                 )),
+                  hr(class='contexthr')
+                 )
+               } else {
+                 NULL
+               },
                tag('ul', list(
                  id='items',
-                 tag('li',list(class='clickMe', 'Lookup element'))
+                 tag('li',list(class='clickMe', span(class="icon-help"), span( 'Lookup element')))
                ))
           )
           #-------left content end--------

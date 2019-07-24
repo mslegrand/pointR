@@ -187,32 +187,6 @@ Shiny.addCustomMessageHandler(
   }
 );
 
-//------begin:-------stuff to handle custom context menu
-function startFocusOut(){
-  $(document).on("click",function(){
-  $("#cntnr").hide();        
-  $(document).off("click");
-  });
-}
-
-$(function () {
-    $('.clickMe').click(function () {
-      var cmd = $(this).text()
-      if(cmd==='Lookup element'){
-        var id= $("#cntnr").attr('data-value');
-        var $el = $( id);
-        var editor = $el.data('aceEditor'); 
-        editor.getSession().selection.moveCursorLongWordLeft();
-        editor.getSession().selection.selectWordRight();
-        var text = editor.getSession().getTextRange(editor.getSelectionRange());
-        Shiny.onInputChange('helpMssg', {query:text, num:Math.random(), editorId: id} );
-      } else {
-         alert("You have selected "+ $(this).text() + " with ace id = " +id);
-      }
-    });
-});
-
-//-----end:--------stuff to handle custom context menu
 
 
 $('document').ready(function()
