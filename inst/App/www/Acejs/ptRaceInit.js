@@ -249,8 +249,10 @@ function ptRaceInit(data){
  //------begin:-------stuff to handle custom context menu
  function startFocusOut(){
   $(document).on("click",function(){
-  $("#cntnr").hide();        
-  $(document).off("click");
+  if( $("#cntnr").is(":visible") ){
+    $("#cntnr").hide(); 
+  }
+  //$(document).off("click");
   });
 }
 

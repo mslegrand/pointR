@@ -23,6 +23,7 @@ shinyUI(
         tags$script(src="api.js"),
         tags$script(src="splitjs/split-pane.js" ),
         tags$script(src="splitjs/split-pane-ptr.js" ),
+        tags$link(rel = 'stylesheet', type = 'text/css', href ="contextMenu.css"),
         tags$link(rel = "stylesheet", type = "text/css", href ="splitjs/split-pane.css" ),
         tags$link(rel = "stylesheet", type = "text/css", href ="splitjs/split-pane-ptr.css" ),
         tags$link(rel = "stylesheet", type = "text/css", href ="splitjs/split-pane-pretty-frame.css" ),
