@@ -1,5 +1,0 @@
-<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:ev='http://www.w3.org/2001/xml-events' width='52' height='32'>
-  <line stroke-dasharray='2' stroke='#00FFFF' x1='26' y1='0' x2='26' y2='32'/>
-  <line stroke-dasharray='2' stroke='#00FFFF' x1='0' y1='16' x2='52' y2='16'/>
-  <text stroke='#00FFFF' font-size='18' fill='none' x='26' y='16'>T</text>
-</svg>
