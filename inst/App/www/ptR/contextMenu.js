@@ -1,17 +1,4 @@
 //------begin:-------stuff to handle custom context menu
-
-// window.sendToElectron('cmdAppRun',data.app2RunPath, data.tabId);
-
-/*
-function copy2clip(txt){
-  var cb = document.getElementById("cb");
-  cb.value = txt;
-  cb.style.display='block';
-  cb.select();
-  $(document).execCommand('copy');
-  cb.style.display='none';
- };
-*/
  
 $(function () {
     $('.clickMe').click(function () {

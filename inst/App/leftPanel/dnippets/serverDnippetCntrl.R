@@ -14,7 +14,6 @@ observeEvent(c( getDnippetsAll(), dnippetsDB$usage, input$pages),{
     log.fin(c( getDnippetsAll(), getDnippetsSelected(), input$pages))
     mode<-getMode()
     all<-getDnippetsAll()
-   # browser()
     updateAwesomeCheckboxGroup(session, 
        inputId="selectedDDDnippets", 
        choices  = getDnippetsAll(),

@@ -6,7 +6,7 @@
         //this.$savedState;
         this.$wasSaved=false;
       }
-      //ud.$ok=[];
+      
       UMD.prototype=Object.create(ace.UndoManager.prototype);
       UMD.prototype.constructor= UMD;
       
@@ -14,11 +14,9 @@
         // TODO donot push if ok is on stack
         if(this.$ok.indexOf(this.$undoStack.length) == -1){
           this.$ok.push( this.$undoStack.length); 
-          //return(this);
         }
       };
-      //ud.setOk=function(){ this.$ok.push( this.$undoStack.length); };
-      //ud.pop2Ok=function(){
+      
       
       // kludge to fix initial save state
       UMD.prototype.isSaved = function(){ 

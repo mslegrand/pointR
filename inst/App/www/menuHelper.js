@@ -1,7 +1,7 @@
 
 
 shinyjs.closeWindow = function() { 
-  console.log('inside shinyjs.closeWindow');
+  //console.log('inside shinyjs.closeWindow');
 /*  if(!!window.sendToElectron ){ 
     console.log('about to send confirmation');
     var confirmation='no'; //window.sendExitConfirmation();
@@ -9,7 +9,7 @@ shinyjs.closeWindow = function() {
     console.log('confirmation recieved '+ JSON.stringify(confirmation));
   }
 */  
-  console.log('invoking window.close');
+  //console.log('invoking window.close');
   window.close();
 };
 
