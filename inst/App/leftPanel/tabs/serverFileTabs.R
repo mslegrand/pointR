@@ -37,8 +37,6 @@ tabTitleRfn<-function(tabName, tabId, docFilePath){
 closeTabNow<-function(tabId2X){
   stopifnot('tabId' %in% names(serverAssetDB$tib))
   serverAssetDB$tib<-filter(serverAssetDB$tib, tabId!=tabId2X)
-  # stopifnot('tabId' %in% names(widgetDB())
-  # handler$choices<-filter(handler$choices, tabId!=tabId2X)
   removePageWidgetDB(tabId2X)
   removeFileDesc(tabId2X)
   removeTab(inputId = "pages", tabId2X)
@@ -78,16 +76,13 @@ getAceEditorId<-reactive({
 
 #  triggers doc has been changed.
 observeEvent(input$pages,{
-  # cat(">---> input$pages 2\n")
   tabId<-input$pages
-  # if(!allGood(tabId)){ browser() }
   if(!is.null(tabId)){
     aceId<-tabID2aceID(tabId)
     updateAceExt(id=aceId, sender='cmd.tabChange', roleBack=FALSE, setfocus=TRUE, getValue=TRUE)
   } else {
     reOrgPanels(id=NULL, mode=NULL)
   }
-   # cat("<---< input$pages 2\n")
 },  ignoreNULL = FALSE, ignoreInit = FALSE, label='pages2')
 
 

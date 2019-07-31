@@ -185,7 +185,7 @@ Shiny.addCustomMessageHandler(
     }
     console.log('-----------Exiting ptRManager------------\n');
   }
-); 
+);
 
 
 
@@ -193,6 +193,7 @@ $('document').ready(function()
 {
   $('.hiddenButton').hide();
   
+
 
   //this is  ctrl+w key fails in browser, but works
   document.addEventListener('keydown', function(event) {

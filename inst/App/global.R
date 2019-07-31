@@ -3,11 +3,9 @@
 
 .global <- new.env()
 
-# if(!is.null(getShinyOption("ptRVersion"))){
-#   version=getShinyOption("ptRVersion")
-# } else {
-  version=paste0("v.", read.dcf(system.file('DESCRIPTION', package='pointR'))[,'Version'])
-# }
+
+version=paste0("v.", read.dcf(system.file('DESCRIPTION', package='pointR'))[,'Version'])
+
 
 if(!is.null(getShinyOption("HOME"))){
   homeDir=getShinyOption("HOME")

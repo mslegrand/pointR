@@ -6,7 +6,7 @@
         //this.$savedState;
         this.$wasSaved=false;
       }
-      //ud.$ok=[];
+      
       UMD.prototype=Object.create(ace.UndoManager.prototype);
       UMD.prototype.constructor= UMD;
       
@@ -14,11 +14,9 @@
         // TODO donot push if ok is on stack
         if(this.$ok.indexOf(this.$undoStack.length) == -1){
           this.$ok.push( this.$undoStack.length); 
-          //return(this);
         }
       };
-      //ud.setOk=function(){ this.$ok.push( this.$undoStack.length); };
-      //ud.pop2Ok=function(){
+      
       
       // kludge to fix initial save state
       UMD.prototype.isSaved = function(){ 
@@ -245,6 +243,28 @@ function ptRaceInit(data){
    
  });
  
+ 
+ //------begin:-------stuff to handle custom context menu
+ function startFocusOut(){
+  $(document).on("click",function(){
+  if( $("#cntnr").is(":visible") ){
+    $("#cntnr").hide(); 
+  }
+  //$(document).off("click");
+  });
+}
+
+ theEditor.container.addEventListener("contextmenu", function(e) {
+    e.preventDefault();
+    console.log(e.pageX + "," + e.pageY);
+    // to do: choose menu by mode of code (ptR vs Rmd vs ...)
+    $("#cntnr").attr('data-value', '#' + id); // for element use $el
+    $("#cntnr").css("left",e.pageX);
+    $("#cntnr").css("top",e.pageY);
+    $("#cntnr").fadeIn(200,startFocusOut());  
+    return false;
+}, false);
+//------end:-------stuff to handle custom context menu
  //  theEditor.session.getUndoManager().reset();
 
     

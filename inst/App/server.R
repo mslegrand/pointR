@@ -47,28 +47,18 @@ shinyServer(function(input, output,session) {
     if(is.null(getCode()) || nchar(getCode())==0 || !identical(getMode(), 'ptr')  ){
       return(NULL)
     }  
-    # browser()
     useTribbleFormat<- getUseTribble()
     ptDefs<-ex.getPtDefs(getCode(), useTribbleFormat=useTribbleFormat) 
     ptDefs
   })  
   
 
-  shinyFileChoose(input, "buttonFileOpen",           session=session, roots=c(home="~"),  filetypes=c('R','PTR','SVGR','js','dnds') ) #hidden
-  shinyFileChoose(input, "buttonFileOpenProject",    session=session, roots=c(home="~"),  filetypes=c('pprj') ) #hidden
-  shinyFileChoose(input, "buttonSnippetImport",      session=session, roots=c(home="~"),  filetypes=c('snip') ) #hidden
-  shinyFileChoose(input, "buttonDnippetImport",      session=session, roots=c(home="~"),  filetypes=c('dnds') ) #hidden
-  shinyFileChoose(input, "buttonPreProcPtImport",    session=session, roots=c(home="~"),  filetypes=c('R') ) #hidden
-  shinyFileChoose(input, "buttonPreProcAtImport",    session=session, roots=c(home="~"),  filetypes=c('R') ) #hidden
-  
-  shinyFileSave(input,   "buttonSvgExport",           session=session, roots=c(home="~")  ) #hidden
-  shinyFileSave(input,   "buttonPreprocPtExport",      session=session, roots=c(home="~") ) #hidden
-  shinyFileSave(input,   "buttonPreprocAtExport",      session=session, roots=c(home="~") ) #hidden
   
   disableDMDM(session, "editNavBar", 'project')
-
+  
 
 #------------------leftPanel--------------------------------
+ 
   source("leftPanel/serverRequest.R",                            local=TRUE) 
   source("leftPanel/serverSendPtRManagerMessage.R",              local=TRUE) 
   source("leftPanel/serverOutputMssg.R",                         local=TRUE) 
@@ -82,6 +72,7 @@ shinyServer(function(input, output,session) {
   
   
   #------------------fileIO----------------------------------
+  source("fileIO/serverShinyFiles.R",                            local=TRUE) 
   source("fileIO/serverGenShinyFilesSaveObservers.R",            local=TRUE)
   source("fileIO/serverFileDescriptor.R",                        local=TRUE)
   source("fileIO/serverLoadWorkSpace.R",                         local=TRUE)
