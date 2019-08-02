@@ -1,6 +1,8 @@
 
 cmdDnippetImport<-function(){
+   log.fin(cmdDnippetImport )
     sendPtRManagerMessage(  sender='cmd.dnippet.file.import', openFile=runif(1) )
+    log.fout(cmdDnippetImport)
 }
 
 # loads the drippets given the datapath
@@ -28,6 +30,7 @@ loadDndSnippets<-function(datapath, startup=FALSE){
 }
 
 observeEvent(input$buttonDnippetImport,{
+  log.fin(input$buttonDnippetImport )
   fp.dt<-parseFilePaths(c(home='~'), input$buttonDnippetImport)
   if(length(fp.dt)>0 && nrow(fp.dt)){
     datapath<-as.character(fp.dt$datapath[1])
@@ -57,4 +60,5 @@ observeEvent(input$buttonDnippetImport,{
     
     
   }
+  log.fout(input$buttonDnippetImport)
 })

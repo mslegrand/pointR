@@ -44,6 +44,7 @@ closeCurrentProj<-function(){
 
 }
 
+# used only by resetShinyFilesIOPaths
 setSfDir<-function(sf_id, path, root="home"){
   if(is.null(path)){
     jscode<-paste0(
@@ -67,9 +68,18 @@ setSfDir<-function(sf_id, path, root="home"){
 # sets shinyFiles to use pathToProj
 resetShinyFilesIOPaths<-function(pathToProj, resources='resources'){
   log.fin(resetShinyFilesIOPaths)
+  log.val(pathToProj)
+  log.val(optionDirPath())
+  
   if( identical(pathToProj, optionDirPath())){ # optionDirPath is the .ptR directory
+    log.val("case1")
+    isProj=FALSE
     pathToProj<-path_home()
+    pathToProj<-path_rel(pathToProj, path_home() )
+    pathToProj<-paste0("~/",pathToProj) # !!!TODO:  do we really want to do this???
   } else {
+    log.val("case2")
+    isProj=TRUE
     pathToProj<-path_rel(pathToProj, path_home() )
     pathToProj<-paste0("~/",pathToProj) # !!!TODO:  do we really want to do this???
   }
@@ -85,22 +95,29 @@ resetShinyFilesIOPaths<-function(pathToProj, resources='resources'){
   }
   Sys.sleep(.3)
   # next set to pathToProj
-  for(id in c(fileIOIds, saveButtonFileNames)){
-    if(id %in% c("buttonPreProcPtImport", "buttonPreprocPtExport")){
-      #browser()
-      jscode<-setSfDir(id, path= path_join( c(pathToProj, resourceDir, 'preprocPts') ))
-    } else if(id %in% c("buttonPreProcAtImport", "buttonPreprocAtExport")){
-      jscode<-setSfDir(id, path= path_join( c(pathToProj, resourceDir, 'preprocAts') ))
-    } else if(id %in% c("buttonDnippetImport")){
-      jscode<-setSfDir(id, path= path_join( c(pathToProj, resourceDir, 'dnds' )))
-    } else if(id %in% c("buttonSnippetImport")){
-      jscode<-setSfDir(id, path= path_join( c(pathToProj,resourceDir, 'snip' )))
-    } else {
-      jscode<-setSfDir(id, path=pathToProj)
+  if(isProj==TRUE){
+    for(id in c(fileIOIds, saveButtonFileNames)){
+      if(id %in% c("buttonPreProcPtImport", "buttonPreprocPtExport")){
+        jscode<-setSfDir(id, path= path_join( c(pathToProj, resourceDir, 'preprocPts') ))
+      } else if(id %in% c("buttonPreProcAtImport", "buttonPreprocAtExport")){
+        jscode<-setSfDir(id, path= path_join( c(pathToProj, resourceDir, 'preprocAts') ))
+      } else if(id %in% c("buttonDnippetImport")){
+        jscode<-setSfDir(id, path= path_join( c(pathToProj, resourceDir, 'dnds' )))
+      } else if(id %in% c("buttonSnippetImport")){
+        jscode<-setSfDir(id, path= path_join( c(pathToProj,resourceDir, 'snip' )))
+      } else {
+        jscode<-setSfDir(id, path=pathToProj)
+      }
+      cat(jscode,'\n')
+      runjs(jscode)
     }
-    cat(jscode,'\n')
-    runjs(jscode)
+  } else {
+    for(id in c(fileIOIds, saveButtonFileNames)){
+      jscode<-setSfDir(id, path=pathToProj)
+      runjs(jscode)
+    }
   }
+
   
   log.fout(resetShinyFilesIOPaths)
 }
