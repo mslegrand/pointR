@@ -1,6 +1,6 @@
 
 
-genShinyOpenFilesButtons<-function(){
+UIGenShinyOpenFilesButtons<-function(){
   tagList(
     shinySaveButton("buttonSvgExport",        label="",  title="Export as ...",     filetype=list(svg='svg') ,          class='hiddenButton'),
     shinySaveButton("buttonPreprocPtExport",  label="", title="Export as ...",      filetype=list(R='R'),               class='hiddenButton'), 
@@ -14,3 +14,4 @@ genShinyOpenFilesButtons<-function(){
     shinyFilesButton("buttonPreProcAtImport", label="", title="Import PreProcessors for values",                  multiple=FALSE,   class='hiddenButton')
   )
 }
+

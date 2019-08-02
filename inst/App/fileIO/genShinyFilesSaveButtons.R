@@ -1,7 +1,7 @@
 
 saveButtonFileNames<-setNames(paste0('buttonFileSave', extMode.TB$ext), extMode.TB$mode )
 
-genShinySaveFilesButtons<-function(){
+UIGenShinySaveFilesButtons<-function(){
   tt<-setNames(as.list(extMode.TB$ext),extMode.TB$mode)
   fileTypes<-lapply(tt, function(x){
     xx<-c(x,tt[tt!=x])

@@ -74,7 +74,8 @@ javascriptPanelTag<-'javascriptPanel'
 snippetPanelTag<-'snippetPanel'
 appPanelTag<-'appPanel'
 tibTag<-'tib'
-resourceDir='resources'
+#resourceDir='resources' # to do change to "aux"
+resourceDir='aux' # to do change to "aux"
 
 
 preprocChoices<-list(points=c("onNewPt",  "onMovePt", "onMoveMat"), values=c('onNewRow', 'onChangeRow'))
@@ -90,10 +91,12 @@ source("util/logger.R")
 source("fileIO/genShinyFilesOpenButtons.R")
 source("fileIO/genShinyFilesSaveButtons.R")
 source("leftPanel/menu/UIbuildLeftMenu.R")
+source("leftPanel/mid/UIcontextMenu.R")
 source("leftPanel/toolbar/buildLeftHToolBarUI.R")
 source("rightPanel/preProc/pointPreprocessor.R")
 source("rightPanel/menu/buildRightMenuUI.R")
 source("leftPanel/mid/shinyAce4Ptr.R")
+
 
 
 
