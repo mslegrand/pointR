@@ -75,14 +75,11 @@ resetShinyFilesIOPaths<-function(pathToProj, resources='resources'){
     log.val("case1")
     isProj=FALSE
     pathToProj<-path_home()
-    pathToProj<-path_rel(pathToProj, path_home() )
-    pathToProj<-paste0("~/",pathToProj) # !!!TODO:  do we really want to do this???
   } else {
-    log.val("case2")
     isProj=TRUE
-    pathToProj<-path_rel(pathToProj, path_home() )
-    pathToProj<-paste0("~/",pathToProj) # !!!TODO:  do we really want to do this???
   }
+  pathToProj<-path_rel(pathToProj, path_home() )
+  pathToProj<-paste0("~/",pathToProj) # !!!TODO:  do we really want to do this???
   fileIOIds<-c("buttonFileOpen",         "buttonFileSaveR",
                "buttonSnippetImport",    "buttonDnippetImport",
                "buttonPreProcPtImport",  "buttonPreprocPtExport",
