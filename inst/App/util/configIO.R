@@ -62,6 +62,7 @@ defaultOpts<-(function(){
   opts
 })() #execute now!
  
+
 # adjust defaultOpts as needed
 if(!is.null(getShinyOption("initialPointRProject"))){
   initialPointRProject<-getShinyOption("initialPointRProject")

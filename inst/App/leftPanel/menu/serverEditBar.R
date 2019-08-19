@@ -314,14 +314,24 @@ observeEvent( editOption$currentProjectName, {
 
 
 observeEvent(editOption$fontSize, {
+  # todo: get all aceids and update
+  # search for class .shiny-ace; collect all ids
+  # var $el = $('#' + id);
+  # var editor = $el.data('aceEditor');
+  # in pixels: editor.setFontSize("18px"); or for pixels: editor.setFontSize("10");
+  
   updateAceEditor(session, getAceEditorId(), fontSize=as.numeric(editOption$fontSize) )
 })
 
 observeEvent(editOption$theme, {
+  # todo: get all aceids and update
+  
+  
   updateAceEditor(session, getAceEditorId(), theme=editOption$theme)
 })
 
 observeEvent(editOption$tabSize, {
+  # todo: get all aceids and update
   updateAceEditor(session, getAceEditorId(),  tabSize=as.numeric(editOption$tabSize))
 }, ignoreNULL = TRUE, ignoreInit = TRUE)
 

@@ -36,6 +36,7 @@ initialPtrAceOptions<-function(
     gsub("[^[:alnum:]]", "", id)
   }
   id<-sanitizeId(outputId)
+ 
   # cat('sanitizeId(outputId)=', id,'\n')
   editorVar = paste0("editor__",sanitizeId(outputId))
   acejs = file.path(system.file(package="pointR"), "App/www/Acejs")
@@ -72,14 +73,17 @@ shinyAce4Ptr <- function(
     initSaved=initSaved #assigned
   ){
   # cat('shinyAce4Ptr:: outputId=',outputId,"\n")
+  
     if(is.null(theme)){
       theme<-"chrome"
     }
+  
     saceList<-aceEditor(
-      outputId,
-      value,
-      'text',
+      outputId=outputId,
+      value=value,
+      mode='text',
       autoComplete='disabled',
+      fontSize=fontSize,
       theme=theme,
       height='100%'
     )

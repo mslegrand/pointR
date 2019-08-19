@@ -27,7 +27,23 @@ appRunner<-reactiveValues(
 if(usingElectron){
 
   observeEvent(input$writeNRunApp ,{
-    # cat('>-----> input$writeNRunApp')
+    # need to iterate and save all unsaved pages
+    # unsaved<-getAllNamedUnsavedFiles()
+    # if(nrow(unsaved)>0){
+    #   for(i in 1:nrow(unsaved)){
+    #     tabId<-unsaved$tabId[i]
+    #     aceId<-tabID2aceID(unsaved$tabId[i])
+    #     code<-input$aceId
+    #     docFilePath<-unsaved$filePath[i]
+    #     writeLines(code, docFilePath)
+    #     setFileDescSave(tabId, TRUE)
+    #     # todo 
+    #     # send message to scrollManagerto setFileTab to be saved (but don't scroll to view)
+    #     
+    #   }
+    # }
+    # need to get content of each page, then save
+    #
     pageId<-input$pages
     appRunner$tabId<-pageId
     appRunner$log<-""

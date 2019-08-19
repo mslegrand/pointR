@@ -106,6 +106,10 @@ function ptRaceInit(data){
   } else {
     console.log('mode is null');
   }
+  if(!!data.fontSize){
+    console.log('setfontsize='+data.fontSize);
+    theEditor.getSession().setOption('fontSize', data.fontSize);
+  }
   
   $el.data('errorMarkerArray', []);
   
