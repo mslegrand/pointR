@@ -111,17 +111,11 @@ observeEvent( input$editNavBar, {
       showModal( modalIndentSize() )
       dirtyDMDM(session, "editNavBar")
     }
-    whiteSpace<-c("Show White Space", "Hide White Space")
-    
-    if(fileCmd %in% whiteSpace){
-      indx<-which(fileCmd==whiteSpace)
-      newLabel<-ifelse(indx==2,"Show White Space", "Hide White Space" )
-      updateAceExt(id= getAceEditorId(), sender= 'fileCmd.whitespace', toggleWhiteSpace=TRUE )
-      renameDMDM(
-        session, menuBarId="editNavBar", 
-        entry=fileCmd, 
-        newLabel = newLabel, 
-        type = "menuItem")
+    #whiteSpaceCmds<-c("Show White Space", "Hide White Space")
+    if(fileCmd == "toggleWhiteSpace"){
+      editOption$whiteSpace<-!(editOption$whiteSpace)
+      val=ifelse(editOption$whiteSpace, 'show', 'hide' )
+      updateAceExt(id=getAceEditorId(), sender='updateAll', whiteSpace=val )
       dirtyDMDM(session, "editNavBar")
     }
     

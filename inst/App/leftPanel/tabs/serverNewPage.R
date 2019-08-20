@@ -45,7 +45,9 @@ newPage<-function(tabId, title, txt, docFilePath, mode,  fileSaveStatus ){
           value    = txt,
           mode     = mode,
           theme    = editOption$theme, 
-          fontSize = as.numeric(editOption$fontSize), 
+          fontSize = as.numeric(editOption$fontSize),
+          tabSize  = as.numeric(editOption$tabSize),
+          whiteSpace = editOption$whiteSpace,
           autoComplete="enabled",
           if(mode=='ptr'){
             autoCompleteList =list(names(svgR:::eleDefs))

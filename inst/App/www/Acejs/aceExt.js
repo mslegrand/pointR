@@ -190,16 +190,23 @@ Shiny.addCustomMessageHandler(
             }
             if(!!data.theme){
               $('.shiny-ace').each(function(){
-                let lid=this.id; //setTheme(String theme)
+                let lid=this.id; 
                 console.log('data.aceTheme='+data.theme);
                 $('#'+lid).data('aceEditor').setTheme("ace/theme/" + data.theme);
               });
             }
             if(!!data.tabSize){
               $('.shiny-ace').each(function(){
-                let lid=this.id; //setTheme(String theme)
+                let lid=this.id; 
                 console.log('data.tabSize='+data.tabSize);
                 $('#'+lid).data('aceEditor').getSession().setTabSize(data.tabSize);
+              });
+            }
+            if(!!data.whiteSpace){
+              var wsCmd=(data.whiteSpace==='show');
+              $('.shiny-ace').each(function(){
+                let lid=this.id; 
+                $('#'+lid).data('aceEditor').setShowInvisibles(wsCmd);
               });
             }
             return null;

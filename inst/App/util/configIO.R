@@ -39,7 +39,7 @@ defaultOpts<-(function(){
     tabSize=2,
     currentFile="",       # !!! appears to be not used
     currentDirectory=".", # !!! appears to be not used
-    
+    whiteSpace=FALSE,
     currentFilePath="./",
     tabType="Use Soft Tabs",
     useTribbleFormat=TRUE,

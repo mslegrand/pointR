@@ -163,5 +163,15 @@ observeEvent( editOption$recentFiles ,{
     )
   }
 })
-    
+
+# observeEvent(editOption$whiteSpace,{
+#   newLabel<-ifelse(editOption$whiteSpace, "Hide White Space",  "Show White Space")
+#   renameDMDM(
+#     session, menuBarId="editNavBar", 
+#     entry=newLabel, 
+#     newLabel = newLabel, 
+#     type = "menuItem")
+#   dirtyDMDM(session, "editNavBar")
+# })
+  
             

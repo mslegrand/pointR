@@ -20,6 +20,7 @@ initialPtrAceOptions<-function(
   value="",
   theme="chrome",
   fontSize=16,
+  tabSize=2,
   mode="ptr",
   autoComplete=c("disabled", "enabled", "live"),
   autoCompleteList=NULL,
@@ -62,6 +63,8 @@ shinyAce4Ptr <- function(
     height="100%", 
     theme="chrome", #assigned defaultOpts["theme"]
     fontSize=16,# assigned defaultOpts["fontSize"]
+    tabSize=2,
+    whiteSpace=F,
     mode="ptr", #assigned
     autoComplete= "enabled", #asssigned enabled
     autoCompleteList=NULL, #assigned names(svgR:::eledefs) when mode is 'ptr
@@ -84,6 +87,8 @@ shinyAce4Ptr <- function(
       mode='text',
       autoComplete='disabled',
       fontSize=fontSize,
+      showInvisibles=whiteSpace,
+      tabSize=tabSize,
       theme=theme,
       height='100%'
     )
