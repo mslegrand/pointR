@@ -178,8 +178,7 @@ Shiny.addCustomMessageHandler(
       	
       });
     } //endof insertDrippets
-    
-    
+
     if(!!data.rowCountChange){
       $(window).resize();
     }

@@ -180,7 +180,30 @@ Shiny.addCustomMessageHandler(
           console.log('editor is null');
           return false;
         }  
-        
+        //-------------updateAll handlers---------------
+        if(sender=='updateAll'){
+              if(!!data.fontSize){
+              $('.shiny-ace').each(function(){
+                let lid=this.id;
+                $('#'+lid).data('aceEditor').setFontSize(data.fontSize);
+              });
+            }
+            if(!!data.theme){
+              $('.shiny-ace').each(function(){
+                let lid=this.id; //setTheme(String theme)
+                console.log('data.aceTheme='+data.theme);
+                $('#'+lid).data('aceEditor').setTheme("ace/theme/" + data.theme);
+              });
+            }
+            if(!!data.tabSize){
+              $('.shiny-ace').each(function(){
+                let lid=this.id; //setTheme(String theme)
+                console.log('data.tabSize='+data.tabSize);
+                $('#'+lid).data('aceEditor').getSession().setTabSize(data.tabSize);
+              });
+            }
+            return null;
+        }
         //---------------extract ud check------------------
         var Range = ace.require("ace/range").Range;
         var ud =  editor.getSession().getUndoManager();

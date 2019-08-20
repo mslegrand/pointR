@@ -56,7 +56,7 @@ $.extend(widgetCntrlBinding, {
     },
     clicked: function(ctrlId, evt ){
       var pt = this.mouse2pt(ctrlId, evt.clientX, evt.clientY);
-      var el = "#" + ctrlId;
+        var el = "#" + ctrlId;
       this.setValue("#" + ctrlId, 
         {
           x: pt.x-$(el).data("CXY").x, 
