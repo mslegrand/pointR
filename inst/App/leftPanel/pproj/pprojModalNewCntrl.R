@@ -119,8 +119,8 @@ observeEvent(input$modalNewShinyCntrlProjOk, {
     pathToProj<-path_join(c(pathToProjParent,projName))
     setUpProj(projName=projNameExt, pathToProj=pathToProj, projType='shinyInputCntrl')
     #invoke startup
-    request$sender<-'startup'
-    
+    #request$sender<-'startup'
+    requestStartUp()
     removeModal() 
   }
     

@@ -191,14 +191,12 @@ Shiny.addCustomMessageHandler(
             if(!!data.theme){
               $('.shiny-ace').each(function(){
                 let lid=this.id; 
-                console.log('data.aceTheme='+data.theme);
                 $('#'+lid).data('aceEditor').setTheme("ace/theme/" + data.theme);
               });
             }
             if(!!data.tabSize){
               $('.shiny-ace').each(function(){
                 let lid=this.id; 
-                console.log('data.tabSize='+data.tabSize);
                 $('#'+lid).data('aceEditor').getSession().setTabSize(data.tabSize);
               });
             }
@@ -452,8 +450,6 @@ Shiny.addCustomMessageHandler(
                  rnd : randomString(5)
               } );   
           }, 5 );
-          //var lang = ace.require("ace/lib/lang");
-          //lang.delayedCall(editor.getSession().getUndoManager().setOk());
           
           
           }        

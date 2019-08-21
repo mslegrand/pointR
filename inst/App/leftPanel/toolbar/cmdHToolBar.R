@@ -15,7 +15,8 @@ hBaRR<-reactiveValues(
   observers=list()
 )
 
-observeEvent( request$sender, {
+#observeEvent( request$sender, {
+observeEvent( getRequestSender(), {
     genTBObserver<-function(tbId, cmd){
       return(observeEvent(
         input[[tbId]],{

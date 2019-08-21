@@ -5,8 +5,9 @@ observeEvent(input$messageFromAce, {
     if(length(input$messageFromAce$sender)>0){
       if(length(input$messageFromAce$code)>0){
         request$code<-input$messageFromAce$code # only place where request$code is set
-        sender<-input$messageFromAce$sender
-        request$sender<-sender
+        sender<-input$messageFromAce$sender # ace returns sender from call to update
+        #request$sender<-sender 
+        setRequestSender(sender)
         aceId<-input$messageFromAce$id
         tabId<-aceID2TabID(aceId)
         clearErrorMssg()

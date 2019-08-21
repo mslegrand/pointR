@@ -109,7 +109,7 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
       }
     }
   } else { #already saved
-    if( identical(request$sender, 'buttonCmd.rmdViewer')){
+    if( identical(getRequestSender(), 'buttonCmd.rmdViewer')){
       rmdOut(docFilePath)
       # cat('aceOut1:: buttonCmd.rmdViewer\n')
       # rmarkdown::render(docFilePath )
@@ -117,7 +117,7 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
       # browseURL(htmlPath)
     }
     tabId<-popTab()
-    if(request$sender%in% c('fileCmd.close') ){
+    if(getRequestSender()%in% c('fileCmd.close') ){
       addToRecentFiles(mssg$docFilePath)
       closeTabNow(tabId)
     }

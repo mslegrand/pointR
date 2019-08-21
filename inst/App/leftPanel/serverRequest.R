@@ -28,7 +28,12 @@ setTabRequest<-function(sender, tabs){
   request$trigger<-sample(10^6,1)
 }
 
-getSender<-reactive({request$sender})
+getRequestSender<-reactive({request$sender}) #not currently used
+setRequestSender<-function(sender){request$sender<-sender} #not currently used
+
+requestStartUp<-function(){
+  request$sender<-'startUp'
+}
 peekTab<-reactive( {request$tabs[1]} )
 popTab<-reactive({
   tab<-request$tabs[1]

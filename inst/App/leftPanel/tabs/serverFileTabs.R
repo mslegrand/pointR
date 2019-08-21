@@ -100,11 +100,11 @@ observeEvent(input$tabManager,{
 observeEvent(c(request$trigger,request$tabs), {
   if(length(request$tabs)>0 && length(request$sender )>0){
     tabId<-peekTab()
-    sender<-request$sender #getSender()
+    sender<-getRequestSender() #getSender()
     aceId<-tabID2aceID(tabId)
     updateAceExt( id=aceId, sender=sender, getDoc=TRUE)
   } else {
-    if(identical(request$sender, 'fileCmd.quit')){
+    if(identical(getRequestSender(), 'fileCmd.quit')){
       cmdQuitNow()
     }
   }

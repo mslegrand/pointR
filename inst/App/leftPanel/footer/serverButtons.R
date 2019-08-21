@@ -44,6 +44,8 @@ if(usingElectron){
     # }
     # need to get content of each page, then save
     #
+    # sendFileTabsMessage(sender= 'fileCmd.saveNow', getAllTabIds=runif(1))
+    
     pageId<-input$pages
     appRunner$tabId<-pageId
     appRunner$log<-""

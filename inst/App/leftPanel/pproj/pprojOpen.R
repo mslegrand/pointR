@@ -15,7 +15,8 @@ openProj<-function(projName, pathToProj, projType="generic"){
     pprj(ptRproj)
     setUpProj(projName, pathToProj, projType=projType)
     #invoke startup
-    request$sender<-'startup'
+    #request$sender<-'startup'
+    requestStartUp()
   
     # cat("<---< openProj\n")
 } 
