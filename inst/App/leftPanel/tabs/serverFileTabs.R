@@ -99,12 +99,16 @@ observeEvent(input$tabManager,{
 # if non-empty, first request with 1st tab forwarded to ace (save/close/saveAs) 
 observeEvent(c(request$trigger,request$tabs), {
   if(length(request$tabs)>0 && length(request$sender )>0){
-    tabId<-peekTab()
-    sender<-getRequestSender() #getSender()
+    # tabId<-peekTab()
+    # sender<-getRequestSender() #getSender()
+    sender<-peekRequest()[1]
+    tabId<- peekRequest()[2]
+    
     aceId<-tabID2aceID(tabId)
     updateAceExt( id=aceId, sender=sender, getDoc=TRUE)
   } else {
-    if(identical(getRequestSender(), 'fileCmd.quit')){
+    sender<-peekRequest()[1]
+    if(identical(sender, 'fileCmd.quit')){
       cmdQuitNow()
     }
   }

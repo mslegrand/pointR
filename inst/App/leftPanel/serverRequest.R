@@ -35,10 +35,31 @@ setTabRequest<-function(sender, tabs){
   request$trigger<-sample(10^6,1)
 }
 
+setRequests<-function( requestList ){
+  
+}
+
+popRequest<-function(  ){
+  tab<-request$tabs[1]
+  request$tabs<-request$tabs[-1]
+  # ?????   if length(tabs is 0, remove sender?)
+  c(request$sender, tab)
+}
+
+peekRequest<-reactive( {
+  c(request$sender,request$tabs[1])
+} )
+
+
+clearRequest<-function(  ){
+  request$sender<-NULL
+  request$tags<-list()
+}
+
 
 
 getRequestSender<-reactive({request$sender}) 
-setRequestSender<-function(sender){request$sender<-sender} 
+#setRequestSender<-function(sender){request$sender<-sender} 
 
 requestStartUp<-function(){ 
   setTrigger('startup')

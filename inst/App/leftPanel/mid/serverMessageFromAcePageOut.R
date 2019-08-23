@@ -82,11 +82,13 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
       
       savePage(tabId) # saves page to workspace
       if(sender %in% c('fileCmd.save','fileCmd.saveNow')){
-        tabId=popTab()
+        #tabId=popTab()
+        tabId=popRequest()[2]
       }
       if(sender %in% 'fileCmd.quit'){
        # pop off tab and exit from this
-        tabId=popTab()
+        #tabId=popTab()
+        tabId=popRequest()[2]
       } else if (sender %in% c('fileCmd.close')){ # if not saved and closing
         addToRecentFiles(mssg$docFilePath)
         closeTabNow(tabId)
@@ -117,8 +119,9 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
       # htmlPath<-sub('\\.Rmd$','\\.html',docFilePath)
       # browseURL(htmlPath)
     }
-    tabId<-popTab()
-    if(getRequestSender()%in% c('fileCmd.close') ){
+    #tabId<-popTab()
+    tabId=popRequest()[2]
+    if(sender %in% c('fileCmd.close') ){
       addToRecentFiles(mssg$docFilePath)
       closeTabNow(tabId)
     }

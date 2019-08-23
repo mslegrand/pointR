@@ -12,7 +12,8 @@ genShinySaveFilesObservers<-function(input, session){
       rtList<-input[[n]]
       if('cancel' %in% names(rtList)){
         if(rtList$cancel=='close'){ 
-          tabId<-popTab()
+          # tabId<-popTab()
+          tabId=popRequest()[2]
           closeTabNow(tabId)
         } else {
           setTabRequest(sender=NULL, tabs=NULL)
@@ -42,8 +43,10 @@ genShinySaveFilesObservers<-function(input, session){
           #      sets doc as SAVED
           #      If sender==close, removeTab
           #      ow. update tab title
-          sender=getRequestSender()
-          tabId<-peekTab()
+          sender<-peekRequest()[1]
+          tabId<- peekRequest()[2]
+          # sender=getRequestSender()
+          # tabId<-peekTab()
           aceId<-tabID2aceID(tabId)
           if(sender=='fileCmd.saveAs'){
             sender='fileCmd.saveNow'
