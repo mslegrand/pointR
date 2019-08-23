@@ -28,11 +28,14 @@ getCode4RenderingTransform<-eventReactive( trigger$redraw, {
   src
 })
 
+
 setTabRequest<-function(sender, tabs){
   request$sender<-sender
   request$tabs<-tabs
   request$trigger<-sample(10^6,1)
 }
+
+
 
 getRequestSender<-reactive({request$sender}) 
 setRequestSender<-function(sender){request$sender<-sender} 

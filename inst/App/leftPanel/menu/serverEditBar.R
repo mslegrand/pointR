@@ -80,7 +80,8 @@ observeEvent( input$editNavBar, {
       editOption$currentProjectName<-NULL
       dirtyDMDM(session, "editNavBar")
       #delay(500, {request$sender='startup'})
-      delay(500, {setRequestSender('startup')})
+      #delay(500, {setRequestSender('startup')})
+      delay(500, {requestStartUp()})
     }
     if(fileCmd=="quit"){
       # cat(' fileCmd=="quit" \n')
