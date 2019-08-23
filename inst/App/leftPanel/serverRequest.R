@@ -1,12 +1,18 @@
+
+theCode<-reactiveVal("")
+
 request<-reactiveValues(
-  code=NULL, 
+  #code=NULL, 
   sender='startup',
   tabs=NULL,
   trigger=0
 )
 
+
+
 trigger<-reactiveValues(
-  redraw=0
+  redraw=0,
+  startup=0
 )
 
 setTrigger<-function(what="redraw"){
@@ -28,12 +34,14 @@ setTabRequest<-function(sender, tabs){
   request$trigger<-sample(10^6,1)
 }
 
-getRequestSender<-reactive({request$sender}) #not currently used
-setRequestSender<-function(sender){request$sender<-sender} #not currently used
+getRequestSender<-reactive({request$sender}) 
+setRequestSender<-function(sender){request$sender<-sender} 
 
-requestStartUp<-function(){
-  request$sender<-'startUp'
+requestStartUp<-function(){ 
+  setTrigger('startup')
+  #request$sender<-'startup'
 }
+
 peekTab<-reactive( {request$tabs[1]} )
 popTab<-reactive({
   tab<-request$tabs[1]
@@ -42,7 +50,10 @@ popTab<-reactive({
   tab
 })
 
-
+setCode<-function(code){
+  theCode(code)
+}
 getCode<-reactive({
-  request$code
+  theCode()
+  #request$code
 })

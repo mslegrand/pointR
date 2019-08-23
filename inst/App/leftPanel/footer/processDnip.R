@@ -2,7 +2,8 @@
 processDnip<-reactive({
   # cat_list<<-c( cat_list,">---> processDnip\n")
   clearErrorMssg()
-  src<-request$code
+  # src<-request$code
+  src<-getCode()
   setSourceType(rmdPanelTag)
   if(length(src)==1 && nchar(src)>0){
     

@@ -63,7 +63,8 @@ processCommit<-reactive({
 
 
 processSvgR<-reactive({
-  src<-request$code
+  #src<-request$code
+  src<-getCode()
   # cat('>----> processSvgR::\n')
   if(length(src)==1){
     ptRList<-getPtDefs()$tib

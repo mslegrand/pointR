@@ -32,7 +32,6 @@ newProj<-function(projName, parentDir, projType="generic"){
     # 5 setup
     setUpProj(projName, pathToProj, projType="generic")
     #6 invoke startup
-    #request$sender<-'startup'
     requestStartUp()
     log.fout(newProj)
 } 

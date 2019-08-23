@@ -4,7 +4,6 @@ closeProj<-function(){
   #addToRecentProjects(currentProjectDirectory,currentProjectName )
   # add to recent ???
   #invoke startup
-  #request$sender<-'startup'
-  requestStartUp()
+   requestStartUp()
 } 
 

@@ -1,5 +1,6 @@
-observeEvent(request$sender,{
-  if(identical(request$sender,'startup')){ 
+#observeEvent(request$sender,{
+  #if(identical(request$sender,'startup')){ 
+observeEvent(trigger$startup, {
     log.fin(startup)
     reOrgPanels(id=NULL, mode=NULL)
     readDnippetsFileNames()
@@ -17,5 +18,5 @@ observeEvent(request$sender,{
     )
     
     log.fout(startup)
-  }
+  # }
 }, priority=100)

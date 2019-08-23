@@ -140,7 +140,6 @@ observeEvent(input$modalCloneProjOk, {
     pathToProj<-path_join(c(pathToProjParent,projName))
     setUpProj(projName=projNameExt, pathToProj=pathToProj, projType='cloned')
     #invoke startup
-    #request$sender<-'startup'
     requestStartUp()
     removeModal() 
   }

@@ -109,7 +109,8 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
       }
     }
   } else { #already saved
-    if( identical(getRequestSender(), 'buttonCmd.rmdViewer')){
+    #if( identical(getRequestSender(), 'buttonCmd.rmdViewer')){
+    if( identical(sender, 'buttonCmd.rmdViewer')){
       rmdOut(docFilePath)
       # cat('aceOut1:: buttonCmd.rmdViewer\n')
       # rmarkdown::render(docFilePath )

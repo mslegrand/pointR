@@ -42,14 +42,14 @@ genShinySaveFilesObservers<-function(input, session){
           #      sets doc as SAVED
           #      If sender==close, removeTab
           #      ow. update tab title
-          sender=request$sender
-          
-          if(request$sender=='fileCmd.saveAs'){
+          sender=getRequestSender()
+          tabId<-peekTab()
+          aceId<-tabID2aceID(tabId)
+          if(sender=='fileCmd.saveAs'){
             sender='fileCmd.saveNow'
           }
           
-          tabId<-peekTab()
-          aceId<-tabID2aceID(tabId)
+          
           
           # Now the sender can be close, save or saveAs, but we leave this to ace, then we need a flag to say that we changed the name!
           updateAceExt( id=aceId, setDocFilePath=datapath,  sender=sender, getDoc=TRUE)
