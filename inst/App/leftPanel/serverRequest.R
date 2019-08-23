@@ -30,6 +30,9 @@ getCode4RenderingTransform<-eventReactive( trigger$redraw, {
 
 
 setTabRequest<-function(sender, tabs){
+  if(length(sender)==1 && length(tabs)>1){
+    sender<-rep_len(sender,length(tabs) )
+  }
   request$sender<-sender
   request$tabs<-tabs
   request$trigger<-sample(10^6,1)
@@ -40,14 +43,16 @@ setRequests<-function( requestList ){
 }
 
 popRequest<-function(  ){
-  tab<-request$tabs[1]
-  request$tabs<-request$tabs[-1]
+  tab   <- request$tabs[1]
+  sender<- request$sender[1]
+  request$sender<-request$sender[-1]
+  request$tabs  <-request$tabs[-1]
   # ?????   if length(tabs is 0, remove sender?)
-  c(request$sender, tab)
+  c(sender, tab)
 }
 
 peekRequest<-reactive( {
-  c(request$sender,request$tabs[1])
+  c(request$sender[1],request$tabs[1])
 } )
 
 
@@ -58,7 +63,7 @@ clearRequest<-function(  ){
 
 
 
-getRequestSender<-reactive({request$sender}) 
+# getRequestSender<-reactive({request$sender}) 
 #setRequestSender<-function(sender){request$sender<-sender} 
 
 requestStartUp<-function(){ 
