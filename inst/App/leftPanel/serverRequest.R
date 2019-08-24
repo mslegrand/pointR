@@ -18,6 +18,7 @@ trigger<-reactiveValues(
 setTrigger<-function(what="redraw"){
   trigger[[what]]<-sample(10^9,1)
 }
+
 getCode4Rendering<-eventReactive( trigger$redraw, {
   getCode()
 })
@@ -38,8 +39,22 @@ setTabRequest<-function(sender, tabs){
   request$trigger<-sample(10^6,1)
 }
 
+appendRequests<-function(sender, tabs){
+  if(length(sender)==1 && length(tabs)>1){
+    sender<-rep_len(sender,length(tabs) )
+  }
+  request$sender<-c(request$sender, sender)
+  request$tabs  <-c(request$tabs, tabs)
+  request$trigger<-sample(10^6,1)
+}
+
 setRequests<-function( requestList ){
-  
+  if(length(sender)==1 && length(tabs)>1){
+    sender<-rep_len(sender,length(tabs) )
+  }
+  request$sender<-sender
+  request$tabs<-tabs
+  request$trigger<-sample(10^6,1)
 }
 
 popRequest<-function(  ){
@@ -47,7 +62,6 @@ popRequest<-function(  ){
   sender<- request$sender[1]
   request$sender<-request$sender[-1]
   request$tabs  <-request$tabs[-1]
-  # ?????   if length(tabs is 0, remove sender?)
   c(sender, tab)
 }
 
@@ -57,7 +71,7 @@ peekRequest<-reactive( {
 
 
 clearRequest<-function(  ){
-  request$sender<-NULL
+  request$sender<-list()
   request$tags<-list()
 }
 

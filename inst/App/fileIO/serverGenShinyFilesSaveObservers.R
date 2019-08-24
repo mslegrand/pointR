@@ -7,6 +7,7 @@ genShinySaveFilesServerConnection<-function(input, session){
 
 #needs to be in server
 genShinySaveFilesObservers<-function(input, session){
+  # "buttonFileSaveR"  "buttonFileSaveRmd" "buttonFileSavesnip" "buttonFileSavednds"  "buttonFileSavetxt"   "buttonFileSavejs" "buttonFileSavecss" 
   lapply(saveButtonFileNames, function(n){
     observeEvent(input[[n]], {
       rtList<-input[[n]]
@@ -48,10 +49,12 @@ genShinySaveFilesObservers<-function(input, session){
           # sender=getRequestSender()
           # tabId<-peekTab()
           aceId<-tabID2aceID(tabId)
-          if(sender=='fileCmd.saveAs'){
+          if(sender=='fileCmd.saveAs'){ #ideally this is always thecase
             sender='fileCmd.saveNow'
           }
-          
+          # update the value of the datapath in fileDescDB
+          setFileDescPath(pageId=tabId, filePath=datapath, pathToProj=editOption$currentProjectDirectory)
+          # then we should be able to read it back in server
           
           
           # Now the sender can be close, save or saveAs, but we leave this to ace, then we need a flag to say that we changed the name!

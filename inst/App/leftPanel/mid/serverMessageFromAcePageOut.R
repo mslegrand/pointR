@@ -38,7 +38,10 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
   log.fin(processMssgFromAceMssgPageOut)
   
   if( !saved || sender %in% c('fileCmd.save', 'fileCmd.saveAs','fileCmd.saveNow', 'buttonCmd.rmdViewer', 'fileCmd.quit') ) { #need to save
-    docFilePath<-unlist(mssg$docFilePath)
+    tabId<-aceID2TabID(id)
+    docFilePath<-getFileDescriptor(tabId )$filePath
+    browser()
+    #docFilePath<-unlist(mssg$docFilePath)
     if(docFilePath=='?' || sender=='fileCmd.saveAs'){ # file unnamed : fileSaveAs
       tabId<-aceID2TabID(id)
       

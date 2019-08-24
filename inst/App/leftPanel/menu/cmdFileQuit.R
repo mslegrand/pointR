@@ -74,7 +74,8 @@ observeEvent(input$quitNow,{
     cmdQuitNow()
   } else {
     #iterate over each tab id selection and save each, then quit 
-    #print(paste(selection, collapse=", "))
+    
+    
     setTabRequest(sender='fileCmd.quit', tabs=selection)
   }
   
