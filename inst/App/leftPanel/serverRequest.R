@@ -31,31 +31,45 @@ getCode4RenderingTransform<-eventReactive( trigger$redraw, {
 
 
 setTabRequest<-function(sender, tabs){
-  if(length(sender)==1 && length(tabs)>1){
-    sender<-rep_len(sender,length(tabs) )
-  }
+  # if(length(sender)==1 && length(tabs)>1){
+  #   sender<-rep_len(sender,length(tabs) )
+  # }
   request$sender<-sender
   request$tabs<-tabs
   request$trigger<-sample(10^6,1)
 }
 
-appendRequests<-function(sender, tabs){
-  if(length(sender)==1 && length(tabs)>1){
-    sender<-rep_len(sender,length(tabs) )
-  }
-  request$sender<-c(request$sender, sender)
-  request$tabs  <-c(request$tabs, tabs)
-  request$trigger<-sample(10^6,1)
+popTabRequest<-function(){
+  tab   <- request$tabs[1]
+  request$tabs  <-request$tabs[-1]
+  tab
 }
 
-setRequests<-function( requestList ){
-  if(length(sender)==1 && length(tabs)>1){
-    sender<-rep_len(sender,length(tabs) )
-  }
-  request$sender<-sender
-  request$tabs<-tabs
-  request$trigger<-sample(10^6,1)
+peekTabRequest<-function(){
+  request$tabs[1]
 }
+
+peekTabCmd<-function(){
+  request$sender
+}
+
+# appendRequests<-function(sender, tabs){
+#   if(length(sender)==1 && length(tabs)>1){
+#     sender<-rep_len(sender,length(tabs) )
+#   }
+#   request$sender<-c(request$sender, sender)
+#   request$tabs  <-c(request$tabs, tabs)
+#   request$trigger<-sample(10^6,1)
+# }
+
+# setRequests<-function( requestList ){
+#   if(length(sender)==1 && length(tabs)>1){
+#     sender<-rep_len(sender,length(tabs) )
+#   }
+#   request$sender<-sender
+#   request$tabs<-tabs
+#   request$trigger<-sample(10^6,1)
+# }
 
 popRequest<-function(  ){
   tab   <- request$tabs[1]
@@ -71,7 +85,7 @@ peekRequest<-reactive( {
 
 
 clearRequest<-function(  ){
-  request$sender<-list()
+  request$sender<-NULL
   request$tags<-list()
 }
 
