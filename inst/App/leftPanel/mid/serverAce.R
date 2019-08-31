@@ -37,8 +37,7 @@ observeEvent(input$messageFromAce, {
           processMssgFromAceMssgPageIn(sender, input$messageFromAce)
         } else if( sender %in% 
             c( 
-            'fileCmd.save', 'fileCmd.close', 'fileCmd.saveAs', 'fileCmd.quit' ,
-            'fileCmd.saveNow', 'buttonCmd.rmdViewer'
+            'fileCmd.save', 'fileCmd.saveAs' 
             )
         ){
           processMssgFromAceMssgPageOut(sender, input$messageFromAce) 

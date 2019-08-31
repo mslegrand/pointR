@@ -152,6 +152,7 @@ getFileSavedStatus<-reactive({
   rtv
 })
 
+
 # to be called when tab is closed
 # a tab can be closed in one of two ways:
 # 1 server calls closeTabNow

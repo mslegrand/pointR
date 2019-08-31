@@ -81,15 +81,18 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
   } #end of saving
   # final clean up
   
-   if( identical(reqCmd , 'fileCmd.quit')){
+  if( identical(reqCmd , 'fileCmd.quit') && length(request$tabs)<=1){ 
     cmdQuitNow()
+  } else if(identical(reqCmd , 'fileCmd.runApp')){
+    app2RunPath<-getFileDescriptor(appRunner$tabId)$filePath
+    sendPtRManagerMessage(sender='cmd.electron', app2RunPath=app2RunPath, tabId=pageId)
   } else if( identical(reqCmd , 'fileCmd.close')){
     tabId=popTabRequest()
     if(mssg$docFilePath!="?"){
       addToRecentFiles(mssg$docFilePath)
     }
     closeTabNow(tabId)
-  }  else if( identical(reqCmd , 'buttonCmd.rmdViewer')){
+  }  else if( identical(reqCmd , 'buttonCmd.rmdViewer') && length(request$tabs)<=1){
     tabId=popTabRequest()
     rmdOut(docFilePath)
   } else { #{if(reqCmd %in% c('fileCmd.save','fileCmd.saveAs'))

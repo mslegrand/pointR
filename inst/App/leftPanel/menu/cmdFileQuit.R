@@ -59,6 +59,7 @@ observeEvent(input$checkAll,{
     cmdQuitNow()
   } else {
     #iterate over each tab id selection and save each, then quit 
+        
     setTabRequest(sender='fileCmd.quit', tabs=selection)
   }
   # cat('<---< checkAll\n')

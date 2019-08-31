@@ -27,31 +27,17 @@ appRunner<-reactiveValues(
 if(usingElectron){
 
   observeEvent(input$writeNRunApp ,{
-    # need to iterate and save all unsaved pages
-    # unsaved<-getAllNamedUnsavedFiles()
-    # if(nrow(unsaved)>0){
-    #   for(i in 1:nrow(unsaved)){
-    #     tabId<-unsaved$tabId[i]
-    #     aceId<-tabID2aceID(unsaved$tabId[i])
-    #     code<-input$aceId
-    #     docFilePath<-unsaved$filePath[i]
-    #     writeLines(code, docFilePath)
-    #     setFileDescSave(tabId, TRUE)
-    #     # todo 
-    #     # send message to scrollManagerto setFileTab to be saved (but don't scroll to view)
-    #     
-    #   }
-    # }
-    # need to get content of each page, then save
-    #
-    # sendFileTabsMessage(sender= 'fileCmd.saveNow', getAllTabIds=runif(1))
-    
     pageId<-input$pages
     appRunner$tabId<-pageId
     appRunner$log<-""
-    app2RunPath<-getFileDescriptor(pageId)$filePath
-    #app2RunPath<-"/home/sup/svgRHabitat/ptR-Master/widget" # TODO!!! edit/refactor this
-    sendPtRManagerMessage(sender='cmd.electron', app2RunPath=app2RunPath, tabId=pageId)
+    selection<-getAllNamedUnsavedFiles()$tabId
+    if(length(selection)>0){
+    setTabRequest(sender='fileCmd.runApp', tabs=selection)
+    } else {
+      app2RunPath<-getFileDescriptor(appRunner$tabId)$filePath
+      sendPtRManagerMessage(sender='cmd.electron', app2RunPath=app2RunPath, tabId=pageId)
+    }
+    
   }, label= "writeNRunApp")
  
   observeEvent(input$stopShinyApp ,{

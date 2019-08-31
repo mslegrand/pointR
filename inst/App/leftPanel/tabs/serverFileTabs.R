@@ -99,7 +99,6 @@ observeEvent(input$tabManager,{
 # if non-empty, first request with 1st tab forwarded to ace (save/close/saveAs) 
 observeEvent(c(request$trigger,request$tabs), {
   if(length(request$tabs)>0){
-    
     cat('request$sender=',request$sender,'\n')
     sender<-peekTabCmd()
     cat('sender=',sender,'\n')
@@ -133,47 +132,3 @@ observeEvent(c(request$trigger,request$tabs), {
   }
 }, label='request-tabs-trigger')
 
-# postSaveReq<-function(tabId){
-#   # peek sender->cmd
-#   # if (cmd==close){...}
-#   # if(length(request$tabs)==1){ #last
-#   # if(cmd=Rmd){ launch(Rmd), pop}
-#   # if(cmd=Quit){ launch(quit), pop}
-#   # if(cmd==App){ launch(app)}
-#   #}
-# }
-
-# observeEvent(c(request$trigger,request$tabs), {
-#   if(length(request$sender)>0){
-#     sender<-peekRequest()[1] #pull from top
-#     # if (sender=='save') {updateAceExt( id=aceId, sender='save', getDoc=TRUE)}
-#     # if (sender=='close') {updateAceExt( id=aceId, sender='save', getDoc=TRUE)}
-#     # if (sender=='quit') {updateAceExt( id=aceId, sender='save', getDoc=TRUE)}
-#     if(identical(sender, 'fileCmd.quit')){
-#       cmdQuitNow()
-#     } else {
-#       if(length(request$tabs)>0 ){
-#         tabId<- peekRequest()[2]
-#         cat('request: sender=', sender, ", tabId=", format(tabId),"\n")
-#         aceId<-tabID2aceID(tabId)
-#         updateAceExt( id=aceId, sender=sender, getDoc=TRUE)
-#       }
-#     }
-#   }
-#   # if(length(request$tabs)>0 && length(request$sender )>0){
-#   #   # tabId<-peekTab()
-#   #   # sender<-getRequestSender() #getSender()
-#   #   sender<-peekRequest()[1]
-#   #   tabId<- peekRequest()[2]
-#   #   cat('request: sender=', sender, ", tabId=", format(tabId),"\n")
-#   #   aceId<-tabID2aceID(tabId)
-#   #   updateAceExt( id=aceId, sender=sender, getDoc=TRUE)
-#   # } else {
-#   #   sender<-peekRequest()[1]
-#   #   if(identical(sender, 'fileCmd.quit')){
-#   #     cmdQuitNow()
-#   #   }
-#   # }
-# #}, label='request-tabs-trigger')
-# 
-# 

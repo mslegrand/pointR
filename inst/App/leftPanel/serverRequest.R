@@ -3,7 +3,7 @@ theCode<-reactiveVal("")
 
 request<-reactiveValues(
   #code=NULL, 
-  sender='startup',
+  sender=NULL,
   tabs=NULL,
   trigger=0
 )
@@ -62,7 +62,7 @@ peekTabCmd<-function(){
 #   request$trigger<-sample(10^6,1)
 # }
 
-# setRequests<-function( requestList ){
+# setRequest<-function( requestList ){
 #   if(length(sender)==1 && length(tabs)>1){
 #     sender<-rep_len(sender,length(tabs) )
 #   }
@@ -70,15 +70,15 @@ peekTabCmd<-function(){
 #   request$tabs<-tabs
 #   request$trigger<-sample(10^6,1)
 # }
-
-popRequest<-function(  ){
-  tab   <- request$tabs[1]
-  sender<- request$sender[1]
-  request$sender<-request$sender[-1]
-  request$tabs  <-request$tabs[-1]
-  c(sender, tab)
-}
-
+# 
+# popRequest<-function(  ){
+#   tab   <- request$tabs[1]
+#   sender<- request$sender[1]
+#   request$sender<-request$sender[-1]
+#   request$tabs  <-request$tabs[-1]
+#   c(sender, tab)
+# }
+# 
 peekRequest<-reactive( {
   c(request$sender[1],request$tabs[1])
 } )
