@@ -273,7 +273,6 @@ $(document).ready(function(){
   
   $('#editNavBar').mousedown(function(){
     var paths=stabs.getAllDocPaths();
-    // console.log(JSON.stringify(paths));
   });
 });
 

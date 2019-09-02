@@ -2,7 +2,6 @@
 theCode<-reactiveVal("")
 
 request<-reactiveValues(
-  #code=NULL, 
   sender=NULL,
   tabs=NULL,
   trigger=0
@@ -53,50 +52,14 @@ peekTabCmd<-function(){
   request$sender
 }
 
-# appendRequests<-function(sender, tabs){
-#   if(length(sender)==1 && length(tabs)>1){
-#     sender<-rep_len(sender,length(tabs) )
-#   }
-#   request$sender<-c(request$sender, sender)
-#   request$tabs  <-c(request$tabs, tabs)
-#   request$trigger<-sample(10^6,1)
-# }
-
-# setRequest<-function( requestList ){
-#   if(length(sender)==1 && length(tabs)>1){
-#     sender<-rep_len(sender,length(tabs) )
-#   }
-#   request$sender<-sender
-#   request$tabs<-tabs
-#   request$trigger<-sample(10^6,1)
-# }
-# 
-# popRequest<-function(  ){
-#   tab   <- request$tabs[1]
-#   sender<- request$sender[1]
-#   request$sender<-request$sender[-1]
-#   request$tabs  <-request$tabs[-1]
-#   c(sender, tab)
-# }
-# 
-peekRequest<-reactive( {
-  c(request$sender[1],request$tabs[1])
-} )
-
 
 clearRequest<-function(  ){
   request$sender<-NULL
   request$tags<-list()
 }
 
-
-
-# getRequestSender<-reactive({request$sender}) 
-#setRequestSender<-function(sender){request$sender<-sender} 
-
 requestStartUp<-function(){ 
   setTrigger('startup')
-  #request$sender<-'startup'
 }
 
 peekTab<-reactive( {request$tabs[1]} )
@@ -112,5 +75,4 @@ setCode<-function(code){
 }
 getCode<-reactive({
   theCode()
-  #request$code
 })
