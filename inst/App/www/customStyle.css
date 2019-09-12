@@ -229,18 +229,19 @@ overflow-y: auto;
   font-size: 12px;  
   line-height: 12px;
   background-color: #22AAAA; 
-  padding: 2px;
+  /*padding: 2px;*/
 }
 .ptR2 .selectize-input.full {
-   background: url(http://i62.tinypic.com/15xvbd5.png) no-repeat 96% 0;
+   background-color: #222244;
    height: 33px;
    width: 110px;
-   overflow: hidden;
+   /*overflow: hidden;*/
+   /*padding: 2px;*/
 }
 .ptRBtn2 .btn{
 background-color: #222244; 
 color: #00ffff; 
-border-radius: 0px; 
+border-radius: 0; 
 font-size: 12px;
 width: 110px;
 }
