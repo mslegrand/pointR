@@ -59,6 +59,17 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
       
      
     } #end of mode changeR
+    # if mode is 'dnippets' refreshDnd
+    ptRproj<-pprj()
+    # browser()
+    cat('modeFromPath=', format(modeFromPath),"\n")
+    cat('ptRproj$pathToProj=',format(ptRproj$pathToProj),"\n")
+    if(identical(modeFromPath,'dnippets') && !is.null(ptRproj$pathToProj) && dir.exists( ptRproj$pathToProj )){
+      dndsDir<-path_join(c(ptRproj$pathToProj, resourceDir, 'dnds'))
+      cat('dndsDir=',format(dndsDir),"\n")
+      reloadDndDir(dndsDir)
+    }
+    
     savePage(tabId) # saves page to workspace
     if(sender=='fileCmd.saveAs'){
       addToRecentFiles(mssg$docFilePath)

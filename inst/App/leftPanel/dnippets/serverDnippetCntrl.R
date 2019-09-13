@@ -7,6 +7,9 @@ add2DnippetsSelectionAll<-function(dnName, dnippets ){
   dnippetSelection$all[[dnName]]=dnippets
 }
 
+removeFromDnippetsSelectionAll<-function(dnName ){
+  dnippetSelection$all<-dnippetSelection$all[[-dnName]]
+}
 
 
 observeEvent(c( getDnippetsAll(), dnippetsDB$usage, input$pages),{
@@ -25,7 +28,7 @@ observeEvent(c( getDnippetsAll(), dnippetsDB$usage, input$pages),{
     dnippets<-dnippetSelection$all[selected]
     dnippets<-unlist(dnippets,recursive=F)
     names(dnippets)<-NULL
-    if(length(dnippets)==0){
+    if(length(dnippets)==0){ 
       sendPtRManagerMessage(sender='cmd.dnippet.file.load', removeDrippets=runif(1));
     } else{
       sendPtRManagerMessage(sender='cmd.dnippet.file.load', insertDrippets=dnippets)
