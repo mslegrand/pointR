@@ -66,7 +66,7 @@ setSfDir<-function(sf_id, path, root="home"){
 
 # called whenever dirPath changes
 # sets shinyFiles to use pathToProj
-resetShinyFilesIOPaths<-function(pathToProj, resources='resources'){
+resetShinyFilesIOPaths<-function(pathToProj, resources='aux'){
   log.fin(resetShinyFilesIOPaths)
   log.val(pathToProj)
   log.val(optionDirPath())
