@@ -105,7 +105,7 @@ resetShinyFilesIOPaths<-function(pathToProj, resources='aux'){
       } else {
         jscode<-setSfDir(id, path=pathToProj)
       }
-      cat(jscode,'\n')
+      # cat(jscode,'\n')
       runjs(jscode)
     }
   } else {

@@ -74,8 +74,7 @@ javascriptPanelTag<-'javascriptPanel'
 snippetPanelTag<-'snippetPanel'
 appPanelTag<-'appPanel'
 tibTag<-'tib'
-#resourceDir='resources' # to do change to "aux"
-resourceDir='aux' # to do change to "aux"
+resourceDir='aux' 
 
 
 preprocChoices<-list(points=c("onNewPt",  "onMovePt", "onMoveMat"), values=c('onNewRow', 'onChangeRow'))
