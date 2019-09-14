@@ -57,8 +57,6 @@ initialServerAsset<-function(){
 }
 
 initialServerAssetDB<-function(){
-  # tmp<-initialServerAsset()
-  # tmp[sapply(tmp, is.null)]<-'NULL' # need to cast as character.
   initialServerAsset()[0,]
 }
 

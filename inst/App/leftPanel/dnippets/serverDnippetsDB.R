@@ -53,9 +53,6 @@ getDnippetsSelected<-reactive({
   val<-getPageDnippetsDB(input$pages)
   val<-names(which(val==TRUE))
   intersect(alles,val)
-  # val[['tabId']]<-NULL
-  # val<-unlist(val)
-  # alles[val==TRUE]
 })
 
 getDnippetsAll<-reactive({

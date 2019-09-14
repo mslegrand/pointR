@@ -6,7 +6,7 @@ statusPlotTransform<-callModule(
   module=modulePlotSVGr,
   id="svgTransformMod",
   svgID='ptR_SVG_TRANSFORM',
-  showPts.compound=NULL,
+  showPts.compound=reactive({NULL}),
   ptrDisplayScript = reactive({ 
     type=getTransformType()
     svgToolsScript(type) 

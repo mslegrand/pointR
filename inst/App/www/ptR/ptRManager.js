@@ -173,9 +173,6 @@ Shiny.addCustomMessageHandler(
               		}
               	})
           );
-          
-     	
-      	
       });
     } //endof insertDrippets
     

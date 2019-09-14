@@ -1,6 +1,5 @@
 
 rmdOut<-function(docFilePath){
-  # rmarkdown::render(docFilePath )
   if(usingElectron==TRUE){
     docFilePath<-gsub('~',homeDir,docFilePath)
     # TODO:: add check for Pandoc!!! 
@@ -59,6 +58,13 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
       
      
     } #end of mode changeR
+    # if mode is 'dnippets' refreshDnd
+    ptRproj<-pprj()
+    if(identical(modeFromPath,'dnippets') && !is.null(ptRproj$pathToProj) && dir.exists( ptRproj$pathToProj )){
+      dndsDir<-path_join(c(ptRproj$pathToProj, resourceDir, 'dnds'))
+      reloadDndDir(dndsDir)
+    }
+    
     savePage(tabId) # saves page to workspace
     if(sender=='fileCmd.saveAs'){
       addToRecentFiles(mssg$docFilePath)
@@ -66,10 +72,6 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
       cat( "tabName=",basename(docFilePath ),"\n")
       sendFileTabsMessage(title=title, tabId=tabId)
     } 
-    # else {
-    #   sendFileTabsMessage( tabId=tabId, sender='savedStatus', savedStatus='saved')
-    # }
-    #popTabRequest()
   } #end of saving
   # final clean up
   

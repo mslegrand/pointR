@@ -8,26 +8,8 @@ moduleEdTibUI<-function(id, input, output) {
   left0=5
   wid0=90
   left=120
-  tagList(
-    #begin-----------headerPanel
   
-    # #---header backdrop
-    # absolutePanel( id=ns('header'),
-    #      "class"="headerPanel", draggable=FALSE
-    # ),
-    # #---asset name
-    # #-------asset button
-    # absolutePanel(top= top0, left=left0,
-    #     div( 'class'="ptRBtn2",
-    #       actionButton(ns("newAssetsButton"), span(class='icon-plus'," Assets"))
-    #     )
-    # ),
-    # #------asset chooser
-    # absolutePanel(top= top0, left=left,  right=10,
-    #     uiOutput(ns("dataSetUI"))
-    # ),
-    
-    #---tib 
+  tagList(
     div( 
       id=ns('headEdTib'),
       #---tib column
