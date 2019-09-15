@@ -16,7 +16,8 @@ statusPlotTransform<-callModule(
   getBackDrop,
   getCode = getCode4RenderingTransform,
   getErrorMssg,
-  getTibNRow=getTibNRow 
+  getTibNRow=getTibNRow,
+  getDirPath=getDirPath
 )
 
 #error handler

@@ -96,7 +96,8 @@ statusPlotTagVal<-callModule(
   getBackDrop,
   getCode4Rendering,
   getErrorMssg,
-  getTibNRow=getTibNRow 
+  getTibNRow=getTibNRow,
+  getDirPath=getDirPath
 )
 
 observeEvent(statusPlotTagVal$status(), {
