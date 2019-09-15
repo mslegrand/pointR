@@ -103,8 +103,14 @@ processSvgR<-reactive({
         setSourceType(sourceType=RPanelTag) #no error, just R code
       } else { # presume to be svgR code
         # next check if it can be run
-        # cat("processCommit::captureOutput2\n")
-        parsedCode<-parse(text=src) 
+        # Set wd to the current project or if no project, then to home
+        dpath<-getDirPath()
+        if(identical(dpath, '~/.ptR')){
+          dpath<-'~'
+        }
+        wd<-paste0('\nsetwd("',dpath,'")\n\n')
+        parsedCode<-parse(text=paste0(wd,src) )
+        #parsedCode<-parse(text=src) 
         # svg<-eval(parsedCode)
         # if(identical(class(svg),'svgDoc')){
         #   w<-svg$root$getAttr('width')
