@@ -21,6 +21,7 @@ rmdOut<-function(docFilePath){
 processMssgFromAceMssgPageOut<-function(sender, mssg){
   id<-mssg$id
   saved<-unlist(mssg$isSaved)
+  
   log.fin(processMssgFromAceMssgPageOut)
   
   reqCmd<-peekTabCmd()
@@ -37,7 +38,7 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
     modeFromPath<-pathExt2mode(tools::file_ext(docFilePath)) # ---- reset mode if has changed! 
     updateAceExt(id, sender,  setDocFileSaved=TRUE, setMode=modeFromPath)  # resets undomanger, and possibly mode, but doesn't return anything
     setFileDescSaved(pageId=tabId, fileSaveStatus=TRUE ) # save status
-    sendFileTabsMessage( tabId=tabId, sender='savedStatus', savedStatus='saved')
+    sendFileTabsMessage( tabId=tabId, sender='savedStatus', savedStatus=TRUE)
     
     
     if(!identical(oldeMode,modeFromPath)){ #mode has changed

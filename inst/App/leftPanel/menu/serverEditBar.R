@@ -248,15 +248,19 @@ observeEvent( input$editNavBar, {
 
 # keep file menu save uptodate
 observeEvent(getFileSavedStatus(),{
-  # cat("\n*****************************getFileSavedStatus()=",getFileSavedStatus(),"\n")
-  if(getFileSavedStatus()==FALSE){
+  cat("\n*****************************getFileSavedStatus()=",getFileSavedStatus(),"\n")
+  fd<-getFileDescriptor(input$pages)
+  
+  status<-getFileSavedStatus()
+  if(!is.null(input$pages) && getFileSavedStatus()==FALSE && 
+     !identical(fd$filePath,"?")){
     # set dmdm file save active
     enableDMDM(
       session, 
       menuBarId="editNavBar", 
       entry="Save"
     )
-    status<-'notSaved'
+    #status<-FALSE #'notSaved'
   } else {
     # set dmdm file save inactive
     disableDMDM(
@@ -264,12 +268,14 @@ observeEvent(getFileSavedStatus(),{
       menuBarId="editNavBar", 
       entry="Save"
     )
-    status<-'saved'
+    #status<-TRUE #'saved'
   }
   if(!is.null(input$pages)){
       sendFileTabsMessage( tabId=input$pages, sender='savedStatus', savedStatus=status)
   }
 })
+
+
 
 #------- editor options handlers
 

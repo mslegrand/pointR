@@ -149,9 +149,13 @@ function ptRaceInit(data){
       
   var ud = new UMD(); 
   if(!!data.initSaved){
-      ud.$initiallySaved=true; //data.initSaved;
+    console.log("*********************************");
+    console.log("*** data.initSaved=" + data.initSaved);
+      ud.$initiallySaved=data.initSaved;
       console.log('---->undo manager .$initiallySaved=' + ud.$initiallySaved);
-  }      
+  } else {
+    ud.$initiallySaved=false;
+  }     
   
   theEditor.getSession().setUndoManager(ud);
       

@@ -7,6 +7,7 @@
 
 # gets what we need from fileDescDB()
 newPage<-function(tabId, title, txt, docFilePath, mode,  fileSaveStatus ){
+  # fileSaveStatus is boolean
   log.fin(newPage)
   if(is.null(tabId)){
     cat('big probs\n')

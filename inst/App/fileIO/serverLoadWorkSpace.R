@@ -69,6 +69,7 @@ restoreWorkSpace<-reactive({
     
     
     fileSaveStatus=page$fileDescriptor.isSaved
+    cat('fileSaveStatus  =', format(fileSaveStatus), "\n")
     txt=page$code
     if(fileSaveStatus==TRUE && file.exists(docFilePath)){ 
       tryCatch(
@@ -91,6 +92,9 @@ restoreWorkSpace<-reactive({
       docFilePath=docFilePath, mode=mode,
       fileSaveStatus=fileSaveStatus
     )
+    cat('\n\ntitle=',title,' fileSaveStatus  =', format(fileSaveStatus), "\n")
+    # kludge
+    #sendFileTabsMessage( tabId=tabId, sender='savedStatus', savedStatus=fileSaveStatus)
   }
   
   serverAssetDB$tib<-extractDBFromPages(wsPages, "^assetSelection.", initTib=initialServerAssetDB() )
