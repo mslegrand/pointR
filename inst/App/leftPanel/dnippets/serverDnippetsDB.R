@@ -27,7 +27,7 @@ add2DnippetDBPath<-function(dndname, dndPath){
 
 # Note:: Adds column to usage: this requires at least one page to be loaded
 add2DnippetChoices<-function(dndName, value=TRUE){
-  # todo!!!  refuse id dnName is already there
+  # refuse id dnName is already there
   if(!dndName %in% names(dnippetsDB$usage)){
       dnippetsDB$usage<-add_column(dnippetsDB$usage, !!dndName:=value)
       saveDnippetsFileNames() # save loaded dnippets even if there are no pages
