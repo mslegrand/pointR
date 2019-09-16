@@ -65,7 +65,7 @@ svgToolsScript<-function(type){
           wd<-paste0('\nsetwd("',dpath,'")\n\n')
           
           parsedCode<-parse(text=paste0(wd,codeTxt))
-          svg<-eval(parsedCode)
+          svg<-eval(parsedCode, new.env() )
           w<-svg$root$getAttr('width')
           h<-svg$root$getAttr('height')
           rtv$WH<-c(w,h)

@@ -117,7 +117,7 @@ processSvgR<-reactive({
         #   h<-svg$root$getAttr('height')
         #   #set WH in selected...
         # }
-        output<-captureOutput(eval(parsedCode))
+        output<-captureOutput(eval(parsedCode, new.env()))
         output<-paste( output, collapse="\n" )
         output<-paste("Output:",output,sep="\n")
         setCapturedMssg(output)

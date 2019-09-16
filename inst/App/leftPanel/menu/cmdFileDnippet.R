@@ -69,16 +69,17 @@ observeEvent(input$buttonDnippetImport,{
 
 # todo: reload dnds in aux/dnd/ dir
 reloadDndDir<-function(dirPath){
+ 
   dndfiles<-dir(dirPath, full.names=TRUE)
   dndNames<-basename(dndfiles)
-  dndDBNames<-dnippetsDB$paths$names
+  dndDBNames<-dnippetsDB$paths$dname
   # remove any dnd whose file has been removed
-  for(dname in dndDBNames) {
-    if(!dname %in% dndNames){ 
-      #remove column from dnippetsDB$usage
-      dnippetsDB$usage<-select(dnippetsDB$usage, -dname)
-        # row from dnippetsDB$paths
-      dnippetsDB$paths<-filter(dnippetsDB$paths, name!=dname)
+  for(sname in dndDBNames) {
+    if(!sname %in% dndNames){ #not in current dnds dir
+      #remove sname column  from dnippetsDB$usage
+      dnippetsDB$usage<-select(dnippetsDB$usage, -sname)
+        #remove sname row from dnippetsDB$paths
+      dnippetsDB$paths<-filter(dnippetsDB$paths, sname!=dname)
       removeFromDnippetsSelectionAll()
     }
   }
@@ -86,17 +87,19 @@ reloadDndDir<-function(dirPath){
   for(datapath in dndfiles ){
     try({
       dnippetText<-paste(readLines(datapath), collapse = "\n")
+      
       dnippetList<-dripplets2List2(dnippetText) # contains hint, snippet, logo where logo has been processed into SVG
       dnippets<-getDnippets4ToolBar(dnippetList) # minor reshape
-      dnName<-basename(datapath)
-      add2DnippetsSelectionAll( dnName, dnippets )
-      add2DnippetDBPath( dnName, datapath )
-      if(!dnName %in% dnippetsDB$paths$name){ 
-        # addto dnippetsDB$paths
-        add2DnippetDBPath(dnName, dndspath)
-        # add to dnippetsDB$usage 
-        add2DnippetChoices(dndnNameame, FALSE)
-      }
+      bName<-basename(datapath) 
+      add2DnippetsSelectionAll( bName, dnippets )
+      add2DnippetDBPath( bName, datapath )
+      add2DnippetChoices(bName, FALSE)
+      # if(!bName %in% dnippetsDB$paths$dname){ 
+      #   # addto dnippetsDB$paths
+      #   #  add2DnippetDBPath(dnName, dndspath)
+      #   # add to dnippetsDB$usage 
+      #   add2DnippetChoices(dndnNameame, FALSE)
+      # }
     })
   }
   refreshPageDNDs()

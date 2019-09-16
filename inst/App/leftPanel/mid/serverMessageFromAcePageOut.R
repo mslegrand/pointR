@@ -62,6 +62,7 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
     # if mode is 'dnippets' refreshDnd
     ptRproj<-pprj()
     if(identical(modeFromPath,'dnippets') && !is.null(ptRproj$pathToProj) && dir.exists( ptRproj$pathToProj )){
+     
       dndsDir<-path_join(c(ptRproj$pathToProj, resourceDir, 'dnds'))
       reloadDndDir(dndsDir)
     }

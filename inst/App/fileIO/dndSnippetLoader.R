@@ -81,6 +81,7 @@ dripplets2Rmd<-function( drps ){
 #' }
 #extractDripplet<-function(dr, tmpdir=tempdir() ){
 extractDripplet<-function(dr ){
+ 
   temp<-str_trim(unlist(str_split(dr,'\n```')))
   if(length(temp)>=6){
     temp<-temp[nchar(temp)>0]
@@ -94,7 +95,7 @@ extractDripplet<-function(dr ){
   if(all(m>0)){
     rtv<-tt
     rtv<-tryCatch({
-       svg<-as.character(eval(parse(text=tt['SVGR'])))
+       svg<-as.character(eval(parse(text=tt['SVGR']), new.env()))
        rtv["SVGR"]<-svg
        names(rtv)<-c('hint','snip','logo')[m]
        rtv
