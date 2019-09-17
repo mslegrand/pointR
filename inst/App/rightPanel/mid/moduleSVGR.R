@@ -26,7 +26,8 @@ svgToolsScript<-function(type){
     getBackDrop,
     getCode,
     getErrorMssg, 
-    getTibNRow # doesnot appear
+    getTibNRow, # doesnot appear
+    getDirPath
   ){
   ns <- session$ns
   user<-  reactiveValues( code="")
@@ -47,7 +48,7 @@ svgToolsScript<-function(type){
     codeTxt<-getCode()
     if(is.null(getSvgGrid())){return(NULL)}
     
-    # why can't I force this???
+    # 
     showPts.compound=showPts.compound #should be able to force this
     svgid<-paste0('id="', svgID, '",')
     ptrDisplyScriptTxt<-unlist(ptrDisplayScript())
@@ -56,8 +57,15 @@ svgToolsScript<-function(type){
     res<-""
     if(!is.null(codeTxt)){
       tryCatch({
-          parsedCode<-parse(text=codeTxt)
-          svg<-eval(parsedCode)
+        # Set wd to the current project or if no project, then to home
+          dpath<-getDirPath()
+          if(identical(dpath, '~/.ptR')){
+            dpath<-'~'
+          }
+          wd<-paste0('\nsetwd("',dpath,'")\n\n')
+          
+          parsedCode<-parse(text=paste0(wd,codeTxt))
+          svg<-eval(parsedCode, new.env() )
           w<-svg$root$getAttr('width')
           h<-svg$root$getAttr('height')
           rtv$WH<-c(w,h)

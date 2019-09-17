@@ -7,12 +7,16 @@ genShinySaveFilesServerConnection<-function(input, session){
 
 #needs to be in server
 genShinySaveFilesObservers<-function(input, session){
+  # "buttonFileSaveR"  "buttonFileSaveRmd" "buttonFileSavesnip" "buttonFileSavednds"  "buttonFileSavetxt"   "buttonFileSavejs" "buttonFileSavecss" 
   lapply(saveButtonFileNames, function(n){
     observeEvent(input[[n]], {
       rtList<-input[[n]]
       if('cancel' %in% names(rtList)){
         if(rtList$cancel=='close'){ 
-          tabId<-popTab()
+          tabId=popTabRequest()
+          if(mssg$docFilePath!="?"){
+            addToRecentFiles(mssg$docFilePath)
+          }
           closeTabNow(tabId)
         } else {
           setTabRequest(sender=NULL, tabs=NULL)
@@ -42,17 +46,21 @@ genShinySaveFilesObservers<-function(input, session){
           #      sets doc as SAVED
           #      If sender==close, removeTab
           #      ow. update tab title
-          sender=request$sender
-          
-          if(request$sender=='fileCmd.saveAs'){
-            sender='fileCmd.saveNow'
-          }
-          
-          tabId<-peekTab()
+          sender<-peekTabCmd() # is this needed here?
+          tabId<- peekTabRequest()
+          # sender=getRequestSender()
+          # tabId<-peekTab()
           aceId<-tabID2aceID(tabId)
+          # if(sender=='fileCmd.saveAs'){ #ideally this is always thecase
+          #   sender='fileCmd.saveNow'
+          # }
+          # update the value of the datapath in fileDescDB
+          setFileDescPath(pageId=tabId, filePath=datapath, pathToProj=editOption$currentProjectDirectory)
+          # then we should be able to read it back in server
+          
           
           # Now the sender can be close, save or saveAs, but we leave this to ace, then we need a flag to say that we changed the name!
-          updateAceExt( id=aceId, setDocFilePath=datapath,  sender=sender, getDoc=TRUE)
+          updateAceExt( id=aceId, setDocFilePath=datapath,  sender='fileCmd.saveAs', getDoc=TRUE)
         }
       }
     })

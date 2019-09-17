@@ -116,7 +116,8 @@ statusPlotPoint<-callModule(
   getBackDrop,
   getCode4Rendering,
   getErrorMssg,
-  getTibNRow=getTibNRow
+  getTibNRow=getTibNRow,
+  getDirPath=getDirPath
 )
 
 #error handler

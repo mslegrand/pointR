@@ -69,6 +69,7 @@ restoreWorkSpace<-reactive({
     
     
     fileSaveStatus=page$fileDescriptor.isSaved
+    cat('fileSaveStatus  =', format(fileSaveStatus), "\n")
     txt=page$code
     if(fileSaveStatus==TRUE && file.exists(docFilePath)){ 
       tryCatch(

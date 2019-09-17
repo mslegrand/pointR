@@ -64,7 +64,7 @@ buildLeftMenu<-function(version){
         shinyDMDMenu::menuItem("Theme" ),
         shinyDMDMenu::menuItem("Font Size"), 
         shinyDMDMenu::menuItem("Adjust Tabs",       value="adjustTabs"),
-        shinyDMDMenu::menuItem("Show White Space"),
+        shinyDMDMenu::menuItem("Toggle White Space", value="toggleWhiteSpace"),
         shinyDMDMenu::menuItem(defaultOpts$tabType)
       ),
       menuDivider(),

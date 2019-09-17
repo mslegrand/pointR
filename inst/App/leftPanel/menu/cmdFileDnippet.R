@@ -1,6 +1,8 @@
 
 cmdDnippetImport<-function(){
+   log.fin(cmdDnippetImport )
     sendPtRManagerMessage(  sender='cmd.dnippet.file.import', openFile=runif(1) )
+    log.fout(cmdDnippetImport)
 }
 
 # loads the drippets given the datapath
@@ -28,6 +30,7 @@ loadDndSnippets<-function(datapath, startup=FALSE){
 }
 
 observeEvent(input$buttonDnippetImport,{
+  log.fin(input$buttonDnippetImport )
   fp.dt<-parseFilePaths(c(home='~'), input$buttonDnippetImport)
   if(length(fp.dt)>0 && nrow(fp.dt)){
     datapath<-as.character(fp.dt$datapath[1])
@@ -51,10 +54,67 @@ observeEvent(input$buttonDnippetImport,{
       saveDnippetsFileNames()
       #load
       loadDndSnippets(dndspath)
+      # should force redraw?
+      refreshPageDNDs()
     } else { # not a project
       loadDndSnippets(datapath) # !!! may need to rethink this
+      # !!! issue: does not add to dnippetDBP
+      refreshPageDNDs()
     }
     
     
   }
+  log.fout(input$buttonDnippetImport)
 })
+
+# todo: reload dnds in aux/dnd/ dir
+reloadDndDir<-function(dirPath){
+ 
+  dndfiles<-dir(dirPath, full.names=TRUE)
+  dndNames<-basename(dndfiles)
+  dndDBNames<-dnippetsDB$paths$dname
+  # remove any dnd whose file has been removed
+  for(sname in dndDBNames) {
+    if(!sname %in% dndNames){ #not in current dnds dir
+      #remove sname column  from dnippetsDB$usage
+      dnippetsDB$usage<-select(dnippetsDB$usage, -sname)
+        #remove sname row from dnippetsDB$paths
+      dnippetsDB$paths<-filter(dnippetsDB$paths, sname!=dname)
+      removeFromDnippetsSelectionAll()
+    }
+  }
+  # refresh/add any dnd whose file has just appeared
+  for(datapath in dndfiles ){
+    try({
+      dnippetText<-paste(readLines(datapath), collapse = "\n")
+      
+      dnippetList<-dripplets2List2(dnippetText) # contains hint, snippet, logo where logo has been processed into SVG
+      dnippets<-getDnippets4ToolBar(dnippetList) # minor reshape
+      bName<-basename(datapath) 
+      add2DnippetsSelectionAll( bName, dnippets )
+      add2DnippetDBPath( bName, datapath )
+      add2DnippetChoices(bName, FALSE)
+      # if(!bName %in% dnippetsDB$paths$dname){ 
+      #   # addto dnippetsDB$paths
+      #   #  add2DnippetDBPath(dnName, dndspath)
+      #   # add to dnippetsDB$usage 
+      #   add2DnippetChoices(dndnNameame, FALSE)
+      # }
+    })
+  }
+  refreshPageDNDs()
+}
+
+refreshPageDNDs<-function(){
+  selected<-getDnippetsSelected()
+  dnippets<-dnippetSelection$all[selected]
+  dnippets<-unlist(dnippets,recursive=F)
+  names(dnippets)<-NULL
+  if(length(dnippets)==0){ 
+    sendPtRManagerMessage(sender='cmd.dnippet.refresh', removeDrippets=runif(1));
+  } else{
+    sendPtRManagerMessage(sender='cmd.dnippet.refresh', insertDrippets=dnippets)
+  }
+}
+
+

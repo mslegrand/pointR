@@ -11,11 +11,11 @@ newProj<-function(projName, parentDir, projType="generic"){
     # 2. create workspace
     wrkspacePath=file.path(pathToProj,'.workspace') 
     dir.create(wrkspacePath)
-    dir.create(path_join( c(wrkspacePath, resourceDir)))
-    dir.create(path_join( c(wrkspacePath, resourceDir, 'preprocPts')))
-    dir.create(path_join( c(wrkspacePath, resourceDir, 'preprocAts')))
-    dir.create(path_join( c(wrkspacePath, resourceDir, 'dnds')))
-    dir.create(path_join( c(wrkspacePath, resourceDir, 'snip')))
+    dir.create(path_join( c(pathToProj, resourceDir)))
+    dir.create(path_join( c(pathToProj, resourceDir, 'preprocPts')))
+    dir.create(path_join( c(pathToProj, resourceDir, 'preprocAts')))
+    dir.create(path_join( c(pathToProj, resourceDir, 'dnds')))
+    dir.create(path_join( c(pathToProj, resourceDir, 'snip')))
     # 3. fill pproj data
     if(!grepl('\\.pprj',projName)){
     projName<-paste0(projName, ".pprj")
@@ -32,7 +32,7 @@ newProj<-function(projName, parentDir, projType="generic"){
     # 5 setup
     setUpProj(projName, pathToProj, projType="generic")
     #6 invoke startup
-    request$sender<-'startup'
+    requestStartUp()
     log.fout(newProj)
 } 
 

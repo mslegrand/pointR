@@ -39,7 +39,7 @@ defaultOpts<-(function(){
     tabSize=2,
     currentFile="",       # !!! appears to be not used
     currentDirectory=".", # !!! appears to be not used
-    
+    whiteSpace=FALSE,
     currentFilePath="./",
     tabType="Use Soft Tabs",
     useTribbleFormat=TRUE,
@@ -62,6 +62,7 @@ defaultOpts<-(function(){
   opts
 })() #execute now!
  
+
 # adjust defaultOpts as needed
 if(!is.null(getShinyOption("initialPointRProject"))){
   initialPointRProject<-getShinyOption("initialPointRProject")

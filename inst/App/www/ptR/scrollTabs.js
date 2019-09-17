@@ -273,7 +273,6 @@ $(document).ready(function(){
   
   $('#editNavBar').mousedown(function(){
     var paths=stabs.getAllDocPaths();
-    // console.log(JSON.stringify(paths));
   });
 });
 
@@ -281,7 +280,7 @@ Shiny.addCustomMessageHandler(
   "scrollManager",
   function(data){
     console.log("----------entering  scrollManager------------");
-    // console.log("data is" + JSON.stringify(data));
+    console.log("data is" + JSON.stringify(data));
     if(!!data.resize){
       $(window).resize();
     }
@@ -293,8 +292,8 @@ Shiny.addCustomMessageHandler(
         stabs.resetTitleGivendataValue( data.title, data.tabId);
         stabs.reAdjust();
       }
-      if(!!data.savedStatus){
-        stabs.toggleSaveState(data.tabId, data.savedStatus!=='saved');
+      if(data.sender==='savedStatus'){
+        stabs.toggleSaveState(data.tabId, !data.saveStatus);
       }
     }
     

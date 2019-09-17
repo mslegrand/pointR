@@ -2,7 +2,9 @@
 processKnit<-reactive({
   # cat_list<<-c( cat_list,">---> processKnit\n")
   clearErrorMssg()
-  src<-request$code
+  #src<-request$code
+  src<-getCode()
+  
   setSourceType(rmdPanelTag)
   
   if(length(src)==1 && nchar(src)>0){

@@ -180,7 +180,35 @@ Shiny.addCustomMessageHandler(
           console.log('editor is null');
           return false;
         }  
-        
+        //-------------updateAll handlers---------------
+        if(sender=='updateAll'){
+              if(!!data.fontSize){
+              $('.shiny-ace').each(function(){
+                let lid=this.id;
+                $('#'+lid).data('aceEditor').setFontSize(data.fontSize);
+              });
+            }
+            if(!!data.theme){
+              $('.shiny-ace').each(function(){
+                let lid=this.id; 
+                $('#'+lid).data('aceEditor').setTheme("ace/theme/" + data.theme);
+              });
+            }
+            if(!!data.tabSize){
+              $('.shiny-ace').each(function(){
+                let lid=this.id; 
+                $('#'+lid).data('aceEditor').getSession().setTabSize(data.tabSize);
+              });
+            }
+            if(!!data.whiteSpace){
+              var wsCmd=(data.whiteSpace==='show');
+              $('.shiny-ace').each(function(){
+                let lid=this.id; 
+                $('#'+lid).data('aceEditor').setShowInvisibles(wsCmd);
+              });
+            }
+            return null;
+        }
         //---------------extract ud check------------------
         var Range = ace.require("ace/range").Range;
         var ud =  editor.getSession().getUndoManager();
@@ -422,8 +450,6 @@ Shiny.addCustomMessageHandler(
                  rnd : randomString(5)
               } );   
           }, 5 );
-          //var lang = ace.require("ace/lib/lang");
-          //lang.delayedCall(editor.getSession().getUndoManager().setOk());
           
           
           }        

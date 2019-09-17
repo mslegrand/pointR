@@ -82,6 +82,9 @@ getFileDescriptor<-function(pageId){
       fd<-fileDescDB()
       # print(fd)
       rtv<-fd[fd$tabId==pageId,] #or use filter
+      if(nrow(rtv)==0){
+        rtv<-NULL
+      }
       # print(rtv)
   } else {
     rtv<-NULL
@@ -118,6 +121,9 @@ setFileDescSaved<-function(pageId, fileSaveStatus){
         fd[fd$tabId==pageId,"isSaved"]<-fileSaveStatus 
         fileDescDB(fd) 
       }
+      cat('setFileDescSaved: pageId=',pageId,',  savedStatus=',fileSaveStatus,"\n")
+      
+      sendFileTabsMessage(tabId=pageId, sender='savedStatus', saveStatus=fileSaveStatus)
       log.fout(setFileDescSaved)
   }
 }
@@ -131,26 +137,24 @@ getAllNamedUnsavedFiles<-reactive({
   fd
 })
 
+# get the saved status for the current page
 getFileSavedStatus<-reactive({
-  # cat('>---> getFileSavedStatus\n')
   pageId<-input$pages
   if(!is.null(pageId)){
     fd<-fileDescDB()
     stopifnot('tabId' %in% names(fd))
-    # print(fd)
     tmp<-filter(fd, tabId==pageId)
-    # print(tmp)
     if(nrow(tmp)==1){
       rtv<-tmp$isSaved
     } else {
       rtv<-FALSE
     }
   } else {
-    rtv<-TRUE
+    rtv<-FALSE
   }
-  # cat('<---< getFileSavedStatus\n')
   rtv
 })
+
 
 # to be called when tab is closed
 # a tab can be closed in one of two ways:

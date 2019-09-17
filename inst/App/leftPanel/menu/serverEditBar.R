@@ -79,7 +79,9 @@ observeEvent( input$editNavBar, {
       editOption$currentProjectDirectory<-NULL
       editOption$currentProjectName<-NULL
       dirtyDMDM(session, "editNavBar")
-      delay(500, {request$sender='startup'})
+      #delay(500, {request$sender='startup'})
+      #delay(500, {setRequestSender('startup')})
+      delay(500, {requestStartUp()})
     }
     if(fileCmd=="quit"){
       # cat(' fileCmd=="quit" \n')
@@ -111,17 +113,11 @@ observeEvent( input$editNavBar, {
       showModal( modalIndentSize() )
       dirtyDMDM(session, "editNavBar")
     }
-    whiteSpace<-c("Show White Space", "Hide White Space")
-    
-    if(fileCmd %in% whiteSpace){
-      indx<-which(fileCmd==whiteSpace)
-      newLabel<-ifelse(indx==2,"Show White Space", "Hide White Space" )
-      updateAceExt(id= getAceEditorId(), sender= 'fileCmd.whitespace', toggleWhiteSpace=TRUE )
-      renameDMDM(
-        session, menuBarId="editNavBar", 
-        entry=fileCmd, 
-        newLabel = newLabel, 
-        type = "menuItem")
+    #whiteSpaceCmds<-c("Show White Space", "Hide White Space")
+    if(fileCmd == "toggleWhiteSpace"){
+      editOption$whiteSpace<-!(editOption$whiteSpace)
+      val=ifelse(editOption$whiteSpace, 'show', 'hide' )
+      updateAceExt(id=getAceEditorId(), sender='updateAll', whiteSpace=val )
       dirtyDMDM(session, "editNavBar")
     }
     
@@ -252,15 +248,21 @@ observeEvent( input$editNavBar, {
 
 # keep file menu save uptodate
 observeEvent(getFileSavedStatus(),{
-  # cat("\n*****************************getFileSavedStatus()=",getFileSavedStatus(),"\n")
-  if(getFileSavedStatus()==FALSE){
+  cat("\n*****************************getFileSavedStatus()=",getFileSavedStatus(),"\n")
+  cat("input$pages=",input$pages,"  ")
+  fd<-getFileDescriptor(input$pages)
+  cat("filePath=",format(fd$filePath),"\n")
+  cat("\n*****************************\n")
+  status<-getFileSavedStatus()
+  if(!is.null(input$pages) && getFileSavedStatus()==FALSE && 
+     !identical(fd$filePath,"?")){
     # set dmdm file save active
     enableDMDM(
       session, 
       menuBarId="editNavBar", 
       entry="Save"
     )
-    status<-'notSaved'
+    #status<-FALSE #'notSaved'
   } else {
     # set dmdm file save inactive
     disableDMDM(
@@ -268,12 +270,14 @@ observeEvent(getFileSavedStatus(),{
       menuBarId="editNavBar", 
       entry="Save"
     )
-    status<-'saved'
+    #status<-TRUE #'saved'
   }
   if(!is.null(input$pages)){
-      sendFileTabsMessage( tabId=input$pages, sender='savedStatus', savedStatus=status)
+      sendFileTabsMessage( tabId=input$pages, sender='savedStatus', saveStatus=status)
   }
 })
+
+
 
 #------- editor options handlers
 
@@ -314,15 +318,20 @@ observeEvent( editOption$currentProjectName, {
 
 
 observeEvent(editOption$fontSize, {
-  updateAceEditor(session, getAceEditorId(), fontSize=as.numeric(editOption$fontSize) )
+  updateAceExt(id=getAceEditorId(), sender='updateAll', fontSize=as.numeric(editOption$fontSize) )
+  #updateAceEditor(session, getAceEditorId(), fontSize=as.numeric(editOption$fontSize) )
 })
 
 observeEvent(editOption$theme, {
-  updateAceEditor(session, getAceEditorId(), theme=editOption$theme)
+  updateAceExt(id=getAceEditorId(), sender='updateAll', theme=editOption$theme )
+  #updateAceEditor(session, getAceEditorId(), theme=editOption$theme)
 })
 
 observeEvent(editOption$tabSize, {
-  updateAceEditor(session, getAceEditorId(),  tabSize=as.numeric(editOption$tabSize))
+  # todo: change to update all tabSizes?
+  updateAceExt(id=getAceEditorId(), sender='updateAll', 
+               tabSize=as.numeric(editOption$tabSize)) 
+  # updateAceEditor(session, getAceEditorId(),  tabSize=as.numeric(editOption$tabSize))
 }, ignoreNULL = TRUE, ignoreInit = TRUE)
 
 

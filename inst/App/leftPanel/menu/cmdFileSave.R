@@ -3,8 +3,32 @@ cmdFileSave<-function(){
 }
 
 cmdFileSaveAll<-function(){
-  sendFileTabsMessage(sender= 'fileCmd.save', getAllTabIds=runif(1))
+  tabIds<-getAllNamedUnsavedFiles()$tabId
+  if(length(tabIds)>0){
+    setTabRequest(sender= 'fileCmd.save', tabs=tabIds)
+  }
 }
 
+observeEvent(getFileDescriptor(input$pages),{
+ 
+  fd<-getFileDescriptor(input$pages)
+  if(nrow(fd)>0){
+    if( fd$isSaved==FALSE  && fd$filePath!="?"){
+      enableDMDM(session,  menuBarId="editNavBar", entry="Save")
+    }else{
+      disableDMDM(session,  menuBarId="editNavBar", entry="Save")
+    } 
+  }
+})
+
+
+observeEvent(getAllNamedUnsavedFiles(),{
+  fd<-getAllNamedUnsavedFiles()
+  if(nrow(fd)==0){
+    disableDMDM(session,  menuBarId="editNavBar", entry="saveAll")
+  } else {
+    enableDMDM(session,  menuBarId="editNavBar", entry="saveAll")
+  }
+})
 
   

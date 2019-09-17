@@ -15,10 +15,10 @@ observeEvent(input$buttonExportSVG,{
     fileName<-gsub(pattern = '^NA/', "~/", fileName)
     src<- getCode()
     parsedCode<-parse(text=src)
-    txt<-as.character(eval(parsedCode))
+    txt<-as.character(eval(parsedCode), new.env() )
     writeLines(txt, fileName)
-    if(getFileNameStatus()==FALSE){
-      fileName<-sub("\\.svg$", ".R", fileName)
+    if(getFileNameStatus()==FALSE){ 
+      fileName<-sub("\\.svg$", ".R", fileName) # appears to setCurrentFilePath unnamed.R ???
       setCurrentFilePath(fileName)
     }
   }

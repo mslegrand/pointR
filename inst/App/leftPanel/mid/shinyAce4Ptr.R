@@ -20,6 +20,7 @@ initialPtrAceOptions<-function(
   value="",
   theme="chrome",
   fontSize=16,
+  tabSize=2,
   mode="ptr",
   autoComplete=c("disabled", "enabled", "live"),
   autoCompleteList=NULL,
@@ -36,6 +37,7 @@ initialPtrAceOptions<-function(
     gsub("[^[:alnum:]]", "", id)
   }
   id<-sanitizeId(outputId)
+ 
   # cat('sanitizeId(outputId)=', id,'\n')
   editorVar = paste0("editor__",sanitizeId(outputId))
   acejs = file.path(system.file(package="pointR"), "App/www/Acejs")
@@ -61,6 +63,8 @@ shinyAce4Ptr <- function(
     height="100%", 
     theme="chrome", #assigned defaultOpts["theme"]
     fontSize=16,# assigned defaultOpts["fontSize"]
+    tabSize=2,
+    whiteSpace=F,
     mode="ptr", #assigned
     autoComplete= "enabled", #asssigned enabled
     autoCompleteList=NULL, #assigned names(svgR:::eledefs) when mode is 'ptr
@@ -72,14 +76,19 @@ shinyAce4Ptr <- function(
     initSaved=initSaved #assigned
   ){
   # cat('shinyAce4Ptr:: outputId=',outputId,"\n")
+  
     if(is.null(theme)){
       theme<-"chrome"
     }
+  
     saceList<-aceEditor(
-      outputId,
-      value,
-      'text',
+      outputId=outputId,
+      value=value,
+      mode='text',
       autoComplete='disabled',
+      fontSize=fontSize,
+      showInvisibles=whiteSpace,
+      tabSize=tabSize,
       theme=theme,
       height='100%'
     )

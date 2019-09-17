@@ -27,9 +27,14 @@ closeRfn<-function(tabId){
   paste0("event.stopPropagation();Shiny.onInputChange('closeTab',  {id:'",tabId,"', type: 'tabId'} ); return false")
 }
 
-tabTitleRfn<-function(tabName, tabId, docFilePath){
+tabTitleRfn<-function(tabName, tabId, docFilePath, fileSaveStatus){
+  if(fileSaveStatus==FALSE){
+    tabNameClass<-"tabTitle star"
+  } else {
+    tabNameClass<-"tabTitle"
+  }
   span(
-    bs_embed_tooltip(span(tabName, "class"="tabTitle"), title=docFilePath),
+    bs_embed_tooltip(span(tabName, "class"=tabNameClass), title=docFilePath),
     span( " " , class='icon-cancel', onclick=closeRfn(tabId))  
   )
 }
@@ -51,7 +56,6 @@ closeTabNow<-function(tabId2X){
 # fontsize should be read from options 
 addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FALSE){
   log.fin(addFileTab)
-  # cat("addFileTab:: mode=",mode,"\n")
   tabId<-getNextTabId()
   
   if(is.null(tabId)){ cat("tabId is null\n"); browser() }
@@ -63,7 +67,7 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FA
                  docFilePath=docFilePath, mode=mode,
                  fileSaveStatus=fileSaveStatus)
   
-  
+  #sendFileTabsMessage(tabId=pageId, sender='savedStatus', saveStatus=fileSaveStatus,resize=runif(1))
   sendFileTabsMessage(resize=runif(1))
   log.fout(addFileTab)
   return(tabId)
@@ -98,16 +102,32 @@ observeEvent(input$tabManager,{
 #  2. ace 
 # if non-empty, first request with 1st tab forwarded to ace (save/close/saveAs) 
 observeEvent(c(request$trigger,request$tabs), {
-  if(length(request$tabs)>0 && length(request$sender )>0){
-    tabId<-peekTab()
-    sender<-request$sender #getSender()
-    aceId<-tabID2aceID(tabId)
-    updateAceExt( id=aceId, sender=sender, getDoc=TRUE)
-  } else {
-    if(identical(request$sender, 'fileCmd.quit')){
-      cmdQuitNow()
+  if(length(request$tabs)>0){
+    sender<-peekTabCmd()
+    tabId<-peekTabRequest()
+    docFilePath<-getFileDescriptor(tabId)$filePath
+    if((docFilePath=='?' && 
+        sender %in% c( 'buttonCmd.rmdViewer', "buttonCmd.runApp")
+       ) || (
+         sender=='fileCmd.saveAs'
+       )
+    ){ #need user to assign Path
+      
+      ext<-mode2pathExt( getMode() )
+      ext<-shinyFiles:::formatFiletype(ext)
+      target<-saveButtonFileNames[[getMode()]]
+      sendPtRManagerMessage( # triggers shinyFiles
+        sender=sender, saveFile=TRUE,  
+        target=target, tabId=tabId 
+      ) 
+    } else {
+      aceId<-tabID2aceID(tabId)
+      updateAceExt( id=aceId, sender='fileCmd.save', 
+                    getDoc=TRUE, 
+                    getSaved=TRUE, 
+                    getFilePath=TRUE
+      )
     }
   }
 }, label='request-tabs-trigger')
-
 

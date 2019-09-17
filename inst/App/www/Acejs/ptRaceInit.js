@@ -106,6 +106,10 @@ function ptRaceInit(data){
   } else {
     console.log('mode is null');
   }
+  if(!!data.fontSize){
+    console.log('setfontsize='+data.fontSize);
+    theEditor.getSession().setOption('fontSize', data.fontSize);
+  }
   
   $el.data('errorMarkerArray', []);
   
@@ -145,9 +149,13 @@ function ptRaceInit(data){
       
   var ud = new UMD(); 
   if(!!data.initSaved){
-      ud.$initiallySaved=true; //data.initSaved;
+    console.log("*********************************");
+    console.log("*** data.initSaved=" + data.initSaved);
+      ud.$initiallySaved=data.initSaved;
       console.log('---->undo manager .$initiallySaved=' + ud.$initiallySaved);
-  }      
+  } else {
+    ud.$initiallySaved=false;
+  }     
   
   theEditor.getSession().setUndoManager(ud);
       

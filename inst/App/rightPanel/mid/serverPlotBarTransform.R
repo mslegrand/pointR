@@ -6,7 +6,7 @@ statusPlotTransform<-callModule(
   module=modulePlotSVGr,
   id="svgTransformMod",
   svgID='ptR_SVG_TRANSFORM',
-  showPts.compound=NULL,
+  showPts.compound=reactive({NULL}),
   ptrDisplayScript = reactive({ 
     type=getTransformType()
     svgToolsScript(type) 
@@ -16,7 +16,8 @@ statusPlotTransform<-callModule(
   getBackDrop,
   getCode = getCode4RenderingTransform,
   getErrorMssg,
-  getTibNRow=getTibNRow 
+  getTibNRow=getTibNRow,
+  getDirPath=getDirPath
 )
 
 #error handler
