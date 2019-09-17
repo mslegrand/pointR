@@ -293,8 +293,7 @@ Shiny.addCustomMessageHandler(
         stabs.reAdjust();
       }
       if(data.sender==='savedStatus'){
-        console.log('####### scrolltabs data.savedStatus='+data.savedStatus );
-        stabs.toggleSaveState(data.tabId, !data.savedStatus);
+        stabs.toggleSaveState(data.tabId, !data.saveStatus);
       }
     }
     

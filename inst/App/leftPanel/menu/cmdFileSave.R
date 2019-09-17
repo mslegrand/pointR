@@ -13,7 +13,7 @@ observeEvent(getFileDescriptor(input$pages),{
  
   fd<-getFileDescriptor(input$pages)
   if(nrow(fd)>0){
-    if( fd$isSaved==F  && fd$filePath!="?"){
+    if( fd$isSaved==FALSE  && fd$filePath!="?"){
       enableDMDM(session,  menuBarId="editNavBar", entry="Save")
     }else{
       disableDMDM(session,  menuBarId="editNavBar", entry="Save")

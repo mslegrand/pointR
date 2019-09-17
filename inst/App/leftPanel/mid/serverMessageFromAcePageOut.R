@@ -38,7 +38,7 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
     modeFromPath<-pathExt2mode(tools::file_ext(docFilePath)) # ---- reset mode if has changed! 
     updateAceExt(id, sender,  setDocFileSaved=TRUE, setMode=modeFromPath)  # resets undomanger, and possibly mode, but doesn't return anything
     setFileDescSaved(pageId=tabId, fileSaveStatus=TRUE ) # save status
-    sendFileTabsMessage( tabId=tabId, sender='savedStatus', savedStatus=TRUE)
+    sendFileTabsMessage( tabId=tabId, sender='savedStatus', saveStatus=TRUE)
     
     
     if(!identical(oldeMode,modeFromPath)){ #mode has changed
@@ -62,7 +62,6 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
     # if mode is 'dnippets' refreshDnd
     ptRproj<-pprj()
     if(identical(modeFromPath,'dnippets') && !is.null(ptRproj$pathToProj) && dir.exists( ptRproj$pathToProj )){
-     
       dndsDir<-path_join(c(ptRproj$pathToProj, resourceDir, 'dnds'))
       reloadDndDir(dndsDir)
     }

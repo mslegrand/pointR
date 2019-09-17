@@ -1,9 +1,4 @@
-  # tabId=page$fileDescriptor.tabId
-  # 
-  # mode=page$fileDescriptor.mode
-  # docFilePath=page$fileDescriptor.filePath
-  # fileSaveStatus=page$fileDescriptor.isSaved 
-
+  
 
 # gets what we need from fileDescDB()
 newPage<-function(tabId, title, txt, docFilePath, mode,  fileSaveStatus ){
@@ -13,20 +8,7 @@ newPage<-function(tabId, title, txt, docFilePath, mode,  fileSaveStatus ){
     cat('big probs\n')
     stop()
   }
-  # fd<-fileDescDB()
-  # fd<-fd[fd$tabId==tabId,]
-  # mode=fd.mode
-  # docFilePath=fd.filePath
   aceId<-tabID2aceID(tabId)
-  # fileSaveStatus<-fd.fileDescriptor.isSaved 
-  
-  # if(!identical(docFilePath, "?")){
-  #   title=basename(docFilePath)
-  # } else {
-  #   title=paste('Anonymous', page$fileDescriptor.anonNo)
-  # }
-  # cat('newPage mode= ',format(mode),'\n')
-  # cat('title=',title,"\n")
   if(mode=='javascript'){
     divClass="cAceContainer"
   } else if(mode=='ptr' && !title %in% c('app.R','App.R')){
@@ -37,7 +19,7 @@ newPage<-function(tabId, title, txt, docFilePath, mode,  fileSaveStatus ){
   appendTab(
     inputId = "pages", select=TRUE,
     tabPanel(
-      title=tabTitleRfn(title, tabId, docFilePath), # maybe we should save title in fileDescriptor?
+      title=tabTitleRfn(title, tabId, docFilePath, fileSaveStatus), # maybe we should save title in fileDescriptor?
       div(
         class=divClass,
         overflow= "hidden",inline=FALSE,

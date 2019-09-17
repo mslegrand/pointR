@@ -92,9 +92,6 @@ restoreWorkSpace<-reactive({
       docFilePath=docFilePath, mode=mode,
       fileSaveStatus=fileSaveStatus
     )
-    cat('\n\ntitle=',title,' fileSaveStatus  =', format(fileSaveStatus), "\n")
-    # kludge
-    #sendFileTabsMessage( tabId=tabId, sender='savedStatus', savedStatus=fileSaveStatus)
   }
   
   serverAssetDB$tib<-extractDBFromPages(wsPages, "^assetSelection.", initTib=initialServerAssetDB() )
