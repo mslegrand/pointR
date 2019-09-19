@@ -69,7 +69,12 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
     savePage(tabId) # saves page to workspace
     if(sender=='fileCmd.saveAs'){
       addToRecentFiles(mssg$docFilePath)
-      title=as.character(tabTitleRfn( tabName=basename(docFilePath ), tabId=tabId, docFilePath=docFilePath ))
+      title=as.character(
+        tabTitleRfn( tabName=basename(docFilePath ), 
+                      tabId=tabId, 
+                     docFilePath=docFilePath,
+                     fileSaveStatus=TRUE
+      ))
       cat( "tabName=",basename(docFilePath ),"\n")
       sendFileTabsMessage(title=title, tabId=tabId)
     } 

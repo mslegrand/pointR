@@ -33,10 +33,13 @@ function SnippetToolBaR(containerId, listId, buttonDownId, buttonUpId, itemHeigh
       $(this.downId).show();
     } else if( deltaHidden < 0 ){ // deltaHidden<=0; container grew, hidden decreased
       // slide list down by the amount -deltaHidden
-      if(deltaHidden>-this.itemHeight){
-        $(this.listId).animate({top:0},'fast');
-      } else{
-        $(this.listId).animate({top:"-="+ deltaHidden +"px"},'fast');
+      if(this.heightOfHidden()<=0){
+         $(this.listId).animate({top:0},'fast');
+         $(this.upId).hide();
+         $(this.downId).hide();
+      } else if( this.getTopPos()<= -this.heightOfHidden()-6){
+         $(this.listId).animate({top:-this.heightOfHidden()-6},'fast');
+         $(this.downId).hide();
       }
     }
     if( this.getTopPos()>=0){
@@ -53,14 +56,13 @@ function SnippetToolBaR(containerId, listId, buttonDownId, buttonUpId, itemHeigh
   
 
   SnippetToolBaR.prototype.onDownClick = function(){
-    var m1 = $(this.containerId).outerHeight()-2*this.itemHeight;
-    var m2 = (this.heightOfHidden()+ this.getTopPos()); 
-    var delta = Math.min(m1,m2);
-    if(m2<=m1){
-      $(this.downId).fadeOut('slow');
-      delta=delta+8;
+    var delta  = 0.5*$(this.containerId).outerHeight();
+    var tp = this.getTopPos() - delta;
+    if( ( tp + this.heightOfHidden() )<=0 ){
+        tp = -this.heightOfHidden()-6;
+        $(this.downId).fadeOut('slow');
     }
-    $(this.listId).animate({top:"-=" + delta + "px"},'slow',function(){$(this.upId).fadeIn('slow');});
+    $(this.listId).animate({top: tp },'slow',function(){$(this.upId).fadeIn('slow');});
     $(this.upId).fadeIn('slow');
   };
     

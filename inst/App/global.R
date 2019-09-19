@@ -84,11 +84,13 @@ source("util/extNmode.R")
 source("util/logger.R")
 
 #---used to build the UI portion
+
 source("fileIO/genShinyFilesOpenButtons.R")
 source("fileIO/genShinyFilesSaveButtons.R")
 source("leftPanel/menu/UIbuildLeftMenu.R")
 source("leftPanel/mid/UIcontextMenu.R")
 source("leftPanel/toolbar/buildLeftHToolBarUI.R")
+source("rightPanel/mid/rowIndexCtrl.R")
 source("rightPanel/preProc/pointPreprocessor.R")
 source("rightPanel/menu/buildRightMenuUI.R")
 source("leftPanel/mid/shinyAce4Ptr.R")
@@ -102,6 +104,6 @@ source("rightPanel/header/moduleEdAsset.R")
 source("rightPanel/header/moduleEdTib.R")
 source("rightPanel/header/moduleEdTransform.R")
 source("rightPanel/mid/moduleLog.R")
-source("rightPanel/mid/moduleRowDND.R")
+#source("rightPanel/mid/moduleRowDND.R")
 source("rightPanel/mid/moduleSVGR.R")
 
