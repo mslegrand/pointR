@@ -89,7 +89,7 @@ shinyServer(function(input, output,session) {
   source("rightPanel/header/serverEdTib.R",                      local=TRUE)
   source("rightPanel/header/serverEdTransform.R",                local=TRUE)
   source("rightPanel/header/serverEdAsset.R",                    local=TRUE)
-  source("rightPanel/mid/serverRowDND.R",                        local=TRUE)
+  source("rightPanel/mid/serverRowIndexCtrl.R",                  local=TRUE)
   source("rightPanel/mid/serverPlotBarPoints.R",                 local=TRUE) 
   source("rightPanel/mid/serverPlotBarSVG.R",                    local=TRUE) 
   source("rightPanel/mid/serverPlotBarTagValues.R",              local=TRUE)  

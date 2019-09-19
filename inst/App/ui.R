@@ -176,7 +176,9 @@ shinyUI(
           div( id="midRightPanels", class="cMidPanel ctop140",
             div( id='svgOutPanel',  class="cSvgOut", uiOutput("MidRightPanel")),
             div( id='rowOutPanel',  class='cRowOut', 
-                 uiOutput("LeftMidRightPanel"),visibility='hidden',
+                 #uiOutput("LeftMidRightPanel"),
+                 rowIndexCtrl('rowIndex'),
+                 visibility='hidden',
                  div( id='rowScrollUp', class='snippetButton  cTop center cRowButtonUp', height="22px",
                       span('class'="glyphicon glyphicon-chevron-up") 
                  ),
