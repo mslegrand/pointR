@@ -1,0 +1,11 @@
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:ev='http://www.w3.org/2001/xml-events' width='400' height='200'>
+  <script type='application/ecmascript'><![CDATA[
+  function clicked(){
+            alert("hello");
+        }
+  ]]></script>
+  <path d='M 200,180 L 360,180 A 160,160,180,0,0,313.137084989848,66.8629150101524 Z ' stroke='#0000FF' stroke-width='2' fill='lightgreen'/>
+  <path d='M 200,180 L 360,180 A 160,160,180,0,0,40,180 Z ' stroke='#0000FF' stroke-width='2' fill='none'/>
+  <path d='M 360,180 A 160,160,180,0,0,40,180' stroke='#AA00FF' stroke-width='20' fill='none' onclick='alert("hello")'/>
+  <circle r='8' fill='blue' cx='313.137084989848' cy='66.8629150101524'/>
+</svg>

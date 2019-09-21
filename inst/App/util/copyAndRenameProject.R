@@ -25,7 +25,7 @@ copyAndRenameProject<-function(sourceProject, targetName, pathToTargetParent ){
   ptRproj$pathToProj<-sub(path_home(),'~', ptRproj$pathToProj) #l;udge for portability
   sourcePath<-dirname(sourceProject)
   
-  projName<-sub('\\.pprj', '', targetName)
+  projName<-sub('\\.pprj$', '', targetName)
   pathToProjParent<-pathToTargetParent
  
   
