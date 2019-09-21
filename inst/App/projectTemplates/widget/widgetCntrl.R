@@ -3,7 +3,7 @@ library(svgR)
 
 try({ removeInputHandler("widgetCntrlBinding") })
 
-widgetSvgCntrl<-function(args){
+widgetSvgCntrl<-function(params){
     source('widget_svg.R', local=T)$value
 }
 

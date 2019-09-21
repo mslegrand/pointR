@@ -88,9 +88,11 @@ observeEvent(input$modalNewShinyCntrlProjOk, {
     # 3 register in recent projects.
     
     # prepare to process
-    templateName<-requestedProjTemplateName()
+    templateName<-requestedProjTemplateName() 
     templatePath<- projTemplatesPaths[templateName] # the clone path of this project.
-    templateName.pprj<-paste0(templateName,'.pprj')  # namesassigned to the .pprj
+    #browser()
+    templateName.pprj<-dir(templatePath,pattern=".pprj$")
+      #paste0(templateName,'.pprj')  # namesassigned to the .pprj
     
     pathToProjParent<-datapath # input$parentProjDirectoryName # parent directory of new project
     

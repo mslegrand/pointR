@@ -9,12 +9,11 @@ R<-.4*WH[1]
 CMD<-""
 R0<-10
 
-if(exists("args")){
-    WH<-args$WH
-    theta0<-args$theta0
-    CXY<-args$CXY
-    R<-args$R
-    CMD=args$CMD
+#----------function override of params---------- 
+if(exists("params") ){
+    for(n in names(params)){
+        assign(n, params[[n]])
+    }
 }
 
 theta2pos<-function(theta, cxy=CXY, r=R){
