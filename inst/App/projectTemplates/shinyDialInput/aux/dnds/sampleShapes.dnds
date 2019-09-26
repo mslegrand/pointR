@@ -366,7 +366,7 @@ POPUP
 Sample Quadratic Bezier
 ```
 SNIPPET
-  ```
+```
 path(
     d=list(
       ${1:M=c(.2,.2)*WH,} 
@@ -407,7 +407,7 @@ POPUP
 Sample Extended Quadratic Bezier
 ```
 SNIPPET
-  ```
+```
 path(
     d=list(
       ${1:M=c(.3,.1)*WH,} 
