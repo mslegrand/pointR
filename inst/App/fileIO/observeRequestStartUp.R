@@ -1,10 +1,8 @@
-#observeEvent(request$sender,{
-  #if(identical(request$sender,'startup')){ 
+
 observeEvent(trigger$startup, {
     log.fin(startup)
     reOrgPanels(id=NULL, mode=NULL)
-    readDnippetsFileNames()
-    saveDnippetsFileNames()
+    readAuxDnippets()
     aceId<-restoreWorkSpace()
     if(is.null(aceId)){
         cmdFileNewPtR()

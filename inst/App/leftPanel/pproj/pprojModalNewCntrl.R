@@ -48,7 +48,7 @@ requestedProjTemplateName<-reactiveVal("")
 
 observeEvent(input$modalNewShinyCntrlProjOk, {
   # Check that data object exists and is data frame.
-  templateName<-input$prjTmplName
+  templateName<-requestedProjTemplateName()
   projectName<-input$modalProjName
   if(!is.null(projectName)){
     projectName<-str_trim(projectName)
@@ -59,7 +59,6 @@ observeEvent(input$modalNewShinyCntrlProjOk, {
     datapath<-str_trim(datapath)
     if(nchar(datapath)==0){datapath<-NULL }
   }
-  
   if (is.null(projectName) ) {
     mssg='Please specify the project name'; 
     failed = 1
@@ -72,11 +71,15 @@ observeEvent(input$modalNewShinyCntrlProjOk, {
   } else if( file.access(datapath, mode=2)<0 ){
     mssg<- paste('This path specified below is not writable. Please specify a different project path')
     failed = 2
-  } else {
+  } else if( file.exists(file.path(datapath,projectName))){
+    mssg=paste(file.path(datapath,projectName),'exists. Please specify different name or path');
+    failed=1
+  } else{
     failed =0
   }
   if(failed!=0){
-    showModal(newProjModal(failed = 1, mssg=mssg, datapath=datapath, projectName = projectName, projTemplateName=templateName))
+    showModal(newProjShinyCntrlModal(failed = failed, mssg=mssg, datapath=datapath, 
+                           projectName = projectName, projTemplateName=templateName))
   } else {
     
     # try to add file and workspace, if not writable , return fail
@@ -90,10 +93,8 @@ observeEvent(input$modalNewShinyCntrlProjOk, {
     # prepare to process
     templateName<-requestedProjTemplateName() 
     templatePath<- projTemplatesPaths[templateName] # the clone path of this project.
-    #browser()
     templateName.pprj<-dir(templatePath,pattern=".pprj$")
-      #paste0(templateName,'.pprj')  # namesassigned to the .pprj
-    
+
     pathToProjParent<-datapath # input$parentProjDirectoryName # parent directory of new project
     
     projName<-gsub('\\.pprj$','',projectName)  # the name of of new project

@@ -1,5 +1,23 @@
 
-#restoreWorkSpace<-function( workSpaceDir=getWorkSpaceDir(), pprjPath=getProjectFullPath(), session=getSession() ){
+syncDndDB<-function(usageDB){
+  
+  dndNames<-getDnippetsAll()
+  usageNames<-names(usageDB)
+  usageNames<-usageNames[usageNames!='tabId']
+  for(sname in usageNames) {
+    if(!sname %in% dndNames){ #remove col if usagename not in current dnds dir
+      usageDB<-select(usageDB, -sname)
+    }
+  }
+  
+  for(sname in dndNames) {#
+    if(!sname %in% usageNames){ #not in  usageDB
+      usageDB<-add_column(usageDB, sname=FALSE)
+    }
+  }
+  usageDB
+}
+
 restoreWorkSpace<-reactive({
   log.fin(restoreWorkSpace)
   workSpaceDir=getWorkSpaceDir()
@@ -69,7 +87,7 @@ restoreWorkSpace<-reactive({
     
     
     fileSaveStatus=page$fileDescriptor.isSaved
-    cat('fileSaveStatus  =', format(fileSaveStatus), "\n")
+    
     txt=page$code
     if(fileSaveStatus==TRUE && file.exists(docFilePath)){ 
       tryCatch(
@@ -110,11 +128,11 @@ restoreWorkSpace<-reactive({
   
   
 
-  dnippetsDB$usage<-extractDBFromPages(wsPages, "^dnip.", initTib=tibble(tabId='bogus')[0,] )
-  # browser()
-  dnippetsDB$usage[is.na(dnippetsDB$usage)]<-FALSE # TODO!!! remove when dnippets becomes stable
-  # dnippetsDB$usage<-select(dnippetsDB$usage, -c("sampleShapes.dnippets")) # TODO!!! remove when dnippets becomes stable
-  # browser()
+  usageDB<-extractDBFromPages(wsPages, "^dnip.", initTib=tibble(tabId='bogus')[0,] )
+  usageDB[is.na(usageDB)]<-FALSE
+  usageDB<-syncDndDB(usageDB)
+  dnippetsDB$usage<-usageDB
+  
   preProcDB$points<-extractDBFromPages(wsPages, "^preprocScripts.", initTib=initialPreprocDB())
 
   tib<-extractDBFromPages(wsPages, "^fileDescriptor.", initTib=initialFileDescDB() )

@@ -17,7 +17,6 @@ cmdQuitNow<-reactive({
   opts<-isolate(reactiveValuesToList((editOption)))
   opts<-sapply(opts,unlist, USE.NAMES = T, simplify = F )
   writeOptionsJSON(opts)
-  #js$closeWindow()
   sendPtRManagerMessage(sender='closePtRWindowNow', now=TRUE)
   Sys.sleep(1)
   
@@ -27,7 +26,6 @@ cmdQuitNow<-reactive({
 
 
 fileQuitModal<-function(choices){
-  # doQuit<-"shinyjs.triggerButtonOnEnter(event,\"quitNow\")"
   modalDialog( 
     # onkeypress=doQuit, 
     span('The following named files have unsaved changes.'), 
@@ -50,33 +48,26 @@ fileQuitModal<-function(choices){
 
 observeEvent(input$checkAll,{
   removeModal()
-  saveDnippetsFileNames()
   savePage(input$pages)
   # now put tabs on tab list and save all
-  # cat('>---> checkAll\n')
   selection<-getAllNamedUnsavedFiles()$tabId
   if(length(selection)==0){
     cmdQuitNow()
   } else {
     #iterate over each tab id selection and save each, then quit 
-        
     setTabRequest(sender='fileCmd.quit', tabs=selection)
   }
-  # cat('<---< checkAll\n')
 })
 
 observeEvent(input$quitNow,{
   selection<-input$namedUnsavedFilesChBox
   removeModal()
-  saveDnippetsFileNames()
   savePage(input$pages)
   # now put tabs on tab list and save all
   if(length(selection)==0){
     cmdQuitNow()
   } else {
     #iterate over each tab id selection and save each, then quit 
-    
-    
     setTabRequest(sender='fileCmd.quit', tabs=selection)
   }
   

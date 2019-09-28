@@ -12,10 +12,7 @@
 #  for the time being we just close
 closeCurrentProj<-function(){
   storeAssetState()
-  saveDnippetsFileNames()
-  
   savePage(input$pages)
-
   pprj(NULL)
   if(!is.null(editOption$currentProjectName)){
     addToRecentProjects(editOption$currentProjectDirectory, editOption$currentProjectName )
