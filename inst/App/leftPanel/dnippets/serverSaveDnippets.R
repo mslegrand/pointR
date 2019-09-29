@@ -1,11 +1,4 @@
 
-saveDnippetsFileNames<-function(path=getWorkSpaceDir()){
-  log.fin(saveDnippetsFileNames)
-  fileName=path_join(c(path,"loadedDnippets.rda"))
-  rtv<-dnippetsDB$paths
-  saveRDS(object=rtv, file = fileName)
-  log.fout(saveDnippetsFileNames)
-}
 
 
 
@@ -94,7 +87,9 @@ getDndAuxPath<-reactive({file.path(getDirPath(),'aux','dnds')})
 
 readAuxDnippets<-function(fp, startup=TRUE){
   dndAuxPath<-getDndAuxPath()
+  
   dPaths<-list.files(dndAuxPath, full.names=TRUE)
+  #browser()
   if(length(dPaths)==0){
     sampleDnippetPath<-path_join(c(system.file('App', package='pointR'), 'templates', 'sampleShapes.dnds'))
     dPaths=sampleDnippetPath

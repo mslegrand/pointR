@@ -9,12 +9,11 @@
 
 dnippetsDB<-reactiveValues(
   usage=tibble(tabId='bogus')[0,]#,
-  #paths=tibble(fullpath="datapath", dname="dnName" )[0,]
 )
 
 resetDnippetsDB<-function(){
   dnippetsDB$usage=tibble(tabId='bogus')[0,]
-  #dnippetsDB$paths=tibble(fullpath="datapath", dname="dnName" )[0,]
+  dnippetSelection$all=list()
 }
 
 
