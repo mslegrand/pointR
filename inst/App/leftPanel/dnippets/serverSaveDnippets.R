@@ -87,9 +87,7 @@ getDndAuxPath<-reactive({file.path(getDirPath(),'aux','dnds')})
 
 readAuxDnippets<-function(fp, startup=TRUE){
   dndAuxPath<-getDndAuxPath()
-  
   dPaths<-list.files(dndAuxPath, full.names=TRUE)
-  #browser()
   if(length(dPaths)==0){
     sampleDnippetPath<-path_join(c(system.file('App', package='pointR'), 'templates', 'sampleShapes.dnds'))
     dPaths=sampleDnippetPath

@@ -1,5 +1,5 @@
 #' sets preproc value for 'onChangeRow' for 
-#'   1. when row is changed by row selector in serverRowDND.R
+#'   1. when row is changed by row selector in serverRowIndexCtrl.R
 #'   2. when row is changed by mouse click (in value mode: tagDrag.mouse in serverMouseCmdValue.R) 
 preprocTrySetAttrValue<-function( cmd.Row, ptDefs, rowIndex, selection){
 

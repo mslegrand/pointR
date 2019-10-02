@@ -33,7 +33,13 @@ lapply(unlist(preprocChoices, use.names = FALSE), function(name){
 
 
 
-output$ptPreProcSource<-renderText('Point Preprocessor')
+output$ptPreProcSource<-renderText(
+  if(identical(getColumnType(),'points')){
+    'Point Preprocessor'
+  } else {
+    'Attribute Value Preprocessor'
+  }
+)
 
 observeEvent( input$commitPtPreProcButton,{ 
   
