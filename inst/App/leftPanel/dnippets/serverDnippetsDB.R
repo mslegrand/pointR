@@ -8,29 +8,21 @@
 # the columns for the dnames are booleans
 
 dnippetsDB<-reactiveValues(
-  usage=tibble(tabId='bogus')[0,],
-  paths=tibble(fullpath="datapath", dname="dnName" )[0,]
+  usage=tibble(tabId='bogus')[0,]#,
 )
 
 resetDnippetsDB<-function(){
   dnippetsDB$usage=tibble(tabId='bogus')[0,]
-  dnippetsDB$paths=tibble(fullpath="datapath", dname="dnName" )[0,]
+  dnippetSelection$all=list()
 }
 
-add2DnippetDBPath<-function(dndname, dndPath){
-  if( !dndname %in% dnippetsDB$paths$dname){ # add if not there
-    dnippetsDB$paths<-add_row(dnippetsDB$paths, fullpath=dndPath, dname=dndname  )
-  } else { # replace if an entry for this dnd already exists
-    dnippetsDB$paths[dnippetsDB$paths$dname == dndname  , names(dnippetsDB$paths)=='fullpath']<-dndPath
-  }
-}
+
 
 # Note:: Adds column to usage: this requires at least one page to be loaded
 add2DnippetChoices<-function(dndName, value=TRUE){
   # refuse id dnName is already there
   if(!dndName %in% names(dnippetsDB$usage)){
       dnippetsDB$usage<-add_column(dnippetsDB$usage, !!dndName:=value)
-      saveDnippetsFileNames() # save loaded dnippets even if there are no pages
   }
 }
 
@@ -56,21 +48,22 @@ getDnippetsSelected<-reactive({
 })
 
 getDnippetsAll<-reactive({
-  dnippetsDB$paths$dname
+  names(dnippetSelection$all)
 })
 
 setDnippetsSelected<-function(pageId, selected){
   # we require usageVec has full path
-  nms<-dnippetsDB$paths$dname
+  nms<-getDnippetsAll()
   stopifnot('tabId' %in% names(dnippetsDB$usage))
   newRow<-c(list(tabId=pageId), as.list(sapply(nms, function(x)any(grepl(x,selected)))))
   tbc<-filter(dnippetsDB$usage, tabId!=pageId)
   dnippetsDB$usage<-bind_rows(tbc,newRow)
 }
 
+# by default all dnippets are selected for page not in usage
 addNewPage2dnippetsDB<-function(pageId){
   log.fin(addNewPage2dnippetsDB)
-  dn<-dnippetsDB$paths$dname
+  dn<-getDnippetsAll()
   if(length(pageId)>0 && !(pageId %in% dnippetsDB$usage$tabId)){
     tbb<-structure(as.list(rep_along(dn,TRUE)), names= dn)
     tbb[['tabId']]=pageId

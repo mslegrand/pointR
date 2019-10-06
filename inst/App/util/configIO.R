@@ -1,4 +1,12 @@
+# base contains
+# file.path file.exists basename path.expand dir.create dir.exists
+# find.package
 
+# R.util contains
+# filePath, ...
+
+# fs contains
+# path_join, path_split, ...
 
 # globals declared here are
 
@@ -10,14 +18,32 @@ optionDirPath<-function(){
          Windows= '%localappdata%/ptR',
          Linux  = '~/.ptR',
          Darwin = '~/.ptR'
-  )
+  ) 
+  # alternatively, using package fs: 
+  # dirPath=path_home('.ptR')
+  # dir_create(path_home('.ptR'))
+  # dir_create(path_home('.ptR','.workspace'))
+  # dir_create(path_home('.ptR','aux','dnds'))
+  # dir_create(path_home('.ptR','aux','preprocPts'))
+  # dir_create(path_home('.ptR','aux','preprocAts'))
+  # dir_create(path_home('.ptR','aux','snip'))
   if(!file.exists(dirPath)){
     dir.create(dirPath)
   }
-  workSpaceDir<-paste0(dirPath,"/",'.workspace')
+  workSpaceDir<-file.path(dirPath,'.workspace')
   if(!file.exists(workSpaceDir)){
     dir.create(workSpaceDir)
   }
+  pth<-file.path(dirPath,'aux') #file,pa
+  if(!file.exists(pth)){ dir.create(pth) }
+  pth<-file.path(dirPath,'aux','dnds')
+  if(!file.exists(pth)){ dir.create(pth) }
+  pth<-file.path(dirPath,'aux','preprocPts')
+  if(!file.exists(pth)){ dir.create(pth) }
+  pth<-file.path(dirPath,'aux', 'preprocAts')
+  if(!file.exists(pth)){ dir.create(pth) }
+  pth<-file.path(dirPath,'aux','snip')
+  if(!file.exists(pth)){ dir.create(pth) }
   dirPath
 }
 

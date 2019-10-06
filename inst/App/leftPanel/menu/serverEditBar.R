@@ -42,11 +42,11 @@ observeEvent( input$editNavBar, {
       showModal(cloneProjModal())
       dirtyDMDM(session, "editNavBar")
     }
-    if(fileCmd=="newSimpleInputWidget"){
-      showModal(newProjShinyCntrlModal())
-      dirtyDMDM(session, "editNavBar")
+    if(grepl("projectTemplate-",fileCmd)){
+      templateName<- str_split(fileCmd,'-')[[1]][2]
+      showModal(newProjShinyCntrlModal(projTemplateName=templateName))
     }
-    
+
     if(fileCmd=="openProject"){ #-----open
       dirtyDMDM(session, "editNavBar") 
       cmdFileOpenProject()
@@ -248,11 +248,7 @@ observeEvent( input$editNavBar, {
 
 # keep file menu save uptodate
 observeEvent(getFileSavedStatus(),{
-  cat("\n*****************************getFileSavedStatus()=",getFileSavedStatus(),"\n")
-  cat("input$pages=",input$pages,"  ")
   fd<-getFileDescriptor(input$pages)
-  cat("filePath=",format(fd$filePath),"\n")
-  cat("\n*****************************\n")
   status<-getFileSavedStatus()
   if(!is.null(input$pages) && getFileSavedStatus()==FALSE && 
      !identical(fd$filePath,"?")){

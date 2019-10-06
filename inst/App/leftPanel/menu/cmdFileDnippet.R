@@ -20,7 +20,7 @@ loadDndSnippets<-function(datapath, startup=FALSE){
     # adds to selection
     #The first 2 are almost the same thing, recording path and dname
     add2DnippetsSelectionAll( dnName, dnippets )
-    add2DnippetDBPath( dnName, datapath )
+    # add2DnippetDBPath( dnName, datapath )
     #This sets the dname default value for existing pages (no effect on pages not yet loaded)
     if( !identical( startup, TRUE ) ){
       add2DnippetChoices( dnName, TRUE )
@@ -31,6 +31,7 @@ loadDndSnippets<-function(datapath, startup=FALSE){
 
 observeEvent(input$buttonDnippetImport,{
   log.fin(input$buttonDnippetImport )
+  # browser()
   fp.dt<-parseFilePaths(c(home='~'), input$buttonDnippetImport)
   if(length(fp.dt)>0 && nrow(fp.dt)){
     datapath<-as.character(fp.dt$datapath[1])
@@ -49,9 +50,9 @@ observeEvent(input$buttonDnippetImport,{
       dname=path_file(datapath)
       dndspath<-path_join(c(dndsDir,dname))
       #dname=sub('\\.dnds$','',dname)
-      add2DnippetDBPath(dname, dndspath)
+      #add2DnippetDBPath(dname, dndspath)
       # save database
-      saveDnippetsFileNames()
+      #saveDnippetsFileNames()
       #load
       loadDndSnippets(dndspath)
       # should force redraw?
@@ -69,18 +70,14 @@ observeEvent(input$buttonDnippetImport,{
 
 # todo: reload dnds in aux/dnd/ dir
 reloadDndDir<-function(dirPath){
- 
   dndfiles<-dir(dirPath, full.names=TRUE)
   dndNames<-basename(dndfiles)
-  dndDBNames<-dnippetsDB$paths$dname
-  # remove any dnd whose file has been removed
+  dndDBNames<-names(dnippetsDB$usage)
+  dndDBNames<-dndDBNames[dndDBNames!='tabId']
   for(sname in dndDBNames) {
     if(!sname %in% dndNames){ #not in current dnds dir
       #remove sname column  from dnippetsDB$usage
       dnippetsDB$usage<-select(dnippetsDB$usage, -sname)
-        #remove sname row from dnippetsDB$paths
-      dnippetsDB$paths<-filter(dnippetsDB$paths, sname!=dname)
-      removeFromDnippetsSelectionAll()
     }
   }
   # refresh/add any dnd whose file has just appeared
@@ -92,14 +89,7 @@ reloadDndDir<-function(dirPath){
       dnippets<-getDnippets4ToolBar(dnippetList) # minor reshape
       bName<-basename(datapath) 
       add2DnippetsSelectionAll( bName, dnippets )
-      add2DnippetDBPath( bName, datapath )
       add2DnippetChoices(bName, FALSE)
-      # if(!bName %in% dnippetsDB$paths$dname){ 
-      #   # addto dnippetsDB$paths
-      #   #  add2DnippetDBPath(dnName, dndspath)
-      #   # add to dnippetsDB$usage 
-      #   add2DnippetChoices(dndnNameame, FALSE)
-      # }
     })
   }
   refreshPageDNDs()

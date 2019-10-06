@@ -98,13 +98,14 @@ getPreProcPtScript<-reactive({
 #' used by 
 #' serverPage2Workspace.R
 getPreProcPtEntries<-function(pageId){
-  ptpts<-filter(preProcDB$points, tabId==pageId)
+  tibColNames<-getTibColumnNameChoices()
+  ptpts<-filter(preProcDB$points, tabId==pageId & ptColName %in% tibColNames)
   ptpts
 }
 
 getPreProcOnNewRowScripts<-function(pageId, assetName  ){
-  x<-filter(preProcDB$points, tabId==pageId & tibName==assetName & cmd=='onNewRow' )
-  
+  tibColNames<-getTibColumnNameChoices()
+  x<-filter(preProcDB$points, tabId==pageId & tibName==assetName & cmd=='onNewRow' & ptColName %in% tibColNames)
   scripts<-x$script
   if(length( scripts)>0){
     cols<-x$ptColName

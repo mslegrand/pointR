@@ -14,7 +14,7 @@ mouseCmdValue<- function(mssg){
   
   #--- insert hook here
   if(hasPtScript() && !is.null(getPreProcPtScript()['onChangeRow'])){
-    preprocTrySetAttrValue('onChangeRow', ptDefs, rowIndex, selection)
+    preprocTrySetAttrValue('onChangeRow', ptDefs, rowIndex, selection, mssg)
   } else {
     updateAceExtDef(ptDefs, sender=sender, selector=list( rowIndex=rowIndex))
   }

@@ -37,7 +37,7 @@ mouseCmdAddPt<-function(mssg){
           newRowIndx<-rowIndex
           tryCatch({
             tibColNames<-names(tib)
-            cols<-names(scripts)
+            cols<-intersect(tibColNames,names(scripts))
             for(columnName in cols){
                 txt<-scripts[columnName]
                 values<-tib[[columnName]]

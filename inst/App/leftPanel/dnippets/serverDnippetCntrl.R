@@ -14,17 +14,16 @@ removeFromDnippetsSelectionAll<-function(dnName ){
 
 observeEvent(c( getDnippetsAll(), dnippetsDB$usage, input$pages),{
   if(!is.null(input$pages)){
-    log.fin(c( getDnippetsAll(), getDnippetsSelected(), input$pages))
+    selected<-getDnippetsSelected()
     mode<-getMode()
     all<-getDnippetsAll()
     updateAwesomeCheckboxGroup(session, 
        inputId="selectedDDDnippets", 
-       choices  = getDnippetsAll(),
-       selected = getDnippetsSelected(), 
+       choices  = all,
+       selected = selected, 
        inline = FALSE, status = "primary"
     )
     
-    selected<-getDnippetsSelected()
     dnippets<-dnippetSelection$all[selected]
     dnippets<-unlist(dnippets,recursive=F)
     names(dnippets)<-NULL
@@ -47,12 +46,10 @@ observeEvent(c( getDnippetsAll(), dnippetsDB$usage, input$pages),{
 
 observeEvent(input$selectedDDDnippets,{
   if(!is.null(input$pages)){
-    log.fin(input$selectedDDDnippets)
     selected=input$selectedDDDnippets
     setDnippetsSelected(input$pages , selected)
-    log.fout(input$selectedDDDnippets)
   }
   
-}, ignoreInit = FALSE, ignoreNULL = FALSE, label='selectedDDDnippets')
+}, ignoreInit = TRUE, ignoreNULL = TRUE, label='selectedDDDnippets')
 
 

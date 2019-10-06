@@ -10,6 +10,7 @@ observeEvent( input$rowIndex,{
     #cat("serverRowDND:: -----Entering-----rowIndex()::----------------\n")
     rowIndex<-as.integer(input$rowIndex)
     if(!is.null(getTibRow()) && rowIndex==getTibRow()){ return(NULL) } #bail
+    rowIndex<-min(getTibNRow(),rowIndex)
     # compute matColIndex and update rowIndex, matColIndex
     if(getColumnType()=='point'){
       pts<-getTibPts()
@@ -19,7 +20,7 @@ observeEvent( input$rowIndex,{
       if(hasPtScript() && !is.null(getPreProcPtScript()['onChangeRow'])){
         ptDefs<-getPtDefs()
         selection<-getAssetName()
-        preprocTrySetAttrValue('onChangeRow', ptDefs, rowIndex, selection)
+        preprocTrySetAttrValue('onChangeRow', ptDefs, rowIndex, selection, mssg=NULL)
       } else {
         updateSelected( rowIndex=rowIndex)
       }
