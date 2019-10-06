@@ -70,7 +70,6 @@ observeEvent(input$buttonDnippetImport,{
 
 # todo: reload dnds in aux/dnd/ dir
 reloadDndDir<-function(dirPath){
- cat('dirPath=',dirPath,"\n")
   dndfiles<-dir(dirPath, full.names=TRUE)
   dndNames<-basename(dndfiles)
   dndDBNames<-names(dnippetsDB$usage)
@@ -78,12 +77,7 @@ reloadDndDir<-function(dirPath){
   for(sname in dndDBNames) {
     if(!sname %in% dndNames){ #not in current dnds dir
       #remove sname column  from dnippetsDB$usage
-      cat('\n\n\n---------------\n')
-      cat('removing ', sname,'\n')
       dnippetsDB$usage<-select(dnippetsDB$usage, -sname)
-        #remove sname row from dnippetsDB$paths
-      # dnippetsDB$paths<-filter(dnippetsDB$paths, sname!=dname)
-      # removeFromDnippetsSelectionAll()
     }
   }
   # refresh/add any dnd whose file has just appeared

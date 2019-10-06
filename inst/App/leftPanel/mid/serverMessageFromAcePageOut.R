@@ -75,7 +75,6 @@ processMssgFromAceMssgPageOut<-function(sender, mssg){
                      docFilePath=docFilePath,
                      fileSaveStatus=TRUE
       ))
-      cat( "tabName=",basename(docFilePath ),"\n")
       sendFileTabsMessage(title=title, tabId=tabId)
     } 
   } #end of saving

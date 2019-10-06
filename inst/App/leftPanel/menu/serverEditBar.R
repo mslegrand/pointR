@@ -248,11 +248,7 @@ observeEvent( input$editNavBar, {
 
 # keep file menu save uptodate
 observeEvent(getFileSavedStatus(),{
-  cat("\n*****************************getFileSavedStatus()=",getFileSavedStatus(),"\n")
-  cat("input$pages=",input$pages,"  ")
   fd<-getFileDescriptor(input$pages)
-  cat("filePath=",format(fd$filePath),"\n")
-  cat("\n*****************************\n")
   status<-getFileSavedStatus()
   if(!is.null(input$pages) && getFileSavedStatus()==FALSE && 
      !identical(fd$filePath,"?")){

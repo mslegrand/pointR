@@ -28,8 +28,6 @@ if(usingElectron){
     appRunner$log<-""
     selection<-getAllNamedUnsavedFiles()$tabId
     if(length(selection)>0){
-      cat('selection=\n')
-      print(selection)
       setTabRequest(sender='fileCmd.runApp', tabs=selection)
     } else {
       app2RunPath<-getFileDescriptor(appRunner$tabId)$filePath
