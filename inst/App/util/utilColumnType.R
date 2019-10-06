@@ -84,6 +84,8 @@ extractColType<-function( column ){
       }
     } else if(is.logical(column)) {
       return("logical")
+    } else if(is.na(column)){
+      return("NA")
     } else {
       return("other")
     }
