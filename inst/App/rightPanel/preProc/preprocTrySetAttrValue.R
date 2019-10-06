@@ -1,8 +1,11 @@
 #' sets preproc value for 'onChangeRow' for 
 #'   1. when row is changed by row selector in serverRowIndexCtrl.R
 #'   2. when row is changed by mouse click (in value mode: tagDrag.mouse in serverMouseCmdValue.R) 
-preprocTrySetAttrValue<-function( cmd.Row, ptDefs, rowIndex, selection){
-
+preprocTrySetAttrValue<-function( cmd.Row, ptDefs, rowIndex, selection, mssg=NULL){
+  log.fin(preprocTrySetAttrValue)
+  if(is.null(mssg)){
+    mssg<-list(altKey=FALSE, shiftKey=FALSE, ctrlKey=FALSE, metaKey=FALSE)
+  }
   tryCatch({ 
     txt<-getPreProcPtScript()['onChangeRow']
     tibs<-ptDefs$tib
@@ -12,6 +15,7 @@ preprocTrySetAttrValue<-function( cmd.Row, ptDefs, rowIndex, selection){
       stop('cannot edit list column')
     }
     getAttrValue<-function(){values[rowIndex]}
+   
     context<-list(
       name=getAssetName(),
       column=getTibColPos(),
@@ -21,6 +25,9 @@ preprocTrySetAttrValue<-function( cmd.Row, ptDefs, rowIndex, selection){
     ppenv<-list(
       setAttrValue=setAttrValue,
       getAttrValue=getAttrValue,
+      getTibRow=getTibRow,
+      setTibRow=setTibRow,
+      appendAttrValues=appendAttrValues,
       context=context,
       keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey)
     )
@@ -34,6 +41,7 @@ preprocTrySetAttrValue<-function( cmd.Row, ptDefs, rowIndex, selection){
     err<-paste(unlist(e), collapse="\n", sep="\n")
     alert(err)
   })
+  log.fin(preprocTrySetAttrValue)
 }
 
 #' Sets preproc values for
@@ -46,7 +54,7 @@ preprocTrySetAttrValueS<-function(scripts,  ptDefs, rowIndex, selection){
     tib<-tibs[[selection]]
     tibColNames<-names(tib)
     if(length(scripts)>0){
-      cols<-names(scripts)
+      cols<-intersect(tibColNames,names(scripts))
       for(columnName in cols){
         txt<-scripts[columnName]
         values<-tib[[columnName]]
@@ -60,6 +68,9 @@ preprocTrySetAttrValueS<-function(scripts,  ptDefs, rowIndex, selection){
         ppenv<-list(
           setAttrValue=setAttrValue,
           getAttrValue=getAttrValue,
+          getTibRow=getTibRow,
+          setTibRow=setTibRow,
+          appendAttrValues=appendAttrValues,
           context=context,
           keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey)
         )
