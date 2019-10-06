@@ -12,11 +12,14 @@ toStrPtR0<-function(x,...){ UseMethod("toStrPtR0") }
 
 toStrPtR0.default<-function(x,...){ format(x,...) }
 toStrPtR0.character<-function(x, ...){
-  if(length(x)>1){
-    paste0("c(",paste0(shQuote(x),collapse=","),")")
-  } else {
-    shQuote(x)
-  }
+  xx<-sapply(x,function(y){if(!is.na(y)){shQuote(y)} else {'NA'}})
+  if(length(xx)==0){
+    'character(0)'
+  } else if (length(xx)==1){
+    xx
+  } else{
+    paste0("c(",paste0(xx,collapse=","),")")
+  } 
 }
 toStrPtR0.numeric<-function(x, digits=0, ...){
   if(length(x)==0){
