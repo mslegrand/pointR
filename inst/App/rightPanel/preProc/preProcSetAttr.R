@@ -29,6 +29,17 @@ appendAttrValues<-function(tib, missing=TRUE, ...){
   tib
 }
 
+getLastRow<-function(tib){
+  tib[nrow(tib),]
+}
+replaceLastRow<-function(tib, row){
+  tib[nrow(tib),]<-row
+  tib
+}
+
+appendLastRow<-function(tib, row){
+  rbind(tib,row)
+}
 
 # appendAttrValues<-function(tib, =TRUE, ...){
 #   vals<-list(...)

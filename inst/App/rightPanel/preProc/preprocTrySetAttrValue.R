@@ -25,8 +25,9 @@ preprocTrySetAttrValue<-function( cmd.Row, ptDefs, rowIndex, selection, mssg=NUL
     ppenv<-list(
       setAttrValue=setAttrValue,
       getAttrValue=getAttrValue,
-      getTibRow=getTibRow,
-      setTibRow=setTibRow,
+      getLastRow=getLastRow,
+      replaceLastRow=replaceLastRow,
+      appendLastRow=appendLastRow,
       appendAttrValues=appendAttrValues,
       context=context,
       keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey)
@@ -68,8 +69,9 @@ preprocTrySetAttrValueS<-function(scripts,  ptDefs, rowIndex, selection){
         ppenv<-list(
           setAttrValue=setAttrValue,
           getAttrValue=getAttrValue,
-          getTibRow=getTibRow,
-          setTibRow=setTibRow,
+          getLastRow=getLastRow,
+          replaceLastRow=replaceLastRow,
+          appendLastRow=appendLastRow,
           appendAttrValues=appendAttrValues,
           context=context,
           keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey)
