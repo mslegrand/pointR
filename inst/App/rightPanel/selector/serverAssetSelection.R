@@ -50,7 +50,6 @@ atLeast2Rows<-reactive({
 })
 
 getTibRow<-reactive({selectedAsset$rowIndex})
-
 getTibMatCol<-reactive({ selectedAsset$matCol })
 getTibPtsNCol<-reactive({ sapply(getTibPts(),ncol)}  )
 

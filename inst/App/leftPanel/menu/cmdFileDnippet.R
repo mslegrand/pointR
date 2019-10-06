@@ -31,7 +31,7 @@ loadDndSnippets<-function(datapath, startup=FALSE){
 
 observeEvent(input$buttonDnippetImport,{
   log.fin(input$buttonDnippetImport )
-  browser()
+  # browser()
   fp.dt<-parseFilePaths(c(home='~'), input$buttonDnippetImport)
   if(length(fp.dt)>0 && nrow(fp.dt)){
     datapath<-as.character(fp.dt$datapath[1])
