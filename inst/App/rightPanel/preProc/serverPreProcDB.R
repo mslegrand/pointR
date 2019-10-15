@@ -1,4 +1,16 @@
 
+
+preProcScriptDB<-eactiveValues(
+  points=tibble( scriptName='bogus', cmd="bogus", script='bogus')[0,],
+  attrs=tibble( scriptName='bogus', cmd="bogus", script='bogus')[0,]
+)
+
+preProcPageDB<-reactiveValues(
+  tibble( tabId="bogus", tibName="bogus", colName='bogus', scriptName='bogus')[0,],
+)
+
+
+
 # todo refactor this: ptColName => colName; eliminate points?
 preProcDB<-reactiveValues(
   points=tibble( tabId="bogus", tibName="bogus", ptColName='bogus', cmd="bogus", script='bogus')[0,]
