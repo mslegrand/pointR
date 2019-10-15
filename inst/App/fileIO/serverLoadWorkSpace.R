@@ -1,6 +1,5 @@
 
 syncDndDB<-function(usageDB){
-  
   dndNames<-getDnippetsAll()
   usageNames<-names(usageDB)
   usageNames<-usageNames[usageNames!='tabId']
@@ -9,7 +8,6 @@ syncDndDB<-function(usageDB){
       usageDB<-select(usageDB, -sname)
     }
   }
-  
   for(sname in dndNames) {#
     if(!sname %in% usageNames){ #not in  usageDB
       usageDB<-add_column(usageDB, sname=FALSE)

@@ -26,6 +26,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ### first pass
 
+
 - move editor into **popup preproc editor**
   - require name for each script
 - modify menu responses in serverPlotBar.R 
@@ -37,12 +38,22 @@ knitr::opts_chunk$set(echo = TRUE)
         - trigger **popup preproc editor** (preproc popup to be written)
         - upon *commit* populate *preProcScriptDB*
     - add fileName to slider* checkbox (below)
+- replace *hasPtScript* with **hasPreprocScript**
+    -  **hasPreprocScript** should monitor **preProcScriptDB** and colType for status
 - **add slider-checbox picker** with names (checkbox to be written)
   - require preproc type to match the current column type (value vs points)
       - this means that from the filename, I should know whether is points or values
   - edits *preProcPageDB* upon closing (or immediately?)
       - tabId, tibName, colName only appears in *preProcPageDB* if a fileName has been assigned to them
-  
+- replace **getPreProcPtScript** with **getPreProcScript**
+      - given tabId, tibName, colName,
+      - needs to
+          - getColType
+          - extract fileName from **preProcPageDB**
+          - given cmd and fileName, extract script from **preProcScriptDB**
+
+
+
 ## second pass
 
 - *savePage* should serialize *preProcPageDB*
@@ -58,4 +69,18 @@ knitr::opts_chunk$set(echo = TRUE)
     - import pp
     - remove pp
 - remove export pp command
-    
+  
+  
+  ## sequencing for initial devel
+  
+  - crate4 dbs
+    -  **preProcPageDB**
+    -  **preProcScriptDB**
+  - readin **preProcScriptDB** via 
+    - reloadDndDir
+  
+  - replace editor slider with checkbox slider
+  - replace *hasPtScript* with **hasPreprocScript**
+  - replace **getPreProcPtScript** with 
+      - single fn: **getPreProcScript**?
+  
