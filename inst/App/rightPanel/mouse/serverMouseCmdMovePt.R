@@ -16,8 +16,8 @@ mouseCmdMovePt<- function(mssg){
   newPt<-vec
   rowIndex<-as.numeric(vid[3]) # index is the absolute position of in the points array
   matColIndx<-as.numeric(vid[4])
-  if( hasPtScript() ){
-    txt<-getPreProcPtScript()['onMovePt']
+  txt<-getPreProcScript()['onMovePt']
+  if( !is.null(txt) ){
     tryCatch({ 
       getPoint<-function(){names(newPt)<-c('x','y'); newPt}
       context<-list(

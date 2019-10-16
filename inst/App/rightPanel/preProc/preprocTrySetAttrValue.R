@@ -7,7 +7,7 @@ preprocTrySetAttrValue<-function( cmd.Row, ptDefs, rowIndex, selection, mssg=NUL
     mssg<-list(altKey=FALSE, shiftKey=FALSE, ctrlKey=FALSE, metaKey=FALSE)
   }
   tryCatch({ 
-    txt<-getPreProcPtScript()['onChangeRow']
+    txt<-getPreProcScript()['onChangeRow']
     tibs<-ptDefs$tib
     tib<-tibs[[selection]]
     values<-tib[[getTibColumnName()]]

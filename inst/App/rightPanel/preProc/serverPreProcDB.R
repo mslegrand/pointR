@@ -105,15 +105,18 @@ getPreProcScript<-reactive({
   script_Name<-getPreProcScriptName(
     tab_Id=getTibTabId(), tib_Name=getAssetName(),column_Name= getTibColumnName()
   )
-  rtv<=list()
   if(script_Name!='none'){
     if(getColumnType()=='point'){
       tb<-filter(preProcScriptDB$points, scriptName==script_Name)
     } else {
       tb<-filter(preProcScriptDB$attrs, scriptName==script_Name)
     }
-    
+    scripts<-unlist(tb$script)
+    names(scripts)<-tb$cmd
+  } else {
+    scripts<-NULL
   }
+  scripts
 })
 
 #' used by 
