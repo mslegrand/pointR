@@ -25,6 +25,7 @@ shinyServer(function(input, output,session) {
   source("util/utilTransform.R")
   source("util/copyAndRenameProject.R")
   source("fileIO/dndSnippetLoader.R")
+  source("rightPanel/preProc/serverAuxPreproc.R", local=TRUE)
   source("rightPanel/preProc/preProcSetAttr.R")
   source("rightPanel/preProc/preprocTrySetAttrValue.R", local=TRUE)
   source("rightPanel/preProc/preProcValidate.R")
