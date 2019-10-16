@@ -1,6 +1,6 @@
 preProcScriptDB<-reactiveValues(
   points=tibble( scriptName='bogus', cmd="bogus", script='bogus')[0,],
-  attrs=tibble( scriptName='bogus', cmd="bogus", script='bogus')[0,]
+  attrs=tibble(  scriptName='bogus', cmd="bogus", script='bogus')[0,]
 )
 
 loadAuxPreProc<-function(fullName){
