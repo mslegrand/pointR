@@ -3,6 +3,7 @@ observeEvent(trigger$startup, {
     log.fin(startup)
     reOrgPanels(id=NULL, mode=NULL)
     readAuxDnippets()
+    readAuxPreProcs()
     aceId<-restoreWorkSpace()
     if(is.null(aceId)){
         cmdFileNewPtR()
