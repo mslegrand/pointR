@@ -26,9 +26,10 @@ loadAuxPreProc<-function(fullName){
       stop('ill-formed  preprocessor')
       # todo better message
     }
-    tb<-tibble(scriptName=basename(fullName), cmd=names(preProcList), script=preProcList)
+    ppscripts<-lapply(preProcList, extractBodyWithComments)
+    tb<-tibble(scriptName=basename(fullName), cmd=names(preProcList), script=ppscripts)
     # may need to use cmds instead
-    # browser()
+   
     if( "preprocPts"==basename(dirname(fullName))){
       preProcScriptDB$points<-rbind(preProcScriptDB$points, tb)
     } else if( "preprocAts"==basename(dirname(fullName))){
