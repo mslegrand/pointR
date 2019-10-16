@@ -1,11 +1,5 @@
 
-
-preProcScriptDB<-eactiveValues(
-  points=tibble( scriptName='bogus', cmd="bogus", script='bogus')[0,],
-  attrs=tibble( scriptName='bogus', cmd="bogus", script='bogus')[0,]
-)
-
-preProcPageDB<-reactiveValues(
+preProcPageDB<-reactiveVal(
   tibble( tabId="bogus", tibName="bogus", colName='bogus', scriptName='bogus')[0,],
 )
 
