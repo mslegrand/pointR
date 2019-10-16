@@ -119,3 +119,41 @@ getPreProcOnNewRowScripts<-function(pageId, assetName  ){
   } 
   scripts
 }
+
+setPreProcScriptName<-function(tab_Id, tib_Name, column_Name,  script_Name){
+  # log.fin( setPreProcScriptName)
+  # filter  on tab_Id, tib_Name, pt_Column_Name
+  ppDB<-preProcPageDB()
+  ppDB<-filter(ppDB, !(tabId==tab_Id &
+           tibName==tib_Name & 
+           colName==column_Name )
+  )
+  if(script_Name!='none'){
+      ppDB<-rbind(ppDB, tibble(tabId=tab_Id, tibName=tib_Name, colName=column_Name, scriptName=script_Name))
+  }
+  preProcPageDB(ppDB)
+  # log.fout( setPreProcScriptName )
+}
+
+getPreProcScriptName<-function(tab_Id, tib_Name, column_Name){
+  ppDB<-preProcPageDB()
+  ppDB<-filter(ppDB, 
+               tabId==tab_Id &tibName==tib_Name & colName==column_Name 
+  )
+  if(nrow(ppDB)>0){
+    ppDB$scriptName
+  } else {
+    "none"
+  }
+}
+
+getPagePreprocPageDB<-function(pageId){
+  if(!is.null(pageId)){
+    ppDB<-preProcPageDB()
+    rtv<-filter(ppDB,tabId==pageId)
+  } else {
+    rtv<-NULL
+  }
+  rtv
+}
+

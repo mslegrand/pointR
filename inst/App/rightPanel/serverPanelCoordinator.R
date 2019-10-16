@@ -253,7 +253,7 @@ observeEvent( getRightMidPanel(), {
 }, label='getRightMidPanel')
 
 # need to rewrite for cmdExportAP cmdRemoveAP
-observeEvent( c(getRightMidPanel(), hasPreProcChoices() ), {
+observeEvent( c( getRightMidPanel(), hasPreProcChoices() ), {
   if( !is.null(getRightMidPanel()) && 
       #(getRightMidPanel() %in% c('point','matrix')) &&
       hasPreProcChoices() 
@@ -267,5 +267,5 @@ observeEvent( c(getRightMidPanel(), hasPreProcChoices() ), {
     disableDMDM( session, menuBarId="plotNavBar", entry="cmdRemovePP")
   }
 }, 
-label='PanelCoordinator.R:: c(getRightMidPanel(), hasPtScript())' 
+label='PanelCoordinator.R:: c(getRightMidPanel(), hasPreProcChoices())' 
 )

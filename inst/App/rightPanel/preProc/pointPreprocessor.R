@@ -54,24 +54,24 @@ newPreProcDropDown<-function()
 { 
   # ppc<-getPreProcChoices()
   # ppcNames<-sub('\\.R$', '', ppc)
-  dropdownId= "ptPreProcDropDown" #paste0("PtPreProc",id)
+  dropdownId= "preProcDropDown" #paste0("PtPreProc",id)
   absolutePanel( id='PtPreProcDiv', left=5, bottom=5, 
                  dropdown( inputId = dropdownId ,  
                            div( id='ptPreProcBackPanel', class='backPanel',
-                                div( style='margin-left:20px; color: #00ffff; ', h4(textOutput("ptPreProcSource")) ) ,
+                                div( style='margin-left:20px; color: #00ffff; ', h4(textOutput("ptPreProcSource"))  ,
                                 radioButtons(inputId = 'preProcChooser', 
                                              label = 'Preproc chooser', 
                                              choiceNames=c('none'),
                                              choiceValues= c('none'),
-                                             width="100%"
-                                ),
+                                             width="80%"
+                                )),
                                 
                                 div(style="width: 100%; overflow: hidden; margin-top:5px; margin-bottom:5px",
                                     div( style="float:left;",
-                                         actionButton(inputId= "commitPtPreProcButton", label='Commit', class=c("btn") )
+                                         actionButton(inputId= "commitPreProcChoiceButton", label='Commit', class=c("btn") )
                                     ),
                                     div( style="float:right;",
-                                         actionButton(inputId= "dimissPtPreProcButton", label='Dismiss', class=c("btn") )
+                                         actionButton(inputId= "dimissPreProcChoiceButton", label='Dismiss', class=c("btn") )
                                     )
                                 )
                            ),
@@ -85,3 +85,5 @@ newPreProcDropDown<-function()
                  )
   ) 
 }
+
+

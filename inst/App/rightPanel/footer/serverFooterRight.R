@@ -12,7 +12,7 @@ returnValue4ModuleRtFtr<-callModule(
     rtv<-getRightMidPanel(); 
     rtv
   }),
-  hasPtScript=hasPtScript 
+  hasPreProcChoices=hasPreProcChoices 
 )
 
 #-----------BUTTON EVENTS--------------------

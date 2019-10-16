@@ -132,7 +132,9 @@ restoreWorkSpace<-reactive({
   dnippetsDB$usage<-usageDB
   
   preProcDB$points<-extractDBFromPages(wsPages, "^preprocScripts.", initTib=initialPreprocDB())
-
+  
+  tib<-extractDBFromPages(wsPages, "^preprocPage.", initTib=initialPreProcPageDB())
+  preProcPageDB(tib)
   tib<-extractDBFromPages(wsPages, "^fileDescriptor.", initTib=initialFileDescDB() )
   fileDescDB(tib)  
   

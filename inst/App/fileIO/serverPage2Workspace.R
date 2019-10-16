@@ -13,6 +13,7 @@ savePage<-function(pageId, path=getWorkSpaceDir()){
     trib<-getPageUseTribble(pageId)
     dnip<-getPageDnippetsDB(pageId)
     widg<-getPageWidgetDB(pageId)
+    preprocPage<-getPagePreprocPageDB(pageId)
     # print(widg)
     rtv<-c(
       fileDescriptor=getFileDescriptor(pageId),
@@ -22,13 +23,15 @@ savePage<-function(pageId, path=getWorkSpaceDir()){
       grid=grid,
       trib=trib,
       dnip=dnip,
-      widg=widg
+      widg=widg,
+      preprocPage=preprocPage
     )
     
     ppE<-getPreProcPtEntries(pageId)
     if(length(ppE)!=0 && nrow(ppE)>0){
       rtv<-c(rtv, preprocScripts=ppE)
     }
+    if(length(preprocPage))
     saveRDS(object=rtv, file = fileName)
     log.fout(savePage)
   }

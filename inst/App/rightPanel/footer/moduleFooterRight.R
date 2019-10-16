@@ -7,12 +7,12 @@ moduleFooterRight<-function(input, output, session,
                       getTibEditState,
                       getPointMax,
                       getPanelState, 
-                      hasPtScript
+                      hasPreProcChoices
 ){
   
   output$footer<-renderUI({
     footerPanelState<-getPanelState()
-    if(hasPtScript()){
+    if(hasPreProcChoices()){
       leftPtButtons= 50
     } else {
       leftPtButtons= 0
