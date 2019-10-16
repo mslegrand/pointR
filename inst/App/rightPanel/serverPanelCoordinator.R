@@ -253,10 +253,10 @@ observeEvent( getRightMidPanel(), {
 }, label='getRightMidPanel')
 
 # need to rewrite for cmdExportAP cmdRemoveAP
-observeEvent( c(getRightMidPanel(), hasPtScript() ), {
+observeEvent( c(getRightMidPanel(), hasPreProcChoices() ), {
   if( !is.null(getRightMidPanel()) && 
       #(getRightMidPanel() %in% c('point','matrix')) &&
-      hasPtScript() 
+      hasPreProcChoices() 
   ){
     removeCssClass( id='PtPreProcDiv', class="hiddenPanel")
     enableDMDM( session, menuBarId="plotNavBar", entry="cmdExportPP")
