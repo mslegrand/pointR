@@ -72,7 +72,10 @@ observeEvent(input$plotNavBar, {
         onMovePt=fileTemplates[['movePtTemplate.R']],
         onMoveMat=fileTemplates[['moveMatTemplate.R']]  
       ) 
-      insertPreProcPtEntry(getTibTabId(), getAssetName(), getTibColumnName(), newScript )
+      browser()
+      cmdPreProcEdit(preprocScripts=newScript, preprocName='')
+      
+      #insertPreProcPtEntry(getTibTabId(), getAssetName(), getTibColumnName(), newScript )
     }
     dirtyDMDM(session, "plotNavBar")
   }

@@ -28,6 +28,7 @@ shinyServer(function(input, output,session) {
   source("rightPanel/preProc/serverAuxPreproc.R", local=TRUE)
   source("rightPanel/preProc/preProcSetAttr.R")
   source("rightPanel/preProc/preprocTrySetAttrValue.R", local=TRUE)
+  source("rightPanel/preProc/modalPreprocEditor.R", local=TRUE)
   source("rightPanel/preProc/preProcValidate.R")
   
 # Reactive values----------
