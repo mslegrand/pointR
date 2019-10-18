@@ -27,7 +27,8 @@ loadAuxPreProc<-function(fullName){
       # todo better message
     }
     ppscripts<-lapply(preProcList, extractBodyWithComments)
-    tb<-tibble(scriptName=basename(fullName), cmd=names(preProcList), script=ppscripts)
+    scriptName=sub('\\.R$','',basename(fullName))
+    tb<-tibble(scriptName=scriptName, cmd=names(preProcList), script=ppscripts)
     # may need to use cmds instead
    
     if( "preprocPts"==basename(dirname(fullName))){
@@ -56,15 +57,59 @@ reloadPreProcScriptDB<-function(dirPath, scriptType='points'){
 getPreProcPPAuxPath<-reactive({file.path(getDirPath(),'aux','preprocPts')})   
 getPreProcPAAuxPath<-reactive({file.path(getDirPath(),'aux','preprocAts')})   
 
+clearPreProcEditMenu<-function(type='points'){
+  #entry=paste0('dropDown-editPreProc-',type)
+  entry=paste0('Edit preproc ',type)
+  # id=paste0('dropDown-editPreProc-',type)
+  # id='dropDown-editPreProc-points'
+  # ##removeDMDM(session=session, menuBarId="plotNavBar", entry=id)
+  removeDMDM(session=session, menuBarId="plotNavBar", entry=entry, type="dropdown")
+  'Edit point preprocessor'
+  # sn<-unique(preProcScriptDB[[type]]$scriptName)
+  # sn<-paste0('edit-',type,'-',sn)
+  # for(entry in sn){
+  #   removeDMDM(session=session, menuBarId="plotNavBar", 
+  #              entry=entry, type='menuItem')
+  # }
+}
+
+populatePreProcEditMenu<-function(type=points){
+  sn<-trimws(unique(preProcScriptDB[[type]]$scriptName))
+  #snn<-paste0('edit-',type,'-',sn)
+  kids<-lapply(sn, function(nn){
+    shinyDMDMenu::menuItem(nn, value=paste0('editPP-',type,'-',nn))
+  })
+  idd=trimws(paste0('dropDown-editPreProc-',type))
+  afterEntry=ifelse(type=='points', 'cmdNewPP', 'cmdNewAP')
+  label=paste0('Edit preproc ',type)
+  shinyDMDMenu::insertAfterDMDM(
+    session, 
+    menuBarId  ="plotNavBar",  
+    entry=afterEntry,
+    submenu=
+      do.call(
+        function(...){ menuDropdown( label,...) },
+        kids
+      )
+  )
+}
+
 readAuxPreProcs<-function( startup=TRUE){
   
   preProcFilePaths<-c(
     list.files(getPreProcPPAuxPath(), full.names=TRUE),
     list.files(getPreProcPAAuxPath(), full.names=TRUE)
   ) 
+  # clear the menus
+  clearPreProcEditMenu('points')
+  clearPreProcEditMenu('attrs')
   for(fp in preProcFilePaths){
     loadAuxPreProc(fp)
   }
+  
+  populatePreProcEditMenu('points')
+  populatePreProcEditMenu('attrs')
+  # repopulate the menu
 }
 
 
@@ -101,4 +146,11 @@ observeEvent(c(selectedAsset$tabId, selectedAsset$name,
   updateRadioButtons(session, "preProcChooser", choices=choices, selected=selected, )
 })
 
-
+writeAuxPreprocPoints<-function(filePath, scripts){
+  # scripts<-getPreProcPtScript()[preprocChoices$points]
+  txt0<-paste(names(scripts),'= function( pt, context, WH, keys){\n',scripts,"\n}", collapse=",\n")
+  str_split(txt0, '\n')[[1]]->lines
+  paste0("  ", lines,collapse="\n")->txt1
+  txt<-paste0('preprocPts<-list(\n', txt1, "\n)")
+  writeLines(txt, filePath)
+}

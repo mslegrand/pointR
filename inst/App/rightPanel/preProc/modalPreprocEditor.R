@@ -1,12 +1,12 @@
-cmdPreProcEdit<-function(preprocScripts, preprocName){
+cmdPreProcEdit<-function(preprocScripts, preprocName, type){
   showModal( 
-    modalPreProcEditor(preprocScripts=preprocScripts, preprocName=preprocName) 
+    modalPreProcEditor(preprocScripts=preprocScripts, preprocName=preprocName, type=type) 
   )
 }
 
 # creates a single tabPanel entry
 newPreProcPanel<-function(label, value){
-  outputId<-paste0('ptPreProcAce',label)
+  outputId<-paste0('preProcAce-',label)
   tabPanel(label,
            div(
              aceEditor(
@@ -26,13 +26,14 @@ preProcTabSetPanel<-function(id='ptPreProcpages', preprocScripts ){
   do.call(tabsetPanel, pptabs)
 }
 
+preProcModalType<-reactiveVal(NULL)
 
-# dropdown for preprocessor
+# modal for preprocessor
 
-modalPreProcEditor <- function( preprocScripts, preprocName, failed=0, mssg=' '  ) {
+modalPreProcEditor <- function( preprocScripts, preprocName, type='points'  ) {
+  preProcModalType(type)
   modalDialog(
     div( id='ptPreProcBackPanel', class='backPanel', style='padding:20px;',
-        #div( style='margin-left:20px; color: #00ffff;', h4(textOutput("ptPreProcSource")) ) ,
         textInput("modalPreprocName", 
                   label=span(style='color: #00ffff;', 'Preprocessor Name'),  
                   value=preprocName, 
@@ -44,21 +45,47 @@ modalPreProcEditor <- function( preprocScripts, preprocName, failed=0, mssg=' ' 
     title="Preproc Editor",
     easyClose = TRUE,
     footer = tagList(
-      modalButton("Cancel"),
-      actionButton("modalPreprocEditorCommitOk", "OK")
+      modalButton("Dismiss"),
+      actionButton("modalPreprocEditorCommitOk", "Commit")
     )
   )
 }
 
+observeEvent(input$modalPreprocName,{
+  preprocName<-input$modalPreprocName
+  if(length(preprocName)==0 || nchar(preprocName)<8){
+    hideElement("modalPreprocEditorCommitOk")
+  } else {
+    showElement("modalPreprocEditorCommitOk")
+  }
+})
+
 
 observeEvent( input$modalPreprocEditorCommitOk,{
-  browser()
+  cat('\n\n-----------------preProcEditorCommitOk\n\n')
   preprocName<-input$modalPreprocName
-  if(nchar(preprocName)<0){
-    
+  preprocName<-sub('\\.R$','',preprocName)
+  preprocName<-paste0(preprocName,'.R')
+  type<-preProcModalType()
+  cmds<-preprocChoices[[type]]
+  aceIds<-paste0('preProcAce-', cmds)
+  scripts<-lapply(aceIds, function(x){input[[x]]})
+  names(scripts)<-cmds
+  if(type=='points'){
+    filePath<-file.path(getPreProcPPAuxPath(), preprocName)
   } else {
-    removeModal()
+    filePath<-file.path(getPreProcPAAuxPath(), preprocName)
   }
+  # 2 choices: 
+  # First choice:
+  # i. store in preProcScriptDB
+  # ii. write to aux via writeAuxPreprocPts (uses getPreProcPtScript) or ...
+  # Secondt choice
+  # write scripts directly to aux
+  writeAuxPreprocPoints(filePath, scripts)
+  readAuxPreProcs()
+  removeModal()
+  
 })
 
 
