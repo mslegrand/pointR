@@ -31,19 +31,20 @@ buildRightMenu<-function(){
     menuDropdown(
       "Tools",
       shinyDMDMenu::menuDropdown(
-        "Point Preprocessor",
+        "Point Preprocessor", 
         shinyDMDMenu::menuItem('New', value='cmdNewPP'),
-        shinyDMDMenu::menuItem('Edit', value='cmdEditPP'),
-        shinyDMDMenu::menuItem('Import', value='cmdImportPP'),
-        shinyDMDMenu::menuItem('Export', value='cmdExportPP'),
-        shinyDMDMenu::menuItem('Remove', value='cmdRemovePP')
+        shinyDMDMenu::menuDropdown(id='dropDown-editPreProc-points','Edit preproc points'),
+        shinyDMDMenu::menuItem('Import', value='cmdImportPP')#,
+        #shinyDMDMenu::menuItem('Export', value='cmdExportPP'),
+        #shinyDMDMenu::menuItem('Remove', value='cmdRemovePP')
       ),
       shinyDMDMenu::menuDropdown(
         "Attribute Preprocessor",
         shinyDMDMenu::menuItem('New', value='cmdNewAP'),
-        shinyDMDMenu::menuItem('Import', value='cmdImportAP'),
-        shinyDMDMenu::menuItem('Export', value='cmdExportAP'),
-        shinyDMDMenu::menuItem('Remove', value='cmdRemoveAP')
+        shinyDMDMenu::menuDropdown(id='dropDown-editPreProc-attrs','Edit preproc values'),
+        shinyDMDMenu::menuItem('Import', value='cmdImportAP')
+        #shinyDMDMenu::menuItem('Export', value='cmdExportAP'),
+        #shinyDMDMenu::menuItem('Remove', value='cmdRemoveAP')
       )
     )
   ) #menubar end 
