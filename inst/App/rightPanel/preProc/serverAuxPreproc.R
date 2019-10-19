@@ -3,6 +3,22 @@ preProcScriptDB<-reactiveValues(
   attrs=tibble(  scriptName='bogus', cmd="bogus", script='bogus')[0,]
 )
 
+observeEvent(nrow(preProcScriptDB$points),{
+  if(nrow(preProcScriptDB$points)>0){
+       enableDMDM(session, 'plotNavBar','Edit preproc points')
+  } else{
+      disableDMDM(session, 'plotNavBar','Edit preproc points')
+  }
+})
+
+observeEvent(nrow(preProcScriptDB$attrs),{
+  if(nrow(preProcScriptDB$attrs)>0){
+    enableDMDM(session, 'plotNavBar','Edit preproc attrs')
+  } else{
+    disableDMDM(session, 'plotNavBar','Edit preproc attrs')
+  }
+})
+
 loadAuxPreProc<-function(fullName){
   extractBodyWithComments<-function(fn){
     tt<-capture.output(print(fn))
@@ -58,19 +74,8 @@ getPreProcPPAuxPath<-reactive({file.path(getDirPath(),'aux','preprocPts')})
 getPreProcPAAuxPath<-reactive({file.path(getDirPath(),'aux','preprocAts')})   
 
 clearPreProcEditMenu<-function(type='points'){
-  #entry=paste0('dropDown-editPreProc-',type)
   entry=paste0('Edit preproc ',type)
-  # id=paste0('dropDown-editPreProc-',type)
-  # id='dropDown-editPreProc-points'
-  # ##removeDMDM(session=session, menuBarId="plotNavBar", entry=id)
   removeDMDM(session=session, menuBarId="plotNavBar", entry=entry, type="dropdown")
-  'Edit point preprocessor'
-  # sn<-unique(preProcScriptDB[[type]]$scriptName)
-  # sn<-paste0('edit-',type,'-',sn)
-  # for(entry in sn){
-  #   removeDMDM(session=session, menuBarId="plotNavBar", 
-  #              entry=entry, type='menuItem')
-  # }
 }
 
 populatePreProcEditMenu<-function(type=points){
@@ -95,7 +100,6 @@ populatePreProcEditMenu<-function(type=points){
 }
 
 readAuxPreProcs<-function( startup=TRUE){
-  
   preProcFilePaths<-c(
     list.files(getPreProcPPAuxPath(), full.names=TRUE),
     list.files(getPreProcPAAuxPath(), full.names=TRUE)
