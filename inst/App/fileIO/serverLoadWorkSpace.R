@@ -131,7 +131,7 @@ restoreWorkSpace<-reactive({
   usageDB<-syncDndDB(usageDB)
   dnippetsDB$usage<-usageDB
   
-  preProcDB$points<-extractDBFromPages(wsPages, "^preprocScripts.", initTib=initialPreprocDB())
+  #preProcDB$points<-extractDBFromPages(wsPages, "^preprocScripts.", initTib=initialPreprocDB())
   
   tib<-extractDBFromPages(wsPages, "^preprocPage.", initTib=initialPreProcPageDB())
   preProcPageDB(tib)

@@ -27,10 +27,10 @@ savePage<-function(pageId, path=getWorkSpaceDir()){
       preprocPage=preprocPage
     )
     
-    ppE<-getPreProcPtEntries(pageId)
-    if(length(ppE)!=0 && nrow(ppE)>0){
-      rtv<-c(rtv, preprocScripts=ppE)
-    }
+    # ppE<-getPreProcPtEntries(pageId)
+    # if(length(ppE)!=0 && nrow(ppE)>0){
+    #   rtv<-c(rtv, preprocScripts=ppE)
+    # }
     if(length(preprocPage))
     saveRDS(object=rtv, file = fileName)
     log.fout(savePage)
