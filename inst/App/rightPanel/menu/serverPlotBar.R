@@ -85,7 +85,7 @@ observeEvent(input$plotNavBar, {
   
   if(cmd == 'cmdNewAP'){ # disable unless ...
     log.fin(cmd == 'cmdNewAP' )
-    type='values'
+    type='attrs'
     labels<-preprocChoices[[type]]
     preprocScripts = fileTemplates[paste0(labels,'Template.R')]
     names(preprocScripts)<-labels
@@ -101,7 +101,7 @@ observeEvent(input$plotNavBar, {
   }  
   
   if(cmd=="cmdRemoveAP"){ #-----save
-    cmdPreProcAtsRemove('values')
+    cmdPreProcAtsRemove('attrs')
     dirtyDMDM(session, "plotNavBar")
   } 
   
@@ -120,9 +120,9 @@ observeEvent(input$plotNavBar, {
       modalPreProcEditor( preprocScripts, preprocName, type=type )
     )
   }
-  if( grepl( '^editPP-values-', cmd)){
+  if( grepl( '^editPP-attrs-', cmd)){
     type='attrs'
-    preprocName<-sub("^editPP-points-","",cmd)
+    preprocName<-sub("^editPP-attrs-","",cmd)
     tb<-filter(preProcScriptDB[[type]], scriptName==preprocName)
     preprocScripts<-tb$script
     names(preprocScripts)<-tb$cmd

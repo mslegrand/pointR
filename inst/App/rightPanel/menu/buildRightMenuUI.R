@@ -41,7 +41,7 @@ buildRightMenu<-function(){
       shinyDMDMenu::menuDropdown(
         "Attribute Preprocessor",
         shinyDMDMenu::menuItem('New', value='cmdNewAP'),
-        shinyDMDMenu::menuDropdown(id='dropDown-editPreProc-attrs','Edit preproc values'),
+        shinyDMDMenu::menuDropdown(id='dropDown-editPreProc-attrs','Edit preproc attrs'),
         shinyDMDMenu::menuItem('Import', value='cmdImportAP')
         #shinyDMDMenu::menuItem('Export', value='cmdExportAP'),
         #shinyDMDMenu::menuItem('Remove', value='cmdRemoveAP')

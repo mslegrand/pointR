@@ -7,7 +7,7 @@ cmdPreProcAtsImport<-function(){
 }
 
 
-loadPreProc<-function(datapath){
+loadPreProc<-function(datapath, type){
   extractBodyWithComments<-function(fn){
     tt<-capture.output(print(fn))
     tt<-paste(tt, collapse="\n")
@@ -24,26 +24,24 @@ loadPreProc<-function(datapath){
   tryCatch({
     preProcList<-source(datapath, local=T)$value
     #check preProcList
+  
     if(is.null(preProcList) ||  
-       #length(preProcList)!=3 ||
-       any(match(names(preProcList), unlist(preprocChoices)   , 0 )==0)
-      
+       !(setequal(names(preProcList), preprocChoices[[type]]))
     ){
       stop('ill-formed  preprocessor')
       # todo better message
     }
     
     preProcList<-sapply(preProcList, extractBodyWithComments)
-   
-    insertPreProcPtEntry(
-      tab_Id= getTibTabId(),  
-      tib_Name=getAssetName(),
-      pt_Column_Name=getTibColumnName(),
-      newScript=preProcList
-    )
-    selection<-names(preProcList)[1]
-    txt=preProcList[1]
-    updateAceEditor(session, editorId='ptPreProcAceEditor', value=txt)
+    if(type=='points'){
+      auxPath<-getPreProcPPAuxPath()
+    } else {
+      auxPath<-getPreProcPAAuxPath()
+    }
+    
+    #if this works, copy datapath to aux and reload
+      file.copy(datapath, auxPath, overwrite = TRUE)
+      readAuxPreProcs()
   }, 
   error=function(e){
         e<-c(e,traceback())
@@ -57,7 +55,7 @@ observeEvent(input$buttonPreProcPtImport,{
   if(length(fp.dt)>0 && nrow(fp.dt)){
     datapath<-as.character(fp.dt$datapath[1])
     datapath<-gsub(pattern = '^NA/', "~/", datapath)
-    loadPreProc(datapath)
+    loadPreProc(datapath, 'points')
   }
 })
 
@@ -66,6 +64,6 @@ observeEvent(input$buttonPreProcAtImport,{
   if(length(fp.dt)>0 && nrow(fp.dt)){
     datapath<-as.character(fp.dt$datapath[1])
     datapath<-gsub(pattern = '^NA/', "~/", datapath)
-    loadPreProc(datapath)
+    loadPreProc(datapath, 'attrs')
   }
 })
