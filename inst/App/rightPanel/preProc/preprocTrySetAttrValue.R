@@ -47,7 +47,8 @@ preprocTrySetAttrValue<-function( cmd.Row, ptDefs, rowIndex, selection, mssg=NUL
 
 #' Sets preproc values for
 #'  returnValue4ModuleRtFtr$tagPt() in serverFooterRight.R
-#'   
+#'  This differes from  preprocTrySetAttrValue by interating over all columns
+#'  and not just a single column
 preprocTrySetAttrValueS<-function(scripts,  ptDefs, rowIndex, selection){
   row<-rowIndex
   tryCatch({

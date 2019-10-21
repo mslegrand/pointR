@@ -16,6 +16,18 @@ syncDndDB<-function(usageDB){
   usageDB
 }
 
+# syncPreProcDB<-function(ppDB){
+#   ptScriptNames<-preProcScriptDB$points$scriptName
+#   atScriptNames<-preProcScriptDB$attrs$scriptName
+#   # filter out ptScript cmds with missing scriptName
+#   ppDB<-filter(ppDB, cmd %in% c('onChangeRow','onNewRow') || scriptName %in% ptScriptNames)
+#   # filter out ptScript cmds with missing scriptName
+#   ppDB<-filter(ppDB, cmd %in% c('onNewPt','onMovePt','onMoveMat') || scriptName %in% atScriptNames)
+#   ppDB
+# }
+
+
+
 restoreWorkSpace<-reactive({
   log.fin(restoreWorkSpace)
   workSpaceDir=getWorkSpaceDir()
@@ -134,6 +146,7 @@ restoreWorkSpace<-reactive({
   #preProcDB$points<-extractDBFromPages(wsPages, "^preprocScripts.", initTib=initialPreprocDB())
   
   tib<-extractDBFromPages(wsPages, "^preprocPage.", initTib=initialPreProcPageDB())
+  #tib<-syncPreProcDB(tib)
   preProcPageDB(tib)
   tib<-extractDBFromPages(wsPages, "^fileDescriptor.", initTib=initialFileDescDB() )
   fileDescDB(tib)  
