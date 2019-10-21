@@ -35,21 +35,17 @@ getNameType<-reactive({
     rtv<-errorPanelTag
   } else {
     if(!is.null(getAssetName())){
-      # browser()
       if( getAssetName() %in% names(getPtDefs()$tib) ){
         rtv<-tibTag
       } else if( identical(getAssetName(),transformTag) && usingTransformDraggable()) { 
         # return transformTag if transformTag and usingTransformDraggable()
         rtv<-transformTag
       } else {
-        #rtv<-RPanelTag 
         rtv<-getAssetName()
       }
     } else { # RPanelTag whenever getAssetName is NULL???
       rtv<-RPanelTag
     }
-    # cat('rtv=',format(rtv),"\n")
-    # cat("<---< getNameType\n")
   }
   rtv
 })
@@ -77,7 +73,6 @@ getColumnType<-reactive({
 #    getRightMidPanel
 #    serverEdTib to set transform panel
 getPlotState<-reactive({
-  # cat(">----> getPlotState\n")
   nameType<-getNameType()
   if(identical(nameType,tibTag)){
     colType<-getColumnType()
@@ -89,18 +84,14 @@ getPlotState<-reactive({
   } else {
     rtv<-nameType
   }
-  # cat("<----< getPlotState\n")
   rtv
 })
 
 # returns true iff editing tib contents
 getTibEditState<-reactive({
-  # cat("getTibEditState::getPlotState()=",format(getPlotState()),"\n")
-  # cat(">----> getTibEditState\n")
   rtv<-getSourceType()==svgPanelTag && 
     !is.null(getPlotState()) && 
     getPlotState() %in%  c("point", "value", "matrix")
-  # cat("<----< getTibEditState\n")
   rtv
 }
 )
@@ -114,7 +105,6 @@ getTibEditState<-reactive({
 # returns:
 #  RPanelTag, rmdPanelTag, or oneof point, matrix, value, if ptR
 getRightMidPanel<-reactive({
-  # cat(">---> getRightMidPanel\n")
   if(hasError()){
     rtv<-errorPanelTag
   } else if (panels$sourceType %in% c( rmdPanelTag, textPanelTag, snippetPanelTag, javascriptPanelTag, appPanelTag) ){
@@ -122,8 +112,6 @@ getRightMidPanel<-reactive({
   } else {
     rtv<-getPlotState()
   }
-  # cat('getRightMidPanel=',format(rtv),'\n')
-  # cat("<---< getRightMidPanel\n")
   rtv
 })
 
@@ -235,22 +223,6 @@ observeEvent(atLeast2Rows(),{
 
 
 
-# observeEvent( getRightMidPanel(), {
-#   panel<-getRightMidPanel()
-#   menuBarId="plotNavBar"
-#   entry="Attribute Preprocessor"
-#   if( identical(panel,'value')){
-#     enableDMDM(session, menuBarId=menuBarId, entry=entry)
-#   } else {
-#     disableDMDM(session, menuBarId=menuBarId, entry=entry)
-#   }
-#   entry="Point Preprocessor"
-#   if( identical(panel,'point') || identical(panel,'matrix')){
-#     enableDMDM(session, menuBarId=menuBarId, entry=entry)
-#   } else {
-#     disableDMDM(session, menuBarId=menuBarId, entry=entry)
-#   }
-# }, label='getRightMidPanel')
 
 # 
 observeEvent( c( getRightMidPanel(), hasPreProcChoices() ), {
