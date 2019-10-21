@@ -16,7 +16,7 @@ preProcPageDB<-reactiveVal(
 #' serverMouseCmdAddPt.R 
 #' serverMouseCmdMovePt.R 
 #' serverPanelCoordinator.R
-hasPtScript<-reactiveVal(FALSE, label='hasPtScript' )
+# hasPtScript<-reactiveVal(FALSE, label='hasPtScript' )
 
 #' must rewrite 
 #' to use columnName instead of getTibColumnName

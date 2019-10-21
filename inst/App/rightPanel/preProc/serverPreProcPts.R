@@ -2,6 +2,8 @@
 getSVGWH<-reactiveVal(c(650,620)) 
 
 
+
+
 # 
 # observeEvent(input$ptPreProcDropDown,{
 #   log.fin(input$ptPreProcDropDown )
@@ -21,9 +23,9 @@ getSVGWH<-reactiveVal(c(650,620))
 #   log.fout(input$ptPreProcDropDown )
 # })
 
-observeEvent(input$dimissPtPreProcButton,{
-  click('ptPreProcDropDown')
-})
+# observeEvent(input$dimissPtPreProcButton,{
+#   click('ptPreProcDropDown')
+# })
 
 
 observeEvent(input$dimissPreProcChoiceButton,{
@@ -31,12 +33,12 @@ observeEvent(input$dimissPreProcChoiceButton,{
 })
 
 
-lapply(unlist(preprocChoices, use.names = FALSE), function(name){
-  editorId=paste0('ptPreProcAce', name)
-  observeEvent( input[[editorId]], {
-    enable("commitPtPreProcButton")
-  }, ignoreInit = TRUE, ignoreNULL = TRUE)
-})
+# lapply(unlist(preprocChoices, use.names = FALSE), function(name){
+#   editorId=paste0('ptPreProcAce', name)
+#   observeEvent( input[[editorId]], {
+#     enable("commitPtPreProcButton")
+#   }, ignoreInit = TRUE, ignoreNULL = TRUE)
+# })
 
 
 
@@ -48,29 +50,29 @@ output$ptPreProcSource<-renderText(
   }
 )
 
-observeEvent( input$commitPtPreProcButton,{ 
-  
-  preprocScripts<-getPreProcPtScript() # retrieves scripts from db
-  # this is where we update the tabs and ace
-  for(name in unlist(preprocChoices, use.names = FALSE)){ #runs over all preproc cmds
-    if(name %in% names(preprocScripts)){ # restricts to scripts existing in db
-      editorId=paste0('ptPreProcAce', name)
-      newScript=input[[editorId]]
-      
-        setPreProcPtScript(
-          tab_Id=getTibTabId(),
-          tib_Name=getAssetName(),
-          pt_Column_Name=getTibColumnName(),
-          cmd_name=name,
-          newScript=newScript
-        )
-      
-      
-    } 
-  }
-  disable("commitPtPreProcButton")
-  # log.fout(input$commitPtPreProcButton)
-}, ignoreNULL = TRUE)
+# observeEvent( input$commitPtPreProcButton,{ 
+#   
+#   preprocScripts<-getPreProcPtScript() # retrieves scripts from db
+#   # this is where we update the tabs and ace
+#   for(name in unlist(preprocChoices, use.names = FALSE)){ #runs over all preproc cmds
+#     if(name %in% names(preprocScripts)){ # restricts to scripts existing in db
+#       editorId=paste0('ptPreProcAce', name)
+#       newScript=input[[editorId]]
+#       
+#         setPreProcPtScript(
+#           tab_Id=getTibTabId(),
+#           tib_Name=getAssetName(),
+#           pt_Column_Name=getTibColumnName(),
+#           cmd_name=name,
+#           newScript=newScript
+#         )
+#       
+#       
+#     } 
+#   }
+#   disable("commitPtPreProcButton")
+#   # log.fout(input$commitPtPreProcButton)
+# }, ignoreNULL = TRUE)
 
 observeEvent( input$commitPreProcChoiceButton, {
   scriptName=input$preProcChooser
