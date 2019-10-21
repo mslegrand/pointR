@@ -33,7 +33,7 @@ preProcModalType<-reactiveVal(NULL)
 modalPreProcEditor <- function( preprocScripts, preprocName, type='points'  ) {
   preProcModalType(type)
   modalDialog(
-    div( id='ptPreProcBackPanel', class='backPanel', style='padding:20px;',
+    div( id='ptPreProcBackPanelModalEdit', class='backPanel', style='padding:20px;',
         textInput("modalPreprocName", 
                   label=span(style='color: #00ffff;', 'Preprocessor Name'),  
                   value=preprocName, 

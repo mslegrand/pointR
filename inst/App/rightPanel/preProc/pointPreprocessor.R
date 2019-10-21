@@ -6,9 +6,10 @@ newPreProcDropDown<-function()
   # ppc<-getPreProcChoices()
   # ppcNames<-sub('\\.R$', '', ppc)
   dropdownId= "preProcDropDown" #paste0("PtPreProc",id)
-  absolutePanel( id='PtPreProcDiv', left=5, bottom=5, 
+  div_id=paste0(dropdownId,'Div')
+  absolutePanel( id=div_id, left=5, bottom=5, 
                  dropdown( inputId = dropdownId ,  
-                           div( id='ptPreProcBackPanel', class='backPanel',
+                           div( id='preProcBackPanelDropDown', class='backPanel',
                                 div( style='margin-left:20px; color: #00ffff; ', h4(textOutput("ptPreProcSource"))  ,
                                 radioButtons(inputId = 'preProcChooser', 
                                              label = 'Preproc chooser', 
