@@ -252,20 +252,21 @@ observeEvent(atLeast2Rows(),{
 #   }
 # }, label='getRightMidPanel')
 
-# need to rewrite for cmdExportAP cmdRemoveAP
-# observeEvent( c( getRightMidPanel(), hasPreProcChoices() ), {
-#   if( !is.null(getRightMidPanel()) && 
-#       #(getRightMidPanel() %in% c('point','matrix')) &&
-#       hasPreProcChoices() 
-#   ){
-#     removeCssClass( id='PtPreProcDiv', class="hiddenPanel")
-#     enableDMDM( session, menuBarId="plotNavBar", entry="cmdExportPP")
-#     enableDMDM( session, menuBarId="plotNavBar", entry="cmdRemovePP")
-#   } else {
-#     addCssClass( id='PtPreProcDiv', class="hiddenPanel")
-#     disableDMDM( session, menuBarId="plotNavBar", entry="cmdExportPP")
-#     disableDMDM( session, menuBarId="plotNavBar", entry="cmdRemovePP")
-#   }
-# }, 
-# label='PanelCoordinator.R:: c(getRightMidPanel(), hasPreProcChoices())' 
-# )
+# 
+observeEvent( c( getRightMidPanel(), hasPreProcChoices() ), {
+  dropdownId= "preProcDropDown" #paste0("PtPreProc",id)
+  div_id=paste0(dropdownId,'Div')
+  if( !is.null(getRightMidPanel()) &&
+      hasPreProcChoices()
+  ){
+    removeCssClass( id=div_id, class="hiddenPanel")
+    enableDMDM( session, menuBarId="plotNavBar", entry="cmdExportPP")
+    enableDMDM( session, menuBarId="plotNavBar", entry="cmdRemovePP")
+  } else {
+    addCssClass( id=div_id, class="hiddenPanel")
+    disableDMDM( session, menuBarId="plotNavBar", entry="cmdExportPP")
+    disableDMDM( session, menuBarId="plotNavBar", entry="cmdRemovePP")
+  }
+},
+label='PanelCoordinator.R:: c(getRightMidPanel(), hasPreProcChoices())'
+)
