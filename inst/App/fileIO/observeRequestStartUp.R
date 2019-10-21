@@ -17,5 +17,4 @@ observeEvent(trigger$startup, {
     )
     
     log.fout(startup)
-  # }
 }, priority=100)

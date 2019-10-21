@@ -35,7 +35,6 @@ loadAuxPreProc<-function(fullName){
     preProcList<-source(fullName, local=T)$value
     #check preProcList
     if(is.null(preProcList) ||  
-       #length(preProcList)!=3 ||
        any(match(names(preProcList), unlist(preprocChoices)   , 0 )==0)
        
     ){
@@ -45,7 +44,6 @@ loadAuxPreProc<-function(fullName){
     ppscripts<-lapply(preProcList, extractBodyWithComments)
     scriptName=sub('\\.R$','',basename(fullName))
     tb<-tibble(scriptName=scriptName, cmd=names(preProcList), script=ppscripts)
-    # may need to use cmds instead
    
     if( "preprocPts"==basename(dirname(fullName))){
       preProcScriptDB$points<-rbind(preProcScriptDB$points, tb)
@@ -62,9 +60,7 @@ loadAuxPreProc<-function(fullName){
 
 reloadPreProcScriptDB<-function(dirPath, scriptType='points'){
   ppfiles<-dir(dirPath, full.names=TRUE)
-  # refresh/add any dnd whose file has just appeared
   for(fullName in ppfiles ){
-    # loadPreProc
     readAuxPreProc(fullName)
   }
 }
@@ -80,7 +76,6 @@ clearPreProcEditMenu<-function(type='points'){
 
 populatePreProcEditMenu<-function(type=points){
   sn<-trimws(unique(preProcScriptDB[[type]]$scriptName))
-  #snn<-paste0('edit-',type,'-',sn)
   kids<-lapply(sn, function(nn){
     shinyDMDMenu::menuItem(nn, value=paste0('editPP-',type,'-',nn))
   })
@@ -133,8 +128,6 @@ getPreProcChoices<-reactive({
 hasPreProcChoices<-reactive({ length(getPreProcChoices())>0})
 
 observeEvent(input$preProcDropDown, {
-# observeEvent(c(selectedAsset$tabId, selectedAsset$name, 
-#                selectedAsset$columnName,   getPreProcChoices() ),{
   choices=getPreProcChoices()
   if(length(choices)>0){
     choices<-c('none', getPreProcChoices())
@@ -142,7 +135,6 @@ observeEvent(input$preProcDropDown, {
     tib_Name=selectedAsset$name
     column_Name=selectedAsset$columnName
     selected<-getPreProcScriptName(tab_Id, tib_Name, column_Name)
-    # selected<-'none'
   } else {
     choices<-'none'
     selected<-'none'  
@@ -151,7 +143,6 @@ observeEvent(input$preProcDropDown, {
 })
 
 writeAuxPreprocPoints<-function(filePath, scripts){
-  # scripts<-getPreProcPtScript()[preprocChoices$points]
   txt0<-paste(names(scripts),'= function( pt, context, WH, keys){\n',scripts,"\n}", collapse=",\n")
   str_split(txt0, '\n')[[1]]->lines
   paste0("  ", lines,collapse="\n")->txt1

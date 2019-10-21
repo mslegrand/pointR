@@ -62,7 +62,7 @@ observeEvent(input$modalPreprocName,{
 
 
 observeEvent( input$modalPreprocEditorCommitOk,{
-  cat('\n\n-----------------preProcEditorCommitOk\n\n')
+  
   preprocName<-input$modalPreprocName
   preprocName<-sub('\\.R$','',preprocName)
   preprocName<-paste0(preprocName,'.R')
@@ -76,25 +76,8 @@ observeEvent( input$modalPreprocEditorCommitOk,{
   } else {
     filePath<-file.path(getPreProcPAAuxPath(), preprocName)
   }
-  # 2 choices: 
-  # First choice:
-  # i. store in preProcScriptDB
-  # ii. write to aux via writeAuxPreprocPts (uses getPreProcPtScript) or ...
-  # Secondt choice
-  # write scripts directly to aux
   writeAuxPreprocPoints(filePath, scripts)
   readAuxPreProcs()
   removeModal()
   
 })
-
-
-
-# for(name in unlist(preprocChoices, use.names = FALSE)){
-#   if(name %in% names(preprocScripts)){
-#     editorId=paste0('ptPreProcAce', name)
-#     showTab("ptPreProcpages",name )
-#     updateAceEditor(session, editorId=editorId, value=preprocScripts[name])
-# 
-# 
-

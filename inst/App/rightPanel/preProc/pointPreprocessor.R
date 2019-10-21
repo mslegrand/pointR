@@ -3,8 +3,6 @@
 # dropdown for preprocessor
 newPreProcDropDown<-function()
 { 
-  # ppc<-getPreProcChoices()
-  # ppcNames<-sub('\\.R$', '', ppc)
   dropdownId= "preProcDropDown" #paste0("PtPreProc",id)
   div_id=paste0(dropdownId,'Div')
   absolutePanel( id=div_id, left=5, bottom=5, 

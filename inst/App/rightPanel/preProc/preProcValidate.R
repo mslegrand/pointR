@@ -26,9 +26,7 @@ assertConsistantTibPair<-function(tib1, tib2){
 validateTibLists<-function(tibs1, tibs2){
   Assert$check({!is.null(tibs2)}, message='returned null instead of a list')
   Assert$check({is.list(tibs2)}, message='fails to return a list of tibbles')
-  # if(!setequal(names(tibs1), names(tibs2))){
-  #   stop('returned missing or extra ptR members')
-  # }
+  
   for(n in intersect(names(tibs1),names(tibs2))){
     assertConsistantTibPair(tibs1[[n]], tibs2[[n]])
   }  

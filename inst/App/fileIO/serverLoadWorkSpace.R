@@ -16,17 +16,6 @@ syncDndDB<-function(usageDB){
   usageDB
 }
 
-# syncPreProcDB<-function(ppDB){
-#   ptScriptNames<-preProcScriptDB$points$scriptName
-#   atScriptNames<-preProcScriptDB$attrs$scriptName
-#   # filter out ptScript cmds with missing scriptName
-#   ppDB<-filter(ppDB, cmd %in% c('onChangeRow','onNewRow') || scriptName %in% ptScriptNames)
-#   # filter out ptScript cmds with missing scriptName
-#   ppDB<-filter(ppDB, cmd %in% c('onNewPt','onMovePt','onMoveMat') || scriptName %in% atScriptNames)
-#   ppDB
-# }
-
-
 
 restoreWorkSpace<-reactive({
   log.fin(restoreWorkSpace)
@@ -143,10 +132,7 @@ restoreWorkSpace<-reactive({
   usageDB<-syncDndDB(usageDB)
   dnippetsDB$usage<-usageDB
   
-  #preProcDB$points<-extractDBFromPages(wsPages, "^preprocScripts.", initTib=initialPreprocDB())
-  
   tib<-extractDBFromPages(wsPages, "^preprocPage.", initTib=initialPreProcPageDB())
-  #tib<-syncPreProcDB(tib)
   preProcPageDB(tib)
   tib<-extractDBFromPages(wsPages, "^fileDescriptor.", initTib=initialFileDescDB() )
   fileDescDB(tib)  
@@ -169,5 +155,5 @@ restoreWorkSpace<-reactive({
   return(aceId)
 })
   
-  # need add observer for aceId in pages??
+# need add observer for aceId in pages??
 
