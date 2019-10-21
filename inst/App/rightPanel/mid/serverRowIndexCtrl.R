@@ -17,7 +17,7 @@ observeEvent( input$rowIndex,{
       matColIndex<-length(pts[[rowIndex]])/2
       updateSelected( matCol=matColIndex, rowIndex=rowIndex)
     } else {
-      if(hasPtScript() && !is.null(getPreProcPtScript()['onChangeRow'])){
+      if( !is.null(getPreProcScript()['onChangeRow']) ){
         ptDefs<-getPtDefs()
         selection<-getAssetName()
         preprocTrySetAttrValue('onChangeRow', ptDefs, rowIndex, selection, mssg=NULL)
