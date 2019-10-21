@@ -16,7 +16,6 @@ moveMatrix<-function(dxy=getDxy(), context=context  ){
       rowIndex>0 && 
       rowIndex<=nrow(tib)
     ){
-      # columIndex<-getTibPtColPos() #which(names(tib)==ptColName)
       m<- tib[[rowIndex, columnIndex ]]
       m<-m+dxy
       tib[[rowIndex, columnIndex ]]<-tib[[rowIndex, columnIndex ]]+dxy
