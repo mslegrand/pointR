@@ -132,9 +132,9 @@ getPreProcChoices<-reactive({
 
 hasPreProcChoices<-reactive({ length(getPreProcChoices())>0})
 
-
-observeEvent(c(selectedAsset$tabId, selectedAsset$name, 
-               selectedAsset$columnName,   getPreProcChoices() ),{
+observeEvent(input$preProcDropDown, {
+# observeEvent(c(selectedAsset$tabId, selectedAsset$name, 
+#                selectedAsset$columnName,   getPreProcChoices() ),{
   choices=getPreProcChoices()
   if(length(choices)>0){
     choices<-c('none', getPreProcChoices())
