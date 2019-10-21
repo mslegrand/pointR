@@ -7,7 +7,7 @@ preprocTrySetAttrValue<-function( cmd.Row, ptDefs, rowIndex, selection, mssg=NUL
     mssg<-list(altKey=FALSE, shiftKey=FALSE, ctrlKey=FALSE, metaKey=FALSE)
   }
   tryCatch({ 
-    txt<-getPreProcPtScript()['onChangeRow']
+    txt<-getPreProcScript()['onChangeRow']
     tibs<-ptDefs$tib
     tib<-tibs[[selection]]
     values<-tib[[getTibColumnName()]]
@@ -47,7 +47,8 @@ preprocTrySetAttrValue<-function( cmd.Row, ptDefs, rowIndex, selection, mssg=NUL
 
 #' Sets preproc values for
 #'  returnValue4ModuleRtFtr$tagPt() in serverFooterRight.R
-#'   
+#'  This differes from  preprocTrySetAttrValue by interating over all columns
+#'  and not just a single column
 preprocTrySetAttrValueS<-function(scripts,  ptDefs, rowIndex, selection){
   row<-rowIndex
   tryCatch({

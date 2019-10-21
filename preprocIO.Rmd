@@ -1,0 +1,86 @@
+---
+title: "Reffactor Preproc"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Goals
+
+- Upon proj load, readin all preproc files in proj dir
+- new preproc to auto-save
+- edit preproc to auto-save
+- 2 tables
+    - **preProcScriptDB**
+        - fileName , cmd, script
+    - **preProcPageDB**
+        - tabId, tibName, colName, fileName
+- usage: how the script is to be obtained
+  - function **getPreProScript** (to be written) that performs the following
+      - given tabId, tibName, colName, get fileName
+      - given fileName, cmd get script
+
+## Strategy
+
+### first pass
+
+
+- move editor into **popup preproc editor**
+  - require name for each script
+- modify menu responses in serverPlotBar.R 
+    - cmds to modify
+        - *cmdNewPP* and 
+        - *cmdNewAp*
+    - modifications to Newxx
+        - require new filename
+        - trigger **popup preproc editor** (preproc popup to be written)
+        - upon *commit* populate *preProcScriptDB*
+    - add fileName to slider* checkbox (below)
+- replace *hasPtScript* with **hasPreprocScript**
+    -  **hasPreprocScript** should monitor **preProcScriptDB** and colType for status
+- **add slider-checbox picker** with names (checkbox to be written)
+  - require preproc type to match the current column type (value vs points)
+      - this means that from the filename, I should know whether is points or values
+  - edits *preProcPageDB* upon closing (or immediately?)
+      - tabId, tibName, colName only appears in *preProcPageDB* if a fileName has been assigned to them
+- replace **getPreProcPtScript** with **getPreProcScript**
+      - given tabId, tibName, colName,
+      - needs to
+          - getColType
+          - extract fileName from **preProcPageDB**
+          - given cmd and fileName, extract script from **preProcScriptDB**
+
+
+
+## second pass
+
+- *savePage* should serialize *preProcPageDB*
+- loading workspace should 
+    - load all preproc existing files into *preProcScriptDB*
+        - this is **syncPPDB** and **syncPADB**  similar to *syncDndDB*
+    - restore *preProcPageDB*
+        - prune any entries with fileNames not  *preProcScriptDB*
+
+## third pass 
+
+- menu cmds for
+    - import pp
+    - remove pp
+- remove export pp command
+  
+  
+  ## sequencing for initial devel
+  
+  - crate4 dbs
+    -  **preProcPageDB**
+    -  **preProcScriptDB**
+  - readin **preProcScriptDB** via 
+    - reloadDndDir
+  
+  - replace editor slider with checkbox slider
+  - replace *hasPtScript* with **hasPreprocScript**
+  - replace **getPreProcPtScript** with 
+      - single fn: **getPreProcScript**?
+  

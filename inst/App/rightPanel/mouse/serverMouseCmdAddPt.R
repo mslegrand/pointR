@@ -69,8 +69,8 @@ mouseCmdAddPt<-function(mssg){
   # now  add  the point
   newPtDefs<-ptDefs
   tibs<-newPtDefs$tib
-  if( hasPtScript() ){ #preproc pts 
-      txt<-getPreProcPtScript()['onNewPt']
+  txt<-getPreProcScript()['onNewPt']
+  if( !is.null(txt) ){ #preproc pts 
       tryCatch({
         getPoint<-function(){names(newPt)<-c('x','y'); newPt}
         context<-list(

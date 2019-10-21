@@ -1,6 +1,5 @@
 
 syncDndDB<-function(usageDB){
-  
   dndNames<-getDnippetsAll()
   usageNames<-names(usageDB)
   usageNames<-usageNames[usageNames!='tabId']
@@ -9,7 +8,6 @@ syncDndDB<-function(usageDB){
       usageDB<-select(usageDB, -sname)
     }
   }
-  
   for(sname in dndNames) {#
     if(!sname %in% usageNames){ #not in  usageDB
       usageDB<-add_column(usageDB, sname=FALSE)
@@ -17,6 +15,7 @@ syncDndDB<-function(usageDB){
   }
   usageDB
 }
+
 
 restoreWorkSpace<-reactive({
   log.fin(restoreWorkSpace)
@@ -133,8 +132,8 @@ restoreWorkSpace<-reactive({
   usageDB<-syncDndDB(usageDB)
   dnippetsDB$usage<-usageDB
   
-  preProcDB$points<-extractDBFromPages(wsPages, "^preprocScripts.", initTib=initialPreprocDB())
-
+  tib<-extractDBFromPages(wsPages, "^preprocPage.", initTib=initialPreProcPageDB())
+  preProcPageDB(tib)
   tib<-extractDBFromPages(wsPages, "^fileDescriptor.", initTib=initialFileDescDB() )
   fileDescDB(tib)  
   
@@ -156,5 +155,5 @@ restoreWorkSpace<-reactive({
   return(aceId)
 })
   
-  # need add observer for aceId in pages??
+# need add observer for aceId in pages??
 

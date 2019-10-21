@@ -85,7 +85,7 @@
 
 getDndAuxPath<-reactive({file.path(getDirPath(),'aux','dnds')})   
 
-readAuxDnippets<-function(fp, startup=TRUE){
+readAuxDnippets<-function( startup=TRUE){
   dndAuxPath<-getDndAuxPath()
   dPaths<-list.files(dndAuxPath, full.names=TRUE)
   if(length(dPaths)==0){

@@ -64,16 +64,12 @@ observeEvent(input$plotNavBar, {
   }
   
   if(cmd == 'cmdNewPP'){ # disable unless ...
-    columnName<-getTibColumnName()
-    if( getRightMidPanel()=='point' 
-    ){
-      newScript = c(
-        onNewPt=fileTemplates[['newPtTemplate.R']],
-        onMovePt=fileTemplates[['movePtTemplate.R']],
-        onMoveMat=fileTemplates[['moveMatTemplate.R']]  
-      ) 
-      insertPreProcPtEntry(getTibTabId(), getAssetName(), getTibColumnName(), newScript )
-    }
+    # columnName<-getTibColumnName()
+    type='points'
+    labels<-preprocChoices[[type]]
+    preprocScripts = fileTemplates[paste0(labels,'Template.R')]
+    names(preprocScripts)<-labels
+    cmdPreProcEdit(preprocScripts=preprocScripts, preprocName='', type=type)
     dirtyDMDM(session, "plotNavBar")
   }
   
@@ -81,28 +77,20 @@ observeEvent(input$plotNavBar, {
       cmdPreProcPtsImport()
       dirtyDMDM(session, "plotNavBar")
   }  
-  if(cmd=="cmdExportPP"){ #-----save
-    cmdPreProcPtsExport()
-    dirtyDMDM(session, "plotNavBar")
-  }   
-  if(cmd=="cmdRemovePP"){ #-----save
-    cmdPreProcPtsRemove('points')
-    dirtyDMDM(session, "plotNavBar")
-  } 
+  
+  # if(cmd=="cmdRemovePP"){ #-----save
+  #   cmdPreProcPtsRemove('points')
+  #   dirtyDMDM(session, "plotNavBar")
+  # } 
   
   if(cmd == 'cmdNewAP'){ # disable unless ...
     log.fin(cmd == 'cmdNewAP' )
-    columnName<-getTibColumnName()
-    if( identical(getRightMidPanel(),'value') 
-        # && 
-        # nrow(filter(preProcDB$points, tabId==getTibTabId() && tibName==getAssetName()))==0
-    ){
-      newScript = c(
-        onChangeRow=fileTemplates[['onRowChangeTemplate.R']],
-        onNewRow=fileTemplates[['onRowNewTemplate.R']]
-      ) 
-      insertPreProcPtEntry(getTibTabId(), getAssetName(), getTibColumnName(), newScript )
-    }
+    type='attrs'
+    labels<-preprocChoices[[type]]
+    preprocScripts = fileTemplates[paste0(labels,'Template.R')]
+    names(preprocScripts)<-labels
+    cmdPreProcEdit(preprocScripts=preprocScripts, preprocName='', type=type)
+    dirtyDMDM(session, "plotNavBar")
     log.fout(cmd == 'cmdNewAP')
     dirtyDMDM(session, "plotNavBar")
   }
@@ -111,12 +99,9 @@ observeEvent(input$plotNavBar, {
     cmdPreProcAtsImport()
     dirtyDMDM(session, "plotNavBar")
   }  
-  if(cmd=="cmdExportAP"){ #-----save
-    cmdPreProcAtsExport()
-    dirtyDMDM(session, "plotNavBar")
-  }   
+  
   if(cmd=="cmdRemoveAP"){ #-----save
-    cmdPreProcAtsRemove('values')
+    cmdPreProcAtsRemove('attrs')
     dirtyDMDM(session, "plotNavBar")
   } 
   
@@ -124,6 +109,32 @@ observeEvent(input$plotNavBar, {
     dirtyDMDM(session, "plotNavBar")
   }
   
+  
+  if( grepl( '^editPP-points-', cmd)){
+    type='points'
+    preprocName<-sub("^editPP-points-","",cmd)
+    tb<-filter(preProcScriptDB[[type]], scriptName==preprocName)
+    preprocScripts<-unlist(tb$script)
+    names(preprocScripts)<-unlist(tb$cmd)
+    showModal( 
+      modalPreProcEditor( preprocScripts, preprocName, type=type )
+    )
+  }
+  if( grepl( '^editPP-attrs-', cmd)){
+    type='attrs'
+    preprocName<-sub("^editPP-attrs-","",cmd)
+    tb<-filter(preProcScriptDB[[type]], scriptName==preprocName)
+    preprocScripts<-tb$script
+    names(preprocScripts)<-tb$cmd
+    showModal( 
+      modalPreProcEditor( preprocScripts, preprocName, type=type )
+    )
+  }
+  
+  
+  
+  
 })
+
 
 

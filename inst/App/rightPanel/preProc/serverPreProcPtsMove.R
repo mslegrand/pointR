@@ -17,7 +17,6 @@ movePoint<-function(pt, context=context  ){
       rowIndex>0 && 
       rowIndex<=nrow(tib)
     ){
-      #columIndex<-getTibPtColPos() #ie. which(names(tib)==ptColName)
       tib[[rowIndex,columnIndex]][,matColIndex] <-pt
       tibs[[assetName]]<-tib
     }

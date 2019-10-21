@@ -11,9 +11,6 @@ output$TopRightPanel<-renderUI({
   )
 })
 
-# output$LeftMidRightPanel<-renderUI({
-#   moduleRowDNDUI("rowDND", input, output)
-# })
 
 output$BottomRightPanel<-renderUI({
   tagList(

@@ -13,7 +13,7 @@ mouseCmdValue<- function(mssg){
   selection<-getAssetName()
   
   #--- insert hook here
-  if(hasPtScript() && !is.null(getPreProcPtScript()['onChangeRow'])){
+  if( !is.null(getPreProcScript()['onChangeRow'])){
     preprocTrySetAttrValue('onChangeRow', ptDefs, rowIndex, selection, mssg)
   } else {
     updateAceExtDef(ptDefs, sender=sender, selector=list( rowIndex=rowIndex))
