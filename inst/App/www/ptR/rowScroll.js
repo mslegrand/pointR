@@ -113,4 +113,12 @@ rowScrollBaR.prototype.onUpClick = function() {
   $(this.listId).animate({top:"+=" + delta +"px"},'slow',function(){});
 };
 
-
+/*
+$(".radio .ui-sortable-handle").contextmenu(function(){
+   //e.preventDefault();
+   alert('hello');
+	// toggle background via class or colorset
+	//$(this).addClass('group-row');
+ return false;
+});
+*/
