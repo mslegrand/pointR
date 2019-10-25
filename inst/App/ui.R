@@ -174,7 +174,7 @@ shinyUI(
           uiOutput("BottomRightPanel"),
           uiOutput("TopRightPanel"),
           div( id="midRightPanels", class="cMidPanel ctop140",
-            div( id='svgOutPanel',  class="cSvgOut", uiOutput("MidRightPanel")),
+            div( id='svgOutPanel',  class="cSvgOut", tabindex="0", uiOutput("MidRightPanel")),
             div( id='rowOutPanel',  class='cRowOut', 
                  
                  rowPicker(inputId="myTibRowCntrl", count=50),

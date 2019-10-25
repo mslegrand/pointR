@@ -226,6 +226,16 @@ $('document').ready(function()
     }
   });
   
+  
+  $( "#svgOutPanel" ).keydown(function(event) {
+    $( "#svgOutPanel" ).data("keycode", event.keyCode );
+   // alert( "Handler for .keydown() called." );
+  });
+  $( "#svgOutPanel" ).keyup(function(event) {
+    $( "#svgOutPanel" ).data("keycode", null);
+   // alert( "Handler for .keyup() called." );
+  });
+  
   /*
   $("#left-component").on('resize', function(e){
     console.log('resize #left-component');
