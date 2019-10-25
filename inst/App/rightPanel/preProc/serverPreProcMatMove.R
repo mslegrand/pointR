@@ -7,20 +7,22 @@ moveMatrix<-function(dxy=getDxy(), context=context  ){
       assetName %in% names(tibs) 
   ){
     tib<-tibs[[ assetName ]]
-    rowIndex<-   context$row
     columnIndex<-context$column
-    matColIndex<-context$ptIndex
-    if( 
-      is_scalar_numeric(rowIndex) &&
-      is_scalar_numeric(matColIndex)  &&
-      rowIndex>0 && 
-      rowIndex<=nrow(tib)
-    ){
-      m<- tib[[rowIndex, columnIndex ]]
-      m<-m+dxy
-      tib[[rowIndex, columnIndex ]]<-tib[[rowIndex, columnIndex ]]+dxy
-      tibs[[assetName]]<-tib
+    
+    rowIndex<-context$row
+    for(rowIndex in context$row){
+      if(  is_scalar_numeric(rowIndex) &&
+        rowIndex>0 && 
+        rowIndex<=nrow(tib) &&
+        is_scalar_numeric(ncol( tib[[ rowIndex, columnIndex]]))
+      ){
+        m<- tib[[rowIndex, columnIndex ]]
+        m<-m+dxy
+        tib[[rowIndex, columnIndex ]]<-tib[[rowIndex, columnIndex ]]+dxy
+       
+      } 
     }
+    tibs[[assetName]]<-tib
   }
   tibs
 }

@@ -1,3 +1,4 @@
+rowGroupsDB<-reactiveVal(initialRowGroupDB())
 
 # if the number of rows change or the current row changes
 # possible initial triggers causing a change in getTibNRow():
@@ -13,7 +14,7 @@
 #  Generally, 
 # the number of rows is determined from ptDefs after ace update 
 # so, the control cannot determine the initial trigger 
-observeEvent( c(getTibNRow(), getTibRow()), {
+observeEvent(  getTibRow(), {
   # updateRadioButtons(session, "rowIndex", label = NULL,  choices=1:(getTibNRow()),
   #                    selected = getTibRow())
   rowIndex<-input$myTibRowCntrl$selected
@@ -24,12 +25,27 @@ observeEvent( c(getTibNRow(), getTibRow()), {
   ){
     return(NULL)
   }
+  updateRowPicker(session, "myTibRowCntrl",
+                  selectRow = getTibRow()
+    )
+})
 
+observeEvent( getTibNRow(), {
+  # updateRadioButtons(session, "rowIndex", label = NULL,  choices=1:(getTibNRow()),
+  #                    selected = getTibRow())
+  rowIndex<-input$myTibRowCntrl$selected
+  if(!is.null(getTibRow()) &&
+     rowIndex==getTibRow() &&
+     !is.null(getTibNRow()) &&
+     length(input$myTibRowCntrl$order)== getTibNRow()
+  ){
+    return(NULL)
+  }
+  
   updateRowPicker(session, "myTibRowCntrl",
                   selectRow = getTibRow(),
                   count= getTibNRow()
-    )
-
+  )
 })
 
 
@@ -118,15 +134,15 @@ observeEvent( input$myTibRowCntrl$order,{
   }
 })
 
-# observeEvent( input$myTibRowCntrl$group,{
-#   if( getTibEditState()==TRUE ){
-#     group<-input$myTibRowCntrl$group
-#     name<-getAssetName()
-#     
-#     columnName<-getTibColumnName()
-#     # update the group for this column
-#     updateSelected( rowGroupIndices=group)
-#   }
-# })
+observeEvent( input$myTibRowCntrl$group,{
+  if( getTibEditState()==TRUE ){
+    group<-input$myTibRowCntrl$group
+    aname<-getAssetName()
+    pageId<-getTibTabId()
+    db<-filter(rowGroupsDB(), tabId!=pageId || name!=aname )
+    db<-rbind(db, tibble(tabId=pageId, name=aname,rows=group))
+    rowGroupsDB(db)
+  }
+})
 
 

@@ -1,6 +1,7 @@
 
 observeEvent(trigger$startup, {
     log.fin(startup)
+    rowGroupsDB(initialRowGroupDB())
     reOrgPanels(id=NULL, mode=NULL)
     readAuxDnippets()
     readAuxPreProcs()

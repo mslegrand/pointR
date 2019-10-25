@@ -5,7 +5,7 @@ mouseCmdValue<- function(mssg){
   src<-getCode()
   replacementList<-list()
   ptDefs<-getPtDefs() 
-  
+  updateRowPicker(session, "myTibRowCntrl", removeEntireGroup=TRUE)
   sender='tagDrag.mouse'
   tid<-mssg$id
   tmp<-unlist(str_split(tid,"_"))
