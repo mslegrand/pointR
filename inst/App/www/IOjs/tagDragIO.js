@@ -14,7 +14,7 @@ function PtRPanelTagDrag(svgId){ //currently svgId is not used here
 
 // selectElement 
 PtRPanelTagDrag.prototype.selectElement = function (evt) {
-  
+  evt.stopPropagation();
   this.selectedElement = evt.currentTarget;
   this.currentX = evt.clientX;
   this.currentY = evt.clientY;
@@ -36,6 +36,7 @@ PtRPanelTagDrag.prototype.selectElement = function (evt) {
 // translation of an element
 PtRPanelTagDrag.prototype.moveElement = function (evt) {
   if(this.selectedElement!==0){ // this should not be necessary
+    evt.stopPropagation();
     var dx = evt.clientX - this.currentX;
     var dy = evt.clientY - this.currentY;
     this.currentMatrix[4] += dx;
@@ -51,7 +52,7 @@ PtRPanelTagDrag.prototype.moveElement = function (evt) {
 PtRPanelTagDrag.prototype.deselectElement =  function (evt) {
   if(this.selectedElement !== 0){
     
-    
+    evt.stopPropagation();
     var movedByX = evt.clientX - this.origX;
     var movedByY = evt.clientY - this.origY;
   

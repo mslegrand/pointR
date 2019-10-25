@@ -12,7 +12,7 @@ function PtRPanelPoints(svgId){
 PtRPanelPoints.prototype.newPoint = function (evt) {
   this.pt.x = evt.clientX;
   this.pt.y = evt.clientY;
-  
+  evt.stopPropagation();
   //if (evt.altKey || evt.shiftKey || evt.ctrlKey || evt.metaKey) {
   //    alert('Hooray!');
   //}
@@ -35,6 +35,7 @@ PtRPanelPoints.prototype.newPoint = function (evt) {
 
 // implements moving a single point
 PtRPanelPoints.prototype.selectPoint = function (evt){
+  evt.stopPropagation();
   this.selectedElement = evt.target;
   this.currentX = evt.clientX;
   this.currentY = evt.clientY;
@@ -46,6 +47,7 @@ PtRPanelPoints.prototype.selectPoint = function (evt){
 
 PtRPanelPoints.prototype.movePoint = function (evt){
   if(this.selectedElement !== 0){
+    evt.stopPropagation();
     this.selectedElement = evt.target;
     var dx = evt.clientX - this.currentX;
     var dy = evt.clientY - this.currentY; 
@@ -66,6 +68,7 @@ PtRPanelPoints.prototype.movePoint = function (evt){
 
 PtRPanelPoints.prototype.deselectPoint = function (evt){
   if(this.selectedElement !== 0){
+    evt.stopPropagation();
     this.pt.x = evt.clientX;
     this.pt.y = evt.clientY;
     
