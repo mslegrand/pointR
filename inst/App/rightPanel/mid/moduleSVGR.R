@@ -88,18 +88,20 @@ svgToolsScript<-function(type){
           svg$root$setAttr('id',svgID)
           if(getSvgGrid()$show==TRUE){ 
             dxy<-c( getSvgGrid()$dx, getSvgGrid()$dy)
-            svg$root$prependNode(svgR:::graphPaper( wh=c(w,h), dxy=dxy, labels=TRUE )) 
+            svg$root$prependNode(svgR:::graphPaper( wh=c(w,h), dxy=dxy, labels=TRUE )) #need to replace with vbScaleFactor-scalable version
           }
           if(getBackDrop()$checked==FALSE){
               svg$root$prependChildren(
                 svgR:::use(filter=svgR:::filter(filterUnits="userSpaceOnUse", svgR:::feFlood(flood.color=getBackDrop()$color))))
           } else {
+             wh2=c(20,20)/vbScaleFactor
+             wh1=c(10,10)/vbScaleFactor
              svg$root$prependChildren(
                svgR:::rect(xy=c(0,0), wh=c(w,h),
-                  fill=svgR:::pattern( xy=c(0,0), wh=c(20,20), patternUnits="userSpaceOnUse",
+                  fill=svgR:::pattern( xy=c(0,0), wh=wh2, patternUnits="userSpaceOnUse",
                     svgR:::g(
-                      svgR:::rect(xy=c(0,0), wh=c(10,10), fill=getBackDrop()$color),
-                      svgR:::rect(xy=c(10,10), wh=c(10,10), fill=getBackDrop()$color)
+                      svgR:::rect(xy=c(0,0), wh=wh1, fill=getBackDrop()$color),
+                      svgR:::rect(xy=wh1, wh=wh1, fill=getBackDrop()$color)
                     )
                   )
                 )
