@@ -57,13 +57,14 @@ PtRPanelTagDrag.prototype.deselectElement =  function (evt) {
     var movedByY = evt.clientY - this.origY;
   
     var dxy=[ movedByX, movedByY];
-      
+    var kc=$( "#svgOutPanel" ).data("keycode");
       
     Shiny.onInputChange("mouseMssg",
       {
           cmd: "transGrp",
           vec: [movedByX, movedByY],
           id : this.selectedElement.getAttribute("tid"),
+          keycode:      kc,
           altKey:   !!evt.altKey,
           shiftKey: !!evt.shiftKey,
           ctrlKey:  !!evt.ctrlKey,

@@ -20,11 +20,13 @@ PtRPanelPoints.prototype.newPoint = function (evt) {
   
   // The cursor point, translated into svg coordinates
   var cursorpt =  this.pt.matrixTransform(this.svg.getScreenCTM().inverse());
+  var kc=$( "#svgOutPanel" ).data("keycode");
   Shiny.onInputChange("mouseMssg",
                       {
                         cmd:      "add",
                         vec:      [cursorpt.x, cursorpt.y],
                         id:       "dummyId",
+                        keycode:      kc,
                         altKey:   !!evt.altKey,
                         shiftKey: !!evt.shiftKey,
                         ctrlKey:  !!evt.ctrlKey,
@@ -74,11 +76,12 @@ PtRPanelPoints.prototype.deselectPoint = function (evt){
     
     // The cursor point, translated into svg coordinates
     var cursorpt =  this.pt.matrixTransform(this.svg.getScreenCTM().inverse());
-    
+    var kc=$( "#svgOutPanel" ).data("keycode");
     Shiny.onInputChange("mouseMssg",{
         cmd: "move",
         vec: [cursorpt.x, cursorpt.y],
         id: this.selectedElement.getAttribute("id"),
+        keycode:      kc,
         altKey:   !!evt.altKey,
         shiftKey: !!evt.shiftKey,
         ctrlKey:  !!evt.ctrlKey,
