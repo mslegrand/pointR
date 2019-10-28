@@ -43,7 +43,7 @@ svgToolsScript<-function(type){
   
   # Todo: add the mouseMssg handler
   
-  output$svghtml <- renderUI({
+  output$svghtml <- renderUI({ # renderUI is probably not the most efficient approach!!!
     WH<-getSVGWH()
     codeTxt<-getCode()
     if(is.null(getSvgGrid())){return(NULL)}
@@ -114,6 +114,8 @@ svgToolsScript<-function(type){
               temp<-svgR(showPts.compound()(vbScaleFactor))$root$xmlChildren()
               svg$root$appendChildren(temp)
           }
+          # todo: append to svg$root the attribute onmousedown='ptRPlotter_ptR_SVG_keyMouse.onMouseDown(evt)"
+          # svg$root$addAttributes(list(onmousedown='ptRPlotter_ptR_SVG_keyMouse.onMouseDown(evt)'))
          as.character(svg)->svgOut 
           res<-HTML(svgOut)
           rtv$status<-list(

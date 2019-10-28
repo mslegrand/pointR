@@ -34,6 +34,7 @@ shinyUI(
         tags$script(src = 'IOjs/rotIO.js' ),
         tags$script(src = 'IOjs/scaleIO.js' ),
         tags$script(src = 'IOjs/tagDragIO.js' ),
+        tags$script(src = 'IOjs/keymouseIO.js' ),
         tags$script(src = 'shared/jqueryui/jquery-ui.min.js'),
         tags$script(src = 'ptR/scrollTabs.js' ),
         tags$script(src = 'ptR/snippetScroll.js' ),
