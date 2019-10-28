@@ -114,8 +114,9 @@ svgToolsScript<-function(type){
               temp<-svgR(showPts.compound()(vbScaleFactor))$root$xmlChildren()
               svg$root$appendChildren(temp)
           }
-          # todo: append to svg$root the attribute onmousedown='ptRPlotter_ptR_SVG_keyMouse.onMouseDown(evt)"
-          # svg$root$addAttributes(list(onmousedown='ptRPlotter_ptR_SVG_keyMouse.onMouseDown(evt)'))
+          # Append to svg$root the attribute onmousedown
+           keyMouseScript=paste0('onKeyMouseDown(evt, "', svgID, '")')
+           svg$root$addAttributes(list(onmousedown=keyMouseScript))
          as.character(svg)->svgOut 
           res<-HTML(svgOut)
           rtv$status<-list(
