@@ -4,7 +4,7 @@
 preprocTrySetAttrValue<-function( cmd.Row, ptDefs, rowIndex, selection, mssg=NULL){
   log.fin(preprocTrySetAttrValue)
   if(is.null(mssg)){
-    mssg<-list(altKey=FALSE, shiftKey=FALSE, ctrlKey=FALSE, metaKey=FALSE)
+    mssg<-list(altKey=FALSE, shiftKey=FALSE, ctrlKey=FALSE, metaKey=FALSE, keycode=NULL)
   }
   tryCatch({ 
     txt<-getPreProcScript()['onChangeRow']
@@ -30,7 +30,7 @@ preprocTrySetAttrValue<-function( cmd.Row, ptDefs, rowIndex, selection, mssg=NUL
       appendLastRow=appendLastRow,
       appendAttrValues=appendAttrValues,
       context=context,
-      keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey)
+      keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey, keycode=mssg$keycode)
     )
     tibs<-eval(parse(text=txt), ppenv )
     validateTibLists(getPtDefs()$tib, tibs)
@@ -75,7 +75,7 @@ preprocTrySetAttrValueS<-function(scripts,  ptDefs, rowIndex, selection){
           appendLastRow=appendLastRow,
           appendAttrValues=appendAttrValues,
           context=context,
-          keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey)
+          keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey, mssg$keycode)
         )
         tibs<-eval(parse(text=txt), ppenv )
         validateTibLists(getPtDefs()$tib, tibs)
