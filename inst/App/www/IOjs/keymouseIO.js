@@ -1,10 +1,3 @@
-
-function PtRPanelKeyMouse(svgId){
-  //this.svgId=svgId;
-  //this.svg=document.querySelector("#" + svgId); 
-  //this.pt= this.svg.createSVGPoint();
-}
-
 //called to obtaine mouse with keycode
 onKeyMouseDown = function (evt, svgId) {
   let kc=$( "#svgOutPanel" ).data("keycode");
