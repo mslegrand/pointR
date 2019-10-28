@@ -1,7 +1,7 @@
 //called to obtaine mouse with keycode
 onKeyMouseDown = function (evt, svgId) {
   let kc=$( "#svgOutPanel" ).data("keycode");
-  if(!!kc){
+  if(!!evt.altKey){
     console.log('keyMouse: svgId='+svgId);
     console.log('keyMouse: kc='+kc);
     var svg=document.querySelector("#" + svgId);
