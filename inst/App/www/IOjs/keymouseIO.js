@@ -6,18 +6,21 @@ function PtRPanelKeyMouse(svgId){
 }
 
 //called to obtaine mouse with keycode
-PtRPanelKeyMouse.prototype.onMouseDown = function (evt, svgId) {
+onKeyMouseDown = function (evt, svgId) {
   let kc=$( "#svgOutPanel" ).data("keycode");
   if(!!kc){
+    console.log('keyMouse: svgId='+svgId);
+    console.log('keyMouse: kc='+kc);
     var svg=document.querySelector("#" + svgId);
-    var pt= this.svg.createSVGPoint();
+    var pt= svg.createSVGPoint();
     pt.x = evt.clientX;
     pt.y = evt.clientY;
     evt.stopPropagation();
     var cursorpt =  pt.matrixTransform(svg.getScreenCTM().inverse());
+    console.log('keyMouse: cursorpt='+ cursorpt.x +","+cursorpt.y );
     Shiny.onInputChange("mouseMssg",
                         {
-                          cmd:      "key",
+                          cmd:      "keyMouse",
                           vec:      [cursorpt.x, cursorpt.y],
                           id:       svgId,
                           keycode:      kc,
