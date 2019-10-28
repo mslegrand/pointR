@@ -8,7 +8,6 @@ mouseCmdFindPoint<-function(mssg){
   toName<-NULL
   toColName<- NULL
   toRow<-0
-  browser()
   for(name in names(tibs)){
     tib<-tibs[[name]]
     for(colName in names(tib)){
