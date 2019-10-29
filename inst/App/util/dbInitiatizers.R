@@ -69,4 +69,7 @@ initialWidgetDB<-function(){
   tibble(tabId='Tab0', name='x',column='y',type='character',minVal=NA, maxVal=NA,step=1, selectedWidget=NA)[0,]
 }
 
+initialRowGroupDB<-function(){
+  tibble(tabId='Tab0', name='x',rows=c(0,1,2,3))[0,]
+}
 

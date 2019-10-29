@@ -104,6 +104,7 @@ shinyServer(function(input, output,session) {
   source("rightPanel/mouse/serverMouseCmdMoveMatrix.R",          local=TRUE)
   source("rightPanel/mouse/serverMouseCmdValue.R",               local=TRUE)
   source("rightPanel/mouse/serverMouseCmdTransform.R",           local=TRUE)
+  source("rightPanel/mouse/serverMouseCmdFindPoint.R",           local=TRUE)
   source("rightPanel/mouse/serverMouseClicks.R",                 local=TRUE)
   source("rightPanel/menu/cmdNewColumn.R",                       local=TRUE)
   source("rightPanel/menu/cmdNewAsset.R",                        local=TRUE)

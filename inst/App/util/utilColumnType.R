@@ -70,7 +70,6 @@ listColType<-function(x){
 
 # callers: PanelCoordinator::getColumnType, preProcValidate::assertConsistantTibPair
 extractColType<-function( column ){
-  #cat("extractColType: class(column)",class(column),"\n")
   if(is.list(column)){
     return(listColType(column))
   } else {
@@ -92,60 +91,3 @@ extractColType<-function( column ){
   }
 }
 
-
-# below not used !!!----------------
-
-# # sole caller: lowerBd (below)
-# upperBd<-function(vals){
-#   ml<-max(vals)
-#   if(ml==0){
-#     return(0)
-#   } else if (ml>0){
-#     ml<-log(ml,10)
-#     fml<-floor(ml)
-#     if((ml-fml)>log(5,10)){
-#       maxVal<-10^(fml+1)
-#     } else {
-#       maxVal<-5*10^fml
-#     }
-#     return(maxVal)
-#   } else {
-#     return(-lowerBd(-1*vals))
-#   }
-# }
-# 
-# # sole caller: upperBd (below)
-# lowerBd<-function(vals){
-#   ml<-min(vals)
-#   if(ml==0){
-#     return(0)
-#   } else if( ml>0){
-#     ml<-log(min(vals),10)
-#     fml<-floor(ml)
-#     if((ml-fml)>log(5,10)){
-#       minVal<-5*10^(fml)
-#     } else {
-#       minVal<-10^fml
-#     }    
-#   } else {
-#     return(-upperBd(-1*vals))
-#   }
-# }
-# 
-# 
-# 
-# 
-# # not used
-# isIntegerString<-function(x){
-#   all(nchar(x)>0 && !grepl("[^[:digit:]]",x))
-# }
-# 
-# # not used
-# isInteger<-function(x){
-#   all(x==as.integer(x))
-# }
-# # not used
-# isBooleanString<-function(x){
-#   all(x %in% c('T','F','TRUE','FALSE'))
-# }
-# 

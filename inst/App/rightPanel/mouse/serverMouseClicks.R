@@ -20,11 +20,15 @@ observeEvent(input$mouseMssg, { #may want to rename this: input$mouseMssg
       if(panelName=='matrix'){
         if(cmd=='transGrp'){ # -- move tagged group (from tagDrag)
           mouseCmdMoveMatrix(mssg)
+        } else if (cmd=='keyMouse'){
+          mouseCmdFindPoint(mssg)
         }
       }
       if(panelName=='value'){
-        if(cmd=='tagValSelect'){ # -- move tagged group (from tagDrag)
+        if(cmd=='tagValSelect'){ 
           mouseCmdValue(mssg)
+        } else if (cmd=='keyMouse'){
+          mouseCmdFindPoint(mssg)
         }
       }
       if(panelName==transformTag){

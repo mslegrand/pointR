@@ -8,7 +8,7 @@ function PtRPanelTagVal(svgId){ //currently svgId is not used here
 
 // selectElement 
 PtRPanelTagVal.prototype.selectElement = function (evt) {
-  
+  evt.stopPropagation();
   this.selectedElement = evt.currentTarget;
   
   //add eventattrs to element
@@ -22,11 +22,14 @@ PtRPanelTagVal.prototype.selectElement = function (evt) {
   // deselect that element
 PtRPanelTagVal.prototype.deselectElement =  function (evt) {
   if(this.selectedElement !== 0){
+    evt.stopPropagation();
+    let kc=$( "#svgOutPanel" ).data("keycode");
     Shiny.onInputChange("mouseMssg",
       {
           cmd: "tagValSelect",
           vec: [0, 0],
           id : this.selectedElement.getAttribute("tid"),
+          keycode:      kc,
           altKey:   !!evt.altKey,
           shiftKey: !!evt.shiftKey,
           ctrlKey:  !!evt.ctrlKey,

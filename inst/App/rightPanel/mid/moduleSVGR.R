@@ -40,10 +40,34 @@ svgToolsScript<-function(type){
     WH=NULL
   )
  
+  graphPaper2 %<c-% function(wh, dxy=c(10, 10), labels=FALSE, scaleFactor =1 ){
+    seq(0,wh[1],dxy[1])->xs
+    seq(0,wh[2],dxy[2])->ys
+    grph<-g(
+      stroke.width=1/scaleFactor,
+      lapply(xs, function(x){line(xy1=c(x,0),xy2=c(x,wh[2]))}),
+      lapply(ys, function(y){line(xy1=c(0,y),xy2=c(wh[1],y))})
+    )
+    if(labels){
+      grph<-c(grph,
+              lapply(xs, function(x)text(font.size=10, xy=scaleFactor*c(x+1,1),x, 
+                                         text.anchor="start", alignment.baseline="hanging",
+                                         transform=paste0('scale(',1/scaleFactor ,')') )),
+              lapply(ys, function(y)text(font.size=10, xy=scaleFactor*c(1,y),y, 
+                                         text.anchor="start", alignment.baseline="baseline",
+                                         transform=paste0('scale(',1/scaleFactor ,')') ))
+      )
+    }
+    g( 
+       font.size=10,
+       stroke="grey",
+       #transform=paste0('scale(',1/scaleFactor,')' ),
+       grph
+    )
+  }
+ 
   
-  # Todo: add the mouseMssg handler
-  
-  output$svghtml <- renderUI({
+  output$svghtml <- renderUI({ # renderUI is probably not the most efficient approach!!!
     WH<-getSVGWH()
     codeTxt<-getCode()
     if(is.null(getSvgGrid())){return(NULL)}
@@ -88,18 +112,22 @@ svgToolsScript<-function(type){
           svg$root$setAttr('id',svgID)
           if(getSvgGrid()$show==TRUE){ 
             dxy<-c( getSvgGrid()$dx, getSvgGrid()$dy)
-            svg$root$prependNode(svgR:::graphPaper( wh=c(w,h), dxy=dxy, labels=TRUE )) 
+            #svg$root$prependNode(svgR:::graphPaper( wh=c(w,h), dxy=dxy, labels=TRUE )) #need to replace with vbScaleFactor-scalable version
+            svg$root$prependNode( graphPaper2( wh=c(w,h), dxy=dxy, labels=TRUE, scaleFactor= vbScaleFactor))
           }
           if(getBackDrop()$checked==FALSE){
               svg$root$prependChildren(
-                svgR:::use(filter=svgR:::filter(filterUnits="userSpaceOnUse", svgR:::feFlood(flood.color=getBackDrop()$color))))
+                svgR:::use(filter=svgR:::filter(xy=c(0,0), wh=c(w,h), filterUnits="userSpaceOnUse", svgR:::feFlood(flood.color=getBackDrop()$color)))
+              )
           } else {
+             wh2=c(20,20)/vbScaleFactor
+             wh1=c(10,10)/vbScaleFactor
              svg$root$prependChildren(
                svgR:::rect(xy=c(0,0), wh=c(w,h),
-                  fill=svgR:::pattern( xy=c(0,0), wh=c(20,20), patternUnits="userSpaceOnUse",
+                  fill=svgR:::pattern( xy=c(0,0), wh=wh2, patternUnits="userSpaceOnUse",
                     svgR:::g(
-                      svgR:::rect(xy=c(0,0), wh=c(10,10), fill=getBackDrop()$color),
-                      svgR:::rect(xy=c(10,10), wh=c(10,10), fill=getBackDrop()$color)
+                      svgR:::rect(xy=c(0,0), wh=wh1, fill=getBackDrop()$color),
+                      svgR:::rect(xy=wh1, wh=wh1, fill=getBackDrop()$color)
                     )
                   )
                 )
@@ -112,6 +140,9 @@ svgToolsScript<-function(type){
               temp<-svgR(showPts.compound()(vbScaleFactor))$root$xmlChildren()
               svg$root$appendChildren(temp)
           }
+          # Append to svg$root the attribute onmousedown
+           keyMouseScript=paste0('onKeyMouseDown(evt, "', svgID, '")')
+           svg$root$addAttributes(list(onmousedown=keyMouseScript))
          as.character(svg)->svgOut 
           res<-HTML(svgOut)
           rtv$status<-list(

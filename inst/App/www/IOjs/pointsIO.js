@@ -12,7 +12,7 @@ function PtRPanelPoints(svgId){
 PtRPanelPoints.prototype.newPoint = function (evt) {
   this.pt.x = evt.clientX;
   this.pt.y = evt.clientY;
-  
+  evt.stopPropagation();
   //if (evt.altKey || evt.shiftKey || evt.ctrlKey || evt.metaKey) {
   //    alert('Hooray!');
   //}
@@ -20,11 +20,13 @@ PtRPanelPoints.prototype.newPoint = function (evt) {
   
   // The cursor point, translated into svg coordinates
   var cursorpt =  this.pt.matrixTransform(this.svg.getScreenCTM().inverse());
+  var kc=$( "#svgOutPanel" ).data("keycode");
   Shiny.onInputChange("mouseMssg",
                       {
                         cmd:      "add",
                         vec:      [cursorpt.x, cursorpt.y],
                         id:       "dummyId",
+                        keycode:      kc,
                         altKey:   !!evt.altKey,
                         shiftKey: !!evt.shiftKey,
                         ctrlKey:  !!evt.ctrlKey,
@@ -35,6 +37,7 @@ PtRPanelPoints.prototype.newPoint = function (evt) {
 
 // implements moving a single point
 PtRPanelPoints.prototype.selectPoint = function (evt){
+  evt.stopPropagation();
   this.selectedElement = evt.target;
   this.currentX = evt.clientX;
   this.currentY = evt.clientY;
@@ -46,6 +49,7 @@ PtRPanelPoints.prototype.selectPoint = function (evt){
 
 PtRPanelPoints.prototype.movePoint = function (evt){
   if(this.selectedElement !== 0){
+    evt.stopPropagation();
     this.selectedElement = evt.target;
     var dx = evt.clientX - this.currentX;
     var dy = evt.clientY - this.currentY; 
@@ -66,16 +70,18 @@ PtRPanelPoints.prototype.movePoint = function (evt){
 
 PtRPanelPoints.prototype.deselectPoint = function (evt){
   if(this.selectedElement !== 0){
+    evt.stopPropagation();
     this.pt.x = evt.clientX;
     this.pt.y = evt.clientY;
     
     // The cursor point, translated into svg coordinates
     var cursorpt =  this.pt.matrixTransform(this.svg.getScreenCTM().inverse());
-    
+    var kc=$( "#svgOutPanel" ).data("keycode");
     Shiny.onInputChange("mouseMssg",{
         cmd: "move",
         vec: [cursorpt.x, cursorpt.y],
         id: this.selectedElement.getAttribute("id"),
+        keycode:      kc,
         altKey:   !!evt.altKey,
         shiftKey: !!evt.shiftKey,
         ctrlKey:  !!evt.ctrlKey,

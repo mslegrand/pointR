@@ -5,7 +5,7 @@ mouseCmdMovePt<- function(mssg){
   src<-getCode()
   replacementList<-list()
   ptDefs<-getPtDefs() 
-  
+  updateRowPicker(session, "myTibRowCntrl", removeEntireGroup=TRUE)
   sender='PointsBar.mouse.move'
   id<-mssg$id
   newPtDefs<-ptDefs
