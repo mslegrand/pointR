@@ -43,20 +43,25 @@ svgToolsScript<-function(type){
   graphPaper2 %<c-% function(wh, dxy=c(10, 10), labels=FALSE, scaleFactor =1 ){
     seq(0,wh[1],dxy[1])->xs
     seq(0,wh[2],dxy[2])->ys
-    grph<-c(
+    grph<-g(
+      stroke.width=1/scaleFactor,
       lapply(xs, function(x){line(xy1=c(x,0),xy2=c(x,wh[2]))}),
       lapply(ys, function(y){line(xy1=c(0,y),xy2=c(wh[1],y))})
     )
     if(labels){
       grph<-c(grph,
-              lapply(xs, function(x)text(xy=c(x+2,10),x)),
-              lapply(ys, function(y)text(xy=c(2,y),y))
+              lapply(xs, function(x)text(font.size=10, xy=scaleFactor*c(x+1,1),x, 
+                                         text.anchor="start", alignment.baseline="hanging",
+                                         transform=paste0('scale(',1/scaleFactor ,')') )),
+              lapply(ys, function(y)text(font.size=10, xy=scaleFactor*c(1,y),y, 
+                                         text.anchor="start", alignment.baseline="baseline",
+                                         transform=paste0('scale(',1/scaleFactor ,')') ))
       )
     }
-    g( stroke.width=1,
+    g( 
        font.size=10,
        stroke="grey",
-       transform=paste0('scale=',1/scaleFactor),
+       #transform=paste0('scale(',1/scaleFactor,')' ),
        grph
     )
   }
@@ -112,8 +117,7 @@ svgToolsScript<-function(type){
           }
           if(getBackDrop()$checked==FALSE){
               svg$root$prependChildren(
-                svgR:::use(filter=svgR:::filter(filterUnits="userSpaceOnUse", svgR:::feFlood(flood.color=getBackDrop()$color)))
-                #svgR:::rect(xy=c(0,0), wh=c(w,h), fill=getBackDrop()$color)
+                svgR:::use(filter=svgR:::filter(xy=c(0,0), wh=c(w,h), filterUnits="userSpaceOnUse", svgR:::feFlood(flood.color=getBackDrop()$color)))
               )
           } else {
              wh2=c(20,20)/vbScaleFactor
