@@ -29,6 +29,10 @@ mouseCmdFindPoint<-function(mssg){
       }
     }
   }
+  
+  # todo: if current col name in toName, and coltype is same as current type
+  # set toColName = current col name
+  
   # if found change current selection to 
   if(toVal<Inf){
     updateSelected( name=toName, rowIndex=toRow, columnName=toColName )
