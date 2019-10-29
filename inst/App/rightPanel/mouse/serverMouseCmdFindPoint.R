@@ -2,11 +2,17 @@ mouseCmdFindPoint<-function(mssg){
   if(length(mssg$vec)>0){
     pt<- as.numeric(unlist(mssg$vec))
   }
-  tibs<-getPtDefs()$tib
+  
+  
+  fromColumnName<-getTibColumnName()
+  fromCol<-getTib()[[fromColumnName]]
+  fromColType<-extractColType( fromCol)
+  
   # to get assetName, ptColName, rowIndex of matrix closest to pt
   toVal<-Inf
   toName<-NULL
   toColName<- NULL
+  tibs<-getPtDefs()$tib
   toRow<-0
   for(name in names(tibs)){
     tib<-tibs[[name]]
@@ -30,11 +36,20 @@ mouseCmdFindPoint<-function(mssg){
     }
   }
   
-  # todo: if current col name in toName, and coltype is same as current type
-  # set toColName = current col name
+  
+  
   
   # if found change current selection to 
   if(toVal<Inf){
+    # if asset=toName contains a column with the same name as the current col
+    # and it's column type is the same as the current col, then toColName<-fromColName
+    if(fromColumnName %in% names(tibs[[toName]]) ){
+      toCol<-tibs[[toName]][[fromColumnName]]
+      toColType<-extractColType(toCol)
+      if(identical(toColType, fromColType)){
+        toColName<-fromColumnName
+      }
+    }
     updateSelected( name=toName, rowIndex=toRow, columnName=toColName )
   }
 } 
