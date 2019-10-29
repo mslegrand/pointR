@@ -2,15 +2,15 @@
 onKeyMouseDown = function (evt, svgId) {
   let kc=$( "#svgOutPanel" ).data("keycode");
   if(!!evt.altKey){
-    console.log('keyMouse: svgId='+svgId);
-    console.log('keyMouse: kc='+kc);
-    var svg=document.querySelector("#" + svgId);
-    var pt= svg.createSVGPoint();
+    // console.log('keyMouse: svgId='+svgId);
+    // console.log('keyMouse: kc='+kc);
+    let svg=document.querySelector("#" + svgId);
+    let pt= svg.createSVGPoint();
     pt.x = evt.clientX;
     pt.y = evt.clientY;
     evt.stopPropagation();
-    var cursorpt =  pt.matrixTransform(svg.getScreenCTM().inverse());
-    console.log('keyMouse: cursorpt='+ cursorpt.x +","+cursorpt.y );
+    let cursorpt =  pt.matrixTransform(svg.getScreenCTM().inverse());
+    // console.log('keyMouse: cursorpt='+ cursorpt.x +","+cursorpt.y );
     Shiny.onInputChange("mouseMssg",
                         {
                           cmd:      "keyMouse",

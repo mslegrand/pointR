@@ -23,7 +23,7 @@ PtRPanelTagVal.prototype.selectElement = function (evt) {
 PtRPanelTagVal.prototype.deselectElement =  function (evt) {
   if(this.selectedElement !== 0){
     evt.stopPropagation();
-    var kc=$( "#svgOutPanel" ).data("keycode");
+    let kc=$( "#svgOutPanel" ).data("keycode");
     Shiny.onInputChange("mouseMssg",
       {
           cmd: "tagValSelect",
