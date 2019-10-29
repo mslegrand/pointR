@@ -20,7 +20,8 @@ newPreProcPanel<-function(label, value){
 }
 
 preProcTabSetPanel<-function(id='ptPreProcpages', preprocScripts ){
-  preprocScripts<-unlist(preprocScripts, use.names = FALSE)
+  
+  preprocScripts<-unlist(preprocScripts, use.names = TRUE)
   pptabs<-mapply(newPreProcPanel, names(preprocScripts), preprocScripts, 
                  SIMPLIFY = FALSE, USE.NAMES = FALSE)
   do.call(tabsetPanel, pptabs)
