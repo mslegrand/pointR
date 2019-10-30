@@ -70,6 +70,6 @@ initialWidgetDB<-function(){
 }
 
 initialRowGroupDB<-function(){
-  tibble(tabId='Tab0', name='x',rows=c(0,1,2,3))[0,]
+  tibble(tabId='Tab0', name='x',rows=c(0,1,2,3), colName='col')[0,]
 }
 

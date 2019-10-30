@@ -14,7 +14,7 @@ mouseCmdMoveMatrix<-function(mssg){
   selection<-getAssetName() 
   matColIndx<-ncol(newPtDefs$tib[[selection]][[ row, getTibPtColPos() ]])
   
-  # Todo for inter tib move support
+  # Todo: for inter tib move support
   # selection -> 1 or more selections
   # row (currently corresponding to single name) - sets of rows
   #  might implement by either 
@@ -28,19 +28,95 @@ mouseCmdMoveMatrix<-function(mssg){
   #         ii providing the list to the user, have the user loop
   
   
-  # Issues: we suppose that we derive context from rowGroupDB, but
+  # Issues: we suppose that we derive context from rowGroupsDB, but
   # rowGroupDB contains
   # - tabId: should be fixed for this page
   # - name: the asset name (tib name)
   # - rows: the indices of the selected rows
   
-  # 1. we currently don't know the ptCol to translate, (add to rowGroupDB?)
+  # 1. we currently don't know which ptCol in the given row to apply the translation, 
+  #    - to fix we could 
+  #      - add ptCol to rowGroupDB? (added if we use findeR from a ptCol)
+  #      - take first ptCol and apply
+  #      - translate all non-empty ptrows
   # 2. the user might corrupt the tibs before we get to the given tib
+  
+  
+  # if we add a colName to rowGroupDB, then what?
+  #   must clear rowGroupDB if we change col or asset, unless we change via findR alt+ctrl (kill=F)
+  #       observer( col, aname,{ if(kill==T){ } else{ kill=T})
+  #   then we loop over entries in rowGroupsDB to reassign pts
+  #   Need to prevent double translation of current row, col, asset
+  #   so remove from rowGroupsDB and then add back to rowGroupsDB
+  
+  # pc<-tibble(
+  #   name=selection,
+  #   rows=row,
+  #   colName=getTibColumnName()
+  # )
+  # if( mssg$ctrlKey==TRUE){ #add row to rowGroupsDB
+  #   updateRowPicker(session, "myTibRowCntrl", addToGroup = row)
+  #   pageId<-getTibTabId()
+  #   cname<-getTibColumnName()
+  #   tpc<-filter(rowGroupsDB(), tabId==pageId & name==selection & rows!=row & colName != cname)
+  #   tpc<-select(pc,'name','rows','colName')
+  #   pc<-rbind<-c(tpc,pc)
+  # }  else {
+  #   updateRowPicker(session, "myTibRowCntrl", removeEntireGroup=TRUE)
+  # }
+  # 
+  # contextList<-pmap(pc, function(name,rows,colName){
+  #   c(name=name, column=colName, row=rows)
+  # })
+  # 
+  # txt<-getPreProcScript()['onMoveMat']
+  # if( !is.null(txt) ){
+  #   tryCatch({ 
+  #     getDxy<-function(){names(dxy)<-c('dx','dy'); dxy}
+  #     
+  #     ppenv<-list(
+  #       keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey),
+  #       WH=getSVGWH()
+  #     )
+  #     # LOOP: for each context in context list, form context (remember to do current asset + col last)
+  #     tibs<-getPtDefs()$tib
+  #     for(cntx in pc){
+  #       context<-c(cntx, tibs)
+  #       tibs<-eval(parse(text=txt), ppenv )
+  #       validateTibLists(getPtDefs()$tib, tibs)
+  #     }
+  #     newPtDefs$tib<-tibs
+  #     # matCol index update for all or just current???
+  #     matCol<-ncol(tibs[[getAssetName()]][row[1], getTibPtColPos()] )
+  #     # end LOOP
+  #     updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=row[1], matCol=matCol))  
+  #   },error=function(e){
+  #     e<-c('preproErr',unlist(e))
+  #     err<-paste(unlist(e), collapse="\n", sep="\n")
+  #     alert(err)
+  #   })
+  # } else {
+  #   matCol<-NULL
+  #   for(arow in row){
+  #     m<-newPtDefs$tib[[selection]][[ arow, getTibPtColPos() ]]
+  #     newPtDefs$tib[[selection]][[ arow, getTibPtColPos() ]]<-m+vec
+  #     if(is.null(matCol)){
+  #       matCol<-ncol(m)
+  #     }
+  #   }
+  #   
+  #   updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=row[1], matCol=matCol)) 
+  # }
+  #------------------------------------
+  
+  
+  
   
   if( mssg$ctrlKey==TRUE){ #add row to rowGroupsDB
     updateRowPicker(session, "myTibRowCntrl", addToGroup = row)
     pageId<-getTibTabId()
-    row0<-filter(rowGroupsDB(), tabId==pageId & name==selection & rows!=row)$rows
+    cname<-getTibColumnName()
+    row0<-filter(rowGroupsDB(), tabId==pageId & name==selection & rows!=row & colName != cname)$rows
     row<-c(row,row0)
   }  else {
     updateRowPicker(session, "myTibRowCntrl", removeEntireGroup=TRUE)
@@ -48,20 +124,20 @@ mouseCmdMoveMatrix<-function(mssg){
   
   txt<-getPreProcScript()['onMoveMat']
   if( !is.null(txt) ){
-      tryCatch({ 
+      tryCatch({
         getDxy<-function(){names(dxy)<-c('dx','dy'); dxy}
-        
+
         ppenv<-list(
           keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey),
           WH=getSVGWH()
         )
         # LOOP: for each context in context list, form context (remember to do current asset + col last)
-        
+        tibs<-getPtDefs()$tib
         context<-list(
           name=getAssetName(),
           column=getTibPtColPos(),
           row=row,
-          tibs=getPtDefs()$tib
+          tibs=tibs
         )
         tibs<-eval(parse(text=txt), ppenv )
         validateTibLists(getPtDefs()$tib, tibs)
@@ -69,7 +145,7 @@ mouseCmdMoveMatrix<-function(mssg){
         # matCol index update for all or just current???
         matCol<-ncol(tibs[[getAssetName()]][row[1], getTibPtColPos()] )
         # end LOOP
-        updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=row[1], matCol=matCol))  
+        updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=row[1], matCol=matCol))
       },error=function(e){
         e<-c('preproErr',unlist(e))
         err<-paste(unlist(e), collapse="\n", sep="\n")

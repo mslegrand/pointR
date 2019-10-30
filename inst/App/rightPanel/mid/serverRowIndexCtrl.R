@@ -139,8 +139,9 @@ observeEvent( input$myTibRowCntrl$group,{
     group<-input$myTibRowCntrl$group
     aname<-getAssetName()
     pageId<-getTibTabId()
-    db<-filter(rowGroupsDB(), tabId!=pageId || name!=aname )
-    db<-rbind(db, tibble(tabId=pageId, name=aname,rows=group))
+    cname<-getTibColumnName()
+    db<-filter(rowGroupsDB(), tabId!=pageId || name!=aname || colName != cname )
+    db<-rbind(db, tibble(tabId=pageId, name=aname,rows=group, colName=cname))
     rowGroupsDB(db)
   }
 })
