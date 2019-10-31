@@ -116,8 +116,9 @@ observeEvent( input$myTibRowCntrl$selected, {
 
 # if this control changes the order
 observeEvent( input$myTibRowCntrl$order,{
-  if( getTibEditState()==TRUE ){
+  if( getTibEditState()==TRUE &  !all(diff(input$myTibRowCntrl$order)==1)){
     ordering<-input$myTibRowCntrl$order
+    log.val(ordering)
     name<-getAssetName()
     row<-getTibRow()
     columnName<-getTibColumnName()
