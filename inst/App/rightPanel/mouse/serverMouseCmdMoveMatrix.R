@@ -76,44 +76,77 @@ mouseCmdMoveMatrix<-function(mssg){
   # TODO: for each ctx in contextList
   #  getPreProcScript needs args of tabId, assetName, columnName, and
   # invoke preproc only when that is non-empty
-  txt<-getPreProcScript()['onMoveMat']
-  if( !is.null(txt) ){
-    tryCatch({
-      getDxy<-function(){names(dxy)<-c('dx','dy'); dxy}
-
-      ppenv<-list(
-        keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey),
-        WH=getSVGWH()
-      )
-      # LOOP: for each context in context list, form context (remember to do current asset + col last)
-      
-      for(ctx in contextList){
+  
+  tryCatch({
+    matCol<-NULL
+    getDxy<-function(){names(dxy)<-c('dx','dy'); dxy}
+    ppenv<-list(
+      keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey),
+      WH=getSVGWH()
+    )
+    for(ctx in contextList){
+      txt<-extractPreProcScript(
+        tab_Id=pageId, 
+        tib_Name= ctx$name,
+        column_Name= names( tibs[[ctx$name]] )[ ctx$column ]  
+      )['onMoveMat']
+      if(is.null(txt)){
+        m<-tibs[[context$name]][[ context$row, context$column ]]
+        tibs[[context$name]][[ context$row, context$column ]]<-m+vec 
+      } else {
         context<-c(ctx, list(tibs=tibs))
         tibs<-eval(parse(text=txt), ppenv )
         validateTibLists(getPtDefs()$tib, tibs)
       }
-      newPtDefs$tib<-tibs
-      # matCol index update for all or just current???
-      matCol<-ncol(tibs[[getAssetName()]][row, getTibPtColPos()] )
-      # end LOOP
-      updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=row[1], matCol=matCol))
-    },error=function(e){
-      e<-c('preproErr',unlist(e))
-      err<-paste(unlist(e), collapse="\n", sep="\n")
-      alert(err)
-    })
-  } else { #no preproc, just add
-    matCol<-NULL
-    for(ctx in contextList){
-      m<-tibs[[context$name]][[ context$row, context$column ]]
-      newPtDefs$tib[[context$name]][[ context$row, context$column ]]<-m+vec
     }
-    rowIndx=row      
-    if(is.null(matCol)){
-        matCol<-ncol(m)
-    }
+    matCol<-ncol(tibs[[getAssetName()]][row, getTibPtColPos()] )
+    newPtDefs$tib<-tibs
     updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=row, matCol=matCol))
-  }
+  }, error=function(e){
+    e<-c('preproErr',unlist(e))
+    err<-paste(unlist(e), collapse="\n", sep="\n")
+    alert(err)
+  })
+    
+    
+  # txt<-getPreProcScript()['onMoveMat']
+  # if( !is.null(txt) ){
+  #   tryCatch({
+  #     getDxy<-function(){names(dxy)<-c('dx','dy'); dxy}
+  # 
+  #     ppenv<-list(
+  #       keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey),
+  #       WH=getSVGWH()
+  #     )
+  #     # LOOP: for each context in context list, form context (remember to do current asset + col last)
+  #     
+  #     for(ctx in contextList){
+  #       context<-c(ctx, list(tibs=tibs))
+  #       tibs<-eval(parse(text=txt), ppenv )
+  #       validateTibLists(getPtDefs()$tib, tibs)
+  #     }
+  #     newPtDefs$tib<-tibs
+  #     # matCol index update for all or just current???
+  #     matCol<-ncol(tibs[[getAssetName()]][row, getTibPtColPos()] )
+  #     # end LOOP
+  #     updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=row[1], matCol=matCol))
+  #   },error=function(e){
+  #     e<-c('preproErr',unlist(e))
+  #     err<-paste(unlist(e), collapse="\n", sep="\n")
+  #     alert(err)
+  #   })
+  # } else { #no preproc, just add
+  #   matCol<-NULL
+  #   for(ctx in contextList){
+  #     m<-tibs[[context$name]][[ context$row, context$column ]]
+  #     newPtDefs$tib[[context$name]][[ context$row, context$column ]]<-m+vec
+  #   }
+  #   rowIndx=row      
+  #   if(is.null(matCol)){
+  #       matCol<-ncol(m)
+  #   }
+  #   updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=row, matCol=matCol))
+  # }
   #------------------------------------
   
   
