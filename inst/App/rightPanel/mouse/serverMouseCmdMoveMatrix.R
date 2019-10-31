@@ -72,10 +72,8 @@ mouseCmdMoveMatrix<-function(mssg){
     list(name=name, column=columnIndex, row=rows)
   })
   
-  #tibs<-getPtDefs()$tib
-  # TODO: for each ctx in contextList
-  #  getPreProcScript needs args of tabId, assetName, columnName, and
-  # invoke preproc only when that is non-empty
+  
+  
   
   tryCatch({
     matCol<-NULL
@@ -91,8 +89,8 @@ mouseCmdMoveMatrix<-function(mssg){
         column_Name= names( tibs[[ctx$name]] )[ ctx$column ]  
       )['onMoveMat']
       if(is.null(txt)){
-        m<-tibs[[context$name]][[ context$row, context$column ]]
-        tibs[[context$name]][[ context$row, context$column ]]<-m+vec 
+        m<-tibs[[ctx$name]][[ ctx$row, ctx$column ]]
+        tibs[[ctx$name]][[ ctx$row, ctx$column ]]<-m+vec 
       } else {
         context<-c(ctx, list(tibs=tibs))
         tibs<-eval(parse(text=txt), ppenv )
