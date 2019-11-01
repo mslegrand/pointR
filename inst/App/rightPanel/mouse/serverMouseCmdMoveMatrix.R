@@ -55,9 +55,10 @@ mouseCmdMoveMatrix<-function(mssg){
     colName=getTibColumnName()
   )
   pageId<-getTibTabId()
-  #browser()
+  
   if( mssg$ctrlKey==TRUE){ #add row to rowGroupsDB
-    updateRowPicker(session, "myTibRowCntrl", addToGroup = row)
+    updateRowPicker(session, "myTibRowCntrl", addToGroup = getTibRow(), 
+                    selectRow = row)
     
     cname<-getTibColumnName()
     cntx1<-filter(rowGroupsDB(), tabId==pageId & !(name==selection & rows==row & colName == cname ))
@@ -72,9 +73,6 @@ mouseCmdMoveMatrix<-function(mssg){
     columnIndex<-which(names(tibs[[name]])==colName  )
     list(name=name, column=columnIndex, row=rows)
   })
-  
-  
-  
   
   tryCatch({
     matCol<-NULL
@@ -106,104 +104,4 @@ mouseCmdMoveMatrix<-function(mssg){
     err<-paste(unlist(e), collapse="\n", sep="\n")
     alert(err)
   })
-    
-    
-  # txt<-getPreProcScript()['onMoveMat']
-  # if( !is.null(txt) ){
-  #   tryCatch({
-  #     getDxy<-function(){names(dxy)<-c('dx','dy'); dxy}
-  # 
-  #     ppenv<-list(
-  #       keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey),
-  #       WH=getSVGWH()
-  #     )
-  #     # LOOP: for each context in context list, form context (remember to do current asset + col last)
-  #     
-  #     for(ctx in contextList){
-  #       context<-c(ctx, list(tibs=tibs))
-  #       tibs<-eval(parse(text=txt), ppenv )
-  #       validateTibLists(getPtDefs()$tib, tibs)
-  #     }
-  #     newPtDefs$tib<-tibs
-  #     # matCol index update for all or just current???
-  #     matCol<-ncol(tibs[[getAssetName()]][row, getTibPtColPos()] )
-  #     # end LOOP
-  #     updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=row[1], matCol=matCol))
-  #   },error=function(e){
-  #     e<-c('preproErr',unlist(e))
-  #     err<-paste(unlist(e), collapse="\n", sep="\n")
-  #     alert(err)
-  #   })
-  # } else { #no preproc, just add
-  #   matCol<-NULL
-  #   for(ctx in contextList){
-  #     m<-tibs[[context$name]][[ context$row, context$column ]]
-  #     newPtDefs$tib[[context$name]][[ context$row, context$column ]]<-m+vec
-  #   }
-  #   rowIndx=row      
-  #   if(is.null(matCol)){
-  #       matCol<-ncol(m)
-  #   }
-  #   updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=row, matCol=matCol))
-  # }
-  #------------------------------------
-  
-  
-  
-  
-  # if( mssg$ctrlKey==TRUE){ #add row to rowGroupsDB
-  #   updateRowPicker(session, "myTibRowCntrl", addToGroup = row)
-  #   pageId<-getTibTabId()
-  #   cname<-getTibColumnName()
-  #   row0<-filter(rowGroupsDB(), tabId==pageId & name==selection & rows!=row & colName != cname)$rows
-  #   row<-c(row,row0)
-  # }  else {
-  #   updateRowPicker(session, "myTibRowCntrl", removeEntireGroup=TRUE)
-  # }
-  # 
-  # txt<-getPreProcScript()['onMoveMat']
-  # if( !is.null(txt) ){
-  #     tryCatch({
-  #       getDxy<-function(){names(dxy)<-c('dx','dy'); dxy}
-  # 
-  #       ppenv<-list(
-  #         keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey),
-  #         WH=getSVGWH()
-  #       )
-  #       # LOOP: for each context in context list, form context (remember to do current asset + col last)
-  #       tibs<-getPtDefs()$tib
-  #       context<-list(
-  #         name=getAssetName(),
-  #         column=getTibPtColPos(),
-  #         row=row,
-  #         tibs=tibs
-  #       )
-  #       tibs<-eval(parse(text=txt), ppenv )
-  #       validateTibLists(getPtDefs()$tib, tibs)
-  #       newPtDefs$tib<-tibs
-  #       # matCol index update for all or just current???
-  #       matCol<-ncol(tibs[[getAssetName()]][row[1], getTibPtColPos()] )
-  #       # end LOOP
-  #       updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=row[1], matCol=matCol))
-  #     },error=function(e){
-  #       e<-c('preproErr',unlist(e))
-  #       err<-paste(unlist(e), collapse="\n", sep="\n")
-  #       alert(err)
-  #     })
-  # } else {
-  #   matCol<-NULL
-  #   for(arow in row){
-  #      m<-newPtDefs$tib[[selection]][[ arow, getTibPtColPos() ]]
-  #      newPtDefs$tib[[selection]][[ arow, getTibPtColPos() ]]<-m+vec
-  #      if(is.null(matCol)){
-  #        matCol<-ncol(m)
-  #      }
-  #   }
-  #   
-  #   updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=row[1], matCol=matCol)) 
-  # }
-  
-  
-  
-   
 }
