@@ -54,10 +54,11 @@ mouseCmdMoveMatrix<-function(mssg){
     rows=row,
     colName=getTibColumnName()
   )
+  pageId<-getTibTabId()
   #browser()
   if( mssg$ctrlKey==TRUE){ #add row to rowGroupsDB
     updateRowPicker(session, "myTibRowCntrl", addToGroup = row)
-    pageId<-getTibTabId()
+    
     cname<-getTibColumnName()
     cntx1<-filter(rowGroupsDB(), tabId==pageId & !(name==selection & rows==row & colName == cname ))
     cntx1<-select(cntx1,'name','rows','colName')
@@ -90,7 +91,7 @@ mouseCmdMoveMatrix<-function(mssg){
       )['onMoveMat']
       if(is.null(txt)){
         m<-tibs[[ctx$name]][[ ctx$row, ctx$column ]]
-        tibs[[ctx$name]][[ ctx$row, ctx$column ]]<-m+vec 
+        tibs[[ctx$name]][[ ctx$row, ctx$column ]]<-m+dxy 
       } else {
         context<-c(ctx, list(tibs=tibs))
         tibs<-eval(parse(text=txt), ppenv )
