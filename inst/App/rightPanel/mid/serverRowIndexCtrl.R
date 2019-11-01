@@ -77,43 +77,6 @@ observeEvent( input$myTibRowCntrl$selected, {
   }
 })
 
-# # if this control changes the order
-# observeEvent( input$rowIndex_order,{
-#   if( getTibEditState()==TRUE ){
-#     ordering<-as.integer(input$rowIndex_order)
-#     name<-getAssetName()
-#     row<-getTibRow()
-#     columnName<-getTibColumnName()
-#     newPtDefs<-getPtDefs()
-#     tib<-newPtDefs$tib[[name]]
-#     tib<-tib[ordering,]
-#     newPtDefs$tib[[name]]<-tib
-#     row<-which(row==ordering)
-#     sender="reorderRow"
-#     updateAceExtDef(newPtDefs, sender=sender, selector=list( name=name, rowIndex=row, columnName=columnName   ) )
-#   }
-# })
-
-
-# # if this control changes the order
-# observeEvent( input$rowIndex_order,{
-#   if( getTibEditState()==TRUE ){
-#     ordering<-as.integer(input$rowIndex_order)
-#     name<-getAssetName()
-#     row<-getTibRow()
-#     columnName<-getTibColumnName()
-#     newPtDefs<-getPtDefs()
-#     tib<-newPtDefs$tib[[name]]
-#     tib<-tib[ordering,]
-#     newPtDefs$tib[[name]]<-tib
-#     row<-which(row==ordering)
-#     sender="reorderRow"
-#     updateAceExtDef(newPtDefs, sender=sender, selector=list( name=name, rowIndex=row, columnName=columnName   ) )
-#   }
-# })
-# 
-
-
 # if this control changes the order
 observeEvent( input$myTibRowCntrl$order,{
   if( getTibEditState()==TRUE &  !all(diff(input$myTibRowCntrl$order)==1)){
@@ -141,10 +104,36 @@ observeEvent( input$myTibRowCntrl$group,{
     aname<-getAssetName()
     pageId<-getTibTabId()
     cname<-getTibColumnName()
-    db<-filter(rowGroupsDB(), tabId!=pageId || name!=aname || colName != cname )
+    #db<-filter(rowGroupsDB(), tabId!=pageId || name!=aname || colName != cname )
+    db<-filter(rowGroupsDB(), tabId!=pageId | name!=aname)
     db<-rbind(db, tibble(tabId=pageId, name=aname,rows=group, colName=cname))
     rowGroupsDB(db)
   }
 })
 
 
+# observeEvent(getAssetName(),{ #reload rowpicker
+#   aname<-getAssetName()
+#   if(!is.null(aname)){
+#     pageId<-input$pages
+#     count<-getTibNRow()
+#     aname<-getAssetName()
+#     cname<-getTibColumnName()
+#     row<-getTibRow()
+#     group<-filter(rowGroupsDB(), tabId==pageId,  name==aname, colName==cname)$rows
+#     updateRowPicker(session, "myTibRowCntrl",
+#                     selectRow = row,
+#                     count= count,
+#                     group=group
+#     )    
+#   }
+# })
+# 
+
+# observeEvent(input$page,{
+#   rowGroupsDB(initialRowGroupDB())
+#   updateRowPicker(session, "myTibRowCntrl",
+#                   selectRow=getTibRow(),
+#                   count<-getTibNRow()
+#                   )
+# })
