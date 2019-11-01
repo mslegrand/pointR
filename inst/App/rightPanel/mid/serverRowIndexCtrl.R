@@ -15,8 +15,6 @@ rowGroupsDB<-reactiveVal(initialRowGroupDB())
 # the number of rows is determined from ptDefs after ace update 
 # so, the control cannot determine the initial trigger 
 observeEvent(  getTibRow(), {
-  # updateRadioButtons(session, "rowIndex", label = NULL,  choices=1:(getTibNRow()),
-  #                    selected = getTibRow())
   rowIndex<-input$myTibRowCntrl$selected
   if(!is.null(getTibRow()) &&
      rowIndex==getTibRow() &&
@@ -31,8 +29,6 @@ observeEvent(  getTibRow(), {
 })
 
 observeEvent( getTibNRow(), {
-  # updateRadioButtons(session, "rowIndex", label = NULL,  choices=1:(getTibNRow()),
-  #                    selected = getTibRow())
   rowIndex<-input$myTibRowCntrl$selected
   if(!is.null(getTibRow()) &&
      rowIndex==getTibRow() &&
@@ -55,8 +51,6 @@ observeEvent( getTibNRow(), {
 observeEvent( input$myTibRowCntrl$selected, {
   #input$rowIndex,{
   if( getTibEditState()==TRUE ){
-    #cat("serverRowDND:: -----Entering-----rowIndex()::----------------\n")
-    #rowIndex<-as.integer(input$rowIndex)
     rowIndex<-input$myTibRowCntrl$selected
     if(!is.null(getTibRow()) && rowIndex==getTibRow()){ return(NULL) } #bail
     rowIndex<-min(getTibNRow(),rowIndex)
@@ -104,7 +98,6 @@ observeEvent( input$myTibRowCntrl$group,{
     aname<-getAssetName()
     pageId<-getTibTabId()
     cname<-getTibColumnName()
-    #db<-filter(rowGroupsDB(), tabId!=pageId || name!=aname || colName != cname )
     db<-filter(rowGroupsDB(), tabId!=pageId | name!=aname)
     db<-rbind(db, tibble(tabId=pageId, name=aname,rows=group, colName=cname))
     rowGroupsDB(db)
