@@ -57,15 +57,14 @@ mouseCmdMoveMatrix<-function(mssg){
   pageId<-getTibTabId()
   
   if( mssg$ctrlKey==TRUE){ #add row to rowGroupsDB
-    updateRowPicker(session, "myTibRowCntrl", addToGroup = getTibRow(), 
-                    selectRow = row)
-    updateRowPicker(session, "myTibRowCntrl", addToGroup = row)
+    updateRowPicker(session, "myTibRowCntrl", addToGroup = c(getTibRow(), row), selectRow = row)
+    #updateRowPicker(session, "myTibRowCntrl", addToGroup = row)
     cname<-getTibColumnName()
     cntx1<-filter(rowGroupsDB(), tabId==pageId & !(name==selection & rows==row & colName == cname ))
     cntx1<-select(cntx1,'name','rows','colName')
     cntx<-rbind(cntx1,cntx)
   }  else {
-    cat('mouseCmdMoveMatrix: removeEntireGroup=TRUE\n')
+    # cat('---------------mouseCmdMoveMatrix: removeEntireGroup=TRUE\n')
     updateRowPicker(session, "myTibRowCntrl", removeEntireGroup=TRUE)
   }
 
@@ -99,7 +98,7 @@ mouseCmdMoveMatrix<-function(mssg){
     }
     matCol<-ncol(tibs[[getAssetName()]][row, getTibPtColPos()] )
     newPtDefs$tib<-tibs
-    cat('ContextList updateAceExtDef\n')
+    # cat('ContextList updateAceExtDef\n')
     updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=row, matCol=matCol))
   }, error=function(e){
     e<-c('preproErr',unlist(e))
