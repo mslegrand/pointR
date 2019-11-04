@@ -115,7 +115,7 @@ readAuxPreProcs<-function( startup=TRUE){
 
 getPreProcChoices<-reactive({
   rtv<-c() 
-  if( getTibEditState()==TRUE ){
+  if( getTibEditState()==TRUE && !is.null(getColumnType())){
     if(getColumnType()=='point'){
       rtv<-unique(preProcScriptDB$points$scriptName)
     } else {
