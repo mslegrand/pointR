@@ -13,11 +13,12 @@ rowGroupsDB<-reactiveVal(initialRowGroupDB())
 #   2. rowdown button
 #  Generally, 
 # the number of rows is determined from ptDefs after ace update 
-# so, the control cannot determine the initial trigger 
+# so, the control cannot determine what was the initial trigger 
+
 observeEvent(  getTibRow(), {
   rowIndex<-input$myTibRowCntrl$selected
   if(!is.null(getTibRow()) &&
-     rowIndex==getTibRow() &&
+     identical(rowIndex,getTibRow()) &&
      !is.null(getTibNRow()) &&
      length(input$myTibRowCntrl$order)== getTibNRow()
   ){
@@ -26,21 +27,21 @@ observeEvent(  getTibRow(), {
   updateRowPicker(session, "myTibRowCntrl",selectRow = getTibRow() )
 })
 
-# observeEvent( getTibNRow(), {
-#   rowIndex<-input$myTibRowCntrl$selected
-#   if(!is.null(getTibRow()) &&
-#      rowIndex==getTibRow() &&
-#      !is.null(getTibNRow()) &&
-#      length(input$myTibRowCntrl$order)== getTibNRow()
-#   ){
-#     return(NULL)
-#   }
-# 
-#   updateRowPicker(session, "myTibRowCntrl",
-#                   selectRow = getTibRow(),
-#                   count= getTibNRow()
-#   )
-# })
+observeEvent( getTibNRow(), {
+  rowIndex<-input$myTibRowCntrl$selected
+  if(!is.null(getTibRow()) &&
+     identical(rowIndex,getTibRow()) &&
+     !is.null(getTibNRow()) &&
+     length(input$myTibRowCntrl$order)== getTibNRow()
+  ){
+    return(NULL)
+  }
+
+  updateRowPicker(session, "myTibRowCntrl",
+                  selectRow = getTibRow(),
+                  count= getTibNRow()
+  )
+})
 
 
 
@@ -51,7 +52,11 @@ observeEvent( input$myTibRowCntrl$selected, {
   if( getTibEditState()==TRUE ){
     log.fin(input$myTibRowCntrl$selected)
     rowIndex<-input$myTibRowCntrl$selected
-    if(!is.null(getTibRow()) && rowIndex==getTibRow()){ 
+    if(length(rowIndex)<1){
+      rowIndex<-Inf
+    }
+   
+    if(!is.null(getTibRow()) &&  identical(rowIndex,getTibRow())){ 
       # group<-input$myTibRowCntrl$group
       # if(length(group)>0)
       #   log.val(format(paste(group,collapse=",")))
