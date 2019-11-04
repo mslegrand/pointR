@@ -28,21 +28,21 @@ observeEvent(  getTibRow(), {
     )
 })
 
-observeEvent( getTibNRow(), {
-  rowIndex<-input$myTibRowCntrl$selected
-  if(!is.null(getTibRow()) &&
-     rowIndex==getTibRow() &&
-     !is.null(getTibNRow()) &&
-     length(input$myTibRowCntrl$order)== getTibNRow()
-  ){
-    return(NULL)
-  }
-  
-  updateRowPicker(session, "myTibRowCntrl",
-                  selectRow = getTibRow(),
-                  count= getTibNRow()
-  )
-})
+# observeEvent( getTibNRow(), {
+#   rowIndex<-input$myTibRowCntrl$selected
+#   if(!is.null(getTibRow()) &&
+#      rowIndex==getTibRow() &&
+#      !is.null(getTibNRow()) &&
+#      length(input$myTibRowCntrl$order)== getTibNRow()
+#   ){
+#     return(NULL)
+#   }
+# 
+#   updateRowPicker(session, "myTibRowCntrl",
+#                   selectRow = getTibRow(),
+#                   count= getTibNRow()
+#   )
+# })
 
 
 
@@ -51,8 +51,13 @@ observeEvent( getTibNRow(), {
 observeEvent( input$myTibRowCntrl$selected, {
   #input$rowIndex,{
   if( getTibEditState()==TRUE ){
+    log.fin(input$myTibRowCntrl$selected)
     rowIndex<-input$myTibRowCntrl$selected
-    if(!is.null(getTibRow()) && rowIndex==getTibRow()){ return(NULL) } #bail
+    if(!is.null(getTibRow()) && rowIndex==getTibRow()){ 
+      cat('bailing\n')
+      log.fout(input$myTibRowCntrl$selected)
+      return(NULL) 
+    } #bail
     rowIndex<-min(getTibNRow(),rowIndex)
     # compute matColIndex and update rowIndex, matColIndex
     if(getColumnType()=='point'){
@@ -68,6 +73,7 @@ observeEvent( input$myTibRowCntrl$selected, {
         updateSelected( rowIndex=rowIndex)
       }
     }
+    log.fout(input$myTibRowCntrl$selected)
   }
 })
 
@@ -94,39 +100,58 @@ observeEvent( input$myTibRowCntrl$order,{
 
 observeEvent( input$myTibRowCntrl$group,{
   if( getTibEditState()==TRUE ){
+    log.fin(input$myTibRowCntrl$group)
     group<-input$myTibRowCntrl$group
+    if(length(group)>0)
+    log.val(format(paste(group,collapse=",")))
+    else
+      cat('group is empty\n')
     aname<-getAssetName()
     pageId<-getTibTabId()
     cname<-getTibColumnName()
+    print(rowGroupsDB())
     db<-filter(rowGroupsDB(), tabId!=pageId | name!=aname)
     db<-rbind(db, tibble(tabId=pageId, name=aname,rows=group, colName=cname))
     rowGroupsDB(db)
+    print(rowGroupsDB())
+    log.fout(input$myTibRowCntrl$group)
   }
 })
 
 
-# observeEvent(getAssetName(),{ #reload rowpicker
-#   aname<-getAssetName()
-#   if(!is.null(aname)){
-#     pageId<-input$pages
-#     count<-getTibNRow()
-#     aname<-getAssetName()
-#     cname<-getTibColumnName()
-#     row<-getTibRow()
-#     group<-filter(rowGroupsDB(), tabId==pageId,  name==aname, colName==cname)$rows
-#     updateRowPicker(session, "myTibRowCntrl",
-#                     selectRow = row,
-#                     count= count,
-#                     group=group
-#     )    
-#   }
-# })
-# 
+observeEvent(getAssetName(),{ #reload rowpicker
+  aname<-getAssetName()
+  if(!is.null(aname)){
+    log.fin("reload rowpicker")
+    print(rowGroupsDB())
+    pageId<-input$pages
+    count<-getTibNRow()
+    aname<-getAssetName()
+    cname<-getTibColumnName()
+    row<-getTibRow()
+    group<-filter(rowGroupsDB(), tabId==pageId,  name==aname, colName==cname)$rows
+    #browser()
+    cat('class of group is ',class(group),'\n')
+    # updateRowPicker(session, "myTibRowCntrl",
+    #                 count= count
+    # )
+    updateRowPicker(session, "myTibRowCntrl",
+                    count= count,
+                    selectRow = row,
+                    group=group
+    )
+    print(rowGroupsDB())
+    log.fout("reload picker")
+  }
+})
 
-# observeEvent(input$page,{
-#   rowGroupsDB(initialRowGroupDB())
-#   updateRowPicker(session, "myTibRowCntrl",
-#                   selectRow=getTibRow(),
-#                   count<-getTibNRow()
-#                   )
-# })
+
+observeEvent(input$pages,{
+  log.fin(input$pages)
+  rowGroupsDB(initialRowGroupDB())
+  updateRowPicker(session, "myTibRowCntrl",
+                  selectRow=getTibRow(),
+                  count<-getTibNRow()
+                  )
+  log.fout(input$pages)
+})
