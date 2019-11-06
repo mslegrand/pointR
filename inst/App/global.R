@@ -92,7 +92,7 @@ source("leftPanel/menu/UIbuildLeftMenu.R")
 source("leftPanel/mid/UIcontextMenu.R")
 
 source("leftPanel/toolbar/buildLeftHToolBarUI.R")
-source("rightPanel/mid/rowIndexCtrl.R")
+
 source("rightPanel/preProc/pointPreprocessor.R")
 source("rightPanel/menu/buildRightMenuUI.R")
 source("leftPanel/mid/shinyAce4Ptr.R")

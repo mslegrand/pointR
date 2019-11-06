@@ -10,18 +10,17 @@ moveMatrix<-function(dxy=getDxy(), context=context  ){
     columnIndex<-context$column
     
     rowIndex<-context$row
-    for(rowIndex in context$row){
-      if(  is_scalar_numeric(rowIndex) &&
-        rowIndex>0 && 
-        rowIndex<=nrow(tib) &&
-        is_scalar_numeric(ncol( tib[[ rowIndex, columnIndex]]))
-      ){
-        m<- tib[[rowIndex, columnIndex ]]
-        m<-m+dxy
-        tib[[rowIndex, columnIndex ]]<-tib[[rowIndex, columnIndex ]]+dxy
-       
-      } 
-    }
+    
+    if(  is_scalar_numeric(rowIndex) &&
+      rowIndex>0 && 
+      rowIndex<=nrow(tib) &&
+      is_scalar_numeric(ncol( tib[[ rowIndex, columnIndex]]))
+    ){
+      m<- tib[[rowIndex, columnIndex ]]
+      m<-m+dxy
+      tib[[rowIndex, columnIndex ]]<-tib[[rowIndex, columnIndex ]]+dxy
+    } 
+    
     tibs[[assetName]]<-tib
   }
   tibs

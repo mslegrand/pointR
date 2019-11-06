@@ -346,14 +346,7 @@ div .radio .ui-sortable-handle{
   border: 1px solid #44FFFF;
 }
 
-#rowIndex .radio {
-  color: #44FFFF;
-  background-color: #242424;
-  width: 100%; 
-  margin: 0;
-  padding-left: 4px;
-  border: 1px solid #44FFFF;
-}
+
 
 input[type='radio']:after {
     width: 15px;

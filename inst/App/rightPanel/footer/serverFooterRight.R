@@ -26,6 +26,7 @@ observeEvent(
     selection<-getAssetName()
     tib<-ptDefs$tib[[selection]]
     rowIndex<-getTibRow()
+    updateRowPicker(session, "myTibRowCntrl", insertRow=rowIndex+1)
     newTib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
     rowIndx=rowIndex+1
     matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
@@ -49,6 +50,7 @@ observeEvent(
     name<-getAssetName()
     newTib<-ptDefs$tib[[name]]
     rowIndex<-getTibRow()
+    updateRowPicker(session, "myTibRowCntrl", deleteRow=rowIndex)
     # !!!TODO handle case where this would be last existing row. What to do???
     # for now we ignore
     if(is.null(newTib) || nrow(newTib)<2){ return(NULL) }
@@ -143,17 +145,19 @@ observeEvent( returnValue4ModuleRtFtr$tagPt(), {
   
   row<-getTibRow()
   matCol<-getTibMatCol()
-
+  
   m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]
   ptDefs$mats[selection]<-FALSE # no longer a matrix input!
   tib<-ptDefs$tib[[selection]] #get the tib
   tib<-tagTib(tib, getTibPtColPos(), row, matCol)
+  updateRowPicker(session, "myTibRowCntrl", insertRow=row)
   row<-row+1
   matCol<-length(tib[[row, getTibPtColPos()]])/2
   ptDefs$tib[[selection]]<-tib
   sender='tagPt'
   tabId<-getTibTabId()
   scripts<-getPreProcOnNewRowScripts(tabId, selection)
+  
   if(length(scripts)>0){
     preprocTrySetAttrValueS(scripts,  ptDefs, row, selection)
   } else {

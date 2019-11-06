@@ -22,6 +22,27 @@ getPreProcScript<-reactive({
   scripts
 })
 
+extractPreProcScript<-function(tab_Id, tib_Name, column_Name){
+  script_Name<-getPreProcScriptName(
+    tab_Id, tib_Name,column_Name
+  )
+  if(script_Name!='none'){
+    tibs<-getPtDefs()$tib
+    col<-tibs[[tib_Name]][[column_Name]]
+    ctype<-extractColType(col)
+    if(ctype=='point'){
+      tb<-filter(preProcScriptDB$points, scriptName==script_Name)
+    } else {
+      tb<-filter(preProcScriptDB$attrs, scriptName==script_Name)
+    }
+    scripts<-unlist(tb$script)
+    names(scripts)<-tb$cmd
+  } else {
+    scripts<-NULL
+  }
+  scripts
+}
+
 
 getPreProcOnNewRowScripts<-function(pageId, assetName  ){
   pgDB<-preProcPageDB()

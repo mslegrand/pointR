@@ -13,52 +13,71 @@ rowGroupsDB<-reactiveVal(initialRowGroupDB())
 #   2. rowdown button
 #  Generally, 
 # the number of rows is determined from ptDefs after ace update 
-# so, the control cannot determine the initial trigger 
+# so, the control cannot determine what was the initial trigger 
+
 observeEvent(  getTibRow(), {
-  # updateRadioButtons(session, "rowIndex", label = NULL,  choices=1:(getTibNRow()),
-  #                    selected = getTibRow())
   rowIndex<-input$myTibRowCntrl$selected
   if(!is.null(getTibRow()) &&
-     rowIndex==getTibRow() &&
+     identical(rowIndex,getTibRow()) &&
      !is.null(getTibNRow()) &&
      length(input$myTibRowCntrl$order)== getTibNRow()
   ){
     return(NULL)
   }
-  updateRowPicker(session, "myTibRowCntrl",
-                  selectRow = getTibRow()
-    )
+  updateRowPicker(session, "myTibRowCntrl",selectRow = getTibRow() )
 })
 
-observeEvent( getTibNRow(), {
-  # updateRadioButtons(session, "rowIndex", label = NULL,  choices=1:(getTibNRow()),
-  #                    selected = getTibRow())
+
+# if the number of rows change 
+# possible initial triggers causing a change in getTibNRow():
+#  1. asset change 
+#  2. split button (tagPt)
+#  3. clone button (cloneRow)
+#  4. delete row button (deleteRow)
+#  5. user code change (USER COMMIT)
+# the number of rows is determined from ptDefs after ace update 
+resetRowPickeR<-function(){
   rowIndex<-input$myTibRowCntrl$selected
   if(!is.null(getTibRow()) &&
-     rowIndex==getTibRow() &&
+     identical(rowIndex,getTibRow()) &&
      !is.null(getTibNRow()) &&
      length(input$myTibRowCntrl$order)== getTibNRow()
   ){
     return(NULL)
   }
-  
   updateRowPicker(session, "myTibRowCntrl",
                   selectRow = getTibRow(),
-                  count= getTibNRow()
+                  count= getTibNRow() # count resizes with predjudice, i.e. we loose the  group!!!
   )
-})
+  # WE SHOULD PRESERVE THE GROUP FOR 
+  # NAME
+  # CLONE
+  # SPLIT
+  # DELETE
+}
 
 
 
-# trigger: this control changes the selected row,
-# 
+#  rowPicker => selector$row,
 observeEvent( input$myTibRowCntrl$selected, {
   #input$rowIndex,{
   if( getTibEditState()==TRUE ){
-    #cat("serverRowDND:: -----Entering-----rowIndex()::----------------\n")
-    #rowIndex<-as.integer(input$rowIndex)
+    log.fin(input$myTibRowCntrl$selected)
     rowIndex<-input$myTibRowCntrl$selected
-    if(!is.null(getTibRow()) && rowIndex==getTibRow()){ return(NULL) } #bail
+    if(length(rowIndex)<1){
+      rowIndex<-Inf
+    }
+   
+    if(!is.null(getTibRow()) &&  identical(rowIndex,getTibRow())){ 
+      # group<-input$myTibRowCntrl$group
+      # if(length(group)>0)
+      #   log.val(format(paste(group,collapse=",")))
+      # else
+        # cat('group is empty\n')
+        # cat('bailing\n')
+        #  log.fout(input$myTibRowCntrl$selected)
+      return(NULL)  #bail
+    }
     rowIndex<-min(getTibNRow(),rowIndex)
     # compute matColIndex and update rowIndex, matColIndex
     if(getColumnType()=='point'){
@@ -74,50 +93,15 @@ observeEvent( input$myTibRowCntrl$selected, {
         updateSelected( rowIndex=rowIndex)
       }
     }
+    # log.fout(input$myTibRowCntrl$selected)
   }
 })
 
-# # if this control changes the order
-# observeEvent( input$rowIndex_order,{
-#   if( getTibEditState()==TRUE ){
-#     ordering<-as.integer(input$rowIndex_order)
-#     name<-getAssetName()
-#     row<-getTibRow()
-#     columnName<-getTibColumnName()
-#     newPtDefs<-getPtDefs()
-#     tib<-newPtDefs$tib[[name]]
-#     tib<-tib[ordering,]
-#     newPtDefs$tib[[name]]<-tib
-#     row<-which(row==ordering)
-#     sender="reorderRow"
-#     updateAceExtDef(newPtDefs, sender=sender, selector=list( name=name, rowIndex=row, columnName=columnName   ) )
-#   }
-# })
-
-
-# # if this control changes the order
-# observeEvent( input$rowIndex_order,{
-#   if( getTibEditState()==TRUE ){
-#     ordering<-as.integer(input$rowIndex_order)
-#     name<-getAssetName()
-#     row<-getTibRow()
-#     columnName<-getTibColumnName()
-#     newPtDefs<-getPtDefs()
-#     tib<-newPtDefs$tib[[name]]
-#     tib<-tib[ordering,]
-#     newPtDefs$tib[[name]]<-tib
-#     row<-which(row==ordering)
-#     sender="reorderRow"
-#     updateAceExtDef(newPtDefs, sender=sender, selector=list( name=name, rowIndex=row, columnName=columnName   ) )
-#   }
-# })
-# 
-
-
-# if this control changes the order
+# rowPicker => the tib row order
 observeEvent( input$myTibRowCntrl$order,{
-  if( getTibEditState()==TRUE ){
+  if( getTibEditState()==TRUE &  !all(diff(input$myTibRowCntrl$order)==1)){
     ordering<-input$myTibRowCntrl$order
+    # log.val(ordering)
     name<-getAssetName()
     row<-getTibRow()
     columnName<-getTibColumnName()
@@ -134,15 +118,94 @@ observeEvent( input$myTibRowCntrl$order,{
   }
 })
 
+
+# rowPicker => rowGroupsDB 
 observeEvent( input$myTibRowCntrl$group,{
   if( getTibEditState()==TRUE ){
+    # log.fin(input$myTibRowCntrl$group)
     group<-input$myTibRowCntrl$group
+    # if(length(group)>0)
+    # log.val(format(paste(group,collapse=",")))
+    # else
+    #   cat('group is empty\n')
     aname<-getAssetName()
     pageId<-getTibTabId()
-    db<-filter(rowGroupsDB(), tabId!=pageId || name!=aname )
-    db<-rbind(db, tibble(tabId=pageId, name=aname,rows=group))
+    cname<-getTibColumnName()
+    # print(rowGroupsDB())
+    db<-filter(rowGroupsDB(), tabId!=pageId | name!=aname)
+    db<-rbind(db, tibble(tabId=pageId, name=aname,rows=group, colName=cname))
+    # cat('setting rowGroupsDB with db=')
+    # print(db)
     rowGroupsDB(db)
+    # cat('now rowGroupsDB=')
+    # print(rowGroupsDB())
+    # log.fout(input$myTibRowCntrl$group)
+  }
+})
+
+# new asset , reload rowCntrl from rowGroupsDB
+# selector$name + rowGroupsDB => rowPicker
+observeEvent(getAssetName(),{ #reload rowpicker
+  aname<-getAssetName()
+  if(!is.null(aname)){
+    # log.fin("reload rowpicker")
+    # log.val(aname)
+    # group<-input$myTibRowCntrl$group
+    # if(length(group)>0){
+    #   cat('groups=\n')
+    #   log.val(format(paste(group,collapse=",")))
+    # } else {
+    #   cat('group is empty\n')
+    # }
+    
+    # print(rowGroupsDB())
+    pageId<-input$pages
+    count<-getTibNRow()
+    aname<-getAssetName()
+    cname<-getTibColumnName()
+    
+    group<-filter(rowGroupsDB(), tabId==pageId,  name==aname, colName==cname)$rows
+    row<-getTibRow()
+    if(length(group)>0 && !(row %in% group)){
+      row<-tail(group,1)
+      updateSelected(rowIndex=row)
+    }
+      
+    #browser()
+    # cat('class of group is ',class(group),'\n')
+    # updateRowPicker(session, "myTibRowCntrl",
+    #                 count= count
+    # )
+    # cat('************ (getAssetName count=count\n')
+    # print(rowGroupsDB())
+    # cat('*********before**************\n')
+    updateRowPicker(session, "myTibRowCntrl",
+                    count= count,
+                    selectRow = row,
+                    addToGroup=group
+    )
+    # cat('*********after**************\n')
+    # print(rowGroupsDB())
+    # if(length(group)>0){
+    #   cat('groups=\n')
+    #   log.val(format(paste(group,collapse=",")))
+    # } else {
+    #   cat('group is empty\n')
+    # }
+    # log.fout("reload picker")
   }
 })
 
 
+observeEvent(getTibTabId(),{
+  # log.fin(getTibTabId())
+  # cat('-----initializing rowGroupDB-----\n')
+  # count=getTibNRow()
+  # log.val(count)
+  rowGroupsDB(initialRowGroupDB())
+  updateRowPicker(session, "myTibRowCntrl",
+                  selectRow=getTibRow(),
+                  count=getTibNRow()
+                  )
+  # log.fout(getTibTabId())
+})
