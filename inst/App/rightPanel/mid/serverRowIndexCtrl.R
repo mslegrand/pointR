@@ -27,7 +27,19 @@ observeEvent(  getTibRow(), {
   updateRowPicker(session, "myTibRowCntrl",selectRow = getTibRow() )
 })
 
-observeEvent( getTibNRow(), {
+
+# if the number of rows change 
+# possible initial triggers causing a change in getTibNRow():
+#  1. asset change 
+#  2. split button (tagPt)
+#  3. clone button (cloneRow)
+#  4. delete row button (deleteRow)
+#  5. user code change (USER COMMIT)
+# the number of rows is determined from ptDefs after ace update 
+# so, the control alone cannot determine what was the initial trigger (needs sender)
+# this handles split, clone, delete, and user
+# but also is triggered by asset name change (WHICH WE DONT WANT!!!!!)
+resetRowPickeR<-function(){
   rowIndex<-input$myTibRowCntrl$selected
   if(!is.null(getTibRow()) &&
      identical(rowIndex,getTibRow()) &&
@@ -36,17 +48,20 @@ observeEvent( getTibNRow(), {
   ){
     return(NULL)
   }
-
   updateRowPicker(session, "myTibRowCntrl",
                   selectRow = getTibRow(),
-                  count= getTibNRow()
+                  count= getTibNRow() # count resizes with predjudice, i.e. we loose the  group!!!
   )
-})
+  # WE SHOULD PRESERVE THE GROUP FOR 
+  # NAME
+  # CLONE
+  # SPLIT
+  # DELETE
+}
 
 
 
-# trigger: this control changes the selected row,
-# 
+#  rowPicker => selector$row,
 observeEvent( input$myTibRowCntrl$selected, {
   #input$rowIndex,{
   if( getTibEditState()==TRUE ){
@@ -85,7 +100,7 @@ observeEvent( input$myTibRowCntrl$selected, {
   }
 })
 
-# if this control changes the order
+# rowPicker => the tib row order
 observeEvent( input$myTibRowCntrl$order,{
   if( getTibEditState()==TRUE &  !all(diff(input$myTibRowCntrl$order)==1)){
     ordering<-input$myTibRowCntrl$order
@@ -107,7 +122,7 @@ observeEvent( input$myTibRowCntrl$order,{
 })
 
 
-
+# rowPicker => rowGroupsDB 
 observeEvent( input$myTibRowCntrl$group,{
   if( getTibEditState()==TRUE ){
     # log.fin(input$myTibRowCntrl$group)
@@ -131,7 +146,8 @@ observeEvent( input$myTibRowCntrl$group,{
   }
 })
 
-
+# new asset , reload rowCntrl from rowGroupsDB
+# selector$name + rowGroupsDB => rowPicker
 observeEvent(getAssetName(),{ #reload rowpicker
   aname<-getAssetName()
   if(!is.null(aname)){
