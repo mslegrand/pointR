@@ -67,12 +67,18 @@ mouseCmdMoveMatrix<-function(mssg){
     # cat('---------------mouseCmdMoveMatrix: removeEntireGroup=TRUE\n')
     updateRowPicker(session, "myTibRowCntrl", removeEntireGroup=TRUE)
   }
-
-  contextList<-pmap(cntx, function(name,rows,colName){
+ 
+  contextList<-pmap(cntx, function(name, rows, colName){
     # to check that tib has names
-    columnIndex<-which(names(tibs[[name]])==colName  )
-    list(name=name, column=columnIndex, row=rows)
+    ctype<-extractColType(tibs[[name]][[colName]])
+    if(identical(ctype,'point')){
+      columnIndex<-which(names(tibs[[name]])==colName  )
+      list(name=name, column=columnIndex, row=rows)
+    } else {
+      NULL
+    }
   })
+  contextList<-Filter(function(x){!is.null(x)}, contextList)
   
   tryCatch({
     matCol<-NULL
