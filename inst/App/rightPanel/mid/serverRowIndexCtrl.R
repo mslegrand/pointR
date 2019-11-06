@@ -36,9 +36,6 @@ observeEvent(  getTibRow(), {
 #  4. delete row button (deleteRow)
 #  5. user code change (USER COMMIT)
 # the number of rows is determined from ptDefs after ace update 
-# so, the control alone cannot determine what was the initial trigger (needs sender)
-# this handles split, clone, delete, and user
-# but also is triggered by asset name change (WHICH WE DONT WANT!!!!!)
 resetRowPickeR<-function(){
   rowIndex<-input$myTibRowCntrl$selected
   if(!is.null(getTibRow()) &&
