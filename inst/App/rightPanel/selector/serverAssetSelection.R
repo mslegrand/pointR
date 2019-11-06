@@ -122,6 +122,7 @@ resetSelectedTibbleName<-function(tibs, name){
             #unless selected is 'matrix', set to 'point' 
             updateSelected( selIndex=1)
           }
+          
         } else {
           ptColName<-NULL
           matColIndex<-0
@@ -140,6 +141,7 @@ resetSelectedTibbleName<-function(tibs, name){
           }
         }
       }
+      resetRowPickeR()
       if( selectedAsset$name==transformTag){
         selectedAsset$transformType='Translate'
       }
