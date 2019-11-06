@@ -96,7 +96,7 @@ observeEvent(returnValue4ModuleEdTib$entryValue(),{
       return(NULL)
     }
 
-    if(getColumnType()=='point'){
+    if(identical(getColumnType(),'point')){
       entry<-which(entry==c('point','matrix'))
       if(length(entry)){
         updateSelected(selIndex =entry)
