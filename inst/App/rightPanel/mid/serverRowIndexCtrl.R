@@ -201,13 +201,15 @@ observeEvent(getAssetName(),{ #reload rowpicker
 })
 
 
-observeEvent(input$pages,{
-  # log.fin(input$pages)
-  # cat('-----initializing rowGroupDB------')
+observeEvent(getTibTabId(),{
+  # log.fin(getTibTabId())
+  # cat('-----initializing rowGroupDB-----\n')
+  # count=getTibNRow()
+  # log.val(count)
   rowGroupsDB(initialRowGroupDB())
   updateRowPicker(session, "myTibRowCntrl",
                   selectRow=getTibRow(),
-                  count<-getTibNRow()
+                  count=getTibNRow()
                   )
-  # log.fout(input$pages)
+  # log.fout(getTibTabId())
 })
