@@ -196,5 +196,12 @@ observeEvent( returnValue4ModuleRtFtr$matColLim(), {
    }
 })
 
+observeEvent( returnValue4ModuleRtFtr$tagSetValue(),{
+  # get the current value of the selectedRowIndex and selectedColumn
+  # get the group rows
+  # get the tib
+  # for each row in the group, set the values of the selected column to the current value
+  # update ace
+})
 
 
