@@ -184,6 +184,7 @@ observeEvent( returnValue4ModuleRtFtr$backwardPt(), {
     matColIndex=max(matColIndex-1, min(matColChoices) )
     updateSelected(  matCol=matColIndex  )
   }
+  
 })
 
 observeEvent( returnValue4ModuleRtFtr$matColLim(), {
@@ -197,11 +198,22 @@ observeEvent( returnValue4ModuleRtFtr$matColLim(), {
 })
 
 observeEvent( returnValue4ModuleRtFtr$tagSetValue(),{
+  aName<-getAssetName()
+  cname<-getTibColumnName()
+  newPtDefs<-getPtDefs()
   # get the current value of the selectedRowIndex and selectedColumn
+  rowIndx<-getTibRow()
+  value<-newPtDefs$tib[[aName]][[cname]][[rowIndx]]
   # get the group rows
-  # get the tib
+  group<-filter(rowGroupsDB(), tabId==getTibTabId(),  name==aName, colName==cname)$rows
   # for each row in the group, set the values of the selected column to the current value
+  #browser()
+  for(row in group){
+    newPtDefs$tib[[aName]][[cname]][[row]]<-value
+  }
   # update ace
+  sender<-'setTibValue'
+  updateAceExtDef(newPtDefs, sender=sender )
 })
 
 
