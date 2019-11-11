@@ -99,9 +99,10 @@ observeEvent( input$myTibRowCntrl$selected, {
 
 # rowPicker => the tib row order
 observeEvent( input$myTibRowCntrl$order,{
+  log.fin(input$myTibRowCntrl$order)
   if( getTibEditState()==TRUE &  !all(diff(input$myTibRowCntrl$order)==1)){
     ordering<-input$myTibRowCntrl$order
-    # log.val(ordering)
+    log.val(ordering)
     name<-getAssetName()
     row<-getTibRow()
     columnName<-getTibColumnName()
@@ -110,12 +111,14 @@ observeEvent( input$myTibRowCntrl$order,{
     tib<-tib[ordering,]
     newPtDefs$tib[[name]]<-tib
     row<-which(row==ordering)
+    updateRowPicker(session, "myTibRowCntrl", renumber = TRUE)
     sender="reorderRow"
     updateAceExtDef(
       newPtDefs, sender=sender, 
       selector=list( name=name, rowIndex=row, columnName=columnName   ) 
     )
   }
+  log.fout(input$myTibRowCntrl$order)
 })
 
 
@@ -159,13 +162,14 @@ observeEvent(getAssetName(),{ #reload rowpicker
     # }
     
     # print(rowGroupsDB())
-    pageId<-input$pages
+    pageId<-getTibTabId()
     count<-getTibNRow()
     aname<-getAssetName()
     cname<-getTibColumnName()
     
     group<-filter(rowGroupsDB(), tabId==pageId,  name==aname, colName==cname)$rows
     row<-getTibRow()
+    #browser()
     if(length(group)>0 && !(row %in% group)){
       row<-tail(group,1)
       updateSelected(rowIndex=row)

@@ -57,7 +57,17 @@ moduleFooterRight<-function(input, output, session,
               )
             )
           } else if (footerPanelState=='value'){
-            NULL
+            absolutePanel( "class"="footerPanel", draggable=FALSE, style="bottom: 0; left: 10px; display:inline-block",
+                           absolutePanel(  id='rightFooterValueButtons', bottom=5, left=leftPtButtons,
+                                           actionGroupButtons(
+                                             inputIds=c(session$ns("tagSetValue" )),
+                                             labels=list(
+                                               span(span('class'="icon-right"), span('class'="icon-columns"))  %>% bs_embed_tooltip(title = "Set Value")
+                                             ),
+                                             status='primary'
+                                           )
+                           )
+            )
           } else {
             NULL
           }
@@ -77,6 +87,7 @@ moduleFooterRight<-function(input, output, session,
     removePt     =reactive({input$removePt}),
     tagPt        =reactive({input$tagPt}),
     matColLim    = reactive({input$matColLim}),
+    tagSetValue = reactive({input$tagSetValue}),
     useColourPalette = reactive({input$useColourPalette})
   )
 }
