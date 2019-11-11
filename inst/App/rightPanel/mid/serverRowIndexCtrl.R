@@ -169,7 +169,7 @@ observeEvent(getAssetName(),{ #reload rowpicker
     
     group<-filter(rowGroupsDB(), tabId==pageId,  name==aname, colName==cname)$rows
     row<-getTibRow()
-    browser()
+    #browser()
     if(length(group)>0 && !(row %in% group)){
       row<-tail(group,1)
       updateSelected(rowIndex=row)
