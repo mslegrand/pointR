@@ -58,7 +58,7 @@ PtRPanelTagDrag.prototype.deselectElement =  function (evt) {
   
     var dxy=[ movedByX, movedByY];
     var kc=$( "#svgOutPanel" ).data("keycode");
-      
+    let r = Math.random().toString(36).substring(7);
     Shiny.onInputChange("mouseMssg",
       {
           cmd: "transGrp",
@@ -68,7 +68,8 @@ PtRPanelTagDrag.prototype.deselectElement =  function (evt) {
           altKey:   !!evt.altKey,
           shiftKey: !!evt.shiftKey,
           ctrlKey:  !!evt.ctrlKey,
-          metaKey:  !!evt.metaKey
+          metaKey:  !!evt.metaKey , 
+          rnd: r
       }
     );
     this.selectedElement.removeAttributeNS(null, "onmousemove");
