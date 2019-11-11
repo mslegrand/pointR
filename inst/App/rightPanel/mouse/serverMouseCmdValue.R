@@ -9,7 +9,11 @@ mouseCmdValue<- function(mssg){
   row<-as.numeric(tail(tmp,1))
 
   if( mssg$ctrlKey==TRUE){ #add row to rowGroupsDB
-    updateRowPicker(session, "myTibRowCntrl", addToGroup = c(getTibRow(), row), selectRow = row)
+    if(getTibRow()!=row){
+      updateRowPicker(session, "myTibRowCntrl", addToGroup = row, selectRow = row )
+    } else {
+      updateRowPicker(session, "myTibRowCntrl", toggleGroup = row)
+    }
   }  else {
     updateRowPicker(session, "myTibRowCntrl", removeEntireGroup=TRUE)
   }

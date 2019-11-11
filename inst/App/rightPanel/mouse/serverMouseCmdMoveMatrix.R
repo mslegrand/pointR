@@ -1,4 +1,5 @@
 mouseCmdMoveMatrix<-function(mssg){
+  log.fin(mouseCmdMoveMatrix)
   if(length(mssg$vec)>0){
     vec<- as.numeric(unlist(mssg$vec))
   }
@@ -56,15 +57,19 @@ mouseCmdMoveMatrix<-function(mssg){
   )
   pageId<-getTibTabId()
   
-  if( mssg$ctrlKey==TRUE){ #add row to rowGroupsDB
-    updateRowPicker(session, "myTibRowCntrl", addToGroup = c(getTibRow(), row), selectRow = row)
+  if( mssg$ctrlKey==TRUE){ 
+    if(getTibRow()!=row){
+      updateRowPicker(session, "myTibRowCntrl", addToGroup = row, selectRow = row )
+    } else {
+      updateRowPicker(session, "myTibRowCntrl", toggleGroup = row)
+    }
+    #updateRowPicker(session, "myTibRowCntrl", addToGroup = c(getTibRow(), row), selectRow = row)
     #updateRowPicker(session, "myTibRowCntrl", addToGroup = row)
     cname<-getTibColumnName()
     cntx1<-filter(rowGroupsDB(), tabId==pageId & !(name==selection & rows==row & colName == cname ))
     cntx1<-select(cntx1,'name','rows','colName')
     cntx<-rbind(cntx1,cntx)
   }  else {
-    # cat('---------------mouseCmdMoveMatrix: removeEntireGroup=TRUE\n')
     updateRowPicker(session, "myTibRowCntrl", removeEntireGroup=TRUE)
   }
  
@@ -111,4 +116,5 @@ mouseCmdMoveMatrix<-function(mssg){
     err<-paste(unlist(e), collapse="\n", sep="\n")
     alert(err)
   })
+  log.fout(mouseCmdMoveMatrix)
 }
