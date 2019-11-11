@@ -4,8 +4,15 @@ mouseCmdValue<- function(mssg){
   }
   src<-getCode()
   replacementList<-list()
-  ptDefs<-getPtDefs() 
-  updateRowPicker(session, "myTibRowCntrl", removeEntireGroup=TRUE)
+  ptDefs<-getPtDefs()
+  tmp<-unlist(str_split(mssg$id,"_")) 
+  row<-as.numeric(tail(tmp,1))
+
+  if( mssg$ctrlKey==TRUE){ #add row to rowGroupsDB
+    updateRowPicker(session, "myTibRowCntrl", addToGroup = c(getTibRow(), row), selectRow = row)
+  }  else {
+    updateRowPicker(session, "myTibRowCntrl", removeEntireGroup=TRUE)
+  }
   sender='tagValue.mouse'
   tid<-mssg$id
   tmp<-unlist(str_split(tid,"_"))
@@ -18,8 +25,4 @@ mouseCmdValue<- function(mssg){
   } else {
     updateAceExtDef(ptDefs, sender=sender, selector=list( rowIndex=rowIndex))
   }
-  
-  #---
-  
-  
 }
