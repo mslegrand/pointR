@@ -50,6 +50,20 @@ mouseCmdFindPoint<-function(mssg){
         toColName<-fromColumnName
       }
     }
+    
+    if( mssg$ctrlKey==TRUE){ #add row to rowGroupsDB
+      # browser()
+      if( getAssetName()==toName ){
+        if( getTibRow()==toRow){
+          updateRowPicker(session, "myTibRowCntrl", toggleGroup = toRow)
+        } else {
+          updateRowPicker(session, "myTibRowCntrl", addToGroup = toRow, selectRow = toRow )
+        }
+      } else { # asset name about to change: set rowGroupsDB() 
+        rowGroupsDB.addRow( getTibTabId(), toName, toColName, toRow )
+      } 
+    }  
+    
     updateSelected( name=toName, rowIndex=toRow, columnName=toColName )
   }
 } 

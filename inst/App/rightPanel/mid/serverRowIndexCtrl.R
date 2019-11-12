@@ -1,5 +1,12 @@
 rowGroupsDB<-reactiveVal(initialRowGroupDB())
 
+
+rowGroupsDB.addRow<-function(pageId, aname, cname, row_index ){
+  db<-filter(rowGroupsDB(), tabId!=pageId | name!=aname | colName!= cname | rows !=row_index)
+  db<-rbind(db, tibble(tabId=pageId, name=aname, rows=row_index, colName=cname))
+  rowGroupsDB(db)
+}
+
 # if the number of rows change or the current row changes
 # possible initial triggers causing a change in getTibNRow():
 #  1. asset change 
