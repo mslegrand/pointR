@@ -11,6 +11,7 @@ statusPlotTransform<-callModule(
     type=getTransformType()
     svgToolsScript(type) 
   }),
+  useKeyMouseScript=FALSE,
   getSVGWH,
   getSvgGrid,
   getBackDrop,

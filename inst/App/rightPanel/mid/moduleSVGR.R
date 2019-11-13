@@ -21,6 +21,7 @@ svgToolsScript<-function(type){
     svgID, #='ptR_SVG_Point'
     showPts.compound, # =showsvgRPoints.pts2
     ptrDisplayScript, # =js.scripts[[ "Points"]]
+    useKeyMouseScript, #  
     getSVGWH, 
     getSvgGrid,
     getBackDrop,
@@ -140,9 +141,14 @@ svgToolsScript<-function(type){
               temp<-svgR(showPts.compound()(vbScaleFactor))$root$xmlChildren()
               svg$root$appendChildren(temp)
           }
-          # Append to svg$root the attribute onmousedown
-           keyMouseScript=paste0('onKeyMouseDown(evt, "', svgID, '")')
-           svg$root$addAttributes(list(onmousedown=keyMouseScript))
+          if(useKeyMouseScript){
+            # Append to svg$root the attribute onmousedown
+            keyMouseScript=paste0('onKeyMouseDown(evt, "', svgID, '")')
+            svg$root$addAttributes(list(onmousedown=keyMouseScript))
+          }
+          
+          
+           
          as.character(svg)->svgOut 
           res<-HTML(svgOut)
           rtv$status<-list(
