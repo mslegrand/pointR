@@ -11,6 +11,7 @@ statusPlotSVG<-callModule(
     NULL
   }),
   ptrDisplayScript = reactive({ list("") }), 
+  useKeyMouseScript=FALSE,
   getSVGWH,
   getSvgGrid,
   getBackDrop,

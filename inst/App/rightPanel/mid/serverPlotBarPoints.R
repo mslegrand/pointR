@@ -111,6 +111,7 @@ statusPlotPoint<-callModule(
     }
   }),
   ptrDisplayScript = reactive({ svgToolsScript( "Points") }), 
+  useKeyMouseScript=FALSE,
   getSVGWH,
   getSvgGrid,
   getBackDrop,
