@@ -100,6 +100,6 @@ buildLeftMenu<-function(version){
       },
       shinyDMDMenu::menuItem("About", value="aboutCmd")
     ), 
-    menuItem('project: none',value="project")
+    menuItem('project: ',value="project")
   )
 }
