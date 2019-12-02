@@ -11,6 +11,14 @@ getTibColClass<-function(tib){ #used by fmtTribble
 toStrPtR0<-function(x,...){ UseMethod("toStrPtR0") }
 
 toStrPtR0.default<-function(x,...){ format(x,...) }
+toStrPtR0.name<-function(x,...){ paste0('quote(',as.character(x),')') }
+toStrPtR0.call<-function(x,...){ 
+  paste0('quote(',
+         paste0(format(x), collapse=""),
+         ')'
+  )
+}
+
 toStrPtR0.character<-function(x, ...){
   xx<-sapply(x,function(y){if(!is.na(y)){shQuote(y)} else {'NA'}})
   if(length(xx)==0){
