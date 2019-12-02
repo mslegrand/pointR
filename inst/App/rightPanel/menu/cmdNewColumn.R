@@ -11,8 +11,8 @@ addNewColModal <- function(errMssg=NULL) {
      div( class='ptR2',
        awesomeRadio('modalColTreatAs', 'Initialize Column Values as ', 
           choices = list(  
-            ' a character string'='string','a number'='number','an expression'='expression',
-            'a matrix of points'='points' , 'the preprocessing script result'='script'
+            ' a character string'='string','a single number'='number','a vector or list'='expression',
+            'a matrix of points'='points' , 'the result of a preprocessing script'='script'
             ) ,
           inline = TRUE
       )
@@ -60,6 +60,7 @@ observeEvent(input$commitNewCol, {
     rtv<-TRUE
     tryCatch({
       eval(parse(text=txt))
+      # parse(text=txt)
       rtv<-FALSE
     }, 
     error = function(e) {})
