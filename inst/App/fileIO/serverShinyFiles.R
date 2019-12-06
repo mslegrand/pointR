@@ -11,5 +11,5 @@ for(name in names(shinyFileChooseFileTypes)){
   shinyFileChoose(input, name, session=session, roots=c(home="~"), filetypes=shinyFileChooseFileTypes[[name]] )
 }
 for( name in c( "buttonSvgExport", "buttonPreprocPtExport",   "buttonPreprocAtExport" )){
-  shinyFileSave(input,  name,           session=session, roots=c(home="~")  ) #hidden
+  shinyFileSave(input,  name, session=session, roots=c(home="~")  ) #hidden
 }

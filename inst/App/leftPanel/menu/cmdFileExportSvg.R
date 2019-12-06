@@ -5,11 +5,11 @@ cmdFileExportSvg<-function(){
   } else {
     svgFileName<-"unnamed.svg"
   }
-  click('buttonExportSVG')
+  click('buttonSvgExport')
 }
 
-observeEvent(input$buttonExportSVG,{
-  fp.dt<-parseSavePath(c(home='~'), input$buttonExportSVG)
+observeEvent(input$buttonSvgExport,{
+  fp.dt<-parseSavePath(c(home='~'), input$buttonSvgExport)
   if(length(fp.dt)>0 && nrow(fp.dt)){
     fileName<-as.character(fp.dt$datapath[1])
     fileName<-gsub(pattern = '^NA/', "~/", fileName)
