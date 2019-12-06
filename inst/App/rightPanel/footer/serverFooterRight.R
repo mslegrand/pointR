@@ -26,16 +26,16 @@ observeEvent(
     selection<-getAssetName()
     tib<-ptDefs$tib[[selection]]
     rowIndex<-getTibRow()
-    updateRowPicker(session, "myTibRowCntrl", insertRow=rowIndex+1)
+    updateRowPicker(session, "myTibRowCntrl", insertRow=rowIndex+1, selectRow=rowIndex+1)
     newTib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
-    rowIndx=rowIndex+1
+    rowIndex=rowIndex+1
     matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
     pts<-newTib[[getTibPtColPos()]]
     ptDefs$tib[[selection]]<-newTib
     tabId<-getTibTabId()
     scripts<-getPreProcOnNewRowScripts(tabId, selection)
     if(length(scripts)>0){
-      preprocTrySetAttrValueS(scripts,  ptDefs, rowIndx, selection)
+      preprocTrySetAttrValueS(scripts,  ptDefs, rowIndex, selection)
     } else {
       updateAceExtDef(ptDefs, sender=sender, selector=list(rowIndex=rowIndex, matCol=matCol  ) )
     }
@@ -150,6 +150,7 @@ observeEvent( returnValue4ModuleRtFtr$tagPt(), {
   ptDefs$mats[selection]<-FALSE # no longer a matrix input!
   tib<-ptDefs$tib[[selection]] #get the tib
   tib<-tagTib(tib, getTibPtColPos(), row, matCol)
+  
   updateRowPicker(session, "myTibRowCntrl", insertRow=row)
   row<-row+1
   matCol<-length(tib[[row, getTibPtColPos()]])/2
