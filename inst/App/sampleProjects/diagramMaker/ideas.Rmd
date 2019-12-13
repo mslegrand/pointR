@@ -1,0 +1,485 @@
+---
+title: 'svgR in a Markdown Doc'
+author: 'author'
+date: "2019-06-18"
+output: html_document
+---
+
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(svgR)
+```
+
+## alternatives to append
+
+- get and modify and replace last entry
+- get and modify and append last entry
+
+## Bugs and distractions
+
+
+- saved files appear are now starred on loading,
+    - but menu for named shows saveAs , with save greyed out.
+- dnds missplaced
+    -  selects from current cursor pos to drop pos and replaces all with snippet
+- working directory is not the directory to the project
+    - getwd() 
+    - used to return **"/opt/ptr/resources/library/pointR/App"**
+    - now returns **"/home/sup/"** instead of **"/home/sup/AA/diagramMaker"**
+    - getDirPath seems to return the path to the project, however, 
+      - cannot use inside user-ptr code 
+      - cannot set at start up, since we do sourcing there
+      - set at each commit?
+- CLOSES WINDOW ON *control + x*  (very **BAD**)
+- Rmd
+    - lacking *xxx* bracing macro (but has  quote macro: "xxx" and {xxx} and (xxx)  )
+    - no syntax checks inside code blocks
+    - need short cut ctrl+tab to tab line
+    - no dnds for R-codeblocks and svgR-code blocks
+    - For .Rmd files, canvas should scroll to last edit (but how??)
+    - **CRASHES WHEN SELECTION OPEN IN BROWSER** (on laptop)
+        -  (but not on desktop machine)
+- save on commit option? (or commit on save?)
+- lacking zoom for both editor and canvas
+
+## What to create
+
+- text
+    - doc title
+    - bold
+    - big
+    - small
+- shapes
+    - rectangles
+        - square corners 
+        - rounded corners
+    - reactives
+        - source (aka value)
+        - conductor (aka expression)
+        - endpoint (aka observer)
+    - data
+    - circle
+        - empty
+        - bullet
+    - braces
+        - curly
+        - square
+    - balloons
+        - square
+        - oval
+- arrows
+    - sqpuare
+    - rounded
+    - labeled
+- shadows ?
+
+
+## What is needed in the final diagram product
+
+- add icons for objects 
+    - (perhaps just the function, or fn + pmap)
+- add icons for arrows
+    - (perhaps just the function, or fn + pmap)
+- include source files for objects and arrows
+    - objects take pointPairs (wh computed internally)
+    - arrows take point sequences
+- have tibbles to contain objects, 
+- have tibbles to contain arrows
+- add snapping for objects
+- add snapping for arrows
+- arrow types
+    -  plain
+    -  animated 
+
+
+## rectangles
+
+
+
+```{r, results='asis'}
+WH=c(300,200)
+svgR(
+    wh=WH,
+    rect(xy=c(50,50),wh=c(200,50), fill='none',stroke='green'),
+    rect(xy=c(50,150), wh=c(200,50), fill='none', stroke='red',rx=20)
+)
+```
+
+
+## reactive source
+
+
+###  Using polygon
+
+```{r, results='asis'}
+WH=c(300,200)
+
+points<-c(0,0, 100, 0,  150, 50, 100, 100, 0,100)+c(50,50)
+svgR(
+    wh=WH,
+    polygon(points=points, fill='none',stroke='blue', stroke.width=2)
+    
+)
+```
+
+###  Using path
+
+
+```{r, results='asis'}
+WH=c(300,200)
+
+m<-c("M", c(150,50))
+polyPortion<-c("l", 100, 0, 50, 50, -50, 50, -100,0)
+d=c(m,polyPortion, 'Z')
+svgR(
+    wh=WH,
+   path(d=d, fill='none', stroke='blue', stroke.width=2)
+    
+)
+```
+
+Proposal:  if wh is the bounding box, then the base should be
+w-h/2, so we create a fn called reactiveSource as
+
+```{r}
+reactiveSource %<c-% function(xy, wh, fill='none', stroke= 'black', ...){
+    
+    m<-c('M',xy)
+    dz<-wh[2]/2
+    dx<-wh[1]-dz
+    
+    polyPortion<-c('l', dx,0,  dz,dz, -dz,dz, -dx, 0 )
+    d<-c(m, polyPortion, 'Z')
+    
+    path(d=d, fill=fill, stroke=stroke, ...)
+} 
+
+```
+
+
+```{r, results='asis'}
+WH=c(300,200)
+svgR(wh=WH,
+ reactiveSource( xy=c(50,50), wh=c(200,50), stroke.width=2)
+
+)
+
+```
+
+### With points arg
+
+
+```{r}
+reactiveSource %<c-% function( points, fill='none', stroke= 'black', ...){
+    xy<-apply(points,1,min)
+    wh<-abs(apply(points,1,diff))
+    m<-c( 'M',points[,1] )
+    dz<-wh[2]/2
+    dx<-wh[1]-dz
+    polyPortion<-c('l', dx,0,  dz,dz, -dz,dz, -dx, 0 )
+    d<-c(m, polyPortion, 'Z')
+    path(d=d, fill=fill, stroke=stroke, ...)
+} 
+
+```
+
+
+```{r, results='asis'}
+WH=c(400,200)
+svgR(wh=WH,
+ reactiveSource( points=matrix(c(50,50,350,150),2), stroke.width=2, fill='pink')
+
+)
+
+```
+
+
+
+
+## reactive expression
+
+```{r, results='asis'}
+WH=c(300,200)
+
+m<-c("M", c(150,50))
+polyPortion<-c("l", 100, 0, 50, 50, -50, 50, -100,0)
+arcPortion<-c('a', c(50,50), 180, 1,1, c(0,-100))
+d=c(m,polyPortion, arcPortion)
+svgR(
+    wh=WH,
+   path(d=d, fill='none', stroke='blue', stroke.width=2)
+    
+)
+```
+
+
+### reactive expression as a compound
+
+
+```{r}
+reactiveExpression %<c-% function(xy, wh, fill='none', stroke= 'black', ...){
+    
+   
+    dz<-wh[2]/2
+    dx<-wh[1]-2*dz
+    m<-c('M',xy+c(dz,0))
+    polyPortion<-c('l', dx,0,  dz,dz, -dz,dz, -dx, 0 )
+    arcPortion<-c('a', c(dz,dz), 180, 1,1, c(0, -2*dz))
+    d<-c(m, polyPortion, arcPortion)
+    
+    path(d=d, fill=fill, stroke=stroke, ... )
+} 
+
+```
+
+
+```{r, results='asis'}
+WH<-c(300,200)
+svgR(
+    reactiveExpression( xy= c(50,50), wh=c(200,50), stroke.width=2)
+)
+
+```
+
+
+### reactive expression as a compound with points arg
+
+
+```{r}
+reactiveExpression %<c-% function(points, fill='none', stroke= 'black', ...){
+     xy<-apply(points,1,min)
+    wh<-abs(apply(points,1,diff))
+   
+   
+    dz<-wh[2]/2
+    dx<-wh[1]-2*dz
+    m<-c('M',xy+c(dz,0))
+    polyPortion<-c('l', dx,0,  dz,dz, -dz,dz, -dx, 0 )
+    arcPortion<-c('a', c(dz,dz), 180, 1,1, c(0, -2*dz))
+    d<-c(m, polyPortion, arcPortion)
+    
+    path(d=d, fill=fill, stroke=stroke, ... )
+} 
+
+```
+
+
+```{r, results='asis'}
+WH<-c(300,200)
+svgR(
+    reactiveExpression( points=matrix(c(50,50,200,150),2), stroke.width=2, fill='orange')
+)
+
+```
+
+
+
+## reactive observer
+
+```{r, results='asis'}
+WH=c(300,200)
+
+m<-c("M", c(150,50))
+polyPortion<-c("l", 100, 0, 0, 100,  -100,0)
+arcPortion<-c('a', c(50,50), 180, 1,1, c(0,-100))
+d=c(m,polyPortion, arcPortion)
+svgR(
+    wh=WH,
+   path(d=d, fill='none', stroke='blue', stroke.width=2)
+    
+)
+```
+
+
+### reactive observer as a compound
+
+
+```{r}
+reactiveObserver %<c-% function(xy, wh, fill='none', stroke= 'black', ...){
+    
+   
+    dz<-wh[2]/2
+    dx<-wh[1]-dz
+    m<-c('M',xy+c(dz,0))
+    polyPortion<-c('l', dx,0,  0,2*dz, -dx, 0 )
+    arcPortion<-c('a', c(dz,dz), 180, 1,1, c(0, -2*dz))
+    d<-c(m, polyPortion, arcPortion)
+    
+    
+    path(d=d, fill=fill, stroke=stroke, ... )
+} 
+
+```
+
+
+
+```{r, results='asis'}
+WH<-c(300,200)
+svgR(
+    reactiveObserver( xy= c(50,50), wh=c(200,50), stroke.width=2)
+)
+
+```
+
+
+### reactive iobserver with points
+
+
+```{r}
+reactiveObserver %<c-% function(points, fill='none', stroke= 'black', ...){
+    
+    xy<-apply(points,1,min)
+    wh<-abs(apply(points,1,diff))
+    dz<-wh[2]/2
+    dx<-wh[1]-dz
+    m<-c('M',xy+c(dz,0))
+    polyPortion<-c('l', dx,0,  0,2*dz, -dx, 0 )
+    arcPortion<-c('a', c(dz,dz), 180, 1,1, c(0, -2*dz))
+    d<-c(m, polyPortion, arcPortion)
+    
+    
+    path(d=d, fill=fill, stroke=stroke, ... )
+} 
+
+```
+
+
+
+```{r, results='asis'}
+WH<-c(300,200)
+svgR(
+    reactiveObserver( points=matrix(c(50,50,290,150),2), stroke.width=2, fill='yellow')
+)
+
+```
+
+
+
+## Text
+
+To add text to the above, we can either
+
+1. return a list with object and text
+2. return a groub with object and text
+
+
+## arrows
+
+```{r}
+roundedPolyLine%<c-%function(x, r=5, ...){
+  nx<-length(x)
+  if(nx<4){
+    return(NULL)
+  }
+  n<-ncol(x)
+  if(n==2){
+    return(path(d=c("M", x[,1], "L", x[,n]), ...))
+  }
+
+  dv<-x[,-n]-x[,-1]
+  d<-apply( dv ,2, function(x)sqrt(sum(x)^2) )
+  lambda<-sapply(r/d, function(x)min(x,.5))
+  
+  m<- n-1
+  if(m==2){
+    mA<-matrix(c(lambda[1],1-lambda[1]),2,1)
+    mB<-matrix(c(1-lambda[2],lambda[2]),2,1)
+  } else {
+    mA<- rbind(diag(lambda[-m]),0) + rbind(0,diag(1-lambda[-m]))
+    mB<- rbind(0,diag(lambda[-1])) + rbind(diag(1-lambda[-1]),0)
+  } 
+  a<-x[,-n]%*%mA
+  b<-x[,-1]%*%mB   
+  rL<-rep("L", n-2)
+  rQ<-rep("Q", n-2)
+  if(m==2){
+    rr<-c(rL,a,rQ,x[,2],b)
+  } else {
+    rr<-rbind(rL, a, rQ, x[,-c(1,n)], b)
+  }
+  path(d=c("M", x[,1], rr, "L", x[,n]),  ...)
+  }
+  ```
+  
+  ```{r, results='asis'}
+  
+  WH<-c(500,300)
+  svgR(
+  wh=WH,
+  roundedPolyLine(
+    x=matrix(c(100,100,100,200,300,200),2),
+    r=10, 
+    fill='none',
+    stroke='red',
+    marker.end=
+        marker( viewBox=c(0, 0, 10, 10), refXY=c(9,5), 
+              markerWidth=6, markerHeight=6, orient="auto",
+              path( d=c("M", 0, 0, "L", 10, 5, "L", 0, 10, "z") )
+       
+        )
+        )
+  )
+  ```
+  
+  ### alternatively including marker in arrow def
+  
+  
+  ```{r}
+arrow %<c-% function(x, r=5, ...){
+  nx<-length(x)
+  if(nx<4){
+    return(NULL)
+  }
+  n<-ncol(x)
+  if(n==2){
+    return(path(d=c("M", x[,1], "L", x[,n]), ...))
+  }
+
+  dv<-x[,-n]-x[,-1]
+  d<-apply( dv ,2, function(x)sqrt(sum(x)^2) )
+  lambda<-sapply(r/d, function(x)min(x,.5))
+  
+  m<- n-1
+  if(m==2){
+    mA<-matrix(c(lambda[1],1-lambda[1]),2,1)
+    mB<-matrix(c(1-lambda[2],lambda[2]),2,1)
+  } else {
+    mA<- rbind(diag(lambda[-m]),0) + rbind(0,diag(1-lambda[-m]))
+    mB<- rbind(0,diag(lambda[-1])) + rbind(diag(1-lambda[-1]),0)
+  } 
+  a<-x[,-n]%*%mA
+  b<-x[,-1]%*%mB   
+  rL<-rep("L", n-2)
+  rQ<-rep("Q", n-2)
+  if(m==2){
+    rr<-c(rL,a,rQ,x[,2],b)
+  } else {
+    rr<-rbind(rL, a, rQ, x[,-c(1,n)], b)
+  }
+ 
+    path(
+        d=c("M", x[,1], rr, "L", x[,n]),  
+        fill='none',
+        marker.end= marker( viewBox=c(0, 0, 10, 10), refXY=c(9,5), 
+              markerWidth=6, markerHeight=6, orient="auto",
+              path( d=c("M", 0, 0, "L", 10, 5, "L", 0, 10, "z") )
+       
+        ),
+    ...)
+ 
+  }
+  ```
+  
+  ```{r, results='asis'}
+  
+  WH<-c(500,300)
+  svgR(
+  wh=WH,
+  arrow(
+    x=matrix(c(100,100,100,200,300,200),2)
+   
+    )
+  )
+  ```
+

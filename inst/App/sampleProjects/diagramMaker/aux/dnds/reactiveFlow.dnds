@@ -1,0 +1,168 @@
+---
+title: "Dnd Snippet"
+author: "Anonymous"
+date:   "TODAY"
+output: dnd_snippet
+---
+
+- Individual drippets are seperate by lines consisting of three or more stars (*)
+- Each drippet consists of 3 entries, with each entry having a title and a value (block)
+    - The title consists of a single line followed by a colon (:)
+        - titles are *POPUP*, *SNIPPET*, *SVGR*
+        - The values are blocks defined by 3 backtics *````*
+- Two drippets are shown below to help you get started
+   
+
+*********************
+                        
+
+POPUP 
+```
+Block
+```
+SNIPPET
+```
+block(
+  pmap(ptR$${1:block}, block)
+)
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+svgR(wh=WH, fill='none', stroke='#00FFFF', stroke.width=2,
+  rect(
+    cxy=WH/2,
+    wh=WH/1.5
+    
+  ),
+  text(cxy=WH/2, 'B', fill='#00FFFF')
+)
+```
+*********************
+
+POPUP 
+```
+reactiveSource
+```
+SNIPPET
+```
+pmap(ptR$${1:source}, reactiveSource)
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+xy<-c(.2,.2)*WH
+wwh<-c(.6,.6)*WH
+m<-c('M',xy)
+dz<-wwh[2]/2
+dx<-wwh[1]-dz
+polyPortion<-c('l', dx,0,  dz,dz, -dz,dz, -dx, 0 )
+d<-c(m, polyPortion, 'Z')
+
+svgR(wh=WH, stroke.width=2, stroke="#00FFFF",  fill="none",
+    g(
+       path(d=d),
+       text(cxy=WH/2, 'S')
+    )
+)
+```
+******************
+POPUP 
+```
+reactiveObserver
+```
+SNIPPET
+```
+pmap(ptR$${1:observer}, reactiveObserver)
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+xy<-c(.2,.2)*WH
+wwh<-c(.6,.6)*WH
+m<-c('M',xy)
+dz<-wwh[2]/2
+dx<-wwh[1]-dz
+polyPortion<-c('l', dx,0,  dz,dz, -dz,dz, -dx, 0 )
+d<-c(m, polyPortion, 'Z')
+
+ 
+    m<-c('M',xy+c(dz,0))
+    polyPortion<-c('l', dx,0,  0,2*dz, -dx, 0 )
+    arcPortion<-c('a', c(dz,dz), 180, 1,1, c(0, -2*dz))
+    d<-c(m, polyPortion, arcPortion)
+svgR(wh=WH, stroke.width=2, stroke="#00FFFF",  fill="none",
+    g(
+        path(d=d ),
+        text(cxy=xy+wwh/2, "O")
+    )
+)
+```
+******************
+POPUP 
+```
+reactiveExpression
+```
+SNIPPET
+```
+pmap(ptR$${1:expression}, reactiveExpression)
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+xy<-c(.2,.2)*WH
+wwh<-c(.5,.6)*WH
+m<-c('M',xy)
+dz<-wwh[2]/2
+dx<-wwh[1]-dz
+polyPortion<-c('l', dx,0,  dz,dz, -dz,dz, -dx, 0 )
+d<-c(m, polyPortion, 'Z')
+
+ 
+    m<-c('M',xy+c(dz,0))
+    polyPortion<-c('l', dx,0,  dz,dz, -dz,dz, -dx, 0 )
+    arcPortion<-c('a', c(dz,dz), 180, 1,1, c(0, -2*dz))
+    d<-c(m, polyPortion, arcPortion)
+    
+svgR(wh=WH, stroke.width=2, stroke="#00FFFF",  fill="none",
+    g(
+        path(d=d ),
+        text(cxy=WH/2, "E")
+    )
+)
+```
+******************
+POPUP 
+```
+Arrow
+```
+SNIPPET
+```
+pmap(ptR$${1:arrows}, arrow)
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+stroke="#00FFFF"
+svgR(wh=WH, stroke.width=2, stroke="#00FFFF",  fill="none",
+     path(
+        d=c("M", c(.1,.7)*WH, "L", c(c(.5,.7), c(.5,.5), c(.8,.5))*WH),  
+        fill='none', stroke=stroke,
+        marker.end= marker( viewBox=c(0, -1, 12, 12), refXY=c(9,5), stroke=stroke, fill=stroke,
+              markerWidth=4, markerHeight=4, orient="auto",
+              path( d=c("M", 0, 0, "L", 10, 5, "L", 0, 10, "z") )
+       
+        )
+    )
+)
+```
+******************
+
