@@ -8,9 +8,9 @@ syncDndDB<-function(usageDB){
       usageDB<-select(usageDB, -sname)
     }
   }
-  for(sname in dndNames) {#
-    if(!sname %in% usageNames){ #not in  usageDB
-      usageDB<-add_column(usageDB, sname=FALSE)
+  for(dndName in dndNames) {#
+    if(!dndName %in% names(usageDB)){ #not in  usageDB
+      usageDB<-add_column(usageDB, !!dndName:=FALSE)
     }
   }
   usageDB

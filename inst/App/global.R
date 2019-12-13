@@ -88,6 +88,8 @@ source("util/logger.R")
 source("fileIO/genShinyFilesOpenButtons.R")
 source("fileIO/genShinyFilesSaveButtons.R")
 source("leftPanel/menu/UIProjectTemplateMenu.R")
+source("leftPanel/menu/UIProjectSampleMenu.R")
+
 source("leftPanel/menu/UIbuildLeftMenu.R")
 source("leftPanel/mid/UIcontextMenu.R")
 

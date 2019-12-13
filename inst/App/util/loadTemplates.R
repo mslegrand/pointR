@@ -15,5 +15,10 @@ projTemplateNames<-dir(filePath(ptRPath, "App","projectTemplates"))
 projTemplatesPaths<-sapply( projTemplateNames, function(x){
   filePath(ptRPath, "App","projectTemplates", x )
 })
+
+projSamplesNames<-dir(filePath(ptRPath, "App","sampleProjects"))
+projSamplesPaths<-sapply( projSamplesNames, function(x){
+  filePath(ptRPath, "App","sampleProjects", x )
+})
                             
   

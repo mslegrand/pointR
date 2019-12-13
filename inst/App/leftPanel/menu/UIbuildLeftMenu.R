@@ -28,7 +28,11 @@ buildLeftMenu<-function(version){
         shinyDMDMenu::menuItem('New Basic Project', value='newBasicProject'),
         shinyDMDMenu::menuItem('Clone of Existing Project', value='newCloneProject'),
         #shinyDMDMenu::menuItem('svgR-based ShinyInput Control', value='newSimpleInputWidget'),
-        UIProjectTemplateMenu()
+        UIProjectTemplateMenu(),
+        menuDropdown('Sample Project',
+          UIProjectSampleMenu()
+        )
+        
       ),
       menuDropdown("Recent Projects"),
       menuDivider(),

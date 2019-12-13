@@ -147,6 +147,7 @@ shinyServer(function(input, output,session) {
   source("leftPanel/pproj/pprojOpen.R",                         local=TRUE)   
   source("leftPanel/pproj/pprojClose.R",                        local=TRUE)  
   source("leftPanel/pproj/pprojModalNew.R",                     local=TRUE)  
+  source("leftPanel/pproj/pprojModalSample.R",                  local=TRUE)  
   
   source("leftPanel/menu/cmdFileExportSvg.R",                   local=TRUE) 
   source("leftPanel/menu/cmdOptionsTheme.R",                    local=TRUE)
