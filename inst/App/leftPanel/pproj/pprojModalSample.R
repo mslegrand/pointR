@@ -77,33 +77,27 @@ observeEvent(input$modalSampleProjOk, {
     showModal(sampleProjModal(failed = 2, mssg=mssg, datapath=datapath, projectName= projectName))
   } else {
     # try to add file and workspace, if not writable , return fail
-    #newProj(projectName, datapath, projType="generic")
+    
     projSourcePath<- projSamplesPaths[projectName]
     projectName.pprj<-dir(projSourcePath,pattern=".pprj$")
     
     # 0. close current project
     closeCurrentProj()
+    
     # 1. copy project
-    #
     dir_copy( projSourcePath,  pathToProjParent)
     
-    # 2. open cloned project
-    #fullpathProjName<-path_join(c(pathToProjParent, projectName, projectName.pprj))
+    # 2. open copied project
     fullpathProjName<-file.path(pathToProjParent, projectName, projectName.pprj)
     ptRproj<-read_json(fullpathProjName, simplifyVector = TRUE) 
     pprj(ptRproj)
-    # 3. 
     
-    
+    # 3. setup
     setUpProj(projName=projectName.pprj, pathToProj=pathToProj, projType='other')
+    
     #invoke startup
     requestStartUp()
     removeModal()   
-    # 1 cd to datapath
-    # 2 create new file with name = input$modalProjName
-    #   2.5 may need to put in request, since it will need to add windows.
-    # 3 register in recent projects.
-    
     
   }
 })
