@@ -1,7 +1,7 @@
 
 updateAceExtDef<-function(newPtDef, sender, selector=list() ){
   if(!is.null(getCode())){
-    newPtDef$tib<-pts2Integers(newPtDef$tib )
+    newPtDef$tib<-trimPtDigits(newPtDef$tib ) 
     replacementList<-ptDef2ReplacementList(name, newPtDef, getCode() ) #name not used!!!
     if( length(replacementList)>0 ){
       data<-list(id= getAceEditorId(), replacement=replacementList, selector=selector, sender=sender, ok=1)

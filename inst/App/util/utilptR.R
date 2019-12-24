@@ -93,12 +93,12 @@ ptDef2ReplacementList<-function(name, newPtDef, txt){ # name arg not used???
 
 
 # sole caller: updateAceExtDef 
-pts2Integers<-function(newtib){ #!!!REDO KLUDGE to convert output to ints
+trimPtDigits<-function(newtib){ #!!! trim to 3 significant  digits
   for(nm in names(newtib)){
     for( j in ncol( newtib[[nm]] )){
       if( is.matrix(newtib[[nm]][[1,j]]) &&  dim(newtib[[nm]][[1,j]])[1]==2){
         for( i in nrow(  newtib[[nm]] )){
-          newtib[[nm]][[i,j]]<-matrix( as.integer(newtib[[nm]][[i,j]] ), 2)
+          newtib[[nm]][[i,j]]<-matrix( signif(newtib[[nm]][[i,j]],3 ), 2)
         }
       }
     }
