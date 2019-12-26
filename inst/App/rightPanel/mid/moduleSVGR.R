@@ -51,10 +51,16 @@ svgToolsScript<-function(type){
     )
     if(labels){
       grph<-c(grph,
-              lapply(xs, function(x)text(font.size=10, xy=scaleFactor*c(x+1,1),x, 
-                                         text.anchor="start", alignment.baseline="hanging",
-                                         transform=paste0('scale(',1/scaleFactor ,')') )),
-              lapply(ys, function(y)text(font.size=10, xy=scaleFactor*c(1,y),y, 
+              lapply(xs, function(x)text(font.size=10, 
+                                         xy=scaleFactor*c(x,0)+c(5,5),
+                                         x, 
+                                         text.anchor="start", alignment.baseline="hanging" ,
+                                         transform=paste0('scale(',1/scaleFactor ,')') 
+                                         )
+                     ),
+              lapply(ys, function(y)text(font.size=10, 
+                                         xy=scaleFactor*c(0,y)+c(5,-5),
+                                         y, 
                                          text.anchor="start", alignment.baseline="baseline",
                                          transform=paste0('scale(',1/scaleFactor ,')') ))
       )
@@ -98,11 +104,13 @@ svgToolsScript<-function(type){
           vbWH<-str_split(vbWH,',')
           vbWH<-unlist(vbWH)[3:4]
           vbScaleFactor<-1
+          gWH<-c(w,h)
           tryCatch({
             if(length(vbWH)==2  ){
               vbWH<-as.numeric(vbWH)
               if(min(vbWH)>0){
                 vbScaleFactor<-mean(rtv$WH/vbWH)
+                gWH<-vbWH
               } else {
                 vbScaleFactor<-1
               }
@@ -113,8 +121,10 @@ svgToolsScript<-function(type){
           svg$root$setAttr('id',svgID)
           if(getSvgGrid()$show==TRUE){ 
             dxy<-c( getSvgGrid()$dx, getSvgGrid()$dy)
+            
             #svg$root$prependNode(svgR:::graphPaper( wh=c(w,h), dxy=dxy, labels=TRUE )) #need to replace with vbScaleFactor-scalable version
-            svg$root$prependNode( graphPaper2( wh=c(w,h), dxy=dxy, labels=TRUE, scaleFactor= vbScaleFactor))
+            #svg$root$prependNode( graphPaper2( wh=c(w,h), dxy=dxy, labels=TRUE, scaleFactor= vbScaleFactor))
+            svg$root$prependNode( graphPaper2( wh=gWH, dxy=dxy, labels=TRUE, scaleFactor= vbScaleFactor))
           }
           if(getBackDrop()$checked==FALSE){
               svg$root$prependChildren(
