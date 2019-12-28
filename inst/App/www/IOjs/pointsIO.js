@@ -43,7 +43,7 @@ PtRPanelPoints.prototype.selectPoint = function (evt){
   this.currentY = evt.clientY;
   var pth = "ptRPlotter_"+this.svgId;
   this.selectedElement.setAttributeNS(null, "onmousemove",  pth + ".movePoint(evt)");
-  this.svg.setAttributeNS(null, "onmouseout", pth + ".deselectPoint(evt)");
+  //this.svg.setAttributeNS(null, "onmouseout", pth + ".deselectPoint(evt)");
   this.svg.setAttributeNS(null, "onmouseup",  pth + ".deselectPoint(evt)");
 };
 

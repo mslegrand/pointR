@@ -29,7 +29,7 @@ PtRPanelTagDrag.prototype.selectElement = function (evt) {
   var pth = "ptRPlotter_"+this.svgId;
   
   this.selectedElement.setAttributeNS(null, "onmousemove", pth + ".moveElement(evt)");
-  this.svg.setAttributeNS(null, "onmouseout", pth + ".deselectElement(evt)");
+  //this.svg.setAttributeNS(null, "onmouseout", pth + ".deselectElement(evt)");
   this.svg.setAttributeNS(null, "onmouseup",  pth + ".deselectElement(evt)");
 };
 
