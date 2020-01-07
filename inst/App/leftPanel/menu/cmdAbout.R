@@ -15,7 +15,7 @@ modalAbout <- function(..., size = "m" ) {
        "SVG is short for scalar vector graphics.",
        "Applications include Shiny apps, Rdocs, or even generating a plain SVG file.")),
       p("This software is licensed under the GPL-3 License"),
-      p("Copyright (c) 2018 M. S. Legrand. All rights reserved")
+      p("Copyright (c) 2020 M. S. Legrand. All rights reserved")
     ),
     title="About",
     footer=tagList( modalButton("Dismiss")),
