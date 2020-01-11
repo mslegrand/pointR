@@ -119,6 +119,13 @@ dripplets2List2<-function(drps){
     rtv<-extractDripplet(dr)
     rtv
   })
+  
+  if(!is.null(editOption$currentProjectName)){
+    drps<-lapply(drps, function(dr){
+      dr['snip']<-gsub('@projectName@', editOption$currentProjectName, dr['snip'])
+      dr
+    })
+  }
   drps
 }
 
