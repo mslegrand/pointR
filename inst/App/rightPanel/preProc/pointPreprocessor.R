@@ -17,10 +17,10 @@ newPreProcDropDown<-function()
                                 )),
                                 
                                 div(style="width: 100%; overflow: hidden; margin-top:5px; margin-bottom:5px",
-                                    div( style="float:left;",
+                                    div( style="float:right;",
                                          actionButton(inputId= "commitPreProcChoiceButton", label='Commit', class=c("btn") )
                                     ),
-                                    div( style="float:right;",
+                                    div( style="float:left;",
                                          actionButton(inputId= "dimissPreProcChoiceButton", label='Dismiss', class=c("btn") )
                                     )
                                 )
