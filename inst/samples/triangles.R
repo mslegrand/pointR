@@ -16,7 +16,7 @@ svgR(wh=WH,
     fill='red',
     opacity=.5,
     transform=matrix(c(0.4211, -0.907, 0.907, 0.4211, 85.26, 277.6),2),
-    class='draggable'
+    class='adjustable'
   )
   
   

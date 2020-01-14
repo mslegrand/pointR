@@ -204,8 +204,8 @@ usingTransformDraggable<-reactive({
   length(code) >0 &&
     nchar(code)>0 &&
     ( 
-      grepl("class\\s*=\\s*'draggable'",code ) || 
-        grepl('class\\s*=\\s*"draggable"',code )
+      grepl("class\\s*=\\s*'adjustable'",code ) || 
+        grepl('class\\s*=\\s*"adjustable"',code )
     )
 }) 
 

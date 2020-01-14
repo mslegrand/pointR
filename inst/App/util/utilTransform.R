@@ -18,7 +18,7 @@ usingDraggable<-function(txt, transformType){
   log.val(transformType)
   
   
-  if(is.null(transformType) || is.null(txt) || !grepl('draggable',txt )){
+  if(is.null(transformType) || is.null(txt) || !grepl('adjustable',txt )){
     return(txt)
   }
   if(transformType=='Scale'){
@@ -32,7 +32,7 @@ usingDraggable<-function(txt, transformType){
   ep<-parse(text=txt)
   df<-getParseData(ep)
   
-  drag<-subset(df, text %in% c('"draggable"', "'draggable'"))
+  drag<-subset(df, text %in% c('"adjustable"', "'adjustable'"))
   pDrag<-subset(df, id %in% drag$parent) 
   gpDrag<-pDrag$parent
   tr<-subset(df, text=="transform" & terminal==TRUE & parent %in% gpDrag)

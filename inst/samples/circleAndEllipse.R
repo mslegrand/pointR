@@ -18,11 +18,11 @@ svgR(wh=WH,
             fill=linearGradient( y12=c(0,1), x12=c(0,0),
                                  colors=c('red','black')
             ),
-            class='draggable',
+            class='adjustable',
             transform=matrix(c(0.683, -0.7303, 0.7303, 0.683, -270.3, 204.3),2)
      ),
      g(
-       class='draggable',
+       class='adjustable',
        transform=NULL,
        ellipse(cxy=ce, rxy=cwh/2, 
         fill=radialGradient(colors=c('green','blue','black'))
