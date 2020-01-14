@@ -41,7 +41,7 @@ showPts.valTag %<c-% function(
            list(
              circle(cxy=m[,j], r=8),
              if(ptDisplayMode=="Labeled"){
-               text( paste(j), cxy=m[,j]+10*c(1,-1),  stroke='black', font.size=12) 
+               text( paste(i), cxy=m[,j]+10*c(1,-1),  stroke='black', font.size=12) 
              } else {
                NULL
              }
@@ -62,7 +62,7 @@ showPts.valTag %<c-% function(
          list(
            circle(   cxy=mRow[,j], r=8),
            if(ptDisplayMode=="Labeled"){
-             text(paste(j), cxy=mRow[,j]+10*c(1,-1),  stroke='black', font.size=12) #opac)
+             text(paste(rowIndex), cxy=mRow[,j]+10*c(1,-1),  stroke='black', font.size=12) #opac)
            } else {
              NULL
            }
