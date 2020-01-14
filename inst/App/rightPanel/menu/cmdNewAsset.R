@@ -29,7 +29,7 @@ observeEvent(input$commitNewAsset, {
     #add name to tib
     newPtDefs<-getPtDefs()
     newAssetName<-input$modalAssetName
-    newPtDefs$tib[[newAssetName]]<-tibble(points=list(matrix(NA,2,0)))
+    newPtDefs$tib[[newAssetName]]<-tibble(points=list(matrix(0,2,0)))
     newPtDefs$mats[newAssetName]<-input$modalAssetType=='matrix' 
 
     # updateAce and set selection to this column

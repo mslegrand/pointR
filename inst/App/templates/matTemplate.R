@@ -4,7 +4,7 @@ WH<-c(600,400)
 
 # Defined by mouse: edit with care!
 ptR<-list(
-  x=matrix(NA,2,0)
+  x=matrix(0,2,0)
 )
 
 svgR(wh=WH,
