@@ -372,7 +372,7 @@ path(
       ${1:M=c(.2,.2)*WH,} 
       Q=${2:c( c(.5,1.5),c(.8,.2))*WH}
     ),
-    stroke=${3:'#000FF'},
+    stroke=${3:'#0000FF'},
     stroke.width=${4:1},
     fill=${5:'none'}
 )${0:}
