@@ -139,31 +139,32 @@ observeEvent( returnValue4ModuleRtFtr$removePt(), {
 #---TAG THIS POINT button-----
 observeEvent( returnValue4ModuleRtFtr$tagPt(), {
 
-  src<-getCode()
-  selection<-getAssetName()
+  # src<-getCode() #why
+  sender='tagPt'
   ptDefs<-getPtDefs()
-  
-  row<-getTibRow()
+  selection<-getAssetName()
+  tib<-ptDefs$tib[[selection]] #get the tib
+  rowIndex<-getTibRow()
   matCol<-getTibMatCol()
   
-  m<-ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]
-  ptDefs$mats[selection]<-FALSE # no longer a matrix input!
-  tib<-ptDefs$tib[[selection]] #get the tib
-  tib<-tagTib(tib, getTibPtColPos(), row, matCol)
+  updateRowPicker(session, "myTibRowCntrl", insertRow=rowIndex+1, selectRow=rowIndex+1)
   
-  updateRowPicker(session, "myTibRowCntrl", insertRow=row)
-  row<-row+1
-  matCol<-length(tib[[row, getTibPtColPos()]])/2
-  ptDefs$tib[[selection]]<-tib
-  sender='tagPt'
+  m<-tib[[ rowIndex, getTibPtColPos() ]]
+  ptDefs$mats[selection]<-FALSE # no longer a matrix input!
+  newTib<-tagTib(tib, getTibPtColPos(), rowIndex, matCol)
+  
+  
+  rowIndex<-rowIndex+1
+  matCol<-length(newTib[[rowIndex, getTibPtColPos()]])/2
+  ptDefs$tib[[selection]]<-newTib
+  
   tabId<-getTibTabId()
   scripts<-getPreProcOnNewRowScripts(tabId, selection)
   
   if(length(scripts)>0){
-    preprocTrySetAttrValueS(scripts,  ptDefs, row, selection)
+    preprocTrySetAttrValueS(scripts,  ptDefs, rowIndex, selection)
   } else {
-    sender='tagPt'
-    updateAceExtDef(ptDefs, sender=sender, selector=list(rowIndex=row, matCol=matCol   ) )
+    updateAceExtDef(ptDefs, sender=sender, selector=list(rowIndex=rowIndex, matCol=matCol   ) )
   }
 }) 
 
