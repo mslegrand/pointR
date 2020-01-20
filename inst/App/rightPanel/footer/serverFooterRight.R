@@ -30,7 +30,7 @@ observeEvent(
     newTib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
     rowIndex=rowIndex+1
     matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
-    pts<-newTib[[getTibPtColPos()]]
+    pts<-newTib[[getTibPtColPos()]] #!!!!  NOT USED?????
     ptDefs$tib[[selection]]<-newTib
     tabId<-getTibTabId()
     scripts<-getPreProcOnNewRowScripts(tabId, selection)

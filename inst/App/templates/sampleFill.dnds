@@ -58,8 +58,8 @@ Radial Gradient
 SNIPPET
 ```
 radialGradient(
-  cxy=c(1,1)*.5, 
-  rxy=c(1,1)*.5,
+  cxy=c(.5,.7)*.5, 
+  fxy=c(1,1)*.5,
   colors=${0:c('#FFFFFF', '#00AAAA')}
 )
 ```
@@ -76,8 +76,8 @@ svgR(wh=WH,
     cxy=WH/2,
     wh=WH*c(.8,.8),
     fill=radialGradient(
-      cxy=c(1,1)*.5, 
-      rxy=c(1,1)*.5,
+      cxy=c(.5,.7), 
+      fxy=c(1,1)*.5,
       colors=c('#FFFFFF', '#00AAAA')
     ),
     stroke='none',
