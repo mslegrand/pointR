@@ -23,7 +23,7 @@ SNIPPET
 ```
 circle(
 	cxy=${1:WH/2},
-	r=${2:WH[2]/3},
+	r=${2:min(WH)/3},
 	stroke='black',
 	fill=${3:'none'}
 )${0:}
@@ -329,7 +329,7 @@ SNIPPET
 	path(
 		d=list(
 			M=${1:c(.5,.2)*WH}, 
-			A=${2:c(2.3*WH, 180,1,0,c(.8,.5)*WH)}
+			A=${2:c(.3*WH, 180,1,0,c(.8,.5)*WH)}
 		),
 		stroke=${3:'#0000FF'},
 		stroke.width=${4:2},
