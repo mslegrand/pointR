@@ -90,7 +90,8 @@ readAuxDnippets<-function( startup=TRUE){
   dPaths<-list.files(dndAuxPath, full.names=TRUE)
   if(length(dPaths)==0){
     sampleDnippetPath<-path_join(c(system.file('App', package='pointR'), 'templates', 'sampleShapes.dnds'))
-    dPaths=sampleDnippetPath
+    fillDnippetPath<-path_join(c(system.file('App', package='pointR'), 'templates', 'fill.dnds'))
+    dPaths=c(sampleDnippetPath,fillDnippetPath)
   }
   for(fp in dPaths){
     loadDndSnippets(fp, startup=TRUE)
