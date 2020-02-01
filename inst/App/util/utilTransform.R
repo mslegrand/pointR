@@ -17,10 +17,11 @@ usingDraggable<-function(txt, transformType){
   log.fin(usingDraggable)
   log.val(transformType)
   
-  
+
   if(is.null(transformType) || is.null(txt) || !grepl('adjustable',txt )){
     return(txt)
   }
+  
   if(transformType=='Scale'){
     onMouseDownTxt = "', onmousedown='ptRPlotter_ptR_SVG_TRANSFORM_SCALE.selectElement(evt)'"
   } else if(transformType=='Rotate'){
@@ -29,18 +30,24 @@ usingDraggable<-function(txt, transformType){
     onMouseDownTxt = "', onmousedown='ptRPlotter_ptR_SVG_TRANSFORM_TRANSLATE.selectElement(evt)'"
   }
   
-  ep<-parse(text=txt)
-  df<-getParseData(ep)
+  sf <- srcfile("txt")
+  try(parse(text = txt, srcfile = sf))
+  df<-getParseData(sf)
+  
+  # df<-getParseData(ep)
   
   drag<-subset(df, text %in% c('"adjustable"', "'adjustable'"))
+  
   pDrag<-subset(df, id %in% drag$parent) 
   gpDrag<-pDrag$parent
+  
   tr<-subset(df, text=="transform" & terminal==TRUE & parent %in% gpDrag)
   
   sibNodes<-subset(df, id %in% (tr$id+2))
   if(nrow(sibNodes)==0){
     return(txt)
   }
+  
   lapply(split(sibNodes, 1:nrow(sibNodes)), function(x){
     if(x$text=='matrix'){ #get grandparent
       px<-subset(df, id ==x$parent )
@@ -48,11 +55,14 @@ usingDraggable<-function(txt, transformType){
     }
     x 
   })->tmp
+  
+  
   #save sib node table, and original source
   lapply(tmp, function(x)paste("tid",x$line1,x$col1,x$col2,sep="-"))->tr.id
   
   #form tid from sib node values
   names(tr.id)<-tr$id
+  
   
   #get end pos of parent Nodes of tr ( or sib nodes) for insertion of tid and mousedown
   # form list in increasing order of names of sib nodes and endPos of parent Nodes
@@ -83,6 +93,7 @@ usingDraggable<-function(txt, transformType){
       lines[row]<-line
     }
   }
+  
   src<-paste(lines, collapse="\n")
   src
 }
