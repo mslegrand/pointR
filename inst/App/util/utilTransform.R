@@ -34,8 +34,6 @@ usingDraggable<-function(txt, transformType){
   try(parse(text = txt, srcfile = sf))
   df<-getParseData(sf)
   
-  # df<-getParseData(ep)
-  
   drag<-subset(df, text %in% c('"adjustable"', "'adjustable'"))
   
   pDrag<-subset(df, id %in% drag$parent) 
