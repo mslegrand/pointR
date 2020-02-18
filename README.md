@@ -1,27 +1,27 @@
-# pointR
+# pointR and ptR
 
-**pointR** is an R package providing a *shiny-based* minimalist ide for R scripting using svgR
+- **pointR** is an R package providing a *shiny-based* minimalist ide for R scripting using svgR. **pointR** is primarly written in R, with a little bit of javascript for seasoning.
+- **ptR** is an **electron** wrapper around **pointR**. Using **electron** 
+	- Removes the dependency on the local browser
+	- Provides independent windows for help
+	- Provides an integrated approach for building **shiny custom inputs**
+	- Prepackaged installations **ptR** are readily available for *mac* and *linux* (dmg and deb).
 - ***Videos on pointR*** can be found at http://mslegrand.github.io/pointRmedia/.
 - ***Related information*** can be found at http://mslegrand.github.io/svgR/.
 - ***Rambling thoughts*** can be found on the wiki at https://github.com/mslegrand/pointR/wiki
 
-## Some Points on PointR
+## Installation 
+
+We strongly recommend installing **ptR** from one of the installations packages. Prior to installation, you may want to 
+consider installing **pandoc** and the R package **tidyverse**. Note, **pandoc** is used for **knitr** and is normally included in the **Rstudio** installation. 
+
+## Some Points on pointR
 -  pointR is a shiny server application
 -  pointR uses the ACE editor for coding
 -  pointR is intended to ease the writing of R scripts using svgR.
 -  pointR is an attempt to bridge the gap between coding and point&click.
 -  svgR bridges the gap between R and SVG
 
-## Try Out
-- runGitHub("pointR", "mslegrand")
-  
-# Installation
-- install.packages("devtools")
-- library(devtools)
-- install_github("shiny", "rstudio")
-- install_github("shinyAce", "trestletech")
-- install_github("shinyjs", "daattali")
-- install_github("svgR", "mslegrand")
 
 # Reporting issues
 Please report any bugs/issue in the 
