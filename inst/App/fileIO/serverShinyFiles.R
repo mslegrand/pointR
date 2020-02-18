@@ -23,7 +23,7 @@
 # }
 
 shinyFileChoose(input, "buttonFileOpen",  session=session, roots=c(home="~"),
-                filetypes=c('R','PTR','SVGR','js','dnds'))
+                filetypes=c('R','PTR','SVGR','js','dnds', 'Rmd'))
 shinyFileChoose(input,"buttonFileOpenProject",  session=session, roots=c(home="~"), filetypes=c('pprj'))
 shinyFileChoose(input,"buttonSnippetImport",  session=session, roots=c(home="~"), filetypes=c('snip'))
 shinyFileChoose(input,"buttonDnippetImport",  session=session, roots=c(home="~"), filetypes=c('dnds'))
