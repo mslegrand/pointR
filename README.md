@@ -5,14 +5,14 @@
 	- Removes the dependency on the local browser
 	- Provides independent windows for help
 	- Provides an integrated approach for building **shiny custom inputs**
-	- Prepackaged installations **ptR** are readily available for *mac* and *linux* (dmg and deb).
+	- Prepackaged installations **ptR** are readily available for *mac* and *linux* (dmg and deb). These can be found on the release page https://github.com/mslegrand/ptR/releases
 - ***Videos on pointR*** can be found at http://mslegrand.github.io/pointRmedia/.
 - ***Related information*** can be found at http://mslegrand.github.io/svgR/.
 - ***Rambling thoughts*** can be found on the wiki at https://github.com/mslegrand/pointR/wiki
 
 ## Installation 
 
-We strongly recommend installing **ptR** from one of the installations packages. Prior to installation, you may want to 
+We strongly recommend installing **ptR** from one of the installations packages found at https://github.com/mslegrand/ptR/releases. Prior to installation, you may want to 
 consider installing **pandoc** and the R package **tidyverse**. Note, **pandoc** is used for **knitr** and is normally included in the **Rstudio** installation. 
 
 ## Some Points on pointR
