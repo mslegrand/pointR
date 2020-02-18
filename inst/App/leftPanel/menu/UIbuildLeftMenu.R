@@ -32,9 +32,7 @@ buildLeftMenu<-function(version){
        
         
       ), 
-      menuDropdown('Sample Project',
-          UIProjectSampleMenu()
-      ),
+      # menuDropdown('Sample Project', UIProjectSampleMenu()),
       menuDropdown("Recent Projects"),
       menuDivider(),
       shinyDMDMenu::menuItem("Open File", value='openFile'),
