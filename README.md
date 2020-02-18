@@ -12,8 +12,12 @@
 
 ## Installation 
 
-We strongly recommend installing **ptR** from one of the installations packages found at https://github.com/mslegrand/ptR/releases. Prior to installation, you may want to 
-consider installing **pandoc** and the R package **tidyverse**. Note, **pandoc** is used for **knitr** and is normally included in the **Rstudio** installation. 
+We strongly recommend installing **ptR** from one of the installations packages found at https://github.com/mslegrand/ptR/releases. 
+
+Prior to installation, you may want to 
+consider installing **pandoc** and the R package **tidyverse**. 
+
+Note, **pandoc** is used for **knitr** and is normally included in the **Rstudio** installation. 
 
 ## Some Points on pointR
 -  pointR is a shiny server application
