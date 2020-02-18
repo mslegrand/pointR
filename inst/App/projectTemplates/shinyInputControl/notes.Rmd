@@ -1,0 +1,136 @@
+---
+title: 'Notes on building shiny input controls'
+author: 'author'
+date: "2020-02-11"
+output: html_document
+---
+
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(svgR)
+```
+
+
+
+# Details about the Strategies
+
+
+## Notes on SVG
+For initial SVG development it is convenient to keep the svgR in a seperate file
+Thus we
+- put svgR code in a seperate file:  *shinyInputControl_svg.R*
+- create a wrapper to source the svg
+- call that wrapper from the constructor for *shinyInputControl*
+
+## Notes on Updating
+
+### What is updating
+
+Updating is the act of sending a message from the server to the client.
+The message contains info to recreate appearence and value
+
+### What is the purpose of updating?
+
+The purpose of updating is to perform 2 objectives: 
+
+-   set a new value for the control
+-   change the control's appearence
+
+
+### What are the steps of updating?
+
+- Starts in the server by calling the function *updateShinyInputControl*
+- A message is formed to be sent to the client
+- To send the message a call is made via  *session\$sendInputMessage*
+- The client receives the message in the function *receiveMessage* 
+- In *receiveMessage* 
+    - extract the value
+    - reset the value via set value
+    - reset the appearence (via node manipulations)
+
+### Three Strategies to Update
+
+I.  **Braindead**: (minimal js)
+
+        1. Recreate the svgTree with using new params 
+        2. Form message = value + svg
+        3. send to the client
+        4. client replaces tree and updates value
+
+II. **Mixedup**:
+
+        1. Recreate the svg with using new params 
+        2. get id of svg node that is affected
+        3. Extract affected node from svg to send
+        4. Form message = value + replacement-node + id of node
+        5. send to the client
+        6. find node given id and replace with replacement-node
+        
+III. **Traditional**: (uses more js)
+
+        1. Form message = value
+        2. Send to client
+        3. Use javascript to update appearence base on value.
+
+We recommend the *Kindergarden* strategy to begin with.
+
+
+## Notes on registerInputHandler
+
+### On the client side
+
+- svg sends a message to the **shinyInputControl**, probably **clicked**
+- **clicked** resets the value via **setValue**
+- The **setValue** function  triggers a change message
+- Inside the subscribe function a callback has been registered 
+to send a message containg the value to the server 
+
+### On the server side
+
+#### Inputhandler
+- The message from the client is received by the **inputhandler**
+    - The **inputhandler** was defined when we called **registerInputHandler**
+- The **inputhandler** allows for preprocessing of the data before attaching it to the **input\$controlId**
+    - This preprocessing is need for lists, etc.
+    - The **inputhandler** returns a value to be assigned to **input\$controlId**
+ 
+#### How is the appearnce of the control changed?
+
+The appearance of the control can be changed in one of two ways:
+
+##### On the client side
+
+Prior to sending the value to the server via setValue use javascript to modify the appearance.
+For example, one might do this inside the **:clicked** function.
+
+##### On the server side
+
+Inside the inputhandler function, after receiving the value, call an update with the
+new value to force the client to redraw the control with that new value.
+
+
+# Some supported events by SVG
+
+- SVG Mouse events
+    - onclick
+    - onmousedown
+    - onmouseup
+    - onmouseover
+    - onmousemove
+    - onmouseout
+- SVG UIEvents
+    - onfocusin
+    - onfocusout
+    - onactivate
+- SVG Misc
+    -  onload
+    -  onunload
+    -  onabort
+    -  onerror
+    -  onresize
+    -  onscroll
+    -  onzoom
+    -  onbegin
+    -  onend
+    -  onrepeat

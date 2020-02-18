@@ -1,0 +1,331 @@
+---
+title: 'svgR in a Markdown Doc'
+author: 'author'
+date: "2020-02-04"
+output: html_document
+---
+
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(svgR)
+```
+
+
+# Steps to Implement *shinyInputControl*
+
+### 1. Building your svg
+
+```{r, results='asis', }
+WH<-c(400,200)
+svgR(wh=WH,text('STEP1',xy=c(20,20)),
+     rect(
+       xy=c(100,5),
+       wh=c(250,90),
+       fill='#BBFFBB',
+      stroke='blue',
+       stroke.width=3
+     ),
+     
+     text('shinyInputControl_svg.R',xy=c(100,5)+c(10,20),stroke='blue' ),
+     text('add to',cxy=c(250,50)),
+     text('params and svgR',cxy=c(250,70)),
+     rect(
+       xy=c(100,100),
+       wh=c(250,50),
+       fill='#BBFFBB',
+      stroke='blue',
+       stroke.width=3
+     ),
+     text('app.R',xy=c(100,100)+c(10,20),stroke='blue' ),
+     text('commit to test',cxy=c(250,120))
+)
+````
+
+1. In file **shinyInputControl_svg.R** 
+    - Add to Parameters section as needed
+        - Parameters section contains variables:
+            - WH (width height) 
+            - ID for the contol id
+            - CMDS (may supply more than one)
+        - Add here anything you want to be adjustable
+    - add to the svgR(){} what you want to see
+2. commit to test image 
+ 
+### 2. Adding mouse events
+
+```{r, results='asis'}
+WH<-c(400,200)
+svgR(wh=WH,text('STEP2',xy=c(20,20)),
+     rect(
+       xy=c(100,5),
+       wh=c(250,90),
+       fill='#BBFFBB',
+      stroke='blue',
+       stroke.width=3
+     ),
+     
+     text('shinyInputControl_svg.R',xy=c(100,5)+c(10,20),stroke='blue' ),
+     text('add mouse events',cxy=c(250,50)),
+     rect(
+       xy=c(100,100),
+       wh=c(250,50),
+       fill='pink',
+      stroke='blue',
+       stroke.width=3
+     ),
+     text('app.R',xy=c(100,100)+c(10,20),stroke='blue' ),
+     text('run to test',cxy=c(250,120))
+)
+````
+
+- In file **shinyInputControl_svg.R** 
+    - add *onclick=CMDS*  for interactivity
+- run **App.R** and test for on an click message
+- use browser to verify value was assigned 
+
+### 3. Initializing the Control
+
+```{r, results='asis', }
+WH<-c(400,300)
+svgR(wh=WH, text('STEP3',xy=c(20,20)),
+     rect(
+       xy=c(100,5),
+       wh=c(250,90),
+       fill='lightyellow',
+       stroke='blue',
+       stroke.width=3
+     ),
+     
+     text('shinyInputControl.R',xy=c(100,5)+c(10,20),stroke='blue' ),
+     text('edit shinyInputControl()',cxy=c(250,50)),
+     rect(
+       xy=c(100,102),
+       wh=c(250,90),
+       fill='lightblue',
+      stroke='blue',
+       stroke.width=3
+     ),
+
+     text('shinyInputControl.js',xy=c(100,105)+c(10,20),stroke='blue' ),
+     text('edit shinyInputControl()',cxy=c(250,150)),
+     rect(
+       xy=c(100,200),
+       wh=c(250,50),
+       fill='pink',
+       stroke='blue',
+       stroke.width=3
+     ),
+
+     text('app.R',xy=c(100,200)+c(10,20),stroke='blue' ),
+     text('run to test',cxy=c(250,220))
+)
+````
+
+1. In file **shinyInputControl.R**
+    - in function *shinyInputControl()*
+        -  if necessary 
+            - preprocess the *value* argument 
+            - edit params 
+            - edit 'data-value'=value
+2. In file **shinyInputControl.js**
+    - in function **initialize**
+        - do any needed processing of data here 
+            - if a data value is a string representing an object
+                - get value from data-value using 'get element data' dnd
+                - convert into object using 'From String' dnd
+                - set data-value using 'set element data' dnd
+3. run **App.R** and use browser to verify data-value attached
+    - in the browser panel (right hand side) 
+        - locate the div with the id matching your control id 
+        - verify that the data-value attribute appears and has the value you assigned
+
+### 4. Adding Mouseclick Handler
+
+```{r, results='asis', }
+WH<-c(400,260)
+svgR(wh=WH,
+     rect(
+       xy=c(100,5),
+       wh=c(250,90),
+       fill='lightblue',
+       stroke='blue',
+       stroke.width=3
+     ),
+     text('STEP4',xy=c(20,20)),
+     text('shinyInputControl.js',xy=c(100,5)+c(10,20),stroke='blue' ),
+     text('add clicked:',cxy=c(250,50)),
+     rect(
+       xy=c(100,102),
+       wh=c(250,90),
+       fill='lightyellow',
+      stroke='blue',
+       stroke.width=3
+     ),
+     text('shinyInputControl.R',xy=c(100,105)+c(10,20),stroke='blue' ),
+     text('edit params$CMDS',cxy=c(250,150)),
+     rect(
+       xy=c(100,200),
+       wh=c(250,50),
+       fill='pink',
+       stroke='blue',
+       stroke.width=3
+     ),
+     text('app.R',xy=c(100,200)+c(10,20),stroke='blue' ),
+     text('run to test',cxy=c(250,220))
+)
+````
+
+1. In **shinyInputControl.js**
+    - add handler **clicked:** (assuming that you are using mouse click)
+        - typically this will
+            - getValue
+            - do something
+            - setValue
+2. In **shinyInputControl.R**
+    - edit **params\$CMDS** to use cmd in client. (clicked)
+        - **sprintf('shinyInputControlBinding.clicked("%s", evt)',params\$ID)**
+3. run **App.R** and use browser to verify data-value is modified on click
+
+### 5. Handling Return Values From Client
+
+```{r, results='asis', }
+WH<-c(400,160)
+svgR(wh=WH,
+     rect(
+       xy=c(100,5),
+       wh=c(250,90),
+       fill='lightyellow',
+       stroke='blue',
+       stroke.width=3
+     ),
+     text('STEP5',xy=c(20,20)),
+     text('shinyInputControl.R',xy=c(100,5)+c(10,20),stroke='blue' ),
+     text('registerInputHandler',cxy=c(250,50)),
+     rect(
+       xy=c(100,102),
+       wh=c(250,50),
+       fill='pink',
+       stroke='blue',
+       stroke.width=3
+     ),
+     text('app.R',xy=c(100,102)+c(10,20),stroke='blue' ),
+     text('run to test',cxy=c(250,120))
+)
+````
+
+1. In file **shinyInputControl.R** 
+    - in *registerInputHandler*
+        - do any post processing of value and return value
+2. test return value of input\$controlId in App.R
+
+### 6. Implement  Update using a Braindead Approach
+
+```{r, results='asis', }
+WH<-c(400,400)
+svgR(wh=WH, text('STEP6',xy=c(20,20)),
+     rect(
+       xy=c(100,5),
+       wh=c(250,90),
+       fill='pink',
+       stroke='blue',
+       stroke.width=3
+     ),
+     text('app.R',xy=c(100,5)+c(10,20),stroke='blue' ),
+     text('edit observer for update',cxy=c(250,50)),
+     rect(
+       xy=c(100,102),
+       wh=c(250,100),
+       fill='lightyellow',
+       stroke='blue',
+       stroke.width=3
+     ),
+     text('shinyInputControl.R',xy=c(100,105)+c(10,20),stroke='blue' ),
+     text('recreate svgTree',xy=c(200,150)),
+     text('create message',  xy=c(200,165)),
+     text('send message', xy=c(200,180)),
+     
+     rect(
+       xy=c(100,210),
+       wh=c(250,100),
+       fill='lightblue',
+       stroke='blue',
+       stroke.width=3
+     ),
+     text('shinyInputControl.js',xy=c(100,212)+c(10,20),stroke='blue' ),
+     text('extract value from data',xy=c(200,250)),
+     text('set element withvalue',  xy=c(200,265)),
+     text('extract and replace tree', xy=c(200,280)),
+     rect(
+       xy=c(100,317),
+       wh=c(250,80),
+       fill='pink',
+       stroke='blue',
+       stroke.width=3
+     ),
+     text('app.R',xy=c(100,317)+c(10,20),stroke='blue' ),
+     text('run to test',xy=c(200,350)+c(10,20) )
+)
+````
+
+
+1. In **App.R** 
+    - Edit *observeEvent(input\$updateButton* to call
+       - *updateshinyInputControl* with the proper value
+2. In file **shinyInputControl.R** (use dnd)
+    1. Recreate svg Tree, edit params=list as necessary
+        - params=list(ID=inputId, WH=wh, value=value) 
+        - svgTree<-*shinyInputControlWrapper*(params=params)
+        - node<-as.character(svgTree)
+    2. Form message
+          mssg<-list( value=value, node=node) 
+    3. Send message to client
+          - session\$sendInputMessage(inputId, mssg)
+3. In file **shinyInputControl.js** in function *receivemessage*
+    1. extract value(s) 
+        - var value = data.value;
+    2. Possibly convert to object: i.e. value=JSON.parse(value);
+    3. set element with new data
+        - this.setValue($(el), value);
+    4. update svg rendering by replacing the entire svgTree under the $(el)
+        - var node=data.node; 
+        - \$(el).empty().append(node); //this replaces the svgTree
+4. In **App.R** validate that *updateshinyInputControl* works:
+        -  the appearance changes
+        -  value changes
+
+### 7. Updating the Appearance Upon Receiving Input 
+
+```{r, results='asis', }
+WH<-c(400,160)
+svgR(wh=WH, text('STEP7',xy=c(20,20)),
+     rect(
+       xy=c(100,5),
+       wh=c(250,90),
+       fill='lightyellow',
+       stroke='blue',
+       stroke.width=3
+     ),
+     text('shinyInputControl.R',xy=c(100,5)+c(10,20),stroke='blue' ),
+     text('add to registerInputHandler',cxy=c(250,50)),
+     text('updateShinyInputControl(...)',cxy=c(250,70)),
+     rect(
+       xy=c(100,102),
+       wh=c(250,50),
+       fill='pink',
+       stroke='blue',
+       stroke.width=3
+     ),
+     text('app.R',xy=c(100,102)+c(10,20),stroke='blue' ),
+     text('run to test',cxy=c(250,120))
+)
+````
+
+
+
+- In **shinyInputControl.R**
+    - In *registerInputHandler* prior to returning value
+        - add *updateshinyInputControl(...)* 
+      
+
+
