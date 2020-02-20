@@ -79,12 +79,35 @@ ptDef2ReplacementList<-function(name, newPtDef, txt){ # name arg not used???
   
   p.df<-getParseDataFrame(txt)
   ptR.df<-extractTagDF(p.df, tag='ptR')
-  pt.Pos<-list(
-    startRow= ptR.df$line1 -1,
-    startColumn=ptR.df$col1 -1 ,
-    endRow= ptR.df$line2 -1,
-    endColumn=ptR.df$col2 
-  )
+  if(!is.null(ptR.df)){
+     pt.Pos<-list(
+      startRow= ptR.df$line1 -1,
+      startColumn=ptR.df$col1 -1 ,
+      endRow= ptR.df$line2 -1,
+      endColumn=ptR.df$col2 
+    )
+  } else {
+    svgR.df<-extractSVGRDF(p.df)
+    if(nrow(svgR.df)>0){
+      pt.Pos<-list(
+        startRow= svgR.df$line1 -1,
+        startColumn=0 ,
+        endRow= svgR.df$line1 -1,
+        endColumn= 0
+      )
+      pt.repl<-paste0(pt.repl,' \n \n')
+    }
+    else {
+      pt.Pos<-list(
+        startRow= 0,
+        startColumn=0 ,
+        endRow= 0,
+        endColumn= 0
+      )
+      pt.repl<-paste0(pt.repl,' \n \n')
+    }
+  }
+ 
   replacementList<-c(replacementList, list(list(rng=pt.Pos, txt= pt.repl)))
   replacementList
 }
