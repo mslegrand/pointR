@@ -6,7 +6,7 @@ WH<-c(600,400)
 ptR<-list(
   x=tribble(
     ~points,
-    matrix(NA,2,0)
+    matrix(0,2,0)
   )
 )
 
