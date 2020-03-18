@@ -59,7 +59,10 @@ getNameType<-reactive({
 #   3. getTibEntry, getTibEntryChoices
 # and use it only for whether or not the column is a 'points' column.
 getColumnType<-reactive({
-  colName<-getTibColumnName()
+  colName<-getTibColumnName() # i.e. selectedAsset$columnName
+  if(is.null(colName)){
+    return(NULL)
+  }
   columnValues<-getTib()[[colName]]
   if(!is.null(columnValues)){
     return(extractColType(columnValues))
