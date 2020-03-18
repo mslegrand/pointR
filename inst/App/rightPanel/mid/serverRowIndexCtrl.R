@@ -82,12 +82,12 @@ observeEvent( input$myTibRowCntrl$selected, {
       # else
         # cat('group is empty\n')
         # cat('bailing\n')
-        #  log.fout(input$myTibRowCntrl$selected)
+          # log.fout(input$myTibRowCntrl$selected)
       return(NULL)  #bail
     }
     rowIndex<-min(getTibNRow(),rowIndex)
     # compute matColIndex and update rowIndex, matColIndex
-    if(getColumnType()=='point'){
+    if(identical(getColumnType(),'point')){
       pts<-getTibPts()
       matColIndex<-length(pts[[rowIndex]])/2
       updateSelected( matCol=matColIndex, rowIndex=rowIndex)
@@ -100,19 +100,22 @@ observeEvent( input$myTibRowCntrl$selected, {
         updateSelected( rowIndex=rowIndex)
       }
     }
-    # log.fout(input$myTibRowCntrl$selected)
+     # log.fout(input$myTibRowCntrl$selected)
   }
 })
 
 # rowPicker => the tib row order
 observeEvent( input$myTibRowCntrl$order,{
   log.fin(input$myTibRowCntrl$order)
-  if( getTibEditState()==TRUE &  !all(diff(input$myTibRowCntrl$order)==1)){
+  if( getTibEditState()==TRUE &  !all(diff(input$myTibRowCntrl$order)==1)){ 
     ordering<-input$myTibRowCntrl$order
     log.val(ordering)
     name<-getAssetName()
     row<-getTibRow()
     columnName<-getTibColumnName()
+    if(is.null(columnName)){
+      return(NULL)
+    }
     newPtDefs<-getPtDefs()
     tib<-newPtDefs$tib[[name]]
     tib<-tib[ordering,]
@@ -131,8 +134,8 @@ observeEvent( input$myTibRowCntrl$order,{
 
 # rowPicker => rowGroupsDB 
 observeEvent( input$myTibRowCntrl$group,{
-  if( getTibEditState()==TRUE ){
-    # log.fin(input$myTibRowCntrl$group)
+  if( getTibEditState()==TRUE &&  !is.null(getTibColumnName())){
+    log.fin(input$myTibRowCntrl$group)
     group<-input$myTibRowCntrl$group
     # if(length(group)>0)
     # log.val(format(paste(group,collapse=",")))
@@ -149,7 +152,7 @@ observeEvent( input$myTibRowCntrl$group,{
     rowGroupsDB(db)
     # cat('now rowGroupsDB=')
     # print(rowGroupsDB())
-    # log.fout(input$myTibRowCntrl$group)
+    log.fout(input$myTibRowCntrl$group)
   }
 })
 
@@ -158,7 +161,7 @@ observeEvent( input$myTibRowCntrl$group,{
 observeEvent(getAssetName(),{ #reload rowpicker
   aname<-getAssetName()
   if(!is.null(aname)){
-    # log.fin("reload rowpicker")
+    log.fin("reload rowpicker")
     # log.val(aname)
     # group<-input$myTibRowCntrl$group
     # if(length(group)>0){
@@ -203,7 +206,7 @@ observeEvent(getAssetName(),{ #reload rowpicker
     # } else {
     #   cat('group is empty\n')
     # }
-    # log.fout("reload picker")
+    log.fout("reload picker")
   }
 })
 
