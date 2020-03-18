@@ -8,16 +8,15 @@
 
 selectedAsset <- reactiveValues(
   tabId="bogus",
-  name=NULL,        # name of current point array
+  name=NULL,        # name of current point array aka. assetName
   rowIndex=1,
-  columnName=NULL, # currently used only by tibbleEditor and could be placed there.
+  columnName=NULL, # 
   matCol=0, #
   ptColName=NULL,      # !!! KLUDGE for now. should this default to last col? probably not
   selIndex=1, # only used is to determine if in matrix or point mode !! 
   transformType='Translate', # TODO!!! replace this with selIndex
   ptScriptSel=preprocChoices$points[1] #assigned but not used?
 )
-
 
 
 getSelIndex<-reactive({
@@ -33,8 +32,22 @@ observeEvent(getTibNRow(),{
 
 getAssetName<-reactive({selectedAsset$name}) #allow to be null only if tib is null  
 getTibTabId<-reactive({ selectedAsset$tabId})
-getTibColumnName<-reactive({ selectedAsset$columnName })
-getTib<-reactive({ getPtDefs() %$$% 'tib' %$$%  getAssetName() })
+
+getAssetNames<-reactive({ names(getPtDefs()$tib) })
+
+getTibColumnName<-reactive({
+  # if(is.null( selectedAsset$columnName)|| !(selectedAsset$columnName %in% names(tib))){
+  #   selectedAsset$columnName<-tail(names(getTib()),1)
+  # }
+  selectedAsset$columnName 
+})
+
+# returns the tib corresponding to selectedAsset$name
+# ie. getPtDefs$tib[[  selectedAsset$name ]]
+getTib<-reactive({ 
+  getPtDefs() %$$% 'tib' %$$%  getAssetName() 
+})
+
 getTibColPos<-reactive({ which(names(getTib())==selectedAsset$columnName )})
 getTibPtColPos<-reactive({ which(names(getTib())==selectedAsset$ptColName )})
 getTibNRow<-reactive({
@@ -81,7 +94,7 @@ getTibMatColMax<-reactive({
 #'        cmd.add.asset
 #'
 resetSelectedTibbleName<-function(tibs, name){
-    # log.fin(resetSelectedTibbleName)
+     # log.fin(resetSelectedTibbleName)
     if(hasError()){
       return(NULL) # never change selection when in error state
     }
@@ -145,7 +158,7 @@ resetSelectedTibbleName<-function(tibs, name){
       if( selectedAsset$name==transformTag){
         selectedAsset$transformType='Translate'
       }
-      # log.fout(resetSelectedTibbleName)
+       # log.fout(resetSelectedTibbleName)
 }
 
 

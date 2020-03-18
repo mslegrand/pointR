@@ -66,9 +66,10 @@ observeEvent(input$commitNewCol, {
     error = function(e) {})
     rtv
   }
-  # browser()
+  
   treatAs<-input$modalColTreatAs
   newVal<-input$modalAttrValue
+
   #checks
     if(!grepl(pattern = "^[[:alpha:]]", input$modalAttrName)){
       # check name syntax

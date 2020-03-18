@@ -1,7 +1,7 @@
 
 
 observeEvent(input$messageFromAce, {
-  cat("\n>----> messageFromAce", '*****       sender=',format(input$messageFromAce$sender),"\n")
+  # cat("\n>----> messageFromAce", '*****       sender=',format(input$messageFromAce$sender),"\n")
     if(length(input$messageFromAce$sender)>0){
       if(length(input$messageFromAce$code)>0){ # returning code  
         setCode(input$messageFromAce$code)  # only place where request$code is set
