@@ -1,4 +1,18 @@
 
+#returns col indices of tib corresponding to points
+# used by serverAssetSellection.R and serverAssetSellectionDB.R
+extractPointColumnIndices<-function(tib){
+  if(length(names(tib))==0){
+    vals<-F
+  } else{
+    vals<-sapply(names(tib),
+                 function(n){
+                   isPoints(tib[[n]])
+                 }
+    )
+  }
+  which(vals)
+}
 
 # sole caller:  getDef (below)
 getDefPos<-function(txt, defTag){
@@ -40,19 +54,13 @@ ex.getPtDefs<-function(src, useTribbleFormat, ptTag="ptR"  ){
     try({
       ptDefTxt1<-getDef(src, defTag=ptTag)
       if( is.null(ptDefTxt1)){
-        #cat('\n===========ptDefTxt1 is NULL\n')
-        #stop("failed to fint ptR")
-        
         ptDefs$tib<-list()
       } else {
-       # cat('\n===========ptDefTxt1 is NOT NULL\n')
         eval(parse(text=ptDefTxt1)) #stupid eval to obtain the points
         
         #!!!KLUDGE first kludge (undo later)
-        
-        
         ptDefs$tib<-get(ptTag) #at this stage we have ptR as a list of tibbles, each tibble containings points with name same as tib
-        ptDefs$mats<-sapply(ptDefs$tib,is.matrix) #record what is a matrix
+        ptDefs$mats<-sapply(ptDefs$tib,is.matrix) #record what is a matrix (vs a tib)
         nms<-names(ptDefs$tib)
         for(n in nms){ #convert matrics to tibbles
           v<-ptDefs$tib[[n]]
@@ -107,58 +115,20 @@ ptDef2ReplacementList<-function(name, newPtDef, txt){ # name arg not used???
       pt.repl<-paste0(pt.repl,' \n \n')
     }
   }
- 
   replacementList<-c(replacementList, list(list(rng=pt.Pos, txt= pt.repl)))
   replacementList
 }
 
 
-
-
-# sole caller: updateAceExtDef 
-trimPtDigits<-function(newtib){ #!!! trim to 3 significant  digits
-  for(nm in names(newtib)){
-    for( j in ncol( newtib[[nm]] )){
-      if( is.matrix(newtib[[nm]][[1,j]]) &&  dim(newtib[[nm]][[1,j]])[1]==2){
-        for( i in nrow(  newtib[[nm]] )){
-          newtib[[nm]][[i,j]]<-matrix( signif(newtib[[nm]][[i,j]],3 ), 2)
+trimPtDigits<-function(tibs){ #!!! trim to 3 significant  digits
+  for(nm in names(tibs)){
+    for( j in ncol( tibs[[nm]] )){
+      if( isPoints(tibs[[nm]][[j]])){
+        for( i in nrow(  tibs[[nm]] )){
+          tibs[[nm]][[j]][[i]]<-matrix( signif(tibs[[nm]][[j]][[i]],3 ), 2)
         }
       }
     }
   }
-  newtib
+  tibs
 }
-
-# 
-# # NOT Used!!  
-# # this could be used when opening a file
-# ## choices 
-# choices2ColType<-function( choices, column){
-#   ct<-NULL
-#   lastVal<-last(choices)
-#   cv=class(lastVal)
-#   ct<-list(cv)
-#   if(is.character(cv) && isColor(lastVal)){
-#     ct<-list('colorPicker')
-#   }
-#   if(column %in% c('opacity' )){
-#     ct<-list('slider','decimal',0,1)
-#   }
-#   ct
-# }
-# 
-# # NOT Used!!
-# # this would be used when adding an new column
-# val2ColType<-function(val, column){
-#   tmp<-type.convert(val)
-#   cv=class(lastVal)
-#   ct<-list(cv)
-#   if(is.character(cv) && isColor(lastVal)){
-#     ct<-list('colorPicker')
-#   }
-#   if(column %in% c('opacity' )){
-#     ct<-list('slider','decimal',0,1)
-#   }
-#   ct
-# }
-# 
