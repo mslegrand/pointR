@@ -17,12 +17,15 @@ mouseCmdAddPt<-function(mssg){
   rowIndex<-getTibRow()
   matColIndx<-getTibMatCol()
   
+  
   if( length( getPointMax())>1){ stop('getPointMax is too big')} #should never happen
-  pts<-ptDefs[[ selection]][[rowIndex,getTibColPos()]]
+
+  
+  #pts<-ptDefs$tib[[selection]][[rowIndex,getTibColPos()]]
   if(!is.na(getPointMax()) && getTibMatColMax() >= getPointMax() ){ #need to split?
       #split
       tibs<-ptDefs$tib
-      tib<-tibs[[selection]]
+      tib<-tibs[[selection]]      
       tib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
       rowIndex<-rowIndex+1
       tib[[getTibColumnName()]][[rowIndex]]<-matrix(0,2,0)
