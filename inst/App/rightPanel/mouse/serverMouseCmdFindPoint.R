@@ -52,7 +52,6 @@ mouseCmdFindPoint<-function(mssg){
     }
     
     if( mssg$ctrlKey==TRUE){ #add row to rowGroupsDB
-      # browser()
       if( getAssetName()==toName ){
         if( getTibRow()==toRow){
           updateRowPicker(session, "myTibRowCntrl", toggleGroup = toRow)

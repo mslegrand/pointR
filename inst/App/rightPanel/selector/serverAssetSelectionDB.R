@@ -74,11 +74,6 @@ newAssetSelection<-function( tabId, choices, tibs){
   } else {
     tib<-tibs[[name]]
     rowIndex=nrow( tib )
-    # ptIndxs<-sapply(  seq_along(names(tib)),function(j){
-    #     is.matrix(tib[[rowIndex,j]]) && dim(tib[[rowIndex,j]])[1]==2
-    #   } 
-    # )
-    # ptIndxs<-which(ptIndxs==T)
     columnName<-tail(names(tib),1)
     ptIndxs<-extractPointColumnIndices(tib)
     if(length(ptIndxs)>0){

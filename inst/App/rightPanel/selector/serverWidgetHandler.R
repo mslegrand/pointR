@@ -1,9 +1,5 @@
 
 
-# handler<-reactiveValues(
-#   choices=initialWidgetDB()
-#   # choices=tibble(tabId='Tab0', name='x',column='y',type='character',minVal=NA, maxVal=NA,step=1, selectedWidget=NA)[0,]
-# )
 
 widgetDB<-reactiveVal(
   initialWidgetDB()
@@ -124,22 +120,6 @@ updateWidgetChoicesRow<-function(#tibName, colName, colType,
     }  
     widgetDB(wdb)
     log.fout(updateWidgetChoicesRow)
-    # rowNo<-which(
-    #     handler$choices$tabId==tabId & 
-    #     handler$choices$name==tibName & 
-    #     handler$choices$column==colName
-    # ) 
-    # if(length(rowNo)>0){ #not much changes, just replace selected (assuming selected in colVal)
-    #   nn<-names(match.call()[-1])
-    #   for(n in nn){
-    #     handler$choices[[n]][rowNo]<-get(n)
-    #   }
-    # } else { #remove the row
-    #   widgets<-type2WidgetChoices(colType)
-    #   
-    #   tmp<-handler$choices[!(handler$choices$tabId==tabId & handler$choices$name==tibName & handler$choices$column==colName),]
-    #   handler$choices<-add_row(tmp, tabId=tabId, name=tibName, column=colName,  minVal=minVal, maxVal=maxVal, step=step, selectedWidget=selectedWidget)
-    # }
   }
 } 
 
@@ -147,7 +127,6 @@ updateWidgetChoicesRow<-function(#tibName, colName, colType,
 
 getWidgetChoices<-reactive({
   colType<-getColumnType()
-  # browser()
   widgetChoices<-type2WidgetChoices(colType)
 })
 
@@ -156,28 +135,6 @@ getWidgetChoices<-reactive({
 #  then moduleEdTib (lines 108, 128), bothconditon by getTibEditState()==TRUE
 getWidget<-reactive({
    cat('entering getWidget\n')
-  # widgets<-getWidgetChoices()
-  # widget<-widgets[1]
-  # colName<-getTibColumnName()
-  # columnValues<-getTib()[[colName]]
-  # row<-filter(widgetDB(), 
-  #         tabId==getTibTabId() & 
-  #         name==getAssetName() & 
-  #         column==getTibColumnName()
-  # )
-  # if(nrow(row)==0 ){
-  #   selectedWidget<-getWidgetChoices()[1]
-  # } else if(nrow(row)=1 ){ # found
-  #   selectedWidget<-row$selectedWidget
-  #   if( !(selectedWidget %in% widgets) ){ 
-  #     browser()
-  #     selectedWidget<-getWidgetChoices()[1]
-  #   }
-  # } else { # stop
-  #   browser()
-  #   stop('corrupted widgets')
-  # } 
-  # browser()
   rtv<-getRowWidgetDB()$selectedWidget
   # browser()
   cat('leaving getWidget\n')

@@ -7,7 +7,7 @@ mouseCmdAddPt<-function(mssg){
   replacementList<-list()
   ptDefs<-getPtDefs() 
   updateRowPicker(session, "myTibRowCntrl", removeEntireGroup=TRUE)
-  # tibs<-getPtDefs()$tib
+  
   sender='PointsBar.mouse.add'
   
   
