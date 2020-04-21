@@ -51,7 +51,7 @@ restoreAssetState<-function(nextTabId){
       if(length(row.tib)==0){
         cat(" length(row.tib)==0\n"); browser() #should never happen
       }
-      if(nrow(row.tib)==0){
+      if(nrow(row.tib)==0 || length(row.tib) <length(names(selectedAsset))){
         choices<-getRightPanelChoices() 
         
         row.tib<-newAssetSelection(tabId=nextTabId, choices=choices, tibs=getPtDefs()$tib)
@@ -75,6 +75,7 @@ newAssetSelection<-function( tabId, choices, tibs){
   }
   #create a tibble
   name=choices[1]
+  
   if( is.null(tibs)){
     rowIndex=1
     columnName='x' #bogus
@@ -83,22 +84,25 @@ newAssetSelection<-function( tabId, choices, tibs){
   } else {
     tib<-tibs[[name]]
     rowIndex=nrow( tib )
-    ptIndxs<-sapply(  seq_along(names(tib)),function(j){
-        is.matrix(tib[[rowIndex,j]]) && dim(tib[[rowIndex,j]])[1]==2
-      } 
-    )
-    ptIndxs<-which(ptIndxs==T)
+    # ptIndxs<-sapply(  seq_along(names(tib)),function(j){
+    #     is.matrix(tib[[rowIndex,j]]) && dim(tib[[rowIndex,j]])[1]==2
+    #   } 
+    # )
+    # ptIndxs<-which(ptIndxs==T)
+    columnName<-tail(names(tib),1)
+    ptIndxs<-extractPointColumnIndices(tib)
     if(length(ptIndxs)>0){
       ptColIndex<-ptIndxs[1]
       entry<-tib[[rowIndex,ptColIndex]]
       ptColName<- names(tib)[ptColIndex]
+      columnName<-ptColName
       matCol<-ncol(entry)
       selIndex=1
     } else {
       ptColName<-NULL
       matCol<-0
     }
-    columnName<-ptColName
+    
     if(name==transformTag){
       transformType='Translate'
     }
