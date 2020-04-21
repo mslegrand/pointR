@@ -43,7 +43,7 @@ mouseCmdMovePt<- function(mssg){
       alert(err)
     })
   } else {
-    newPtDefs$tib[[selection]][[ rowIndex, getTibPtColPos() ]][,matColIndx]<-newPt
+    newPtDefs$tib[[selection]][[getTibPtColPos()]][[ rowIndex ]][,matColIndx]<-newPt
     if(!is.null(newPtDefs)){ #update only upon success
       updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx))
     }
