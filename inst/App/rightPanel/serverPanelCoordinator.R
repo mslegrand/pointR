@@ -59,15 +59,15 @@ getNameType<-reactive({
 #   3. getTibEntry, getTibEntryChoices
 # and use it only for whether or not the column is a 'points' column.
 getColumnType<-reactive({
+  ctype=NULL
   colName<-getTibColumnName() # i.e. selectedAsset$columnName
-  if(is.null(colName)){
-    return(NULL)
+  if(!is.null(colName)){
+    columnValues<-getTib()[[colName]]
+    if(!is.null(columnValues)){
+      ctype=extractColType(columnValues)
+    }
   }
-  columnValues<-getTib()[[colName]]
-  if(!is.null(columnValues)){
-    return(extractColType(columnValues))
-  }
-  return(NULL)
+  return(ctype)
 })
 
 # returns the state: 'point', 'matrix', 'value',  transformTag, RPanelTag, errorPanelTag
@@ -79,7 +79,9 @@ getPlotState<-reactive({
   nameType<-getNameType()
   if(identical(nameType,tibTag)){
     colType<-getColumnType()
-    if(identical(colType,'point')){
+    if(!is.null(colType)){
+      rtv<-NULL #should never happen!!!
+    } else if(identical(colType,'point')){
       rtv<-c('point', 'matrix')[ getSelIndex() ]
     } else {
       rtv<-'value'
