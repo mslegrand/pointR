@@ -1,17 +1,5 @@
 
-# serverAssetDB<-reactiveValues(
-#   tib=tibble(
-#     tabId="NULL",
-#     name="NULL",
-#     rowIndex=1,         # row in tibble
-#     columnName="NULL",  # currently used only by tibbleEditor and could be placed there.
-#     matCol=0,           # colIndex of the current matrix.
-#     ptColName="NULL",   # !!! KLUDGE for now. should this default to last col?
-#     selIndex=1,         # only used when current col is points,
-#     transformType='Translate',
-#     ptScriptSel=preprocChoices[1]
-#   )[0,]
-# )
+
 
 serverAssetDB<-reactiveValues( tib=initialServerAssetDB() )
 
@@ -49,11 +37,13 @@ restoreAssetState<-function(nextTabId){
          row.tib<-serverAssetDB$tib
        }
       if(length(row.tib)==0){
-        cat(" length(row.tib)==0\n"); browser() #should never happen
+        cat(" length(row.tib)==0\n"); 
+        browser() #should never happen
       }
+
       if(nrow(row.tib)==0 || length(row.tib) <length(names(selectedAsset))){
+
         choices<-getRightPanelChoices() 
-        
         row.tib<-newAssetSelection(tabId=nextTabId, choices=choices, tibs=getPtDefs()$tib)
       }
       if(!is.null(row.tib)){
