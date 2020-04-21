@@ -21,6 +21,9 @@ output$BottomRightPanel<-renderUI({
 output$MidRightPanel<-renderUI({
   # cat(">---> output$MidRightPanel\n")
   chosenRightMidPanel<-getRightMidPanel()
+  if(is.null(chosenRightMidPanel)){
+    chosenRightMidPanel<-'NA'
+  }
   # cat("chosenRightMidPanel=",format(chosenRightMidPanel),"\n")
   if (chosenRightMidPanel=='point'){
     # cat("chosenRightMidPanel=1\n")
@@ -64,7 +67,7 @@ output$MidRightPanel<-renderUI({
     div( img(src="ptR/pointRLogo.SVG") ) 
     #Todo add something about sponsors.
   } else {
-    # cat("chosenRightMidPanel=11\n")
+    cat("chosenRightMidPanel=11\n")
     div( img(src="ptR/pointRLogo.SVG"))
   }
   
