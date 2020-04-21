@@ -18,9 +18,9 @@ insertPoint<-function(pt, context=context  ){
        rowIndex>0 && 
        rowIndex<=nrow(tib)
     ){
-      pts<-tib[[rowIndex,columnIndex]] 
+      pts<-tib[[columnIndex]][[rowIndex]]
       pts<-append(pts,pt,2*(matColIndex))
-      tib[[rowIndex,columnIndex]]<-matrix(pts,2)
+      tib[[columnIndex]][[rowIndex]]<-matrix(pts,2)
       tibs[[assetName]]<-tib
     }
   }
