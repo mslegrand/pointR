@@ -206,7 +206,7 @@ observeEvent(getAssetName(),{ #reload rowpicker
     # } else {
     #   cat('group is empty\n')
     # }
-    log.fout("reload picker")
+    log.fout("reload rowpicker")
   }
 })
 
