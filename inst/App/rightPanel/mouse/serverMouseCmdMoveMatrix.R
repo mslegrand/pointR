@@ -13,7 +13,7 @@ mouseCmdMoveMatrix<-function(mssg){
   tmp<-unlist(str_split(id,"_")) 
   row<-as.numeric(tail(tmp,1)) #this should be the same as selected row index
   selection<-getAssetName() 
-  matColIndx<-ncol(newPtDefs$tib[[selection]][[ row, getTibPtColPos() ]])
+  matColIndx<-ncol(newPtDefs$tib[[selection]][[getTibPtColPos()]][[ row  ]])
   
   # Todo: for inter tib move support
   # selection -> 1 or more selections
@@ -99,15 +99,15 @@ mouseCmdMoveMatrix<-function(mssg){
         column_Name= names( tibs[[ctx$name]] )[ ctx$column ]  
       )['onMoveMat']
       if(is.null(txt)){
-        m<-tibs[[ctx$name]][[ ctx$row, ctx$column ]]
-        tibs[[ctx$name]][[ ctx$row, ctx$column ]]<-m+dxy 
+        m<-tibs[[ctx$name]][[ctx$column ]][[ctx$row ]]
+        tibs[[ctx$name]][[ctx$column ]][[ctx$row ]]<-m+dxy 
       } else {
         context<-c(ctx, list(tibs=tibs))
         tibs<-eval(parse(text=txt), ppenv )
         validateTibLists(getPtDefs()$tib, tibs)
       }
     }
-    matCol<-ncol(tibs[[getAssetName()]][row, getTibPtColPos()] )
+    matCol<-ncol(tibs[[getAssetName()]][[getTibPtColPos()]][[row]] )
     newPtDefs$tib<-tibs
     # cat('ContextList updateAceExtDef\n')
     updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=row, matCol=matCol))
