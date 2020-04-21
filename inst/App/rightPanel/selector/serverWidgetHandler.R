@@ -53,31 +53,36 @@ getPageWidgetDB<-function(pageId ){
   filter(db, tabId==pageId )
 }
 
+# called soley by getWidget
 getRowWidgetDB<-reactive({ 
-  # browser()
+  log.fin(getRowWidgetDB)
   pageId<-  input$pages
   if(length(pageId>0)){
       wdb<-widgetDB()
-  tibName<-getAssetName()
-  colName<-getTibColumnName()
-  row<-filter(wdb, tabId==pageId & name==tibName & column==colName)
+      tibName<-getAssetName()
+      colName<-getTibColumnName()
+      row<-filter(wdb, tabId==pageId & name==tibName & column==colName)
   
-  if(nrow(row)!=1){ #not there or multiple occurances
-    if(nrow(row)>1){ # remove multiple occurances
-      wdb<-filter(wdb, !(tabId==pageId & name==tibName & column==colName))
+      if(nrow(row)!=1){ #something is messed up: not there or multiple occurances
+        if(nrow(row)>1){ # remove multiple occurances
+          wdb<-filter(wdb, !(tabId==pageId & name==tibName & column==colName))
+        } 
+        # and add back a default
+        colType<-getColumnType()
+        widgets<-type2WidgetChoices(colType)
+        chosenWidget<-widgets[1]
+        wdb<-add_row(wdb, 
+                     tabId=pageId,    name=tibName, 
+                     column=colName,  type=colType,
+                     minVal=NA, maxVal=NA, 
+                     step=1, selectedWidget=chosenWidget
+        )
+        widgetDB(wdb)
+        row<-filter(wdb, tabId==pageId & name==tibName & column==colName)
     } 
-    # add back a default
-    colType<-getColumnType()
-    widgets<-type2WidgetChoices(colType)
-    selectedWidget<-widgets[1]
-    wdb<-add_row(wdb, tabId=pageId, name=tibName, column=colName,  
-            minVal=NA, maxVal=NA, step=1, 
-            selectedWidget=selectedWidget)
-    widgetDB(wdb)
-    row<-filter(wdb, tabId==pageId & name==tibName & column==colName)
-  } 
+    log.fout(getRowWidgetDB)
   row
-  }
+  } 
 
 })
 
@@ -88,8 +93,9 @@ updateWidgetChoicesRow<-function(#tibName, colName, colType,
   minVal=NA, maxVal=NA, step=1, selectedWidget='radio'){ # use current tib and col
   pageId<-  input$pages
   tibName<-getAssetName()
-  colName<-getTibColumnName()
   
+  colName<-getTibColumnName()
+  # browser()
   
   log.fin(updateWidgetChoicesRow)
   if(length(pageId)>0){
@@ -108,11 +114,13 @@ updateWidgetChoicesRow<-function(#tibName, colName, colType,
     } else { # not there, or multiple rows?
       colType<-getColumnType()
       widgets<-type2WidgetChoices(colType)
-      if(!selectedWidget %in% widgets){
-        selectedWidget<-widgets[1]
+      chosenWidget<selectedWidget #kludge to avoid name clash
+      if(!chosenWidget %in% widgets){
+        chosenWidget<-widgets[1]
       }
       tmp<-wdb[!(wdb$tabId==pageId & wdb$name==tibName & wdb$column==colName),] #remove the row  why?
-      wdb<-add_row(wdb, tabId=pageId, name=tibName, column=colName,  minVal=minVal, maxVal=maxVal, step=step, selectedWidget=selectedWidget)
+      wdb<-add_row(wdb, tabId=pageId, name=tibName, column=colName, 
+                   type=colType , minVal=minVal, maxVal=maxVal, step=step, selectedWidget=chosenWidget)
     }  
     widgetDB(wdb)
     log.fout(updateWidgetChoicesRow)
@@ -139,11 +147,15 @@ updateWidgetChoicesRow<-function(#tibName, colName, colType,
 
 getWidgetChoices<-reactive({
   colType<-getColumnType()
+  # browser()
   widgetChoices<-type2WidgetChoices(colType)
 })
 
+# called by 
+#  serverEdTib init (line 33) 
+#  then moduleEdTib (lines 108, 128), bothconditon by getTibEditState()==TRUE
 getWidget<-reactive({
-  # cat('entering getWidget\n')
+   cat('entering getWidget\n')
   # widgets<-getWidgetChoices()
   # widget<-widgets[1]
   # colName<-getTibColumnName()
@@ -168,6 +180,7 @@ getWidget<-reactive({
   # browser()
   rtv<-getRowWidgetDB()$selectedWidget
   # browser()
+  cat('leaving getWidget\n')
   rtv
   #return(selectedWidget)
 })
