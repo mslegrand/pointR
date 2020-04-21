@@ -20,8 +20,6 @@ mouseCmdAddPt<-function(mssg){
   
   if( length( getPointMax())>1){ stop('getPointMax is too big')} #should never happen
 
-  
-  #pts<-ptDefs$tib[[selection]][[rowIndex,getTibColPos()]]
   if(!is.na(getPointMax()) && getTibMatColMax() >= getPointMax() ){ #need to split?
       #split
       tibs<-ptDefs$tib
