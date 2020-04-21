@@ -79,7 +79,7 @@ getPlotState<-reactive({
   nameType<-getNameType()
   if(identical(nameType,tibTag)){
     colType<-getColumnType()
-    if(!is.null(colType)){
+    if(is.null(colType)){
       rtv<-NULL #should never happen!!!
     } else if(identical(colType,'point')){
       rtv<-c('point', 'matrix')[ getSelIndex() ]
