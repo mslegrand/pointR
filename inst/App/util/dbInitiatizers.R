@@ -66,7 +66,7 @@ initialServerAssetDB<-function(){
 }
 
 initialWidgetDB<-function(){
-  tibble(tabId='Tab0', name='x',column='y',type='character',minVal=NA, maxVal=NA,step=1, selectedWidget=NA)[0,]
+  tibble(tabId='Tab0', name='x',column='y',type='character',minVal=NA, maxVal=NA,step=1, selectedWidget='radio')[0,]
 }
 
 initialRowGroupDB<-function(){
