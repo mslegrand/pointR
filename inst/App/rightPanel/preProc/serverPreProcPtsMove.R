@@ -17,7 +17,7 @@ movePoint<-function(pt, context=context  ){
       rowIndex>0 && 
       rowIndex<=nrow(tib)
     ){
-      tib[[rowIndex,columnIndex]][,matColIndex] <-pt
+      tib[[columnIndex]][[rowIndex]][,matColIndex] <-pt
       tibs[[assetName]]<-tib
     }
   }
