@@ -118,8 +118,7 @@ resetSelectedTibbleName<-function(tibs, name){
         rowIndex=nrow( tib )
         selectedAsset$rowIndex=rowIndex
         # next we try to extract a pt column for the selected tib
-        ptIndxs<-sapply(seq_along(names(tib)),function(j) is.matrix(tib[[rowIndex,j]]) && dim(tib[[rowIndex,j]])[1]==2)
-        ptIndxs<-which(ptIndxs==TRUE)
+        ptIndxs<-extractPointColumnIndices(tib)
         if(length(ptIndxs)>0){
           ptColNames<-names(tib)[ptIndxs]
           if(!is.null(selectedAsset$columnName) && selectedAsset$columnName %in% ptColNames){
