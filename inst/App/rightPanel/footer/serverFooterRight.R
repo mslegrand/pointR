@@ -121,9 +121,9 @@ observeEvent( returnValue4ModuleRtFtr$removePt(), {
     #get row, col
     if(matCol>=1){
       row<-getTibRow()
-      m<-matrix(ptDefs$tib[[selection]][[ row, getTibPtColPos() ]][,-matCol],2)
+      m<-matrix(ptDefs$tib[[selection]][[getTibPtColPos() ]][[row]] [,-matCol],2)
       #!!! probably need some checking here
-      ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]<-m
+      ptDefs$tib[[selection]] [[getTibPtColPos() ]][[ row]]<-m
       matCol<-min(matCol, length(m)/2)
       newPtDefs<-ptDefs
       sender='points.deletePoint'
