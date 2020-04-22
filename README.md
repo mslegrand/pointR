@@ -1,8 +1,9 @@
 # pointR and ptR
 
-- **pointR** is an R package providing a *shiny-based* minimalist ide for R scripting using svgR. **pointR** is primarly written in R, with a little bit of javascript for seasoning.
-- **ptR** is an **electron** wrapper around **pointR**. Using **electron** 
-	- Removes the dependency on the local browser
+- **pointR** is an R package providing a *shiny-based* minimalist IDE for R scripting using svgR. **pointR** is primarly written in R, with a little bit of javascript for seasoning.
+- **ptR** is an **Electron** wrapper around **pointR**. 
+- Using **Electron** 
+	- Removes potential hiccups by removing and dependency on the local browser 
 	- Provides independent windows for help
 	- Provides an integrated approach for building **shiny custom inputs**
 
@@ -31,7 +32,7 @@ Prior to installation, you may want to
 consider
 - installing [R](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu)
 - installing either i or ii
-	- i [pandoc](https://pandoc.org)and placing it on your path)  
+	- i [pandoc](https://pandoc.org) (and placing it on your path)  
 	- ii [RStudio]
 - from withing the R interpreter, installing the R package [tidyverse ](https://www.tidyverse.org)
 
@@ -46,7 +47,7 @@ Note, **pandoc** is used for **knitr** and is normally included in the **Rstudio
 4. Install node.js, npm, electon
 5. from terminal run **npm start**
 
-**NOTE** I've built on linux and mac, but not window.
+**NOTE** I've built both on linux and mac, but not windows.
 
 
 # Reporting issues
