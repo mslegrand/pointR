@@ -1,4 +1,4 @@
-# pointR and ptR
+## pointR and ptR
 
 - **pointR** is an R package providing a *shiny-based* minimalist IDE for R scripting using svgR. **pointR** is primarly written in R, with a little bit of javascript for seasoning.
 - **ptR** is an **Electron** wrapper around **pointR**. 
@@ -50,17 +50,17 @@ Note, **pandoc** is used for **knitr** and is normally included in the **Rstudio
 **NOTE** I've built both on linux and mac, but not windows.
 
 
-# Reporting issues
+## Reporting issues
 Please report any bugs/issue in the 
 [Github Issue tracker](https://github.com/mslegrand/pointR)
 
 #Contributing
 If you wish to contribute to the pointR project, now is the time. Thanks.
 
-# Caution
+## Caution
 To quote from TrestleTech: *As with any online application, it is a genuinely bad idea to allow arbitrary users to execute code on your server.* **BE CAREFUL!!**
 
-# Licensing
+## Licensing
 
 			NOTICE
 
