@@ -5,19 +5,10 @@
 	- Removes the dependency on the local browser
 	- Provides independent windows for help
 	- Provides an integrated approach for building **shiny custom inputs**
-	- Prepackaged installations **ptR** are readily available for *mac* and *linux* (dmg and deb). These can be found on the release page https://github.com/mslegrand/ptR/releases
+
 - ***Videos on pointR*** can be found at http://mslegrand.github.io/pointRmedia/.
 - ***Related information*** can be found at http://mslegrand.github.io/svgR/.
 - ***Rambling thoughts*** can be found on the wiki at https://github.com/mslegrand/pointR/wiki
-
-## Installation 
-
-We strongly recommend installing **ptR** from one of the installations packages found at https://github.com/mslegrand/ptR/releases. 
-
-Prior to installation, you may want to 
-consider installing **pandoc** and the R package **tidyverse**. 
-
-Note, **pandoc** is used for **knitr** and is normally included in the **Rstudio** installation. 
 
 ## Some Points on pointR
 -  pointR is a shiny server application
@@ -25,6 +16,37 @@ Note, **pandoc** is used for **knitr** and is normally included in the **Rstudio
 -  pointR is intended to ease the writing of R scripts using svgR.
 -  pointR is an attempt to bridge the gap between coding and point&click.
 -  svgR bridges the gap between R and SVG
+
+## Some Points on ptR
+- ptR is an Electron wrapper around pointR
+- ptR is javascript (since Electron is)
+- Electron is required for full functionality (such as building shiny input controls)
+
+
+## Installation 
+
+We strongly recommend installing **ptR** from one of the installations packages (deb, dmg, msis) found at https://github.com/mslegrand/ptR/releases. 
+
+Prior to installation, you may want to 
+consider
+- installing [R](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu)
+- installing either i or ii
+	- i [pandoc](https://pandoc.org)and placing it on your path)  
+	- ii [RStudio]
+- from withing the R interpreter, installing the R package [tidyverse ](https://www.tidyverse.org)
+
+Note, **pandoc** is used for **knitr** and is normally included in the **Rstudio** installation. 
+
+## Building from Source
+
+0. This can be painful.
+1. [Download pointR](https://github.com/mslegrand/pointR) and build the **pointR** library
+2. [Download ptR](https://github.com/mslegrand/ptR) and place in a folder (like pointR-electron/ptRMigrate)
+3. cd to ptRMigrate and edit script ./build/mklib.sh to copy the ptR lib to 2 locations (for testing & production)
+4. Install node.js, npm, electon
+5. from terminal run **npm start**
+
+**NOTE** I've built on linux and mac, but not window.
 
 
 # Reporting issues
@@ -41,7 +63,7 @@ To quote from TrestleTech: *As with any online application, it is a genuinely ba
 
 			NOTICE
 
-Copyright (c) 2018 M. S. Legrand. All rights reserved
+Copyright (c) 2020 M. S. Legrand. All rights reserved
 
 The pointR package as a whole is distributed under the GPL-3 License,
 GNU GENERAL PUBLIC LICENSE version 3, see below.
