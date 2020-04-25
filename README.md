@@ -42,7 +42,12 @@ We strongly recommend installing **ptR** from one of the installations packages 
 ### Installation
 
 - go to https://github.com/mslegrand/ptR/releases and download the appropriate installer (dmg for mac, isis for windows and deb for most linux) 
-- after downloading, double click on the installer and be patient.
+- after downlo=ading, double click on the installer and be patient.
+
+### Post-Instalation
+
+- Upon opening, ptR will look for additiona R-=packages that it requires. If some of these packages are missing, you will be prompted to either quit or let ptR install them for you.  When completed, the ptR IDE will start.
+
 
 Note, **pandoc** is used for **knitr** and is normally included in the **Rstudio** installation. 
 
