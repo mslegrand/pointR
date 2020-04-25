@@ -24,17 +24,25 @@
 - Electron is required for full functionality (such as building shiny input controls)
 
 
-## Installation 
+## User Installation 
 
-We strongly recommend installing **ptR** from one of the installations packages (deb, dmg, msis) found at https://github.com/mslegrand/ptR/releases. 
+We strongly recommend installing **ptR** from one of the installations packages (deb, dmg, msis) found at https://github.com/mslegrand/ptR/releases. But before installing, there are a few requirements to be successful.
 
-Prior to installation, you may want to 
-consider
-- installing [R](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu)
-- installing either i or ii
+### Pre-Installation
+
+- If not already installed, install [R](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu) 
+- Pandoc is required. This can be done by installing either i or ii
 	- i [pandoc](https://pandoc.org) (and placing it on your path)  
-	- ii [RStudio]
-- from withing the R interpreter, installing the R package [tidyverse ](https://www.tidyverse.org)
+	- ii [RStudio](https://rstudio.com/products/rstudio/download/)  (RStudio contains a copy of pandoc)
+- The R package [tidyverse ](https://www.tidyverse.org) is required. This can be installed in 2 ways
+	- i from a terminal, open R and inside the R interpretor issue the command 
+	**install.packages('tidyverse'**, then when finished issue command quit() and close terminal
+	- ii open **RSTudio** (by clicking on it's icon) and then select the *packages tab* From there click on 
+	*install* and in the popup type tidyverse. When finished, close **RStudio**.
+### Installation
+
+- go to https://github.com/mslegrand/ptR/releases and download the appropriate installer (dmg for mac, isis for windows and deb for most linux) 
+- after downloading, double click on the installer and be patient.
 
 Note, **pandoc** is used for **knitr** and is normally included in the **Rstudio** installation. 
 
