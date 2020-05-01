@@ -84,7 +84,7 @@ source("util/extNmode.R")
 source("util/logger.R")
 
 #---used to build the UI portion
-
+source('util/pointRLogoSVG.R')
 source("fileIO/genShinyFilesOpenButtons.R")
 source("fileIO/genShinyFilesSaveButtons.R")
 source("leftPanel/menu/UIProjectTemplateMenu.R")

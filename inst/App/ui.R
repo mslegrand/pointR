@@ -62,7 +62,7 @@ shinyUI(
           buildLeftMenu(if(usingElectron){""} else {version}),
           #-------left menu end------------
           #-------left content begin--------
-
+          # absolutePanel(id="logo.left", top=145, left=0, width="100%", img(src="ptR/pointRLogo.SVG") ),
           div( id='aceTabSet', class="container",
                tabsetPanel(id='pages') 
           ),
@@ -74,7 +74,9 @@ shinyUI(
               top=105, left=0, width="100%", "class"="headerPanel", draggable=FALSE, height="30px",
               buildHToolBar(bar2)
            ),
-          absolutePanel(id="logo.left", top=145, left=0, width="100%", img(src="ptR/pointRLogo.SVG") ),
+          absolutePanel(id="logo.left", top=145, left=0, width="100%", pointRLogoSVG()),
+                                                #img(id="logo.left", src="ptR/pointRLogo.SVG") ,
+                        #),
           div( id='snippetToolBarContainer', "class"="cSnippetToolBarContainer", #draggable=FALSE ,
                 tags$ul( id='dndSnippetList', "class"="cSnippetToolBarList",
                   NULL
@@ -170,7 +172,8 @@ shinyUI(
         #---right bootstrap page begin--------------
         bootstrapPage(
           buildRightMenu(),
-          absolutePanel(id="logo.left", top=145, left=0, width="100%", img(src="ptR/pointRLogo.SVG") ),
+          absolutePanel(id="logo.right", top=145, left=0, width="100%",  pointRLogoSVG()),
+                        # HTML(' <img src="ptR/pointRLogo.SVG">' )),
           div(newPreProcDropDown()),
           uiOutput("BottomRightPanel"),
           uiOutput("TopRightPanel"),
