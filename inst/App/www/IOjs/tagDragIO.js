@@ -37,6 +37,8 @@ PtRPanelTagDrag.prototype.selectElement = function (evt) {
 PtRPanelTagDrag.prototype.moveElement = function (evt) {
   if(this.selectedElement!==0){ // this should not be necessary
     evt.stopPropagation();
+//    this.svg.parentNode.style.cursor="move";
+//    this.selectedElement.style.cursor="move";
     var dx = evt.clientX - this.currentX;
     var dy = evt.clientY - this.currentY;
     this.currentMatrix[4] += dx;
@@ -53,9 +55,10 @@ PtRPanelTagDrag.prototype.deselectElement =  function (evt) {
   if(this.selectedElement !== 0){
     
     evt.stopPropagation();
-    var movedByX = evt.clientX - this.origX;
-    var movedByY = evt.clientY - this.origY;
-  
+//    var movedByX = evt.clientX - this.origX;
+//    var movedByY = evt.clientY - this.origY;
+    this.selectedElement.style.cursor="default";
+    this.svg.parentNode.style.cursor=="default";
     var dxy=[ movedByX, movedByY];
     var kc=$( "#svgOutPanel" ).data("keycode");
     let r = Math.random().toString(36).substring(7);

@@ -81,7 +81,7 @@
 newPtLayer %<c-% function(insert, wh=c(1200,800)){
   if(insert==TRUE){
     onmousedownNewPt="ptRPlotter_ptR_SVG_Point.newPoint(evt)"
-    rect(xy=c(0,0), wh=wh, fill="#ADADFF", stroke='black', 
+    rect(xy=c(0,0), wh=wh, fill="#ADADFF", stroke='black', cursor='crosshair',
          opacity=.0, onmousedown=onmousedownNewPt
     )
   } else {
