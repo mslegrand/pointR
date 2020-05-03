@@ -55,13 +55,15 @@ svgToolsScript<-function(type){
                                          xy=scaleFactor*c(x,0)+c(5,5),
                                          x, 
                                          text.anchor="start", alignment.baseline="hanging" ,
-                                         transform=paste0('scale(',1/scaleFactor ,')') 
+                                         transform=paste0('scale(',1/scaleFactor ,')'),
+                                         class="unselectable"
                                          )
                      ),
               lapply(ys, function(y)text(font.size=10, 
                                          xy=scaleFactor*c(0,y)+c(5,-5),
                                          y, 
                                          text.anchor="start", alignment.baseline="baseline",
+                                         class="unselectable",
                                          transform=paste0('scale(',1/scaleFactor ,')') ))
       )
     }
