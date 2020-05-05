@@ -92,23 +92,29 @@ observeEvent(returnValue4ModuleEdTib$entryValue(),{
   if( getTibEditState()==TRUE ){
     log.fin(returnValue4ModuleEdTib$entryValue() )
     entry<-returnValue4ModuleEdTib$entryValue()
+    # 
     if(length(entry)==0 || is.na(entry) ){
       return(NULL)
     }
-
     if(identical(getColumnType(),'point')){
       entry<-which(entry==c('point','matrix'))
       if(length(entry)){
         updateSelected(selIndex =entry)
       }
-    } else {
-      if(isNumericString(entry)){
-        entry<-as.numeric(entry)
-      } else if (getColumnType() %in% 
+      return(NULL)
+    } 
+    # format entry according to columnType
+    if (identical(getColumnType(),'integer')){
+      entry=as.integer(entry)
+    } else if (identical(getColumnType(),'numeric')){
+      entry=as.numeric(entry)
+    } else if (identical(getColumnType(),'logical')){
+      entry=as.logical(entry)
+    } else if (length(entry)==1 && getColumnType() %in% 
           c("character.list", "character.list.2", "character.list.vec",
           "numeric.list", "numeric.list.2", "integer.list.2", "numeric.list.vec",
           "integer.list.vec")
-      ){
+    ){
         bad<-TRUE
         tryCatch({
          entry<-eval(parse(text=entry)) #TODO!!!!!!!!!!!!! Better Error check???
@@ -118,28 +124,27 @@ observeEvent(returnValue4ModuleEdTib$entryValue(),{
           triggerRefresh('cmd.commit') # this works but move to the last row.
           return(NULL) #TODO !!!! force reset dropdown value in modulueEdTib (refresh or commit?)
         }
-      }
-      name<-getAssetName()
-      newPtDefs<-getPtDefs()
-      columnName<-getTibColumnName()
-      rowIndex<-getTibRow()
-      good<-all(!sapply(list(name, newPtDefs, columnName, rowIndex), is.null))
-      stopifnot(good)
-      tib<-newPtDefs$tib[[name]]
-      stopifnot(
-          0<rowIndex && 
-          !is.null(nrow(tib)) && 
-          rowIndex<=nrow(tib)
-      )
-      sender='applyTibEdit'
-     
-      if(!identical(newPtDefs$tib[[getAssetName()]][[rowIndex,columnName ]],entry)){
-        newPtDefs$tib[[getAssetName()]][[rowIndex,columnName ]]<-entry
-        updateAceExtDef(newPtDefs, sender=sender, selector=list( name=name, rowIndex=rowIndex, columnName=columnName   ) )
-      }
+    }
+    name<-getAssetName()
+    newPtDefs<-getPtDefs()
+    columnName<-getTibColumnName()
+    rowIndex<-getTibRow()
+    good<-all(!sapply(list(name, newPtDefs, columnName, rowIndex), is.null))
+    stopifnot(good)
+    tib<-newPtDefs$tib[[name]]
+    stopifnot(
+        0<rowIndex && 
+        !is.null(nrow(tib)) && 
+        rowIndex<=nrow(tib)
+    )
+    sender='applyTibEdit'
+   
+    if(!identical(newPtDefs$tib[[getAssetName()]][[columnName ]][[rowIndex]],entry)){
+      newPtDefs$tib[[getAssetName()]][[columnName]][[rowIndex ]]<-entry
+      updateAceExtDef(newPtDefs, sender=sender, selector=list( name=name, rowIndex=rowIndex, columnName=columnName   ) )
     }
     log.fout(returnValue4ModuleEdTib$entryValue())
-  } 
+  }
 },label='EdTib-rtv-entryValue', ignoreNULL = TRUE)
 
 
