@@ -63,7 +63,12 @@ atLeast2Rows<-reactive({
 })
 
 getTibRow<-reactive({selectedAsset$rowIndex})
-getTibMatCol<-reactive({ selectedAsset$matCol })
+getTibMatCol<-reactive({ 
+  if(is.null(selectedAsset$matCol)){
+    selectedAsset$matCol<-0 
+    }
+  selectedAsset$matCol 
+})
 getTibPtsNCol<-reactive({ sapply(getTibPts(),ncol)}  )
 
 getTransformType<-reactive({ 
@@ -111,7 +116,7 @@ resetSelectedTibbleName<-function(tibs, name){
         selectedAsset$rowIndex=0
         selectedAsset$ptColName=NULL
         selectedAsset$columnName=NULL
-        selectedAsset$matCol=NULL
+        selectedAsset$matCol=1
       } else {
         tib<-getPtDefs()$tib[[selectedAsset$name]]
         # set row
@@ -128,6 +133,7 @@ resetSelectedTibbleName<-function(tibs, name){
           }
           entry<-tib[[ptColName]][[rowIndex]]
           matColIndex<-ncol(entry)
+          # browser()
           selectedAsset$matCol<-matColIndex
           selectedAsset$ptColName=ptColName 
           if(is.null(selectedAsset$selIndex) || selectedAsset$selIndex!=2){
@@ -179,6 +185,7 @@ updateSelected<-function( name, rowIndex, columnName, matCol,  ptColName, selInd
     selectedAsset$rowIndex=rowIndex
   }
   if(!missing(matCol)){
+    # browser()
     selectedAsset$matCol=matCol
   }
   if(!missing(selIndex)){
