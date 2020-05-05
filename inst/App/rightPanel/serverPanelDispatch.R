@@ -53,22 +53,23 @@ output$MidRightPanel<-renderUI({
       # cat('************ inside output$MidRightPanel: aptRunner***************\n')
       moduleLogUI("aptRunnerLogMod", input, output)
     } else {
-      div( pointRLogoSVG() )
+      div(img(src="ptR/pointRlogo.svg"))
     }
   } else if( chosenRightMidPanel == rmdPanelTag ){
     # cat("chosenRightMidPanel=8\n")
     modulePlotRmdUI("rmdMod", input, output)
   } else if(chosenRightMidPanel == textPanelTag){
     # cat("chosenRightMidPanel=9\n")
-    div( pointRLogoSVG() ) 
+    div(img(src="ptR/pointRlogo.svg"))
     #Todo add something about sponsors.
   }  else if(chosenRightMidPanel == snippetPanelTag){
     # cat("chosenRightMidPanel=10\n")
-    div( pointRLogoSVG() ) 
+    div(img(src="ptR/pointRlogo.svg"))
     #Todo add something about sponsors.
   } else {
     cat("chosenRightMidPanel=11\n")
-    div( pointRLogoSVG())
+    div(img(src="ptR/pointRlogo.svg"))
+    # div( pointRLogoSVG())
   }
   
   

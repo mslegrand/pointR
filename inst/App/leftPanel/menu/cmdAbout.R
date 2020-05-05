@@ -6,7 +6,8 @@ cmdAbout<-function(){
 
 modalAbout <- function(..., size = "m" ) {
   modalDialog(
-    div( pointRLogoSVG()),
+    # div( pointRLogoSVG()),
+    div(img(src="ptR/pointRlogo.svg")),
     div( p(version, align="right")),
     div( width="100%",
       p(paste(

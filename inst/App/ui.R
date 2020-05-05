@@ -74,7 +74,8 @@ shinyUI(
               top=105, left=0, width="100%", "class"="headerPanel", draggable=FALSE, height="30px",
               buildHToolBar(bar2)
            ),
-          absolutePanel(id="logo.left", top=145, left=0, width="100%", pointRLogoSVG()),
+          absolutePanel(id="logo.left", top=145, left=0, width="100%", #pointRLogoSVG()),
+                        div(img(src="ptR/pointRlogo.svg"))),
                                                 #img(id="logo.left", src="ptR/pointRLogo.SVG") ,
                         #),
           div( id='snippetToolBarContainer', "class"="cSnippetToolBarContainer", #draggable=FALSE ,
@@ -172,7 +173,8 @@ shinyUI(
         #---right bootstrap page begin--------------
         bootstrapPage(
           buildRightMenu(),
-          absolutePanel(id="logo.right", top=145, left=0, width="100%",  pointRLogoSVG()),
+          absolutePanel(id="logo.right", top=145, left=0, width="100%",  #pointRLogoSVG()),
+                        div(img(src="ptR/pointRlogo.svg"))),
                         # HTML(' <img src="ptR/pointRLogo.SVG">' )),
           div(newPreProcDropDown()),
           uiOutput("BottomRightPanel"),
