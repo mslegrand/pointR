@@ -122,70 +122,77 @@ moduleEdTib<-function(input, output, session,
   
   output$columnEntryUI<-renderUI({
     if( getTibEditState()==TRUE ){
-      # cat("\nEntering----------output$colEntryUI---------------\n")
-      # cat("\nInitial value of getRowIndex", format(getRowIndex()), "\n")
-      # cat('--calling ---getWidget2----------\n')
+      cat("\nEntering----------output$colEntryUI---------------\n")
+      cat("\nInitial value of getRowIndex", format(getRowIndex()), "\n")
+      cat('--calling ---getWidget2----------\n')
       widget<-getWidget()
-      # cat("widget=",format(widget),"\n")
-      # cat("getTibEntry()=",format(getTibEntry()),"\n")
-      # cat("getTibEntryChoices()=",format(getTibEntryChoices()),"\n")
+      cat("widget=",format(widget),"\n")
+      cat("getTibEntry()=",format(getTibEntry()),"\n")
+      cat("getTibEntryChoices()=",format(getTibEntryChoices()),"\n")
       if(!is.null(widget) && !is.null(getTibEntry()) && !is.null(getTibEntryChoices())){ 
             selected<-getTibEntry()
-            # cat("length(selected)= ", length(selected), "\n")
-            if(length(selected)>1 ){
-              selected<-paste("c(", paste(format(selected), collapse="," ),')')
+            choices<-getTibEntryChoices()
+            if(widget=='slider'){
+              # cat('xxx widget=', format(widget),"\n")
+              sliderInput(
+                inputId=ns("entrySlider"),label = NULL, min=0,max = 100, value = as.numeric(selected)
+              ) 
+            } else {
+                if(length(selected)>1 ){
+                  selected<-paste("c(", paste(format(selected), collapse="," ),')')
+                }
+                choices<-lapply(choices, function(val){
+                  if(length(val)>1){
+                    val<-paste('c(', paste(format(val), collapse="," ),')')
+                  } 
+                  val
+                })
+                choices<-sort(unique(unlist( choices )))
+                if(widget=='radio'){
+                  # cat('xxx widget=', format(widget),"\n")
+                  radioGroupButtons(inputId=ns("entryRadio"), 
+                                    choices=choices, 
+                                    selected=selected,
+                                    justified=TRUE
+                  )
+                } else if (widget=='picker'){
+                  # cat('xxx widget=', format(widget),"\n")
+                  div( "class"="ptR2", width='800px',
+                       selectizeInput(ns("entryValue"), label=NULL,
+                                      choices=choices, selected=selected, 
+                                      options = list(create = TRUE, allowEmptyOption=FALSE, maxItems=1, width='200px')
+                       )
+                  )
+                } else if(widget=='colourable') {
+                  # cat('xxx widget=', format(widget),"\n")
+                  colourInput(
+                    ns("entryColour"), label=NULL, value=selected
+                  )
+                } else if(widget=='numeric'){
+                  # cat('xxx widget=', format(widget),"\n")
+                  numericInput(
+                    ns('entryNumeric'), label = NULL, min=1, max = 100, value = as.numeric(selected)
+                  )
+                } else if(widget=='knob'){
+                  # cat('xxx widget=', format(widget),"\n")
+                  cat('value is ',selected, '\n')
+                  div(knobInput(
+                    ns('entryKnob'), label = NULL, min=1, max = 100, value = as.numeric(selected), width=100, height=100
+                  ))
+                }            
             }
             # cat("length(selected)= ", length(selected), "\n")
+            
+            # cat("length(selected)= ", length(selected), "\n")
             # cat("(selected)= ", format(selected), "\n")
-            choices<-getTibEntryChoices()
-            choices<-lapply(choices, function(val){
-              if(length(val)>1){
-                val<-paste('c(', paste(format(val), collapse="," ),')')
-              } 
-              val
-            })
+  
+            
 
-            choices<-sort(unique(unlist( choices )))
                 #getTibEntryChoices() 
             #)
             #))
             # cat('inside moduleEdTib::output$colEntryUI if widget==...\n')
-            if(widget=='radio'){
-              # cat('xxx widget=', format(widget),"\n")
-              radioGroupButtons(inputId=ns("entryRadio"), 
-                          choices=choices, 
-                          selected=selected,
-                          justified=TRUE
-              )
-            } else if (widget=='picker'){
-              # cat('xxx widget=', format(widget),"\n")
-              div( "class"="ptR2", width='800px',
-                selectizeInput(ns("entryValue"), label=NULL,
-                             choices=choices, selected=selected, 
-                             options = list(create = TRUE, allowEmptyOption=FALSE, maxItems=1, width='200px')
-                )
-              )
-            } else if(widget=='colourable') {
-              # cat('xxx widget=', format(widget),"\n")
-              colourInput(
-                ns("entryColour"), label=NULL, value=selected
-              )
-            } else if(widget=='numeric'){
-              # cat('xxx widget=', format(widget),"\n")
-              numericInput(
-                ns('entryNumeric'), label = NULL, min=1, max = 100, value = as.numeric(selected)
-              )
-            } else if(widget=='slider'){
-              # cat('xxx widget=', format(widget),"\n")
-              sliderInput(
-                inputId=ns("entrySlider"),label = NULL, min=1,max = 100, value = as.numeric(selected)
-              )
-            } else if(widget=='knob'){
-              # cat('xxx widget=', format(widget),"\n")
-               div(knobInput(
-                 ns('entryKnob'), label = NULL, min=1, max = 100, value = as.numeric(selected), width=100, height=100
-               ))
-            } 
+            
             # else if( widget=='spectrum'){
             #   spectrumInput(
             #     inputId = ns("entrySpectrum"),
