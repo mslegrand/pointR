@@ -21,8 +21,8 @@ type2WidgetChoices<-function(colType){
      point=c('radio','picker'),
      character=c('radio','picker'), #'switch', 'toggle'),
      character.list= c('radio','picker'), #, "multiInput", 'picker', 'checkbox'), #range
-     character.list.2= c('slider','radio','picker'), #, "multiInput", 'picker', 'checkbox'), #range
-     character.list.vec= c('radio','picker'), #, "multiInput", 'picker', 'checkbox'), #range
+     character.list.2= c('picker','slider','radio'), #, "multiInput", 'picker', 'checkbox'), #range
+     character.list.vec= c('picker','radio'), #, "multiInput", 'picker', 'checkbox'), #range
      integer=c('radio','picker','slider',  "numeric"), #,'knob'
      numeric=c('radio','picker','slider',  "numeric"), #,'knob'
      numeric.list=c('radio','picker'), #,'slider',  "numeric"), #,'knob'
