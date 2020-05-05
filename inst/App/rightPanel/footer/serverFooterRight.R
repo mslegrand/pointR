@@ -29,7 +29,7 @@ observeEvent(
     updateRowPicker(session, "myTibRowCntrl", insertRow=rowIndex+1, selectRow=rowIndex+1)
     newTib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
     rowIndex=rowIndex+1
-    matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
+    matCol<-ncol(newTib[[ getTibPtColPos()]][[rowIndex]])
     pts<-newTib[[getTibPtColPos()]] #!!!!  NOT USED?????
     ptDefs$tib[[selection]]<-newTib
     tabId<-getTibTabId()
@@ -60,7 +60,7 @@ observeEvent(
 
     #adjust position
     rowIndex<-min(rowIndex, nrow(newTib))
-    matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
+    matCol<-ncol(newTib[[getTibPtColPos()]][[rowIndex]])
     if(length(matCol)==0){matCol=0}
     updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matCol   ) )
   }
@@ -81,7 +81,7 @@ observeEvent( returnValue4ModuleRtFtr$tagMoveUp(),{
 
     #adjust position
     rowIndex<-rowIndex-1
-    matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
+    matCol<-ncol(newTib[[ getTibPtColPos()]][[rowIndex]])
     if(length(matCol)==0){matCol=0}
     updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matCol   ) )
   }
@@ -102,7 +102,7 @@ observeEvent( returnValue4ModuleRtFtr$tagMoveDown(),{
 
     #adjust position
     rowIndex<-rowIndex+1
-    matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
+    matCol<-ncol(newTib[[getTibPtColPos()]][[rowIndex]])
     if(length(matCol)==0){matCol=0}
     updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matCol   ) )
   }
@@ -149,13 +149,13 @@ observeEvent( returnValue4ModuleRtFtr$tagPt(), {
   
   updateRowPicker(session, "myTibRowCntrl", insertRow=rowIndex+1, selectRow=rowIndex+1)
   
-  m<-tib[[ rowIndex, getTibPtColPos() ]]
+  m<-tib[[getTibPtColPos() ]][[ rowIndex]]
   ptDefs$mats[selection]<-FALSE # no longer a matrix input!
   newTib<-tagTib(tib, getTibPtColPos(), rowIndex, matCol)
   
   
   rowIndex<-rowIndex+1
-  matCol<-length(newTib[[rowIndex, getTibPtColPos()]])/2
+  matCol<-length(newTib[[getTibPtColPos()]][[rowIndex]])/2
   ptDefs$tib[[selection]]<-newTib
   
   tabId<-getTibTabId()
