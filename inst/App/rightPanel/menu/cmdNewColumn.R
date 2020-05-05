@@ -11,7 +11,7 @@ addNewColModal <- function(errMssg=NULL) {
      div( class='ptR2',
        awesomeRadio('modalColTreatAs', 'Initialize Column Values as ', 
           choices = list(  
-            ' a character string'='string','a single number'='number','a vector or list'='expression',
+            ' a single character string'='string','a single number'='number','a vector'='expression',
             'a matrix of points'='points' , 'the result of a preprocessing script'='script'
             ) ,
           inline = TRUE
@@ -69,7 +69,7 @@ observeEvent(input$commitNewCol, {
   
   treatAs<-input$modalColTreatAs
   newVal<-input$modalAttrValue
-
+  # browser()
   #checks
     if(!grepl(pattern = "^[[:alpha:]]", input$modalAttrName)){
       # check name syntax
@@ -87,6 +87,7 @@ observeEvent(input$commitNewCol, {
       showModal(addNewColModal( errMssg="Unable to evaluate expression") )
     } else { # checks passed
       #add name to tib
+      
       cat('treatAs=', format(treatAs),'\n')
       cat('newVal=', format(newVal),'\n')
       newPtDefs<-getPtDefs()
@@ -94,6 +95,7 @@ observeEvent(input$commitNewCol, {
       # browser()
       if(treatAs=='script'){ # apply script sequentially to newPtDefs
         # extract onNewRowScript
+        # browser()
         script_Name<-input$modalColPreProcScript
         tb<-filter(preProcScriptDB$attrs, scriptName==script_Name)
         scripts<-unlist(tb$script)
@@ -105,7 +107,7 @@ observeEvent(input$commitNewCol, {
         tryCatch({
         # 1. newPtDefs<-getPtDefs()
             #newPtDefs<-getPtDefs()
-            #browser()
+            # browser()
             
         # 2. 
             tibs<-newPtDefs$tib
@@ -158,7 +160,7 @@ observeEvent(input$commitNewCol, {
           newVal<-list(matrix(0,2,0)) 
         } else if ( treatAs=='expression'){
           newVal<-list(eval(parse(text=newVal))) # to do: validate!!!
-        }
+        } 
         # newVal is ready to insert
         newPtDefs$tib[[getAssetName()]]<-add_column(newPtDefs$tib[[getAssetName()]], 
                                                   !!(newColName):=newVal   )   
