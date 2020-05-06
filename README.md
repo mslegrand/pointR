@@ -1,27 +1,3 @@
-## pointR and ptR
-
-- **pointR** is an R package providing a *shiny-based* minimalist IDE for R scripting using svgR. **pointR** is primarly written in R, with a little bit of javascript for seasoning.
-- **ptR** is an **Electron** wrapper around **pointR**. 
-- Using **Electron** 
-	- Removes potential hiccups by removing and dependency on the local browser 
-	- Provides independent windows for help
-	- Provides an integrated approach for building **shiny custom inputs**
-
-- ***Related information*** can be found at http://mslegrand.github.io/svgR/.
-- ***Rambling thoughts*** can be found on the wiki at https://github.com/mslegrand/pointR/wiki
-
-## Some Points on pointR
--  pointR is a shiny server application
--  pointR uses the ACE editor for coding
--  pointR is intended to ease the writing of R scripts using svgR.
--  pointR is an attempt to bridge the gap between coding and point&click.
--  svgR bridges the gap between R and SVG
-
-## Some Points on ptR
-- ptR is an Electron wrapper around pointR
-- ptR is javascript (since Electron is)
-- Electron is required for full functionality (such as building shiny input controls)
-
 
 ## User Installation 
 
@@ -49,6 +25,32 @@ We strongly recommend installing **ptR** from one of the installations packages 
 
 
 Note, **pandoc** is used for **knitr** and is normally included in the **Rstudio** installation. 
+
+## pointR and ptR
+
+- **pointR** is an R package providing a *shiny-based* minimalist IDE for R scripting using svgR. **pointR** is primarly written in R, with a little bit of javascript for seasoning.
+- **ptR** is an **Electron** wrapper around **pointR**. 
+- Using **Electron** 
+	- Removes potential hiccups by removing and dependency on the local browser 
+	- Provides independent windows for help
+	- Provides an integrated approach for building **shiny custom inputs**
+
+- ***Related information*** can be found at http://mslegrand.github.io/svgR/.
+- ***Rambling thoughts*** can be found on the wiki at https://github.com/mslegrand/pointR/wiki
+
+## Some Points on pointR
+-  pointR is a shiny server application
+-  pointR uses the ACE editor for coding
+-  pointR is intended to ease the writing of R scripts using svgR.
+-  pointR is an attempt to bridge the gap between coding and point&click.
+-  svgR bridges the gap between R and SVG
+
+## Some Points on ptR
+- ptR is an Electron wrapper around pointR
+- ptR is javascript (since Electron is)
+- Electron is required for full functionality (such as building shiny input controls)
+
+
 
 ## Building from Source
 
