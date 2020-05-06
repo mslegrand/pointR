@@ -47,11 +47,11 @@ observeEvent( input$editNavBar, {
       showModal(newProjShinyCntrlModal(projTemplateName=templateName))
       dirtyDMDM(session, "editNavBar")
     }
-    if(grepl("projectSample-",fileCmd)){
-      projectName<- str_split(fileCmd,'-')[[1]][2]
-      showModal(sampleProjModal(projectName=projectName))
-      dirtyDMDM(session, "editNavBar")
-    }
+    # if(grepl("projectSample-",fileCmd)){
+    #   projectName<- str_split(fileCmd,'-')[[1]][2]
+    #   showModal(sampleProjModal(projectName=projectName))
+    #   dirtyDMDM(session, "editNavBar")
+    # }
     if(fileCmd=="openProject"){ #-----open
       dirtyDMDM(session, "editNavBar") 
       cmdFileOpenProject()
