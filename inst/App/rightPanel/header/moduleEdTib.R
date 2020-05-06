@@ -181,18 +181,7 @@ moduleEdTib<-function(input, output, session,
                   ))
                 }            
             }
-            # cat("length(selected)= ", length(selected), "\n")
-            
-            # cat("length(selected)= ", length(selected), "\n")
-            # cat("(selected)= ", format(selected), "\n")
-  
-            
-
-                #getTibEntryChoices() 
-            #)
-            #))
-            # cat('inside moduleEdTib::output$colEntryUI if widget==...\n')
-            
+                  
             # else if( widget=='spectrum'){
             #   spectrumInput(
             #     inputId = ns("entrySpectrum"),
@@ -211,19 +200,7 @@ moduleEdTib<-function(input, output, session,
     } 
   })
   
-  # output$matColIndexUI<-renderUI({
-  #   selected<-getTibEntry() %AND% getMatColMax() %AND% getMatColIndex() 
-  #   if(!is.null(selected) && getTibEntry()=='point'){
-  #     matColIndex=getMatColIndex() 
-  #     matColMax=getMatColMax()
-  #     matColMin=ifelse(matColMax==0, 0, 1)
-  #     numericInput(ns("matColIndex"), label="Mat Col", value= matColIndex,
-  #                  min=matColMin, max=matColMax, step=1,
-  #                  width= '80px'
-  #     )
-  #   }
-  # })
-  # 
+  
 
   #---asset name---
   observeEvent(c( name(), nameChoices() ), { #update the name
@@ -234,17 +211,7 @@ moduleEdTib<-function(input, output, session,
       # cat('transformPanelContainer hide \n')
       hideElement('transformPanelContainer')
     }
-    # toggleElement(
-    #   id='transformPanelContainer' ,
-    #   condition=(!is.null(name()) && name()==transformTag)
-    # )
-   
-      # updateRadioGroupButtons(session, inputId=ns("name" ),
-      #   choices=nameChoices(), selected=name()
-      # )
-      
-      # cat('moduleEdTib observer:: name()=', format(name()),"\n")
-      
+    
       if(length(nameChoices())>0 && !is.null(name()) && nchar(name())>0 && !(name() %in% c( transformTag, RPanelTag, errorPanelTag, svgPanelTag)) ){
         # cat('headEdTib show\n')
         showElement('headEdTib')
@@ -253,11 +220,7 @@ moduleEdTib<-function(input, output, session,
         hideElement('headEdTib')
         hideElement(ns('headEdTib'))
       }
-      # toggleElement(
-      #   id='headEdTib' ,
-      #   condition=!(name() %in% c( transformTag, RPanelTag, errorPanelTag, svgPanelTag))
-      # )
-    # cat('byre\n')
+      
     
   }) 
 

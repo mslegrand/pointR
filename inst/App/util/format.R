@@ -116,7 +116,8 @@ fmtTibble<-function(tib, tibName, is.mat=FALSE, indent="  ", ...){
 fmtMat<-function(tib, tibName, indent="  ", ...){ 
   n=2 # indent factor of 2 tabs
   indentName<-paste0(rep(indent, n=n),collapse="")
-  m<-tib[[1,tibName]]
+  # m<-tib[[1,tibName]]
+  m<-tib[[tibName]][[1]]
   tmp<-paste0(indentName, tibName, "= ", toStrPtR0.matrix(m))
   tmp  
 }
