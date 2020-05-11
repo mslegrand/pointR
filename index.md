@@ -21,7 +21,7 @@ The recommend installation of **ptR** is to use one of the prebuilt packages sho
 - Choose the button on the left which matches your os to download the approiate installer.
 - After downloading, double click on the installer and be patient. **Note**: I have not yet purchased digital signatures, so you may be prompted with a warning. Please ignore.
 
-### Post-Instalation (First time running)
+### Post-Installation (First time running)
 - Upon opening, ptR will look for *additiona R-packages* that it requires. If some of these packages are missing, you will be prompted to either quit or let **ptR** install them for you.  When completed, the ptR IDE will start.
 
 
