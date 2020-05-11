@@ -1,7 +1,7 @@
 
 ## User Installation 
 
-We strongly recommend installing **ptR** from one of the installations packages (deb, dmg, msis) found at https://github.com/mslegrand/ptR/releases. But before installing, there are a few requirements to be successful.
+We strongly recommend installing **ptR** from one of the installations packages (deb, dmg, msis) found at https://github.com/mslegrand/pointR/releases. But before installing, there are a few requirements to be successful.
 
 ### Pre-Installation
 
