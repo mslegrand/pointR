@@ -19,7 +19,6 @@ The recommend installation of **ptR** is to use one of the prebuilt packages sho
     
 ### Installation (Using the Installer)
 - Choose the button on the left which matches your os to download the approiate installer.
-- go to https://github.com/mslegrand/ptR/releases and download the appropriate installer (dmg for mac, isis for windows and deb for most linux) 
 - After downloading, double click on the installer and be patient. **Note**: I have not yet purchased digital signatures, so you may be prompted with a warning. Please ignore.
 
 ### Post-Instalation (First time running)
