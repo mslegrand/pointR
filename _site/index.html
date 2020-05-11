@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>pointR | An R based IDE to generate SVG</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="pointR" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="An R based IDE to generate SVG" />
+<meta property="og:description" content="An R based IDE to generate SVG" />
+<link rel="canonical" href="http://localhost:4000/" />
+<meta property="og:url" content="http://localhost:4000/" />
+<meta property="og:site_name" content="pointR" />
+<script type="application/ld+json">
+{"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:4000/assets/img/256x256.png"}},"url":"http://localhost:4000/","name":"pointR","headline":"pointR","description":"An R based IDE to generate SVG","@type":"WebSite","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <link rel="stylesheet" href="/assets/css/style.css?v=">
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1><a href="http://localhost:4000/">pointR</a></h1>
+        
+        
+          <img src="/assets/img/256x256.png" alt="Logo" />
+        
+
+        <p>An R based IDE to generate SVG</p>
+
+        
+
+        
+
+        
+        <ul class="downloads">
+          <li><a href="https://github.com/mslegrand/pointR/releases/download/0.4.2.1/ptr_0.4.1_amd64.deb">Download <strong>LINUX</strong></a></li>
+          <li><a href="https://github.com/mslegrand/pointR/releases/tag/0.4.2.1/ptr-0.4.1.dmg">Download <strong>MAC</strong></a></li>
+          <li><a href="https://github.com/mslegrand/pointR/releases/download/0.4.2.1/ptr.Setup.0.4.1.exe">Download <strong>WIN</strong></a></li>
+          <li><a href="">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="">View On <strong>GitHub</strong></a></li>
+        </ul>
+        
+      </header>
+      <section>
+
+      <h2 id="installation-instructions">Installation Instructions</h2>
+
+<p>The recommend installation of <strong>ptR</strong> is to use one of the prebuilt packages shown found to the left. But <em>prior to installing</em>, there are a few required dependencies that should be installed.</p>
+
+<h3 id="pre-installation-requirements">Pre-Installation (Requirements)</h3>
+<ul>
+  <li><strong>R</strong> is required. If not already installed, <strong><a href="https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu">install R</a></strong></li>
+  <li><strong>Pandoc</strong> is required. This means either 1. or 2. below
+    <ol>
+      <li><strong><a href="https://pandoc.org">install pandoc</a></strong> (and placing it on your path)</li>
+      <li><strong><a href="https://rstudio.com/products/rstudio/download/">install RStudio</a></strong>  (RStudio contains a copy of pandoc)</li>
+    </ol>
+  </li>
+  <li>The <strong>R</strong> package <strong><a href="https://www.tidyverse.org">tidyverse </a></strong> is required. This can be installed by either 1. or 2. below
+    <ol>
+      <li>From a terminal, open <strong>R</strong> and inside the <strong>R</strong> interpretor issue the command 
+  <em>install.packages(‘tidyverse’)</em>, then when finished issue command <em>quit()</em> and close terminal</li>
+      <li>Open <strong>RStudio</strong> (by clicking on it’s icon) and then select the <em>packages tab</em> From there click on 
+  <em>install</em> and in the popup type <em>tidyverse</em>. When finished, close <strong>RStudio</strong>.</li>
+    </ol>
+  </li>
+</ul>
+
+<h3 id="installation-using-the-installer">Installation (Using the Installer)</h3>
+<ul>
+  <li>Choose the button on the left which matches your os to download the approiate installer.</li>
+  <li>go to https://github.com/mslegrand/ptR/releases and download the appropriate installer (dmg for mac, isis for windows and deb for most linux)</li>
+  <li>After downloading, double click on the installer and be patient. <strong>Note</strong>: I have not yet purchased digital signatures, so you may be prompted with a warning. Please ignore.</li>
+</ul>
+
+<h3 id="post-instalation-first-time-running">Post-Instalation (First time running)</h3>
+<ul>
+  <li>Upon opening, ptR will look for <em>additiona R-packages</em> that it requires. If some of these packages are missing, you will be prompted to either quit or let <strong>ptR</strong> install them for you.  When completed, the ptR IDE will start.</li>
+</ul>
+
+<p>Note, <strong>pandoc</strong> is used for <strong>knitr</strong> and is normally included in the <strong>Rstudio</strong> installation.</p>
+
+<h2 id="pointr-and-ptr">pointR and ptR</h2>
+<ul>
+  <li><strong>pointR</strong> is an R package providing a <em>shiny-based</em> minimalist IDE for R scripting using svgR. <strong>pointR</strong> is primarly written in R, with a little bit of javascript for seasoning.</li>
+  <li><strong>ptR</strong> is an <strong>Electron</strong> wrapper around <strong>pointR</strong>.</li>
+  <li>Using <strong>Electron</strong>
+    <ul>
+      <li>Removes potential hiccups by removing and dependency on the local browser</li>
+      <li>Provides independent windows for help</li>
+      <li>Provides an integrated approach for building <strong>shiny custom inputs</strong></li>
+    </ul>
+  </li>
+  <li><strong><em>Related information</em></strong> can be found at http://mslegrand.github.io/svgR/.</li>
+  <li><strong><em>Rambling thoughts</em></strong> can be found on the wiki at https://github.com/mslegrand/pointR/wiki</li>
+</ul>
+
+<h2 id="some-points-on-pointr">Some Points on pointR</h2>
+<ul>
+  <li>pointR is a shiny server application</li>
+  <li>pointR uses the ACE editor for coding</li>
+  <li>pointR is intended to ease the writing of R scripts using svgR.</li>
+  <li>pointR is an attempt to bridge the gap between coding and point&amp;click.</li>
+  <li>svgR bridges the gap between R and SVG</li>
+</ul>
+
+<h2 id="some-points-on-ptr">Some Points on ptR</h2>
+<ul>
+  <li>ptR is an Electron wrapper around pointR</li>
+  <li>ptR is javascript (since Electron is)</li>
+  <li>Electron is required for full functionality (such as building shiny input controls)</li>
+</ul>
+
+<h2 id="reporting-issues">Reporting issues</h2>
+<p>Please report any bugs/issue in the 
+<a href="https://github.com/mslegrand/pointR">Github Issue tracker</a></p>
+
+<p>#Contributing
+If you wish to contribute to the pointR project, now is the time. Thanks.</p>
+
+<h2 id="caution">Caution</h2>
+<p>To quote from TrestleTech: <em>As with any online application, it is a genuinely bad idea to allow arbitrary users to execute code on your server.</em> <strong>BE CAREFUL!!</strong></p>
+
+<p>Your Text can be <strong>bold</strong>, <em>italic</em>, or <del>strikethrough</del>.</p>
+
+<p><a href="./another-page.html">Link to another page</a>.</p>
+
+<p>There should be whitespace between paragraphs.</p>
+
+<p>There should be whitespace between paragraphs. We recommend including a README, or a file with information about your project.</p>
+
+<h1 id="header-1">Header 1</h1>
+
+<p>This is a normal paragraph following a header. GitHub is a code hosting platform for version control and collaboration. It lets you and others work together on projects from anywhere.</p>
+
+<h2 id="header-2">Header 2</h2>
+
+<blockquote>
+  <p>This is a blockquote following a header.</p>
+
+  <p>When something is important enough, you do it even if the odds are not in your favor.</p>
+</blockquote>
+
+<h3 id="header-3">Header 3</h3>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Javascript code with syntax highlighting.</span>
+<span class="kd">var</span> <span class="nx">fun</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">lang</span><span class="p">(</span><span class="nx">l</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">dateformat</span><span class="p">.</span><span class="nx">i18n</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">./lang/</span><span class="dl">'</span> <span class="o">+</span> <span class="nx">l</span><span class="p">)</span>
+  <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Ruby code with syntax highlighting</span>
+<span class="no">GitHubPages</span><span class="o">::</span><span class="no">Dependencies</span><span class="p">.</span><span class="nf">gems</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">gem</span><span class="p">,</span> <span class="n">version</span><span class="o">|</span>
+  <span class="n">s</span><span class="p">.</span><span class="nf">add_dependency</span><span class="p">(</span><span class="n">gem</span><span class="p">,</span> <span class="s2">"= </span><span class="si">#{</span><span class="n">version</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h4 id="header-4">Header 4</h4>
+
+<ul>
+  <li>This is an unordered list following a header.</li>
+  <li>This is an unordered list following a header.</li>
+  <li>This is an unordered list following a header.</li>
+</ul>
+
+<h5 id="header-5">Header 5</h5>
+
+<ol>
+  <li>This is an ordered list following a header.</li>
+  <li>This is an ordered list following a header.</li>
+  <li>This is an ordered list following a header.</li>
+</ol>
+
+<h6 id="header-6">Header 6</h6>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">head1</th>
+      <th style="text-align: left">head two</th>
+      <th style="text-align: left">three</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">ok</td>
+      <td style="text-align: left">good swedish fish</td>
+      <td style="text-align: left">nice</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">out of stock</td>
+      <td style="text-align: left">good and plenty</td>
+      <td style="text-align: left">nice</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ok</td>
+      <td style="text-align: left">good <code class="highlighter-rouge">oreos</code></td>
+      <td style="text-align: left">hmm</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ok</td>
+      <td style="text-align: left">good <code class="highlighter-rouge">zoute</code> drop</td>
+      <td style="text-align: left">yumm</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="theres-a-horizontal-rule-below-this">There’s a horizontal rule below this.</h3>
+
+<hr />
+
+<h3 id="here-is-an-unordered-list">Here is an unordered list:</h3>
+
+<ul>
+  <li>Item foo</li>
+  <li>Item bar</li>
+  <li>Item baz</li>
+  <li>Item zip</li>
+</ul>
+
+<h3 id="and-an-ordered-list">And an ordered list:</h3>
+
+<ol>
+  <li>Item one</li>
+  <li>Item two</li>
+  <li>Item three</li>
+  <li>Item four</li>
+</ol>
+
+<h3 id="and-a-nested-list">And a nested list:</h3>
+
+<ul>
+  <li>level 1 item
+    <ul>
+      <li>level 2 item</li>
+      <li>level 2 item
+        <ul>
+          <li>level 3 item</li>
+          <li>level 3 item</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>level 1 item
+    <ul>
+      <li>level 2 item</li>
+      <li>level 2 item</li>
+      <li>level 2 item</li>
+    </ul>
+  </li>
+  <li>level 1 item
+    <ul>
+      <li>level 2 item</li>
+      <li>level 2 item</li>
+    </ul>
+  </li>
+  <li>level 1 item</li>
+</ul>
+
+<h3 id="small-image">Small image</h3>
+
+<p><img src="https://github.githubassets.com/images/icons/emoji/octocat.png" alt="Octocat" /></p>
+
+<h3 id="large-image">Large image</h3>
+
+<p><img src="https://guides.github.com/activities/hello-world/branching.png" alt="Branching" /></p>
+
+<h3 id="definition-lists-can-be-used-with-html-syntax">Definition lists can be used with HTML syntax.</h3>
+
+<dl>
+<dt>Name</dt>
+<dd>Godzilla</dd>
+<dt>Born</dt>
+<dd>1952</dd>
+<dt>Birthplace</dt>
+<dd>Japan</dd>
+<dt>Color</dt>
+<dd>Green</dd>
+</dl>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Long, single-line code blocks should not wrap. They should horizontally scroll if they are too long. This line should be long enough to demonstrate this.
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>The final element.
+</code></pre></div></div>
+
+
+      </section>
+      <footer>
+        
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="/assets/js/scale.fix.js"></script>
+    
+  </body>
+</html>

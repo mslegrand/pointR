@@ -1,0 +1,9 @@
+title: pointR
+logo: /assets/img/256x256.png
+description: An R based IDE to generate SVG 
+show_downloads: true
+google_analytics:
+theme: jekyll-theme-minimal
+release_mac: https://github.com/mslegrand/pointR/releases/tag/0.4.2.1/ptr-0.4.1.dmg
+release_linux: https://github.com/mslegrand/pointR/releases/download/0.4.2.1/ptr_0.4.1_amd64.deb
+release_win: https://github.com/mslegrand/pointR/releases/download/0.4.2.1/ptr.Setup.0.4.1.exe
