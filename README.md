@@ -1,30 +1,7 @@
 
-## User Installation 
+## Installation 
 
-We strongly recommend installing **ptR** from one of the installations packages (deb, dmg, msis) found at https://github.com/mslegrand/pointR/releases. But before installing, there are a few requirements to be successful.
-
-### Pre-Installation
-
-- If not already installed, install [R](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu) 
-- Pandoc is required. This can be done by installing either i or ii
-	- i [pandoc](https://pandoc.org) (and placing it on your path)  
-	- ii [RStudio](https://rstudio.com/products/rstudio/download/)  (RStudio contains a copy of pandoc)
-- The R package [tidyverse ](https://www.tidyverse.org) is required. This can be installed in 2 ways
-	- i from a terminal, open R and inside the R interpretor issue the command 
-	**install.packages('tidyverse'**, then when finished issue command quit() and close terminal
-	- ii open **RSTudio** (by clicking on it's icon) and then select the *packages tab* From there click on 
-	*install* and in the popup type tidyverse. When finished, close **RStudio**.
-### Installation
-
-- go to https://github.com/mslegrand/ptR/releases and download the appropriate installer (dmg for mac, isis for windows and deb for most linux) 
-- after downlo=ading, double click on the installer and be patient.
-
-### Post-Instalation
-
-- Upon opening, ptR will look for additiona R-=packages that it requires. If some of these packages are missing, you will be prompted to either quit or let ptR install them for you.  When completed, the ptR IDE will start.
-
-
-Note, **pandoc** is used for **knitr** and is normally included in the **Rstudio** installation. 
+For a full featured install go to http://mslegrand.github.io/pointR/. There you will find package installers for linux, mac and windows. 
 
 ## pointR and ptR
 
@@ -54,14 +31,14 @@ Note, **pandoc** is used for **knitr** and is normally included in the **Rstudio
 
 ## Building from Source
 
-0. This can be painful.
+0. Warning, you might find this painful.
 1. [Download pointR](https://github.com/mslegrand/pointR) and build the **pointR** library
 2. [Download ptR](https://github.com/mslegrand/ptR) and place in a folder (like pointR-electron/ptRMigrate)
 3. cd to ptRMigrate and edit script ./build/mklib.sh to copy the ptR lib to 2 locations (for testing & production)
 4. Install node.js, npm, electon
 5. from terminal run **npm start**
 
-**NOTE** I've built both on linux and mac, but not windows.
+**NOTE** I've built both on linux and mac machines, but not windows.
 
 
 ## Reporting issues
