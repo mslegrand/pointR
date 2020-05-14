@@ -55,8 +55,8 @@ PtRPanelTagDrag.prototype.deselectElement =  function (evt) {
   if(this.selectedElement !== 0){
     
     evt.stopPropagation();
-//    var movedByX = evt.clientX - this.origX;
-//    var movedByY = evt.clientY - this.origY;
+    var movedByX = evt.clientX - this.origX;
+    var movedByY = evt.clientY - this.origY;
     this.selectedElement.style.cursor="default";
     this.svg.parentNode.style.cursor=="default";
     var dxy=[ movedByX, movedByY];
