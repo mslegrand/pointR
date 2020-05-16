@@ -8,7 +8,7 @@ mouseCmdValue<- function(mssg){
   tmp<-unlist(str_split(mssg$id,"_")) 
   row<-as.numeric(tail(tmp,1))
 
-  if( mssg$ctrlKey==TRUE){ #add row to rowGroupsDB
+  if( mssg$shiftKey==TRUE){ #add row to rowGroupsDB
     if(getTibRow()!=row){
       updateRowPicker(session, "myTibRowCntrl", addToGroup = row, selectRow = row )
     } else {

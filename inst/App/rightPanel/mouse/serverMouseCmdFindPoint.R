@@ -3,7 +3,7 @@ mouseCmdFindPoint<-function(mssg){
     pt<- as.numeric(unlist(mssg$vec))
   }
   
-  
+  browser()
   fromColumnName<-getTibColumnName()
   fromCol<-getTib()[[fromColumnName]]
   fromColType<-extractColType( fromCol)
@@ -51,7 +51,7 @@ mouseCmdFindPoint<-function(mssg){
       }
     }
     
-    if( mssg$ctrlKey==TRUE){ #add row to rowGroupsDB
+    if( mssg$shiftKey==TRUE){ #add row to rowGroupsDB
       if( getAssetName()==toName ){
         if( getTibRow()==toRow){
           updateRowPicker(session, "myTibRowCntrl", toggleGroup = toRow)
