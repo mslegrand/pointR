@@ -22,6 +22,7 @@ mouseCmdAddPt<-function(mssg){
 
   if(!is.na(getPointMax()) && getTibMatColMax() >= getPointMax() ){ #need to split?
       #split
+      updateRowPicker(session, "myTibRowCntrl", insertRow=rowIndex+1, selectRow=rowIndex+1)
       tibs<-ptDefs$tib
       tib<-tibs[[selection]]      
       tib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
@@ -32,7 +33,8 @@ mouseCmdAddPt<-function(mssg){
       ptDefs$tib<-tibs
       # since we just added a new row we must check if we need to
       # modify (preproc) the values in that row
-    
+      
+      
       scripts<-getPreProcOnNewRowScripts( getTibTabId(), selection)
       if(length(scripts)>0){
           newTibs<-tibs # backup tibs, 
