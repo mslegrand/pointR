@@ -25,7 +25,8 @@ SNIPPET
 linearGradient(
   xy1=${1:c(0,0)}, 
   xy2=${2:c(0,1)},
-  colors=${0:c('#00AAAA', '#00000')}
+  colors=${3:c('#00AAAA', '#00000')},
+  gradientUnits=${0:"objectBoundingBox"}
 )
 ```
 SVGR
@@ -58,9 +59,10 @@ Radial Gradient
 SNIPPET
 ```
 radialGradient(
-  cxy=c(.5,.7)*.5, 
-  fxy=c(1,1)*.5,
-  colors=${0:c('#FFFFFF', '#00AAAA')}
+  cxy=${1:c(.5,.7)*.5}, 
+  fxy=${2:c(1,1)*.5},
+  colors=${3:c('#FFFFFF', '#00AAAA')},
+  gradientUnits=${0:"objectBoundingBox"}
 )
 ```
 SVGR

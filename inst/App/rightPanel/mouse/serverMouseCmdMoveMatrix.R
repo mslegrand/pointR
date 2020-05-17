@@ -57,7 +57,7 @@ mouseCmdMoveMatrix<-function(mssg){
   )
   pageId<-getTibTabId()
   
-  if( mssg$ctrlKey==TRUE){ 
+  if( mssg$shiftKey==TRUE){ 
     if(getTibRow()!=row){
       updateRowPicker(session, "myTibRowCntrl", addToGroup = row, selectRow = row )
     } else {
