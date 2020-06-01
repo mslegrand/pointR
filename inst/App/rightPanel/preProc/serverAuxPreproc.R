@@ -21,7 +21,13 @@ observeEvent(nrow(preProcScriptDB$attrs),{
 
 loadAuxPreProc<-function(fullName){
   extractBodyWithComments<-function(fn){
+   
     tt<-capture.output(print(fn))
+    blanks1<-grepl('^ *$',tt)
+    blanks2<-c(blanks1[-1], FALSE)
+    bad<-blanks1 & blanks2
+    tt<-tt[!bad]
+    tt<-sub('^( )( )*','',tt) #eat all indents :()
     tt<-paste(tt, collapse="\n")
     pos1<-str_locate_all(tt,'\\{')[[1]][1]
     if(length(pos1)==0) {stop('ill formed preproc')}
@@ -42,12 +48,14 @@ loadAuxPreProc<-function(fullName){
       # todo better message
     }
     ppscripts<-lapply(preProcList, extractBodyWithComments)
-    scriptName=sub('\\.R$','',basename(fullName))
-    tb<-tibble(scriptName=scriptName, cmd=names(preProcList), script=ppscripts)
+    script.Name=sub('\\.R$','',basename(fullName))
+    tb<-tibble(scriptName=script.Name, cmd=names(preProcList), script=ppscripts)
    
-    if( "preprocPts"==basename(dirname(fullName))){
+    if( "preprocPts"== basename(dirname(fullName))){
+      preProcScriptDB$points<-filter(preProcScriptDB$points, scriptName!=script.Name)
       preProcScriptDB$points<-rbind(preProcScriptDB$points, tb)
     } else if( "preprocAts"==basename(dirname(fullName))){
+      preProcScriptDB$attrs<-filter(preProcScriptDB$attrs, scriptName!=script.Name)
       preProcScriptDB$attrs<-rbind(preProcScriptDB$attrs, tb)
     }
   }, 
@@ -144,7 +152,7 @@ observeEvent(input$preProcDropDown, {
 
 writeAuxPreprocPoints<-function(filePath, scripts){
   txt0<-paste(names(scripts),'= function( pt, context, WH, keys){\n',scripts,"\n}", collapse=",\n")
-  str_split(txt0, '\n')[[1]]->lines
+  unlist(str_split(txt0, '\n'))->lines
   paste0("  ", lines,collapse="\n")->txt1
   txt<-paste0('preprocPts<-list(\n', txt1, "\n)")
   writeLines(txt, filePath)

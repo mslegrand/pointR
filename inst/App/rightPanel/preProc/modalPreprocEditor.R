@@ -71,6 +71,7 @@ observeEvent( input$modalPreprocEditorCommitOk,{
   cmds<-preprocChoices[[type]]
   aceIds<-paste0('preProcAce-', cmds)
   scripts<-lapply(aceIds, function(x){input[[x]]})
+
   names(scripts)<-cmds
   if(type=='points'){
     filePath<-file.path(getPreProcPPAuxPath(), preprocName)
@@ -78,6 +79,7 @@ observeEvent( input$modalPreprocEditorCommitOk,{
     filePath<-file.path(getPreProcPAAuxPath(), preprocName)
   }
   writeAuxPreprocPoints(filePath, scripts)
+  
   readAuxPreProcs()
   removeModal()
   
