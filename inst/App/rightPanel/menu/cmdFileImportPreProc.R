@@ -10,6 +10,11 @@ cmdPreProcAtsImport<-function(){
 loadPreProc<-function(datapath, type){
   extractBodyWithComments<-function(fn){
     tt<-capture.output(print(fn))
+    blanks1<-grepl('^ *$',tt)
+    blanks2<-c(blanks1[-1], FALSE)
+    bad<-blanks1 & blanks2
+    tt<-tt[!bad]
+    tt<-sub('^( )( )*','',tt) #eat all indents :()
     tt<-paste(tt, collapse="\n")
     pos1<-str_locate_all(tt,'\\{')[[1]][1]
     if(length(pos1)==0) {stop('ill formed preproc')}
@@ -18,7 +23,6 @@ loadPreProc<-function(datapath, type){
     pos1<-pos1[1]+1
     pos2<-pos2[length(pos2)]-1
     substr(tt,pos1,pos2)
-    
   }
   
   tryCatch({
@@ -33,6 +37,9 @@ loadPreProc<-function(datapath, type){
     }
     
     preProcList<-sapply(preProcList, extractBodyWithComments)
+    
+    
+    # remove 1st 2 spaces of each line
     if(type=='points'){
       auxPath<-getPreProcPPAuxPath()
     } else {
