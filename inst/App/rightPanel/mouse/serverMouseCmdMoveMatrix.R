@@ -90,6 +90,7 @@ mouseCmdMoveMatrix<-function(mssg){
     getDxy<-function(){names(dxy)<-c('dx','dy'); dxy}
     ppenv<-list(
       getDxy=getDxy,
+      moveMatrix=moveMatrix,
       keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey),
       WH=getSVGWH()
     )
