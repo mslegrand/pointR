@@ -47,10 +47,11 @@ notNull<-function(...) {
 
 
 sapply(
-       c('shiny','shinyjs', 'R.utils', 'svgR', 'shinyAce', 'rowPicker', 'stringr', 'jsonlite', 'fs',
+       c('shiny','shinyjs', 'R.utils', 'svgR', 'shinyAce', 'jsonlite', 'rowPicker', 'fs',
           'shinyDMDMenu', 'shinyFiles', 'shinythemes', 'colourpicker', 'shinyWidgets', 
           'bsplus','shinyjqui', 'knitr', 'tidyverse'), 
        library, character.only=TRUE)
+# 'stringr', , in "tidyverse"
 
 #library("RColorBrewer")
 # options(shiny.error = recover)
