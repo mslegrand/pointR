@@ -8,10 +8,10 @@ The recommend installation of **ptR** is to use one of the prebuilt packages sho
 
 ### Pre-Installation (Requirements)
 - **R** is required. If not already installed, **[install R](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu)** 
-- **Pandoc** is required. This means either 1. or 2. below
+- **Pandoc** is required. This means doing either 1. or 2. below
 	1. **[install pandoc](https://pandoc.org)** (and placing it on your path)  
 	2. **[install RStudio](https://rstudio.com/products/rstudio/download/)**  (RStudio contains a copy of pandoc)
-- The **R** package **[tidyverse ](https://www.tidyverse.org)** is required. This can be installed by either 1. or 2. below
+- The **R** package **[tidyverse ](https://www.tidyverse.org)** is required. This can be installed by doing either 1. or 2. below
 	1. From a terminal, open **R** and inside the **R** interpretor issue the command 
 	*install.packages('tidyverse')*, then when finished issue command *quit()* and close terminal
 	2. Open **RStudio** (by clicking on it's icon) and then select the *packages tab* From there click on 
@@ -27,13 +27,13 @@ The recommend installation of **ptR** is to use one of the prebuilt packages sho
 
 Note, **pandoc** is used for **knitr** and is normally included in the **Rstudio** installation. 
 
-## pointR and ptR
+## The Relationship Between pointR and ptR
 - **pointR** is an R package providing a *shiny-based* minimalist IDE for R scripting using svgR. **pointR** is primarly written in R, with a little bit of javascript for seasoning.
 - **ptR** is an **Electron** wrapper around **pointR**. 
-- Using **Electron** 
-	- Removes potential hiccups by removing and dependency on the local browser 
-	- Provides independent windows for help
-	- Provides an integrated approach for building **shiny custom inputs**
+- Benefits of using the **Electron** wrapper:
+	- Remove potential hiccups by removing and dependency on the local browser 
+	- Provide independent windows for help
+	- Provide an integrated approach for building **shiny custom inputs**
 
 - ***Related information*** can be found at http://mslegrand.github.io/svgR/.
 - ***Rambling thoughts*** can be found on the wiki at https://github.com/mslegrand/pointR/wiki
@@ -50,6 +50,10 @@ Note, **pandoc** is used for **knitr** and is normally included in the **Rstudio
 - ptR is javascript (since Electron is)
 - Electron is required for full functionality (such as building shiny input controls)
 
+## Some Sample Projects Built in ptR
+
+After installing **ptR**, you may want to take a look at some samples found 
+    [here on Github](https://github.com/mslegrand/pointR-sample-projects)
 
 
 
