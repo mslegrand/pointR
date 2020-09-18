@@ -61,7 +61,7 @@ After installing **ptR**, you may want to take a look at some samples found
 Please report any bugs/issue in the 
 [Github Issue tracker](https://github.com/mslegrand/pointR)
 
-#Contributing
+## Contributing
 If you wish to contribute to the pointR project, now is the time. Thanks.
 
 ## Caution
