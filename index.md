@@ -18,7 +18,7 @@ The recommend installation of **ptR** is to use one of the prebuilt packages sho
 	*install* and in the popup type *tidyverse*. When finished, close **RStudio**.
     
 ### Installation (Using the Installer)
-- Choose the button on the left which matches your os to download the approiate installer.
+- Choose the button on the left which matches your OS to download the appropriate installer.
 - After downloading, double click on the installer and be patient. **Note**: I have not yet purchased digital signatures, so you may be prompted with a warning. Please ignore.
 
 ### Post-Installation (First time running)
