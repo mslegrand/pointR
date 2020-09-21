@@ -27,7 +27,10 @@ mouseCmdMovePt<- function(mssg){
           ptIndex=matColIndx,
           tibs=getPtDefs()$tib
       )
-      ppenv<-list(
+      ppenv<-list(          
+        getPoint=getPoint,
+        movePoint=movePoint,
+        context=context,
         keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey),
         WH=getSVGWH()
       )

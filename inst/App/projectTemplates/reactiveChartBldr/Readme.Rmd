@@ -1,0 +1,25 @@
+---
+title: 'Building a Reactive Chart'
+author: 'author'
+date: "2020-08-24"
+output: html_document
+---
+
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(svgR)
+```
+
+# Building a Reactive Chart
+
+-  To define position of shapes: 
+    - add pairs of points to each tibble
+- To instantiate a given shape:
+    -  drag and drop snippet
+    -  supply tibble corresponding to that shape
+-  commit to update drawing
+
+
+
+

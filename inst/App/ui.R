@@ -47,6 +47,7 @@ shinyUI(
     div(
       class="split-pane vertical-percent",
       useShinyjs(),
+      useShinyalert(),
       # extendShinyjs(script="www/menuHelper.js"), 
       extendShinyjs(script="www/menuHelper.js", functions="triggerButtonOnEnter"), # used in cmdNewColumn.R; cmdNewAsset.R
       

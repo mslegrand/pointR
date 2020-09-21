@@ -53,7 +53,7 @@ loadPreProc<-function(datapath, type){
   error=function(e){
         e<-c(e,traceback())
         err<-paste(unlist(e), collapse="\n", sep="\n")
-        alert(err)
+        shinyalert("load preproc Error",err, type="error")
   })
 }
 

@@ -78,7 +78,7 @@ observeEvent( input$modalPreprocEditorCommitOk,{
   } else {
     filePath<-file.path(getPreProcPAAuxPath(), preprocName)
   }
-  writeAuxPreprocPoints(filePath, scripts)
+  writeAuxPreprocList(filePath, scripts)
   
   readAuxPreProcs()
   removeModal()

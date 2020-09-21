@@ -286,7 +286,7 @@ function ptRaceInit(data){
     var pos = $el.data('aceEditor').renderer.screenToTextCoordinates(event.clientX, event.clientY);
     
     console.log("pos=" + JSON.stringify(pos));
-    console.log("ui =\n" + JSON.stringify(ui));
+    
     var txt =  ui.draggable.attr("data-snippet");
     console.log(
       'txt=' + JSON.stringify(txt)

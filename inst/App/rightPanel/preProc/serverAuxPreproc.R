@@ -21,22 +21,42 @@ observeEvent(nrow(preProcScriptDB$attrs),{
 
 loadAuxPreProc<-function(fullName){
   extractBodyWithComments<-function(fn){
-   
     tt<-capture.output(print(fn))
+    #remove blank lines
     blanks1<-grepl('^ *$',tt)
     blanks2<-c(blanks1[-1], FALSE)
-    bad<-blanks1 & blanks2
+    bad<-blanks1 #& blanks2
     tt<-tt[!bad]
-    tt<-sub('^( )( )*','',tt) #eat all indents :()
+    #drop function beginning
+    begPos<-min(grep('\\{',tt)) #todo handle case where { not found
+    if(grepl( "\\{\\s*$", tt[begPos])){
+      begPos<-begPos+1
+    } else {
+      bPos<-1+min(unlist(gregexpr('\\{',tt[begPos])))
+      tt[begPos]<-substring(tt[begPos],nn)
+    }
+    # begPos
+    #drop function ending
+    endPos<-max(grep('\\}',tt)) #todo handle case where } not found
+    if(grepl( "\\S+\\s*\\}\\s*$", tt[endPos])){
+      ePos<- -1+max(unlist(gregexpr('\\}',tt[endPos])))
+      tt[endPos]<-substring(tt[endPos],ePos)
+    } else {
+      endPos<-endPos-1
+    }
+    # endPos
+    tt<-tt[begPos:endPos]
+    
+    #remove indents
+    nn<-min(unlist(gregexpr('\\S+',tt)))
+    
+    tt<-substring(tt,nn)
+    
     tt<-paste(tt, collapse="\n")
-    pos1<-str_locate_all(tt,'\\{')[[1]][1]
-    if(length(pos1)==0) {stop('ill formed preproc')}
-    pos2<-str_locate_all(tt,'\\}')[[1]]
-    if(length(pos2)==0) {stop('ill formed preproc')}
-    pos1<-pos1[1]+1
-    pos2<-pos2[length(pos2)]-1
-    substr(tt,pos1,pos2)
+    
+    tt
   }
+  
   tryCatch({
     preProcList<-source(fullName, local=T)$value
     #check preProcList
@@ -47,7 +67,9 @@ loadAuxPreProc<-function(fullName){
       stop('ill-formed  preprocessor')
       # todo better message
     }
+    
     ppscripts<-lapply(preProcList, extractBodyWithComments)
+    
     script.Name=sub('\\.R$','',basename(fullName))
     tb<-tibble(scriptName=script.Name, cmd=names(preProcList), script=ppscripts)
    
@@ -60,9 +82,10 @@ loadAuxPreProc<-function(fullName){
     }
   }, 
   error=function(e){
+    #e0<-paste('attn: err in prepro script',script.Name,"\n")
     e<-c(e,traceback())
     err<-paste(unlist(e), collapse="\n", sep="\n")
-    alert(err)
+    shinyalert("preprocErr load",err, type="error")
   })
 }
 
@@ -110,6 +133,7 @@ readAuxPreProcs<-function( startup=TRUE){
   # clear the menus
   clearPreProcEditMenu('points')
   clearPreProcEditMenu('attrs')
+  
   for(fp in preProcFilePaths){
     loadAuxPreProc(fp)
   }
@@ -150,10 +174,10 @@ observeEvent(input$preProcDropDown, {
   updateRadioButtons(session, "preProcChooser", choices=choices, selected=selected, )
 })
 
-writeAuxPreprocPoints<-function(filePath, scripts){
-  txt0<-paste(names(scripts),'= function( pt, context, WH, keys){\n',scripts,"\n}", collapse=",\n")
+writeAuxPreprocList<-function(filePath, scripts){
+  txt0<-paste0(names(scripts),'= function( pt, context, WH, keys){\n',scripts,"\n}", collapse=",\n")
   unlist(str_split(txt0, '\n'))->lines
   paste0("  ", lines,collapse="\n")->txt1
-  txt<-paste0('preprocPts<-list(\n', txt1, "\n)")
+  txt<-paste0('preprocList<-list(\n', txt1, "\n)")
   writeLines(txt, filePath)
 }

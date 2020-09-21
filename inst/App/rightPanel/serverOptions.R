@@ -109,6 +109,7 @@ mkFileSubMenu<-function(subMenuLabel, prefix, fullFilePaths){
   }
   if(length(files)>0){
     # 4 make submenu
+    files<-normalizePath(files)
     files<-unique(files)
     values<-paste(prefix,files, sep="-")
     labels<-basename(files)
@@ -116,8 +117,8 @@ mkFileSubMenu<-function(subMenuLabel, prefix, fullFilePaths){
     mkmenuitem<-function(label, value, hint){
       shinyDMDMenu::menuItem(
         label=label, 
-        value=value,
-        span(hint, class='tooltiptext')
+        value=value # ,
+       # span(hint, class='tooltiptext')
       )
     }
     items<-mapply(mkmenuitem, label=labels, value=values, hint=hints,

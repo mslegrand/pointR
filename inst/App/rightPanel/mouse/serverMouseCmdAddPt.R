@@ -63,9 +63,8 @@ mouseCmdAddPt<-function(mssg){
             } # all cols done  successfully
             ptDefs$tib<-tibs # success, reset ptDefs
           }, error=function(e){
-            e<-c('preproErr',e)
             err<-paste(unlist(e), collapse="\n", sep="\n")
-            alert(err)
+            shinyalert("preproc new point Error",err, type="error")
           })
       } #end of scripts
   } # end of split
@@ -86,6 +85,7 @@ mouseCmdAddPt<-function(mssg){
         )
         ppenv<-list(
           getPoint=getPoint,
+          insertPoint=insertPoint,
           context=context,
           keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey),
           WH=getSVGWH()
@@ -97,9 +97,8 @@ mouseCmdAddPt<-function(mssg){
           updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx+1))
         }
       },error=function(e){
-        e<-c('preproErr',e)
         err<-paste(unlist(e), collapse="\n", sep="\n")
-        alert(err)
+        shinyalert("preproc new point Error",err, type="error")
       })
   } else { #no prepoc pts
       tib<-tibs[[selection]]

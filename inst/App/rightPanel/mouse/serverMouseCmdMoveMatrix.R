@@ -89,6 +89,8 @@ mouseCmdMoveMatrix<-function(mssg){
     matCol<-NULL
     getDxy<-function(){names(dxy)<-c('dx','dy'); dxy}
     ppenv<-list(
+      getDxy=getDxy,
+      moveMatrix=moveMatrix,
       keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey),
       WH=getSVGWH()
     )
@@ -103,7 +105,8 @@ mouseCmdMoveMatrix<-function(mssg){
         tibs[[ctx$name]][[ctx$column ]][[ctx$row ]]<-m+dxy 
       } else {
         context<-c(ctx, list(tibs=tibs))
-        tibs<-eval(parse(text=txt), ppenv )
+        tppenv<-c(ppenv,context)
+        tibs<-eval(parse(text=txt), tppenv )
         validateTibLists(getPtDefs()$tib, tibs)
       }
     }
