@@ -47,7 +47,7 @@ notNull<-function(...) {
 
 
 sapply(
-       c('shiny','shinyjs', 'R.utils', 'svgR', 'shinyAce', 'jsonlite', 'rowPicker', 'fs',
+       c('shiny','shinyjs', 'shinyalert', 'R.utils', 'svgR', 'shinyAce', 'jsonlite', 'rowPicker', 'fs',
           'shinyDMDMenu', 'shinyFiles', 'shinythemes', 'colourpicker', 'shinyWidgets', 
           'bsplus','shinyjqui', 'knitr', 'tidyverse'), 
        library, character.only=TRUE)

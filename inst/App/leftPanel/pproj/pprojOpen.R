@@ -12,7 +12,7 @@ openProj<-function(projName, pathToProj, projType="generic"){
     fullpathProjName=file.path(pathToProj, projName)
     if(!file.exists(fullpathProjName) ){
       err<-paste0(format(fullpathProjName), " not found!" )
-      alert(err)
+      shinyalert("open project Error",err, type="error")
       return(NULL)
     }
     closeCurrentProj() # this needs to complete prior to loading new proj

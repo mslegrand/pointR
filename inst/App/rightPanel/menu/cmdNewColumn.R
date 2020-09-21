@@ -150,7 +150,7 @@ observeEvent(input$commitNewCol, {
         }, error=function(e){
           e<-c('preproErr',e)
           err<-paste(unlist(e), collapse="\n", sep="\n")
-          alert(err)
+          shinyalert("preproc new column Error",err, type="error")
         })        
       } else { #not scripting
         # browser()

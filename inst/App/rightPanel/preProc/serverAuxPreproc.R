@@ -82,9 +82,10 @@ loadAuxPreProc<-function(fullName){
     }
   }, 
   error=function(e){
+    #e0<-paste('attn: err in prepro script',script.Name,"\n")
     e<-c(e,traceback())
     err<-paste(unlist(e), collapse="\n", sep="\n")
-    alert(err)
+    shinyalert("preprocErr load",err, type="error")
   })
 }
 
