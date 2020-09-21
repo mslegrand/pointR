@@ -28,10 +28,22 @@ loadAuxPreProc<-function(fullName){
     bad<-blanks1 #& blanks2
     tt<-tt[!bad]
     #drop function beginning
-    begPos<-1+min(grep('\\{',tt))
+    begPos<-min(grep('\\{',tt)) #todo handle case where { not found
+    if(grepl( "\\{\\s*$", tt[begPos])){
+      begPos<-begPos+1
+    } else {
+      bPos<-1+min(unlist(gregexpr('\\{',tt[begPos])))
+      tt[begPos]<-substring(tt[begPos],nn)
+    }
     # begPos
     #drop function ending
-    endPos<-max(grep('\\}',tt))-1
+    endPos<-max(grep('\\}',tt)) #todo handle case where } not found
+    if(grepl( "\\S+\\s*\\}\\s*$", tt[endPos])){
+      ePos<- -1+max(unlist(gregexpr('\\}',tt[endPos])))
+      tt[endPos]<-substring(tt[endPos],ePos)
+    } else {
+      endPos<-endPos-1
+    }
     # endPos
     tt<-tt[begPos:endPos]
     
@@ -161,7 +173,7 @@ observeEvent(input$preProcDropDown, {
   updateRadioButtons(session, "preProcChooser", choices=choices, selected=selected, )
 })
 
-writeAuxPreprocPoints<-function(filePath, scripts){
+writeAuxPreprocList<-function(filePath, scripts){
   txt0<-paste0(names(scripts),'= function( pt, context, WH, keys){\n',scripts,"\n}", collapse=",\n")
   unlist(str_split(txt0, '\n'))->lines
   paste0("  ", lines,collapse="\n")->txt1
