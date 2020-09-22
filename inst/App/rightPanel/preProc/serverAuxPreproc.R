@@ -22,7 +22,7 @@ observeEvent(nrow(preProcScriptDB$attrs),{
 loadAuxPreProc<-function(fullName){
   extractBodyWithComments<-function(fn){
     tt<-capture.output(print(fn))
-    #remove blank lines
+    # remove blank lines
     blanks1<-grepl('^ *$',tt)
     blanks2<-c(blanks1[-1], FALSE)
     bad<-blanks1 #& blanks2
@@ -53,19 +53,18 @@ loadAuxPreProc<-function(fullName){
     tt<-substring(tt,nn)
     
     tt<-paste(tt, collapse="\n")
-    
     tt
   }
   
   tryCatch({
-    preProcList<-source(fullName, local=T)$value
+    preProcList<-source(fullName, local=TRUE, keep.source=TRUE)$value
     #check preProcList
     if(is.null(preProcList) ||  
        any(match(names(preProcList), unlist(preprocChoices)   , 0 )==0)
        
     ){
       stop('ill-formed  preprocessor')
-      # todo better message
+      # todo better error handle
     }
     
     ppscripts<-lapply(preProcList, extractBodyWithComments)
