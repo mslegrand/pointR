@@ -107,8 +107,9 @@ shinyUI(
                               actionButton("stopShinyApp", label = "Stop App", style="font-weight: 800; color: white; background-color: red; ") %>% bs_embed_tooltip(title = "Stop Shiny App")
               )
              },
-             absolutePanel( id='tribblePanel', left=180, bottom=-10,
+             absolutePanel( id='tribblePanel', left=180, bottom=-10, class='ptRFootertText',
                awesomeRadio('useTribble', NULL, choices=c('Tribble','Tibble'),
+                            
                                     selected = "Tribble", 
                                     inline = TRUE, status='success')
              ),

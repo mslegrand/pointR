@@ -220,6 +220,10 @@ overflow-y: auto;
   color: #00ffff; 
   width: 110px;
 }
+.ptRFootertText {
+  font-size: 14px;
+  color: #00ffff; 
+}
 #tagValBar-entryValue .formControl.selectized {
   width:260px;
 }
