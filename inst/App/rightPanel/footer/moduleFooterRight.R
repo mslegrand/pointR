@@ -7,15 +7,25 @@ moduleFooterRight<-function(input, output, session,
                       getTibEditState,
                       getPointMax,
                       getPanelState, 
-                      hasPreProcChoices
+                      hasPreProcChoices,
+                      getScriptName
 ){
   
   output$footer<-renderUI({
     footerPanelState<-getPanelState()
     if(hasPreProcChoices()){
       leftPtButtons= 50
+      scriptName=getScriptName()
+      if(scriptName!="none"){
+        scriptName=paste("Preproc:", scriptName)
+      } else {
+        scriptName=""
+      }
+    
+        
     } else {
       leftPtButtons= 0
+      scriptName=''
     }
       
     if(!is.null( footerPanelState )){
@@ -32,7 +42,8 @@ moduleFooterRight<-function(input, output, session,
                           span(span('class'="icon-circle"), span('class'="icon-fork")) %>% bs_embed_tooltip(title = "Split Select")
                         ),
                         status='primary'
-                       )
+                       ),
+                     span( scriptName, class='ptRFootertText', inline=TRUE)
                   ),
                   absolutePanel( right=90,  bottom=10, width=110,
                       absolutePanel( left=0, bottom=0, 'class'='ptR2', style="font-weight: bold; color: #00FFFF;", span('max pts/row:')),
@@ -53,7 +64,8 @@ moduleFooterRight<-function(input, output, session,
                     span(span('class'="icon-window-minimize"), span('class'="icon-clone")) %>% bs_embed_tooltip(title = "Clone Row")
                   ),
                   status='primary'
-                )
+                ),
+                span( scriptName, class='ptRFootertText', inline=TRUE)
               )
             )
           } else if (footerPanelState=='value'){
@@ -65,8 +77,10 @@ moduleFooterRight<-function(input, output, session,
                                                span(span('class'="icon-right"), span('class'="icon-columns"))  %>% bs_embed_tooltip(title = "Set Value")
                                              ),
                                              status='primary'
-                                           )
+                                           ),
+                                           span( scriptName, class='ptRFootertText', inline=TRUE)
                            )
+                           
             )
           } else {
             NULL
