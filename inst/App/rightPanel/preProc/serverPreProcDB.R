@@ -8,7 +8,7 @@ getPreProcScript<-reactive({
   script_Name<-getPreProcScriptName(
     tab_Id=getTibTabId(), tib_Name=getAssetName(),column_Name= getTibColumnName()
   )
-  if(script_Name!='none'){
+  if(!is.null(script_Name) && script_Name!='none'){
     if(getColumnType()=='point'){
       tb<-filter(preProcScriptDB$points, scriptName==script_Name)
     } else {
@@ -78,8 +78,13 @@ setPreProcScriptName<-function(tab_Id, tib_Name, column_Name,  script_Name){
 }
 
 getPreProcScriptName<-function(tab_Id, tib_Name, column_Name){
+  if(any(sapply(c(tab_Id, tib_Name, column_Name), is.null))
+     || tab_Id=='bogus')
+  {
+    return( "none") 
+  }
   ppDB<-preProcPageDB()
-  ppDB<-filter(ppDB, 
+    ppDB<-filter(ppDB, 
                tabId==tab_Id &tibName==tib_Name & colName==column_Name 
   )
   if(nrow(ppDB)>0){

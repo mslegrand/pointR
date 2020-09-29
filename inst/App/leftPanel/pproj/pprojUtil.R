@@ -31,7 +31,8 @@ closeCurrentProj<-function(){
   # reinit dbs
 
   resetDnippetsDB()
-  # preProcDB$points<-initialPreprocDB()
+  preProcScriptDB$points=initialPreProcScriptDB()
+  preProcScriptDB$attrs= initialPreProcScriptDB()
   fileDescDB(initialFileDescDB())
   svgGridDB( initialSvgGridDB() )
   useTribbleFormatDB( initialTribbleDB() )

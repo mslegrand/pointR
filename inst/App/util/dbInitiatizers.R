@@ -9,9 +9,8 @@ initialFileDescDB<-function(){tibble(
 }
 
 
-initialPreprocDB<-function(){
-  points=tibble( tabId="bogus", tibName="bogus", ptColName='bogus', cmd="bogus", script='bogus')[0,]
-  points
+initialPreProcScriptDB<-function(){
+  tibble( scriptName='bogus', cmd="bogus", script='bogus')[0,]
 }
 
 initialPreProcPageDB<-function(){

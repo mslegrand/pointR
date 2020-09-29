@@ -12,7 +12,10 @@ returnValue4ModuleRtFtr<-callModule(
     rtv<-getRightMidPanel(); 
     rtv
   }),
-  hasPreProcChoices=hasPreProcChoices 
+  hasPreProcChoices=hasPreProcChoices ,
+  getScriptName=reactive({
+    getPreProcScriptName(tab_Id=getTibTabId(), tib_Name=getAssetName(),column_Name= getTibColumnName())
+  })
 )
 
 #-----------BUTTON EVENTS--------------------
@@ -217,5 +220,4 @@ observeEvent( returnValue4ModuleRtFtr$tagSetValue(),{
   sender<-'setTibValue'
   updateAceExtDef(newPtDefs, sender=sender )
 })
-
 
