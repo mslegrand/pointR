@@ -35,6 +35,10 @@ optionDirPath<-function(){
   if(!file.exists(workSpaceDir)){
     dir.create(workSpaceDir)
   }
+  templateDir<-file.path(dirPath,'.templates')
+  if(!file.exists(templateDir)){
+    dir.create(templateDir)
+  }
   pth<-file.path(dirPath,'aux') #file,pa
   if(!file.exists(pth)){ dir.create(pth) }
   pth<-file.path(dirPath,'aux','dnds')
