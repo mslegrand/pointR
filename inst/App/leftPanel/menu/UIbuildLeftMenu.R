@@ -27,10 +27,8 @@ buildLeftMenu<-function(version){
       menuDropdown('New Project',
         shinyDMDMenu::menuItem('New Basic Project', value='newBasicProject'),
         shinyDMDMenu::menuItem('Clone of Existing Project', value='newCloneProject'),
-        #shinyDMDMenu::menuItem('svgR-based ShinyInput Control', value='newSimpleInputWidget'),
+        shinyDMDMenu::menuItem('svgR-based ShinyInput Control', value='newSimpleInputWidget'),
         UIProjectTemplateMenu()
-       
-        
       ), 
       # menuDropdown('Sample Project', UIProjectSampleMenu()),
       menuDropdown("Recent Projects"),
@@ -62,20 +60,25 @@ buildLeftMenu<-function(version){
     #              shinyDMDMenu::menuItem('Delete Tibble', value='cmdDeleteTibble')
     # ),
     menuDropdown(
-      'Edit',
+      'Options',
       menuDropdown(
-        "Options", 
+        "Editor", 
         shinyDMDMenu::menuItem("Theme" ),
         shinyDMDMenu::menuItem("Font Size"), 
         shinyDMDMenu::menuItem("Adjust Tabs",       value="adjustTabs"),
         shinyDMDMenu::menuItem("Toggle White Space", value="toggleWhiteSpace"),
         shinyDMDMenu::menuItem(defaultOpts$tabType)
       ),
-      menuDivider(),
+      #menuDivider(),
       menuDropdown(
         "Import Addin",
         shinyDMDMenu::menuItem("Snippets",   value="importSnippetFile"),
         shinyDMDMenu::menuItem("Drag&Drops",   value='importDndSnippetsFile')
+      ),
+      menuDropdown(
+        "Manage Template Menu",
+        shinyDMDMenu::menuItem("Add Current Project to Template Menu",   value="addTemplate"),
+        shinyDMDMenu::menuDropdown("Remove from Template Menu",   UIRemoveUserTemplate())
       )
     ),
     menuDropdown(

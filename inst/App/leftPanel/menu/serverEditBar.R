@@ -5,7 +5,32 @@ observeEvent( input$editNavBar, {
   fileCmd<-getLeftMenuCmd()
   
   if(length(fileCmd)>0){
-    
+    if( fileCmd =="addTemplate"){
+       # cat('******* addTemplate\n')
+      # get projectPath
+      source<-getProjectFullPath()
+      source=dirname(source)
+      # getProject Name
+      name<-basename(source) # should be same as editOption$currentProjectName)
+      name<-sub("\\.pprj$",'',name)
+      target<-file.path(homeDir, '.ptR','.templates',name)
+      # cat('source=',source,"\n")
+      # cat('target=',target,"\n")
+      copyDirectory(from=source, to=target,  private=TRUE, recursive=TRUE)
+      # copy to .ptR
+      # update menus
+      updateNewProjectMenu(session)
+      updateRemoveTemplateMenu(session)
+    }
+    if(grepl("removeTemplate-",fileCmd)){
+      target<- str_split(fileCmd,'-')[[1]][2]
+     # delete templatePath
+      # unlink(target)
+      dir_delete(target)
+      # update menus
+      updateNewProjectMenu(session)
+      updateRemoveTemplateMenu(session)
+    }
     if( fileCmd %in% c("newPtrTibScript", "newPtRMatScript", "newPtRSVGScript", "newRScript" )){ #-----new
       cmdFileNewPtR(fileCmd)
       dirtyDMDM(session, "editNavBar")
