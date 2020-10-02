@@ -23,6 +23,7 @@ type2WidgetChoices<-function(colType){
      character.list= c('radio','picker'), #, "multiInput", 'picker', 'checkbox'), #range
      character.list.2= c('picker','slider','radio'), #, "multiInput", 'picker', 'checkbox'), #range
      character.list.vec= c('picker','radio'), #, "multiInput", 'picker', 'checkbox'), #range
+     #percentage, percentage.list.2
      integer=c('radio','picker','slider',  "numeric"), #,'knob'
      numeric=c('radio','picker','slider',  "numeric"), #,'knob'
      numeric.list=c('radio','picker'), #,'slider',  "numeric"), #,'knob'
@@ -30,7 +31,8 @@ type2WidgetChoices<-function(colType){
      integer.list.2=c('slider'),
      numeric.list.vec=c('radio','picker'), #,'slider',  "numeric"), #,'knob'
      integer.list.vec=c('radio','picker'), #,'slider',  "numeric"),
-     colourable=c('radio','picker', 'colourable') , #'spectrum', 'colorSelectorInput' ),
+     integer.list=c('radio','picker'),
+     colourable=c('colourable','radio','picker' ) , #'spectrum', 'colorSelectorInput' ),
      other=c('radio','picker'),
      other.list=c('radio','picker')
      )[[colType]]   
@@ -110,7 +112,7 @@ updateWidgetChoicesRow<-function(#tibName, colName, colType,
     } else { # not there, or multiple rows?
       colType<-getColumnType()
       widgets<-type2WidgetChoices(colType)
-      chosenWidget<selectedWidget #kludge to avoid name clash
+      chosenWidget<-selectedWidget #kludge to avoid name clash
       if(!chosenWidget %in% widgets){
         chosenWidget<-widgets[1]
       }
