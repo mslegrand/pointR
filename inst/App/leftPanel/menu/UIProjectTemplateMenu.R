@@ -35,7 +35,7 @@ updateNewProjectMenu<-function(session){
   submenu<-menuDropdown('New Project',
                shinyDMDMenu::menuItem('New Basic Project', value='newBasicProject'),
                shinyDMDMenu::menuItem('Clone of Existing Project', value='newCloneProject'),
-               shinyDMDMenu::menuItem('svgR-based ShinyInput Control', value='newSimpleInputWidget'),
+               # shinyDMDMenu::menuItem('svgR-based ShinyInput Control', value='newSimpleInputWidget'),
                UIProjectTemplateMenu()
   ) 
   # 4 insertsubmenu
@@ -49,7 +49,7 @@ updateNewProjectMenu<-function(session){
 updateRemoveTemplateMenu<-function(session){
   # 1 remove menuDropdown
   removeDMDM(session=session, menuBarId="editNavBar", entry="Remove from Template Menu")
-  #recreate dropdow
+  #recreate dropdown
   submenu<-menuDropdown("Remove from Template Menu",
                         UIRemoveUserTemplate()
   ) 

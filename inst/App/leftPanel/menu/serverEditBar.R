@@ -25,7 +25,7 @@ observeEvent( input$editNavBar, {
     if(grepl("removeTemplate-",fileCmd)){
       target<- str_split(fileCmd,'-')[[1]][2]
      # delete templatePath
-      # unlink(target)
+      # file.remove(target,recursive=TRUE)
       dir_delete(target)
       # update menus
       updateNewProjectMenu(session)
