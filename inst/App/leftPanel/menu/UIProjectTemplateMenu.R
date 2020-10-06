@@ -20,11 +20,14 @@ UIRemoveUserTemplate<-function(){
   userTemplatePaths<-list.dirs(
     file.path(homeDir, '.ptR','.templates'), full.names = TRUE, recursive = FALSE
   )
-  userTemplateNames<-basename(userTemplatePaths)
-  userTemplatePaths<-paste0('removeTemplate-',userTemplatePaths)
-  tmp<-mapply(shinyDMDMenu::menuItem,   userTemplateNames, value=userTemplatePaths, SIMPLIFY=FALSE)
-  do.call(tagList, tmp)
-  
+  if(length(userTemplatePaths)==0){
+    NULL
+  } else {
+    userTemplateNames<-basename(userTemplatePaths)
+    userTemplatePaths<-paste0('removeTemplate-',userTemplatePaths)
+    tmp<-mapply(shinyDMDMenu::menuItem,   userTemplateNames, value=userTemplatePaths, SIMPLIFY=FALSE)
+    do.call(tagList, tmp)
+  }
 }
 
 
@@ -48,16 +51,20 @@ updateNewProjectMenu<-function(session){
 }
 updateRemoveTemplateMenu<-function(session){
   # 1 remove menuDropdown
-  removeDMDM(session=session, menuBarId="editNavBar", entry="Remove from Template Menu")
+  removeDMDM(session=session, menuBarId="editNavBar", entry="Remove from Menu")
   #recreate dropdown
-  submenu<-menuDropdown("Remove from Template Menu",
-                        UIRemoveUserTemplate()
+  templateMenuList<-UIRemoveUserTemplate()
+  submenu<-menuDropdown("Remove from Menu",
+                        templateMenuList
   ) 
   # 4 insertsubmenu
-  if(!is.null(submenu)){
+  #if(!is.null(UIRemoveUserTemplate())){
     insertAfterDMDM(
       session, menuBarId = "editNavBar", 
       entry="addTemplate", submenu= submenu
     )
+  #}
+  if(is.null(templateMenuList)){
+    disableDMDM(session, menuBarId="editNavBar", entry="Remove from Menu")
   }
 }

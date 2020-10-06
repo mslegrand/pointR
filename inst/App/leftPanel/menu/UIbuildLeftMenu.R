@@ -30,7 +30,6 @@ buildLeftMenu<-function(version){
         # shinyDMDMenu::menuItem('svgR-based ShinyInput Control', value='newSimpleInputWidget'),
         UIProjectTemplateMenu()
       ), 
-      # menuDropdown('Sample Project', UIProjectSampleMenu()),
       menuDropdown("Recent Projects"),
       menuDivider(),
       shinyDMDMenu::menuItem("Open File", value='openFile'),
@@ -77,8 +76,8 @@ buildLeftMenu<-function(version){
       ),
       menuDropdown(
         "Manage Template Menu",
-        shinyDMDMenu::menuItem("Add Current Project to Template Menu",   value="addTemplate"),
-        shinyDMDMenu::menuDropdown("Remove from Template Menu",   UIRemoveUserTemplate())
+        shinyDMDMenu::menuItem("Add Current Project",   value="addTemplate"),
+        shinyDMDMenu::menuDropdown("Remove from Menu",   UIRemoveUserTemplate())
       )
     ),
     menuDropdown(
