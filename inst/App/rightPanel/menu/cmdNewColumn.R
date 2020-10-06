@@ -60,7 +60,6 @@ observeEvent(input$commitNewCol, {
     rtv<-TRUE
     tryCatch({
       eval(parse(text=txt))
-      # parse(text=txt)
       rtv<-FALSE
     }, 
     error = function(e) {})
@@ -69,7 +68,6 @@ observeEvent(input$commitNewCol, {
   
   treatAs<-input$modalColTreatAs
   newVal<-input$modalAttrValue
-  # browser()
   #checks
     if(!grepl(pattern = "^[[:alpha:]]", input$modalAttrName)){
       # check name syntax
@@ -87,15 +85,10 @@ observeEvent(input$commitNewCol, {
       showModal(addNewColModal( errMssg="Unable to evaluate expression") )
     } else { # checks passed
       #add name to tib
-      
-      cat('treatAs=', format(treatAs),'\n')
-      cat('newVal=', format(newVal),'\n')
       newPtDefs<-getPtDefs()
       newColName<-input$modalAttrName
-      # browser()
       if(treatAs=='script'){ # apply script sequentially to newPtDefs
         # extract onNewRowScript
-        # browser()
         script_Name<-input$modalColPreProcScript
         tb<-filter(preProcScriptDB$attrs, scriptName==script_Name)
         scripts<-unlist(tb$script)
@@ -106,9 +99,7 @@ observeEvent(input$commitNewCol, {
         #One strategy
         tryCatch({
         # 1. newPtDefs<-getPtDefs()
-            #newPtDefs<-getPtDefs()
-            # browser()
-            
+
         # 2. 
             tibs<-newPtDefs$tib
         # 3. 
@@ -135,22 +126,23 @@ observeEvent(input$commitNewCol, {
               keys=list(altKey=FALSE, shiftKey=FALSE, ctrlKey=FALSE, metaKey=FALSE, keycode=NULL)
             )
             for(rowIndex in 1:nrow(tib)){
-              #browser()
               ppenv$context$row<-rowIndex
               ppenv$context$tibs<-tibs
               tibs<-eval(parse(text=txt), ppenv )
               #ppenv$tibs<-tibs
+
             }
         # 7. check if tibs is valid
           validateTibLists(getPtDefs()$tib, tibs)
           newPtDefs$tib<-tibs
           sender='cmd.add.column'
-          #browser()
-          #updateAceExtDef(newPtDefs, sender=sender, selector=list( name=newColName ) )
+          #set the column to use specified script
+          setPreProcScriptName(tab_Id=getTibTabId(), tib_Name= getAssetName(), column_Name=newColName,  script_Name=script_Name)
+          # updateAceExtDef(newPtDefs, sender=sender, selector=list( name=newColName ) ) #NO! THIS UPDATE CAN CAUSE MESSAGING LOOP
         }, error=function(e){
           e<-c('preproErr',e)
           err<-paste(unlist(e), collapse="\n", sep="\n")
-          shinyalert("preproc new column Error",err, type="error")
+          shinyalert("preproc new column Error",err, type="error") # may want to put this in a scrollable modal
         })        
       } else { #not scripting
         # browser()
