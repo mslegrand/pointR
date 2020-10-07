@@ -122,13 +122,13 @@ moduleEdTib<-function(input, output, session,
   
   output$columnEntryUI<-renderUI({
     if( getTibEditState()==TRUE ){
-      cat("\nEntering----------output$colEntryUI---------------\n")
-      cat("\nInitial value of getRowIndex", format(getRowIndex()), "\n")
-      cat('--calling ---getWidget2----------\n')
+      # cat("\nEntering----------output$colEntryUI---------------\n")
+      # cat("\nInitial value of getRowIndex", format(getRowIndex()), "\n")
+      # cat('--calling ---getWidget2----------\n')
       widget<-getWidget()
-      cat("widget=",format(widget),"\n")
-      cat("getTibEntry()=",format(getTibEntry()),"\n")
-      cat("getTibEntryChoices()=",format(getTibEntryChoices()),"\n")
+      # cat("widget=",format(widget),"\n")
+      # cat("getTibEntry()=",format(getTibEntry()),"\n")
+      # cat("getTibEntryChoices()=",format(getTibEntryChoices()),"\n")
       if(!is.null(widget) && !is.null(getTibEntry()) && !is.null(getTibEntryChoices())){ 
             selected<-getTibEntry()
             choices<-getTibEntryChoices()
@@ -175,10 +175,16 @@ moduleEdTib<-function(input, output, session,
                   )
                 } else if(widget=='knob'){
                   # cat('xxx widget=', format(widget),"\n")
-                  cat('value is ',selected, '\n')
+                  # cat('value is ',selected, '\n')
                   div(knobInput(
                     ns('entryKnob'), label = NULL, min=1, max = 100, value = as.numeric(selected), width=100, height=100
                   ))
+                } else if(widget=='immutable'){
+                  radioGroupButtons(inputId=ns("entryMutable"), 
+                                    choices=selected, 
+                                    selected=selected,
+                                    justified=TRUE
+                  )
                 }            
             }
                   

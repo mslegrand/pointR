@@ -28,7 +28,7 @@ moduleEdAsset<-function(input, output, session,
   output$dataSetUI<-renderUI({
     if( length(nameChoices() )>0){
       butts<- nameChoices()
-      isolate(print(butts))
+      # isolate(print(butts))
       radioGroupButtons(inputId=ns("name"), choices=butts, selected=name(),
                         justified=TRUE)
     }
