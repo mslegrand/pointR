@@ -2,7 +2,7 @@ Package: pointR
 Type: Package
 Date: 2019-12-30
 Title: pointR
-Version: 0.4.3
+Version: 0.4.4
 Author: M.S.Legrand
 Maintainer: M.S.Legrand <slegrand3.14@gmail.com>
 Description: pointR is a shiny-based IDE for svgR
@@ -30,7 +30,7 @@ Imports:
     shinyjqui
 Suggests:
     testthat
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 Remotes: 
   mslegrand/shinyDMDMenu,
   mslegrand/svgR,
