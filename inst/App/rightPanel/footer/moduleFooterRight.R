@@ -74,8 +74,8 @@ moduleFooterRight<-function(input, output, session,
                                            actionGroupButtons(
                                              inputIds=c(session$ns("tagSetValue" )),
                                              labels=list(
-                                               span(span('class'="icon-right"), span('class'="icon-columns"))  %>% bs_embed_tooltip(title = "Set Value")
-                                             ),
+                                               span(span('class'="icon-right"), span('class'="icon-columns"))  %>% bs_embed_tooltip(title = "Set Selected to Value")
+                                             ) ,
                                              status='primary'
                                            ),
                                            span( scriptName, class='ptRFootertText', inline=TRUE)

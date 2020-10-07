@@ -122,8 +122,8 @@ shinyUI(
                          label = NULL, 
                          choices = c(),
                          selected = c()
-                       )
-                    ),
+                       ) 
+                    ) ,
                        #style = "unite", 
                        icon=icon("option-vertical", lib = "glyphicon"),
                        #icon=icon("wrench", lib = "glyphicon"),
@@ -134,7 +134,7 @@ shinyUI(
                          enter = animations$fading_entrances$fadeInLeftBig,
                          exit = animations$fading_exits$fadeOutRightBig
                        )
-                 )
+                 ) %>% bs_embed_tooltip(title="dnds selection tool", placement = "top")
              )
              
           ),
@@ -178,7 +178,7 @@ shinyUI(
           absolutePanel(id="logo.right", top=145, left=0, width="100%",  #pointRLogoSVG()),
                         div(img(src="ptR/pointRlogo.svg"))),
                         # HTML(' <img src="ptR/pointRLogo.SVG">' )),
-          div(newPreProcDropDown()),
+          div(newPreProcDropDown())%>% bs_embed_tooltip(title="preproc selection tool", placement = "top"),
           uiOutput("BottomRightPanel"),
           uiOutput("TopRightPanel"),
           div( id="midRightPanels", class="cMidPanel ctop140",

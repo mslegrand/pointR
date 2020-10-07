@@ -103,8 +103,18 @@ resetSelectedTibbleName<-function(tibs, name){
     if(hasError()){
       return(NULL) # never change selection when in error state
     }
+  
       choices<-getRightPanelChoices()
       # cat("resetSelectedTibbleName:: choices=", paste(choices, collapse=", "),"\n")
+      aName<-getAssetName()
+      if( !is.null(aName) && !is.null(getTibRow()) 
+          && !is.null(tibs[[aName]]) && getTibRow()<nrow(tibs[[aName]])
+      ){
+         srchVal<-tibs[[aName]][[getTibColumnName()]][[getTibRow()]]
+       } else {
+         srchVal<-NULL
+       }
+
       if(is.null(name) || !(name %in% choices)){
         name<-getAssetName() #pick the last name
       }
@@ -120,7 +130,19 @@ resetSelectedTibbleName<-function(tibs, name){
       } else {
         tib<-getPtDefs()$tib[[selectedAsset$name]]
         # set row
-        rowIndex=nrow( tib )
+        if(length(selectedAsset$rowIndex)>0 && selectedAsset$rowIndex>0){
+          rowIndex<-min( selectedAsset$rowIndex,nrow( tib ))
+        } else {
+          rowIndex<-nrow( tib )
+        }
+          
+        if(length(srchVal)==1 && !identical(aName, selectedAsset$name)){
+          pos<-grep(srchVal,tib[[selectedAsset$columnName]])
+          if(length(pos)>0){ 
+            rowIndex<-tail(pos)
+          }
+        }
+        
         selectedAsset$rowIndex=rowIndex
         # next we try to extract a pt column for the selected tib
         ptIndxs<-extractPointColumnIndices(tib)
@@ -159,11 +181,13 @@ resetSelectedTibbleName<-function(tibs, name){
           }
         }
       }
+      
       resetRowPickeR()
       if( selectedAsset$name==transformTag){
         selectedAsset$transformType='Translate'
       }
-       # log.fout(resetSelectedTibbleName)
+         
+      # log.fout(resetSelectedTibbleName)
 }
 
 
@@ -198,7 +222,6 @@ updateSelected<-function( name, rowIndex, columnName, matCol,  ptColName, selInd
       if(!is.null(selectedAsset$row) && !is.null(columnName ) && !is.null(selectedAsset$name )){
         m<-getPtDefs()$tib[[ selectedAsset$name ]][[columnName]][[selectedAsset$row]]
         matCol<-selectedAsset$matCol
-        # cat('matCol=',format(matCol),'\n')
         if(length(m>0)){
           matCol=min(matCol, ncol(m))
         } else {

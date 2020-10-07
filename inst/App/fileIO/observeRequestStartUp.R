@@ -11,11 +11,13 @@ observeEvent(trigger$startup, {
     } else {
       
     }
-    disableDMDM(
-      session, 
-      menuBarId="editNavBar", 
-      entry="customControl"
-    )
+    # disableDMDM(
+    #   session, 
+    #   menuBarId="editNavBar", # can't find customControl
+    #   entry="customControl"
+    # )
+    updateNewProjectMenu(session)
+    updateRemoveTemplateMenu(session)
     
     log.fout(startup)
 }, priority=100)

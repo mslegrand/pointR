@@ -121,7 +121,7 @@ setFileDescSaved<-function(pageId, fileSaveStatus){
         fd[fd$tabId==pageId,"isSaved"]<-fileSaveStatus 
         fileDescDB(fd) 
       }
-      cat('setFileDescSaved: pageId=',pageId,',  savedStatus=',fileSaveStatus,"\n")
+      # cat('setFileDescSaved: pageId=',pageId,',  savedStatus=',fileSaveStatus,"\n")
       
       sendFileTabsMessage(tabId=pageId, sender='savedStatus', saveStatus=fileSaveStatus)
       log.fout(setFileDescSaved)

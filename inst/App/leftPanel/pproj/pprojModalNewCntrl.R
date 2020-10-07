@@ -1,8 +1,8 @@
 # ---beging code to inserted in ptR-------------------------------
-newProjShinyCntrlModal <- function(failed = 0, mssg=NULL, datapath=NULL, projectName=NULL, projTemplateName) {
+newProjShinyCntrlModal <- function(failed = 0, mssg=NULL, datapath=NULL, projectName=NULL, projTemplatePath) {
   #shinyDirChoose(input, id='browseForDir', roots=c(wd='~'), filetypes='')
   # cat('>----> newProjShinyCntrlModal\n')
-  requestedProjTemplateName(projTemplateName)
+  requestedProjTemplatePath(projTemplatePath)
   shinyDirChoose(input, id='browseForDir', roots=c(home='~'))
   observeEvent(input$browseForDir,{
     datapath<-parseDirPath(c(home='~'), input$browseForDir)
@@ -15,7 +15,7 @@ newProjShinyCntrlModal <- function(failed = 0, mssg=NULL, datapath=NULL, project
   # cat('>----> modalDialog\n')
   modalDialog(
     h4('Create a new Project using the template '),
-    h2( projTemplateName),
+    h2( basename(projTemplatePath)),
     if(failed==1){
       h4(mssg)
     },
@@ -42,13 +42,13 @@ newProjShinyCntrlModal <- function(failed = 0, mssg=NULL, datapath=NULL, project
   )
 }
 
-requestedProjTemplateName<-reactiveVal("")
+requestedProjTemplatePath<-reactiveVal("")
 #to do: proj name should be restricted to letters, numbers, '.' and spaces.
 #to do: proj dir should be restricted to letters, numbers, '.'  and spaces.
 
 observeEvent(input$modalNewShinyCntrlProjOk, {
   # Check that data object exists and is data frame.
-  templateName<-requestedProjTemplateName()
+  templatePath<-requestedProjTemplatePath()
   projectName<-input$modalProjName
   if(!is.null(projectName)){
     projectName<-str_trim(projectName)
@@ -79,7 +79,7 @@ observeEvent(input$modalNewShinyCntrlProjOk, {
   }
   if(failed!=0){
     showModal(newProjShinyCntrlModal(failed = failed, mssg=mssg, datapath=datapath, 
-                           projectName = projectName, projTemplateName=templateName))
+                           projectName = projectName, projTemplatePath=templateName))
   } else {
     
     # try to add file and workspace, if not writable , return fail
@@ -91,17 +91,19 @@ observeEvent(input$modalNewShinyCntrlProjOk, {
     # 3 register in recent projects.
     
     # prepare to process
-    templateName<-requestedProjTemplateName() 
-    templatePath<- projTemplatesPaths[templateName] # the clone path of this project.
+    templatePath<-requestedProjTemplatePath() 
+    #templatePath<- templateName #projTemplatesPaths[templateName] # the clone path of this project.
     templateName.pprj<-dir(templatePath,pattern=".pprj$")
 
     pathToProjParent<-datapath # input$parentProjDirectoryName # parent directory of new project
     
     projName<-gsub('\\.pprj$','',projectName)  # the name of of new project
-    projNameExt<-paste0(projName,'.pprj')
+    projNameExt<-paste0(projName,'.pprj') # put extension back 
     
     # 0. close current project
     closeCurrentProj()
+    sourceProject<- path_join(c(templatePath, templateName.pprj))
+    
     # 1. clone project
     fullpathProjName<-copyAndRenameProject(
       sourceProject= path_join(c(templatePath, templateName.pprj)),

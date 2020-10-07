@@ -14,7 +14,7 @@ shinyServer(function(input, output,session) {
   
 # utility functions---------------
   setwd(path_join(c(ptRPath,"App")))
-  cat("--------------begin server-------------\ngetwd()=",getwd(),"\n")
+  # cat("--------------begin server-------------\ngetwd()=",getwd(),"\n")
   source("util/dbInitiatizers.R") 
   
   source("util/format.R")

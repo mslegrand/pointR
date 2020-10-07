@@ -5,7 +5,32 @@ observeEvent( input$editNavBar, {
   fileCmd<-getLeftMenuCmd()
   
   if(length(fileCmd)>0){
-    
+    if( fileCmd =="addTemplate"){
+       # cat('******* addTemplate\n')
+      # get projectPath
+      source<-getProjectFullPath()
+      source=dirname(source)
+      # getProject Name
+      name<-basename(source) # should be same as editOption$currentProjectName)
+      name<-sub("\\.pprj$",'',name)
+      target<-file.path(homeDir, '.ptR','.templates',name)
+      # cat('source=',source,"\n")
+      # cat('target=',target,"\n")
+      copyDirectory(from=source, to=target,  private=TRUE, recursive=TRUE)
+      # copy to .ptR
+      # update menus
+      updateNewProjectMenu(session)
+      updateRemoveTemplateMenu(session)
+    }
+    if(grepl("removeTemplate-",fileCmd)){
+      target<- str_split(fileCmd,'-')[[1]][2]
+     # delete templatePath
+      # file.remove(target,recursive=TRUE)
+      dir_delete(target)
+      # update menus
+      updateNewProjectMenu(session)
+      updateRemoveTemplateMenu(session)
+    }
     if( fileCmd %in% c("newPtrTibScript", "newPtRMatScript", "newPtRSVGScript", "newRScript" )){ #-----new
       cmdFileNewPtR(fileCmd)
       dirtyDMDM(session, "editNavBar")
@@ -43,15 +68,10 @@ observeEvent( input$editNavBar, {
       dirtyDMDM(session, "editNavBar")
     }
     if(grepl("projectTemplate-",fileCmd)){
-      templateName<- str_split(fileCmd,'-')[[1]][2]
-      showModal(newProjShinyCntrlModal(projTemplateName=templateName))
+      templatePath<- str_split(fileCmd,'-')[[1]][2]
+      showModal(newProjShinyCntrlModal(projTemplatePath=templatePath))
       dirtyDMDM(session, "editNavBar")
     }
-    # if(grepl("projectSample-",fileCmd)){
-    #   projectName<- str_split(fileCmd,'-')[[1]][2]
-    #   showModal(sampleProjModal(projectName=projectName))
-    #   dirtyDMDM(session, "editNavBar")
-    # }
     if(fileCmd=="openProject"){ #-----open
       dirtyDMDM(session, "editNavBar") 
       cmdFileOpenProject()
@@ -307,13 +327,14 @@ observeEvent( editOption$currentProjectName, {
   if(length(editOption$currentProjectName)==0){
     title='project: <none>'
     disableDMDM(session, "editNavBar", 'closeProject')
+    disableDMDM(session, "editNavBar", 'addTemplate')
   } else {
     title=paste0('project: ', editOption$currentProjectName)
     enableDMDM(session, "editNavBar", 'closeProject')
+    enableDMDM(session, "editNavBar", 'addTemplate')
   }
   renameDMDM(session, menuBarId="editNavBar", 
                        entry='project', newLabel=title, newValue='project')
-  
 }, ignoreNULL = FALSE)
 # -----------ACE EDITOR------------------------
 
