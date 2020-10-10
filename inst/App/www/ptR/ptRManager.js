@@ -25,6 +25,25 @@ if(!!window.sendToElectron){
     $('#ptRQuit').trigger('click');
   });
   
+  window.ipcRenderer.on( 'fileChanged', function(event, arg){
+    console.log('fileChanged');
+    //alert('fileChanged '+JSON.stringify(arg));
+    Shiny.onInputChange('fileChanged', 
+      {
+          mssg:  arg, 
+          rnd:Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5)
+      });
+      
+    //$('#ptRQuit').trigger('click');
+  });
+  
+  window.ipcRenderer.on( 'fileDeleted', function(event, arg){
+    console.log('fileDeleted');
+    alert('fileDeleted '+JSON.stringify(arg));
+    //$('#ptRQuit').trigger('click');
+  });
+  
+  
 }
 
 
@@ -38,6 +57,12 @@ Shiny.addCustomMessageHandler(
       if(!!data.app2RunPath){
         if(!!window.sendToElectron){
           window.sendToElectron('cmdAppRun',data.app2RunPath, data.tabId);
+        }
+      }
+      if(!!data.resetWatcher){
+        if(!!window.sendToElectron){
+          console.log('resetWatcher sendToElectron');
+          window.sendToElectron('resetWatcher',data.resetWatcher);
         }
       }
       if(!!data.app2stop){
@@ -62,7 +87,7 @@ Shiny.addCustomMessageHandler(
           window.sendToElectron('cmdOpenWindow',data.openWindow, '');
         }
       }
-    }
+    } //end of electron handlers
     if(data.sender==="closePtRWindowNow"){
       console.log('inside data.closePtRWindowNow');
       if(!!window.sendToElectron ){ 
