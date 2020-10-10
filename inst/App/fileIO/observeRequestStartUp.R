@@ -11,13 +11,19 @@ observeEvent(trigger$startup, {
     } else {
       
     }
-    # disableDMDM(
-    #   session, 
-    #   menuBarId="editNavBar", # can't find customControl
-    #   entry="customControl"
-    # )
+    
     updateNewProjectMenu(session)
     updateRemoveTemplateMenu(session)
-    
+    resetWatcher()
     log.fout(startup)
 }, priority=100)
+
+
+resetWatcher<-reactive({
+  if(usingElectron){
+    allFilePaths<-getAllNamedFiles()$filePath
+    cat('pointR::resetWatcher: allFilePaths')
+    print(allFilePaths)
+    sendPtRManagerMessage(sender="cmd.electron", resetWatcher=allFilePaths)
+  }
+})

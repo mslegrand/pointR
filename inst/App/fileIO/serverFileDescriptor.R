@@ -137,6 +137,15 @@ getAllNamedUnsavedFiles<-reactive({
   fd
 })
 
+getAllNamedFiles <- function(){
+  fd<-fileDescDB()
+  fd<-filter(fd, filePath!="?")
+  fd
+}
+
+
+
+
 # get the saved status for the current page
 getFileSavedStatus<-reactive({
   pageId<-input$pages
@@ -176,4 +185,7 @@ removeFileDesc<-function(pageId, path=getWorkSpaceDir() ){
   file.remove(fileName)
   # cat('<---< removeFileDesc\n')
 }
+
+
+
 
