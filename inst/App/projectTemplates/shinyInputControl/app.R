@@ -1,15 +1,17 @@
 library(shiny)
 source("shinyInputControl.R")
 
+initialValue='200'
+
 ui<-fluidPage(
     h1('Test App'),
     h3('current Value'),
     textOutput('currentValue'),
     
-    textInput(inputId='updateValue','update value', '200'),
+    textInput(inputId='updateValue','update value', initialValue),
     actionButton('updateButton', label='press to update value'),
     
-    shinyInputControl(inputId='myshinyInputControl', wh=c(400,400), value=200 )
+    shinyInputControl(inputId='myshinyInputControl', wh=c(400,400), value= initialValue)
 )
 
 server<-function(input,output,session){
