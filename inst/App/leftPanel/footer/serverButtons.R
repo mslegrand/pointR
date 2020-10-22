@@ -73,6 +73,7 @@ if(usingElectron){
     
     
     fd<-fileDescDB()
+    fd$filePath<-normalizePath(fd$filePath)
     tb<-filter(fd, filePath==changedFile)
     # cat("fileChanged 2\n")
     if(nrow(tb)>0){

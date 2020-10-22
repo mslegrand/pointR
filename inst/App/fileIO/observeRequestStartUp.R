@@ -22,8 +22,9 @@ observeEvent(trigger$startup, {
 resetWatcher<-reactive({
   if(usingElectron){
     allFilePaths<-getAllNamedFiles()$filePath
-    cat('pointR::resetWatcher: allFilePaths')
-    print(allFilePaths)
+    allFilePaths<-normalizePath(allFilePaths)
+    # cat('pointR::resetWatcher: allFilePaths')
+    # print(allFilePaths)
     sendPtRManagerMessage(sender="cmd.electron", resetWatcher=allFilePaths)
   }
 })
