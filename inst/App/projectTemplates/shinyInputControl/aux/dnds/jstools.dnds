@@ -4,16 +4,14 @@ author: "Anonymous"
 date:   "TODAY"
 output: dnd_snippet
 ---
-
-
 ******************
 POPUP 
 ```
-get element data (Steps 3.2?)
+extract element attribute (Steps 3.2?)
 ```
 SNIPPET
 ```
-        $(el).data('${0:(valueName)}');
+        let value = $(el).attr('${0:value}');
 ```
 SVGR
 ```
@@ -23,21 +21,22 @@ ptR<-list(
   x=matrix(0,2,0)
 )
 R<-.06*WH[1]
-d<-list(M=WH*c(.8,.42), Q=WH*c(c(.8,.8),c(.2,.8)))
+d<-list(M=WH*c(.65,.2), Q=WH*c(c(.25,.15),c(.25,.4)))
+R<-.06*WH[1]
+#d<-list(M=WH*c(.2,.42), Q=WH*c(c(.2,.8),c(.5,.8)))
 
 svgR(wh=WH, #stroke.width=1, stroke="#00FFFF",  fill="none",
-  polygon(points=WH*c(c(.05,.5), c(.15,.3),c(.15,.7)),fill='#00FFFF'),
-  rect(cxy=WH*c(.2,.5), wh=WH*c(.1,.1),fill="#00FFFF"),
-   lapply(1:5, function(i){
-       ellipse(
-       cxy=c(.6, .8-i*.1)*WH,
-       rxy=c(.2,.1)*WH,
-       stroke='black',
-       fill='#00FFFF',
-       stroke='black',
-       stroke.width=.5
-      )
-     })
+  #polygon(points=WH*c(c(.05,.5), c(.15,.3),c(.15,.7)),fill='#00FFFF'),
+  
+  #rect(cxy=WH*c(.2,.5), wh=WH*c(.1,.1),fill="#00FFFF"),
+  path(d=d, stroke="#00FFFF", stroke.width=2,
+        marker.end=marker(viewBox=c(0, 0, 10, 10), 
+        refXY=c(1,5), stroke.width=1, fill="#00FFFF",
+        markerWidth=4, markerHeight=5, orient="auto",
+        path( d=c("M", 0, 0, "L", 9, 5, "L", 0, 9, "z") )
+    ) ),
+  text(xy=WH*c(.05,.9),'attr', fill="#00FFFF"),
+  text(xy=WH*c(.7,.4),'el', fill="#00FFFF")
 )
 ```
 ******************
@@ -47,7 +46,7 @@ svgR(wh=WH, #stroke.width=1, stroke="#00FFFF",  fill="none",
 
 POPUP 
 ```
-From String (step 3.2? 6.3.1?)
+From String (step 2.2? 6.3.1?)
 ```
 SNIPPET
 ```
@@ -110,15 +109,14 @@ svgR(wh=WH,
 )
 ```
 *********************
-
 ******************
 POPUP 
 ```
-set element data (Step 3.2?)
+set element data (Step 2.3)
 ```
 SNIPPET
 ```
-        $(el).data('${1:(valueName)'}, ${0:(value)});
+        $(el).data('${1:value'}, ${0:value});
 ```
 SVGR
 ```
@@ -146,16 +144,14 @@ svgR(wh=WH, #stroke.width=1, stroke="#00FFFF",  fill="none",
 )
 ```
 
-*********************
-
-********************
+******************
 POPUP 
 ```
-Trigger
+get element data (Steps 3.2?)
 ```
 SNIPPET
 ```
-${1:$(el)}.trigger(${0:"change"});
+        $(el).data('${0:(valueName)}');
 ```
 SVGR
 ```
@@ -164,32 +160,38 @@ WH<-c(48,32)
 ptR<-list(
   x=matrix(0,2,0)
 )
-X=c(.2,.4,.6,.8)
-D<-list(
-  M=c(.2,.2),
-  Q=c( )
-)
-svgR(wh=WH, #stroke.width=1, stroke="#00FFFF",  fill="none",
-  path(d=c("M",c(10,5), "Q", c(5,20), c(25,25) , "T", c(40,5)) ,  fill='#00FFFF'),
-  path(d=c("M",c(12,8), "Q", c(8,20),  c(25,22) , "T", c(36,8)) ,  fill='black'), 
-  path(d=c( "M", c(24,8), "C", c(22,10),  c(30,10), c( 18,18), "Q" , c(30,15), c(28,10), c(32,10), c(32,8)),fill='#00FFFF')
+R<-.06*WH[1]
+d<-list(M=WH*c(.8,.42), Q=WH*c(c(.8,.8),c(.2,.8)))
 
-    
+svgR(wh=WH, #stroke.width=1, stroke="#00FFFF",  fill="none",
+  polygon(points=WH*c(c(.05,.5), c(.15,.3),c(.15,.7)),fill='#00FFFF'),
+  rect(cxy=WH*c(.2,.5), wh=WH*c(.1,.1),fill="#00FFFF"),
+   lapply(1:5, function(i){
+       ellipse(
+       cxy=c(.6, .8-i*.1)*WH,
+       rxy=c(.2,.1)*WH,
+       stroke='black',
+       fill='#00FFFF',
+       stroke='black',
+       stroke.width=.5
+      )
+     })
 )
 ```
 ******************
+
 
 *********************
 
 POPUP 
 ```
-add mouse click (step 4.1)
+add mouse click handler (step 4.1)
 ```
 SNIPPET
 ```
-clicked: function(ctrlId, evt ){
-  alert('hi from '+  ctrlId);
-}
+clicked: function(ctrlId, ${1:value,} evt ){
+  alert('hi from '+  ctrlId +" my value is " + ${0:value});
+}, 
 ```
 SVGR
 ```
@@ -221,6 +223,8 @@ svgR(wh=WH,  stroke="#00FFFF",  fill="none",
 )
 ```
 
+
+
 ******************
 *********************
                         
@@ -232,8 +236,8 @@ add mouse2pt function
 SNIPPET
 ```
 mouse2pt: function(id, x, y){ //method to convert mouse coord to svg coord
-      var thisSVG=document.querySelector("#" + id +" svg"); 
-      var pt= thisSVG.createSVGPoint();
+      let thisSVG=document.querySelector("#" + id +" svg"); 
+      let pt= thisSVG.createSVGPoint();
       pt.x = x;
       pt.y = y;
       return pt.matrixTransform(thisSVG.getScreenCTM().inverse());
@@ -265,6 +269,36 @@ svgR(wh=WH,
 )
 ```
 *********************
+********************
+POPUP 
+```
+Trigger
+```
+SNIPPET
+```
+${1:$(el)}.trigger(${0:"change"});
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+X=c(.2,.4,.6,.8)
+D<-list(
+  M=c(.2,.2),
+  Q=c( )
+)
+svgR(wh=WH, #stroke.width=1, stroke="#00FFFF",  fill="none",
+  path(d=c("M",c(10,5), "Q", c(5,20), c(25,25) , "T", c(40,5)) ,  fill='#00FFFF'),
+  path(d=c("M",c(12,8), "Q", c(8,20),  c(25,22) , "T", c(36,8)) ,  fill='black'), 
+  path(d=c( "M", c(24,8), "C", c(22,10),  c(30,10), c( 18,18), "Q" , c(30,15), c(28,10), c(32,10), c(32,8)),fill='#00FFFF')
+
+    
+)
+```
+******************
 
 POPUP 
 ```
@@ -272,7 +306,7 @@ extract value from data (6.3.1)
 ```
 SNIPPET
 ```
-var value = data.value;
+let value = data.value;
 ```
 SVGR
 ```
@@ -316,7 +350,7 @@ replace svg tree (Step 6.4.3)
 ```
 SNIPPET
 ```
-var node=data.${0:value}; //value
+let node=data.${0:node}; //value
 $(el).empty().append(node);
 ```
 SVGR
@@ -351,7 +385,7 @@ set svg node attribute
 ```
 SNIPPET
 ```
-var node=document.getElementById( ${1:nodeId});
+let node=document.getElementById( ${1:nodeId});
 node.setAttribute('${2:attrName}', ${0:attrValue});
 ```
 SVGR
@@ -365,7 +399,8 @@ R<-.06*WH[1]
 d<-list(M=WH*c(.2,.42), Q=WH*c(c(.2,.8),c(.5,.8)))
 
 svgR(wh=WH, stroke.width=2, stroke="#00FFFF",  fill="none",
-    text(xy=WH*c(.2,.38),'attr', stroke.width=1, fill="#00FFFF"),
+    text(xy=WH*c(.05,.38),'attr', stroke.width=1, fill="#00FFFF"),
+    text(xy=WH*c(.6,.9),'n', stroke.width=.5, fill="#00FFFF"),
     path(d=d, stroke="#00FFFF", 
         marker.end=marker(viewBox=c(0, 0, 10, 10), refXY=c(1,5), stroke.width=1, fill="#00FFFF",
         markerWidth=4, markerHeight=5, orient="auto",
@@ -375,41 +410,6 @@ svgR(wh=WH, stroke.width=2, stroke="#00FFFF",  fill="none",
 )
 ```
 ******************
-
-******************
-POPUP 
-```
-set element data (Step 3.2?)
-```
-SNIPPET
-```
-        $(el).data('${1:(valueName)'}, ${0:(value)});
-```
-SVGR
-```
-library(svgR)
-WH<-c(48,32)
-ptR<-list(
-  x=matrix(0,2,0)
-)
-R<-.06*WH[1]
-d<-list(M=WH*c(.8,.85), Q=WH*c(c(.12,.85),c(.12,.52)))
-
-svgR(wh=WH, #stroke.width=1, stroke="#00FFFF",  fill="none",
-  polygon(points=WH*c(c(.25,.5), c(.15,.3),c(.15,.7)),fill='#00FFFF'),
-  rect(cxy=WH*c(.1,.5), wh=WH*c(.1,.1),fill="#00FFFF"),
-   lapply(1:5, function(i){
-       ellipse(
-       cxy=c(.6, .8-i*.1)*WH,
-       rxy=c(.2,.1)*WH,
-       stroke='black',
-       fill='#00FFFF',
-       stroke='black',
-       stroke.width=.5
-      )
-     })
-)
-```
 
 *********************
 
