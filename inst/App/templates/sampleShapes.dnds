@@ -197,8 +197,8 @@ SNIPPET
 polyline(
 	points=${1:WH*matrix(c(.25,.25,.5,.5,.75,.25),2)},
 	stroke=${2:'black'},
-	stroke.width=${2:1},
-	fill=${3:'none'}
+	stroke.width=${3:1},
+	fill=${4:'none'}
 )${0:}
 ```
 SVGR
@@ -228,8 +228,8 @@ SNIPPET
 polygon(
     points=${1:WH*matrix(c(.25,.75,.5,.5,.75,.75),2)},
     stroke=${2:'black'},
-    stroke.width=${2:1},
-    fill=${3:'none'}
+    stroke.width=${3:1},
+    fill=${4:'none'}
 )${0:}
 ```
 SVGR
