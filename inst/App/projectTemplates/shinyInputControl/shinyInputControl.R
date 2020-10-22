@@ -11,10 +11,11 @@ try({ removeInputHandler("shinyInputControlBinding") })
 # create simple wrapper around svgR code   
 shinyInputControlSvgWrapper<-function(params){
   
-    params$CMDS<-"alert('Wrapper: new command(s)')"
+   # STEP 4.2: replace params$CMDS as appropriate
+    params$CMDS<-c(
+      "alert('Wrapper: new command(s)')", #replace this
+    )
     
-    # STEP 4.2: replace params$CMDS as appropriate
-     
     # fill the wrapper
     source('shinyInputControl_svg.R', local=T)$value
 }
