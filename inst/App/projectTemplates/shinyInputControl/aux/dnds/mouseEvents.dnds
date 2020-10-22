@@ -13,7 +13,7 @@ mouse click
 ```
 SNIPPET
 ```
-onclick='CMDS[${0:1}]'
+onclick=CMDS[${0:1}]
 ```
 SVGR
 ```
@@ -53,7 +53,7 @@ mouse down
 ```
 SNIPPET
 ```
-onmousedown='CMDS[${0:1}]'
+onmousedown=CMDS[${0:1}]
 ```
 SVGR
 ```
@@ -90,7 +90,7 @@ mouse up
 ```
 SNIPPET
 ```
-onmouseup='CMDS[${0:1}]'
+onmouseup=CMDS[${0:1}]
 ```
 SVGR
 ```
@@ -126,7 +126,7 @@ mouse over
 ```
 SNIPPET
 ```
-onmouseover='CMDS[${0:1}]'
+onmouseover=CMDS[${0:1}]
 ```
 SVGR
 ```
@@ -162,7 +162,7 @@ mouse move
 ```
 SNIPPET
 ```
-onmousemove='CMDS[${0:1}]'
+onmousemove=CMDS[${0:1}]
 ```
 SVGR
 ```
@@ -198,7 +198,7 @@ mouse out
 ```
 SNIPPET
 ```
-onmouseout='CMDS[${0:1}]'
+onmouseout=CMDS[${0:1}]
 ```
 SVGR
 ```
