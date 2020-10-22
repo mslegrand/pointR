@@ -39,7 +39,7 @@ if(!!window.sendToElectron){
   
   window.ipcRenderer.on( 'fileDeleted', function(event, arg){
     console.log('fileDeleted');
-    alert('fileDeleted '+JSON.stringify(arg));
+    //alert('fileDeleted '+JSON.stringify(arg));
     //$('#ptRQuit').trigger('click');
   });
   
