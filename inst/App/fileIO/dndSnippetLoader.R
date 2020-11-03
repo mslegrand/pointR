@@ -119,11 +119,16 @@ dripplets2List2<-function(drps){
     rtv<-extractDripplet(dr)
     rtv
   })
-  
+  s.upper<-function(s){
+    paste(toupper(substring(s, 1, 1)), substring(s, 2),
+          sep = "", collapse = " ")
+  }
   if(!is.null(editOption$currentProjectName)){
     cname<-sub('\\.pprj$','', editOption$currentProjectName)
+    Cname<-s.upper(cname)
     drps<-lapply(drps, function(dr){
       dr['snip']<-gsub('@projectName@', cname , dr['snip'])
+      dr['snip']<-gsub('@ProjectName@', Cname , dr['snip'])
       dr
     })
   }
