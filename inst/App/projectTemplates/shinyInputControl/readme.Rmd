@@ -14,10 +14,12 @@ library(svgR)
 
 # Steps to Implement *shinyInputControl*
 
+In what follows steps 1-3 address server to client, steps 4-6 address client to server. Step 7 involves client to server back to client.
+
 ### 1. Building your svg
 
-```{r, results='asis', }
-box %<c-% function(pos, i, headTxt, fill, valTxt, valTxt2=NULL ){
+```{r, results='asis' }
+box %<c-% function(pos, i, headTxt, fill, valTxt, valTxt2=NULL, valTxt3=NULL ){
     g(
          rect(
                xy=pos$rectXY[,i],
@@ -39,6 +41,13 @@ box %<c-% function(pos, i, headTxt, fill, valTxt, valTxt2=NULL ){
              ) 
              } else {
                  NULL
+             },
+             if(!is.null(valTxt3)){
+                text(valTxt3,
+                xy=pos$txt3XY[,i]
+             ) 
+             } else {
+                 NULL
              }
     )
 }
@@ -52,6 +61,7 @@ dimInit<-function(rectH){
   headXY<-c(10,20)+rectXY
   txt1XY<-c(30,20)+headXY
   txt2XY<-c(0,20)+txt1XY
+  txt3XY<-c(0,20)+txt2XY
   WH<-c(400,sum(rectH)+(1+length(rectH))*sep)
   list(
     rectXY=rectXY,
@@ -59,6 +69,7 @@ dimInit<-function(rectH){
     headXY=headXY,
     txt1XY=txt1XY,
     txt2XY=txt2XY,
+    txt3XY=txt3XY,
     WH=WH
   )
 }
@@ -68,124 +79,469 @@ pos<-dimInit(rectH)
 WH<-pos$WH
 
 WH<-c(400,200)
-svgR(wh=WH,text('STEP1',xy=c(20,20)),
-    box(pos, 1, 'shinyInputControl_svg.R', '#BBFFBB','add to parms', 'edit svgR'),
-    box(pos, 2, 'shinyInputControl_svg.R', '#FFCCAA','commit to test')
+svgR(wh=WH,text('STEP 1',xy=c(20,20)),
+    box(pos, 1, 'shinyInputControl_svg.R', '#BBFFBB','add to parms', 'edit svgR','commit svg'),
+    box(pos, 2, 'app.R', '#FFCCAA','run to test')
 
  
 )
-````
+```
 
 1. In file **shinyInputControl_svg.R** 
-    - Add to Parameters section as needed
+    1. Add to Parameters section as needed
         - Parameters section contains variables:
             - WH (width height) 
             - ID for the contol id
             - CMDS (may supply more than one)
         - Add here anything you want to be adjustable
-    - add to the svgR(){} what you want to see
-2. commit to test image 
+    2. add to the svgR(){} what you want to see
+    3. commit to test image
+2. run to test App 
  
 
 ### 2. Initializing the Control
 
-```{r, results='asis', }
-
-
-
-
+```{r, results='asis' }
 
 rectH<-c(50,70,70,50)
 pos<-dimInit(rectH)
 WH<-pos$WH
 
 
-svgR(wh=WH, text('STEP2',xy=c(20,20)),
+svgR(wh=WH, text('STEP 2',xy=c(20,20)),
     box(pos, 1, 'app.R', 'pink','edit intialValue'),
     box(pos, 2, 'shinyInputControl.R', 'lightyellow','edit shinyInputControl()'),
     box(pos, 3, 'shinyInputControl.js', 'lightblue','edit shinyInputControl()'),
     box(pos, 4, 'app.R', '#FFCCAA','run to test')
      
 )
-````
+```
 
 1. In file **app.R**
-   - set **initialValue** as appropriate
-   - edit *ui*  if needed
-   - edit *server* if needed
-2. In file **shinyInputControl.R**
+   1. set **initialValue** as appropriate
+   2. edit *ui*  if needed
+   3. edit *server* if needed
+2. In file **shinyInputControl.R** 
     - in function *shinyInputControl()*
-        -  if necessary 
-            - preprocess the *value* argument 
-            - edit params 
-            - edit 'data-value'=value
-2. In file **shinyInputControl.js**
-    - in function **initialize**
-        - extract values from el attributes using 'extract attribute' dnd
-        - do any needed processing of values here 
-            - if a value represents an object
-                - convert into object using 'From String' dnd
-            - set data-value using 'set element data' dnd
-3. run **App.R** and use browser to verify data-value attached
+        -  if necessary (*when value not a string*)
+            1. preprocess the *value* argument 
+            2. edit params 
+            3. edit 'data-value'=value
+        - **note:** we can have more than one value
+3. In file **shinyInputControl.js**
+    - if necessary  (*when value is to be object*)
+        - in function **initialize**
+            1. extract value from data-value attribute
+               - Hint use:
+``` {r, results='asis'}
+library(svgR)
+WH<-c(48,32)
+R<-.06*WH[1]
+d<-list(M=WH*c(.65,.2), Q=WH*c(c(.25,.15),c(.25,.4)))
+R<-.06*WH[1]
+svgR(wh=WH, 
+  rect( xy=c(0,0), wh=WH, fill='black'), 
+  path(d=d, stroke="#00FFFF", stroke.width=2,
+        marker.end=marker(viewBox=c(0, 0, 10, 10), 
+        refXY=c(1,5), stroke.width=1, fill="#00FFFF",
+        markerWidth=4, markerHeight=5, orient="auto",
+        path( d=c("M", 0, 0, "L", 9, 5, "L", 0, 9, "z") )
+    ) ),
+  text(xy=WH*c(.05,.9),'attr', fill="#00FFFF"),
+  text(xy=WH*c(.7,.4),'el', fill="#00FFFF")
+)
+```
+            2. do any needed processing of value
+                - for example, *if a value represents an object*, then convert to object
+                    - Hint use:
+```{r, results='asis'}
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+r=WH[2]/3
+lft=WH[1]/2-1.5*r
+top<-WH[2]/2-r
+bot<-WH[2]/2+r
+svgR(wh=WH, 
+  rect( xy=c(0,0), wh=WH, fill='black'), 
+  polygon(points=WH*c(c(.05,.5), c(.15,.3),c(.15,.7)),fill='#00FFFF'),
+  rect(cxy=WH*c(.2,.5), wh=WH*c(.1,.1),fill="#00FFFF"),
+  circle(
+    cxy=WH/2,
+    r=WH[2]/3,
+    stroke='none',
+    fill='#00FFFF'
+  ),
+  path(
+    d=list(
+      M=c(.4,.8)*WH, 
+      C=c( c(.6,1.2),c(.9,.2), c(.8,.9))*WH
+    ),
+    stroke='#00FFFF',
+    stroke.width=1,
+    fill='none'
+  ),
+  g(
+      lapply(1:3, function(i){
+        ellipse(cxy=WH*c(.5, .1), rxy=i*c(8,3), fill='none', stroke='#000000', stroke.width=.5)
+      }),
+      mask=mask(circle(cxy=WH/2, r=WH[2]/3), fill='white' )
+  ),
+  g(
+    lapply(1:5, function(i){
+      ellipse(cxy=WH*c(.7, .5), rxy=i*c(3,5), fill='none', stroke='#000000', stroke.width=.5)
+    }), 
+    mask=mask(
+      circle(cxy=WH/2, r=WH[2]/3, fill='white'),
+      ellipse(cxy=WH*c(.5, .1), rxy=3*c(8,3), fill='black')
+    )
+  ),
+   g(
+    lapply(1:5, function(i){
+      ellipse(cxy=WH*c(.3, .3), rxy=i*c(3,5), fill='none', stroke='#000000', stroke.width=.5)
+    }), 
+    mask=mask(
+      circle(cxy=WH/2, r=WH[2]/3, fill='white'),
+      ellipse(cxy=WH*c(.5, .1), rxy=3*c(8,3), fill='black'),
+      ellipse(cxy=WH*c(.7, .5), rxy=5*c(3,5), fill='black')
+    )
+  )
+)
+```                  
+            3. set data-value 
+               - Hint use: 
+```{r, results='asis'}
+library(svgR)
+WH<-c(48,32)
+R<-.06*WH[1]
+d<-list(M=WH*c(.8,.85), Q=WH*c(c(.12,.85),c(.12,.52)))
+
+svgR(wh=WH, #stroke.width=1, stroke="#00FFFF",  fill="none",
+  rect( xy=c(0,0), wh=WH, fill='black'), 
+  polygon(points=WH*c(c(.25,.5), c(.15,.3),c(.15,.7)),fill='#00FFFF'),
+  rect(cxy=WH*c(.1,.5), wh=WH*c(.1,.1),fill="#00FFFF"),
+   lapply(1:5, function(i){
+       ellipse(
+       cxy=c(.6, .8-i*.1)*WH,
+       rxy=c(.2,.1)*WH,
+       stroke='black',
+       fill='#00FFFF',
+       stroke='black',
+       stroke.width=.5
+      )
+     })
+)
+```
+    - if value is a character string, nothing need be done
+4. run **App.R** and use browser to verify *data-value* attached
     - in the browser panel (right hand side) 
         - locate the div with the id matching your control id 
-        - verify that the data-value attribute appears and has the value you assigned
+        - verify that the *data-value* attribute appears and has the value you assigned
+
+### 3. Implementing  Update using a Braindead Approach
+
+```{r, results='asis'}
+rectH<-c(70,90,90,50)
+pos<-dimInit(rectH)
+WH<-pos$WH
+
+
+svgR(wh=WH, text('STEP 3',xy=c(20,20)),
+    box(pos, 1, 'app.R', 'pink','edit observer for update'),
+    box(pos, 2, 'shinyInputControl.R', 'lightyellow','recreate svgTree', 'create & send message'),
+    box(pos, 3, 'shinyInputControl.js', 'lightblue','extract value and set element', 'extract and replace tree'),
+    box(pos, 4, 'app.R', '#FFCCAA','run to test')
+)
+```
+
+
+1. In **App.R** 
+    - Edit *observeEvent(input\$updateButton* to call
+       - *updateshinyInputControl* with a proper value
+2. In file **shinyInputControl.R** 
+  - In the function **updateShinyInputControl**
+    1. Recreate svg Tree (), 
+        - this will entail creating the following
+            - params=list(ID=inputId, WH=wh, value=value) 
+            - svgTree<-*shinyInputControlWrapper*(params=params)
+            - node<-as.character(svgTree)
+        - may be necessary to edit params=list
+    2. Form a message to send to the client
+          - mssg<-list( value=value, node=node) 
+    3. Send the message to client
+          - session\$sendInputMessage(inputId, mssg)
+  - Hint: 
+```{r, results='asis' }
+  library(svgR)
+WH<-c(48,32)
+X=c(.2,.4,.6,.8)
+
+svgR(wh=WH, stroke.width=3, stroke="#00FFFF",  fill="#00FFFF",
+  rect( xy=c(0,0), wh=WH, fill='black'), 
+  line(xy1=WH*c(.1,.1), xy2=WH*c(.9,.1)   ),
+  line(xy1=WH*c(.1,.23), xy2=WH*c(.9,.23) ),
+  line(xy1=WH*c(.5,.4), xy2=WH*c(.5,.9) ),
+  polygon(points=WH*c( .5,.3, .7,.5, .3,.5))
+
+)
+```
+3. In file **shinyInputControl.js** in function *receivemessage*
+    1. extract value(s) 
+        - var value = data.value;
+        - Hint use: 
+```{r, results='asis'}
+library(svgR)
+WH<-c(48,32)
+svgR(wh=WH, 
+     rect(xy=c(0,0), wh=WH, fill='black'),
+  text(cxy=WH/2, "Xval", stroke='#00FFFF', fill='#00FFFF')
+)
+```
+    2. If needed, convert to object: i.e. value=JSON.parse(value);
+      - Hint use: 
+```{r, results='asis'}
+library(svgR)
+WH<-c(48,32)
+r=WH[2]/3
+lft=WH[1]/2-1.5*r
+top<-WH[2]/2-r
+bot<-WH[2]/2+r
+svgR(wh=WH, rect(xy=c(0,0),wh=WH, fill='black'),
+  polygon(points=WH*c(c(.05,.5), c(.15,.3),c(.15,.7)),fill='#00FFFF'),
+  rect(cxy=WH*c(.2,.5), wh=WH*c(.1,.1),fill="#00FFFF"),
+  circle(
+    cxy=WH/2,
+    r=WH[2]/3,
+    stroke='none',
+    fill='#00FFFF'
+  ),
+  path(
+    d=list(
+      M=c(.4,.8)*WH, 
+      C=c( c(.6,1.2),c(.9,.2), c(.8,.9))*WH
+    ),
+    stroke='#00FFFF',
+    stroke.width=1,
+    fill='none'
+  ),
+  g(
+      lapply(1:3, function(i){
+        ellipse(cxy=WH*c(.5, .1), rxy=i*c(8,3), fill='none', stroke='#000000', stroke.width=.5)
+      }),
+      mask=mask(circle(cxy=WH/2, r=WH[2]/3), fill='white' )
+  ),
+  g(
+    lapply(1:5, function(i){
+      ellipse(cxy=WH*c(.7, .5), rxy=i*c(3,5), fill='none', stroke='#000000', stroke.width=.5)
+    }), 
+    mask=mask(
+      circle(cxy=WH/2, r=WH[2]/3, fill='white'),
+      ellipse(cxy=WH*c(.5, .1), rxy=3*c(8,3), fill='black')
+    )
+  ),
+   g(
+    lapply(1:5, function(i){
+      ellipse(cxy=WH*c(.3, .3), rxy=i*c(3,5), fill='none', stroke='#000000', stroke.width=.5)
+    }), 
+    mask=mask(
+      circle(cxy=WH/2, r=WH[2]/3, fill='white'),
+      ellipse(cxy=WH*c(.5, .1), rxy=3*c(8,3), fill='black'),
+      ellipse(cxy=WH*c(.7, .5), rxy=5*c(3,5), fill='black')
+    )
+  )
+)
+```
+    3. set element with new data
+        - this.setValue(\$(el), value);
+        - Hint use:
+```{r, results='asis'}
+library(svgR)
+WH<-c(48,32)
+svgR(wh=WH, rect(xy=c(0,0), wh=WH, fill='black'),
+  text(cxy=WH/2, "Sval", stroke='#00FFFF', fill='#00FFFF')
+)
+```
+    4. update svg rendering by replacing the entire svgTree under the $(el)
+        - let node=data.node; 
+        - \$(el).empty().append(node); //this replaces the svgTree
+        - Hint use:
+``` {r, results='asis'}
+library(svgR)
+WH<-c(48,32)
+R<-.06*WH[1]
+d<-list(M=WH*c(.2,.42), Q=WH*c(c(.2,.8),c(.5,.8)))
+
+svgR(wh=WH, stroke.width=2, stroke="#00FFFF",  fill="none",
+     rect(xy=c(0,0), wh=WH, fill='black'),
+    text(xy=WH*c(.16,.38),'svg', stroke.width=1, fill="#00FFFF"),
+    ellipse(cxy=WH*(c(1,1)-c(.2,.55)),  rxy=R*c(2,1), fill="#00FFFF"),
+    line(xy1=WH*(c(1,1)-c(.2,.1)), xy2=WH*(c(1,1)-c(.2,.3)) ),
+    line(xy1=WH*(c(1,1)-c(.2,.3)), xy2=WH*(c(1,1)-c(.25,.5)),stroke.width=1.5 ),
+    line(xy1=WH*(c(1,1)-c(.2,.3)), xy2=WH*(c(1,1)-c(.15,.5)),stroke.width=1.9 ),
+    path(d=d, stroke="#00FFFF", 
+        marker.end=marker(viewBox=c(0, 0, 10, 10), refXY=c(1,5), stroke.width=1, fill="#00FFFF",
+        markerWidth=4, markerHeight=5, orient="auto",
+        path( d=c("M", 0, 0, "L", 9, 5, "L", 0, 9, "z") )
+    ) 
+    )
+)
+```
+4. In **App.R** validate that *updateshinyInputControl* works:
+        -  the appearance changes
+        -  value changes
 
 
 
-### 3. Adding mouse events
+### 4. Adding mouse events
 
 ```{r, results='asis'}
 rectH<-c(70,50)
 pos<-dimInit(rectH)
 WH<-pos$WH
 
-svgR(wh=WH,text('STEP3',xy=c(20,20)),
+svgR(wh=WH,text('STEP 4',xy=c(20,20)),
     box(pos, 1, 'shinyInputControl_svg.R', '#BBFFBB','add mouse events'),
     box(pos, 2, 'app.R', '#FFCCAA','run to test')
 )
-````
+```
 
 - In file **shinyInputControl_svg.R** 
     - add *onclick=CMDS*  for interactivity
+    - Hint use:
+ ```{r, results='asis'}
+ 
+library(svgR)
+WH<-c(48,32)
+R<-WH[1]*.2
+CXY=WH*c(.3,.5)
+svgR(wh=WH,  stroke="#00FFFF",  fill="none",
+    rect(xy=c(0,0), wh=WH, fill='black'),
+    g(
+        polygon(
+            points=c(WH)*c(
+                c(.0,.0),c(.2,.5), c(.05,.3), c(.05,.6),
+                c(-.05,.6),c(-.05,.3), c(-.2,.5)
+            ),
+            stroke="#00FFFF"
+        ),
+        lapply(c(0,45,135,180), function(theta){
+            line(xy1=c(.1,0)*WH, xy2=c(.3,0)*WH, stroke="#00FFFF",
+            transform=list(rotate=-theta)
+            )
+        }),
+        transform=list( translate=WH*c(.6,.45), rotate=65)
+    )
+)
+```
+
 - run **App.R** and test for on an click message
 - use browser to verify value was assigned 
 
 
-### 4. Adding Mouseclick Handler
+### 5. Adding Mouseclick Handler
 
-```{r, results='asis', }
+```{r, results='asis' }
 rectH<-c(70,70,50)
 pos<-dimInit(rectH)
 WH<-pos$WH
 
-svgR(wh=WH,text('STEP4',xy=c(20,20)),
+svgR(wh=WH,text('STEP 5',xy=c(20,20)),
     box(pos, 1, 'shinyInputControl.js', 'lightblue','add clicked:'),
     box(pos, 2, 'shinyInputControl.R', 'lightyellow','edit params$CMDS'),
     box(pos, 3, 'app.R', '#FFCCAA','run to test')
 )
-````
+```
 
 1. In **shinyInputControl.js**
-    - add handler **clicked:** (assuming that you are using mouse click)
+    - add handler **clicked:** (assuming you are using mouse click)
+        - Hint use:
+``` {r, results='asis'}
+library(svgR)
+WH<-c(48,32)
+R<-WH[1]*.2
+CXY=WH*c(.3,.5)
+svgR(wh=WH,  stroke="#00FFFF",  fill="none",
+     rect(xy=c(0,0), wh=WH, fill='black'),
+    circle(cxy=CXY+c(-R,-R), r=R/4,  fill='#00FFFF'),
+    circle(cxy=CXY+c(-R,+R), r=R/4,  fill='#00FFFF'),
+    g(
+        polygon(
+            points=c(WH)*c(
+                c(.0,.0),c(.2,.5), c(.05,.3), c(.05,.6),
+                c(-.05,.6),c(-.05,.3), c(-.2,.5)
+            ),
+            stroke="#00FFFF"
+        ),
+        lapply(c(0,45,135,180), function(theta){
+            line(xy1=c(.1,0)*WH, xy2=c(.3,0)*WH, stroke="#00FFFF",
+            transform=list(rotate=-theta)
+            )
+        }),
+        transform=list( translate=WH*c(.6,.45), rotate=65)
+    )
+)
+```
         - typically this will
-            - getValue
+            - if needed: 
+                - convert id to el (el='#'+id)
+            - make a call to **this.getValue(el)**
             - do something
-            - setValue
+            - make a call to **this.setValue(el, value)**
+                - Hint use:
+```{r results='asis'}
+library(svgR)
+WH<-c(48,32)
+svgR(wh=WH, rect(xy=c(0,0), wh=WH, fill='black'),
+  text(cxy=WH/2, "Sval", stroke='#00FFFF', fill='#00FFFF')
+)
+```
 2. In **shinyInputControl.R**
-    - edit **params\$CMDS** to use cmd in client. (clicked)
-        - `sprintf('shinyInputControlBinding.clicked("%s", evt)',params$ID)`
+    - edit **params\$CMDS** to use cmd in client. 
+        - for example to handle a mouse click, add 
+          - sprintf('shinyInputControlBinding.clicked("%s", "%s", evt)',params\$ID, mssg)
+          - where mssg contains some additional info
+          - Hint use: 
+```{r, results='asis' }
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+R<-WH[1]*.2
+CXY=WH*c(.3,.5)
+svgR(wh=WH,  stroke="#00FFFF",  fill="none",
+     rect(xy=c(0,0), wh=WH, fill='black'),
+    text(xy=c(.05,.3)*WH,'CMDS', font.size=9),
+    g( 
+        polygon(
+            points=c(WH)*c(
+                c(.0,.0),c(.2,.5), c(.05,.3), c(.05,.6),
+                c(-.05,.6),c(-.05,.3), c(-.2,.5)
+            ),
+            stroke="#00FFFF"
+        ),
+        lapply(c(0,45,135), function(theta){
+            line(xy1=c(.1,0)*WH, xy2=c(.3,0)*WH, stroke="#00FFFF",
+            transform=list(rotate=-theta)
+            )
+        }),
+        transform=list( translate=WH*c(.6,.45), rotate=65)
+    )
+)
+```
 3. run **App.R** and use browser to verify data-value is modified on click
 
-### 5. Handling Return Values From Client
+### 6. Handling Return Values From Client
 
-```{r, results='asis', }
+```{r, results='asis' }
 
 rectH<-c(70,50)
 pos<-dimInit(rectH)
 WH<-pos$WH
 
-svgR(wh=WH,text('STEP 5',xy=c(20,20)),
+svgR(wh=WH,text('STEP 6',xy=c(20,20)),
     box(pos, 1, 'shinyInputControl.R', 'lightyellow','registerInputHandler'),
     box(pos, 2, 'app.R', '#FFCCAA','run to test')
 )
@@ -196,51 +552,10 @@ svgR(wh=WH,text('STEP 5',xy=c(20,20)),
         - do any post processing of value and return value
 2. test return value of input\$controlId in App.R
 
-### 6. Implement  Update using a Braindead Approach
-
-```{r, results='asis', }
-rectH<-c(70,90,90,50)
-pos<-dimInit(rectH)
-WH<-pos$WH
-
-
-svgR(wh=WH, text('STEP6',xy=c(20,20)),
-    box(pos, 1, 'app.R', 'pink','edit observer for update'),
-    box(pos, 2, 'shinyInputControl.R', 'lightyellow','recreate svgTree', 'create & send message'),
-    box(pos, 3, 'shinyInputControl.js', 'lightblue','extract value and set element', 'extract and replace tree'),
-    box(pos, 4, 'app.R', '#FFCCAA','run to test')
-)
-````
-
-
-1. In **App.R** 
-    - Edit *observeEvent(input\$updateButton* to call
-       - *updateshinyInputControl* with the proper value
-2. In file **shinyInputControl.R** (use dnd)
-    1. Recreate svg Tree, edit params=list as necessary
-        - params=list(ID=inputId, WH=wh, value=value) 
-        - svgTree<-*shinyInputControlWrapper*(params=params)
-        - node<-as.character(svgTree)
-    2. Form message
-          mssg<-list( value=value, node=node) 
-    3. Send message to client
-          - session\$sendInputMessage(inputId, mssg)
-3. In file **shinyInputControl.js** in function *receivemessage*
-    1. extract value(s) 
-        - var value = data.value;
-    2. Possibly convert to object: i.e. value=JSON.parse(value);
-    3. set element with new data
-        - this.setValue($(el), value);
-    4. update svg rendering by replacing the entire svgTree under the $(el)
-        - var node=data.node; 
-        - \$(el).empty().append(node); //this replaces the svgTree
-4. In **App.R** validate that *updateshinyInputControl* works:
-        -  the appearance changes
-        -  value changes
 
 ### 7. Updating the Appearance Upon Receiving Input 
 
-```{r, results='asis', }
+```{r, results='asis' }
 rectH<-c(70,50)
 pos<-dimInit(rectH)
 WH<-pos$WH
@@ -250,13 +565,29 @@ svgR(wh=WH,text('STEP 7',xy=c(20,20)),
     box(pos, 2, 'app.R', '#FFCCAA','run to test')
 )
 
-````
+```
 
 
 
 - In **shinyInputControl.R**
     - In *registerInputHandler* prior to returning value
         - add *updateshinyInputControl(...)* 
-      
+        - Hint use: 
+```{r, results='asis',}
+library(svgR) 
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+
+
+svgR(wh=WH, stroke.width=3, stroke="#00FFFF",  fill="#00FFFF",
+  rect(xy=c(0,0), wh=WH, fill='black'),
+  line(xy1=WH*c(.1,.1), xy2=WH*c(.9,.1) ),
+  line(xy1=WH*c(.1,.23), xy2=WH*c(.9,.23) ),
+  polygon(points=WH*c( .5,.3, .7,.5, .3,.5)),
+  polyline(points=WH*c(.1, .5, .1,.85, .5,.85, .5,.4 ) , fill="none")
+)
+```      
 
 

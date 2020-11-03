@@ -15,7 +15,7 @@ output: dnd_snippet
 ******************
 POPUP 
 ```
-toJSON (Steps 3.1? 6.2?)
+toJSON (Steps 2,2.1 3.2.1?)
 ```
 SNIPPET
 ```
@@ -45,11 +45,11 @@ svgR(wh=WH, #stroke.width=1, stroke="#00FFFF",  fill="none",
 
 POPUP 
 ```
-Forward click cmd (Step 4.2)
+Forward click cmd (Step 5.2)
 ```
 SNIPPET
 ```
-sprintf('@projectName@Binding.clicked("%s", "%s", evt)',params$ID, params$value)
+sprintf('@projectName@Binding.clicked("%s", "%s", evt)',params\$ID, mssg)
 ```
 SVGR
 ```
@@ -83,7 +83,7 @@ svgR(wh=WH,  stroke="#00FFFF",  fill="none",
 ******************
 POPUP 
 ```
-fromJSON (Step 5.1?)
+fromJSON (Step 6.1?)
 ```
 SNIPPET
 ```
@@ -111,18 +111,18 @@ svgR(wh=WH, #stroke.width=1, stroke="#00FFFF",  fill="none",
 
 POPUP 
 ```
-Update (Step 6.2)
+Update (Step 3.2)
 ```
 SNIPPET
 ```
       #1. Recreate svg Tree
           node<-as.character(@projectName@SvgWrapper(
-            params=list(ID=inputId, WH=wh,   ${1:value}=value) #<<--
+            params=list(ID=inputId,  ${1:value}=value) # <<--
           ))
       # 2. Form message
           mssg<-list(node=node, value=value) 
-      #3. Send message to client
-          session$sendInputMessage(inputId, mssg)
+      # 3. Send message to client
+          session\$sendInputMessage(inputId, mssg)
 
 ```
 SVGR
@@ -148,12 +148,11 @@ svgR(wh=WH, stroke.width=3, stroke="#00FFFF",  fill="#00FFFF",
 ******************
 POPUP 
 ```
-update (Step 7)
+update svg (Step 7)
 ```
 SNIPPET
 ```
-wh=${1:c(400,400)}
-update@projectName@(session=shinysession, inputId=inputId, wh=wh, value=value )
+update@ProjectName@(session=shinysession, inputId=inputId, value=value )
 ```
 SVGR
 ```

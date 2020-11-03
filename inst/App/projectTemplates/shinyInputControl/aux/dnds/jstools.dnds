@@ -7,7 +7,7 @@ output: dnd_snippet
 ******************
 POPUP 
 ```
-extract element attribute (Steps 3.2?)
+extract attribute (Steps 2.3.1)
 ```
 SNIPPET
 ```
@@ -46,7 +46,7 @@ svgR(wh=WH, #stroke.width=1, stroke="#00FFFF",  fill="none",
 
 POPUP 
 ```
-From String (step 2.2? 6.3.1?)
+From String (steps 3.2 3.3.2?)
 ```
 SNIPPET
 ```
@@ -112,7 +112,7 @@ svgR(wh=WH,
 ******************
 POPUP 
 ```
-set element data (Step 2.3)
+set element data (Step 3.3.3)
 ```
 SNIPPET
 ```
@@ -147,11 +147,11 @@ svgR(wh=WH, #stroke.width=1, stroke="#00FFFF",  fill="none",
 ******************
 POPUP 
 ```
-get element data (Steps 3.2?)
+get element data 
 ```
 SNIPPET
 ```
-        $(el).data('${0:(valueName)}');
+        $(el).data('${0:value}');
 ```
 SVGR
 ```
@@ -185,12 +185,14 @@ svgR(wh=WH, #stroke.width=1, stroke="#00FFFF",  fill="none",
 
 POPUP 
 ```
-add mouse click handler (step 4.1)
+add mouse click handler (step 5.1)
 ```
 SNIPPET
 ```
 clicked: function(ctrlId, ${1:value,} evt ){
-  alert('hi from '+  ctrlId +" my value is " + ${0:value});
+  alert('hi from '+  ctrlId +" my value is " + ${0:value}); //for testing
+  let el='#'+ctrlId;
+  // add code here
 }, 
 ```
 SVGR
