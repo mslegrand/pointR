@@ -7,7 +7,7 @@ layout: default
 The recommend installation of **ptR** is to use one of the prebuilt packages shown found to the left. But *prior to installing*, there are a few required dependencies that should be installed.
 
 ### Pre-Installation (Requirements)
-- **R** is required. If not already installed, **[install R](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu)** 
+- **R version 4.0.2** or greater is required. If not already installed, **[install R](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu)** 
 - **Pandoc** is required. This means doing either 1. or 2. below
 	1. **[install pandoc](https://pandoc.org)** (and placing it on your path)  
 	2. **[install RStudio](https://rstudio.com/products/rstudio/download/)**  (RStudio contains a copy of pandoc)
