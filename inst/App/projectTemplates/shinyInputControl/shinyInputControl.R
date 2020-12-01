@@ -21,7 +21,11 @@ shinyInputControlSvgWrapper<-function(params){
 }
 
 
-# Control constructor to insert in app ui
+#' Constructor for the shinyInputControl
+#' 
+#' @param inputId the id of this shiny input
+#' @param value the initial value for this control
+#' export
 shinyInputControl<-function(inputId,  value='whatever' ){
 # note: use toJSON for non-trivial initializations  
   # STEP 2.1 Place any preprocessing of (initial input) value(s) here
@@ -45,8 +49,13 @@ shinyInputControl<-function(inputId,  value='whatever' ){
   )
 }
 
-
-# server to client update
+#' updateShinyInputControl
+#' server to client update
+#' 
+#' @param session the shiny session
+#' @param inputId the control Id
+#' @param value update with this value
+#' @export
 updateShinyInputControl<-function(session, inputId,  value='bogus'){
  # Perform any value preprocessing here (toJSON if needed)
  # STEP 3.2  Using Braindead Update Approach:

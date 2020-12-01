@@ -19,7 +19,7 @@ toJSON (Steps 2,2.1 3.2.1?)
 ```
 SNIPPET
 ```
-        toJSON('${1:(value)'}, ${0:(value)});
+        toJSON('${1:value'}});
 ```
 SVGR
 ```
