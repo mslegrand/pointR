@@ -1,6 +1,9 @@
 ---
 layout: default
 ---
+## Tutorials 
+
+Videos available at https://www.youtube.com/playlist?list=PLpvG89XJyQhlucHJxb9pr708NY1hTqSun
 
 ##  Installation Instructions
 
