@@ -11,10 +11,10 @@ The recommend installation of **ptR** is to use one of the prebuilt packages sho
 
 ### Pre-Installation (Requirements)
 - **R version 4.0.2** or greater is required. If not already installed, **[install R](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu)** 
-- **Pandoc** is required. This means doing either 1. or 2. below
+- **Pandoc** is required. This means doing either 1. **or** 2. below
 	1. **[install pandoc](https://pandoc.org)** (and placing it on your path)  
 	2. **[install RStudio](https://rstudio.com/products/rstudio/download/)**  (RStudio contains a copy of pandoc)
-- The **R** package **[tidyverse ](https://www.tidyverse.org)** is required. This can be installed by doing either 1. or 2. below
+- The **R** package **[tidyverse ](https://www.tidyverse.org)** is required. This can be installed by doing either 1. **or** 2. below
 	1. From a terminal, open **R** and inside the **R** interpretor issue the command 
 	*install.packages('tidyverse')*, then when finished issue command *quit()* and close terminal
 	2. Open **RStudio** (by clicking on it's icon) and then select the *packages tab* From there click on 
