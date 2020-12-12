@@ -42,7 +42,7 @@ observeEvent(c( getDnippetsAll(), dnippetsDB$usage, input$pages),{
     hideElement('selectedDnippetButtonBoxContainer')
   }
   log.fout(c( getDnippetsAll(), getDnippetsSelected(), input$pages))
-}, label='getDnippetsAll+usage+pages')
+}, label='getDnippetsAll+usage+pages', ignoreNULL = FALSE,)
 
 observeEvent(input$selectedDDDnippets,{
   if(!is.null(input$pages)){
@@ -50,6 +50,6 @@ observeEvent(input$selectedDDDnippets,{
     setDnippetsSelected(input$pages , selected)
   }
   
-}, ignoreInit = TRUE, ignoreNULL = TRUE, label='selectedDDDnippets')
+}, ignoreInit = TRUE, ignoreNULL = FALSE, label='selectedDDDnippets')
 
 

@@ -110,18 +110,24 @@ populatePreProcEditMenu<-function(type=points){
     shinyDMDMenu::menuItem(nn, value=paste0('editPP-',type,'-',nn))
   })
   idd=trimws(paste0('dropDown-editPreProc-',type))
-  afterEntry=ifelse(type=='points', 'cmdNewPP', 'cmdNewAP')
-  label=paste0('Edit preproc ',type)
-  shinyDMDMenu::insertAfterDMDM(
-    session, 
-    menuBarId  ="plotNavBar",  
-    entry=afterEntry,
-    submenu=
-      do.call(
-        function(...){ menuDropdown( label,...) },
-        kids
-      )
-  )
+  if(length(kids)>0){
+    enableDMDM(session, 'plotNavBar',idd)
+    afterEntry=ifelse(type=='points', 'cmdNewPP', 'cmdNewAP')
+    label=paste0('Edit preproc ',type)
+    shinyDMDMenu::insertAfterDMDM(
+      session, 
+      menuBarId  ="plotNavBar",  
+      entry=afterEntry,
+      submenu=
+        do.call(
+          function(...){ menuDropdown( label,...) },
+          kids
+        )
+    )
+  } else {
+    disableDMDM(session, 'plotNavBar',idd)
+  }
+  
 }
 
 readAuxPreProcs<-function( startup=TRUE){

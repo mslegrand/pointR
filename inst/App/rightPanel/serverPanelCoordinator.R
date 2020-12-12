@@ -78,6 +78,8 @@ getColumnType<-reactive({
 getPlotState<-reactive({
   nameType<-getNameType()
   if(identical(nameType,tibTag)){
+    # Tools
+    enableDMDM(session, 'plotNavBar','Tools')
     colType<-getColumnType()
     if(is.null(colType)){
       rtv<-NULL #should never happen!!!
@@ -87,6 +89,7 @@ getPlotState<-reactive({
       rtv<-'value'
     }
   } else {
+    disableDMDM(session, 'plotNavBar','Tools')
     rtv<-nameType
   }
   rtv

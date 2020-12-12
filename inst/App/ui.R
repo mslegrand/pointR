@@ -13,6 +13,7 @@ library(shiny)
 # style="position: fixed; top: -100em" to keep hidden
 shinyUI(  
   div( class="pretty-split-pane-frame", id="mySplitter",
+       #ondrop="dropHandler(ev)",
     singleton(
       tags$head(
         initResourcePaths(),
