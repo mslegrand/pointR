@@ -154,11 +154,14 @@ moduleEdTib<-function(input, output, session,
                 choices<-sort(unique(unlist( choices )))
                 if(widget=='radio'){
                   # cat('xxx widget=', format(widget),"\n")
-                  radioGroupButtons(inputId=ns("entryRadio"), 
-                                    choices=choices, 
-                                    selected=selected,
-                                    justified=TRUE
-                  )
+                  # radioGroupButtons(inputId=ns("entryRadio"), 
+                  #                   choices=choices, 
+                  #                   selected=selected,
+                  #                   justified=TRUE
+                  # )
+                  jqScrollBar(inputId=ns("entryRadio"),  
+                              choices =choices, selected=selected)
+                  
                 } else if (widget=='picker'){
                   # cat('xxx widget=', format(widget),"\n")
                   div( "class"="ptR2", width='800px',
