@@ -89,11 +89,15 @@ moduleEdTib<-function(input, output, session,
   #---columns
   output$columnUI<-renderUI({
     if( getTibEditState()==TRUE ){
-      if(!is.null(getColumnName()) && !is.null(getColumnNameChoices())){ 
-        radioGroupButtons(inputId=ns("columnRadio"), 
-                          choices=as.list(getColumnNameChoices()), 
-                          selected=getColumnName() ,
-                          justified=TRUE)
+      if(!is.null(getColumnName()) && !is.null(getColumnNameChoices())){
+        
+        
+        jqScrollBar(inputId=ns("columnRadio"),  
+                   choices =getColumnNameChoices(), selected=getColumnName())
+        # radioGroupButtons(inputId=ns("columnRadio"), 
+        #                   choices=as.list(getColumnNameChoices()), 
+        #                   selected=getColumnName() ,
+        #                   justified=TRUE)
       }
     } 
   })  
