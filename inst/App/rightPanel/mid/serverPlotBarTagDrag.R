@@ -8,10 +8,16 @@
     ptName=NULL, 
     pts=NULL, 
     rowIndex=NULL,
-    ptDisplayMode,
+    displayOptions=NULL, 
     vbScaleFactor=1
     ){
-    if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
+    #if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
+    
+    if(is.null(displayOptions)){
+      return(NULL)
+    }
+    displayOpt<-displayOptions
+    if(is.null(displayOpt)||is.null(displayOpt$labelMode) || is.null(displayOpt$restrictMode)){ return(NULL)}
     
     onMouseDownTxt="ptRPlotter_ptR_SVG_TagDrag.selectElement(evt)" 
     
@@ -30,7 +36,8 @@
     offRows<-rowNums[-rowIndex]
     mRow<-pts[[rowIndex]]
       
-    list( 
+    list(
+      if(displayOptions$restrictMode==FALSE){
         lapply(offRows, function(i){ #non-selected rows
           m<-pts[[i]]
           if(length(m)==0){
@@ -45,7 +52,7 @@
                pt=m[,j]
                g(
                   circle(cxy=c(0,0), r=8),
-                  if(ptDisplayMode=="Labeled"){
+                  if(displayOpt$labelMode==TRUE){
                     text( paste(i), xy=c(10,-10),  stroke='black', font.size=12)
                   } else {
                     NULL
@@ -55,7 +62,9 @@
              })
             )
           }
-        }),
+        })} else {
+          NULL
+        },
         if(length( mRow)==0){
           NULL
         } else { #selected row=rowIndex
@@ -68,7 +77,7 @@
              pt=mRow[,j]
             g(
                 circle(cxy=c(0,0), r=8),
-                if(ptDisplayMode=="Labeled"){
+                if(displayOpt$labelMode==TRUE){
                     text( paste(rowIndex), xy=c(10,-10),  stroke='black', font.size=12)
                 } else {
                     NULL
@@ -94,7 +103,7 @@ statusPlotTagDrag<-callModule(
       ptName=getAssetName(), 
       pts=getTibPts(), 
       rowIndex=getTibRow(),
-      ptDisplayMode=getDisplayMode(),
+      displayOptions=getDisplayOptions(),
       vbScaleFactor
       )
     }

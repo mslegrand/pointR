@@ -7,15 +7,15 @@ observeEvent(input$plotNavBar, {
     return(NULL)
   }
   
-  if(cmd == 'cmdShowGrid'){
-    renameDMDM(session,  "plotNavBar", "cmdShowGrid", "Hide Grid", newValue="cmdHideGrid")
-    setSvgGrid(input$pages, show=TRUE)
-  }
-  
-  if(cmd == 'cmdHideGrid'){
-    renameDMDM(session,  "plotNavBar",  "cmdHideGrid", "Show Grid",newValue="cmdShowGrid")
-    setSvgGrid(input$pages, show=FALSE)
-  }
+  # if(cmd == 'cmdShowGrid'){
+  #   renameDMDM(session,  "plotNavBar", "cmdShowGrid", "Hide Grid", newValue="cmdHideGrid")
+  #   setSvgGrid(input$pages, show=TRUE)
+  # }
+  # 
+  # if(cmd == 'cmdHideGrid'){
+  #   renameDMDM(session,  "plotNavBar",  "cmdHideGrid", "Show Grid",newValue="cmdShowGrid")
+  #   setSvgGrid(input$pages, show=FALSE)
+  # }
   
   if(cmd == 'cmdAdjustGridSpacing'){
     spacingChoices<-c(.01, .05, .1, .5 ,1, 5,50,100,500)
@@ -45,19 +45,19 @@ observeEvent(input$plotNavBar, {
     setBackDrop(hide=FALSE)
   } 
   
-  if(cmd == 'cmdShowPointsNoLabels'){
-    disableDMDM(session,  menuBarId="plotNavBar", entry="cmdShowPointsNoLabels")
-    enableDMDM(session,  menuBarId="plotNavBar",  entry="cmdShowPointLabels")
-    enableDMDM(session,  menuBarId="plotNavBar",  entry="cmdHidePoints")
-    setDisplayOption(ptMode='Normal')
-  }
-  
-  if(cmd == 'cmdShowPointLabels'){
-    enableDMDM(session,  menuBarId="plotNavBar", entry="cmdShowPointsNoLabels")
-    disableDMDM(session,  menuBarId="plotNavBar",  entry="cmdShowPointLabels")
-    enableDMDM(session,  menuBarId="plotNavBar",  entry="cmdHidePoints")
-    setDisplayOption(ptMode='Labeled')
-  }
+  # if(cmd == 'cmdShowPointsNoLabels'){
+  #   disableDMDM(session,  menuBarId="plotNavBar", entry="cmdShowPointsNoLabels")
+  #   enableDMDM(session,  menuBarId="plotNavBar",  entry="cmdShowPointLabels")
+  #   enableDMDM(session,  menuBarId="plotNavBar",  entry="cmdHidePoints")
+  #   setDisplayOption(ptMode='Normal')
+  # }
+  # 
+  # if(cmd == 'cmdShowPointLabels'){
+  #   enableDMDM(session,  menuBarId="plotNavBar", entry="cmdShowPointsNoLabels")
+  #   disableDMDM(session,  menuBarId="plotNavBar",  entry="cmdShowPointLabels")
+  #   enableDMDM(session,  menuBarId="plotNavBar",  entry="cmdHidePoints")
+  #   setDisplayOption(ptMode='Labeled')
+  # }
   
   if(cmd == 'cmdNewColumn'){
     showModal( addNewColModal() )
@@ -135,6 +135,28 @@ observeEvent(input$plotNavBar, {
   
   
 })
+
+
+observeEvent(input$cmdLabelPoints,{
+  checked<-input$cmdLabelPoints
+  setDisplayOption(labelMode=checked)
+}, ignoreNULL=TRUE)
+
+observeEvent(input$cmdInsertEnabled,{
+  checked<-input$cmdInsertEnabled
+  setDisplayOption(insertMode=checked)
+}, ignoreNULL=TRUE)
+
+
+observeEvent(input$cmdRestrictRows,{
+  checked<-input$cmdRestrictRows
+  setDisplayOption(restrictMode=checked)
+}, ignoreNULL=TRUE)
+
+observeEvent(input$cmdShowGrid,{
+  checked<-input$cmdShowGrid
+  setSvgGrid(input$pages, show=checked)
+}, ignoreNULL=TRUE)
 
 
 

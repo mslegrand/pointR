@@ -8,10 +8,17 @@ showPts.valTag %<c-% function(
   ptName=NULL, 
   pts=NULL, 
   rowIndex=NULL,
-  ptDisplayMode ,
+  displayOptions=NULL ,
   vbScaleFactor=1
   ){
-  if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
+  if(is.null(displayOptions)){
+    return(NULL)
+  }
+  displayOpt<-displayOptions
+  if(is.null(displayOpt)||is.null(displayOpt$labelMode) || is.null(displayOpt$restrictMode)){ return(NULL)}
+
+  #if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) }
+  #if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) }
   onMouseDownTxt<-"ptRPlotter_ptR_SVG_TagVal.selectElement(evt)"
   if(length(ptName)<1){return(NULL)}
   if(length(pts)<1)  {return(NULL) }
@@ -40,7 +47,7 @@ showPts.valTag %<c-% function(
          lapply(seq(ncol(m)), function(j){
            list(
              circle(cxy=m[,j], r=8),
-             if(ptDisplayMode=="Labeled"){
+             if(displayOpt$labelMode==TRUE){
                text( paste(i), cxy=m[,j]+10*c(1,-1),  stroke='black', font.size=12) 
              } else {
                NULL
@@ -61,7 +68,7 @@ showPts.valTag %<c-% function(
        lapply(seq(ncol(mRow)), function(j){
          list(
            circle(   cxy=mRow[,j], r=8),
-           if(ptDisplayMode=="Labeled"){
+           if(displayOpt$labelMode==TRUE){
              text(paste(rowIndex), cxy=mRow[,j]+10*c(1,-1),  stroke='black', font.size=12) #opac)
            } else {
              NULL
@@ -85,7 +92,7 @@ statusPlotTagVal<-callModule(
         ptName=getAssetName(), 
         pts=getTibPts(), 
         rowIndex=getTibRow(),
-        ptDisplayMode=getDisplayMode() ,
+        displayOptions=getDisplayOptions(),
         vbScaleFactor
       )
     }
