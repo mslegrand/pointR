@@ -193,10 +193,23 @@ padding-right: 2px;
 display: inline-block;
 overflow: hidden;
 }
+.nav-tabs>li.active{
+padding-top: 0; 
+padding-bottom: 0; 
+}
 .nav-tabs>li.active>a{
-background-color: #111122; 
+/* background-color: #111122;
 font-weight: bold;
 color: #99ffff; 
+*/ 
+margin-top: 0; 
+margin-bottom: 0; 
+padding-top: 0; 
+padding-bottom: 0; 
+background: transparent url(images/ptr_selected_tab_bg.jpg) no-repeat -25px -3px;
+font-size: 18px;
+color: black;
+height: 35px;
 }
 .nav-tabs>li>a{
 background-color: #222244; 
