@@ -1,6 +1,6 @@
 
 preProcPageDB<-reactiveVal(
-  tibble( tabId="bogus", tibName="bogus", colName='bogus', scriptName='bogus')[0,],
+  tibble( tabId="bogus", tibName="bogus", colName='bogus', scriptName='bogus')[0,]
 )
 
 

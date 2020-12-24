@@ -15,6 +15,7 @@ observeEvent(trigger$startup, {
     updateNewProjectMenu(session)
     updateRemoveTemplateMenu(session)
     resetWatcher()
+    aux$colChoiceSet<-readAuxCustColumns()
     log.fout(startup)
 }, priority=100)
 

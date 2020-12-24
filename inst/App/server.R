@@ -83,6 +83,7 @@ shinyServer(function(input, output,session) {
 #------------------rightPanel--------------------------------
   source("rightPanel/selector/serverAssetSelectionDB.R",         local=TRUE)
   source("rightPanel/preProc/serverPreProcDB.R",                 local=TRUE)
+  source("rightPanel/preProc/serverColSetDB.R",                  local=TRUE)
   source("rightPanel/preProc/serverPreProcPtsInsert.R",          local=TRUE)
   source("rightPanel/preProc/serverPreProcPtsMove.R",            local=TRUE)
   source("rightPanel/preProc/serverPreProcMatMove.R",            local=TRUE)
@@ -108,7 +109,7 @@ shinyServer(function(input, output,session) {
   source("rightPanel/mouse/serverMouseClicks.R",                 local=TRUE)
   source("rightPanel/menu/cmdNewColumn.R",                       local=TRUE)
   source("rightPanel/menu/cmdNewAsset.R",                        local=TRUE)
-  
+  source("rightPanel/menu/modalCustColumn.R",                    local=TRUE)
   source("rightPanel/menu/cmdDeleteColumn.R",                    local=TRUE)
   source("rightPanel/menu/cmdFileImportPreProc.R",               local=TRUE)
   source("rightPanel/menu/cmdFileExportPreProc.R",               local=TRUE)

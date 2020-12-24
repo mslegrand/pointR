@@ -1,7 +1,7 @@
 
 
 observeEvent(input$messageFromAce, {
-  # cat("\n>----> messageFromAce", '*****       sender=',format(input$messageFromAce$sender),"\n")
+  cat("\n>----> messageFromAce", '*****       sender=',format(input$messageFromAce$sender),"\n")
     if(length(input$messageFromAce$sender)>0){
       if(length(input$messageFromAce$code)>0){ # returning code  
         setCode(input$messageFromAce$code)  # only place where request$code is set
@@ -34,12 +34,14 @@ observeEvent(input$messageFromAce, {
               'cmd.commit', 'cmd.add.column', 'cmd.add.asset' 
             ) # these all should redraw viewport
         ){
+          cat('acein\n')
           processMssgFromAceMssgPageIn(sender, input$messageFromAce)
         } else if( sender %in% 
             c( 
             'fileCmd.save', 'fileCmd.saveAs' 
             )
         ){
+          cat('acesave\n')
           processMssgFromAceMssgPageOut(sender, input$messageFromAce) 
         } else {
           setTrigger('redraw')
@@ -56,7 +58,7 @@ observeEvent(input$messageFromAce, {
         }
       }
     }
-   # cat("<----< messageFromAce",'*****       sender=',format(input$messageFromAce$sender),"\n\n")
+    cat("<----< messageFromAce",'*****       sender=',format(input$messageFromAce$sender),"\n\n")
 }, priority = 90, ignoreNULL = TRUE, ignoreInit = TRUE, label='messageFromAce')
 
 
