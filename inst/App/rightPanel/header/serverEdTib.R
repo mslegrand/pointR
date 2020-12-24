@@ -138,12 +138,12 @@ observeEvent(returnValue4ModuleEdTib$entryValue(),{
         rowIndex<=nrow(tib)
     )
     sender='applyTibEdit'
-   
     if(!identical(newPtDefs$tib[[getAssetName()]][[columnName ]][[rowIndex]],entry)){
       newPtDefs$tib[[getAssetName()]][[columnName]][[rowIndex ]]<-entry
       updateAceExtDef(newPtDefs, sender=sender, selector=list( name=name, rowIndex=rowIndex, columnName=columnName   ) )
     }
-    log.fout(returnValue4ModuleEdTib$entryValue())
+    
+    # log.fout(returnValue4ModuleEdTib$entryValue())
   }
 },label='EdTib-rtv-entryValue', ignoreNULL = TRUE)
 

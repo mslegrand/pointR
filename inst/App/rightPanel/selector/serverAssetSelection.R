@@ -243,13 +243,16 @@ getTibEntry<-reactive({
   if( identical(getColumnType(), 'point')){
     return( c('point','matrix')[getSelIndex()] )
   } 
+  entry<-NULL
   rowNum<-getTibRow()
-  if(is.null(rowNum)){ return( NULL)}
-  columnValues<-getTibEntryChoices()
-  if(1<=rowNum && rowNum<=length(columnValues) ){
-    entry<-columnValues[[rowNum]]
-  } else {
-    entry<-NULL
+  if(length(rowNum)>0){
+    columnValues<-getTib() %$$%  getTibColumnName()
+    if(length(columnValues)>0){
+      columnValues<-as.list(columnValues)
+      if(1<=rowNum && rowNum<=length(columnValues) ){
+        entry<-columnValues[[rowNum]]
+      }
+    }
   }
   entry
 })
@@ -258,6 +261,19 @@ getTibEntryChoices<-reactive({
   if( identical(getColumnType(), 'point')){
     return( c('point', 'matrix'))
   } 
+  tab_Id<-getTibTabId()
+  tib_Name<-getAssetName()
+  column_Name<-getTibColumnName()
+  if( length(tab_Id)>0 && length(tib_Name)>0){
+    choiceSetName<-getColSet4PageName( tab_Id, tib_Name, column_Name)
+    if(length(choiceSetName)>0){
+      choices<-aux$colChoiceSet[[choiceSetName]]
+      if(length(choices)>0){
+        return(choices)
+      }
+    }
+  }
+  
   columnValues<-getTib() %$$%  getTibColumnName()
   if(!is.null(columnValues)){
     columnValues <-  as.list(columnValues)

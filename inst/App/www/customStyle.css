@@ -28,6 +28,12 @@ font-weight: 400;
 line-height: 1.1;
 color: #48ca3b;
 }
+.btn .ptR3{
+background-color: #FFFFFF; 
+color: #000000; 
+border-radius: 0px; 
+font-size: 12px;
+}
 .btn{
 background-color: #222244; 
 color: #00ffff; 
@@ -236,6 +242,14 @@ overflow-y: auto;
 .ptRFootertText {
   font-size: 14px;
   color: #00ffff; 
+}
+#modalColChooserSet button..btn.dropdown-toggle.btn-default{
+   background-color:#FFFFFF;
+}
+button.btn.dropdown-toggle.btn-default{
+   background-color:#FFFFFF;
+   color: #000000;
+   border-radius: 0; 
 }
 #tagValBar-entryValue .formControl.selectized {
   width:260px;

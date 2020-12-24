@@ -69,7 +69,13 @@ listColType<-function(x){
   return(paste0('other.list'))
 }
 
-# callers: PanelCoordinator::getColumnType, preProcValidate::assertConsistantTibPair
+# callers: 
+#  PanelCoordinator::getColumnType, 
+#  preProcValidate::assertConsistantTibPair
+#  serverPreProcDB::extractPreProcScript
+#  serverMouseCmdFindPoint::mouseCmdFindPoint
+#  serverMouseCmdMoveMatrix::mouseCmdMoveMatrix
+
 extractColType<-function( column ){
   
   if(is.list(column)){

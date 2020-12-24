@@ -4,27 +4,50 @@
 addNewColModal <- function(errMssg=NULL) {
   doOk<-"shinyjs.triggerButtonOnEnter(event,\"commitNewCol\")"
   ppscriptChoices<-unique(preProcScriptDB$attrs$scriptName)
+  colChoices<-names(aux$colChoiceSet)
+  colChoices<-unique(colChoices)
+  choices<-list(  
+    ' a single character string'='string','a single number'='number','a vector'='expression',
+    'a matrix of points'='points')
+  if(length(ppscriptChoices)>0){
+    choices<-c(choices,list('using a preprocessing script'='script'))
+  }
+  if(length(aux$colChoiceSet)>0){
+    choices<-c(choices,list('using a choice set'='choiceSet'))
+  }
   modalDialog(
+    size='l',
     onkeypress=doOk, 
     span('Enter both a name for the new column and a value for its entries'), 
     textInput("modalAttrName", "Enter the name for the new column"),
      div( class='ptR2',
-       awesomeRadio('modalColTreatAs', 'Initialize Column Values as ', 
-          choices = list(  
-            ' a single character string'='string','a single number'='number','a vector'='expression',
-            'a matrix of points'='points' , 'the result of a preprocessing script'='script'
-            ) ,
+          awesomeRadio('modalColTreatAs', 'Initialize Column Values as ', 
+          choices = choices ,
           inline = TRUE
       )
     ),
     textInput("modalAttrValue", "Enter an entry value for the new column"),
     # pick from preproc list
     if(length(ppscriptChoices)>0){
-      div( class='ptR2',
-         awesomeRadio('modalColPreProcScript', 'Set entry values using the script:', 
+      div( class='ptR2', #awesomeRadio
+           pickerInput('modalColPreProcScript', 'Set entry values using the script:', 
                       choices = ppscriptChoices,
-                      inline = TRUE
+                      inline = FALSE
          )
+      )
+    } else {
+      NULL
+    },
+    if(length(aux$colChoiceSet)>0){
+      div( style="display:inline-block",
+          div(style="float:left;",pickerInput('modalColChooserSet', 'Choiceset:', 
+                       choices = colChoices,
+                       inline = FALSE
+          )),
+          div(style="float:right;",pickerInput('modalColChooserValue', 'Choice value:', 
+                      choices = aux$colChoiceSet[[1]],
+                      inline = FALSE
+          ))
       )
     } else {
       NULL
@@ -45,17 +68,29 @@ observeEvent(input$modalColTreatAs,{
   if(input$modalColTreatAs=='points'){
     hideElement('modalAttrValue')
     hideElement('modalColPreProcScript')
+    hideElement('modalColChooserSet')
+    hideElement('modalColChooserValue')
+    
   } else if (input$modalColTreatAs=='script') {
     hideElement('modalAttrValue')
     showElement('modalColPreProcScript')
+    hideElement('modalColChooserSet')
+    hideElement('modalColChooserValue')
+  } else if (input$modalColTreatAs=='choiceSet') {
+    hideElement('modalAttrValue')
+    hideElement('modalColPreProcScript')
+    showElement('modalColChooserSet')
+    showElement('modalColChooserValue')
   } else {
     showElement('modalAttrValue')
     hideElement('modalColPreProcScript')
+    hideElement('modalColChooserSet')
+    hideElement('modalColChooserValue')
   }
 })
 
 observeEvent(input$commitNewCol, {
-     
+  
   badExpr<-function(txt){
     rtv<-TRUE
     tryCatch({
@@ -65,7 +100,6 @@ observeEvent(input$commitNewCol, {
     error = function(e) {})
     rtv
   }
-  
   treatAs<-input$modalColTreatAs
   newVal<-input$modalAttrValue
   #checks
@@ -76,7 +110,7 @@ observeEvent(input$commitNewCol, {
       # check name uniqueness
       showModal(addNewColModal( errMssg="Invalid Column Name: this name is already taken!") )
     } else if(
-        (!(treatAs %in% c('script', 'points'  ))) &&
+        (!(treatAs %in% c('script', 'points',  'choiceSet' ))) &&
         (!grepl(pattern = "^[[:graph:]]", input$modalAttrValue))
     ){
         # check value is printable
@@ -145,7 +179,15 @@ observeEvent(input$commitNewCol, {
           shinyalert("preproc new column Error",err, type="error") # may want to put this in a scrollable modal
         })        
       } else { #not scripting
-        # browser()
+        if(treatAs=='choiceSet'){
+          newVal<-input$modalColChooserValue
+          # restrict that value is restiricted to this list
+          colSet_Name<-input$modalColChooserSet
+          
+          #To do: perform additional checks !!!
+          
+          setColSet4PageName( tab_Id=getTibTabId(), tib_Name= getAssetName(), column_Name=newColName,   colSet_Name=colSet_Name)
+        }
         if(treatAs=='number'){
           newVal<-as.numeric(newVal)
         } else if ( treatAs=='points'){
@@ -153,11 +195,15 @@ observeEvent(input$commitNewCol, {
         } else if ( treatAs=='expression'){
           newVal<-list(eval(parse(text=newVal))) # to do: validate!!!
         } 
+        
+        
         # newVal is ready to insert
+        
         newPtDefs$tib[[getAssetName()]]<-add_column(newPtDefs$tib[[getAssetName()]], 
                                                   !!(newColName):=newVal   )   
-      }
         
+      }
+      
       # updateAce and set selection to this column
       sender<-'cmd.add.column'
       updateAceExtDef(newPtDefs, sender=sender, selector=list( columnName = newColName   ) )

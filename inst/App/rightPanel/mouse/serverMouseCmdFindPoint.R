@@ -3,7 +3,7 @@ mouseCmdFindPoint<-function(mssg){
     pt<- as.numeric(unlist(mssg$vec))
   }
   
-  browser()
+  # browser()
   fromColumnName<-getTibColumnName()
   fromCol<-getTib()[[fromColumnName]]
   fromColType<-extractColType( fromCol)
