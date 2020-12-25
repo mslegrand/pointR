@@ -81,7 +81,7 @@ getPreProcScriptName<-function(tab_Id, tib_Name, column_Name){
   if(any(sapply(c(tab_Id, tib_Name, column_Name), is.null))
      || tab_Id=='bogus')
   {
-    return( "none") 
+    return( NULL) 
   }
   ppDB<-preProcPageDB()
     ppDB<-filter(ppDB, 
@@ -90,7 +90,7 @@ getPreProcScriptName<-function(tab_Id, tib_Name, column_Name){
   if(nrow(ppDB)>0){
     ppDB$scriptName
   } else {
-    "none"
+    NULL
   }
 }
 

@@ -13,7 +13,7 @@ getColSet4PageName<-function(tab_Id, tib_Name, column_Name){
   if(any(sapply(c(tab_Id, tib_Name, column_Name), is.null))
      || tab_Id=='bogus')
   {
-    return( "none") 
+    return( NULL) 
   }
   csDB<-colSetPageDB()
   csDB<-filter(csDB, 
