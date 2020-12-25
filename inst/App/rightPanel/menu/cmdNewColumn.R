@@ -1,7 +1,8 @@
 
 
 #--------NEW COLUMN------------------------------
-addNewColModal <- function(errMssg=NULL) {
+addNewColModal <- function(errMssg=NULL, treatAsSelect='string') {
+  log.val(treatAsSelect)
   doOk<-"shinyjs.triggerButtonOnEnter(event,\"commitNewCol\")"
   ppscriptChoices<-unique(preProcScriptDB$attrs$scriptName)
   colChoices<-names(aux$colChoiceSet)
@@ -20,13 +21,17 @@ addNewColModal <- function(errMssg=NULL) {
     onkeypress=doOk, 
     span('Enter both a name for the new column and a value for its entries'), 
     textInput("modalAttrName", "Enter the name for the new column"),
-     div( class='ptR2',
+    div( class='ptR2',id='modalColTreatAsDiv',  
           awesomeRadio('modalColTreatAs', 'Initialize Column Values as ', 
           choices = choices ,
-          inline = TRUE
+          inline = TRUE,
+          selected=treatAsSelect
       )
     ),
-    textInput("modalAttrValue", "Enter an entry value for the new column"),
+    div( 
+      textInput("modalAttrValue", "Enter an entry value for the new column" )
+    ),
+    
     # pick from preproc list
     if(length(ppscriptChoices)>0){
       div( class='ptR2', #awesomeRadio
@@ -39,7 +44,7 @@ addNewColModal <- function(errMssg=NULL) {
       NULL
     },
     if(length(aux$colChoiceSet)>0){
-      div( style="display:inline-block",
+      div( style=paste0("display:inline-block;"),
           div(style="float:left;",pickerInput('modalColChooserSet', 'Choiceset:', 
                        choices = colChoices,
                        inline = FALSE
@@ -63,31 +68,62 @@ addNewColModal <- function(errMssg=NULL) {
   ) 
 }
 
+is.Non.Blank.Name<-reactiveVal(FALSE)
+is.Non.Blank.Value<-reactiveVal(FALSE)
 
-observeEvent(input$modalColTreatAs,{
-  if(input$modalColTreatAs=='points'){
-    hideElement('modalAttrValue')
-    hideElement('modalColPreProcScript')
-    hideElement('modalColChooserSet')
-    hideElement('modalColChooserValue')
-    
-  } else if (input$modalColTreatAs=='script') {
-    hideElement('modalAttrValue')
-    showElement('modalColPreProcScript')
-    hideElement('modalColChooserSet')
-    hideElement('modalColChooserValue')
-  } else if (input$modalColTreatAs=='choiceSet') {
-    hideElement('modalAttrValue')
-    hideElement('modalColPreProcScript')
-    showElement('modalColChooserSet')
-    showElement('modalColChooserValue')
-  } else {
-    showElement('modalAttrValue')
-    hideElement('modalColPreProcScript')
-    hideElement('modalColChooserSet')
-    hideElement('modalColChooserValue')
-  }
+observeEvent(input$modalAttrName,{
+  str<-input$modalAttrName
+  is.Non.Blank.Name(nchar(str)>0)
 })
+observeEvent(input$modalAttrValue,{
+  str<-input$modalAttrValue
+  is.Non.Blank.Value(nchar(str)>0)
+})
+
+
+
+
+observeEvent(c(is.Non.Blank.Name(),input$modalColTreatAs, is.Non.Blank.Value() ),{
+  if( is.Non.Blank.Name()){
+    showElement('modalColTreatAsDiv')
+    if(  !(input$modalColTreatAs %in% c('string','number','expression')) || is.Non.Blank.Value() ){
+      showElement('commitNewCol')
+    } else {
+      hideElement('commitNewCol')
+    }
+    if(input$modalColTreatAs=='points'){
+      hideElement('modalAttrValue')
+      hideElement('modalColPreProcScript')
+      hideElement('modalColChooserSet')
+      hideElement('modalColChooserValue')
+    } else if (input$modalColTreatAs=='script') {
+      hideElement('modalAttrValue')
+      showElement('modalColPreProcScript')
+      hideElement('modalColChooserSet')
+      hideElement('modalColChooserValue')
+    } else if (input$modalColTreatAs=='choiceSet') {
+      hideElement('modalAttrValue')
+      hideElement('modalColPreProcScript')
+      showElement('modalColChooserSet')
+      showElement('modalColChooserValue')
+    } else {
+      showElement('modalAttrValue')
+      hideElement('modalColPreProcScript')
+      hideElement('modalColChooserSet')
+      hideElement('modalColChooserValue')
+    }
+  } else {
+    hideElement('modalColTreatAsDiv')
+    hideElement('modalAttrValue')
+    hideElement('modalColPreProcScript')
+    hideElement('modalColChooserSet')
+    hideElement('modalColChooserValue')
+    hideElement('commitNewCol')
+  }
+
+})
+
+
 
 observeEvent(input$commitNewCol, {
   
@@ -105,18 +141,18 @@ observeEvent(input$commitNewCol, {
   #checks
     if(!grepl(pattern = "^[[:alpha:]]", input$modalAttrName)){
       # check name syntax
-      showModal(addNewColModal( errMssg="Invalid Column Name: must begin with a character") )
+      showModal(addNewColModal( errMssg="Invalid Column Name: must begin with a character", treatAsSelect=treatAs) )
     } else if( input$modalAttrName %in% names(getTib()) ){ 
       # check name uniqueness
-      showModal(addNewColModal( errMssg="Invalid Column Name: this name is already taken!") )
+      showModal(addNewColModal( errMssg="Invalid Column Name: this name is already taken!", treatAsSelect=treatAs) )
     } else if(
         (!(treatAs %in% c('script', 'points',  'choiceSet' ))) &&
         (!grepl(pattern = "^[[:graph:]]", input$modalAttrValue))
     ){
         # check value is printable
-        showModal(addNewColModal( errMssg="Invalid Column Value: must begin with printable character other than space") )
+        showModal(addNewColModal( errMssg="Invalid Column Value: must begin with printable character other than space", treatAsSelect=treatAs) )
     } else if( treatAs=='expression' && badExpr( input$modalAttrValue )==TRUE ){
-      showModal(addNewColModal( errMssg="Unable to evaluate expression") )
+      showModal(addNewColModal( errMssg="Unable to evaluate expression", treatAsSelect=treatAs) )
     } else { # checks passed
       #add name to tib
       newPtDefs<-getPtDefs()
@@ -185,7 +221,7 @@ observeEvent(input$commitNewCol, {
           colSet_Name<-input$modalColChooserSet
           
           #To do: perform additional checks !!!
-          
+          #updateWidgetChoicesRow( selectedWidget=returnValue4ModuleEdTib$selectedWidget())
           setColSet4PageName( tab_Id=getTibTabId(), tib_Name= getAssetName(), column_Name=newColName,   colSet_Name=colSet_Name)
         }
         if(treatAs=='number'){
