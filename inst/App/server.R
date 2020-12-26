@@ -114,6 +114,7 @@ shinyServer(function(input, output,session) {
   source("rightPanel/menu/cmdFileImportPreProc.R",               local=TRUE)
   source("rightPanel/menu/cmdFileExportPreProc.R",               local=TRUE)
   source("rightPanel/menu/cmdRemovePreProc.R",                   local=TRUE)
+  source("rightPanel/menu/cmdChoiceSetImport.R",                 local=TRUE)
   source("rightPanel/menu/serverPlotBar.R",                      local=TRUE)
   source("rightPanel/serverPanelCoordinator.R",                  local=TRUE)
   source("rightPanel/serverPanelDispatch.R",                     local=TRUE)

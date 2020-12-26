@@ -114,8 +114,8 @@ observeEvent(input$plotNavBar, {
   }
   
   if(cmd == 'cmdImportColumnChoices'){ # disable unless ...
-  #   cmdPreProcAtsImport()
-  #   dirtyDMDM(session, "plotNavBar")
+     cmdChoiceSetImport()
+     dirtyDMDM(session, "plotNavBar")
   }
   
   # if(cmd=="cmdRemoveAP"){ #-----save

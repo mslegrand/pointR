@@ -9,6 +9,7 @@ UIGenShinyOpenFilesButtons<-function(){
     shinyFilesButton("buttonFileOpen",        label="", title="Open File",                        multiple=FALSE,  class='hiddenButton'),
     shinyFilesButton("buttonFileOpenProject", label="", title="Select Project to Open",           multiple=FALSE,  class='hiddenButton'),
     
+    shinyFilesButton("buttonChoiceSetImport", label="", title="Import Choice Set",                       multiple=FALSE,  class='hiddenButton'),
     shinyFilesButton("buttonSnippetImport",   label="", title="Import Snippets",                         multiple=FALSE,  class='hiddenButton'),
     shinyFilesButton("buttonDnippetImport",   label="", title="Import Dnippets",                           multiple=FALSE,  class='hiddenButton'),
     shinyFilesButton("buttonPreProcPtImport", label="", title="Import PreProcessors for points",                  multiple=FALSE,   class='hiddenButton'),

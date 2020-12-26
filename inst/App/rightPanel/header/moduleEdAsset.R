@@ -26,10 +26,10 @@ moduleEdAsset<-function(input, output, session,
   ns <- session$ns
   #---assets
   output$dataSetUI<-renderUI({
-    if( length(nameChoices() )>0){
+    if( length(nameChoices() )>0 && length(name())>0 && name() %in% nameChoices() ){
       butts<- nameChoices()
-      #butts=mapply(function(x)list('r'),butts,SIMPLIFY = T,USE.NAMES = T)
-      jqScrollBar(inputId=ns("name"),  choices =butts, selected=name())
+      selected=name()
+      jqScrollBar(inputId=ns("name"),  choices =butts, selected =selected)
       # radioGroupButtons(inputId=ns("name"), choices=butts, selected=name(),
       #                   justified=TRUE)
     }

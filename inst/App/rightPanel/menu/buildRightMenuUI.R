@@ -62,9 +62,9 @@ buildRightMenu<-function(){
         #shinyDMDMenu::menuItem('Remove', value='cmdRemoveAP')
       ),
       shinyDMDMenu::menuDropdown(
-        "Custom Choice Sets", 
+        "Column Choice Sets", 
         shinyDMDMenu::menuItem('New', value='cmdNewColumnChoices'),
-        shinyDMDMenu::menuDropdown(id='dropDown-cmdEditColumnChoices','Edit Choice Set'),
+        shinyDMDMenu::menuDropdown(id='dropDown-cmdEditColumnChoices', 'Edit Choices'),
         shinyDMDMenu::menuItem('Import', value='cmdImportColumnChoices')
       )
     )

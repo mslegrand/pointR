@@ -33,6 +33,7 @@ closeCurrentProj<-function(){
   resetDnippetsDB()
   preProcScriptDB$points=initialPreProcScriptDB()
   preProcScriptDB$attrs= initialPreProcScriptDB()
+  colSetPageDB(initialColSetPageDB() )
   fileDescDB(initialFileDescDB())
   svgGridDB( initialSvgGridDB() )
   useTribbleFormatDB( initialTribbleDB() )
@@ -82,7 +83,7 @@ resetShinyFilesIOPaths<-function(pathToProj, resources='aux'){
                "buttonSnippetImport",    "buttonDnippetImport",
                "buttonPreProcPtImport",  "buttonPreprocPtExport",
                "buttonPreprocAtExport",  "buttonPreProcAtImport",
-               "buttonSvgExport")
+               "buttonChoiceSetImport", "buttonSvgExport")
   # first set to root
   for(id in c(fileIOIds, saveButtonFileNames)){
     jscode<-setSfDir(id, path="")
@@ -100,6 +101,8 @@ resetShinyFilesIOPaths<-function(pathToProj, resources='aux'){
         jscode<-setSfDir(id, path= path_join( c(pathToProj, resourceDir, 'dnds' )))
       } else if(id %in% c("buttonSnippetImport")){
         jscode<-setSfDir(id, path= path_join( c(pathToProj,resourceDir, 'snip' )))
+      } else if(id %in% c("buttonChoiceSetImport")){
+        jscode<-setSfDir(id, path= path_join( c(pathToProj,resourceDir, 'choices' )))
       } else {
         jscode<-setSfDir(id, path=pathToProj)
       }

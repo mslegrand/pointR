@@ -4,6 +4,14 @@ colSetPageDB<-reactiveVal(
   tibble( tabId="bogus", tibName="bogus", colName='bogus', colSetName='bogus')[0,]
 )
 
+observeEvent(colSetPageDB(),{
+  if(nrow(  colSetPageDB()  )>0){
+    enableDMDM(session, 'plotNavBar','Edit Choices')
+  } else{
+    disableDMDM(session, 'plotNavBar',"Edit Choices")
+  }
+})
+
 getColSetPage<-function(pageId){
     db<-colSetPageDB()
     filter(db, tabId==pageId )

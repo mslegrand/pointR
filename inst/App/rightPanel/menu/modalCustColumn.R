@@ -44,21 +44,21 @@ observeEvent(input$modalCustColumnName,{
   }
 })
 
-getCustColumnAuxPath<-reactive({file.path(getDirPath(),'aux','columnChoiceSets')})
+getAuxChoicesPath<-reactive({file.path(getDirPath(),'aux','choices')})
 
 writeAuxCustColumnList<-function(filePath, customColumnChoiceList){
   cat(customColumnChoiceList, file=filePath)
 }
 
-readAuxCustColumns<-function(filePath){
-  files<-dir(getCustColumnAuxPath(), pattern="*\\.txt$",full.names=TRUE )
+readAuxChoices<-function(filePath){
+  files<-dir(getAuxChoicesPath(), pattern="*\\.txt$",full.names=TRUE )
   customChoiceList<-list()
   customChoiceList<-lapply(files, function(f){
     scan(file=f, what=character(), quiet=TRUE)
   })
   nms<-gsub('\\.txt','', basename(files))
   names(customChoiceList)<-nms
-  customChoiceList
+  aux$colChoiceSet<-customChoiceList
 }
 
 
@@ -69,12 +69,12 @@ observeEvent( input$modalCustColumnEditorCommitOk,{
   CustColumnName<-paste0(CustColumnName,'.txt')
   
   customColumnChoiceList<-input$customColumnChoiceTxt
-  if(!dir.exists(getCustColumnAuxPath())){
-    dir.create(getCustColumnAuxPath() )
+  if(!dir.exists(getAuxChoicesPath())){
+    dir.create(getAuxChoicesPath() )
   }
-  filePath<-file.path(getCustColumnAuxPath(), CustColumnName)
+  filePath<-file.path(getAuxChoicesPath(), CustColumnName)
   writeAuxCustColumnList(filePath, customColumnChoiceList)
-  aux$colChoiceSet<-readAuxCustColumns()
+  readAuxChoices()
   removeModal()
 })
 
@@ -92,16 +92,16 @@ aux<-reactiveValues(colChoiceSet=list())
 observeEvent(aux$colChoiceSet,{
   # reset submenu for dropDown-cmdEditColumnChoices
   if(length(aux$colChoiceSet )==0){
-    disableDMDM(session, 'plotNavBar','dropDown-cmdEditColumnChoices')
+    removeDMDM(session, 'plotNavBar','Edit Choices')
   } else{
     kids<-lapply(names(aux$colChoiceSet), function(nn){
       shinyDMDMenu::menuItem(nn, value=paste0('editChoiceSet-',nn))
     })
     if(length(kids)>0){
-      enableDMDM(session, 'plotNavBar','dropDown-cmdEditColumnChoices')
+      
       afterEntry='cmdNewColumnChoices'
-      label=paste0('Edit Choice Set')
-      shinyDMDMenu::removeDMDM(session, menuBarId  ="plotNavBar", entry='Edit Choice Set', type='dropdown')
+      label=paste0('Edit Choices')
+      shinyDMDMenu::removeDMDM(session, "plotNavBar", 'Edit Choices')
       shinyDMDMenu::insertAfterDMDM(
         session, 
         menuBarId  ="plotNavBar",  
@@ -112,6 +112,9 @@ observeEvent(aux$colChoiceSet,{
             kids
           )
       )
+      enableDMDM(session, 'plotNavBar','Edit Choices')
     }
   }
 })
+
+
