@@ -78,13 +78,13 @@ observeEvent( input$modalCustColumnEditorCommitOk,{
   removeModal()
 })
 
-colSetPageDB<-reactiveVal(
+choiceSetPageDB<-reactiveVal(
   tibble( tabId="bogus", tibName="bogus", colName='bogus', colChoiceSet='bogus')[0,]
 )
 
 
 populateChoiceSetEditMenu<-function(choice){
-  # append tabId="bogus", tibName="bogus", colName='bogus', colChoiceSet='bogus' to colSetPageDB
+  # append tabId="bogus", tibName="bogus", colName='bogus', colChoiceSet='bogus' to choiceSetPageDB
 }
 
 aux<-reactiveValues(colChoiceSet=list())
