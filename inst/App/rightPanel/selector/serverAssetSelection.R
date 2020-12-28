@@ -265,7 +265,7 @@ getTibEntryChoices<-reactive({
   tib_Name<-getAssetName()
   column_Name<-getTibColumnName()
   if( length(tab_Id)>0 && length(tib_Name)>0){
-    choiceSetName<-getColSet4PageName( tab_Id, tib_Name, column_Name)
+    choiceSetName<-getChoiceSet4PageName( tab_Id, tib_Name, column_Name)
     if(length(choiceSetName)>0){
       choices<-aux$colChoiceSet[[choiceSetName]]
       if(length(choices)>0){

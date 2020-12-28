@@ -137,7 +137,7 @@ restoreWorkSpace<-reactive({
   tib<-extractDBFromPages(wsPages, "^fileDescriptor.", initTib=initialFileDescDB() )
   fileDescDB(tib)  
   
-  tib<-extractDBFromPages(wsPages, "^colSetPage.", initTib=initialChoiceSetPageDB())
+  tib<-extractDBFromPages(wsPages, "^choiceSetPage.", initTib=initialChoiceSetPageDB())
   choiceSetPageDB(tib)
   
   if(!is.null(ptRproj)){

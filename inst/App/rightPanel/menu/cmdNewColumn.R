@@ -222,7 +222,7 @@ observeEvent(input$commitNewCol, {
           
           #To do: perform additional checks !!!
           #updateWidgetChoicesRow( selectedWidget=returnValue4ModuleEdTib$selectedWidget())
-          setColSet4PageName( tab_Id=getTibTabId(), tib_Name= getAssetName(), column_Name=newColName,   colSet_Name=colSet_Name)
+          setChoiceSet4PageName( tab_Id=getTibTabId(), tib_Name= getAssetName(), column_Name=newColName,   choiceSet_Name=colSet_Name)
         }
         if(treatAs=='number'){
           newVal<-as.numeric(newVal)
