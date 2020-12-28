@@ -37,7 +37,7 @@ modalCustColumnEditor <- function(  custColumnName, value="TRUE\nFALSE"  ) {
 
 observeEvent(input$modalCustColumnName,{
   CustColumnName<-input$modalCustColumnName
-  if(length(CustColumnName)==0 || nchar(CustColumnName)<8){
+  if(length(CustColumnName)==0 || nchar(CustColumnName)<6){
     hideElement("modalCustColumnEditorCommitOk")
   } else {
     showElement("modalCustColumnEditorCommitOk")

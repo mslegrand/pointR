@@ -54,7 +54,7 @@ modalPreProcEditor <- function( preprocScripts, preprocName, type='points'  ) {
 
 observeEvent(input$modalPreprocName,{
   preprocName<-input$modalPreprocName
-  if(length(preprocName)==0 || nchar(preprocName)<8){
+  if(length(preprocName)==0 || nchar(preprocName)<6){
     hideElement("modalPreprocEditorCommitOk")
   } else {
     showElement("modalPreprocEditorCommitOk")
