@@ -17,8 +17,8 @@ initialPreProcPageDB<-function(){
   tibble( tabId="bogus", tibName="bogus", colName='bogus', scriptName='bogus')[0,]
 }
 
-initialColSetPageDB<-function(){
-  tibble( tabId="bogus", tibName="bogus", colName='bogus', colSetName='bogus')[0,]
+initialChoiceSetPageDB<-function(){
+  tibble( tabId="bogus", tibName="bogus", colName='bogus', choiceSetName='bogus')[0,]
 }
 
 initialTribbleDB<-function(){

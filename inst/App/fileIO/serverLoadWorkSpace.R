@@ -137,8 +137,8 @@ restoreWorkSpace<-reactive({
   tib<-extractDBFromPages(wsPages, "^fileDescriptor.", initTib=initialFileDescDB() )
   fileDescDB(tib)  
   
-  tib<-extractDBFromPages(wsPages, "^colSetPage.", initTib=initialColSetPageDB())
-  colSetPageDB(tib)
+  tib<-extractDBFromPages(wsPages, "^colSetPage.", initTib=initialChoiceSetPageDB())
+  choiceSetPageDB(tib)
   
   if(!is.null(ptRproj)){
     ptRproj$pathToProj<-editOption$currentProjectDirectory

@@ -16,7 +16,7 @@ moduleFooterRight<-function(input, output, session,
     if(hasPreProcChoices()){
       leftPtButtons= 50
       scriptName=getScriptName()
-      if(scriptName!="none"){
+      if(length(scriptName)>0){
         scriptName=paste("Preproc:", scriptName)
       } else {
         scriptName=""
