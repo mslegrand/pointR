@@ -219,9 +219,7 @@ observeEvent(input$commitNewCol, {
           newVal<-input$modalColChooserValue
           # restrict that value is restiricted to this list
           colSet_Name<-input$modalColChooserSet
-          
           #To do: perform additional checks !!!
-          #updateWidgetChoicesRow( selectedWidget=returnValue4ModuleEdTib$selectedWidget())
           setChoiceSet4PageName( tab_Id=getTibTabId(), tib_Name= getAssetName(), column_Name=newColName,   choiceSet_Name=colSet_Name)
         }
         if(treatAs=='number'){
@@ -232,9 +230,7 @@ observeEvent(input$commitNewCol, {
           newVal<-list(eval(parse(text=newVal))) # to do: validate!!!
         } 
         
-        
         # newVal is ready to insert
-        
         newPtDefs$tib[[getAssetName()]]<-add_column(newPtDefs$tib[[getAssetName()]], 
                                                   !!(newColName):=newVal   )   
         

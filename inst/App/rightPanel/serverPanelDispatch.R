@@ -67,9 +67,7 @@ output$MidRightPanel<-renderUI({
     div(img(src="ptR/pointRlogo.svg"))
     #Todo add something about sponsors.
   } else {
-    cat("chosenRightMidPanel=11\n")
     div(img(src="ptR/pointRlogo.svg"))
-    # div( pointRLogoSVG())
   }
   
   
