@@ -15,7 +15,7 @@ modalCustColumnEditor <- function(  custColumnName, value="TRUE\nFALSE"  ) {
                    label=span(style='color: #00ffff;', 'Name'),  
                    value=custColumnName, 
                    width='100%', 
-                   placeholder = 'Enter a name with at least 8 characters for this set of choices '
+                   placeholder = 'Enter a name with at least 6 characters for this set of choices '
          ),
          div(
            aceEditor(
@@ -62,6 +62,8 @@ readAuxChoices<-function(filePath){
 }
 
 
+
+
 observeEvent( input$modalCustColumnEditorCommitOk,{
   
   CustColumnName<-input$modalCustColumnName
@@ -88,6 +90,16 @@ populateChoiceSetEditMenu<-function(choice){
 }
 
 aux<-reactiveValues(colChoiceSet=list())
+
+getChoiceSetElements<-function(name){
+  rtv<-NULL
+  if(length(name)==1){
+    cs<-aux$colChoiceSet
+    rtv<- cs[[name]]
+  } 
+  rtv
+}
+
 
 observeEvent(aux$colChoiceSet,{
   # reset submenu for dropDown-cmdEditColumnChoices
