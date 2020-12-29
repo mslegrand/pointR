@@ -54,7 +54,7 @@ readAuxChoices<-function(filePath){
   files<-dir(getAuxChoicesPath(), pattern="*\\.txt$",full.names=TRUE )
   customChoiceList<-list()
   customChoiceList<-lapply(files, function(f){
-    scan(file=f, what=character(), quiet=TRUE)
+    scan(file=f, what=character(), quiet=TRUE, sep="\n")
   })
   nms<-gsub('\\.txt','', basename(files))
   names(customChoiceList)<-nms
