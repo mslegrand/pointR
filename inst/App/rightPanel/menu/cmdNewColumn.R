@@ -80,7 +80,11 @@ observeEvent(input$modalAttrValue,{
   is.Non.Blank.Value(nchar(str)>0)
 })
 
-
+observeEvent(input$modalColChooserSet,{
+  name<-input$modalColChooserSet
+  choices<-getChoiceSetElements(name)
+  updatePickerInput(session,inputId ="modalColChooserValue",  choices=choices, selected=choices[[1]])
+})
 
 
 observeEvent(c(is.Non.Blank.Name(),input$modalColTreatAs, is.Non.Blank.Value() ),{
