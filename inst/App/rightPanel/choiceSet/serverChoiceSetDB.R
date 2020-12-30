@@ -45,3 +45,12 @@ setChoiceSet4PageName<-function(tab_Id, tib_Name, column_Name,  choiceSet_Name){
   }
   choiceSetPageDB(csDB)
 }
+
+removeChoiceSet4PageName<-function(tab_Id, tib_Name, column_Name,  choiceSet_Name){
+  csDB<-choiceSetPageDB()
+  csDB<-filter(csDB, !(tabId==tab_Id &
+                         tibName==tib_Name & 
+                         colName==column_Name )
+  )
+  choiceSetPageDB(csDB)
+}
