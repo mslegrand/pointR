@@ -261,22 +261,24 @@ getTibEntryChoices<-reactive({
   if( identical(getColumnType(), 'point')){
     return( c('point', 'matrix'))
   } 
+  columnValues<-getTib() %$$%  getTibColumnName()
+  # if(!is.null(columnValues)){
+  #   columnValues <-  as.list(columnValues)
+  # }
+  
   tab_Id<-getTibTabId()
   tib_Name<-getAssetName()
   column_Name<-getTibColumnName()
   if( length(tab_Id)>0 && length(tib_Name)>0){
     choiceSetName<-getChoiceSet4PageName( tab_Id, tib_Name, column_Name)
     if(length(choiceSetName)>0){
-      choices<-aux$colChoiceSet[[choiceSetName]]
-      if(length(choices)>0){
+      choices<-aux$colChoiceSet[[choiceSetName]] # this is a check to insure consistancy
+      if(length(setdiff(columnValues, choices))==0 && length(choices)>0){
         return(choices)
+      } else {#if it the check fails should remove from choiceSetPage
+        removeChoiceSet4PageName(tab_Id, tib_Name, column_Name)
       }
     }
-  }
-  
-  columnValues<-getTib() %$$%  getTibColumnName()
-  if(!is.null(columnValues)){
-    columnValues <-  as.list(columnValues)
   }
   columnValues
 })
