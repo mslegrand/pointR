@@ -59,6 +59,7 @@ moduleEdTib<-function(input, output, session,
   getTibEditState,
   getTransformType,
   getWidgetChoices,
+  getChoiceSet4PageName,
   getWidget
 ){
   ns <- session$ns
@@ -108,8 +109,14 @@ moduleEdTib<-function(input, output, session,
       # cat('--Entering ---widgetChooserUI----------\n')
       # cat('--calling ---getWidgetChoices----------\n')
       choices<-getWidgetChoices()
+      
       # cat('--calling ---getWidget----------\n')
       widget<-getWidget()
+      cs<-getChoiceSet4PageName()
+      if(!is.null(cs)){
+        choices<-cs
+        widget<-cs
+      }
       # cat('--returning from  ---getWidget----------\n')
       # cat("\nAfter getWidget value of getRowIndex=", format(getRowIndex()), "\n")
       if(length(choices )>0 && !is.null(widget)){
@@ -130,6 +137,7 @@ moduleEdTib<-function(input, output, session,
       # cat("\nInitial value of getRowIndex", format(getRowIndex()), "\n")
       # cat('--calling ---getWidget2----------\n')
       widget<-getWidget()
+      cs<-getChoiceSet4PageName()
       # cat("widget=",format(widget),"\n")
       # cat("getTibEntry()=",format(getTibEntry()),"\n")
       # cat("getTibEntryChoices()=",format(getTibEntryChoices()),"\n")
@@ -152,13 +160,17 @@ moduleEdTib<-function(input, output, session,
                   val
                 })
                 choices<-sort(unique(unlist( choices )))
-                if(widget=='radio'){
+                if(!is.null(cs)){
                   # cat('xxx widget=', format(widget),"\n")
                   # radioGroupButtons(inputId=ns("entryRadio"), 
                   #                   choices=choices, 
                   #                   selected=selected,
                   #                   justified=TRUE
                   # )
+                  jqScrollBar(inputId=ns("entryRadio"),  
+                              choices =choices, selected=selected)
+                  
+                } else if(widget=='radio'){
                   jqScrollBar(inputId=ns("entryRadio"),  
                               choices =choices, selected=selected)
                   

@@ -30,6 +30,12 @@ returnValue4ModuleEdTib<-callModule(
   getTransformType=getTransformType,
   getTibEditState=getTibEditState,
   getWidgetChoices=getWidgetChoices,
+  getChoiceSet4PageName=reactive({ 
+    if( getTibEditState()==TRUE ){ 
+      getChoiceSet4PageName(getTibTabId(), getAssetName(), getTibColumnName() )
+      }  else {
+        NULL } 
+    }),
   getWidget=getWidget #reactive({  if( getTibEditState()==TRUE ){ getHandlerValue() } else { NULL } })
 )
 
