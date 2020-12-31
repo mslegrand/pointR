@@ -14,8 +14,6 @@ savePage<-function(pageId, path=getWorkSpaceDir()){
     dnip<-getPageDnippetsDB(pageId)
     widg<-getPageWidgetDB(pageId)
     preprocPage<-getPagePreprocPageDB(pageId)
-    choiceSetPage<-getChoiceSetPage(pageId)
-    # print(widg)
     rtv<-c(
       fileDescriptor=getFileDescriptor(pageId),
       code=getCode(),
@@ -25,8 +23,7 @@ savePage<-function(pageId, path=getWorkSpaceDir()){
       trib=trib,
       dnip=dnip,
       widg=widg,
-      preprocPage=preprocPage,
-      choiceSetPage=choiceSetPage
+      preprocPage=preprocPage  
     )
     
     # ppE<-getPreProcPtEntries(pageId)
