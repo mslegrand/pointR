@@ -105,7 +105,6 @@ resetSelectedTibbleName<-function(tibs, name){
     }
   
       choices<-getRightPanelChoices()
-      # cat("resetSelectedTibbleName:: choices=", paste(choices, collapse=", "),"\n")
       aName<-getAssetName()
       if( !is.null(aName) && !is.null(getTibRow()) 
           && !is.null(tibs[[aName]]) && getTibRow()<nrow(tibs[[aName]])
@@ -155,7 +154,6 @@ resetSelectedTibbleName<-function(tibs, name){
           }
           entry<-tib[[ptColName]][[rowIndex]]
           matColIndex<-ncol(entry)
-          # browser()
           selectedAsset$matCol<-matColIndex
           selectedAsset$ptColName=ptColName 
           if(is.null(selectedAsset$selIndex) || selectedAsset$selIndex!=2){
@@ -186,8 +184,6 @@ resetSelectedTibbleName<-function(tibs, name){
       if( selectedAsset$name==transformTag){
         selectedAsset$transformType='Translate'
       }
-         
-      # log.fout(resetSelectedTibbleName)
 }
 
 
@@ -209,7 +205,6 @@ updateSelected<-function( name, rowIndex, columnName, matCol,  ptColName, selInd
     selectedAsset$rowIndex=rowIndex
   }
   if(!missing(matCol)){
-    # browser()
     selectedAsset$matCol=matCol
   }
   if(!missing(selIndex)){
@@ -262,36 +257,22 @@ getTibEntryChoices<-reactive({
   if( identical(getColumnType(), 'point')){
     return( c('point', 'matrix'))
   } 
-  log.fin(getTibEntryChoices)
   columnValues<-getTib() %$$%  getTibColumnName()
-  # if(!is.null(columnValues)){
-  #   columnValues <-  as.list(columnValues)
-  # }
-  
+
   tab_Id<-getTibTabId()
   tib_Name<-getAssetName()
   column_Name<-getTibColumnName()
-  log.val(tab_Id)
-  log.val(tib_Name)
-  log.val(column_Name)
   if( length(tab_Id)>0 && length(tib_Name)>0){
-    #choiceSetName<-getChoiceSet4PageName( tab_Id, tib_Name, column_Name)
     choiceSetName<-getWidget()
-    log.val(choiceSetName)
     if(length(choiceSetName)>0){
       choices<-aux$colChoiceSet[[choiceSetName]] # this is a check to insure consistancy
-      cat('choices\n')
-      print(choices)
-      cat('columnValues\n')
-      print(columnValues)
       if(length(choices)>0 && length(setdiff(columnValues, choices))==0  ){
         return(choices)
       } else {#if it the check fails should remove from choiceSetPage
-        removeChoiceSet4PageName(tab_Id, tib_Name, column_Name)
+        #removePageWidgetDB(tab_Id)
       }
     }
   }
-  log.fout(getTibEntryChoices)
   columnValues
 })
 

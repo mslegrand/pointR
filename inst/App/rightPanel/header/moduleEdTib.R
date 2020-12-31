@@ -76,16 +76,6 @@ moduleEdTib<-function(input, output, session,
 
 #------------ui ouput----------------------
   
-  #---assets
-  # output$dataSetUI<-renderUI({
-  #   if(length(nameChoices())>0){
-  #     butts<- nameChoices()
-  #     radioGroupButtons(inputId=ns("name"), choices=butts, selected=name(),
-  #                       justified=TRUE)
-  #   }
-  # })
-  
-  
   
   #---columns
   output$columnUI<-renderUI({
@@ -106,20 +96,14 @@ moduleEdTib<-function(input, output, session,
   #---column values
   output$widgetChooserUI<-renderUI({ #widgetChoice
     if( getTibEditState()==TRUE ){
-      # cat('--Entering ---widgetChooserUI----------\n')
-      # cat('--calling ---getWidgetChoices----------\n')
       choices<-getWidgetChoices()
       
       widget<-getWidget()
       cs<-getChoiceSet4PageName()
       if(!is.null(cs)){
-        # choices<-cs #widget choices
         widget<-cs #selected widget
       }
       if(length(choices )>0 && !is.null(widget)){
-        #cat("tabId=",format(input$pages),"\n")
-        # cat("widgetChooserUI:: choices=c(",paste(choices,collapse=", "),")\n")
-        # cat('widget=',widget,"\n")
         div( "class"='ptR2',
            selectInput(ns("selectedWidget"), label=NULL,
                        choices=choices, selected=widget, width="110px")
@@ -130,22 +114,13 @@ moduleEdTib<-function(input, output, session,
   
   output$columnEntryUI<-renderUI({
     if( getTibEditState()==TRUE ){
-      # cat("\nEntering----------output$colEntryUI---------------\n")
-      # cat("\nInitial value of getRowIndex", format(getRowIndex()), "\n")
-      # cat('--calling ---getWidget2----------\n')
       widget<-getWidget()
       cs<-getChoiceSet4PageName()
-      # cat("widget=",format(widget),"\n")
-      # cat("getTibEntry()=",format(getTibEntry()),"\n")
-      # cat("getTibEntryChoices()=",format(getTibEntryChoices()),"\n")
       if(!is.null(widget) && !is.null(getTibEntry()) && !is.null(getTibEntryChoices())){ 
             selected<-getTibEntry()
-            log.val(selected)
+            # log.val(selected)
             choices<-getTibEntryChoices()
-            print(choices)
-            log.val(widget)
             if(widget=='slider'){
-              # cat('xxx widget=', format(widget),"\n")
               sliderInput(
                 inputId=ns("entrySlider"),label = NULL, min=0,max = 100, value = as.numeric(selected)
               ) 
@@ -230,18 +205,14 @@ moduleEdTib<-function(input, output, session,
   #---asset name---
   observeEvent(c( name(), nameChoices() ), { #update the name
     if( !is.null(name()) && name()==transformTag ){
-      # cat('transformPanelContainer show \n')
       showElement('transformPanelContainer')
     } else {
-      # cat('transformPanelContainer hide \n')
       hideElement('transformPanelContainer')
     }
     
       if(length(nameChoices())>0 && !is.null(name()) && nchar(name())>0 && !(name() %in% c( transformTag, RPanelTag, errorPanelTag, svgPanelTag)) ){
-        # cat('headEdTib show\n')
         showElement('headEdTib')
       } else {
-        # cat('headEdTib hide\n')
         hideElement('headEdTib')
         hideElement(ns('headEdTib'))
       }
