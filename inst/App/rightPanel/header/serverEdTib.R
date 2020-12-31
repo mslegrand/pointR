@@ -32,9 +32,20 @@ returnValue4ModuleEdTib<-callModule(
   getWidgetChoices=getWidgetChoices,
   getChoiceSet4PageName=reactive({ 
     if( getTibEditState()==TRUE ){ 
-      getChoiceSet4PageName(getTibTabId(), getAssetName(), getTibColumnName() )
+        widget<-getWidget()
+        log.val(widget)
+        ll<-aux$colChoiceSe
+        cat('returning choiceSet with names\n')
+        print(names(ll))
+        print(ll)
+        if(!is.null(widget) && widget %in% names(aux$colChoiceSet)){
+          return(widget)
+        } else {
+          return(NULL)
+        }
       }  else {
-        NULL } 
+        NULL 
+      } 
     }),
   getWidget=getWidget #reactive({  if( getTibEditState()==TRUE ){ getHandlerValue() } else { NULL } })
 )
@@ -51,14 +62,16 @@ getSafeSelection<-function(selection, choices){ #anybody using this???
 }
 
 observeEvent(returnValue4ModuleEdTib$selectedWidget(), {
-  if( getTibEditState()==TRUE && !is.null( returnValue4ModuleEdTib$selectedWidget() )){
+  if( getTibEditState()==TRUE && length( returnValue4ModuleEdTib$selectedWidget() )>0 ){
     log.fin(returnValue4ModuleEdTib$selectedWidget())
     selectedWidget<-returnValue4ModuleEdTib$selectedWidget()
-    # log.val(selectedWidget)
+    log.val(nchar(selectedWidget))
+    log.val(selectedWidget)
+    cat('ModuleEdTib$selectedWidget:: abount to update selectedWidget')
     updateWidgetChoicesRow( selectedWidget=returnValue4ModuleEdTib$selectedWidget())
     log.fout(returnValue4ModuleEdTib$selectedWidget())
   }
-})
+}, ignoreNULL = TRUE)
 
 observeEvent(returnValue4ModuleEdTib$transformType(),{
   if( getPlotState()==transformTag){

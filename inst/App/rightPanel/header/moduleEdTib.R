@@ -110,15 +110,12 @@ moduleEdTib<-function(input, output, session,
       # cat('--calling ---getWidgetChoices----------\n')
       choices<-getWidgetChoices()
       
-      # cat('--calling ---getWidget----------\n')
       widget<-getWidget()
       cs<-getChoiceSet4PageName()
       if(!is.null(cs)){
-        choices<-cs
-        widget<-cs
+        # choices<-cs #widget choices
+        widget<-cs #selected widget
       }
-      # cat('--returning from  ---getWidget----------\n')
-      # cat("\nAfter getWidget value of getRowIndex=", format(getRowIndex()), "\n")
       if(length(choices )>0 && !is.null(widget)){
         #cat("tabId=",format(input$pages),"\n")
         # cat("widgetChooserUI:: choices=c(",paste(choices,collapse=", "),")\n")
@@ -143,7 +140,10 @@ moduleEdTib<-function(input, output, session,
       # cat("getTibEntryChoices()=",format(getTibEntryChoices()),"\n")
       if(!is.null(widget) && !is.null(getTibEntry()) && !is.null(getTibEntryChoices())){ 
             selected<-getTibEntry()
+            log.val(selected)
             choices<-getTibEntryChoices()
+            print(choices)
+            log.val(widget)
             if(widget=='slider'){
               # cat('xxx widget=', format(widget),"\n")
               sliderInput(

@@ -258,9 +258,11 @@ getTibEntry<-reactive({
 })
 
 getTibEntryChoices<-reactive({
+  
   if( identical(getColumnType(), 'point')){
     return( c('point', 'matrix'))
   } 
+  log.fin(getTibEntryChoices)
   columnValues<-getTib() %$$%  getTibColumnName()
   # if(!is.null(columnValues)){
   #   columnValues <-  as.list(columnValues)
@@ -269,17 +271,27 @@ getTibEntryChoices<-reactive({
   tab_Id<-getTibTabId()
   tib_Name<-getAssetName()
   column_Name<-getTibColumnName()
+  log.val(tab_Id)
+  log.val(tib_Name)
+  log.val(column_Name)
   if( length(tab_Id)>0 && length(tib_Name)>0){
-    choiceSetName<-getChoiceSet4PageName( tab_Id, tib_Name, column_Name)
+    #choiceSetName<-getChoiceSet4PageName( tab_Id, tib_Name, column_Name)
+    choiceSetName<-getWidget()
+    log.val(choiceSetName)
     if(length(choiceSetName)>0){
       choices<-aux$colChoiceSet[[choiceSetName]] # this is a check to insure consistancy
-      if(length(setdiff(columnValues, choices))==0 && length(choices)>0){
+      cat('choices\n')
+      print(choices)
+      cat('columnValues\n')
+      print(columnValues)
+      if(length(choices)>0 && length(setdiff(columnValues, choices))==0  ){
         return(choices)
       } else {#if it the check fails should remove from choiceSetPage
         removeChoiceSet4PageName(tab_Id, tib_Name, column_Name)
       }
     }
   }
+  log.fout(getTibEntryChoices)
   columnValues
 })
 
@@ -301,6 +313,19 @@ getTibMatColChoices<-reactive({
     }
   }
   rtv
+})
+
+getCompatibleChoicesSets<-reactive({
+  choices<-aux$colChoiceSet
+  columnValues<-getTib() %$$%  getTibColumnName()
+  if(length(cs)>0 && length(columnValues)>0){
+    fn<-function(choices){
+      length(choices)>0 && length(setdiff(columnValues, choices))==0 
+    }
+    names(Filter(fn,choices))
+  } else {
+    NULL
+  }
 })
 
 

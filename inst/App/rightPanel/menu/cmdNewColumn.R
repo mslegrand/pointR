@@ -224,7 +224,38 @@ observeEvent(input$commitNewCol, {
           # restrict that value is restiricted to this list
           colSet_Name<-input$modalColChooserSet
           #To do: perform additional checks !!!
-          setChoiceSet4PageName( tab_Id=getTibTabId(), tib_Name= getAssetName(), column_Name=newColName,   choiceSet_Name=colSet_Name)
+          #setChoiceSet4PageName( tab_Id=getTibTabId(), tib_Name= getAssetName(), column_Name=newColName,   choiceSet_Name=colSet_Name)
+          log.val(colSet_Name)
+          cat('*******************cmdNewColumn about to call updateWidgetChoicesRow************************\n')  
+          # populate widgetDB
+          db<-widgetDB()
+          cat('db1=\n')
+          print(db)
+          pageId<-  input$pages
+          log.val(pageId)
+          tibName<-getAssetName()
+          log.val(tibName)
+          columnName<-input$modalAttrName
+          log.val(columnName)
+          log.val(colSet_Name)
+          db1<-db
+          cat('db1=\n')
+          print(db1)
+          add_row(db, tabId=pageId, name=tibName, column=columnName, 
+                 type='choiceSet' , minVal=NA, maxVal=NA, step=1, selectedWidget=colSet_Name)
+          db2<-tibble_row( tabId=pageId, name=tibName, column=columnName, 
+                           type='choiceSet' , minVal=NA, maxVal=NA, step=1, selectedWidget=colSet_Name)
+          cat('db2=\n')
+          print(db2)
+          db3<-bind_rows(db1,db2)
+          #tibble(tabId='Tab0', name='x',column='y',type='character',minVal=NA, maxVal=NA,step=1, selectedWidget='radio')[0,]
+          cat('db3=\n')
+          print(db3)
+          widgetDB(db3)
+          cat("*********ouch***********************")
+          db<-widgetDB()
+          cat('db3=\n')
+          print(db)
         }
         if(treatAs=='number'){
           newVal<-as.numeric(newVal)
