@@ -10,28 +10,31 @@ removePageWidgetDB<-function(pageId){
   widgetDB(db)
 }
 
+allWidgetChoices<-list(
+    point=c('radio','picker'),
+    character=c('radio','picker'), #'switch', 'toggle'),
+    character.list= c('radio','picker'), #, "multiInput", 'picker', 'checkbox'), #range
+    character.list.2= c('picker','slider','radio'), #, "multiInput", 'picker', 'checkbox'), #range
+    character.list.vec= c('picker','radio'), #, "multiInput", 'picker', 'checkbox'), #range
+    #percentage, percentage.list.2
+    integer=c('picker','slider',  "numeric"), #'radio','knob'
+    numeric=c('picker','slider',  "numeric"), #,'knob'
+    numeric.list=c('picker'), #,'slider',  "numeric"), #'radio',,'knob'
+    numeric.list.2=c('slider'), #,'knob'
+    integer.list.2=c('slider'),
+    numeric.list.vec=c('picker'), #,'slider',  "numeric"), #'radio',,'knob'
+    integer.list.vec=c('picker'), #,'slider',  "numeric"), #radio',
+    integer.list=c('picker'), #'radio',
+    colourable=c('colourable','radio','picker' ) , #'spectrum', 'colorSelectorInput' ),
+    other=c('picker'), #'radio',
+    other.list=c('radio','picker')
+)
+
+allWidgetNames<-unique(unlist(allWidgetChoices))
 
 type2WidgetChoices<-function(colType){
  if(!is.null(colType)){
-   choices<-list(
-     point=c('radio','picker'),
-     character=c('radio','picker'), #'switch', 'toggle'),
-     character.list= c('radio','picker'), #, "multiInput", 'picker', 'checkbox'), #range
-     character.list.2= c('picker','slider','radio'), #, "multiInput", 'picker', 'checkbox'), #range
-     character.list.vec= c('picker','radio'), #, "multiInput", 'picker', 'checkbox'), #range
-     #percentage, percentage.list.2
-     integer=c('picker','slider',  "numeric"), #'radio','knob'
-     numeric=c('picker','slider',  "numeric"), #,'knob'
-     numeric.list=c('picker'), #,'slider',  "numeric"), #'radio',,'knob'
-     numeric.list.2=c('slider'), #,'knob'
-     integer.list.2=c('slider'),
-     numeric.list.vec=c('picker'), #,'slider',  "numeric"), #'radio',,'knob'
-     integer.list.vec=c('picker'), #,'slider',  "numeric"), #radio',
-     integer.list=c('picker'), #'radio',
-     colourable=c('colourable','radio','picker' ) , #'spectrum', 'colorSelectorInput' ),
-     other=c('picker'), #'radio',
-     other.list=c('radio','picker')
-     )[[colType]]   
+   choices<-allWidgetChoices[[colType]]   
  } else {
    choices<-NULL
  }
@@ -54,30 +57,25 @@ getRowWidgetDB<-reactive({
   row<-NULL
   if(length(pageId>0)){
       wdb<-widgetDB()
-      cat('widgetDB\n')
-      print(wdb)
       tibName<-getAssetName()
-      log.val(tibName)
       colName<-getTibColumnName()
-      log.val(colName)
       row<-filter(wdb, tabId==pageId & name==tibName & column==colName)
-      cat('row\n')
-      print(row)
-      if(nrow(row)!=1){ #something is messed up: not there or multiple occurances
-        # begin patch
-          if(nrow(row)>1){ # remove multiple occurances
+      widgets<-getWidgetChoices()
+      if(nrow(row)!=1 || !(row$selectedWidget %in% widgets) ){    # begin patch
+          if(nrow(row)>0){ # remove any existing rowss
             wdb<-filter(wdb, !(tabId==pageId & name==tibName & column==colName))
           }
-          cat("wdb\n")
-          print(wdb)
           # and add back a default
           colType<-getColumnType()
-          widgets<-getWidgetChoices()
+          #widgets<-getWidgetChoices()
           chosenWidget<-widgets[1]
+          if(chosenWidget %in% aux$colChoiceSet){
+            colType<-'choiceSet'
+          }
           wdb<-add_row(wdb,
                        tabId=pageId,    name=tibName,
                        column=colName,  type=colType,
-                       minVal=NA, maxVal=NA,
+                       minVal=NA, maxVal=NA, # may need to rethink these NA's
                        step=1, selectedWidget=chosenWidget
           )
           widgetDB(wdb)
@@ -99,16 +97,9 @@ updateWidgetChoicesRow<-function(#tibName, colName, colType,
   pageId<-  input$pages
   tibName<-getAssetName()
   colName<-getTibColumnName()
-  log.fin(selectedWidget)
-  log.val(pageId)
-  log.val(tibName)
-  log.val(colName)
-  
   if(length(pageId)>0){
 
     wdb<-widgetDB()
-    cat('length(',pageId,')>0\n')
-    print(wdb)
     rowNo<-which(
         wdb$tabId==pageId & 
         wdb$name==tibName & 
@@ -119,32 +110,20 @@ updateWidgetChoicesRow<-function(#tibName, colName, colType,
       columnValues<-getTib() %$$%  getTibColumnName()
       valueChoices<-aux$colChoiceSet[[selectedWidget]]
       isCS<-(length(valueChoices)>0 && length(setdiff(columnValues, valueChoices))==0 )
-      if(!isCS){
-        cat('if!isCS')
-        log.val(selectedWidget)
-        print(columnValues)
-        print(valueChoices)
-        
-      }
     }
-    log.val(isCS)
     if(length(rowNo)==1 && !isCS){ #not much changes, just replace selected (assuming selected in colVal)
-      cat('xxx--\n')
       nn<-names(match.call()[-1])
       for(n in nn){
         wdb[[n]][rowNo]<-get(n)
       }
     } else { # not there, or multiple rows?
-      cat('yyy--\n')
       widgets<-getWidgetChoices()
-      log.val(widgets)
       chosenWidget<-selectedWidget #kludge to avoid name clash
       log.val(chosenWidget)
       if(!isCS && !chosenWidget %in% widgets){
-        cat('should not happen\n')
+        # cat('should not happen\n')
         chosenWidget<-widgets[1]
       }
-      log.val(chosenWidget)
       if(isCS){
         colType<-'choiceSet'
         log.val(colType)
@@ -153,7 +132,6 @@ updateWidgetChoicesRow<-function(#tibName, colName, colType,
       wdb<-add_row(tmp, tabId=pageId, name=tibName, column=colName, 
                    type=colType , minVal=minVal, maxVal=maxVal, step=step, selectedWidget=chosenWidget)
     }  
-    print(wdb)
     widgetDB(wdb)
     log.fout(updateWidgetChoicesRow)
   }
@@ -168,7 +146,7 @@ getWidgetChoices<-reactive({
   tibName<-getAssetName()
   colName<-getTibColumnName()
   cs<-getCompatibleChoicesSets()
-  widgetChoices<-c(widgetChoices, cs)
+  widgetChoices<-c(widgetChoices,cs) #prioritize cs
   log.val(widgetChoices)
   scriptName<-getPreProcScriptName(tab_Id=tabId, tib_Name=tibName, column_Name=colName)
   if(getPlotState()=='value' && 	!is.null(scriptName) ){
@@ -181,26 +159,31 @@ getWidgetChoices<-reactive({
 #  serverEdTib init (line 33) 
 #  then moduleEdTib (lines 108, 128), both by conditon: getTibEditState()==TRUE
 getWidget<-reactive({
-  log.fin(getWidget)
-  log.fin(getTibTabId())
-  cat('getWidget returning\n')
-  db<-getRowWidgetDB()
-  print(db)
-  if(nrow(getRowWidgetDB())==1){
-    rtv<-getRowWidgetDB()$selectedWidget
-  }else {
-    rtv<-NULL
+  # log.fin(getWidget)
+  
+  rdb<-getRowWidgetDB()
+ 
+  
+  if(nrow(rdb)==1){ #look ok so far
+    selectedWidget<-rdb$selectedWidget
+    # check if compatible: looping issue when changing to new tab
+    # if(!is.null(selectedWidget) && selectedWidget %in% names(aux$colChoiceSet ) ){
+    #   columnValues<-getTib() %$$%  getTibColumnName()
+    #   valueChoices<-aux$colChoiceSet[[selectedWidget]]
+    #   isCS<-(length(valueChoices)>0 && length(setdiff(columnValues, valueChoices))==0 )
+    #   if(!isCS){
+    #     selectedWidget<-NULL #or first choice?
+    #   }
+    # }
+  } else {
+    selectedWidget<-NULL
   }
-  print(rtv)
-  log.fin(getWidget)
-  rtv
+  
+  # log.fin(getWidget)
+  selectedWidget
 })
 
-# getWidgetVal<-reactive({
-#   tabId<-input$pages
-#   # row<-filter(handler$choices, tabId==tabId, name==getAssetName(), column==getTibColumnName())
-#   row<-filter(widgetDB(), tabId==tabId & name==getAssetName() & column==getTibColumnName())
-# })
+
 
 getPointMax<-reactive({
   selectedTabId<-getTibTabId()

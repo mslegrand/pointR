@@ -21,14 +21,17 @@ addNewAssetModal <- function(errMssg=NULL) {
 
 observeEvent(input$commitNewAsset, {
   #checks 
-  if(!grepl(pattern = "^[[:alpha:]]", input$modalAssetName)){ # check name syntax
+  #if(!grepl(pattern = "^[[:alpha:]]", input$modalAssetName)){ # check name syntax
+  newAssetName<-input$modalAssetName
+  
+  forbidden<-c(names(getPtDefs()$tib),  'svgPanel', 'RPanel')
+  if(!goodRName(newAssetName ) ){ # check name syntax
     showModal(addNewAssetModal( errMssg="Invalid Asset Name: must begin with a character") )
-  } else if( input$modalAssetName %in% names(getPtDefs()$tib )){ # check name uniqueness
+  } else if( newAssetName %in% forbidden ){ # check name uniqueness
     showModal(addNewAssetModal( errMssg="Invalid Asset Name: this name is already taken!") )
   } else { 
     #add name to tib
     newPtDefs<-getPtDefs()
-    newAssetName<-input$modalAssetName
     newPtDefs$tib[[newAssetName]]<-tibble(points=list(matrix(0,2,0)))
     newPtDefs$mats[newAssetName]<-input$modalAssetType=='matrix' 
 

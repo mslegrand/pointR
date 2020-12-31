@@ -37,8 +37,9 @@ modalCustColumnEditor <- function(  custColumnName, value="TRUE\nFALSE"  ) {
 
 observeEvent(input$modalCustColumnName,{
   CustColumnName<-input$modalCustColumnName
-  if(length(CustColumnName)==0 || nchar(CustColumnName)<6){
-    hideElement("modalCustColumnEditorCommitOk")
+  #if(length(CustColumnName)==0 || nchar(CustColumnName)<6 || CustColumnName %in% names(allWidgetChoices)){
+  if(!goodName(CustColumnName,5) || CustColumnName %in% allWidgetNames){
+      hideElement("modalCustColumnEditorCommitOk")
   } else {
     showElement("modalCustColumnEditorCommitOk")
   }
@@ -79,15 +80,6 @@ observeEvent( input$modalCustColumnEditorCommitOk,{
   readAuxChoices()
   removeModal()
 })
-
-choiceSetPageDB<-reactiveVal(
-  tibble( tabId="bogus", tibName="bogus", colName='bogus', colChoiceSet='bogus')[0,]
-)
-
-
-populateChoiceSetEditMenu<-function(choice){
-  # append tabId="bogus", tibName="bogus", colName='bogus', colChoiceSet='bogus' to choiceSetPageDB
-}
 
 aux<-reactiveValues(colChoiceSet=list())
 
