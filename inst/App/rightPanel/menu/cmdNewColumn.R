@@ -1,8 +1,13 @@
 
 
 #--------NEW COLUMN------------------------------
-addNewColModal <- function(errMssg=NULL, treatAsSelect='string') {
-  log.val(treatAsSelect)
+addNewColModal <- function(errMssg=NULL, init=TRUE, treatAsSelect='string') {
+  #log.val(treatAsSelect)
+  if(init){
+    is.Non.Blank.Name(FALSE)
+    is.Non.Blank.Value(FALSE)
+  }
+  
   doOk<-"shinyjs.triggerButtonOnEnter(event,\"commitNewCol\")"
   ppscriptChoices<-unique(preProcScriptDB$attrs$scriptName)
   colChoices<-names(aux$colChoiceSet)
@@ -16,6 +21,7 @@ addNewColModal <- function(errMssg=NULL, treatAsSelect='string') {
   if(length(aux$colChoiceSet)>0){
     choices<-c(choices,list('using a choice set'='choiceSet'))
   }
+  
   modalDialog(
     size='l',
     onkeypress=doOk, 
@@ -73,9 +79,15 @@ is.Non.Blank.Value<-reactiveVal(FALSE)
 
 observeEvent(input$modalAttrName,{
   str<-input$modalAttrName
-  goodName(str)
-  #is.Non.Blank.Name(nchar(str)>0)
+  if(goodName(str) && !(str %in% c( names(getTib()), 'svgPanel', 'RPanel' ) )){
+    is.Non.Blank.Name(TRUE)
+    # showElement('modalColTreatAsDiv')
+  } else {
+    is.Non.Blank.Name(FALSE)
+  }
+  # is.Non.Blank.Name(nchar(str)>0)
 })
+
 observeEvent(input$modalAttrValue,{
   str<-input$modalAttrValue
   is.Non.Blank.Value(nchar(str)>0)
@@ -88,14 +100,18 @@ observeEvent(input$modalColChooserSet,{
 })
 
 
-observeEvent(c(is.Non.Blank.Name(),input$modalColTreatAs, is.Non.Blank.Value() ),{
+observeEvent(c(is.Non.Blank.Name(),input$modalColTreatAs, is.Non.Blank.Value() , input$modalAttrValue),{
   if( is.Non.Blank.Name()){
     showElement('modalColTreatAsDiv')
-    if(  !(input$modalColTreatAs %in% c('string','number','expression')) || is.Non.Blank.Value() ){
+    if(  !(input$modalColTreatAs %in% c('string','number','expression')) || 
+         (is.Non.Blank.Value() && input$modalColTreatAs!='number') ||
+         isNumericString(input$modalAttrValue)
+         ){
       showElement('commitNewCol')
     } else {
       hideElement('commitNewCol')
     }
+    
     if(input$modalColTreatAs=='points'){
       hideElement('modalAttrValue')
       hideElement('modalColPreProcScript')
@@ -125,10 +141,19 @@ observeEvent(c(is.Non.Blank.Name(),input$modalColTreatAs, is.Non.Blank.Value() )
     hideElement('modalColChooserValue')
     hideElement('commitNewCol')
   }
-
 })
 
 
+
+
+# observeEvent(input$cancel, {
+#     # set as blank? modalAttrValue
+#     hideElement('modalAttrValue')
+#     hideElement('modalColPreProcScript')
+#     hideElement('modalColChooserSet')
+#     hideElement('modalColChooserValue')
+#     removeModal() #close dialog
+# })
 
 observeEvent(input$commitNewCol, {
   
@@ -144,8 +169,8 @@ observeEvent(input$commitNewCol, {
   treatAs<-input$modalColTreatAs
   newVal<-input$modalAttrValue
   #checks
-    # $if(!grepl(pattern = "^[[:alpha:]]", input$modalAttrName)){
-    if(!goodRName(input$modalAttrName)){
+    if(!grepl(pattern = "^[[:alpha:]]", input$modalAttrName)){
+    #if(!goodRName(input$modalAttrName)){
       # check name syntax
       showModal(addNewColModal( errMssg="Invalid Column Name: must begin with a character", treatAsSelect=treatAs) )
     } else if( input$modalAttrName %in% names(getTib()) ){ 
