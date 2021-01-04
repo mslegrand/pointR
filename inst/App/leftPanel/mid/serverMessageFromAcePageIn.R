@@ -12,6 +12,7 @@ processMssgFromAceMssgPageIn<-function(sender, mssg){
          # cat('getAssetName()=', format(getAssetName()), "\n")
       }
       tibs<-getPtDefs()$tib
+      pruneDeadRowsFromWidgetDB()
       resetSelectedTibbleName(tibs=tibs, name=name)
       
     } else { # else covers: 'cmd.tabChange',  # 'cmd.file.new', 'cmd.openFileNow',

@@ -15,9 +15,9 @@ allWidgetChoices<-list(
     character=c('radio','picker'), #'switch', 'toggle'),
     character.list= c('radio','picker'), #, "multiInput", 'picker', 'checkbox'), #range
     character.list.2= c('picker','slider','radio'), #, "multiInput", 'picker', 'checkbox'), #range
-    character.list.vec= c('picker','radio'), #, "multiInput", 'picker', 'checkbox'), #range
+    character.list.vec= c('picker'), #, "multiInput", 'picker', 'checkbox'), #range
     #percentage, percentage.list.2
-    integer=c('picker','slider',  "numeric"), #'radio','knob'
+    integer=c('slider',  "numeric", 'picker'), #'radio','knob'
     numeric=c('picker','slider',  "numeric"), #,'knob'
     numeric.list=c('picker'), #,'slider',  "numeric"), #'radio',,'knob'
     numeric.list.2=c('slider'), #,'knob'
@@ -200,5 +200,24 @@ getPointMax<-reactive({
     colMax
   }
 })
+
+# tibble(tabId='Tab0', name='x',column='y',type='character',minVal=NA, maxVal=NA,step=1, selectedWidget='radio')
+pruneDeadRowsFromWidgetDB<-function(){
+  db<-widgetDB()
+  tibs<-getPtDefs()$tib
+  if(nrow(db)>0){
+    v<-unlist(pmap(db, function(tabId, name, column, type, minVal, maxVal, step, selectedWidget){
+      # print(getTibTabId())
+      # print(column)
+      # print(name)
+      # print(names(tibs[[name]]))
+      tabId!= getTibTabId() ||
+        (name %in% names(tibs) && column %in% names(tibs[[name]]))  
+    }))
+    
+    db<-filter(db, v)
+  }
+  widgetDB(db)
+}
 
 
