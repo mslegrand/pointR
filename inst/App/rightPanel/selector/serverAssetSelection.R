@@ -297,13 +297,13 @@ getTibMatColChoices<-reactive({
 })
 
 getCompatibleChoicesSets<-reactive({
-  choices<-aux$colChoiceSet
+  cs<-aux$colChoiceSet
   columnValues<-getTib() %$$%  getTibColumnName()
   if(length(cs)>0 && length(columnValues)>0){
     fn<-function(choices){
       length(choices)>0 && length(setdiff(columnValues, choices))==0 
     }
-    names(Filter(fn,choices))
+    names(Filter(fn,cs))
   } else {
     NULL
   }
