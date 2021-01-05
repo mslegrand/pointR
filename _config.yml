@@ -4,6 +4,6 @@ description: An R based IDE to generate SVG
 show_downloads: true
 google_analytics:
 theme: jekyll-theme-minimal
-release_mac: https://github.com/mslegrand/pointR/releases/download/v.0.4.3/ptr-0.4.3.dmg
-release_linux: https://github.com/mslegrand/pointR/releases/download/v.0.4.3/ptr_0.4.3_amd64.deb
-release_win: https://github.com/mslegrand/pointR/releases/download/v.0.4.3/ptr.Setup.0.4.3.exe
+release_mac: https://github.com/mslegrand/pointR/releases/download/v.0.4.6/ptr-0.4.6.dmg
+release_linux: https://github.com/mslegrand/pointR/releases/download/v.0.4.6/ptr_0.4.6_amd64.deb
+release_win: https://github.com/mslegrand/pointR/releases/download/v.0.4.6/ptr.Setup.0.4.6.exe
