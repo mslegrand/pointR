@@ -105,7 +105,6 @@ resetSelectedTibbleName<-function(tibs, name){
     }
   
       choices<-getRightPanelChoices()
-      # cat("resetSelectedTibbleName:: choices=", paste(choices, collapse=", "),"\n")
       aName<-getAssetName()
       if( !is.null(aName) && !is.null(getTibRow()) 
           && !is.null(tibs[[aName]]) && getTibRow()<nrow(tibs[[aName]])
@@ -155,7 +154,6 @@ resetSelectedTibbleName<-function(tibs, name){
           }
           entry<-tib[[ptColName]][[rowIndex]]
           matColIndex<-ncol(entry)
-          # browser()
           selectedAsset$matCol<-matColIndex
           selectedAsset$ptColName=ptColName 
           if(is.null(selectedAsset$selIndex) || selectedAsset$selIndex!=2){
@@ -186,8 +184,6 @@ resetSelectedTibbleName<-function(tibs, name){
       if( selectedAsset$name==transformTag){
         selectedAsset$transformType='Translate'
       }
-         
-      # log.fout(resetSelectedTibbleName)
 }
 
 
@@ -209,7 +205,6 @@ updateSelected<-function( name, rowIndex, columnName, matCol,  ptColName, selInd
     selectedAsset$rowIndex=rowIndex
   }
   if(!missing(matCol)){
-    # browser()
     selectedAsset$matCol=matCol
   }
   if(!missing(selIndex)){
@@ -243,24 +238,40 @@ getTibEntry<-reactive({
   if( identical(getColumnType(), 'point')){
     return( c('point','matrix')[getSelIndex()] )
   } 
+  entry<-NULL
   rowNum<-getTibRow()
-  if(is.null(rowNum)){ return( NULL)}
-  columnValues<-getTibEntryChoices()
-  if(1<=rowNum && rowNum<=length(columnValues) ){
-    entry<-columnValues[[rowNum]]
-  } else {
-    entry<-NULL
+  if(length(rowNum)>0){
+    columnValues<-getTib() %$$%  getTibColumnName()
+    if(length(columnValues)>0){
+      columnValues<-as.list(columnValues)
+      if(1<=rowNum && rowNum<=length(columnValues) ){
+        entry<-columnValues[[rowNum]]
+      }
+    }
   }
   entry
 })
 
 getTibEntryChoices<-reactive({
+  
   if( identical(getColumnType(), 'point')){
     return( c('point', 'matrix'))
   } 
   columnValues<-getTib() %$$%  getTibColumnName()
-  if(!is.null(columnValues)){
-    columnValues <-  as.list(columnValues)
+
+  tab_Id<-getTibTabId()
+  tib_Name<-getAssetName()
+  column_Name<-getTibColumnName()
+  if( length(tab_Id)>0 && length(tib_Name)>0){
+    choiceSetName<-getWidget()
+    if(length(choiceSetName)>0){
+      choices<-aux$colChoiceSet[[choiceSetName]] # this is a check to insure consistancy
+      if(length(choices)>0 && length(setdiff(columnValues, choices))==0  ){
+        return(choices)
+      } else {#if it the check fails should remove from choiceSetPage
+        #removePageWidgetDB(tab_Id)
+      }
+    }
   }
   columnValues
 })
@@ -283,6 +294,19 @@ getTibMatColChoices<-reactive({
     }
   }
   rtv
+})
+
+getCompatibleChoicesSets<-reactive({
+  cs<-aux$colChoiceSet
+  columnValues<-getTib() %$$%  getTibColumnName()
+  if(length(cs)>0 && length(columnValues)>0){
+    fn<-function(choices){
+      length(choices)>0 && length(setdiff(columnValues, choices))==0 
+    }
+    names(Filter(fn,cs))
+  } else {
+    NULL
+  }
 })
 
 

@@ -72,4 +72,3 @@ getBackDrop<-reactive({
   getPageBackDrop(input$pages)
 })
 
-

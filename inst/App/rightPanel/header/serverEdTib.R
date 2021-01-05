@@ -30,6 +30,18 @@ returnValue4ModuleEdTib<-callModule(
   getTransformType=getTransformType,
   getTibEditState=getTibEditState,
   getWidgetChoices=getWidgetChoices,
+  getChoiceSet4PageName=reactive({ 
+    if( getTibEditState()==TRUE ){ 
+        widget<-getWidget()
+        if(!is.null(widget) && widget %in% names(aux$colChoiceSet)){
+          return(widget)
+        } else {
+          return(NULL)
+        }
+      }  else {
+        NULL 
+      } 
+    }),
   getWidget=getWidget #reactive({  if( getTibEditState()==TRUE ){ getHandlerValue() } else { NULL } })
 )
 
@@ -45,14 +57,13 @@ getSafeSelection<-function(selection, choices){ #anybody using this???
 }
 
 observeEvent(returnValue4ModuleEdTib$selectedWidget(), {
-  if( getTibEditState()==TRUE && !is.null( returnValue4ModuleEdTib$selectedWidget() )){
+  if( getTibEditState()==TRUE && length( returnValue4ModuleEdTib$selectedWidget() )>0 ){
     log.fin(returnValue4ModuleEdTib$selectedWidget())
     selectedWidget<-returnValue4ModuleEdTib$selectedWidget()
-    # log.val(selectedWidget)
     updateWidgetChoicesRow( selectedWidget=returnValue4ModuleEdTib$selectedWidget())
     log.fout(returnValue4ModuleEdTib$selectedWidget())
   }
-})
+}, ignoreNULL = TRUE)
 
 observeEvent(returnValue4ModuleEdTib$transformType(),{
   if( getPlotState()==transformTag){
@@ -138,12 +149,12 @@ observeEvent(returnValue4ModuleEdTib$entryValue(),{
         rowIndex<=nrow(tib)
     )
     sender='applyTibEdit'
-   
     if(!identical(newPtDefs$tib[[getAssetName()]][[columnName ]][[rowIndex]],entry)){
       newPtDefs$tib[[getAssetName()]][[columnName]][[rowIndex ]]<-entry
       updateAceExtDef(newPtDefs, sender=sender, selector=list( name=name, rowIndex=rowIndex, columnName=columnName   ) )
     }
-    log.fout(returnValue4ModuleEdTib$entryValue())
+    
+    # log.fout(returnValue4ModuleEdTib$entryValue())
   }
 },label='EdTib-rtv-entryValue', ignoreNULL = TRUE)
 

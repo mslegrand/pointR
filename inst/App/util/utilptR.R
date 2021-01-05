@@ -1,3 +1,21 @@
+# enforce naming convention
+goodName<-function(s, n=1){
+  if(length(s)==1 && typeof(s)=='character' && nchar(s)>=n){
+    grepl('^[[:alpha:]][[:alnum:]]*$', s)
+  } else{
+    FALSE
+  }
+}
+
+
+goodRName<-function(s, n=1){
+  if(length(s)==1 && typeof(s)=='character' && nchar(s)>=n){
+    grepl('^[[:alpha:]\\.][[:alnum:]\\.]*$', s)
+  } else{
+    FALSE
+  }
+}
+
 
 #returns col indices of tib corresponding to points
 # used by serverAssetSellection.R and serverAssetSellectionDB.R

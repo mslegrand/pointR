@@ -9,10 +9,19 @@
       pts=NULL,  
       rowIndex=NULL,
       matColIndex=NULL,
-      ptDisplayMode="Normal",
+      displayOptions=NULL, 
       vbScaleFactor
   ){
-    if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
+    
+    
+    if(is.null(displayOptions)){
+      return(NULL)
+    }
+   
+    displayOpt<-displayOptions
+    if(is.null(displayOpt)||is.null(displayOpt$labelMode) || is.null(displayOpt$restrictMode)){ return(NULL)}
+    
+    # if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
     onMouseDownTxt='ptRPlotter_ptR_SVG_Point.selectPoint(evt)'
     if(is.null(pts) ){ return(NULL) } 
     if(length(unlist(pts))<2){ return(NULL)}
@@ -23,16 +32,19 @@
     opacity[rowIndex]<-1
     
     #form list of  all point renderings
+    if(displayOptions$restrictMode==TRUE){
+      rows=rowIndex
+    } else {
+      rows=1:length(pts)
+    }
     g(
-      lapply(seq(length(pts)), function(i){
+      lapply(rows, function(i){
       m<-pts[[i]]
       if(length(m)==0){ # or !is(m,'matrix')
         NULL
       } else {
         lapply(seq(ncol(m)), function(j){ #j is the matCol index
-          
           id<-paste("pd",ptName,i,j,sep="-")
-          
           pt<-m[,j]
           color=colorScheme['default']
           
@@ -54,7 +66,7 @@
                      onmousedown=onMouseDownTxt
               )
             },
-            if(ptDisplayMode=="Labeled"){
+            if(displayOpt$labelMode==TRUE){
               text(paste0(i,",",j), xy=c(10,-10),  
                    stroke='black', font.size=12, opacity=1,
                    transform=list(scale=1/vbScaleFactor,translate=vbScaleFactor*pt)) 
@@ -104,7 +116,7 @@ statusPlotPoint<-callModule(
           pts=getTibPts(), #getPtDefs()$pts[[getPtName()]],
           rowIndex=getTibRow(),
           matColIndex=getTibMatCol(),
-          ptDisplayMode=getDisplayMode(),
+          displayOptions=getDisplayOptions(),
           vbScaleFactor=vbScaleFactor
         )
       )

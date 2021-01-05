@@ -85,11 +85,12 @@ observeEvent(input$pages,{
   # cat(">---> input$pages 5\n")
   tb<-getSvgGrid()
   if(length(tb$show)>0){
-    if(tb$show){
-      renameDMDM(session,  "plotNavBar", "cmdShowGrid", "Hide Grid", newValue="cmdHideGrid")
-    }else{
-      renameDMDM(session,  "plotNavBar",  "cmdHideGrid", "Show Grid",newValue="cmdShowGrid")
-    }
+    updateCheckboxInput(session, "cmdShowGrid",  value = tb$show)
+    # if(tb$show){
+    #   renameDMDM(session,  "plotNavBar", "cmdShowGrid", "Hide Grid", newValue="cmdHideGrid")
+    # }else{
+    #   renameDMDM(session,  "plotNavBar",  "cmdHideGrid", "Show Grid",newValue="cmdShowGrid")
+    # }
   }
   # cat("<---< input$pages 5\n")
 })

@@ -7,15 +7,15 @@ observeEvent(input$plotNavBar, {
     return(NULL)
   }
   
-  if(cmd == 'cmdShowGrid'){
-    renameDMDM(session,  "plotNavBar", "cmdShowGrid", "Hide Grid", newValue="cmdHideGrid")
-    setSvgGrid(input$pages, show=TRUE)
-  }
-  
-  if(cmd == 'cmdHideGrid'){
-    renameDMDM(session,  "plotNavBar",  "cmdHideGrid", "Show Grid",newValue="cmdShowGrid")
-    setSvgGrid(input$pages, show=FALSE)
-  }
+  # if(cmd == 'cmdShowGrid'){
+  #   renameDMDM(session,  "plotNavBar", "cmdShowGrid", "Hide Grid", newValue="cmdHideGrid")
+  #   setSvgGrid(input$pages, show=TRUE)
+  # }
+  # 
+  # if(cmd == 'cmdHideGrid'){
+  #   renameDMDM(session,  "plotNavBar",  "cmdHideGrid", "Show Grid",newValue="cmdShowGrid")
+  #   setSvgGrid(input$pages, show=FALSE)
+  # }
   
   if(cmd == 'cmdAdjustGridSpacing'){
     spacingChoices<-c(.01, .05, .1, .5 ,1, 5,50,100,500)
@@ -45,24 +45,24 @@ observeEvent(input$plotNavBar, {
     setBackDrop(hide=FALSE)
   } 
   
-  if(cmd == 'cmdShowPointsNoLabels'){
-    disableDMDM(session,  menuBarId="plotNavBar", entry="cmdShowPointsNoLabels")
-    enableDMDM(session,  menuBarId="plotNavBar",  entry="cmdShowPointLabels")
-    enableDMDM(session,  menuBarId="plotNavBar",  entry="cmdHidePoints")
-    setDisplayOption(ptMode='Normal')
-  }
-  
-  if(cmd == 'cmdShowPointLabels'){
-    enableDMDM(session,  menuBarId="plotNavBar", entry="cmdShowPointsNoLabels")
-    disableDMDM(session,  menuBarId="plotNavBar",  entry="cmdShowPointLabels")
-    enableDMDM(session,  menuBarId="plotNavBar",  entry="cmdHidePoints")
-    setDisplayOption(ptMode='Labeled')
-  }
+  # if(cmd == 'cmdShowPointsNoLabels'){
+  #   disableDMDM(session,  menuBarId="plotNavBar", entry="cmdShowPointsNoLabels")
+  #   enableDMDM(session,  menuBarId="plotNavBar",  entry="cmdShowPointLabels")
+  #   enableDMDM(session,  menuBarId="plotNavBar",  entry="cmdHidePoints")
+  #   setDisplayOption(ptMode='Normal')
+  # }
+  # 
+  # if(cmd == 'cmdShowPointLabels'){
+  #   enableDMDM(session,  menuBarId="plotNavBar", entry="cmdShowPointsNoLabels")
+  #   disableDMDM(session,  menuBarId="plotNavBar",  entry="cmdShowPointLabels")
+  #   enableDMDM(session,  menuBarId="plotNavBar",  entry="cmdHidePoints")
+  #   setDisplayOption(ptMode='Labeled')
+  # }
   
   if(cmd == 'cmdNewColumn'){
     showModal( addNewColModal() )
   }
-  
+  # -----PP
   if(cmd == 'cmdNewPP'){ # disable unless ...
     # columnName<-getTibColumnName()
     type='points'
@@ -77,11 +77,7 @@ observeEvent(input$plotNavBar, {
       cmdPreProcPtsImport()
       dirtyDMDM(session, "plotNavBar")
   }  
-  
-  # if(cmd=="cmdRemovePP"){ #-----save
-  #   cmdPreProcPtsRemove('points')
-  #   dirtyDMDM(session, "plotNavBar")
-  # } 
+  # -----AP
   
   if(cmd == 'cmdNewAP'){ # disable unless ...
     log.fin(cmd == 'cmdNewAP' )
@@ -104,6 +100,29 @@ observeEvent(input$plotNavBar, {
     cmdPreProcAtsRemove('attrs')
     dirtyDMDM(session, "plotNavBar")
   } 
+  # ----CC
+  if(cmd == 'cmdNewColumnChoices'){ # disable unless ...
+    log.fin(cmd == 'cmdNewColumnChoices' )
+    type='attrs'
+    labels<-preprocChoices[[type]]
+    preprocScripts = fileTemplates[paste0(labels,'Template.R')]
+    names(preprocScripts)<-labels
+    cmdCustColumnEdit( custColumnName='')
+    dirtyDMDM(session, "plotNavBar")
+    log.fout(cmd == 'cmdNewAP')
+    dirtyDMDM(session, "plotNavBar")
+  }
+  
+  if(cmd == 'cmdImportColumnChoices'){ # disable unless ...
+     cmdChoiceSetImport()
+     dirtyDMDM(session, "plotNavBar")
+  }
+  
+  # if(cmd=="cmdRemoveAP"){ #-----save
+  #   cmdPreProcAtsRemove('attrs')
+  #   dirtyDMDM(session, "plotNavBar")
+  # } 
+  
   
   if(!is.null(cmd)){
     dirtyDMDM(session, "plotNavBar")
@@ -130,11 +149,40 @@ observeEvent(input$plotNavBar, {
       modalPreProcEditor( preprocScripts, preprocName, type=type )
     )
   }
-  
+  if( grepl( '^editChoiceSet-', cmd)){
+    choiceSetName<-sub("^editChoiceSet-","",cmd)
+    choiceSet=aux$colChoiceSet[[choiceSetName]]
+    value=paste(choiceSet, collapse="\n")
+    showModal( 
+      modalCustColumnEditor(custColumnName=choiceSetName, value=value) 
+    )
+  }
   
   
   
 })
+
+
+observeEvent(input$cmdLabelPoints,{
+  checked<-input$cmdLabelPoints
+  setDisplayOption(labelMode=checked)
+}, ignoreNULL=TRUE)
+
+observeEvent(input$cmdInsertEnabled,{
+  checked<-input$cmdInsertEnabled
+  setDisplayOption(insertMode=checked)
+}, ignoreNULL=TRUE)
+
+
+observeEvent(input$cmdRestrictRows,{
+  checked<-input$cmdRestrictRows
+  setDisplayOption(restrictMode=checked)
+}, ignoreNULL=TRUE)
+
+observeEvent(input$cmdShowGrid,{
+  checked<-input$cmdShowGrid
+  setSvgGrid(input$pages, show=checked)
+}, ignoreNULL=TRUE)
 
 
 

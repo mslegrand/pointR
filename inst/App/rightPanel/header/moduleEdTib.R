@@ -59,6 +59,7 @@ moduleEdTib<-function(input, output, session,
   getTibEditState,
   getTransformType,
   getWidgetChoices,
+  getChoiceSet4PageName,
   getWidget
 ){
   ns <- session$ns
@@ -75,25 +76,19 @@ moduleEdTib<-function(input, output, session,
 
 #------------ui ouput----------------------
   
-  #---assets
-  # output$dataSetUI<-renderUI({
-  #   if(length(nameChoices())>0){
-  #     butts<- nameChoices()
-  #     radioGroupButtons(inputId=ns("name"), choices=butts, selected=name(),
-  #                       justified=TRUE)
-  #   }
-  # })
-  
-  
   
   #---columns
   output$columnUI<-renderUI({
     if( getTibEditState()==TRUE ){
-      if(!is.null(getColumnName()) && !is.null(getColumnNameChoices())){ 
-        radioGroupButtons(inputId=ns("columnRadio"), 
-                          choices=as.list(getColumnNameChoices()), 
-                          selected=getColumnName() ,
-                          justified=TRUE)
+      if(!is.null(getColumnName()) && !is.null(getColumnNameChoices())){
+        
+        
+        jqScrollBar(inputId=ns("columnRadio"),  
+                   choices =getColumnNameChoices(), selected=getColumnName())
+        # radioGroupButtons(inputId=ns("columnRadio"), 
+        #                   choices=as.list(getColumnNameChoices()), 
+        #                   selected=getColumnName() ,
+        #                   justified=TRUE)
       }
     } 
   })  
@@ -101,17 +96,14 @@ moduleEdTib<-function(input, output, session,
   #---column values
   output$widgetChooserUI<-renderUI({ #widgetChoice
     if( getTibEditState()==TRUE ){
-      # cat('--Entering ---widgetChooserUI----------\n')
-      # cat('--calling ---getWidgetChoices----------\n')
       choices<-getWidgetChoices()
-      # cat('--calling ---getWidget----------\n')
+      
       widget<-getWidget()
-      # cat('--returning from  ---getWidget----------\n')
-      # cat("\nAfter getWidget value of getRowIndex=", format(getRowIndex()), "\n")
+      cs<-getChoiceSet4PageName()
+      if(!is.null(cs)){
+        widget<-cs #selected widget
+      }
       if(length(choices )>0 && !is.null(widget)){
-        #cat("tabId=",format(input$pages),"\n")
-        # cat("widgetChooserUI:: choices=c(",paste(choices,collapse=", "),")\n")
-        # cat('widget=',widget,"\n")
         div( "class"='ptR2',
            selectInput(ns("selectedWidget"), label=NULL,
                        choices=choices, selected=widget, width="110px")
@@ -122,18 +114,13 @@ moduleEdTib<-function(input, output, session,
   
   output$columnEntryUI<-renderUI({
     if( getTibEditState()==TRUE ){
-      # cat("\nEntering----------output$colEntryUI---------------\n")
-      # cat("\nInitial value of getRowIndex", format(getRowIndex()), "\n")
-      # cat('--calling ---getWidget2----------\n')
       widget<-getWidget()
-      # cat("widget=",format(widget),"\n")
-      # cat("getTibEntry()=",format(getTibEntry()),"\n")
-      # cat("getTibEntryChoices()=",format(getTibEntryChoices()),"\n")
+      cs<-getChoiceSet4PageName()
       if(!is.null(widget) && !is.null(getTibEntry()) && !is.null(getTibEntryChoices())){ 
             selected<-getTibEntry()
+            # log.val(selected)
             choices<-getTibEntryChoices()
             if(widget=='slider'){
-              # cat('xxx widget=', format(widget),"\n")
               sliderInput(
                 inputId=ns("entrySlider"),label = NULL, min=0,max = 100, value = as.numeric(selected)
               ) 
@@ -148,13 +135,20 @@ moduleEdTib<-function(input, output, session,
                   val
                 })
                 choices<-sort(unique(unlist( choices )))
-                if(widget=='radio'){
+                if(!is.null(cs)){
                   # cat('xxx widget=', format(widget),"\n")
-                  radioGroupButtons(inputId=ns("entryRadio"), 
-                                    choices=choices, 
-                                    selected=selected,
-                                    justified=TRUE
-                  )
+                  # radioGroupButtons(inputId=ns("entryRadio"), 
+                  #                   choices=choices, 
+                  #                   selected=selected,
+                  #                   justified=TRUE
+                  # )
+                  jqScrollBar(inputId=ns("entryRadio"),  
+                              choices =choices, selected=selected)
+                  
+                } else if(widget=='radio'){
+                  jqScrollBar(inputId=ns("entryRadio"),  
+                              choices =choices, selected=selected)
+                  
                 } else if (widget=='picker'){
                   # cat('xxx widget=', format(widget),"\n")
                   div( "class"="ptR2", width='800px',
@@ -211,18 +205,14 @@ moduleEdTib<-function(input, output, session,
   #---asset name---
   observeEvent(c( name(), nameChoices() ), { #update the name
     if( !is.null(name()) && name()==transformTag ){
-      # cat('transformPanelContainer show \n')
       showElement('transformPanelContainer')
     } else {
-      # cat('transformPanelContainer hide \n')
       hideElement('transformPanelContainer')
     }
     
       if(length(nameChoices())>0 && !is.null(name()) && nchar(name())>0 && !(name() %in% c( transformTag, RPanelTag, errorPanelTag, svgPanelTag)) ){
-        # cat('headEdTib show\n')
         showElement('headEdTib')
       } else {
-        # cat('headEdTib hide\n')
         hideElement('headEdTib')
         hideElement(ns('headEdTib'))
       }

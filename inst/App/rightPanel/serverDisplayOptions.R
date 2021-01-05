@@ -2,7 +2,9 @@
 # controls display of svg rendering
 displayOptions<-reactiveValues(
   insertMode=TRUE,
-  ptMode="Normal" # can be 'Hidden', 'Normal', 'Labeled'
+  ptMode="Normal", # can be 'Hidden', 'Normal', 'Labeled'
+  labelMode=FALSE,
+  restrictMode=FALSE
 )
 
 #displayMode<-reactive({displayOptions$ptMode})
@@ -22,7 +24,13 @@ getDisplayMode<-reactive({
 })
 
 
-setDisplayOption<-function( insertMode, ptMode ){
+setDisplayOption<-function( insertMode, ptMode, labelMode, restrictMode ){
+  if(!missing(labelMode)){
+    displayOptions$labelMode<-labelMode
+  }
+  if(!missing(restrictMode)){
+    displayOptions$restrictMode<-restrictMode
+  }
   if(!missing(insertMode)){
     displayOptions$insertMode<-insertMode
   }
@@ -30,6 +38,9 @@ setDisplayOption<-function( insertMode, ptMode ){
     displayOptions$ptMode<-ptMode
   }
 }
+getDisplayOptions<-reactive({
+  tmp<-reactiveValuesToList(displayOptions)
+})
 
 
 

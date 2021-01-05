@@ -29,6 +29,7 @@ shinyFileChoose(input,"buttonSnippetImport",  session=session, roots=c(home="~")
 shinyFileChoose(input,"buttonDnippetImport",  session=session, roots=c(home="~"), filetypes=c('dnds'))
 shinyFileChoose(input,"buttonPreProcPtImport",  session=session, roots=c(home="~"), filetypes=c('R'))
 shinyFileChoose(input,"buttonPreProcAtImport",  session=session, roots=c(home="~"), filetypes=c('R'))
+shinyFileChoose(input,"buttonChoiceSetImport",  session=session, roots=c(home="~"), filetypes=c('txt'))
 
 
 

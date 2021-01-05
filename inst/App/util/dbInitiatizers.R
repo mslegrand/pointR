@@ -17,7 +17,6 @@ initialPreProcPageDB<-function(){
   tibble( tabId="bogus", tibName="bogus", colName='bogus', scriptName='bogus')[0,]
 }
 
-
 initialTribbleDB<-function(){
   tibble(
     tabId='bogus',

@@ -108,11 +108,12 @@ shinyServer(function(input, output,session) {
   source("rightPanel/mouse/serverMouseClicks.R",                 local=TRUE)
   source("rightPanel/menu/cmdNewColumn.R",                       local=TRUE)
   source("rightPanel/menu/cmdNewAsset.R",                        local=TRUE)
-  
+  source("rightPanel/choiceSet/modalChoiceSet.R",                local=TRUE)
   source("rightPanel/menu/cmdDeleteColumn.R",                    local=TRUE)
   source("rightPanel/menu/cmdFileImportPreProc.R",               local=TRUE)
   source("rightPanel/menu/cmdFileExportPreProc.R",               local=TRUE)
   source("rightPanel/menu/cmdRemovePreProc.R",                   local=TRUE)
+  source("rightPanel/choiceSet/cmdChoiceSetImport.R",            local=TRUE)
   source("rightPanel/menu/serverPlotBar.R",                      local=TRUE)
   source("rightPanel/serverPanelCoordinator.R",                  local=TRUE)
   source("rightPanel/serverPanelDispatch.R",                     local=TRUE)
