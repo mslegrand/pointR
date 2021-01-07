@@ -7,7 +7,7 @@ Videos available at https://www.youtube.com/playlist?list=PLpvG89XJyQhlucHJxb9pr
 
 ## Latest Release
 
-{{site.latest_release}}
+{{ site.latest_release }}
 
 ##  Installation Instructions
 
