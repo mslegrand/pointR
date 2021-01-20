@@ -93,6 +93,60 @@ function getAceMode(ed){
   mode = mode.substr(mode.lastIndexOf('/') + 1);
   return mode;
 }
+
+function aceReplaceBlock(link, txt){
+  let res=link.split(".");
+  let aceId=res[0];
+  let rid=res[1];
+  console.log('++++++++++++ aceId='+aceId);
+  console.log('++++++++++++ rid='+rid);
+  console.log('abcdefg-----------1--------------');
+  let editor=$('#'+aceId).data('aceEditor'); 
+  console.log('abcdefg-----------2--------------');
+  let session =editor.getSession();
+  console.log('abcdefg-----------3--------------');
+  let anchors=session.anchors;
+  console.log('abcdefg-----------4--------------');
+  console.log(JSON.stringify(anchors));
+  let preDoc=null;
+  if(
+    (typeof editor.getSession().anchors !='undefined') &&
+    (typeof editor.getSession().anchors[rid] !='undefined')
+   ){
+    console.log('abcdefg-----------5--------------');
+    let anc1 =editor.getSession().anchors[rid].anc1;
+    let anc2 =editor.getSession().anchors[rid].anc2;
+    if(!!anc1 && !!anc2){
+      let Range = ace.require('ace/range').Range;
+      console.log('abcdefg-----------6--------------');
+      let row1 = anc1.getPosition().row;
+      console.log('abcdefg-----------7--------------');
+      let row2 = anc2.getPosition().row;
+      let prernge =  new Range(0, 0, row1-1, Infinity); // assumes that row1>0
+      preDoc=session.getTextRange(prernge);
+      console.log('abcdefg-----------8--------------');
+       row1=row1+1;
+       row2=row2-1;
+       console.log('abcdefg-----------9--------------');
+      // select range
+      console.log('row1='+row1+' row2='+row2);
+      
+      let rnge =  new Range(row1, 0, row2, Infinity);
+      console.log('abcdefg-----------10--------------');
+      console.log(JSON.stringify(rnge));
+      // replace text in range
+      console.log('abcdefg-----------11--------------');
+      session.replace(rnge,txt);
+      console.log('abcdefg-----------12--------------');
+      
+      session.getUndoManager().setOk();
+    }
+  } else {
+    console.log('anchor['+rid+'] not found');
+  }
+  return preDoc;
+}
+
 /*
 function getSaveStatus(ed){
   if(! ud.canUndo() ){
@@ -180,6 +234,46 @@ Shiny.addCustomMessageHandler(
           console.log('editor is null');
           return false;
         }  
+        
+        if(!!data.updateRmdDependents){
+          $('.shiny-ace').each(function(){
+                let lid=this.id;
+                console.log('lid='+lid);
+                let editr = $('#'+lid).data('aceEditor'); 
+                if(!!editr.getSession().link ){
+                  let link=editr.getSession().link;
+                  console.log('link is:'+JSON.stringify(link));
+                  if(link.length !== undefined){
+                    let res=link[0].split(".");
+                    let aceId=res[0];
+                    let rid=res[1];
+                    if(aceId==id){
+                      console.log('found ace='+aceId+'with anchor='+ rid);
+                      // select the range for rid in the rmd and copy over
+                      console.log('anchors='+JSON.stringify(editor.getSession().anchors ));
+                          if(!!editor.getSession().anchors ){
+                           let anc1 =editor.getSession().anchors[rid].anc1;
+                           let anc2 =editor.getSession().anchors[rid].anc2;
+                           // if both defined, get section
+                            if(!!anc1 && !!anc2){
+                              let Range = ace.require('ace/range').Range;
+          
+                              let row1 = anc1.getPosition().row;
+                              let row2 = anc2.getPosition().row;
+                              console.log('row1='+JSON.stringify( row1) +"  row2="+JSON.stringify(row2)                              );
+                              let xrng =  new Range(row1+1, 0, row2-1, Infinity); // assumes that row1>0
+                              console.log('xrng='+JSON.stringify(xrng) )
+                              let selTxt=editor.getSession().getTextRange(xrng);
+                              console.log(JSON.stringify(selTxt))
+                              editr.getSession().setValue(selTxt);
+                           }
+                      }
+                  } //aceId
+                } //link.length
+                }//!!editr.getSession().link 
+          });
+        }
+        
         //-------------updateAll handlers---------------
         if(sender=='updateAll'){
               if(!!data.fontSize){
@@ -215,7 +309,7 @@ Shiny.addCustomMessageHandler(
         
         var auxValue="";
         
-        var HighlightedLines;
+        //var HighlightedLines;
         var aceMode = editor.getSession().$modeId;
         aceMode = aceMode.substr(aceMode.lastIndexOf('/') + 1);
         
@@ -479,6 +573,7 @@ Shiny.addCustomMessageHandler(
           //  editor.getSession().clearBreakpoints();
           //}
           
+          
           Shiny.onInputChange('messageFromAce', 
           {
              code : editor.getSession().getValue(),
@@ -502,6 +597,7 @@ Shiny.addCustomMessageHandler(
             //}
           }
           */
+          
           if(!!data.rollBack){
             ud=editor.getSession().getUndoManager();
             if( ud.$ok.length>0 ){ // only replace if we can roll back to a good state
@@ -514,6 +610,34 @@ Shiny.addCustomMessageHandler(
             auxValue=data.auxValue;
           }
           
+          preDoc="";
+          if(!!editor.getSession().link){
+            let link= editor.getSession().link
+            //if(typeof link =='array')
+            console.log('*******link*********')
+            console.log("link="+JSON.stringify(link))
+            console.log("link.length="+JSON.stringify(link.length))
+            if(link.length !== undefined){
+              let targetAceId=link[0]
+              console.log('****adskfjalsufhlaiufhsia&&&&&&&&77')
+              if(typeof targetAceId !=undefined){
+                console.log('****adskfjalsufhla666666666iufhsia&&&&&&&&77')
+                console.log(JSON.stringify(link[0]));
+                let text = editor.getSession().getValue();
+                console.log('****adskfjalsufhl8888888888888888hsia&&&&&&&&77')
+                preDoc=aceReplaceBlock(targetAceId, text); // should replace only if text does not match block
+              }
+            
+            // get targetEditor
+            // get targetSession.canchors
+            // select target beteen canchors
+            // set text in that region
+            
+            //
+            }
+            
+            
+          }
           
           Shiny.onInputChange('messageFromAce', 
           {
@@ -524,6 +648,7 @@ Shiny.addCustomMessageHandler(
              mode: aceMode,
              isSaved: ud.isSaved(),
              auxValue: auxValue,
+             preDoc: preDoc,
              rnd : randomString(5)
           });
         }
