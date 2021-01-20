@@ -30,7 +30,8 @@ initialPtrAceOptions<-function(
   cursorId=NULL, 
   hotkeys=NULL,
   docFilePath='?',
-  initSaved=FALSE
+  initSaved=FALSE,
+  link=NULL
 )
 {
   sanitizeId <- function(id){
@@ -49,7 +50,8 @@ initialPtrAceOptions<-function(
     autoCompleteList=autoCompleteList,
     acejs=acejs,
     docFilePath=docFilePath,
-    initSaved=initSaved
+    initSaved=initSaved,
+    link=link
   )
   rtv<-paste0('ptRaceInit(',toJSON(options),');')
   # cat('initialPtrAceOptions:: options')
@@ -73,7 +75,8 @@ shinyAce4Ptr <- function(
     cursorId=NULL, 
     hotkeys=NULL,
     docFilePath=docFilePath, #assigned
-    initSaved=initSaved #assigned
+    initSaved=initSaved, #assigned
+    link=NULL
   ){
   # cat('shinyAce4Ptr:: outputId=',outputId,"\n")
   
@@ -99,7 +102,8 @@ shinyAce4Ptr <- function(
       autoCompleteList=autoCompleteList,
       debounce=debounce, selectionId=selectionId, cursorId=cursorId, hotkeys=hotkeys, 
       docFilePath=docFilePath,
-      initSaved=initSaved
+      initSaved=initSaved,
+      link=link
     )
     
     
