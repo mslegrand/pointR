@@ -3,6 +3,8 @@ processKnit<-reactive({
   # cat_list<<-c( cat_list,">---> processKnit\n")
   clearErrorMssg()
   #src<-request$code
+  updateAceExt( id= getAceEditorId(), sender='commit.removeMarkers', removeAllMarkers='removeAllMarkers', updateRmdDependents=getAceEditorId() )
+  
   src<-getCode()
   
   setSourceType(rmdPanelTag)
