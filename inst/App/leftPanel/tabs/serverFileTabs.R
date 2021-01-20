@@ -54,7 +54,7 @@ closeTabNow<-function(tabId2X){
 
 # TODO!!!! , add input parameters for:   autocomplete
 # fontsize should be read from options 
-addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FALSE){
+addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FALSE, link=NULL){
   log.fin(addFileTab)
   tabId<-getNextTabId()
   
@@ -65,7 +65,8 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FA
   
   aceId<-newPage(tabId=tabId, title=title, txt=txt,
                  docFilePath=docFilePath, mode=mode,
-                 fileSaveStatus=fileSaveStatus)
+                 fileSaveStatus=fileSaveStatus,
+                 link=link)
   
   #sendFileTabsMessage(tabId=pageId, sender='savedStatus', saveStatus=fileSaveStatus,resize=runif(1))
   sendFileTabsMessage(resize=runif(1))
@@ -131,3 +132,38 @@ observeEvent(c(request$trigger,request$tabs), {
   }
 }, label='request-tabs-trigger')
 
+observeEvent(input$messageContextMenu, {
+  
+  #todo
+  # add start_row, end_row, rmdId, to tabId page
+  # add control... to tabId page
+  # hide or disable rmdId page (removeTab, then restore tab later)
+  
+  start_row=input$messageContextMenu$start_row
+  end_row=input$messageContextMenu$end_row
+  src<-input$messageContextMenu$code
+  rid<-input$messageContextMenu$id
+  print("--------rmdId--------------")
+  print(rid)
+  cat("start_row=", start_row, " end_row=",end_row,"\n")
+  rmdAceId<-tabID2aceID(input$pages)
+  link<-paste(rmdAceId,rid, sep=".")
+  print("--------rmdId--------------")
+  print(rmdAceId)
+  # we update Ace with code
+  # + all prior code as a hidden portion
+  # and keep a hidden copy of full text for later reinsertion.
+  # BUT widget handler then has a problem, would need to know which ptR we are refering to.
+  
+  # print(rmdId)
+  # rmdId<-gsub('#',"", rmdId)
+  # hideElement(rmdId) # hides the frame but not the tab itself
+  tabName<-getNextAnonymousFileName()
+  tabId<-addFileTab(title=tabName, txt=src,  docFilePath="?", mode='ptr', fileSaveStatus=FALSE, link=link)
+  # 
+  aceId<-tabID2aceID(tabId)
+  # alternatively set ace content of to code, and save full txt somewhere
+  
+  mssg$error<-""
+  log.fout(cmdFileNewPtR)
+})
