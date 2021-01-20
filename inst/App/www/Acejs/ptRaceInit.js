@@ -158,7 +158,13 @@ function ptRaceInit(data){
   }     
   
   theEditor.getSession().setUndoManager(ud);
-      
+   
+  if(!!data.link){
+    console.log("*********************************");
+    console.log("*** data.link=" + JSON.stringify(data.link));
+    theEditor.getSession().link=data.link;
+  } 
+  
   theEditor.commands.addCommand({
     name: 'commitSource',
     bindKey: {win: 'Ctrl-Shift-Enter', mac: 'Command-Shift-Enter'},
