@@ -1,11 +1,42 @@
 
 theCode<-reactiveVal("")
+theBlocks<-reactiveVal(NULL)
+theEnvList<-reactiveVal(list()) #or NULL?
 
 request<-reactiveValues(
   sender=NULL,
   tabs=NULL,
-  trigger=0
+  trigger=0,
+  predoc=""
 )
+
+getWDCmd<-reactive({
+  log.fin(getWDCmd)
+  dpath<-getDirPath()
+  log.val(dpath)
+  if(identical(dpath, '~/.ptR')){
+    dpath<-'~'
+  }
+  dd<-paste0('\nsetwd("',dpath,'")\n\n')
+  log.fout(getWDCmd)
+  dd
+})
+
+
+getEnvList<-reactive({
+  wd<-getWDCmd()
+  pcode<-theBlocks()
+  if(!is.null(pcode) && pcode!=""){
+    pcode=paste(wd,pcode )
+    initialEnv=new.env()
+    eval(parse(text=pcode),initialEnv)
+    envlist<-as.list(initialEnv)
+  } else  {
+    envlist<-list()
+  }
+  envlist
+})
+
 
 
 
@@ -68,6 +99,14 @@ popTab<-reactive({
   request$tabs<-request$tabs[-1]
   # ?????   if length(tabs is 0, remove sender?)
   tab
+})
+
+setBlocks<-function(blocks){
+  theBlocks(blocks)
+}
+
+getBlocks<-reactive({
+  theBlocks()
 })
 
 setCode<-function(code){
