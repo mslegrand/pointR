@@ -25,7 +25,8 @@ svgToolsScript<-function(type){
     getSVGWH, 
     getSvgGrid,
     getBackDrop,
-    getCode,
+    getCode, 
+    getEnvList,
     getErrorMssg, 
     getTibNRow, # doesnot appear
     getDirPath
@@ -98,7 +99,7 @@ svgToolsScript<-function(type){
           wd<-paste0('\nsetwd("',dpath,'")\n\n')
           
           parsedCode<-parse(text=paste0(wd,codeTxt))
-          svg<-eval(parsedCode, new.env() )
+          svg<-eval(parsedCode, getEnvList() )
           w<-svg$root$getAttr('width')
           h<-svg$root$getAttr('height')
           rtv$WH<-c(w,h)

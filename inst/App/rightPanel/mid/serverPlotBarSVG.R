@@ -16,6 +16,7 @@ statusPlotSVG<-callModule(
   getSvgGrid,
   getBackDrop,
   getCode4Rendering,
+  getEnvList=getEnvList,
   getErrorMssg,
   getTibNRow=getTibNRow,
   getDirPath=getDirPath
