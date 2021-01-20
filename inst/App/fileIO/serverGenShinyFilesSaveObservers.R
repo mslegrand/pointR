@@ -14,8 +14,9 @@ genShinySaveFilesObservers<-function(input, session){
       if('cancel' %in% names(rtList)){
         if(rtList$cancel=='close'){ 
           tabId=popTabRequest()
-          if(mssg$docFilePath!="?"){
-            addToRecentFiles(mssg$docFilePath)
+          docFilePath=getFileDescriptor(tabId)$filePath
+          if(!is.null(docFilePath) && docFilePath!="?"){ # WFT where is this mssg$docFilePath comming from??? !!!!
+            addToRecentFiles(docFilePath)
           }
           closeTabNow(tabId)
         } else {
