@@ -92,6 +92,7 @@ restoreWorkSpace<-reactive({
       tryCatch(
         {txt<-paste(readLines(docFilePath), collapse="\n")},
         error=function(e){
+          e<-e$message
           cat("Unable to read file:", paste(e, collapse="\n"))
           return(NULL) #bail
         }

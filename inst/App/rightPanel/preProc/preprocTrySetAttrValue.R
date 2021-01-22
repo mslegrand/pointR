@@ -38,7 +38,7 @@ preprocTrySetAttrValue<-function( cmd.Row, ptDefs, rowIndex, selection, mssg=NUL
     sender='applyTibEdit'
     updateAceExtDef(ptDefs, sender=sender, selector=list( name=context$name, rowIndex=context$row   ) )
   }, error=function(e){
-    e<-c('onChangeRow:',e)
+    e<-c('onChangeRow:',e$message)
     err<-paste(unlist(e), collapse="\n", sep="\n")
     shinyalert("preproc value Errpr",err, type="error")
   })
@@ -87,7 +87,7 @@ preprocTrySetAttrValueS<-function(scripts,  ptDefs, rowIndex, selection){
       }
     }
   }, error=function(e){
-    e<-c('preprocErr',e)
+    e<-c('preprocErr',e$message)
     err<-paste(unlist(e), collapse="\n", sep="\n")
     shinyalert("preproc value Errpr",err, type="error")
   })

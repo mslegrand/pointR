@@ -18,6 +18,7 @@ processDnip<-reactive({
     } 
     , #end of try
     error=function(e){
+      e<-e$message
       if(all(!str_detect(e,'Output:'))){
         e<-c(e,traceback())
       }

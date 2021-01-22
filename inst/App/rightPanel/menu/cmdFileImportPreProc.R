@@ -51,7 +51,7 @@ loadPreProc<-function(datapath, type){
       readAuxPreProcs()
   }, 
   error=function(e){
-        e<-c(e,traceback())
+        e<-c(e$message,traceback())
         err<-paste(unlist(e), collapse="\n", sep="\n")
         shinyalert("load preproc Error",err, type="error")
   })
