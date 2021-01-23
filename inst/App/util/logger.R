@@ -41,3 +41,9 @@ log.val<-function(x){
     )
   }
 }
+
+log.counter<-function(x=0){
+  x<-x+1
+  cat(paste0('counter-',x),'\n')
+  x
+}
