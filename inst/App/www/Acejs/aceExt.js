@@ -262,9 +262,9 @@ Shiny.addCustomMessageHandler(
                               let row2 = anc2.getPosition().row;
                               console.log('row1='+JSON.stringify( row1) +"  row2="+JSON.stringify(row2)                              );
                               let xrng =  new Range(row1+1, 0, row2-1, Infinity); // assumes that row1>0
-                              console.log('xrng='+JSON.stringify(xrng) )
+                              console.log('xrng='+JSON.stringify(xrng) );
                               let selTxt=editor.getSession().getTextRange(xrng);
-                              console.log(JSON.stringify(selTxt))
+                              console.log(JSON.stringify(selTxt));
                               editr.getSession().setValue(selTxt);
                            }
                       }
@@ -489,14 +489,15 @@ Shiny.addCustomMessageHandler(
           
           ud=editor.getSession().getUndoManager();
           //console.log('1: undoManager is: ' + simpleStringify( ud ));
-          /*
-          console.log('1: ud.$ok is :' + JSON.stringify( ud.$ok));
-          console.log("1: editor.getSession().getUndoManager().$ok=" + 
-                JSON.stringify(editor.getSession().getUndoManager().$ok));
-          console.log("Before pop ud.$undoStack.length=" + 
-              editor.getSession().getUndoManager().$undoStack.length);
-              */
-          if( ud.$ok.length>0 ){ // only replace if we can roll back to a good state
+          
+          //console.log('1: ud.$ok is :' + JSON.stringify( ud.$ok));
+          //console.log("1: editor.getSession().getUndoManager().$ok=" + 
+          //      JSON.stringify(editor.getSession().getUndoManager().$ok));
+          //console.log("Before pop ud.$undoStack.length=" + 
+          //   editor.getSession().getUndoManager().$undoStack.length);
+          //console.log("ud.$ok.length="+ ud.$ok.length)   ;
+          if( ud.$ok.length>0 ){ //  if we can, first roll back to a good state, then replace
+             //console.log(  "ud.$ok.length="+ud.$ok.length );
             ud.pop2Ok();
             /*
             console.log('2: undoManager is: ' + simpleStringify( ud ));
@@ -506,11 +507,11 @@ Shiny.addCustomMessageHandler(
                 JSON.stringify(editor.getSession().getUndoManager().$ok));
             */
             //ud.pop2Ok(); //!!! to do, check if pop.2Ok exists
-            /*
-            console.log("Before replacement u.$undoStack.length=" + 
-              editor.getSession().getUndoManager().$undoStack.length + "\n ok=" +
-              JSON.stringify(editor.getSession().getUndoManager().$ok) );
-            */
+          }  
+            //console.log("Before replacement u.$undoStack.length=" + 
+             // editor.getSession().getUndoManager().$undoStack.length + "\n ok=" +
+             // JSON.stringify(editor.getSession().getUndoManager().$ok) );
+          
             for(var i=0;  i< replacement.length; i++){
               let rpl = replacement[i];
               //console.log("xx "+ i + ": " + JSON.stringify(rpl));
@@ -520,8 +521,8 @@ Shiny.addCustomMessageHandler(
                editor.getSession().replace(rnge, rpl.txt);
                editor.getSession().getUndoManager().setOk();
             }
-           //console.log("After replacement ud.$undoStack.length=" + 
-           //  editor.getSession().getUndoManager().$undoStack.length);
+           console.log("After replacement ud.$undoStack.length=" + 
+             editor.getSession().getUndoManager().$undoStack.length);
            
           setTimeout( function(){
              editor.getSession().getUndoManager().setOk();
@@ -546,8 +547,8 @@ Shiny.addCustomMessageHandler(
           }, 5 );
           
           
-          }        
-        }
+          //}        
+        }  //end replacement
         
         //---------setOk----------
         if(!!data.setOk){
