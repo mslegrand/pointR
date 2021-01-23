@@ -104,7 +104,7 @@ observeEvent( input$myTibRowCntrl$selected, {
         updateSelected( rowIndex=rowIndex)
       }
     }
-     log.fout(input$myTibRowCntrl$selected)
+     # log.fout(input$myTibRowCntrl$selected)
   }
 })
 
