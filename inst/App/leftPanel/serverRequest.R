@@ -24,16 +24,21 @@ getWDCmd<-reactive({
 
 
 getEnvList<-reactive({
+  # log.fin(getEnvList)
   wd<-getWDCmd()
+  # log.val(wd)
   pcode<-theBlocks()
   if(!is.null(pcode) && pcode!=""){
-    pcode=paste(wd,pcode )
+    pcode=paste(wd,pcode,sep="\n")
     initialEnv=new.env()
+    # log.val(pcode)
     eval(parse(text=pcode),initialEnv)
     envlist<-as.list(initialEnv)
   } else  {
     envlist<-list()
   }
+  # log.val(envList)
+  # log.fout(getEnvList)
   envlist
 })
 
@@ -81,12 +86,6 @@ peekTabRequest<-function(){
 
 peekTabCmd<-function(){
   request$sender
-}
-
-
-clearRequest<-function(  ){
-  request$sender<-NULL
-  request$tags<-list()
 }
 
 requestStartUp<-function(){ 
