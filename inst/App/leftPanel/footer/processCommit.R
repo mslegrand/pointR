@@ -55,23 +55,19 @@ processCommit<-reactive({
     tabId<-input$pages
     savePage(tabId)
   }
-  
+  # log.fout(processCommit)
 })
 
 processSvgR<-reactive({
-  
+#  log.fin(processSvgR)
   src<-getCode()
-  
   if(length(src)==1){
-    ptRList<-getPtDefs()$tib
     tryCatch({
       initialEnv<-getEnvList()
-      lines<-strsplit(src,"\n") 
+      lines<-strsplit(src,"\n")
       lines<-lines[[1]]
-      
       ptRPos<-grep("^\\s*ptR<-",lines)
       svgRPos<-grep("^\\s*svgR\\(",lines)
-      
       if(length(svgRPos)==0){ # just R code I guess
         setSourceType(sourceType=RPanelTag) #
       } else {
@@ -97,7 +93,6 @@ processSvgR<-reactive({
         setCapturedMssg(output)
         setSourceType(sourceType=RPanelTag) #no error, just R code
       } else { # presume to be svgR code
-        
         env2<-getEnvList()
         parsedCode<-parse(text=paste0(src) )
         
@@ -114,10 +109,13 @@ processSvgR<-reactive({
     }, #end of try
     error=function(e){ 
         #Error handler for commit
+        e<-e$message
         if(all(!str_detect(e,'Output:'))){
           e<-c(e,traceback())
         }
-        err<-paste(unlist(e), collapse="\n", sep="\n")
+        err<-unlist(e)
+        err<-paste(err, collapse="\n", sep="\n")
+        # log.val(err)
         #try to locate where the error occured
         if(str_detect(err, 'parse')){
           m<-str_match(err, ":([0-9]+):([0-9]+):")
@@ -141,7 +139,8 @@ processSvgR<-reactive({
       } #end of error handler
     ) #end of tryCatch 
   } #end of if(length==1)
-  # cat('<----< processSvgR::\n')
+  
+  # log.fout(processSvgR)
 })
 
 
