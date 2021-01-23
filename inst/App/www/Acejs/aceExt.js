@@ -262,9 +262,9 @@ Shiny.addCustomMessageHandler(
                               let row2 = anc2.getPosition().row;
                               console.log('row1='+JSON.stringify( row1) +"  row2="+JSON.stringify(row2)                              );
                               let xrng =  new Range(row1+1, 0, row2-1, Infinity); // assumes that row1>0
-                              console.log('xrng='+JSON.stringify(xrng) );
+                              // console.log('xrng='+JSON.stringify(xrng) );
                               let selTxt=editor.getSession().getTextRange(xrng);
-                              console.log(JSON.stringify(selTxt));
+                              // console.log(JSON.stringify(selTxt));
                               editr.getSession().setValue(selTxt);
                            }
                       }
@@ -521,8 +521,8 @@ Shiny.addCustomMessageHandler(
                editor.getSession().replace(rnge, rpl.txt);
                editor.getSession().getUndoManager().setOk();
             }
-           console.log("After replacement ud.$undoStack.length=" + 
-             editor.getSession().getUndoManager().$undoStack.length);
+           //console.log("After replacement ud.$undoStack.length=" + 
+          //   editor.getSession().getUndoManager().$undoStack.length);
            
           setTimeout( function(){
              editor.getSession().getUndoManager().setOk();
