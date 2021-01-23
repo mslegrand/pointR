@@ -12,25 +12,78 @@ $(function () {
         let text = editor.getSession().getTextRange(editor.getSelectionRange());
         Shiny.onInputChange('helpMssg', {query:text, num:Math.random(), editorId: aceId} );
       } else if(cmd=="Edit Code Block"){
-        
-        editor.find('```', {backwards:true});
-        let row1=editor.getSelectionRange().start.row;
-        editor.find('```', {backwards:false});
-        let row2=editor.getSelectionRange().start.row;
-        //alert('row1=' + row1 +", row2=" + row2);
-        let col=  editor.session.getLine(row2).length;
         let Range = ace.require('ace/range').Range;
+        let rng1=editor.find('```', {backwards:true, start:editor.getCursorPosition()});
+        if(!rng1){ return null}
+        let row1=rng1.start.row;
+        // add check for "{ r , }"" in row1, 
+        let rngL1 =  new Range(row1, 0, row1, Infinity);
+        let line1 = editor.getSession().getTextRange(rngL1);
+        if(!/\Wr\W/.test(line1)){ // if not found exit
+          return null;
+        }
+        // if found extract label?
+        let rng2=editor.find('```', {backwards:false, start:editor.getCursorPosition()});
+        if(!rng2){ return null} // if not found exit
+        let row2=rng2.start.row;
+         // check .anchors to see if row1, row2 are taken
+        let Anchor = ace.require('ace/anchor').Anchor;
+        let ancs = editor.getSession().anchors;
+        // console.log('----------- ancs='+JSON.stringify(ancs));
+        // console.log("------------> typeof ancs" +typeof ancs);
+        let childAceId=null;
+        let ancTag=null;
+        if(typeof editor.getSession().anchors !='undefined'){
+            let ancs = editor.getSession().anchors;
+            for(let k in ancs){
+              let val=ancs[k];
+              // console.log( 'k='+k);
+              let r1=val.anc1.row;
+              let r2=val.anc2.row;
+              //console.log('-------- r1='+r1," r2="+r2+" ----------");
+              if(r1==r1 && r2== row2){
+               ancTag=k;
+              }
+            }
+            // console.log(JSON.stringify(ancTag));
+            if(!!ancTag){
+              $('.shiny-ace').each(function(){
+                 let lid=this.id;
+                 // console.log('lid='+lid);
+                 let editr = $('#'+lid).data('aceEditor'); 
+                 if(!!editr.getSession().link ){
+                   let link=editr.getSession().link;
+                   // console.log('link is:'+JSON.stringify(link));
+                   if(link.length !== undefined){
+                      let res=link[0].split(".");
+                      let rid=res[1];
+                      if(rid==ancTag){
+                        childAceId=lid;
+                      }
+                   } 
+                 }
+              });
+              if(!!childAceId){
+                // console.log('>>>>>>>>>> childAceId exists=' + childAceId); 
+                if(!!$('#'+childAceId)){
+                  Shiny.onInputChange('messageContextMenu', 
+                  {
+                   cmd: "openTab",
+                   id:childAceId
+                  }); 
+                  return(null);
+                }
+              }
+            }
+        }
+         
+        let col=  editor.session.getLine(row2).length;
+        
         //alert(col);
         let range = new Range(row1, 0, row2, col);
         let doc= editor.session.getDocument();
         
-        //import { Range } from "ace-builds"
-        //alert(JSON.stringify(range));
-        // let row = range.end.row;
-        // let col=  editor.session.getLine(row).length;
-        //range.end.column=Infinity;
-      
-        //alert(range);
+        
         if( !range.isEmpty() ){ 
           let text = editor.getSession().getTextRange(range);
           let lines= text.split("\n");
@@ -39,7 +92,7 @@ $(function () {
           let res1 = patt.test(lines[lines.length-1]);
           let rngOk = res0 && res1;
           if(rngOk){
-            let Anchor = ace.require('ace/anchor').Anchor;
+            //let Anchor = ace.require('ace/anchor').Anchor;
             let anc1=new Anchor(doc,row1,0);
             let anc2=new Anchor(doc,row2,0);
             let anc={anc1: anc1, anc2:anc2};
@@ -56,6 +109,7 @@ $(function () {
             // send message to ptR to create new tab with text as content
             Shiny.onInputChange('messageContextMenu', 
             {
+             cmd: "newTab",
              start_row: row1,
              end_row: row2,
              code :  text,
@@ -85,7 +139,7 @@ $(function () {
         //let text = clipboard.readText();
         let text = window.readText();
         editor.getSession().replace(range,  text); 
-        console.log("You have selected "+ cmd + " with ace id = " +aceId);
+        // console.log("You have selected "+ cmd + " with ace id = " +aceId);
       } else if(cmd==='Delete') {
         let range = editor.getSelectionRange();
         if( !range.isEmpty() ){
