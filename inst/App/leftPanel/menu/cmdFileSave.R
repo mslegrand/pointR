@@ -1,11 +1,11 @@
 cmdFileSave<-function(){
-  setTabRequest(sender="fileCmd.save", tabs=input$pages)
+  setTabRequest(cmd="fileCmd.save", tabs=input$pages)
 }
 
 cmdFileSaveAll<-function(){
   tabIds<-getAllNamedUnsavedFiles()$tabId
   if(length(tabIds)>0){
-    setTabRequest(sender= 'fileCmd.save', tabs=tabIds)
+    setTabRequest(cmd= 'fileCmd.save', tabs=tabIds)
   }
 }
 

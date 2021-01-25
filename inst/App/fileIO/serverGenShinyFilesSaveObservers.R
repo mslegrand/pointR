@@ -20,7 +20,7 @@ genShinySaveFilesObservers<-function(input, session){
           }
           closeTabNow(tabId)
         } else {
-          setTabRequest(sender=NULL, tabs=NULL)
+          setTabRequest(cmd=NULL, tabs=NULL)
         }
       } else { 
         fp.dt<-parseSavePath(c(home='~'), rtList)

@@ -164,7 +164,7 @@ shinyServer(function(input, output,session) {
   
 
 
-  # exportTestValues( request.sender=request$sender)
+  # exportTestValues( request.cmd=request$cmd)
   # exportTestValues(request.code=request$code)
   # exportTestValues(selectedAsset.tabId=selectedAsset$tabId)
   if(usingElectron){

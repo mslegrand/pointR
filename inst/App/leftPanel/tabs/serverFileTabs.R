@@ -94,8 +94,8 @@ observeEvent(input$pages,{
 # updated by scrollManager and relays sender with tabs to request
 observeEvent(input$tabManager,{
   tabs=unlist(input$tabManager$tabs)
-  sender=input$tabManager$sender
-  setTabRequest(sender=sender, tabs=tabs)
+  cmd=input$tabManager$sender
+  setTabRequest(cmd=cmd, tabs=tabs)
 }, label='tabManager')
 
 # request$tabs is updated by either
@@ -161,7 +161,7 @@ observeEvent(input$messageContextMenu, {
     # change to tabId
     #sendFileTabsMessage(selected=tabId, resize=runif(1))
     
-    #setTabRequest(sender="tabChange", tabs=tabId)
+    #setTabRequest(cmd="tabChange", tabs=tabId)
     
   }
   

@@ -4,7 +4,7 @@ theBlocks<-reactiveVal(NULL)
 theEnvList<-reactiveVal(list()) #or NULL?
 
 request<-reactiveValues(
-  sender=NULL,
+  cmd=NULL,
   tabs=NULL,
   trigger=0,
   predoc=""
@@ -65,11 +65,11 @@ getCode4RenderingTransform<-eventReactive( trigger$redraw, {
 })
 
 
-setTabRequest<-function(sender, tabs){
-  # if(length(sender)==1 && length(tabs)>1){
-  #   sender<-rep_len(sender,length(tabs) )
+setTabRequest<-function(cmd, tabs){
+  # if(length(cmd)==1 && length(tabs)>1){
+  #   cmd<-rep_len(cmd,length(tabs) )
   # }
-  request$sender<-sender
+  request$cmd<-cmd
   request$tabs<-tabs
   request$trigger<-sample(10^6,1)
 }
@@ -85,7 +85,7 @@ peekTabRequest<-function(){
 }
 
 peekTabCmd<-function(){
-  request$sender
+  request$cmd
 }
 
 requestStartUp<-function(){ 
@@ -96,7 +96,7 @@ peekTab<-reactive( {request$tabs[1]} )
 popTab<-reactive({
   tab<-request$tabs[1]
   request$tabs<-request$tabs[-1]
-  # ?????   if length(tabs is 0, remove sender?)
+  # ?????   if length(tabs is 0, remove cmd?)
   tab
 })
 

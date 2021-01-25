@@ -12,7 +12,7 @@ observeEvent(input$commitMssg, {
 
 #---commit rmdView button----- 
 observeEvent(input$writeNOpen ,{
-  setTabRequest(sender='buttonCmd.rmdViewer', tabs=input$pages)
+  setTabRequest(cmd='buttonCmd.rmdViewer', tabs=input$pages)
 }, label= "writeNOpen")
 
 appRunner<-reactiveValues(
@@ -28,7 +28,7 @@ if(usingElectron){
     appRunner$log<-""
     selection<-getAllNamedUnsavedFiles()$tabId
     if(length(selection)>0){
-      setTabRequest(sender='fileCmd.runApp', tabs=selection)
+      setTabRequest(cmd='fileCmd.runApp', tabs=selection)
     } else {
       app2RunPath<-getFileDescriptor(appRunner$tabId)$filePath
       sendPtRManagerMessage(sender='cmd.electron', app2RunPath=app2RunPath, tabId= appRunner$tabId)

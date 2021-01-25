@@ -55,7 +55,7 @@ observeEvent(input$checkAll,{
     cmdQuitNow()
   } else {
     #iterate over each tab id selection and save each, then quit 
-    setTabRequest(sender='fileCmd.quit', tabs=selection)
+    setTabRequest(cmd='fileCmd.quit', tabs=selection)
   }
 })
 
@@ -68,7 +68,7 @@ observeEvent(input$quitNow,{
     cmdQuitNow()
   } else {
     #iterate over each tab id selection and save each, then quit 
-    setTabRequest(sender='fileCmd.quit', tabs=selection)
+    setTabRequest(cmd='fileCmd.quit', tabs=selection)
   }
   
 })
