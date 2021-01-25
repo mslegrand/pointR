@@ -1,9 +1,17 @@
 cmdFileClose<-function(){
-  setTabRequest(sender="fileCmd.close", tabs=input$pages)
+  setTabRequest(cmd="fileCmd.close", tabs=input$pages)
 }
 
 cmdFileCloseAll<-function(){
-  sendFileTabsMessage(sender= 'fileCmd.close', getAllTabIds=runif(1))
+  
+  # 1. get all tab Ids
+  tabIds<-fileDescDB()$tabId
+  # 2. sender= 'fileCmd.close'
+  cmd= 'fileCmd.close'
+  # 3. push onto request
+  setTabRequest(cmd=cmd, tabs=tabIds)
+
+  #sendFileTabsMessage(sender= 'fileCmd.close', getAllTabIds=runif(1))
 }
 
 observeEvent( input$closeTab, {
@@ -16,7 +24,7 @@ observeEvent( input$closeTab, {
         tabId<-aceID2TabID(id)
       }
       #removeFileDesc(tabId)
-      setTabRequest(sender="fileCmd.close", tabs=tabId)
+      setTabRequest(cmd="fileCmd.close", tabs=tabId)
       log.fin(input$closeTab)
     }
 } , label= "input$closeTab")
