@@ -162,14 +162,16 @@ observeEvent(input$messageContextMenu, {
     end_row=input$messageContextMenu$end_row
     src<-input$messageContextMenu$code
     rid<-input$messageContextMenu$id
-    
+    tabName<-input$messageContextMenu$label
     rmdAceId<-tabID2aceID(input$pages)
     link<-paste(rmdAceId,rid, sep=".")
     # we update Ace with code
     # + all prior code as a hidden portion
     # and keep a hidden copy of full text for later reinsertion.
     # BUT widget handler then has a problem, would need to know which ptR we are refering to.
-    tabName<-getNextAnonymousFileName()
+    if(tabName==""){
+      tabName<-getNextAnonymousFileName()
+    }
     tabId<-addFileTab(title=tabName, txt=src,  docFilePath="?", mode='ptr', fileSaveStatus=FALSE, link=link)
     # 
     aceId<-tabID2aceID(tabId)

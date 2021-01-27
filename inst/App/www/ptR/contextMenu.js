@@ -22,7 +22,26 @@ $(function () {
         if(!/\Wr\W/.test(line1)){ // if not found exit
           return null;
         }
-        // if found extract label?
+        // split line and look for r, and label
+        // remove ```, {, } and split
+        let toks=line1.replace("```","").replace(/ /g,"").replace("{","").replace("}","").split(",");
+        // search for r
+        let hasR = toks.filter(tok => tok=='r').length==1;
+        if(!hasR){
+          return null;
+        }
+        let label = toks.filter(tok => tok.match(/label=.*/));
+        if(label.length===1){
+          label=label[0].replace(/label='/,"").replace("'","").replace('"','');
+        } else {
+          label =toks.filter(tok=>!tok.match('=')).filter(tok=>tok!='r');
+          if(label.length==1){
+            label=label[0].replace("'","").replace('"','');
+          } else {
+            label="";
+          }
+        } 
+
         let rng2=editor.find('```', {backwards:false, start:editor.getCursorPosition()});
         if(!rng2){ return null} // if not found exit
         let row2=rng2.start.row;
@@ -113,7 +132,8 @@ $(function () {
              start_row: row1,
              end_row: row2,
              code :  text,
-             id:rid
+             id:rid,
+             label: label
             });
           
             // exit gracefully
