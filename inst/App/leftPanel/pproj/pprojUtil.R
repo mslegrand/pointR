@@ -11,6 +11,8 @@
 # - observeEvent of *customFileDialog*
 #  for the time being we just close
 closeCurrentProj<-function(){
+  log.fin(closeCurrentProj)
+  
   storeAssetState()
   savePage(input$pages)
   pprj(NULL)
@@ -22,9 +24,17 @@ closeCurrentProj<-function(){
   opts<-sapply(opts,unlist, USE.NAMES = T, simplify = F )
   writeOptionsJSON(opts)
   
-  # close all open tabs
-  # stopifnot('tabId' %in% names(fileDescDB()) )
-  tabIds<-fileDescDB()$tabId
+  if("parId" %in% names( fileDescDB() )){
+    aids<-filter(fileDescDB(), !is.na(parId) & filePath=="?")$tabId
+    tabIds<-filter(fileDescDB(), is.na(parId) | filePath!="?")$tabId  #fileDescDB()$tabId
+  } else {
+    aids=NULL
+    tabIds<-fileDescDB()$tabId
+  }
+  if(length(aids)>0){
+    tabs<-aceID2TabID(aids)
+    closeTabsNow(tabs)
+  }
   for( tabId in tabIds){
     removeTab(inputId = "pages", tabId)
   }  
@@ -39,7 +49,7 @@ closeCurrentProj<-function(){
   backDropDB( initialBackDropDB() )
   svgGridDB( initialSvgGridDB() )
   serverAssetDB$tib<-initialServerAsset()
-
+  log.fout(closeCurrentProj)
 }
 
 # used only by resetShinyFilesIOPaths

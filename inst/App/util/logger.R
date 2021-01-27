@@ -1,5 +1,5 @@
 
-SHOW_DEBUG_LOG=FALSE
+SHOW_DEBUG_LOG=TRUE
 
 log.fin<-function(x){ 
   if(SHOW_DEBUG_LOG){

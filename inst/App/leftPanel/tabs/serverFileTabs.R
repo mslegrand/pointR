@@ -47,6 +47,25 @@ closeTabNow<-function(tabId2X){
   removeTab(inputId = "pages", tabId2X)
 }
 
+closeTabsNow<-function(tabIds2Close){
+  if(length(tabIds2Close)>0){
+    serverAssetDB$tib<-filter(serverAssetDB$tib, !(tabId %in% tabIds2Close))
+    db<-widgetDB()
+    db<-filter(db, !(tabId %in% tabIds2Close))
+    widgetDB(db)
+    fdDB<-fileDescDB()
+    fdDB<-filter(fdDB, !(tabId %in% tabIds2Close))
+    fileDescDB(fdDB)
+    path=getWorkSpaceDir()
+    for(id in tabIds2Close){
+      pth<-paste0(path,"/",id,".rda")
+      file.remove(pth)
+      removeTab(inputId = "pages", id)
+    }
+  }
+  
+  
+}
 
 
 
@@ -59,7 +78,11 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FA
   tabId<-getNextTabId()
   
   if(is.null(tabId)){ cat("tabId is null\n"); browser() } #should never happen
-  addFileDesc(pageId=tabId, docFilePath=docFilePath, fileSaveStatus, fileMode=mode)
+  parId=NULL
+  if(!is.null(link)){
+    parId<-unlist(strsplit(link,'\\.'))[[1]]
+  }
+  addFileDesc(pageId=tabId, docFilePath=docFilePath, fileSaveStatus, fileMode=mode, parId)
   setUseTribble( pageId=tabId, value=TRUE)
   addNewPage2dnippetsDB(tabId)
   

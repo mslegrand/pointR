@@ -1,7 +1,15 @@
 
 
 cmdFileQuit<-reactive({
+  log.fin(cmdFileQuit)
   storeAssetState()
+  if("parId" %in% names( fileDescDB())){ #shoul
+    aids<-filter(fileDescDB(), !is.na(parId) & filePath=="?")$tabId
+    if(length(aids)>0){
+      tabs<-aceID2TabID(aids)
+      closeTabsNow(tabs)
+    }
+  }
   fd<-getAllNamedUnsavedFiles()
   choices<-fd$filePath
   if(length(choices)>0){
@@ -10,6 +18,7 @@ cmdFileQuit<-reactive({
   } else {
     cmdQuitNow()
   }
+  log.fout(cmdFileQuit)
 })
 
 cmdQuitNow<-reactive({

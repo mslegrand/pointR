@@ -526,14 +526,19 @@ Shiny.addCustomMessageHandler(
            
           setTimeout( function(){
              editor.getSession().getUndoManager().setOk();
-             /*
-              console.log("replacement: After setOk, ok=" + JSON.stringify(editor.getSession().getUndoManager().$ok));
-              console.log('replacement fin: editor.getSession().getUndoManager()$undoStack.length=' + 
-                    editor.getSession().getUndoManager().$undoStack.length);
-              console.log('replacement fin: editor.getUndoManager()getSession().$ok=' + 
-                    JSON.stringify(editor.getSession().getUndoManager().$ok));
-              console.log('replacement fin: sender=' + data.sender);     
-              */
+              preDoc="";
+              if(!!editor.getSession().link){
+                let link= editor.getSession().link
+                
+                if(link.length !== undefined){
+                  let targetAceId=link[0]
+                  if(typeof targetAceId !=undefined){
+                    let text = editor.getSession().getValue();
+                    preDoc=aceReplaceBlock(targetAceId, text); // should replace only if text does not match block
+                  }
+                }
+            }
+              
               Shiny.onInputChange('messageFromAce', 
               {
                  code : editor.getSession().getValue(),

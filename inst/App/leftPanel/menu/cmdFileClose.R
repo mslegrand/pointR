@@ -1,9 +1,18 @@
 cmdFileClose<-function(){
+  # if current tab has children
+  # first add children, then current tab
+  
+  fd<-fileDescDB()
+  aid<-getAceEditorId()
+  aids<-filter(fileDescDB(), parId==aid)$tabId
+  if(length(aids)>0){
+    tabs<-aceID2TabID(aids)
+    closeTabsNow(tabs)
+  }
   setTabRequest(cmd="fileCmd.close", tabs=input$pages)
 }
 
 cmdFileCloseAll<-function(){
-  
   # 1. get all tab Ids
   tabIds<-fileDescDB()$tabId
   # 2. sender= 'fileCmd.close'
@@ -20,8 +29,15 @@ observeEvent( input$closeTab, {
       id<-input$closeTab$id
       if(input$closeTab$type=='tabId'){
         tabId<-id
+        aceId<-tabID2aceID(tabId)
       } else {
-        tabId<-aceID2TabID(id)
+        aceId<-id
+        tabId<-aceID2TabID(aceId)
+      }
+      aids<-filter(fileDescDB(), parId==aceId & filePath=="?")$tabId # exclude from deletion any tabs with paths assigned
+      if(length(aids)>0){
+        tabs<-aceID2TabID(aids)
+        closeTabsNow(tabs)
       }
       #removeFileDesc(tabId)
       setTabRequest(cmd="fileCmd.close", tabs=tabId)
