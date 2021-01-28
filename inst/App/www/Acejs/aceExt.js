@@ -98,47 +98,30 @@ function aceReplaceBlock(link, txt){
   let res=link.split(".");
   let aceId=res[0];
   let rid=res[1];
-  console.log('++++++++++++ aceId='+aceId);
-  console.log('++++++++++++ rid='+rid);
-  console.log('abcdefg-----------1--------------');
   let editor=$('#'+aceId).data('aceEditor'); 
-  console.log('abcdefg-----------2--------------');
   let session =editor.getSession();
-  console.log('abcdefg-----------3--------------');
   let anchors=session.anchors;
-  console.log('abcdefg-----------4--------------');
-  console.log(JSON.stringify(anchors));
   let preDoc=null;
   if(
     (typeof editor.getSession().anchors !='undefined') &&
     (typeof editor.getSession().anchors[rid] !='undefined')
    ){
-    console.log('abcdefg-----------5--------------');
     let anc1 =editor.getSession().anchors[rid].anc1;
     let anc2 =editor.getSession().anchors[rid].anc2;
     if(!!anc1 && !!anc2){
       let Range = ace.require('ace/range').Range;
-      console.log('abcdefg-----------6--------------');
       let row1 = anc1.getPosition().row;
-      console.log('abcdefg-----------7--------------');
       let row2 = anc2.getPosition().row;
       let prernge =  new Range(0, 0, row1-1, Infinity); // assumes that row1>0
       preDoc=session.getTextRange(prernge);
-      console.log('abcdefg-----------8--------------');
        row1=row1+1;
        row2=row2-1;
-       console.log('abcdefg-----------9--------------');
       // select range
-      console.log('row1='+row1+' row2='+row2);
-      
       let rnge =  new Range(row1, 0, row2, Infinity);
-      console.log('abcdefg-----------10--------------');
-      console.log(JSON.stringify(rnge));
       // replace text in range
-      console.log('abcdefg-----------11--------------');
       session.replace(rnge,txt);
-      console.log('abcdefg-----------12--------------');
-      
+      // scroll into view and set cursor pos
+      session.lineToSee=row2;
       session.getUndoManager().setOk();
     }
   } else {
@@ -617,6 +600,15 @@ Shiny.addCustomMessageHandler(
           }
           
           preDoc="";
+          if( //typeof editor.getSession().lineToSee !== 'undefined' &&
+            !!editor.getSession().lineToSee
+          ){
+            let line2see= editor.getSession().lineToSee;
+            editor.moveCursorTo(line2see,0);
+            editor.scrollToLine(line2see, true, true, function () {});
+            editor.clearSelection();
+          }
+          editor.getSession().lineToSee=null;
           if(!!editor.getSession().link){
             let link= editor.getSession().link
             //if(typeof link =='array')

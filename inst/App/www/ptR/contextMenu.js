@@ -12,6 +12,9 @@ $(function () {
         let text = editor.getSession().getTextRange(editor.getSelectionRange());
         Shiny.onInputChange('helpMssg', {query:text, num:Math.random(), editorId: aceId} );
       } else if(cmd=="Edit Code Block"){
+        //let pos=e.getDocumentPosition();
+        ///console.log('#########################');
+        // console.log(JSON.stringify(pos));
         let Range = ace.require('ace/range').Range;
         let rng1=editor.find('```', {backwards:true, start:editor.getCursorPosition()});
         if(!rng1){ return null}
@@ -41,38 +44,33 @@ $(function () {
             label="";
           }
         } 
-
+        
         let rng2=editor.find('```', {backwards:false, start:editor.getCursorPosition()});
+        
         if(!rng2){ return null} // if not found exit
+        
         let row2=rng2.start.row;
          // check .anchors to see if row1, row2 are taken
         let Anchor = ace.require('ace/anchor').Anchor;
         let ancs = editor.getSession().anchors;
-        // console.log('----------- ancs='+JSON.stringify(ancs));
-        // console.log("------------> typeof ancs" +typeof ancs);
         let childAceId=null;
         let ancTag=null;
         if(typeof editor.getSession().anchors !='undefined'){
             let ancs = editor.getSession().anchors;
             for(let k in ancs){
               let val=ancs[k];
-              // console.log( 'k='+k);
               let r1=val.anc1.row;
               let r2=val.anc2.row;
-              //console.log('-------- r1='+r1," r2="+r2+" ----------");
               if(r1==r1 && r2== row2){
                ancTag=k;
               }
             }
-            // console.log(JSON.stringify(ancTag));
             if(!!ancTag){
               $('.shiny-ace').each(function(){
                  let lid=this.id;
-                 // console.log('lid='+lid);
                  let editr = $('#'+lid).data('aceEditor'); 
                  if(!!editr.getSession().link ){
                    let link=editr.getSession().link;
-                   // console.log('link is:'+JSON.stringify(link));
                    if(link.length !== undefined){
                       let res=link[0].split(".");
                       let rid=res[1];
@@ -83,7 +81,6 @@ $(function () {
                  }
               });
               if(!!childAceId){
-                // console.log('>>>>>>>>>> childAceId exists=' + childAceId); 
                 if(!!$('#'+childAceId)){
                   Shiny.onInputChange('messageContextMenu', 
                   {
@@ -97,8 +94,6 @@ $(function () {
         }
          
         let col=  editor.session.getLine(row2).length;
-        
-        //alert(col);
         let range = new Range(row1, 0, row2, col);
         let doc= editor.session.getDocument();
         
