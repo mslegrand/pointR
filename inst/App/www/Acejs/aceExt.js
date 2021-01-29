@@ -94,6 +94,7 @@ function getAceMode(ed){
   return mode;
 }
 
+
 function aceReplaceBlock(link, txt){
   let res=link.split(".");
   let aceId=res[0];
@@ -233,7 +234,7 @@ Shiny.addCustomMessageHandler(
                     if(aceId==id){
                       console.log('found ace='+aceId+'with anchor='+ rid);
                       // select the range for rid in the rmd and copy over
-                      console.log('anchors='+JSON.stringify(editor.getSession().anchors ));
+                      //console.log('anchors='+JSON.stringify(editor.getSession().anchors ));
                           if(!!editor.getSession().anchors ){
                            let anc1 =editor.getSession().anchors[rid].anc1;
                            let anc2 =editor.getSession().anchors[rid].anc2;
@@ -598,45 +599,107 @@ Shiny.addCustomMessageHandler(
           if(!!data.auxValue){
             auxValue=data.auxValue;
           }
-          
+          let blockNum=0;
           preDoc="";
-          if( //typeof editor.getSession().lineToSee !== 'undefined' &&
+          if( typeof editor.getSession().lineToSee !== 'undefined' &&
             !!editor.getSession().lineToSee
           ){
             let line2see= editor.getSession().lineToSee;
+            console.log('line2see='+line2see);
             editor.moveCursorTo(line2see,0);
             editor.scrollToLine(line2see, true, true, function () {});
+            editor.clearSelection();
+            //next find the block number
+            let rngF=new Range(0,0,line2see,Infinity);
+            //let blks=editor.findAll('```', {backwards:true, start:editor.getCursorPosition(), range:rngF});
+            
+            editor.$search.setOptions({
+                needle: "```",
+                start:editor.getCursorPosition(),
+                range:rngF,
+                caseSensitive: true,
+                wholeWord: true,
+                regExp: false,
+            }); 
+            let res=editor.$search.findAll(editor.session)
+            //console.log(res.length);
+            /*
+            res.forEach(function(x){
+              console.log( JSON.stringify(x.start.row));
+              x.end.column=Infinity;
+              console.log('text='+editor.getSession().getTextRange(x));
+              let line=editor.getSession().getTextRange(x);
+              console.log(line)
+              console.log(line.match(/asis/));
+              //let toks=line.replace("```","").replace(/ /g,"").replace("{","").replace("}","").split(",");
+              //toks.filter(tok => tok=='r').length==1;
+            })
+            */
+            //let rows = res.map(function(x){return x.start.row;});
+            //console.log('rows='+JSON.stringify(rows));
+            rows=res.filter( x=>{
+              x.end.column=Infinity;
+              return !!(editor.getSession().getTextRange(x).match(/asis/));
+            })
+            //console.log('2: rows='+JSON.stringify(rows));
+            //console.log('2: rows.length='+rows.length)
+            //rows.forEach(function(x){
+            //  console.log( JSON.stringify(x.start.row));
+            //  x.end.column=Infinity;
+            //  console.log('text='+editor.getSession().getTextRange(x));
+            //})
+            //let fr=res.map(function(x){
+            //  return getTextRange(x);
+            //})
+            
+            if(!!rows){
+              blockNum=rows.length;
+            }
+            
+            
+            //console.log('>>>>>>>>>>>>> blks='+blks);
+            //console.log("type blks="+ typeof blks);
+            if(blockNum>0){
+              //blockNum=blks; //Math.floor(blks/2);
+              setTimeout(function() {
+                 //find all matches possible blocks
+                 // console.log("initially blockNum="+blockNum);
+                 let oblks=$("#rmdMod-rmd_Html").find('svg');
+                 blockNum=Math.min(oblks.length, blockNum);
+                 blockNum=blockNum-1;
+                 // console.log('oblks.length='+oblks.length);
+                 if(!!oblks){
+                   // console.log("blockNum="+blockNum);
+                   let blockEl = oblks[blockNum];
+                   blockEl.scrollIntoView(false);
+                }
+              }, 500, blockNum );
+            }
             editor.clearSelection();
           }
           editor.getSession().lineToSee=null;
           if(!!editor.getSession().link){
             let link= editor.getSession().link
             //if(typeof link =='array')
-            console.log('*******link*********')
-            console.log("link="+JSON.stringify(link))
-            console.log("link.length="+JSON.stringify(link.length))
+            // console.log('*******link*********')
+            // console.log("link="+JSON.stringify(link))
+            // console.log("link.length="+JSON.stringify(link.length))
             if(link.length !== undefined){
               let targetAceId=link[0]
-              console.log('****adskfjalsufhlaiufhsia&&&&&&&&77')
+              //console.log('****adskfjalsufhlaiufhsia&&&&&&&&77')
               if(typeof targetAceId !=undefined){
-                console.log('****adskfjalsufhla666666666iufhsia&&&&&&&&77')
-                console.log(JSON.stringify(link[0]));
+                //console.log('****adskfjalsufhla666666666iufhsia&&&&&&&&77')
+                // console.log(JSON.stringify(link[0]));
                 let text = editor.getSession().getValue();
-                console.log('****adskfjalsufhl8888888888888888hsia&&&&&&&&77')
+                //console.log('****adskfjalsufhl8888888888888888hsia&&&&&&&&77')
                 preDoc=aceReplaceBlock(targetAceId, text); // should replace only if text does not match block
               }
-            
-            // get targetEditor
-            // get targetSession.canchors
-            // select target beteen canchors
-            // set text in that region
-            
             //
             }
             
             
           }
-          
+          console.log('returning blockNum='+blockNum);
           Shiny.onInputChange('messageFromAce', 
           {
              code :  editor.getSession().getValue(),
@@ -647,6 +710,7 @@ Shiny.addCustomMessageHandler(
              isSaved: ud.isSaved(),
              auxValue: auxValue,
              preDoc: preDoc,
+             //blockNumber: blockNum,
              rnd : randomString(5)
           });
         }
