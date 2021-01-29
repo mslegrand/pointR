@@ -16,7 +16,7 @@ $(function () {
         ///console.log('#########################');
         // console.log(JSON.stringify(pos));
         let Range = ace.require('ace/range').Range;
-        let rng1=editor.find('```', {backwards:true, start:editor.getCursorPosition()});
+        let rng1=editor.find('```', {backwards:true, start:editor.getCursorPosition(), range:null});
         if(!rng1){ return null}
         let row1=rng1.start.row;
         // add check for "{ r , }"" in row1, 
@@ -45,7 +45,7 @@ $(function () {
           }
         } 
         
-        let rng2=editor.find('```', {backwards:false, start:editor.getCursorPosition()});
+        let rng2=editor.find('```', {backwards:false, start:editor.getCursorPosition(), range:null});
         
         if(!rng2){ return null} // if not found exit
         
