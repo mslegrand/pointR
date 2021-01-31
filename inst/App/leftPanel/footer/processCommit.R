@@ -1,12 +1,20 @@
 src2sourceType<-function(src){  #not used !!
   lines<-strsplit(src,"\n") 
   lines<-lines[[1]]
-  svgRPos<-grep("^\\s*svgR\\(",lines)
-  if(length(svgRPos)==0){ # just R code I guess
-    # browser()
-    setSourceType(sourceType=RPanelTag) #
+  if(length(lines)==0){
+    setSourceType(sourceType=textPanelTag)
   } else {
-    setSourceType(sourceType=svgPanelTag) #SVG code
+    if(grepl("^---",lines[1])){
+      setSourceType(sourceType=rmdPanelTag)
+    } else{
+      svgRPos<-grep("^\\s*svgR\\(",lines)
+      if(length(svgRPos)==0){ # just R code I guess
+        # browser()
+        setSourceType(sourceType=RPanelTag) #
+      } else {
+        setSourceType(sourceType=svgPanelTag) #SVG code
+      }         
+    }
   }
 }
 
@@ -18,6 +26,7 @@ processCommit<-reactive({
   clearErrorMssg()
   
   mode<-getModeX()
+  log.val(mode)
   if(length(mode)!=1){
     cat('missing mode\n'); browser()
     return(NULL)
