@@ -62,15 +62,20 @@ sapply(
 # the following constants would be better if placed in a list or 
 # alteratively use lockBinding to fix the value
 defTag<-"ptR"
+
+# appears in serverPanelDispatch
 transformTag<-"Transforms"
+svgPanelTag<-'svgPanel'
 errorPanelTag<-"errorPanel"
 RPanelTag='RPanel'
-svgPanelTag<-'svgPanel'
-rmdPanelTag<-'rmdPanel'
-textPanelTag<-'textPanel'
-javascriptPanelTag<-'javascriptPanel'
-snippetPanelTag<-'snippetPanel'
 appPanelTag<-'appPanel'
+rmdPanelTag<-'rmdPanel'  
+textPanelTag<-'textPanel'
+snippetPanelTag<-'snippetPanel'
+javascriptPanelTag<-'javascriptPanel'
+
+
+
 tibTag<-'tib'
 resourceDir='aux' 
 
