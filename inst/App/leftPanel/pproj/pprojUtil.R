@@ -12,9 +12,14 @@
 #  for the time being we just close
 closeCurrentProj<-function(){
   log.fin(closeCurrentProj)
+  # check if current page has a parId
+  # if so,  set current tab to par Id
+  # 
+  if( is.na(getFileDescriptor(input$pages )$parId )){
+    storeAssetState() # this stores the selectedAsset ubti db
+    savePage(input$pages) # this saves the current page
+  }
   
-  storeAssetState()
-  savePage(input$pages)
   pprj(NULL)
   if(!is.null(editOption$currentProjectName)){
     addToRecentProjects(editOption$currentProjectDirectory, editOption$currentProjectName )

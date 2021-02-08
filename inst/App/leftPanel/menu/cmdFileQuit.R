@@ -2,8 +2,8 @@
 
 cmdFileQuit<-reactive({
   log.fin(cmdFileQuit)
-  storeAssetState()
-  if("parId" %in% names( fileDescDB())){ #shoul
+  storeAssetState() # should check if 
+  if("parId" %in% names( fileDescDB())){ #should remove all child tabs
     aids<-filter(fileDescDB(), !is.na(parId) & filePath=="?")$tabId
     if(length(aids)>0){
       tabs<-aceID2TabID(aids)
