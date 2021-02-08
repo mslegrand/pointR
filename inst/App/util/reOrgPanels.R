@@ -19,6 +19,8 @@ reOrgPanels<-function(id, mode){
     hideElement("midRightPanels")
     hideElement("BottomRightPanel")
     hide(id="rmd-edit-code")
+    hide(id="rmd-insert-svgR")
+    hide(id="rmd-insert-ptR")
     addCssClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
     showElement("logo.right")
     showElement("logo.left")
@@ -34,6 +36,8 @@ reOrgPanels<-function(id, mode){
       showElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble
       addCssClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
       hide(id="rmd-edit-code")
+      hide(id="rmd-insert-svgR")
+      hide(id="rmd-insert-ptR")
       if(usingElectron){
         addCssClass( id= "runAppPanel", class="hiddenPanel")
         addCssClass( id= "stopAppPanel", class="hiddenPanel")
@@ -52,10 +56,15 @@ reOrgPanels<-function(id, mode){
       # now consider which mode it is
       if(identical(mode,'ptrrmd')){
         show(id="rmd-edit-code")
+        show(id="rmd-insert-svgR")
+        show(id="rmd-insert-ptR")
+        
         removeCssClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
       }
       else{
         hide(id="rmd-edit-code")
+        hide(id="rmd-insert-svgR")
+        hide(id="rmd-insert-ptR")
         addCssClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
       }
       if(usingElectron){

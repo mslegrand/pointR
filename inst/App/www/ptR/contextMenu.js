@@ -11,6 +11,20 @@ $(function () {
         editor.getSession().selection.selectWordRight();
         let text = editor.getSession().getTextRange(editor.getSelectionRange());
         Shiny.onInputChange('helpMssg', {query:text, num:Math.random(), editorId: aceId} );
+      } else if(cmd=="Insert svgR Block"){
+        //$el.trigger(tab_press);
+        let snippet=
+        "```{r, ${1:title,} echo=${2:FALSE}, results='asis'}\nWH=c(500,300)\nsvgR(wh=WH,\n     #your custom code goes here\n     ${0:NULL}\n)\n```";
+        let snippetManager = ace.require("ace/snippets").snippetManager;
+        snippetManager.insertSnippet(editor, snippet);
+        editor.focus();
+      } else if(cmd=="Insert ptR Block"){
+        let snippet=
+        "```{r, ${1:title,} echo=${2:FALSE}, results='asis'}\nWH<-c(600,400)\n\n# Defined by mouse: edit with care!\nptR<-list(\n  x=tribble(\n    ~points,\n    matrix(0,2,0)\n  )\n)\n\nsvgR(wh=WH,\n     #your custom code goes here\n     ${0:NULL}\n)\n\n```";
+        let snippetManager = ace.require("ace/snippets").snippetManager;
+        snippetManager.insertSnippet(editor, snippet);
+        editor.focus();
+      
       } else if(cmd=="Edit Code Block"){
         //let pos=e.getDocumentPosition();
         ///console.log('#########################');
@@ -136,7 +150,7 @@ $(function () {
           }
           
           
-        }
+        } //end of edit code block
       } else if(cmd==='Copy') {
         let text = editor.getSession().getTextRange(editor.getSelectionRange());
         //window.clipboard.writeText(text);
