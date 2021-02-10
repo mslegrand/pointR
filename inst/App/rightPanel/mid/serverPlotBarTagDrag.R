@@ -114,6 +114,7 @@ statusPlotTagDrag<-callModule(
   getSvgGrid=getSvgGrid,
   getBackDrop=getBackDrop,
   getCode= getCode4Rendering, 
+  getEnvList=getEnvList,
   getErrorMssg=getErrorMssg,
   getTibNRow=getTibNRow,
   getDirPath=getDirPath

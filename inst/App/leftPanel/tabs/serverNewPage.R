@@ -1,7 +1,7 @@
   
 
 # gets what we need from fileDescDB()
-newPage<-function(tabId, title, txt, docFilePath, mode,  fileSaveStatus ){
+newPage<-function(tabId, title, txt, docFilePath, mode,  fileSaveStatus, link=NULL ){
   # fileSaveStatus is boolean
   log.fin(newPage)
   if(is.null(tabId)){
@@ -16,6 +16,8 @@ newPage<-function(tabId, title, txt, docFilePath, mode,  fileSaveStatus ){
   } else {
     divClass="cAceRmdContainer"
   }
+  print("**** newPage link")
+  print(link)
   appendTab(
     inputId = "pages", select=TRUE,
     tabPanel(
@@ -38,7 +40,8 @@ newPage<-function(tabId, title, txt, docFilePath, mode,  fileSaveStatus ){
             NULL
           },
           docFilePath =docFilePath,
-          initSaved   =fileSaveStatus
+          initSaved   =fileSaveStatus,
+          link=link
         )
       ),
       value=tabId

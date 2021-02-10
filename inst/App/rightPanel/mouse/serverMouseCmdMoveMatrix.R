@@ -14,7 +14,7 @@ mouseCmdMoveMatrix<-function(mssg){
   row<-as.numeric(tail(tmp,1)) #this should be the same as selected row index
   selection<-getAssetName() 
   matColIndx<-ncol(newPtDefs$tib[[selection]][[getTibPtColPos()]][[ row  ]])
-  
+
   # Todo: for inter tib move support
   # selection -> 1 or more selections
   # row (currently corresponding to single name) - sets of rows
@@ -56,7 +56,6 @@ mouseCmdMoveMatrix<-function(mssg){
     colName=getTibColumnName()
   )
   pageId<-getTibTabId()
-  
   if( mssg$shiftKey==TRUE){ 
     if(getTibRow()!=row){
       updateRowPicker(session, "myTibRowCntrl", addToGroup = row, selectRow = row )
@@ -72,7 +71,6 @@ mouseCmdMoveMatrix<-function(mssg){
   }  else {
     updateRowPicker(session, "myTibRowCntrl", removeEntireGroup=TRUE)
   }
- 
   contextList<-pmap(cntx, function(name, rows, colName){
     # to check that tib has names
     ctype<-extractColType(tibs[[name]][[colName]])
@@ -84,7 +82,6 @@ mouseCmdMoveMatrix<-function(mssg){
     }
   })
   contextList<-Filter(function(x){!is.null(x)}, contextList)
-  
   tryCatch({
     matCol<-NULL
     getDxy<-function(){names(dxy)<-c('dx','dy'); dxy}
@@ -112,10 +109,9 @@ mouseCmdMoveMatrix<-function(mssg){
     }
     matCol<-ncol(tibs[[getAssetName()]][[getTibPtColPos()]][[row]] )
     newPtDefs$tib<-tibs
-    # cat('ContextList updateAceExtDef\n')
     updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=row, matCol=matCol))
   }, error=function(e){
-    e<-c('preproErr',unlist(e))
+    e<-c('preproErr',e$message)
     err<-paste(unlist(e), collapse="\n", sep="\n")
     alert(err)
   })

@@ -1,7 +1,15 @@
 
 
 cmdFileQuit<-reactive({
-  storeAssetState()
+  log.fin(cmdFileQuit)
+  storeAssetState() # should check if 
+  if("parId" %in% names( fileDescDB())){ #should remove all child tabs
+    aids<-filter(fileDescDB(), !is.na(parId) & filePath=="?")$tabId
+    if(length(aids)>0){
+      tabs<-aceID2TabID(aids)
+      closeTabsNow(tabs)
+    }
+  }
   fd<-getAllNamedUnsavedFiles()
   choices<-fd$filePath
   if(length(choices)>0){
@@ -10,6 +18,7 @@ cmdFileQuit<-reactive({
   } else {
     cmdQuitNow()
   }
+  log.fout(cmdFileQuit)
 })
 
 cmdQuitNow<-reactive({
@@ -55,7 +64,7 @@ observeEvent(input$checkAll,{
     cmdQuitNow()
   } else {
     #iterate over each tab id selection and save each, then quit 
-    setTabRequest(sender='fileCmd.quit', tabs=selection)
+    setTabRequest(cmd='fileCmd.quit', tabs=selection)
   }
 })
 
@@ -68,7 +77,7 @@ observeEvent(input$quitNow,{
     cmdQuitNow()
   } else {
     #iterate over each tab id selection and save each, then quit 
-    setTabRequest(sender='fileCmd.quit', tabs=selection)
+    setTabRequest(cmd='fileCmd.quit', tabs=selection)
   }
   
 })

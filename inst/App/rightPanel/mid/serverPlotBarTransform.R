@@ -16,6 +16,7 @@ statusPlotTransform<-callModule(
   getSvgGrid,
   getBackDrop,
   getCode = getCode4RenderingTransform,
+  getEnvList=getEnvList,
   getErrorMssg,
   getTibNRow=getTibNRow,
   getDirPath=getDirPath

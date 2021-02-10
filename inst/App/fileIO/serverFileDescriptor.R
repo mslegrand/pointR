@@ -1,12 +1,6 @@
 
 fileDescDB<-reactiveVal(
-  tibble(
-    tabId='bogus',
-    isSaved=FALSE,
-    filePath="?",
-    anonNo =1,
-    mode='ptr'
-  )[0,]
+  initialFileDescDB()
 )
 
 getNextAnonymousFileName<-reactive({
@@ -20,14 +14,17 @@ getNextAnonFileNum<-reactive({
 })
 
 # to be called from serverFileTab.R::addFileTab
-addFileDesc<-function( pageId, docFilePath, fileSaveStatus, fileMode){
+addFileDesc<-function( pageId, docFilePath, fileSaveStatus, fileMode, parId=NA){
   if(identical(docFilePath,"?")){
     anonNo<-getNextAnonFileNum()
   } else {
     anonNo<-0
   }
+  if(is.null(parId)){
+    parId=NA
+  }
   tb<-tibble(tabId=pageId, isSaved=fileSaveStatus,  
-             filePath=docFilePath, anonNo, mode=fileMode)
+             filePath=docFilePath, anonNo, mode=fileMode, parId=parId)
   fd<- fileDescDB()
   fd<-bind_rows(fd,tb)
   fileDescDB(fd)

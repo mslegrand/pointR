@@ -41,8 +41,8 @@ mouseCmdMovePt<- function(mssg){
         updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx))
       }
     },error=function(e){
-      e<-c('preproErr',unlist(e))
-      err<-paste(unlist(e), collapse="\n", sep="\n")
+      e<-c('preproErr',e$message)
+      err<-paste(e$message, collapse="\n", sep="\n")
       alert(err)
     })
   } else {

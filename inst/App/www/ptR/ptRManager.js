@@ -21,12 +21,12 @@ if(!!window.sendToElectron){
   });
   
   window.ipcRenderer.on( 'appCloseCmd', function(event, arg){
-    console.log('about to close');
+    // console.log('about to close');
     $('#ptRQuit').trigger('click');
   });
   
   window.ipcRenderer.on( 'fileChanged', function(event, arg){
-    console.log('fileChanged');
+    // console.log('fileChanged');
     //alert('fileChanged '+JSON.stringify(arg));
     Shiny.onInputChange('fileChanged', 
       {
@@ -38,7 +38,7 @@ if(!!window.sendToElectron){
   });
   
   window.ipcRenderer.on( 'fileDeleted', function(event, arg){
-    console.log('fileDeleted');
+    // console.log('fileDeleted');
     //alert('fileDeleted '+JSON.stringify(arg));
     //$('#ptRQuit').trigger('click');
   });
@@ -51,7 +51,7 @@ if(!!window.sendToElectron){
 Shiny.addCustomMessageHandler(
   "ptRManager",
   function(data){
-    console.log('-----------Entering ptRManager------------\n');
+    // console.log('-----------Entering ptRManager------------\n');
     // console.log(JSON.stringify(data));
     if(data.sender==="cmd.electron"){
       if(!!data.app2RunPath){
@@ -61,7 +61,7 @@ Shiny.addCustomMessageHandler(
       }
       if(!!data.resetWatcher){
         if(!!window.sendToElectron){
-          console.log('resetWatcher sendToElectron');
+          // console.log('resetWatcher sendToElectron');
           window.sendToElectron('resetWatcher',data.resetWatcher);
         }
       }
@@ -76,27 +76,27 @@ Shiny.addCustomMessageHandler(
         }
       }
       if(!!data.openLink){
-        console.log('data.openLink' + JSON.stringify(data.openLink));
+        // console.log('data.openLink' + JSON.stringify(data.openLink));
         if(!!window.sendToElectron){
           window.sendToElectron('cmdOpenLink',data.openLink, '');
         }
       }
       if(!!data.openWindow){
-        console.log('data.openWindow' + JSON.stringify(data.openWindow));
+        // console.log('data.openWindow' + JSON.stringify(data.openWindow));
         if(!!window.sendToElectron){
           window.sendToElectron('cmdOpenWindow',data.openWindow, '');
         }
       }
     } //end of electron handlers
     if(data.sender==="closePtRWindowNow"){
-      console.log('inside data.closePtRWindowNow');
+      // console.log('inside data.closePtRWindowNow');
       if(!!window.sendToElectron ){ 
-        console.log('about to send confirmation');
+        // console.log('about to send confirmation');
         var confirmation=window.sendExitConfirmation();
         //window.ipcRenderer.sendSync('confirmExit', true);
-        console.log('confirmation recieved '+ JSON.stringify(confirmation));
+        // console.log('confirmation recieved '+ JSON.stringify(confirmation));
       }
-      console.log('invoking window.close');
+      // console.log('invoking window.close');
       window.close();
     }
     if(!!data.openFile){
@@ -205,7 +205,7 @@ Shiny.addCustomMessageHandler(
     if(!!data.rowCountChange){
       $(window).resize();
     }
-    console.log('-----------Exiting ptRManager------------\n');
+    // console.log('-----------Exiting ptRManager------------\n');
   }
 );
 

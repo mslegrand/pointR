@@ -13,6 +13,7 @@ removeFromDnippetsSelectionAll<-function(dnName ){
 
 
 observeEvent(c( getDnippetsAll(), dnippetsDB$usage, input$pages),{
+  log.fout(c( getDnippetsAll(), getDnippetsSelected(), input$pages))
   if(!is.null(input$pages)){
     selected<-getDnippetsSelected()
     mode<-getMode()

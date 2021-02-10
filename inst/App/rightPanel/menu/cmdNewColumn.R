@@ -240,7 +240,7 @@ observeEvent(input$commitNewCol, {
           #set the column to use specified script
           setPreProcScriptName(tab_Id=getTibTabId(), tib_Name= getAssetName(), column_Name=newColName,  script_Name=script_Name)
         }, error=function(e){
-          e<-c('preproErr',e)
+          e<-c('preproErr',e$message)
           err<-paste(unlist(e), collapse="\n", sep="\n")
           shinyalert("preproc new column Error",err, type="error") # may want to put this in a scrollable modal
         })        

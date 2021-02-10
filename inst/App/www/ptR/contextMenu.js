@@ -11,8 +11,147 @@ $(function () {
         editor.getSession().selection.selectWordRight();
         let text = editor.getSession().getTextRange(editor.getSelectionRange());
         Shiny.onInputChange('helpMssg', {query:text, num:Math.random(), editorId: aceId} );
-      } 
-      else if(cmd==='Copy') {
+      } else if(cmd=="Insert svgR Block"){
+        //$el.trigger(tab_press);
+        let snippet=
+        "```{r, ${1:title,} echo=${2:FALSE}, results='asis'}\nWH=c(500,300)\nsvgR(wh=WH,\n     #your custom code goes here\n     ${0:NULL}\n)\n```";
+        let snippetManager = ace.require("ace/snippets").snippetManager;
+        snippetManager.insertSnippet(editor, snippet);
+        editor.focus();
+      } else if(cmd=="Insert ptR Block"){
+        let snippet=
+        "```{r, ${1:title,} echo=${2:FALSE}, results='asis'}\nWH<-c(600,400)\n\n# Defined by mouse: edit with care!\nptR<-list(\n  x=tribble(\n    ~points,\n    matrix(0,2,0)\n  )\n)\n\nsvgR(wh=WH,\n     #your custom code goes here\n     ${0:NULL}\n)\n\n```";
+        let snippetManager = ace.require("ace/snippets").snippetManager;
+        snippetManager.insertSnippet(editor, snippet);
+        editor.focus();
+      
+      } else if(cmd=="Edit Code Block"){
+        //let pos=e.getDocumentPosition();
+        ///console.log('#########################');
+        // console.log(JSON.stringify(pos));
+        let Range = ace.require('ace/range').Range;
+        let rng1=editor.find('```', {backwards:true, start:editor.getCursorPosition(), range:null});
+        if(!rng1){ return null}
+        let row1=rng1.start.row;
+        // add check for "{ r , }"" in row1, 
+        let rngL1 =  new Range(row1, 0, row1, Infinity);
+        let line1 = editor.getSession().getTextRange(rngL1);
+        if(!/\Wr\W/.test(line1)){ // if not found exit
+          return null;
+        }
+        // split line and look for r, and label
+        // remove ```, {, } and split
+        let toks=line1.replace("```","").replace(/ /g,"").replace("{","").replace("}","").split(",");
+        // search for r
+        let hasR = toks.filter(tok => tok=='r').length==1;
+        if(!hasR){
+          return null;
+        }
+        let label = toks.filter(tok => tok.match(/label=.*/));
+        if(label.length===1){
+          label=label[0].replace(/label='/,"").replace("'","").replace('"','');
+        } else {
+          label =toks.filter(tok=>!tok.match('=')).filter(tok=>tok!='r');
+          if(label.length==1){
+            label=label[0].replace("'","").replace('"','');
+          } else {
+            label="";
+          }
+        } 
+        
+        let rng2=editor.find('```', {backwards:false, start:editor.getCursorPosition(), range:null});
+        
+        if(!rng2){ return null} // if not found exit
+        
+        let row2=rng2.start.row;
+         // check .anchors to see if row1, row2 are taken
+        let Anchor = ace.require('ace/anchor').Anchor;
+        let ancs = editor.getSession().anchors;
+        let childAceId=null;
+        let ancTag=null;
+        if(typeof editor.getSession().anchors !='undefined'){
+            let ancs = editor.getSession().anchors;
+            for(let k in ancs){
+              let val=ancs[k];
+              let r1=val.anc1.row;
+              let r2=val.anc2.row;
+              if(r1==r1 && r2== row2){
+               ancTag=k;
+              }
+            }
+            if(!!ancTag){
+              $('.shiny-ace').each(function(){
+                 let lid=this.id;
+                 let editr = $('#'+lid).data('aceEditor'); 
+                 if(!!editr.getSession().link ){
+                   let link=editr.getSession().link;
+                   if(link.length !== undefined){
+                      let res=link[0].split(".");
+                      let rid=res[1];
+                      if(rid==ancTag){
+                        childAceId=lid;
+                      }
+                   } 
+                 }
+              });
+              if(!!childAceId){
+                if(!!$('#'+childAceId)){
+                  Shiny.onInputChange('messageContextMenu', 
+                  {
+                   cmd: "openTab",
+                   id:childAceId
+                  }); 
+                  return(null);
+                }
+              }
+            }
+        }
+         
+        let col=  editor.session.getLine(row2).length;
+        let range = new Range(row1, 0, row2, col);
+        let doc= editor.session.getDocument();
+        
+        
+        if( !range.isEmpty() ){ 
+          let text = editor.getSession().getTextRange(range);
+          let lines= text.split("\n");
+          let patt=new RegExp("^```");
+          let res0= patt.test(lines[0]);
+          let res1 = patt.test(lines[lines.length-1]);
+          let rngOk = res0 && res1;
+          if(rngOk){
+            //let Anchor = ace.require('ace/anchor').Anchor;
+            let anc1=new Anchor(doc,row1,0);
+            let anc2=new Anchor(doc,row2,0);
+            let anc={anc1: anc1, anc2:anc2};
+            let rid=Math.random().toString(36).substring(8);
+            if(typeof editor.getSession().anchors ==='undefined'){
+              editor.getSession().anchors={};
+            } 
+            editor.getSession().anchors[rid]=anc;
+            
+            lines=lines.slice(1, lines.length-1);
+            text=lines.join('\n');
+            //alert(JSON.stringify(Object.keys(editor.getSession().anchors)));
+            // set current tab to read only
+            // send message to ptR to create new tab with text as content
+            Shiny.onInputChange('messageContextMenu', 
+            {
+             cmd: "newTab",
+             start_row: row1,
+             end_row: row2,
+             code :  text,
+             id:rid,
+             label: label
+            });
+          
+            // exit gracefully
+            //alert(text);
+          }
+          
+          
+        } //end of edit code block
+      } else if(cmd==='Copy') {
         let text = editor.getSession().getTextRange(editor.getSelectionRange());
         //window.clipboard.writeText(text);
         window.writeText(text);
@@ -29,7 +168,7 @@ $(function () {
         //let text = clipboard.readText();
         let text = window.readText();
         editor.getSession().replace(range,  text); 
-        console.log("You have selected "+ cmd + " with ace id = " +aceId);
+        // console.log("You have selected "+ cmd + " with ace id = " +aceId);
       } else if(cmd==='Delete') {
         let range = editor.getSelectionRange();
         if( !range.isEmpty() ){

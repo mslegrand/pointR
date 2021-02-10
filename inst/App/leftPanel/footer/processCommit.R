@@ -1,12 +1,20 @@
 src2sourceType<-function(src){  #not used !!
   lines<-strsplit(src,"\n") 
   lines<-lines[[1]]
-  svgRPos<-grep("^\\s*svgR\\(",lines)
-  if(length(svgRPos)==0){ # just R code I guess
-    # browser()
-    setSourceType(sourceType=RPanelTag) #
+  if(length(lines)==0){
+    setSourceType(sourceType=textPanelTag)
   } else {
-    setSourceType(sourceType=svgPanelTag) #SVG code
+    if(grepl("^---",lines[1])){
+      setSourceType(sourceType=rmdPanelTag)
+    } else{
+      svgRPos<-grep("^\\s*svgR\\(",lines)
+      if(length(svgRPos)==0){ # just R code I guess
+        # browser()
+        setSourceType(sourceType=RPanelTag) #
+      } else {
+        setSourceType(sourceType=svgPanelTag) #SVG code
+      }         
+    }
   }
 }
 
@@ -18,6 +26,7 @@ processCommit<-reactive({
   clearErrorMssg()
   
   mode<-getModeX()
+  log.val(mode)
   if(length(mode)!=1){
     cat('missing mode\n'); browser()
     return(NULL)
@@ -53,31 +62,22 @@ processCommit<-reactive({
   }
   if(!hasError()){
     tabId<-input$pages
-    # cat("tabId=",tabId,"\n")
-    #cat_list<<-c( cat_list,'>---> processCommit::savePage\n')
     savePage(tabId)
-    #cat_list<<-c( cat_list,'<---< processCommit::savePage\n')
   }
-  # log.fout( processCommit)
+  # log.fout(processCommit)
 })
 
-
 processSvgR<-reactive({
-  #src<-request$code
+#  log.fin(processSvgR)
   src<-getCode()
-  # cat('>----> processSvgR::\n')
   if(length(src)==1){
-    ptRList<-getPtDefs()$tib
     tryCatch({
-      lines<-strsplit(src,"\n") 
+      initialEnv<-getEnvList()
+      lines<-strsplit(src,"\n")
       lines<-lines[[1]]
-      # cat('ptRPos\n')
       ptRPos<-grep("^\\s*ptR<-",lines)
-      # cat('svgRPos\n')
       svgRPos<-grep("^\\s*svgR\\(",lines)
-      # cat('done\n')
       if(length(svgRPos)==0){ # just R code I guess
-        # browser()
         setSourceType(sourceType=RPanelTag) #
       } else {
         setSourceType(sourceType=svgPanelTag) #SVG code
@@ -92,32 +92,20 @@ processSvgR<-reactive({
       if(length(svgRPos)==0){ # just R code I guess
         #test for error and capture output
         # capture capture output as mssg
-        env<-new.env()
+        env1<-getEnvList()
         parsedCode<-parse(text=src)
         output<-lapply(parsedCode, function(x){
-          captureOutput(eval(x, envir=env))
+          captureOutput(eval(x, envir= env1    ))
         })
         output<-paste( unlist(output), collapse="\n" )
         output<-paste("Output:",output,sep="\n")
         setCapturedMssg(output)
         setSourceType(sourceType=RPanelTag) #no error, just R code
       } else { # presume to be svgR code
-        # next check if it can be run
-        # Set wd to the current project or if no project, then to home
-        dpath<-getDirPath()
-        if(identical(dpath, '~/.ptR')){
-          dpath<-'~'
-        }
-        wd<-paste0('\nsetwd("',dpath,'")\n\n')
-        parsedCode<-parse(text=paste0(wd,src) )
-        #parsedCode<-parse(text=src) 
-        # svg<-eval(parsedCode)
-        # if(identical(class(svg),'svgDoc')){
-        #   w<-svg$root$getAttr('width')
-        #   h<-svg$root$getAttr('height')
-        #   #set WH in selected...
-        # }
-        output<-captureOutput(eval(parsedCode, new.env()))
+        env2<-getEnvList()
+        parsedCode<-parse(text=paste0(src) )
+        
+        output<-captureOutput(eval(parsedCode, envir=env2 ))
         output<-paste( output, collapse="\n" )
         output<-paste("Output:",output,sep="\n")
         setCapturedMssg(output)
@@ -130,10 +118,13 @@ processSvgR<-reactive({
     }, #end of try
     error=function(e){ 
         #Error handler for commit
+        e<-e$message
         if(all(!str_detect(e,'Output:'))){
           e<-c(e,traceback())
         }
-        err<-paste(unlist(e), collapse="\n", sep="\n")
+        err<-unlist(e)
+        err<-paste(err, collapse="\n", sep="\n")
+        # log.val(err)
         #try to locate where the error occured
         if(str_detect(err, 'parse')){
           m<-str_match(err, ":([0-9]+):([0-9]+):")
@@ -157,7 +148,8 @@ processSvgR<-reactive({
       } #end of error handler
     ) #end of tryCatch 
   } #end of if(length==1)
-  # cat('<----< processSvgR::\n')
+  
+  # log.fout(processSvgR)
 })
 
 

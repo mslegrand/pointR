@@ -1,11 +1,47 @@
 
 theCode<-reactiveVal("")
+theBlocks<-reactiveVal(NULL)
+theEnvList<-reactiveVal(list()) #or NULL?
 
 request<-reactiveValues(
-  sender=NULL,
+  cmd=NULL,
   tabs=NULL,
-  trigger=0
+  trigger=0,
+  predoc=""
 )
+
+getWDCmd<-reactive({
+  log.fin(getWDCmd)
+  dpath<-getDirPath()
+  log.val(dpath)
+  if(identical(dpath, '~/.ptR')){
+    dpath<-'~'
+  }
+  dd<-paste0('\nsetwd("',dpath,'")\n\n')
+  log.fout(getWDCmd)
+  dd
+})
+
+
+getEnvList<-reactive({
+  # log.fin(getEnvList)
+  wd<-getWDCmd()
+  # log.val(wd)
+  pcode<-theBlocks()
+  if(!is.null(pcode) && pcode!=""){
+    pcode=paste(wd,pcode,sep="\n")
+    initialEnv=new.env()
+    # log.val(pcode)
+    eval(parse(text=pcode),initialEnv)
+    envlist<-as.list(initialEnv)
+  } else  {
+    envlist<-list()
+  }
+  # log.val(envList)
+  # log.fout(getEnvList)
+  envlist
+})
+
 
 
 
@@ -29,11 +65,11 @@ getCode4RenderingTransform<-eventReactive( trigger$redraw, {
 })
 
 
-setTabRequest<-function(sender, tabs){
-  # if(length(sender)==1 && length(tabs)>1){
-  #   sender<-rep_len(sender,length(tabs) )
+setTabRequest<-function(cmd, tabs){
+  # if(length(cmd)==1 && length(tabs)>1){
+  #   cmd<-rep_len(cmd,length(tabs) )
   # }
-  request$sender<-sender
+  request$cmd<-cmd
   request$tabs<-tabs
   request$trigger<-sample(10^6,1)
 }
@@ -49,13 +85,7 @@ peekTabRequest<-function(){
 }
 
 peekTabCmd<-function(){
-  request$sender
-}
-
-
-clearRequest<-function(  ){
-  request$sender<-NULL
-  request$tags<-list()
+  request$cmd
 }
 
 requestStartUp<-function(){ 
@@ -66,8 +96,16 @@ peekTab<-reactive( {request$tabs[1]} )
 popTab<-reactive({
   tab<-request$tabs[1]
   request$tabs<-request$tabs[-1]
-  # ?????   if length(tabs is 0, remove sender?)
+  # ?????   if length(tabs is 0, remove cmd?)
   tab
+})
+
+setBlocks<-function(blocks){
+  theBlocks(blocks)
+}
+
+getBlocks<-reactive({
+  theBlocks()
 })
 
 setCode<-function(code){
