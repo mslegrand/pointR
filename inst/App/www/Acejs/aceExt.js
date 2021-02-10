@@ -467,9 +467,9 @@ Shiny.addCustomMessageHandler(
 
        //---------------replacement------------------
         if(!!data.replacement){
-          //console.log("\n\nEntering data.replacement");
+          console.log("\n\nEntering data.replacement");
           var replacement = data.replacement;
-          //console.log(JSON.stringify(replacement));
+          console.log(JSON.stringify(replacement));
           
           ud=editor.getSession().getUndoManager();
           //console.log('1: undoManager is: ' + simpleStringify( ud ));
@@ -483,7 +483,7 @@ Shiny.addCustomMessageHandler(
           if( ud.$ok.length>0 ){ //  if we can, first roll back to a good state, then replace
              //console.log(  "ud.$ok.length="+ud.$ok.length );
             ud.pop2Ok();
-            /*
+            }            /*
             console.log('2: undoManager is: ' + simpleStringify( ud ));
             //console.log('2: ud.$ok is: ' + simpleStringify( ud.$ok ));
             console.log('2: ud.$ok is: ' + JSON.stringify( ud.$ok ));
@@ -537,6 +537,7 @@ Shiny.addCustomMessageHandler(
           
           
           //}        
+
         }  //end replacement
         
         //---------setOk----------

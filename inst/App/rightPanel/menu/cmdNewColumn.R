@@ -79,7 +79,7 @@ is.Non.Blank.Value<-reactiveVal(FALSE)
 
 observeEvent(input$modalAttrName,{
   str<-input$modalAttrName
-  if(goodName(str) && !(str %in% c( names(getTib()), 'svgPanel', 'RPanel' ) )){
+  if(goodRName(str) && !(str %in% c( names(getTib()), 'svgPanel', 'RPanel' ) )){
     is.Non.Blank.Name(TRUE)
     # showElement('modalColTreatAsDiv')
   } else {
@@ -273,7 +273,6 @@ observeEvent(input$commitNewCol, {
         # newVal is ready to insert
         newPtDefs$tib[[getAssetName()]]<-add_column(newPtDefs$tib[[getAssetName()]], 
                                                   !!(newColName):=newVal   )   
-        
       }
       
       # updateAce and set selection to this column
