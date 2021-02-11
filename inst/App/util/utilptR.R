@@ -10,7 +10,7 @@ goodName<-function(s, n=1){
 
 goodRName<-function(s, n=1){
   if(length(s)==1 && typeof(s)=='character' && nchar(s)>=n){
-    grepl('^[[:alpha:]\\.][[:alnum:]\\.]*$', s)
+    grepl('^[[:alpha:]\\.][[:alnum:]\\._]*$', s)
   } else{
     FALSE
   }
