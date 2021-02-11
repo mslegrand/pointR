@@ -5,7 +5,7 @@ observeEvent(input$messageFromAce, {
     
     if(length(input$messageFromAce$sender)>0){
       if(length(input$messageFromAce$preDoc)>0){
-        cat('has preDoc\n')
+        # cat('has preDoc\n')
         pDoc<-input$messageFromAce$preDoc
         if(!identical(pDoc, request$pDoc)){
           pBlocks<-NULL

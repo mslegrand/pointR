@@ -35,10 +35,10 @@ rmdModuleList<-callModule(
 extractCodeBlocksFromRmd<-function(txt){
   
   lines<-unlist(str_split(txt, '\n'))
-  print(lines)
+  # print(lines)
   pos<-grep('^```', lines)
   np<-length(pos)
-  cat('np=',format(np),"\n")
+  # cat('np=',format(np),"\n")
   blocks<-NULL
   if(np>=2){
     if(np%%2==1){
@@ -46,20 +46,20 @@ extractCodeBlocksFromRmd<-function(txt){
     }
     pow<-pos[1:np]
     pos<-matrix(pow,2)
-    print(pos)
+    # print(pos)
     i<-pos[1,]
     ll<-lines[i]
     
     cols<-grep('^```\\s*\\{\\s*r[,[:space:]]',lines[i])
-    cat('cols=',format(cols),'\n')
+    # cat('cols=',format(cols),'\n')
     pos<-pos[,cols]
     if(length(cols)>0){
       pos<-matrix(pos,2)
-      print(pos)
+      # print(pos)
       blocks<-apply(pos,2, function(x){
         paste0(lines[(x[1]+1):(x[2]-1)], collapse="\n")
       })
-      print(blocks)
+      # print(blocks)
     }
   } 
   blocks
