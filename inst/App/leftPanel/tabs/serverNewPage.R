@@ -16,8 +16,8 @@ newPage<-function(tabId, title, txt, docFilePath, mode,  fileSaveStatus, link=NU
   } else {
     divClass="cAceRmdContainer"
   }
-  print("**** newPage link")
-  print(link)
+  # print("**** newPage link")
+  # print(link)
   appendTab(
     inputId = "pages", select=TRUE,
     tabPanel(
