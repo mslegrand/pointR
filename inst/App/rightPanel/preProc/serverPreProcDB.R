@@ -26,6 +26,7 @@ extractPreProcScript<-function(tab_Id, tib_Name, column_Name){
   script_Name<-getPreProcScriptName(
     tab_Id, tib_Name,column_Name
   )
+
   if(length(script_Name)==1 && script_Name!='none'){
     tibs<-getPtDefs()$tib
     col<-tibs[[tib_Name]][[column_Name]]
