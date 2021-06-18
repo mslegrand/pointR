@@ -21,9 +21,11 @@ dripplets2Rmd<-function( drps ){
   unlist(str_split(drps, '\n'))->drps
   indx<-m[2,]
   drps[indx]<-paste(
-    "temp$root$setAttr('width',480)",
-    "temp$root$setAttr('height',320)",
-    "temp$root$setAttr('viewBox','0 0  48 32')",
+    # "temp$root$setAttr('width',480)",
+    # "temp$root$setAttr('height',320)",
+    # "temp$root$setAttr('viewBox','0 0  48 32')",
+    "temp$root$setAttr('stroke','#00FFFF')",
+    "temp$root$setAttr('fill','#00FFFF')",
     "temp$root$prependChildren(
       svgR:::use(filter=svgR:::filter( filterUnits='userSpaceOnUse', svgR:::feFlood(flood.color='black') ) )
     )",

@@ -14,7 +14,7 @@ getNextAnonFileNum<-reactive({
 })
 
 # to be called from serverFileTab.R::addFileTab
-addFileDesc<-function( pageId, docFilePath, fileSaveStatus, fileMode, parId=NA){
+addFileDesc<-function( pageId, docFilePath, fileSaveStatus, fileMode, parId=NA, parMode=NA){
   if(identical(docFilePath,"?")){
     anonNo<-getNextAnonFileNum()
   } else {
@@ -24,7 +24,7 @@ addFileDesc<-function( pageId, docFilePath, fileSaveStatus, fileMode, parId=NA){
     parId=NA
   }
   tb<-tibble(tabId=pageId, isSaved=fileSaveStatus,  
-             filePath=docFilePath, anonNo, mode=fileMode, parId=parId)
+             filePath=docFilePath, anonNo, mode=fileMode, parId=parId, parMode=parMode)
   fd<- fileDescDB()
   fd<-bind_rows(fd,tb)
   fileDescDB(fd)
@@ -43,6 +43,31 @@ getMode<-reactive({
     
   }
   mode
+})
+
+getParMode<-reactive({
+  cat('>---> getParMode\n')
+  tabId<-input$pages # getTibTabId()
+  cat(paste('tabId=',format(tabId)))
+  if(is.null(tabId) || identical(tabId, 'bogus')){
+    cat('seting parNode to NULL')
+    parMode<-NULL
+  } else {
+    fd<-fileDescDB()
+    print(fd)
+    print(fd$tabId)
+    print(fd$parMode)
+    #stopifnot('tabId' %in% names(fd))
+    parMode<-fd[fd$tabId==input$pages,]$parMode
+    cat('parMode=')
+    cat(format(parMode))
+    if(is.na(parMode)){
+      parMode<-NULL
+    }
+  }
+  # print(parMode)
+  #parMode='dnds'
+  parMode
 })
 
 # in getModeX we need to insert flag to enable/disable appmode

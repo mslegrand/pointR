@@ -38,6 +38,7 @@ reOrgPanels<-function(id, mode){
       hide(id="rmd-edit-code")
       hide(id="rmd-insert-svgR")
       hide(id="rmd-insert-ptR")
+      hide(id="dnd-edit-svgR")
       if(usingElectron){
         addCssClass( id= "runAppPanel", class="hiddenPanel")
         addCssClass( id= "stopAppPanel", class="hiddenPanel")
@@ -54,6 +55,11 @@ reOrgPanels<-function(id, mode){
       
       hideElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble
       # now consider which mode it is
+      if(identical(mode,'dnippets')){
+        show(id="dnd-edit-svgR")
+      } else {
+        hide(id="dnd-edit-svgR")
+      }
       if(identical(mode,'ptrrmd')){
         show(id="rmd-edit-code")
         show(id="rmd-insert-svgR")

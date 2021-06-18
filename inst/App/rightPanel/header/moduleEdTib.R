@@ -47,7 +47,7 @@ moduleEdTib<-function(input, output, session,
   name, 
   nameChoices,
   getRowIndex,
-  getTibNRow,
+  getTibNRow, #extraneous???
   matColIndex,
   matColIndexChoices, 
   getMatColIndex,

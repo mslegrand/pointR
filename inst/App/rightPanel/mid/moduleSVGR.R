@@ -22,13 +22,14 @@ svgToolsScript<-function(type){
     showPts.compound, # =showsvgRPoints.pts2
     ptrDisplayScript, # =js.scripts[[ "Points"]]
     useKeyMouseScript, #  
-    getSVGWH, 
+    # getSVGWH, #not used here???
     getSvgGrid,
     getBackDrop,
     getCode, 
     getEnvList,
     getErrorMssg, 
-    getTibNRow, # doesnot appear
+    # getTibNRow, # doesnot appear
+    getParMode,
     getDirPath
   ){
   ns <- session$ns
@@ -78,7 +79,7 @@ svgToolsScript<-function(type){
  
   
   output$svghtml <- renderUI({ # renderUI is probably not the most efficient approach!!!
-    WH<-getSVGWH()
+    #WH<-getSVGWH() # not used here???
     codeTxt<-getCode()
     if(is.null(getSvgGrid())){return(NULL)}
     
@@ -100,6 +101,17 @@ svgToolsScript<-function(type){
           
           parsedCode<-parse(text=paste0(wd,codeTxt))
           svg<-eval(parsedCode, getEnvList() )
+          parentMode<-getParMode()
+          cat('parentMode= ')
+          cat(format(parentMode))
+          if(identical(parentMode, 'dnippets')){
+            cat('\ngot it')
+            svg$root$setAttr('width',480)
+            svg$root$setAttr('height',320)
+            svg$root$setAttr('viewBox','0 0  48 32')
+            svg$root$setAttr('stroke','#00FFFF')
+            svg$root$setAttr('fill','#00FFFF')
+          } 
           w<-svg$root$getAttr('width')
           h<-svg$root$getAttr('height')
           rtv$WH<-c(w,h)
@@ -118,16 +130,25 @@ svgToolsScript<-function(type){
                 vbScaleFactor<-1
               }
             } 
-            }, error=function(e){
+            }, 
+            error=function(e){
               vbScaleFactor<-1
           }) 
+          if(identical(parentMode, 'dnippets')){
+            vbScaleFactor<-10
+            dxy=c(5,5)
+            svg$root$prependNode( graphPaper2( wh=c(48,32), dxy=dxy, labels=TRUE, scaleFactor= vbScaleFactor) )
+            svg$root$prependChildren(
+              svgR:::use(filter=svgR:::filter( filterUnits='userSpaceOnUse', svgR:::feFlood(flood.color='black') ) )
+            )
+          }
           svg$root$setAttr('id',svgID)
           if(getSvgGrid()$show==TRUE){ 
             dxy<-c( getSvgGrid()$dx, getSvgGrid()$dy)
             
             #svg$root$prependNode(svgR:::graphPaper( wh=c(w,h), dxy=dxy, labels=TRUE )) #need to replace with vbScaleFactor-scalable version
             #svg$root$prependNode( graphPaper2( wh=c(w,h), dxy=dxy, labels=TRUE, scaleFactor= vbScaleFactor))
-            svg$root$prependNode( graphPaper2( wh=gWH, dxy=dxy, labels=TRUE, scaleFactor= vbScaleFactor))
+            svg$root$prependNode( graphPaper2( wh=gWH, dxy=dxy, labels=TRUE, scaleFactor= vbScaleFactor) )
           }
           if(getBackDrop()$checked==FALSE){
               svg$root$prependChildren(
@@ -159,10 +180,7 @@ svgToolsScript<-function(type){
             keyMouseScript=paste0('onKeyMouseDown(evt, "', svgID, '")')
             svg$root$addAttributes(list(onmousedown=keyMouseScript))
           }
-          
-          
-           
-         as.character(svg)->svgOut 
+          as.character(svg)->svgOut 
           res<-HTML(svgOut)
           rtv$status<-list(
             state="PASS",

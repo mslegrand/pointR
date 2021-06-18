@@ -124,13 +124,14 @@ statusPlotPoint<-callModule(
   }),
   ptrDisplayScript = reactive({ svgToolsScript( "Points") }), 
   useKeyMouseScript=FALSE,
-  getSVGWH,
+  # getSVGWH, #extraneous???
   getSvgGrid,
   getBackDrop,
   getCode4Rendering,
   getEnvList=getEnvList,
   getErrorMssg,
-  getTibNRow=getTibNRow,
+  #getTibNRow=getTibNRow,  #extraneous
+  getParMode=getParMode,
   getDirPath=getDirPath
 )
 
@@ -141,7 +142,7 @@ observeEvent(c(statusPlotPoint$status(), statusPlotPoint$WH()), {
     mssg$err<-paste(mssg$err, status$message, "cannot plot: code02\n", collapse="\n")
   } else {
     wh<-statusPlotPoint$WH()
-    getSVGWH(wh)
+    getSVGWH(wh) #sets the wh value for later use
   }
 })
 

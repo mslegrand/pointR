@@ -110,13 +110,14 @@ statusPlotTagDrag<-callModule(
   }),
   ptrDisplayScript = reactive({ svgToolsScript( "TagDrag") }), 
   useKeyMouseScript=TRUE,
-  getSVGWH=getSVGWH,
+  # getSVGWH=getSVGWH, #extraneous???
   getSvgGrid=getSvgGrid,
   getBackDrop=getBackDrop,
   getCode= getCode4Rendering, 
   getEnvList=getEnvList,
   getErrorMssg=getErrorMssg,
-  getTibNRow=getTibNRow,
+  #getTibNRow=getTibNRow, #extraneous???
+  getParMode=getParMode,
   getDirPath=getDirPath
 )
 
@@ -127,7 +128,7 @@ observeEvent(c(statusPlotTagDrag$status(),   statusPlotPoint$WH()), {
     # switch to log 
   } else {
     wh<-statusPlotPoint$WH()
-    getSVGWH(wh)
+    getSVGWH(wh) #sets the wh value for later use
   }
 })
 
