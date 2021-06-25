@@ -102,72 +102,85 @@ svgToolsScript<-function(type){
           parsedCode<-parse(text=paste0(wd,codeTxt))
           svg<-eval(parsedCode, getEnvList() )
           parentMode<-getParMode()
-          cat('parentMode= ')
-          cat(format(parentMode))
+          # cat('parentMode= ')
+          # cat(format(parentMode))
+          svg$root$setAttr('id',svgID)
           if(identical(parentMode, 'dnippets')){
-            cat('\ngot it')
             svg$root$setAttr('width',480)
             svg$root$setAttr('height',320)
             svg$root$setAttr('viewBox','0 0  48 32')
             svg$root$setAttr('stroke','#00FFFF')
             svg$root$setAttr('fill','#00FFFF')
-          } 
-          w<-svg$root$getAttr('width')
-          h<-svg$root$getAttr('height')
-          rtv$WH<-c(w,h)
-          vbWH<-svg$root$getAttr('viewBox')
-          vbWH<-str_split(vbWH,',')
-          vbWH<-unlist(vbWH)[3:4]
-          vbScaleFactor<-1
-          gWH<-c(w,h)
-          tryCatch({
-            if(length(vbWH)==2  ){
-              vbWH<-as.numeric(vbWH)
-              if(min(vbWH)>0){
-                vbScaleFactor<-mean(rtv$WH/vbWH)
-                gWH<-vbWH
-              } else {
-                vbScaleFactor<-1
-              }
-            } 
-            }, 
-            error=function(e){
-              vbScaleFactor<-1
-          }) 
-          if(identical(parentMode, 'dnippets')){
+            rtv$WH<-c(480,320)
             vbScaleFactor<-10
-            dxy=c(5,5)
-            svg$root$prependNode( graphPaper2( wh=c(48,32), dxy=dxy, labels=TRUE, scaleFactor= vbScaleFactor) )
+            if(getSvgGrid()$show==TRUE){ 
+              dxy=c(4,4)
+              svg$root$prependNode( graphPaper2( wh=c(48,32), dxy=dxy, labels=TRUE, scaleFactor= vbScaleFactor) )
+            }
             svg$root$prependChildren(
               svgR:::use(filter=svgR:::filter( filterUnits='userSpaceOnUse', svgR:::feFlood(flood.color='black') ) )
             )
-          }
-          svg$root$setAttr('id',svgID)
-          if(getSvgGrid()$show==TRUE){ 
-            dxy<-c( getSvgGrid()$dx, getSvgGrid()$dy)
             
-            #svg$root$prependNode(svgR:::graphPaper( wh=c(w,h), dxy=dxy, labels=TRUE )) #need to replace with vbScaleFactor-scalable version
-            #svg$root$prependNode( graphPaper2( wh=c(w,h), dxy=dxy, labels=TRUE, scaleFactor= vbScaleFactor))
-            svg$root$prependNode( graphPaper2( wh=gWH, dxy=dxy, labels=TRUE, scaleFactor= vbScaleFactor) )
-          }
-          if(getBackDrop()$checked==FALSE){
+          } else {
+            # record width, height
+            w<-svg$root$getAttr('width')
+            h<-svg$root$getAttr('height')
+            rtv$WH<-c(w,h)
+            
+            # if viewBox, calculate vbScaleFactor, else vbScaleFactor=1
+            vbWH<-svg$root$getAttr('viewBox')
+            vbWH<-str_split(vbWH,',')
+            vbWH<-unlist(vbWH)[3:4]
+            vbScaleFactor<-1
+            gWH<-c(w,h)
+            tryCatch({
+              if(length(vbWH)==2  ){
+                vbWH<-as.numeric(vbWH)
+                if(min(vbWH)>0){
+                  vbScaleFactor<-mean(rtv$WH/vbWH)
+                  gWH<-vbWH
+                } else {
+                  vbScaleFactor<-1
+                }
+              } 
+            }, 
+            error=function(e){
+              vbScaleFactor<-1
+            }) 
+            if(getSvgGrid()$show==TRUE){ 
+              dxy<-c( getSvgGrid()$dx, getSvgGrid()$dy)
+              
+              #svg$root$prependNode(svgR:::graphPaper( wh=c(w,h), dxy=dxy, labels=TRUE )) #need to replace with vbScaleFactor-scalable version
+              #svg$root$prependNode( graphPaper2( wh=c(w,h), dxy=dxy, labels=TRUE, scaleFactor= vbScaleFactor))
+              svg$root$prependNode( graphPaper2( wh=gWH, dxy=dxy, labels=TRUE, scaleFactor= vbScaleFactor) )
+            }
+            
+            if(getBackDrop()$checked==FALSE){ #solid
               svg$root$prependChildren(
                 svgR:::use(filter=svgR:::filter(xy=c(0,0), wh=c(w,h), filterUnits="userSpaceOnUse", svgR:::feFlood(flood.color=getBackDrop()$color)))
               )
-          } else {
-             wh2=c(20,20)/vbScaleFactor
-             wh1=c(10,10)/vbScaleFactor
-             svg$root$prependChildren(
-               svgR:::rect(xy=c(0,0), wh=c(w,h),
-                  fill=svgR:::pattern( xy=c(0,0), wh=wh2, patternUnits="userSpaceOnUse",
-                    svgR:::g(
-                      svgR:::rect(xy=c(0,0), wh=wh1, fill=getBackDrop()$color),
-                      svgR:::rect(xy=wh1, wh=wh1, fill=getBackDrop()$color)
-                    )
-                  )
+            } else { # checkered
+              wh2=c(20,20)/vbScaleFactor
+              wh1=c(10,10)/vbScaleFactor
+              svg$root$prependChildren(
+                svgR:::rect(xy=c(0,0), wh=c(w,h),
+                            fill=svgR:::pattern( xy=c(0,0), wh=wh2, patternUnits="userSpaceOnUse",
+                                                 svgR:::g(
+                                                   svgR:::rect(xy=c(0,0), wh=wh1, fill=getBackDrop()$color),
+                                                   svgR:::rect(xy=wh1, wh=wh1, fill=getBackDrop()$color)
+                                                 )
+                            )
                 )
               )
+            }
+            
           }
+          
+          
+          
+          # svg$root$setAttr('id',svgID)
+          
+          
           svg$root$prependNode(svgR:::script(ptrDisplyScriptTxt))
           svg$root$prependNode( svgR:::style(".draggable {','cursor: move;','}"))
             
