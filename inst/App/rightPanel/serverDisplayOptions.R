@@ -4,7 +4,8 @@ displayOptions<-reactiveValues(
   insertMode=TRUE,
   ptMode="Normal", # can be 'Hidden', 'Normal', 'Labeled'
   labelMode=FALSE,
-  restrictMode=FALSE
+  restrictMode=FALSE,
+  labelColor='#000000'
 )
 
 #displayMode<-reactive({displayOptions$ptMode})
@@ -27,6 +28,9 @@ getDisplayMode<-reactive({
 setDisplayOption<-function( insertMode, ptMode, labelMode, restrictMode ){
   if(!missing(labelMode)){
     displayOptions$labelMode<-labelMode
+    if(!is.null(getParMode())){
+      displayOptions$labelColor<-'#FFFFFF'
+    }
   }
   if(!missing(restrictMode)){
     displayOptions$restrictMode<-restrictMode
