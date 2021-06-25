@@ -10,7 +10,8 @@
       rowIndex=NULL,
       matColIndex=NULL,
       displayOptions=NULL, 
-      vbScaleFactor
+      vbScaleFactor,
+      labelColor="black"
   ){
     
     
@@ -20,10 +21,7 @@
    
     displayOpt<-displayOptions
     if(is.null(displayOpt)||is.null(displayOpt$labelMode) || is.null(displayOpt$restrictMode)){ return(NULL)}
-    labelColor<-'#000000' # black by default but override if displayOpt specifies it.
-    if(!is.null(displayOpt$labelColor)){
-      labelColor<-displayOpt$labelColor
-    }
+    
     
     # if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
     onMouseDownTxt='ptRPlotter_ptR_SVG_Point.selectPoint(evt)'
@@ -112,7 +110,7 @@ statusPlotPoint<-callModule(
   id="svgPointsMod",
   svgID='ptR_SVG_Point',
   showPts.compound=reactive({
-    function(vbScaleFactor){
+    function(vbScaleFactor, labelColor){
       list(
         newPtLayer( getInsertMode(), getSVGWH() ),
         showPts.PtCmd(
@@ -121,7 +119,8 @@ statusPlotPoint<-callModule(
           rowIndex=getTibRow(),
           matColIndex=getTibMatCol(),
           displayOptions=getDisplayOptions(),
-          vbScaleFactor=vbScaleFactor
+          vbScaleFactor=vbScaleFactor,
+          labelColor
         )
       )
     }

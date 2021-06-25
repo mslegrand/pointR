@@ -185,7 +185,11 @@ svgToolsScript<-function(type){
           svg$root$prependNode( svgR:::style(".draggable {','cursor: move;','}"))
             
           if(!is.null(showPts.compound()) ){
-              temp<-svgR(showPts.compound()(vbScaleFactor))$root$xmlChildren()
+              labelColor='black'
+              if(!is.null(parentMode) || getBackDrop()$color %in% c('#000000','#FF0000','#0000FF','#333333'   )){
+                labelColor="white"
+              }
+              temp<-svgR(showPts.compound()(vbScaleFactor, labelColor))$root$xmlChildren()
               svg$root$appendChildren(temp)
           }
           if(useKeyMouseScript){

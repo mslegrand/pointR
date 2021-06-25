@@ -9,7 +9,8 @@
     pts=NULL, 
     rowIndex=NULL,
     displayOptions=NULL, 
-    vbScaleFactor=1
+    vbScaleFactor=1,
+    labelColor='black'
     ){
     #if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
     
@@ -102,13 +103,14 @@ statusPlotTagDrag<-callModule(
   id="svgTagDragMod",
   svgID='ptR_SVG_TagDrag',
   showPts.compound=reactive({
-    function(vbScaleFactor){
+    function(vbScaleFactor, labelColor){
       showPts.dragTag(
       ptName=getAssetName(), 
       pts=getTibPts(), 
       rowIndex=getTibRow(),
       displayOptions=getDisplayOptions(),
-      vbScaleFactor
+      vbScaleFactor,
+      labelColor
       )
     }
   }),

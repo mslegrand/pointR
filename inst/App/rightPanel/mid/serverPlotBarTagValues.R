@@ -9,17 +9,15 @@ showPts.valTag %<c-% function(
   pts=NULL, 
   rowIndex=NULL,
   displayOptions=NULL ,
-  vbScaleFactor=1
+  vbScaleFactor=1,
+  labelColor='black'
   ){
   if(is.null(displayOptions)){
     return(NULL)
   }
   displayOpt<-displayOptions
   if(is.null(displayOpt)||is.null(displayOpt$labelMode) || is.null(displayOpt$restrictMode)){ return(NULL)}
-  labelColor<-'#000000' # black by default but override if displayOpt specifies it.
-  if(!is.null(displayOpt$labelColor)){
-    labelColor<-displayOpt$labelColor
-  }
+  
   
   onMouseDownTxt<-"ptRPlotter_ptR_SVG_TagVal.selectElement(evt)"
   if(length(ptName)<1){return(NULL)}
@@ -89,13 +87,14 @@ statusPlotTagVal<-callModule(
   id="svgTagValsMod",
   svgID='ptR_SVG_TagVal',
   showPts.compound=reactive({
-    function(vbScaleFactor=1){
+    function(vbScaleFactor=1, labelColor){
       showPts.valTag(
         ptName=getAssetName(), 
         pts=getTibPts(), 
         rowIndex=getTibRow(),
         displayOptions=getDisplayOptions(),
-        vbScaleFactor
+        vbScaleFactor,
+        labelColor
       )
     }
   }),
