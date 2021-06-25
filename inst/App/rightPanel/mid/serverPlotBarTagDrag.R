@@ -19,10 +19,6 @@
     }
     displayOpt<-displayOptions
     if(is.null(displayOpt)||is.null(displayOpt$labelMode) || is.null(displayOpt$restrictMode)){ return(NULL)}
-    labelColor<-'#000000' # black by default but override if displayOpt specifies it.
-    if(!is.null(displayOpt$labelColor)){
-      labelColor<-displayOpt$labelColor
-    }
     
     onMouseDownTxt="ptRPlotter_ptR_SVG_TagDrag.selectElement(evt)" 
     
