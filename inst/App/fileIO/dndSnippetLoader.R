@@ -97,7 +97,14 @@ extractDripplet<-function(dr ){
   if(all(m>0)){
     rtv<-tt
     rtv<-tryCatch({
-       svg<-as.character(eval(parse(text=tt['SVGR']), new.env()))
+       # svg<-as.character(eval(parse(text=tt['SVGR']), new.env()))
+       svg<-eval(parse(text=tt['SVGR']), new.env())
+       svg$root$setAttr('stroke','#00FFFF')
+       svg$root$setAttr('fill','#00FFFF')
+       svg$root$setAttr('width',48)
+       svg$root$setAttr('height',32)
+       #set width, height???
+       svg<-as.character(svg)
        rtv["SVGR"]<-svg
        names(rtv)<-c('hint','snip','logo')[m]
        rtv
