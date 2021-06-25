@@ -18,6 +18,10 @@
     }
     displayOpt<-displayOptions
     if(is.null(displayOpt)||is.null(displayOpt$labelMode) || is.null(displayOpt$restrictMode)){ return(NULL)}
+    labelColor<-'#000000' # black by default but override if displayOpt specifies it.
+    if(!is.null(displayOpt$labelColor)){
+      labelColor<-displayOpt$labelColor
+    }
     
     onMouseDownTxt="ptRPlotter_ptR_SVG_TagDrag.selectElement(evt)" 
     
@@ -53,7 +57,7 @@
                g(
                   circle(cxy=c(0,0), r=8),
                   if(displayOpt$labelMode==TRUE){
-                    text( paste(i), xy=c(10,-10),  stroke='black', font.size=12)
+                    text( paste(i), xy=c(10,-10),  stroke=labelColor, font.size=12)
                   } else {
                     NULL
                   },
@@ -78,7 +82,7 @@
             g(
                 circle(cxy=c(0,0), r=8),
                 if(displayOpt$labelMode==TRUE){
-                    text( paste(rowIndex), xy=c(10,-10),  stroke='black', font.size=12)
+                    text( paste(rowIndex), xy=c(10,-10),  stroke=labelColor, font.size=12)
                 } else {
                     NULL
                 },

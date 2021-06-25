@@ -16,9 +16,11 @@ showPts.valTag %<c-% function(
   }
   displayOpt<-displayOptions
   if(is.null(displayOpt)||is.null(displayOpt$labelMode) || is.null(displayOpt$restrictMode)){ return(NULL)}
-
-  #if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) }
-  #if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) }
+  labelColor<-'#000000' # black by default but override if displayOpt specifies it.
+  if(!is.null(displayOpt$labelColor)){
+    labelColor<-displayOpt$labelColor
+  }
+  
   onMouseDownTxt<-"ptRPlotter_ptR_SVG_TagVal.selectElement(evt)"
   if(length(ptName)<1){return(NULL)}
   if(length(pts)<1)  {return(NULL) }
@@ -48,7 +50,7 @@ showPts.valTag %<c-% function(
            list(
              circle(cxy=m[,j], r=8),
              if(displayOpt$labelMode==TRUE){
-               text( paste(i), cxy=m[,j]+10*c(1,-1),  stroke='black', font.size=12) 
+               text( paste(i), cxy=m[,j]+10*c(1,-1),  stroke=labelColor, font.size=12) # need to allow stroke to be white
              } else {
                NULL
              }
@@ -69,7 +71,7 @@ showPts.valTag %<c-% function(
          list(
            circle(   cxy=mRow[,j], r=8),
            if(displayOpt$labelMode==TRUE){
-             text(paste(rowIndex), cxy=mRow[,j]+10*c(1,-1),  stroke='black', font.size=12) #opac)
+             text(paste(rowIndex), cxy=mRow[,j]+10*c(1,-1),  stroke=labelColor, font.size=12) #opac)
            } else {
              NULL
            }
