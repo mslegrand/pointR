@@ -46,27 +46,18 @@ getMode<-reactive({
 })
 
 getParMode<-reactive({
-  cat('>---> getParMode\n')
+  # cat('>---> getParMode\n')
   tabId<-input$pages # getTibTabId()
-  cat(paste('tabId=',format(tabId)))
+  # cat(paste('tabId=',format(tabId)))
   if(is.null(tabId) || identical(tabId, 'bogus')){
-    cat('seting parNode to NULL')
     parMode<-NULL
   } else {
     fd<-fileDescDB()
-    print(fd)
-    print(fd$tabId)
-    print(fd$parMode)
-    #stopifnot('tabId' %in% names(fd))
     parMode<-fd[fd$tabId==input$pages,]$parMode
-    cat('parMode=')
-    cat(format(parMode))
-    if(is.na(parMode)){
+    if(length(parMode)>0 && is.na(parMode)){
       parMode<-NULL
     }
   }
-  # print(parMode)
-  #parMode='dnds'
   parMode
 })
 
