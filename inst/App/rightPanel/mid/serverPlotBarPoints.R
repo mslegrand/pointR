@@ -20,6 +20,10 @@
    
     displayOpt<-displayOptions
     if(is.null(displayOpt)||is.null(displayOpt$labelMode) || is.null(displayOpt$restrictMode)){ return(NULL)}
+    labelColor<-'#000000' # black by default but override if displayOpt specifies it.
+    if(!is.null(displayOpt$labelColor)){
+      labelColor<-displayOpt$labelColor
+    }
     
     # if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
     onMouseDownTxt='ptRPlotter_ptR_SVG_Point.selectPoint(evt)'
@@ -68,7 +72,7 @@
             },
             if(displayOpt$labelMode==TRUE){
               text(paste0(i,",",j), xy=c(10,-10),  
-                   stroke='black', font.size=12, opacity=1,
+                   stroke=labelColor, font.size=12, opacity=1,
                    transform=list(scale=1/vbScaleFactor,translate=vbScaleFactor*pt)) 
             } else {
               NULL
