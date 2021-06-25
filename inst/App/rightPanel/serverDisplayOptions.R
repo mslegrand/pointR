@@ -28,9 +28,6 @@ getDisplayMode<-reactive({
 setDisplayOption<-function( insertMode, ptMode, labelMode, restrictMode ){
   if(!missing(labelMode)){
     displayOptions$labelMode<-labelMode
-    if(!is.null(getParMode())){
-      displayOptions$labelColor<-'#FFFFFF'
-    }
   }
   if(!missing(restrictMode)){
     displayOptions$restrictMode<-restrictMode
@@ -43,7 +40,7 @@ setDisplayOption<-function( insertMode, ptMode, labelMode, restrictMode ){
   }
 }
 getDisplayOptions<-reactive({
-  tmp<-reactiveValuesToList(displayOptions)
+  tmp<-reactiveValuesToList(displayOptions) #how can this possibly work???
 })
 
 
