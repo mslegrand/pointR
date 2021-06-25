@@ -32,7 +32,6 @@ addFileDesc<-function( pageId, docFilePath, fileSaveStatus, fileMode, parId=NA, 
 
 
 getMode<-reactive({
-  # cat('>---> getMode\n')
   tabId<-input$pages # getTibTabId()
   if(is.null(tabId) || identical(tabId, 'bogus')){
     mode<-NULL
