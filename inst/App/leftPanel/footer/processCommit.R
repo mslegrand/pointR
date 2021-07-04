@@ -103,6 +103,11 @@ processSvgR<-reactive({
         setSourceType(sourceType=RPanelTag) #no error, just R code
       } else { # presume to be svgR code
         env2<-getEnvList()
+        #if parMode is dndsnippet, need to add to env2, WH=c(48,32)
+        if(identical(getParMode(), 'dnippets')){
+          env2<-c(env2, list(WH=c(48,32)))
+        }
+        
         parsedCode<-parse(text=paste0(src) )
         
         output<-captureOutput(eval(parsedCode, envir=env2 ))

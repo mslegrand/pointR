@@ -100,8 +100,13 @@ svgToolsScript<-function(type){
           wd<-paste0('\nsetwd("',dpath,'")\n\n')
           
           parsedCode<-parse(text=paste0(wd,codeTxt))
-          svg<-eval(parsedCode, getEnvList() )
           parentMode<-getParMode()
+          env3<-getEnvList()
+          if(identical(parentMode, 'dnippets')){
+            env3<-c(env3, list(WH=c(48,32)))
+          }
+          svg<-eval(parsedCode, env3 )
+          
           # cat('parentMode= ')
           # cat(format(parentMode))
           svg$root$setAttr('id',svgID)
