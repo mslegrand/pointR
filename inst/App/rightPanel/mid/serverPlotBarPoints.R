@@ -10,7 +10,8 @@
       rowIndex=NULL,
       matColIndex=NULL,
       displayOptions=NULL, 
-      vbScaleFactor
+      vbScaleFactor,
+      labelColor="black"
   ){
     
     
@@ -20,6 +21,7 @@
    
     displayOpt<-displayOptions
     if(is.null(displayOpt)||is.null(displayOpt$labelMode) || is.null(displayOpt$restrictMode)){ return(NULL)}
+    
     
     # if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
     onMouseDownTxt='ptRPlotter_ptR_SVG_Point.selectPoint(evt)'
@@ -68,7 +70,7 @@
             },
             if(displayOpt$labelMode==TRUE){
               text(paste0(i,",",j), xy=c(10,-10),  
-                   stroke='black', font.size=12, opacity=1,
+                   stroke=labelColor, font.size=12, opacity=1,
                    transform=list(scale=1/vbScaleFactor,translate=vbScaleFactor*pt)) 
             } else {
               NULL
@@ -108,7 +110,7 @@ statusPlotPoint<-callModule(
   id="svgPointsMod",
   svgID='ptR_SVG_Point',
   showPts.compound=reactive({
-    function(vbScaleFactor){
+    function(vbScaleFactor, labelColor){
       list(
         newPtLayer( getInsertMode(), getSVGWH() ),
         showPts.PtCmd(
@@ -117,20 +119,22 @@ statusPlotPoint<-callModule(
           rowIndex=getTibRow(),
           matColIndex=getTibMatCol(),
           displayOptions=getDisplayOptions(),
-          vbScaleFactor=vbScaleFactor
+          vbScaleFactor=vbScaleFactor,
+          labelColor
         )
       )
     }
   }),
   ptrDisplayScript = reactive({ svgToolsScript( "Points") }), 
   useKeyMouseScript=FALSE,
-  getSVGWH,
+  # getSVGWH, #extraneous???
   getSvgGrid,
   getBackDrop,
   getCode4Rendering,
   getEnvList=getEnvList,
   getErrorMssg,
-  getTibNRow=getTibNRow,
+  #getTibNRow=getTibNRow,  #extraneous
+  getParMode=getParMode,
   getDirPath=getDirPath
 )
 
@@ -141,7 +145,7 @@ observeEvent(c(statusPlotPoint$status(), statusPlotPoint$WH()), {
     mssg$err<-paste(mssg$err, status$message, "cannot plot: code02\n", collapse="\n")
   } else {
     wh<-statusPlotPoint$WH()
-    getSVGWH(wh)
+    getSVGWH(wh) #sets the wh value for later use
   }
 })
 

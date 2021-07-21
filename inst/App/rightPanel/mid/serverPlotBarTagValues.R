@@ -9,16 +9,16 @@ showPts.valTag %<c-% function(
   pts=NULL, 
   rowIndex=NULL,
   displayOptions=NULL ,
-  vbScaleFactor=1
+  vbScaleFactor=1,
+  labelColor='black'
   ){
   if(is.null(displayOptions)){
     return(NULL)
   }
   displayOpt<-displayOptions
   if(is.null(displayOpt)||is.null(displayOpt$labelMode) || is.null(displayOpt$restrictMode)){ return(NULL)}
-
-  #if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) }
-  #if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) }
+  
+  
   onMouseDownTxt<-"ptRPlotter_ptR_SVG_TagVal.selectElement(evt)"
   if(length(ptName)<1){return(NULL)}
   if(length(pts)<1)  {return(NULL) }
@@ -48,7 +48,7 @@ showPts.valTag %<c-% function(
            list(
              circle(cxy=m[,j], r=8),
              if(displayOpt$labelMode==TRUE){
-               text( paste(i), cxy=m[,j]+10*c(1,-1),  stroke='black', font.size=12) 
+               text( paste(i), cxy=m[,j]+10*c(1,-1),  stroke=labelColor, font.size=12) # need to allow stroke to be white
              } else {
                NULL
              }
@@ -69,7 +69,7 @@ showPts.valTag %<c-% function(
          list(
            circle(   cxy=mRow[,j], r=8),
            if(displayOpt$labelMode==TRUE){
-             text(paste(rowIndex), cxy=mRow[,j]+10*c(1,-1),  stroke='black', font.size=12) #opac)
+             text(paste(rowIndex), cxy=mRow[,j]+10*c(1,-1),  stroke=labelColor, font.size=12) #opac)
            } else {
              NULL
            }
@@ -87,25 +87,27 @@ statusPlotTagVal<-callModule(
   id="svgTagValsMod",
   svgID='ptR_SVG_TagVal',
   showPts.compound=reactive({
-    function(vbScaleFactor=1){
+    function(vbScaleFactor=1, labelColor){
       showPts.valTag(
         ptName=getAssetName(), 
         pts=getTibPts(), 
         rowIndex=getTibRow(),
         displayOptions=getDisplayOptions(),
-        vbScaleFactor
+        vbScaleFactor,
+        labelColor
       )
     }
   }),
   ptrDisplayScript = reactive({ svgToolsScript( "TagVal") }), 
   useKeyMouseScript=TRUE,
-  getSVGWH,
+  # getSVGWH, #extraneous???
   getSvgGrid,
   getBackDrop,
   getCode4Rendering,
   getEnvList=getEnvList,
   getErrorMssg,
-  getTibNRow=getTibNRow,
+  #getTibNRow=getTibNRow, #extraneous
+  getParMode=getParMode,
   getDirPath=getDirPath
 )
 

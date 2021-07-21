@@ -73,7 +73,7 @@ closeTabsNow<-function(tabIds2Close){
 
 # TODO!!!! , add input parameters for:   autocomplete
 # fontsize should be read from options 
-addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FALSE, link=NULL){
+addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FALSE, link=NULL, parMode=NA){
   log.fin(addFileTab)
   tabId<-getNextTabId()
   
@@ -82,7 +82,8 @@ addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FA
   if(!is.null(link)){
     parId<-unlist(strsplit(link,'\\.'))[[1]]
   }
-  addFileDesc(pageId=tabId, docFilePath=docFilePath, fileSaveStatus, fileMode=mode, parId)
+  cat(format(parMode))
+  addFileDesc(pageId=tabId, docFilePath=docFilePath, fileSaveStatus, fileMode=mode, parId, parMode)
   setUseTribble( pageId=tabId, value=TRUE)
   addNewPage2dnippetsDB(tabId)
   
@@ -157,7 +158,15 @@ observeEvent(c(request$trigger,request$tabs), {
 
 observeEvent(input$messageContextMenu, {
   cmd=input$messageContextMenu$cmd
+  cat('cmd=')
+  cat(format(cmd))
+  parMode<-input$messageContextMenu$parMode
+  cat('\ninput$messageContextMenu$parMode return value=')
+  cat(format(parMode))
+  cat("\n")
   if(cmd=="newTab"){
+    # print(start_row)
+    # print(end_row)
     start_row=input$messageContextMenu$start_row
     end_row=input$messageContextMenu$end_row
     src<-input$messageContextMenu$code
@@ -165,6 +174,7 @@ observeEvent(input$messageContextMenu, {
     tabName<-input$messageContextMenu$label
     rmdAceId<-tabID2aceID(input$pages)
     link<-paste(rmdAceId,rid, sep=".")
+    
     # we update Ace with code
     # + all prior code as a hidden portion
     # and keep a hidden copy of full text for later reinsertion.
@@ -172,7 +182,7 @@ observeEvent(input$messageContextMenu, {
     if(tabName==""){
       tabName<-getNextAnonymousFileName()
     }
-    tabId<-addFileTab(title=tabName, txt=src,  docFilePath="?", mode='ptr', fileSaveStatus=FALSE, link=link)
+    tabId<-addFileTab(title=tabName, txt=src,  docFilePath="?", mode='ptr', fileSaveStatus=FALSE, link=link, parMode=parMode)
     # 
     aceId<-tabID2aceID(tabId)
     # alternatively set ace content of to code, and save full txt somewhere

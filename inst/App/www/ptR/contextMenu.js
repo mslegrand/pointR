@@ -25,39 +25,61 @@ $(function () {
         snippetManager.insertSnippet(editor, snippet);
         editor.focus();
       
-      } else if(cmd=="Edit Code Block"){
+      } else if(cmd=="Edit Code Block" || cmd=='Edit DNDS Icon'){
         //let pos=e.getDocumentPosition();
         ///console.log('#########################');
         // console.log(JSON.stringify(pos));
         let Range = ace.require('ace/range').Range;
-        let rng1=editor.find('```', {backwards:true, start:editor.getCursorPosition(), range:null});
-        if(!rng1){ return null}
-        let row1=rng1.start.row;
-        // add check for "{ r , }"" in row1, 
-        let rngL1 =  new Range(row1, 0, row1, Infinity);
-        let line1 = editor.getSession().getTextRange(rngL1);
-        if(!/\Wr\W/.test(line1)){ // if not found exit
-          return null;
-        }
-        // split line and look for r, and label
-        // remove ```, {, } and split
-        let toks=line1.replace("```","").replace(/ /g,"").replace("{","").replace("}","").split(",");
-        // search for r
-        let hasR = toks.filter(tok => tok=='r').length==1;
-        if(!hasR){
-          return null;
-        }
-        let label = toks.filter(tok => tok.match(/label=.*/));
-        if(label.length===1){
-          label=label[0].replace(/label='/,"").replace("'","").replace('"','');
+        let rng1=null;
+        parMode=null;
+        if(cmd== "Edit Code Block"){
+          parMode='ptrrmd';
+          rng1=editor.find('```', {backwards:true, start:editor.getCursorPosition(), range:null});
+          if(!rng1){ return null}
+          
         } else {
-          label =toks.filter(tok=>!tok.match('=')).filter(tok=>tok!='r');
-          if(label.length==1){
-            label=label[0].replace("'","").replace('"','');
-          } else {
-            label="";
+          parMode='dnippets';
+          rng1=editor.find('***', {backwards:true, start:editor.getCursorPosition(), range:null});
+          if(!rng1){ return null}
+          rng1=editor.find('SVGR', {backwards:false, start:editor.getCursorPosition(), range:null});
+          if(!rng1){ return null}
+          rng1=editor.find('```', {backwards:false, start:editor.getCursorPosition(), range:null});
+          if(!rng1){ return null}
+        }
+        
+        
+        let row1=rng1.start.row;
+        let label="";
+        
+        if(parMode=='ptrrmd'){
+          let rngL1 =  new Range(row1, 0, row1, Infinity);
+          let line1 = editor.getSession().getTextRange(rngL1);
+          if(!/\Wr\W/.test(line1)){ // if not found exit
+            return null;
           }
-        } 
+          // split line and look for r, and label
+          // remove ```, {, } and split
+          let toks=line1.replace("```","").replace(/ /g,"").replace("{","").replace("}","").split(",");
+          // search for r
+          let hasR = toks.filter(tok => tok=='r').length==1;
+          if(!hasR){
+            return null;
+          }
+          
+          label = toks.filter(tok => tok.match(/label=.*/));
+          if(label.length===1){
+            label=label[0].replace(/label='/,"").replace("'","").replace('"','');
+          } else {
+            label =toks.filter(tok=>!tok.match('=')).filter(tok=>tok!='r');
+            if(label.length==1){
+              label=label[0].replace("'","").replace('"','');
+            } else {
+              label="";
+            }
+          } 
+        }
+        // add check for "{ r , }"" in row1, 
+        
         
         let rng2=editor.find('```', {backwards:false, start:editor.getCursorPosition(), range:null});
         
@@ -99,7 +121,8 @@ $(function () {
                   Shiny.onInputChange('messageContextMenu', 
                   {
                    cmd: "openTab",
-                   id:childAceId
+                   id:childAceId,
+                   parMode: parMode
                   }); 
                   return(null);
                 }
@@ -142,7 +165,8 @@ $(function () {
              end_row: row2,
              code :  text,
              id:rid,
-             label: label
+             label: label,
+             parMode: parMode
             });
           
             // exit gracefully

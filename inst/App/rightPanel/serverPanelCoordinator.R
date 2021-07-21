@@ -155,18 +155,36 @@ label= 'getRightPanelChoices'
 )
 
 
-observeEvent(c(getSourceType(), hasError()),{
+observeEvent(c(getSourceType(), hasError(), getParMode() ),{
   if(!hasError() && identical(getSourceType(), svgPanelTag)){
     enableDMDM(
       session, 
       menuBarId="plotNavBar", 
       entry="Grid"
     )
-    enableDMDM(
-      session, 
-      menuBarId="plotNavBar", 
-      entry="Backdrop"
-    )
+    if(is.null(getParMode()) ){
+      enableDMDM(
+        session, 
+        menuBarId="plotNavBar", 
+        entry="Backdrop"
+      )
+      enableDMDM(
+        session, 
+        menuBarId="plotNavBar", 
+        entry="cmdAdjustGridSpacing"
+      )
+    } else {
+      disableDMDM(
+        session, 
+        menuBarId="plotNavBar", 
+        entry="Backdrop"
+      )
+      disableDMDM(
+        session, 
+        menuBarId="plotNavBar", 
+        entry="cmdAdjustGridSpacing"
+      )
+    }
   } else {
     disableDMDM(
       session, 

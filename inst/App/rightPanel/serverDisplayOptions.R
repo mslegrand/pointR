@@ -4,7 +4,8 @@ displayOptions<-reactiveValues(
   insertMode=TRUE,
   ptMode="Normal", # can be 'Hidden', 'Normal', 'Labeled'
   labelMode=FALSE,
-  restrictMode=FALSE
+  restrictMode=FALSE,
+  labelColor='#000000'
 )
 
 #displayMode<-reactive({displayOptions$ptMode})
@@ -39,7 +40,7 @@ setDisplayOption<-function( insertMode, ptMode, labelMode, restrictMode ){
   }
 }
 getDisplayOptions<-reactive({
-  tmp<-reactiveValuesToList(displayOptions)
+  tmp<-reactiveValuesToList(displayOptions) #how can this possibly work???
 })
 
 

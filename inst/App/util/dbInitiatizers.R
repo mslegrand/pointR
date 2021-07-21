@@ -5,7 +5,8 @@ initialFileDescDB<-function(){tibble(
   filePath="?",
   anonNo =1,
   mode='ptr',
-  parId=NA # points to the parent tab (if any)
+  parId=NA, # points to the parent tab (if any)
+  parMode=NA
 )[0,]
 }
 

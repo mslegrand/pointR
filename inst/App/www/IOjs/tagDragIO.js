@@ -7,7 +7,22 @@ function PtRPanelTagDrag(svgId){ //currently svgId is not used here
   this.origY = 0;
   this.svgId=svgId;
   this.svg=document.querySelector("#" + svgId); 
+  this.sx=1.0;
+  this.sy=1.0;
+  if(this.svg.getAttribute('viewBox')){
+    //console.log(JSON.stringify( this.svg.getAttribute('viewBox') ));
+    var vb=this.svg.getAttribute('viewBox').split(/[ ,]+/).filter(Boolean);
+    //console.log('vb='+JSON.stringify(vb));
+    this.sx=Number(vb[2]);
+    this.sy=Number(vb[3]);
+    this.sx=this.sx/Number(this.svg.getAttribute('width'));
+    //console.log('svg height='+this.svg.getAttribute('height'));
+    this.sy=this.sy/Number(this.svg.getAttribute('height'));
+    //console.log('sy='+this.sy);
+    //console.log('sx='+this.sx);
+  } 
   this.currentMatrix = 0;
+  this.pt= this.svg.createSVGPoint();
 }
 
 //TRANSFORM
@@ -21,6 +36,7 @@ PtRPanelTagDrag.prototype.selectElement = function (evt) {
   this.origX    = evt.clientX;
   this.origY    = evt.clientY;
   this.currentMatrix = this.selectedElement.getAttributeNS(null, "transform").slice(7,-1).split(" ");
+  //console.log(JSON.stringify( this.selectedElement.getAttributeNS(null, "transform") ));
   for(var i=0; i<this.currentMatrix.length; i++) {
     this.currentMatrix[i] = parseFloat(this.currentMatrix[i]);
   }
@@ -41,9 +57,10 @@ PtRPanelTagDrag.prototype.moveElement = function (evt) {
 //    this.selectedElement.style.cursor="move";
     var dx = evt.clientX - this.currentX;
     var dy = evt.clientY - this.currentY;
-    this.currentMatrix[4] += dx;
-    this.currentMatrix[5] += dy;
     
+    this.currentMatrix[4] += (dx*this.sx);
+    this.currentMatrix[5] += (dy*this.sy);
+
     this.selectedElement.setAttributeNS(null, "transform", "matrix(" + this.currentMatrix.join(" ") + ")");
     this.currentX = evt.clientX;
     this.currentY = evt.clientY;
@@ -59,13 +76,15 @@ PtRPanelTagDrag.prototype.deselectElement =  function (evt) {
     var movedByY = evt.clientY - this.origY;
     this.selectedElement.style.cursor="default";
     this.svg.parentNode.style.cursor=="default";
-    var dxy=[ movedByX, movedByY];
     var kc=$( "#svgOutPanel" ).data("keycode");
     let r = Math.random().toString(36).substring(7);
+    var dxy=[movedByX*this.sx, movedByY*this.sy];
+    // console.log('moving by'+ JSON.stringify( dxy  ));
     Shiny.onInputChange("mouseMssg",
       {
           cmd: "transGrp",
-          vec: [movedByX, movedByY],
+          
+          vec: [movedByX*this.sx, movedByY*this.sy],
           id : this.selectedElement.getAttribute("tid"),
           keycode:      kc,
           altKey:   !!evt.altKey,
