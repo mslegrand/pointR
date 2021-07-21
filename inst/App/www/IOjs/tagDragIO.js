@@ -79,7 +79,7 @@ PtRPanelTagDrag.prototype.deselectElement =  function (evt) {
     var kc=$( "#svgOutPanel" ).data("keycode");
     let r = Math.random().toString(36).substring(7);
     var dxy=[movedByX*this.sx, movedByY*this.sy];
-    console.log('moving by'+ JSON.stringify( dxy  ));
+    // console.log('moving by'+ JSON.stringify( dxy  ));
     Shiny.onInputChange("mouseMssg",
       {
           cmd: "transGrp",
