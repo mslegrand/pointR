@@ -1,11 +1,94 @@
 //------begin:-------stuff to handle custom context menu
  
 $(function () {
+    const svgRBlockSnip="```{r, ${1:title,} echo=${2:FALSE}, results='asis'}\nWH=c(500,300)\nsvgR(wh=WH,\n     #your custom code goes here\n     ${0:NULL}\n)\n```";
+    const ptRBlockSnip= "```{r, ${1:title,} echo=${2:FALSE}, results='asis'}\nWH<-c(600,400)\n\n# Defined by mouse: edit with care!\nptR<-list(\n  x=tribble(\n    ~points,\n    matrix(0,2,0)\n  )\n)\n\nsvgR(wh=WH,\n     #your custom code goes here\n     ${0:NULL}\n)\n\n```";
+    
+    const DNDSSnip="\n\
+*********************\n\
+POPUP\n\
+```\n\
+${1:hint}\n\
+```\n\
+SNIPPET\n\
+```\n\
+${2:snippet}\n\
+```\n\
+SVGR\n\
+```\n\
+library(svgR)\n\
+ptR<-list(\n\
+  x=matrix(0,2,0)\n\
+)\n\
+svgR(\n\
+  #your code here\n\
+  ${0:NULL}\n\
+)\n\
+```\n\
+*********************\n\
+";
+    function insideDNDS(editor ){
+      let Range = ace.require('ace/range').Range;
+      var curPos=editor.getCursorPosition();
+      console.log("------------------------------");
+      console.log(JSON.stringify(curPos));
+      var row1=curPos.row;
+      // check if curRow contains ```
+      console.log('hello hello hello');
+      let rngL1 =  new Range(row1, 0, row1, Infinity);
+      //let line1 = editor.getSession().getTextRange(rngL1);
+      //console.log('line1================'+line1);
+      //let found=(line1.indexOf('***')>=0);
+      let found=editor.find('***', { start:rngL1, range:rngL1});
+      if(found){
+        row1=row1+1; //move down
+      }
+      // setCurPos to row1
+      // search down for row2
+      // search to see if POPUp is inside
+      //
+      //console.log('found ***='+found);
+      //alert('found ***='+found);
+      return null;
+    }
+    
+    function insideCodeBlock(editor ){
+      let Range = ace.require('ace/range').Range;
+      let curPos=editor.getCursorPosition();
+      let rtv= false;
+      console.log("------------------------------");
+      console.log(JSON.stringify(curPos));
+      let curRow=curPos.row;
+      let curLine = editor.getSession().getLine(curRow);
+      if(-1!==curLine.indexOf('```')){ //check if curLine contains ```
+        return true;
+      } else {
+        // search up for ```
+        let topRng=editor.find('```', {backwards:true, start:curPos, range:null, skipCurrent:false, wrap:false}, false);
+        if(typeof topRng !== 'undefined'){
+          // if found, does that line contain r,?
+          let topRow=topRng.start.row;
+          let curLine = editor.getSession().getLine(topRow);
+          if(-1!==curLine.indexOf('r')){
+            rtv= true;
+          } 
+        } 
+        // restore curPos
+        editor.moveCursorTo(curRow,0);
+        // remove selection
+        editor.clearSelection();
+        return rtv;
+      }
+      // check if curRow contains ```
+    }
+    
     $('.clickMe').click(function () {
       var cmd = $(this).text().trim();
+      console.log('cmd='+cmd);
       var aceId= $("#cntnr").attr('data-value');
       var $el = $( aceId);
-      var editor = $el.data('aceEditor'); 
+      var editor = $el.data('aceEditor');
+      let Range = ace.require('ace/range').Range;
       if(cmd==='Lookup element'){
         editor.getSession().selection.moveCursorLongWordLeft();
         editor.getSession().selection.selectWordRight();
@@ -13,42 +96,98 @@ $(function () {
         Shiny.onInputChange('helpMssg', {query:text, num:Math.random(), editorId: aceId} );
       } else if(cmd=="Insert svgR Block"){
         //$el.trigger(tab_press);
-        let snippet=
-        "```{r, ${1:title,} echo=${2:FALSE}, results='asis'}\nWH=c(500,300)\nsvgR(wh=WH,\n     #your custom code goes here\n     ${0:NULL}\n)\n```";
-        let snippetManager = ace.require("ace/snippets").snippetManager;
-        snippetManager.insertSnippet(editor, snippet);
-        editor.focus();
+        
+        if(!insideCodeBlock(editor)){
+          let snippet =svgRBlockSnip;
+          let snippetManager = ace.require("ace/snippets").snippetManager;
+          snippetManager.insertSnippet(editor, snippet);
+          editor.focus();
+        }
+        
       } else if(cmd=="Insert ptR Block"){
-        let snippet=
-        "```{r, ${1:title,} echo=${2:FALSE}, results='asis'}\nWH<-c(600,400)\n\n# Defined by mouse: edit with care!\nptR<-list(\n  x=tribble(\n    ~points,\n    matrix(0,2,0)\n  )\n)\n\nsvgR(wh=WH,\n     #your custom code goes here\n     ${0:NULL}\n)\n\n```";
-        let snippetManager = ace.require("ace/snippets").snippetManager;
-        snippetManager.insertSnippet(editor, snippet);
-        editor.focus();
-      
+        if(!insideCodeBlock(editor)){
+          let snippet =ptRBlockSnip;
+          let snippetManager = ace.require("ace/snippets").snippetManager;
+          snippetManager.insertSnippet(editor, snippet);
+          editor.focus();
+        }
+      } else if(cmd=='Insert DNDS Block'){
+        // todo add check for placement of block
+        let edPos=editor.getCursorPosition();
+        //console.log('edPos'+JSON.stringify(edPos));
+        let curRow  =editor.getCursorPosition().row;
+        let curLine = editor.getSession().getLine(curRow);
+        console.log('curLine='+curLine);
+        console.log("curLine.indexOf('***')="+curLine.indexOf('***'));
+        if(-1===curLine.indexOf('***')){
+          // get botRow
+          let botRow=editor.session.getLength();
+          let botRng=editor.find('***', {backwards:false, start:edPos, range:null, skipCurrent:true, wrap:false},false);
+          let topRng=editor.find('***', {backwards:true, start:edPos, range:null, skipCurrent:true, wrap:false}, false);
+          //console.log('botRng='+JSON.stringify(botRng));
+          //console.log('topRng='+JSON.stringify(topRng));
+          //console.log('!botRng.isEmpty()'+!botRng.isEmpty() );
+          if(typeof botRng !== 'undefined' && typeof topRng !== 'undefined'     ){
+            botRow=botRng.start.row;
+            let topRow=topRng.start.row;
+            //console.log('range is ='+topRow+", "+botRow);
+            // test if insideDNDS
+            let trng= new Range(topRow, 0, botRow, Infinity);
+            editor.moveCursorTo(topRow,0);
+            //console.log('trange is ='+JSON.stringify(trng));
+            let lines=editor.session.getTextRange(trng);
+            //console.log(lines);
+            if(-1===lines.indexOf('POPUP')){
+              //console.log('POPUP not found');
+              // keep let curRow number
+            } else {
+              //console.log('POPUP  found');
+              // reset let curRow
+              curRow=botRow;
+            }
+            editor.clearSelection();
+          } else {
+            //console.log('empty range');
+          }
+          
+          // get topRow
+          // get popUpRow
+          editor.moveCursorTo(curRow,0);
+          let snippet=DNDSSnip;
+
+          let snippetManager = ace.require("ace/snippets").snippetManager;
+          snippetManager.insertSnippet(editor, snippet);
+          editor.scrollToLine(curRow, false, false, function () {});
+          editor.focus();
+        }
+        
       } else if(cmd=="Edit Code Block" || cmd=='Edit DNDS Icon'){
-        //let pos=e.getDocumentPosition();
-        ///console.log('#########################');
-        // console.log(JSON.stringify(pos));
+        //insideDNDS(editor);
         let Range = ace.require('ace/range').Range;
         let rng1=null;
+        
         parMode=null;
         if(cmd== "Edit Code Block"){
           parMode='ptrrmd';
           rng1=editor.find('```', {backwards:true, start:editor.getCursorPosition(), range:null});
           if(!rng1){ return null}
           
-        } else {
+        } else { //cmd=='Edit DNDS Icon'
           parMode='dnippets';
           rng1=editor.find('***', {backwards:true, start:editor.getCursorPosition(), range:null});
           if(!rng1){ return null}
+          //search for POPUP followed by ```,
+          //rng1=editor.find('POPUP\n```\n', {backwards:false, start:editor.getCursorPosition(), range:null});
+          //The next line should be the label
           rng1=editor.find('SVGR', {backwards:false, start:editor.getCursorPosition(), range:null});
           if(!rng1){ return null}
           rng1=editor.find('```', {backwards:false, start:editor.getCursorPosition(), range:null});
           if(!rng1){ return null}
         }
         
-        
-        let row1=rng1.start.row;
+        //rng1 now points to the top of the block
+        // extract row1 for anchor1
+        let row1=rng1.start.row; //used for anchor1
         let label="";
         
         if(parMode=='ptrrmd'){
@@ -77,6 +216,16 @@ $(function () {
               label="";
             }
           } 
+        } else { //parMode='dnippets'
+          // search upwards for POPUP
+          let pos=editor.getCursorPosition();
+          let rng0=editor.find('POPUP', {backwards:true, start:editor.getCursorPosition(), range:null});
+          let row0=2+rng0.end.row;
+          let rngL1 =  new Range(row0, 0, row0, Infinity);
+          let text = editor.getSession().getTextRange(rngL1);
+          //console.log('text='+text);
+          label=text;
+          editor.moveCursorToPosition(pos);
         }
         // add check for "{ r , }"" in row1, 
         

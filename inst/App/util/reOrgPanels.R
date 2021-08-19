@@ -39,6 +39,7 @@ reOrgPanels<-function(id, mode){
       hide(id="rmd-insert-svgR")
       hide(id="rmd-insert-ptR")
       hide(id="dnd-edit-svgR")
+      hide(id="dnd-insert-block")
       if(usingElectron){
         addCssClass( id= "runAppPanel", class="hiddenPanel")
         addCssClass( id= "stopAppPanel", class="hiddenPanel")
@@ -57,8 +58,10 @@ reOrgPanels<-function(id, mode){
       # now consider which mode it is
       if(identical(mode,'dnippets')){
         show(id="dnd-edit-svgR")
+        show(id="dnd-insert-block")
       } else {
         hide(id="dnd-edit-svgR")
+        hide(id="dnd-insert-block")
       }
       if(identical(mode,'ptrrmd')){
         show(id="rmd-edit-code")
