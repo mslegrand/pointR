@@ -30,11 +30,11 @@ svgR(\n\
     function insideDNDS(editor ){
       let Range = ace.require('ace/range').Range;
       var curPos=editor.getCursorPosition();
-      console.log("------------------------------");
-      console.log(JSON.stringify(curPos));
+      //console.log("------------------------------");
+      //console.log(JSON.stringify(curPos));
       var row1=curPos.row;
       // check if curRow contains ```
-      console.log('hello hello hello');
+      //console.log('hello hello hello');
       let rngL1 =  new Range(row1, 0, row1, Infinity);
       //let line1 = editor.getSession().getTextRange(rngL1);
       //console.log('line1================'+line1);
@@ -56,8 +56,8 @@ svgR(\n\
       let Range = ace.require('ace/range').Range;
       let curPos=editor.getCursorPosition();
       let rtv= false;
-      console.log("------------------------------");
-      console.log(JSON.stringify(curPos));
+      //console.log("------------------------------");
+      //console.log(JSON.stringify(curPos));
       let curRow=curPos.row;
       let curLine = editor.getSession().getLine(curRow);
       if(-1!==curLine.indexOf('```')){ //check if curLine contains ```
@@ -84,7 +84,7 @@ svgR(\n\
     
     $('.clickMe').click(function () {
       var cmd = $(this).text().trim();
-      console.log('cmd='+cmd);
+      //console.log('cmd='+cmd);
       var aceId= $("#cntnr").attr('data-value');
       var $el = $( aceId);
       var editor = $el.data('aceEditor');
@@ -117,8 +117,8 @@ svgR(\n\
         //console.log('edPos'+JSON.stringify(edPos));
         let curRow  =editor.getCursorPosition().row;
         let curLine = editor.getSession().getLine(curRow);
-        console.log('curLine='+curLine);
-        console.log("curLine.indexOf('***')="+curLine.indexOf('***'));
+        //console.log('curLine='+curLine);
+        //console.log("curLine.indexOf('***')="+curLine.indexOf('***'));
         if(-1===curLine.indexOf('***')){
           // get botRow
           let botRow=editor.session.getLength();
