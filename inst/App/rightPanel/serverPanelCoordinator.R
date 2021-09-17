@@ -173,6 +173,7 @@ observeEvent(c(getSourceType(), hasError(), getParMode() ),{
         menuBarId="plotNavBar", 
         entry="cmdAdjustGridSpacing"
       )
+      enable(id='tagValBar-newColumnButton')
     } else {
       disableDMDM(
         session, 
@@ -184,6 +185,12 @@ observeEvent(c(getSourceType(), hasError(), getParMode() ),{
         menuBarId="plotNavBar", 
         entry="cmdAdjustGridSpacing"
       )
+      if(identical(getParMode(), 'dnippets')){
+        disable(id='tagValBar-newColumnButton')
+      } else {
+        enable(id='tagValBar-newColumnButton')
+      }
+      
     }
   } else {
     disableDMDM(

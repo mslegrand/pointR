@@ -22,6 +22,7 @@ UIcontextMenu<-function(){
          tag('li',list(id='rmd-insert-svgR', class='clickMe', span(class=" icon-circle-empty"), span( 'Insert svgR Block'))),
          tag('li',list(id='rmd-insert-ptR', class='clickMe', span(class="icon-circle"), span( 'Insert ptR Block'))),
          tag('li',list(id='rmd-edit-code', class='clickMe', span(class='icon-edit'),span('Edit Code Block')  )),
+         tag('li',list(id='dnd-insert-block', class='clickMe', span(class=" icon-plus-squared-alt"), span( 'Insert DNDS Block'))),
          tag('li',list(id='dnd-edit-svgR', class='clickMe', span(class="icon-edit"), span( 'Edit DNDS Icon')))
        ))
   )
