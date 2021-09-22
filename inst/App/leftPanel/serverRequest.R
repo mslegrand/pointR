@@ -24,26 +24,17 @@ getWDCmd<-reactive({
 
 
 getEnvList<-reactive({
-  # log.fin(getEnvList)
   wd<-getWDCmd()
-  # log.val(wd)
   pcode<-theBlocks()
+  initialEnv=new.env()
   if(!is.null(pcode) && pcode!=""){
     pcode=paste(wd,pcode,sep="\n")
-    initialEnv=new.env()
-    # log.val(pcode)
-    eval(parse(text=pcode),initialEnv)
-    envlist<-as.list(initialEnv)
-  } else  {
-    envlist<-list()
+  } else {
+    pcode<-wd
   }
-  # log.val(envList)
-  # log.fout(getEnvList)
-  envlist
+  eval(parse(text=pcode),initialEnv)
+  initialEnv
 })
-
-
-
 
 trigger<-reactiveValues(
   redraw=0,
@@ -100,11 +91,11 @@ popTab<-reactive({
   tab
 })
 
-setBlocks<-function(blocks){
+setBlocks<-function(blocks){ # not used???
   theBlocks(blocks)
 }
 
-getBlocks<-reactive({
+getBlocks<-reactive({ # not used???
   theBlocks()
 })
 
