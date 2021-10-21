@@ -10,7 +10,7 @@ mouseCmdAddPt<-function(mssg){
   
   sender='PointsBar.mouse.add'
   
-  
+  keycode=mssg$keycode
   newPt<-vec
   
   selection<-getAssetName() 
@@ -56,7 +56,7 @@ mouseCmdAddPt<-function(mssg){
                   setAttrValue=setAttrValue,
                   getAttrValue=getAttrValue,
                   context=context,
-                  keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey)
+                  keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey, keycode=mssg$keycode)
                 )
                 tibs<-eval(parse(text=txt), ppenv )
                 validateTibLists(getPtDefs()$tib, tibs)
@@ -75,6 +75,7 @@ mouseCmdAddPt<-function(mssg){
   txt<-getPreProcScript()['onNewPt']
   if( !is.null(txt) ){ #preproc pts 
       tryCatch({
+        
         getPoint<-function(){names(newPt)<-c('x','y'); newPt}
         context<-list(
           name=getAssetName(),
@@ -87,7 +88,7 @@ mouseCmdAddPt<-function(mssg){
           getPoint=getPoint,
           insertPoint=insertPoint,
           context=context,
-          keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey),
+          keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey, keycode=mssg$keycode),
           WH=getSVGWH()
         )
         tibs<-eval(parse(text=txt), ppenv )

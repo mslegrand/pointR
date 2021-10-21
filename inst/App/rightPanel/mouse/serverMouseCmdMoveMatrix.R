@@ -4,6 +4,7 @@ mouseCmdMoveMatrix<-function(mssg){
     vec<- as.numeric(unlist(mssg$vec))
   }
   src<-getCode()
+  
   replacementList<-list()
   newPtDefs<-getPtDefs() 
   tibs<-getPtDefs()$tib
@@ -88,7 +89,7 @@ mouseCmdMoveMatrix<-function(mssg){
     ppenv<-list(
       getDxy=getDxy,
       moveMatrix=moveMatrix,
-      keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey),
+      keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey, keycode=mssg$keycode),
       WH=getSVGWH()
     )
     for(ctx in contextList){

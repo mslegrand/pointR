@@ -3,6 +3,7 @@ mouseCmdMovePt<- function(mssg){
     vec<- as.numeric(unlist(mssg$vec))
   }
   src<-getCode()
+  keycode=mssg$keycode
   replacementList<-list()
   ptDefs<-getPtDefs() 
   updateRowPicker(session, "myTibRowCntrl", removeEntireGroup=TRUE)
@@ -31,7 +32,7 @@ mouseCmdMovePt<- function(mssg){
         getPoint=getPoint,
         movePoint=movePoint,
         context=context,
-        keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey),
+        keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey, keycode=mssg$keycode),
         WH=getSVGWH()
       )
       tibs<-eval(parse(text=txt), ppenv )
