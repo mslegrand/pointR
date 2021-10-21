@@ -68,12 +68,14 @@ if(usingElectron){
   
   #!!! move this elsewhere
   observeEvent(input$fileChanged,{
-    # cat('Observed Event: fileChanged')
     changedFile<-input$fileChanged$mssg
     
     
     fd<-fileDescDB()
-    fd$filePath<-normalizePath(fd$filePath)
+    if(!(identical(fd$filePath,"?"))){
+      fd$filePath<-normalizePath(fd$filePath)
+    }
+    
     tb<-filter(fd, filePath==changedFile)
     # cat("fileChanged 2\n")
     if(nrow(tb)>0){
