@@ -80,7 +80,10 @@ tibTag<-'tib'
 resourceDir='aux' 
 
 
-preprocChoices<-list(points=c("onNewPt",  "onMovePt", "onMoveMat"), attrs=c('onNewRow', 'onChangeRow'))
+preprocChoices<-list(
+  points=c("onNewPt",  "onMovePt", "onMoveMat"), 
+  attrs=c('onNewRow', 'onChangeRow')
+)
 
 #----begin external resources loaded prior to server------------
 # must be loaded prior to alles
