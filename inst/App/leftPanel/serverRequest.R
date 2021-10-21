@@ -13,7 +13,6 @@ request<-reactiveValues(
 getWDCmd<-reactive({
   log.fin(getWDCmd)
   dpath<-getDirPath()
-  log.val(dpath)
   if(identical(dpath, '~/.ptR')){
     dpath<-'~'
   }
@@ -23,7 +22,7 @@ getWDCmd<-reactive({
 })
 
 
-getEnvList<-reactive({
+getEnvList<-function(){
   wd<-getWDCmd()
   pcode<-theBlocks()
   initialEnv=new.env()
@@ -34,7 +33,7 @@ getEnvList<-reactive({
   }
   eval(parse(text=pcode),initialEnv)
   initialEnv
-})
+}
 
 trigger<-reactiveValues(
   redraw=0,
