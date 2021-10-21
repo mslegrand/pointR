@@ -17,7 +17,8 @@ processKnit<-reactive({
     }
     tryCatch({
       # cat_list<<-c( cat_list,'>--> knit2html\n')
-      knit2html(text = src, fragment.only = FALSE, quiet = TRUE, envir=new.env())
+      # knit2html(text = src, fragment.only = FALSE, quiet = TRUE, envir=new.env())
+      knit2html(text = src, fragment.only = FALSE, quiet = TRUE, envir=getEnvList() )
       # cat_list<<-c( cat_list,'<--< knit2html\n')
       setSourceType(sourceType=rmdPanelTag)
      } 
