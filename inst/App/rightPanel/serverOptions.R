@@ -14,8 +14,8 @@ pprj<-reactiveVal(initialProj)
 getDirPath<-reactive({
   if(!is.null(editOption$currentProjectName) && !is.null(editOption$currentProjectDirectory)){
     dirPath<-editOption$currentProjectDirectory
-    if(!file.exists(dirPath)){
-      dirPath<-optionDirPath()
+    if(!file.exists(dirPath)){ # currentProjectDirectory not found!!
+      dirPath<-optionDirPath() # this sets dirPath to ~/ptr
       editOption$currentProjectName=NULL
       editOption$currentProjectDirectory=NULL
     }
