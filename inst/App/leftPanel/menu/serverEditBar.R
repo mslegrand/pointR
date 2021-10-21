@@ -214,6 +214,18 @@ observeEvent( input$editNavBar, {
         sendPtRManagerMessage(sender='cmd.electron', openWindow= "svgRUserGuide")
         dirtyDMDM(session, "editNavBar")
       }
+      if(identical(fileCmd,"preprocPtHelp")){
+        #href='http://mslegrand.github.io/svgR/User_Guide.html'
+        #sendPtRManagerMessage(sender='cmd.electron', openLink= href)
+        sendPtRManagerMessage(sender='cmd.electron', openWindow= "preprocPtHelp")
+        dirtyDMDM(session, "editNavBar")
+      }
+      if(identical(fileCmd,"preprocAttrHelp")){
+        #href='http://mslegrand.github.io/svgR/User_Guide.html'
+        #sendPtRManagerMessage(sender='cmd.electron', openLink= href)
+        sendPtRManagerMessage(sender='cmd.electron', openWindow= "preprocAttrHelp")
+        dirtyDMDM(session, "editNavBar")
+      }
       if(identical(fileCmd,"io.svgR")){
         href='http://mslegrand.github.io/svgR'
         sendPtRManagerMessage(sender='cmd.electron',  openLink= href)

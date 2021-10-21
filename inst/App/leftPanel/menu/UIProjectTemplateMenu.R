@@ -7,7 +7,7 @@ UIProjectTemplateMenu<-function(){
     file.path(homeDir, '.ptR','.templates'), full.names = TRUE, recursive = FALSE
   )
   templatePaths<-c(projTemplatePaths,userTemplatePaths)
-  templateNames<-basename(templatePaths)
+  templateNames<-basename(templatePaths) #gsub('-',' ',basename(templatePaths))
   templatePaths<-paste0('projectTemplate-',templatePaths)
   tmp<-mapply(shinyDMDMenu::menuItem,   templateNames, value=templatePaths,SIMPLIFY=FALSE)
    do.call(tagList, tmp)

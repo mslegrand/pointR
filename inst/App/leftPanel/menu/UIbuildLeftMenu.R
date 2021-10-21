@@ -84,10 +84,20 @@ buildLeftMenu<-function(version){
       "Help",
       shinyDMDMenu::menuItem("Editor ShortCuts"),
       shinyDMDMenu::menuItem("Element Reference"),
+      
       if(usingElectron){
         shinyDMDMenu::menuItem("svgR User Guide", value="svgRUserGuide")
       } else {
         shinyDMDMenu::menuItem(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/User_Guide.html\"  target=\"_blank\" >svgR User Guide </a></li>"))
+      },
+      if(usingElectron){
+        menuDropdown(
+          "Preprocessing", 
+          shinyDMDMenu::menuItem(HTML("attribute"), value="preprocAttrHelp"),
+          shinyDMDMenu::menuItem(HTML("point"),     value="preprocPtHelp")
+        )
+      } else {
+        NULL
       },
       if(usingElectron){
         menuDropdown(
