@@ -15,7 +15,10 @@ modulePlotRmd<-function(input, output, session,
         src<-dripplets2Rmd(src)
       }
       div( style='background-color: #FFFFFF;',
-        HTML(knit2html(text =src , fragment.only = TRUE, quiet = TRUE))
+        HTML(
+          knit2html(text = src, fragment.only = TRUE, quiet = TRUE, envir=getEnvList() )
+          # knit2html(text =src , fragment.only = TRUE, quiet = TRUE
+        )
       )
      } else {
       HTML('')
