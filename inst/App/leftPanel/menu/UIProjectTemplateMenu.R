@@ -7,7 +7,8 @@ UIProjectTemplateMenu<-function(){
     file.path(homeDir, '.ptR','.templates'), full.names = TRUE, recursive = FALSE
   )
   templatePaths<-c(projTemplatePaths,userTemplatePaths)
-  templateNames<-basename(templatePaths) #gsub('-',' ',basename(templatePaths))
+#  templateNames<-basename(templatePaths) #gsub('-',' ',basename(templatePaths))
+  templateNames<-gsub('-',' ',basename(templatePaths))
   templatePaths<-paste0('projectTemplate-',templatePaths)
   tmp<-mapply(shinyDMDMenu::menuItem,   templateNames, value=templatePaths,SIMPLIFY=FALSE)
    do.call(tagList, tmp)
@@ -36,7 +37,7 @@ updateNewProjectMenu<-function(session){
   removeDMDM(session=session, menuBarId="editNavBar", entry='New Project')
   #recreate dropdow
   submenu<-menuDropdown('New Project',
-               shinyDMDMenu::menuItem('New Basic Project', value='newBasicProject'),
+               # shinyDMDMenu::menuItem('New Basic Project', value='newBasicProject'),
                shinyDMDMenu::menuItem('Clone of Existing Project', value='newCloneProject'),
                # shinyDMDMenu::menuItem('svgR-based ShinyInput Control', value='newSimpleInputWidget'),
                UIProjectTemplateMenu()
