@@ -1,8 +1,8 @@
 # ---beging code to inserted in ptR-------------------------------
 newProjShinyCntrlModal <- function(failed = 0, mssg=NULL, datapath=NULL, projectName=NULL, projTemplatePath) {
   #shinyDirChoose(input, id='browseForDir', roots=c(wd='~'), filetypes='')
-  # cat('>----> newProjShinyCntrlModal\n')
-  requestedProjTemplatePath(projTemplatePath)
+     
+  requestedProjTemplatePath(projTemplatePath) 
   shinyDirChoose(input, id='browseForDir', roots=c(home='~'))
   observeEvent(input$browseForDir,{
     datapath<-parseDirPath(c(home='~'), input$browseForDir)
@@ -15,7 +15,7 @@ newProjShinyCntrlModal <- function(failed = 0, mssg=NULL, datapath=NULL, project
   # cat('>----> modalDialog\n')
   modalDialog(
     h4('Create a new Project using the template '),
-    h2( basename(projTemplatePath)),
+    h2( gsub('-', ' ', basename(projTemplatePath))),
     if(failed==1){
       h4(mssg)
     },
@@ -49,6 +49,7 @@ requestedProjTemplatePath<-reactiveVal("")
 observeEvent(input$modalNewShinyCntrlProjOk, {
   # Check that data object exists and is data frame.
   templatePath<-requestedProjTemplatePath()
+
   projectName<-input$modalProjName
   if(!is.null(projectName)){
     projectName<-str_trim(projectName)
@@ -103,8 +104,8 @@ observeEvent(input$modalNewShinyCntrlProjOk, {
     # 0. close current project
     closeCurrentProj()
     sourceProject<- path_join(c(templatePath, templateName.pprj))
-    
-    # 1. clone project
+     
+    # 1. clone project 
     fullpathProjName<-copyAndRenameProject(
       sourceProject= path_join(c(templatePath, templateName.pprj)),
       targetName=projName,
