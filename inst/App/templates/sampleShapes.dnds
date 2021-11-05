@@ -93,7 +93,7 @@ SNIPPET
 ```
 rect(
     xy=${1:WH/2},
-    wh=${2:c(.47,.3)*WH},
+    wh=${2:c(.4,.3)*WH},
     stroke='black',
     fill=${3:'none'}
 )${0:}
@@ -105,7 +105,7 @@ library(svgR)
 ptR<-list(
   x=matrix(0,2,0)
 )
-svgR(,
+svgR(
   line(xy1=c(.5,0)*WH, xy2=c(.5,1)*WH, stroke.dasharray=2),
   line(xy1=c(0,.5)*WH, xy2=c(1,.5)*WH, stroke.dasharray=2),  
   rect(
@@ -129,7 +129,7 @@ SNIPPET
 ```
 rect(
     cxy=${1:WH/2},
-    wh=${2:c(.47,.3)*WH},
+    wh=${2:c(.45,.3)*WH},
     stroke='black',
     fill=${3:'none'}
 )${0:}
