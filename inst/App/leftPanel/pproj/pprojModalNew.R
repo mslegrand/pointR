@@ -17,7 +17,8 @@ newProjModal <- function(failed = 0, mssg=NULL, datapath=NULL, projectName=NULL)
     },
     div( 
       textInput(inputId="modalProjName", "Project Name",
-                value = projectName,
+                label = gsub('-',' ', projectName),
+                projectName,
                 placeholder = 'The name of this pointR project'
       )),
     #span('Create the project as a subdirectory of:)'),
