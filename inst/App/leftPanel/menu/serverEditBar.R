@@ -68,10 +68,10 @@ observeEvent( input$editNavBar, {
       dirtyDMDM(session, "editNavBar")
     }
     if(grepl("projectTemplate-",fileCmd)){
-      cat('fileCmd=',fileCmd,'\n')
+      # cat('fileCmd=',fileCmd,'\n')
       #templatePath<- str_split(fileCmd,'-')[[1]][2]
       templatePath<-sub('^projectTemplate-','',fileCmd)
-      cat('templatePath=',templatePath,'\n' )
+      # cat('templatePath=',templatePath,'\n' )
       showModal(newProjShinyCntrlModal(projTemplatePath=templatePath))
       dirtyDMDM(session, "editNavBar")
     }

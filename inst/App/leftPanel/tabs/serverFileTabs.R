@@ -158,12 +158,12 @@ observeEvent(c(request$trigger,request$tabs), {
 
 observeEvent(input$messageContextMenu, {
   cmd=input$messageContextMenu$cmd
-  cat('cmd=')
-  cat(format(cmd))
+  # cat('cmd=')
+  # cat(format(cmd))
   parMode<-input$messageContextMenu$parMode
-  cat('\ninput$messageContextMenu$parMode return value=')
-  cat(format(parMode))
-  cat("\n")
+  # cat('\ninput$messageContextMenu$parMode return value=')
+  # cat(format(parMode))
+  # cat("\n")
   if(cmd=="newTab"){
     # print(start_row)
     # print(end_row)
