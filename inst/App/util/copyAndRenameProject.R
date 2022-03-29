@@ -99,7 +99,7 @@ copyAndRenameProject<-function(sourceProject, targetName, pathToTargetParent ){
   }
  
   # create listing of files to process
-  filePaths<-rev(dir_ls(tempDir, recursive = T)) #skips hidden files
+  filePaths<-rev(dir_ls(tempDir, recurse = TRUE)) #skips hidden files
   indx<-grep(path_join(c(tempDir,pattern, resourceDir)),filePaths)
   if(length(indx)>0){
     filePaths<-filePaths[-indx] # skip resources
