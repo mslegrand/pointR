@@ -49,7 +49,7 @@ notNull<-function(...) {
 sapply(
        c('shiny','shinyjs', 'shinyalert', 'R.utils', 'svgR', 'shinyAce', 'jsonlite', 'rowPicker', 'fs',
           'shinyDMDMenu', 'shinyFiles', 'shinythemes', 'colourpicker', 'shinyWidgets', 'jqScrollBar',
-          'bsplus','shinyjqui', 'knitr', 'tidyverse'), 
+          'bsplus','shinyjqui', 'markdown', 'knitr', 'tidyverse'), 
        library, character.only=TRUE)
 # 'stringr', , in "tidyverse"
 
