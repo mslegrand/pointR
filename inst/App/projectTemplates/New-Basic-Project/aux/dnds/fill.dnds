@@ -1,0 +1,143 @@
+---
+title: "Dnd Snippet"
+author: "Anonymous"
+date:   "TODAY"
+output: dnd_snippet
+---
+
+- Individual drippets are seperate by lines consisting of three or more stars (*)
+- Each drippet consists of 3 entries, with each entry having a title and a value (block)
+    - The title consists of a single line followed by a colon (:)
+        - titles are *POPUP*, *SNIPPET*, *SVGR*
+        - The values are blocks defined by 3 backtics *````*
+- Two drippets are shown below to help you get started
+   
+
+*********************
+                        
+
+POPUP 
+```
+Linear Gradient
+```
+SNIPPET
+```
+linearGradient(
+  xy1=${1:c(0,0)}, 
+  xy2=${2:c(0,1)},
+  colors=${3:c('#00AAAA', '#00000')},
+  gradientUnits=${0:"objectBoundingBox"}
+)
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+svgR(wh=WH, 
+  rect(
+    cxy=WH/2,
+    wh=WH*c(.8,.8),
+    fill=linearGradient(
+      xy1=c(0,0), 
+      xy2=c(0,1),
+      colors=c('#00AAAA', '#FFFFFF')
+    ),
+    stroke='none',
+    stroke.width=1
+  )
+)
+```
+*********************
+
+POPUP 
+```
+Radial Gradient
+```
+SNIPPET
+```
+radialGradient(
+  cxy=${1:c(.5,.7)*.5}, 
+  fxy=${2:c(1,1)*.5},
+  colors=${3:c('#FFFFFF', '#00AAAA')},
+  gradientUnits=${0:"objectBoundingBox"}
+)
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+X=c(.2,.4,.6,.8)
+svgR(wh=WH, 
+  rect(
+    cxy=WH/2,
+    wh=WH*c(.8,.8),
+    fill=radialGradient(
+      cxy=c(.5,.7), 
+      fxy=c(1,1)*.5,
+      colors=c('#FFFFFF', '#00AAAA')
+    ),
+    stroke='none',
+    stroke.width=1
+  )
+)
+```
+******************
+*********************
+
+POPUP 
+```
+Pattern
+```
+SNIPPET
+```
+pattern(
+  patternUnits=${1:"userSpaceOnUse"},
+  xy=${2:c(1,1)*0}, 
+  wh=${3:c(1,1)*min(WH)*.2},
+  ${0:circle(
+    cxy=c(1,1)*min(WH)*.1,
+    r=min(WH)*.1,
+    stroke.width=1,
+    fill='none',
+    stroke='#00FFFF'
+  )}
+)
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+X=c(.2,.4,.6,.8)
+W<-.9*min(WH)
+svgR(wh=WH, 
+  rect(
+    cxy=WH/2,
+    wh=W*c(1,1),
+    fill=pattern(
+      patternUnits="userSpaceOnUse",
+      xy=c(1,1)*0, 
+      wh=c(1,1)*W*.2,
+      circle(
+        cxy=c(1,1)*W*.1,
+        r=W*.1,
+        stroke.width=1,
+        fill='none',
+        stroke='#00FFFF'
+      )
+    ),
+    stroke='none',
+    stroke.width=1
+  )
+)
+```
+******************
+

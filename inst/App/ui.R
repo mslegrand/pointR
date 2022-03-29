@@ -10,7 +10,7 @@ library(shiny)
 
 
 
-# style="position: fixed; top: -100em" to keep hidden
+# style="position: fixed; top: -100em" to keep hiddenj
 shinyUI(  
   div( class="pretty-split-pane-frame", id="mySplitter",
        #ondrop="dropHandler(ev)",
@@ -48,7 +48,7 @@ shinyUI(
     div(
       class="split-pane vertical-percent",
       useShinyjs(),
-      useShinyalert(),
+      #useShinyalert(),
       # extendShinyjs(script="www/menuHelper.js"), 
       extendShinyjs(script="www/menuHelper.js", functions="triggerButtonOnEnter"), # used in cmdNewColumn.R; cmdNewAsset.R
       
