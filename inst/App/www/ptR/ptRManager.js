@@ -9,9 +9,6 @@ if(!!window.sendToElectron){
   });
   
     window.ipcRenderer.on( 'appRunnerLog', function(event, arg1, arg2){
-    //alert('appRunnerLog=' + JSON.stringify( arg1));
-    //console.log('appRunnerLog=' + JSON.stringify( arg1));
-    //alert('appRunnerLog=' + JSON.stringify( arg2));
     Shiny.onInputChange('appLog', 
       {
           mssg:  arg1, 
@@ -21,13 +18,10 @@ if(!!window.sendToElectron){
   });
   
   window.ipcRenderer.on( 'appCloseCmd', function(event, arg){
-    // console.log('about to close');
     $('#ptRQuit').trigger('click');
   });
   
   window.ipcRenderer.on( 'fileChanged', function(event, arg){
-    // console.log('fileChanged');
-    //alert('fileChanged '+JSON.stringify(arg));
     Shiny.onInputChange('fileChanged', 
       {
           mssg:  arg, 
@@ -51,8 +45,6 @@ if(!!window.sendToElectron){
 Shiny.addCustomMessageHandler(
   "ptRManager",
   function(data){
-    // console.log('-----------Entering ptRManager------------\n');
-    // console.log(JSON.stringify(data));
     if(data.sender==="cmd.electron"){
       if(!!data.app2RunPath){
         if(!!window.sendToElectron){
@@ -76,7 +68,6 @@ Shiny.addCustomMessageHandler(
         }
       }
       if(!!data.openLink){
-        // console.log('data.openLink' + JSON.stringify(data.openLink));
         if(!!window.sendToElectron){
           window.sendToElectron('cmdOpenLink',data.openLink, '');
         }
@@ -88,16 +79,26 @@ Shiny.addCustomMessageHandler(
         }
       }
     } //end of electron handlers
-    if(data.sender==="closePtRWindowNow"){
-      // console.log('inside data.closePtRWindowNow');
-      if(!!window.sendToElectron ){ 
-        // console.log('about to send confirmation');
-        var confirmation=window.sendExitConfirmation();
-        //window.ipcRenderer.sendSync('confirmExit', true);
-        // console.log('confirmation recieved '+ JSON.stringify(confirmation));
-      }
+    if(data.sender==="closePtRWindowNow"){ //called from cmdFileQuit
+      //console.log('inside data.closePtRWindowNow');
+      //console.log('!!window.sendToElectron='+!!electronFlag);
+      //console.log('!!window.sendToElectron='+!!window.sendToElectron);
+      //alert('inside data.closePtRWindowNow\n'+'!!window.sendExitConfirmation='+!!window.sendExitConfirmation);
+      //alert('inside data.closePtRWindowNow\n'+'!!window='+!!window);
+      //return;
+      //if(!!window.sendExitConfirmation ){ 
+        console.log('about to send confirmation');
+        let confirmation=  window.sendExitConfirmation();
+        //let confirmation= window.ipcRenderer.sendSync('confirmExit', true);
+        //let confirmation= window.ipcRenderer.sendSync('confirmExitMssg', 'true');
+	      //console.log('exitVal='+exitVal);
+        console.log('confirmation recieved '+ JSON.stringify(confirmation));
+        // window.close();
+      //} else {
+        window.close();
+      //}
       // console.log('invoking window.close');
-      window.close();
+      
     }
     if(!!data.openFile){
       //console.log('about to trigger open\n');
