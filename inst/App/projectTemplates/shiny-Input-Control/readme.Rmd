@@ -410,7 +410,7 @@ svgR(wh=WH,text('STEP 4',xy=c(20,20)),
 - In file **shinyInputControl_svg.R** 
     - add *onclick=CMDS*  for interactivity
     - Hint use:
- ```{r, results='asis'}
+```{r, results='asis'}
  
 library(svgR)
 WH<-c(48,32)
@@ -545,7 +545,7 @@ svgR(wh=WH,text('STEP 6',xy=c(20,20)),
     box(pos, 1, 'shinyInputControl.R', 'lightyellow','registerInputHandler'),
     box(pos, 2, 'app.R', '#FFCCAA','run to test')
 )
-````
+```
 
 1. In file **shinyInputControl.R** 
     - in *registerInputHandler*
