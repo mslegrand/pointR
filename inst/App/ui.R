@@ -50,7 +50,7 @@ shinyUI(
       useShinyjs(),
       #useShinyalert(),
       # extendShinyjs(script="www/menuHelper.js"), 
-      extendShinyjs(script="www/menuHelper.js", functions="triggerButtonOnEnter"), # used in cmdNewColumn.R; cmdNewAsset.R
+      extendShinyjs(script="menuHelper.js", functions="triggerButtonOnEnter"), # used in cmdNewColumn.R; cmdNewAsset.R
       
       #-------------left panel begin--------------------------------------------------
       #------- left component begin-----------
