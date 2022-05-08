@@ -16,12 +16,13 @@ observeEvent(input$helpMssg, {
 
 #----------------------
 
-output$htmlHelpSvg_Out<-renderText(
+output$htmlHelpSvg_Out<-renderText({
   htmlHelpSvgOut()
-)
+})
 
 htmlHelpSvgOut<-reactive({
-  HTML(helpsvgR$html)
+  h<-helpsvgR
+  HTML(h$html)
 })
 
 helpsvgR<-reactiveValues(
@@ -74,7 +75,6 @@ observeEvent(input$dismiss,{
 svgQueryAddr2Help<-function(queryAddr){
   # 1. trim off the front
   addr<-basename(queryAddr)
-  
   if(addr=="00Index.html"){
     queryTopic<-"00Index.html"
   } else {
@@ -113,7 +113,9 @@ svgQueryTopic2Help<-function(query){
   pkgRdDB = tools:::fetchRdDB(file.path(find.package(pkg), 'help', pkg))
   tools::findHTMLlinks(pkgDir=path,level=0)->links
   topics<-names(pkgRdDB)
+  
   if(length(query)!=1){ browser() } # debug code!!!
+  
   if(!(query %in% topics)){ # we default to the index
     # we generate the index page by cropping the original help page
     tmp<-readLines(file.path(path.package("svgR"), "html", "00Index.html") )
@@ -128,21 +130,30 @@ svgQueryTopic2Help<-function(query){
     pos<-which(str_detect(html,"</div><h2>"))
     html<-html[-(1:(pos-1))]
     html[1]<-sub( pattern = "^</div>", "", html[1] )
+    html[1]<-sub("<title>R: Element Generators Indexed by Category</title>", "", html[1])
+    html<-paste(html,collapse="\n")
   } else {
     #query was found, now lets grab the page
+    
+    
     txtConnection<-textConnection("html","w")
     tools::Rd2HTML(
       pkgRdDB[[query]],
       package=pkg,
-      Links=links,   
+      Links=links,  
+      fragment=TRUE,
       out=txtConnection
     )
+    
+    textConnectionValue(txtConnection)->tmp
+    tmp[3]=paste("<h2>",tmp[10],"&nbsp;<font size='-1'>{svgR}</font></h2>")
+    tmp[5]=paste("<h4>",tmp[5],"</h4>")
+    tmp[10]=""
+    tmp[8]=""
+    html<-paste(tmp,collapse="\n")
     close(txtConnection)
   }
   
-  html[1]<-sub("<title>R: Element Generators Indexed by Category</title>", "", html[1])
-  html<-paste(html,collapse="\n")
-  html
   
   # Now we want to send a request back to the
   # server in the user clicks a  hyperlink to another page
@@ -160,7 +171,9 @@ svgQueryTopic2Help<-function(query){
 # trigger help for short cut keys
 
 observeEvent( input$keyBoardHelp,{
+  
   kb<-input$keyBoardHelp
+  
 }) 
 
 #handle back button for help
