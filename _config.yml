@@ -4,7 +4,7 @@ description: An R based IDE to generate SVG
 show_downloads: true
 google_analytics:
 theme: jekyll-theme-minimal
-release_mac: https://github.com/mslegrand/pointR/releases/download/v.0.5.2/ptr-0.5.2.dmg
-release_linux: https://github.com/mslegrand/pointR/releases/download/v.0.5.2/ptr_0.5.2_amd64.deb
-release_win: https://github.com/mslegrand/pointR/releases/download/v.0.5.2/ptr.Setup.0.5.2.exe
+release_mac: https://github.com/mslegrand/pointR/releases/download/0.5.2/ptr-0.5.2.dmg
+release_linux: https://github.com/mslegrand/pointR/releases/download/0.5.2/ptr_0.5.2_amd64.deb
+release_win: https://github.com/mslegrand/pointR/releases/download/0.5.2/ptr.Setup.0.5.2.exe
 latest_release: Évariste Galois v.0.4.8
