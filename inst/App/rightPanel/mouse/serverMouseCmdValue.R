@@ -1,4 +1,5 @@
 mouseCmdValue<- function(mssg){
+  #cat('mouseCmdVal\n')
   if(length(mssg$vec)>0){
     vec<- as.numeric(unlist(mssg$vec))
   }
@@ -7,7 +8,19 @@ mouseCmdValue<- function(mssg){
   ptDefs<-getPtDefs()
   tmp<-unlist(str_split(mssg$id,"_")) 
   row<-as.numeric(tail(tmp,1))
-
+  mssg$char<-NULL
+  if (length(mssg$keycode)>0){
+    kc<-mssg$keycode
+    if(  (65<=kc && kc<=90 ) || (40<=kc && kc<=57)){ #process char or numeric only 
+      if(mssg$shiftKey==FALSE && 65<=kc && kc<=90){
+        kc=kc+32
+      } 
+      mode(kc)<-'raw'
+      kc<-rawToChar(kc)
+      mssg$char<-kc
+    }
+  } 
+   
   if( mssg$shiftKey==TRUE){ #add row to rowGroupsDB
     if(getTibRow()!=row){
       updateRowPicker(session, "myTibRowCntrl", addToGroup = row, selectRow = row )
