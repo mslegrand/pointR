@@ -41,6 +41,9 @@ restoreWorkSpace<-reactive({
     if(!is.null(ptRproj$pathToProj)){
       docFilePath=page$fileDescriptor.filePath
       page$fileDescriptor.filePath<-sub( ptRproj$pathToProj, editOption$currentProjectDirectory, docFilePath)
+      if(!file.exists(page$fileDescriptor.filePath)){
+        next # omit this, else saving will cause an error
+      }
       saveRDS(page,filePath)
     }
     wsPages[[id]]<-page
