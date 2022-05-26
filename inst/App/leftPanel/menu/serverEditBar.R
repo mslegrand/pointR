@@ -260,10 +260,8 @@ observeEvent( input$editNavBar, {
     }
     
     if(grepl("recentProj-",fileCmd)){
-      # cat('>---> recentProjects\n')
       #get the name
       name<-sub("recentProj-","",fileCmd)
-      #cat('>---> recentProjects: name=', format(name),"\n")
       #if file fails to exist remove
       dirtyDMDM(session, "editNavBar")
       if(!file.exists(name)){
@@ -276,8 +274,6 @@ observeEvent( input$editNavBar, {
       } else {
         projName<-basename(name)
         pathToProj<-dirname(name)
-        # cat('recentFiles:: pathToProj', format(pathToProj),"\n")
-        # pathToProj<-path_rel(pathToProj, path_home() )
         openProj(projName, pathToProj )
       }
       dirtyDMDM(session, "editNavBar")
