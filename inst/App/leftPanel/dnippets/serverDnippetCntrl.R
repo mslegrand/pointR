@@ -26,7 +26,7 @@ observeEvent(c( getDnippetsAll(), dnippetsDB$usage, input$pages),{
     )
     
     dnippets<-dnippetSelection$all[selected]
-    dnippets<-unlist(dnippets,recursive=F)
+    dnippets<-unlist(dnippets,recursive=FALSE)
     names(dnippets)<-NULL
     if(length(dnippets)==0){ 
       sendPtRManagerMessage(sender='cmd.dnippet.file.load', removeDrippets=runif(1));
@@ -35,7 +35,7 @@ observeEvent(c( getDnippetsAll(), dnippetsDB$usage, input$pages),{
     }
   }
   
-  if(length(input$pages) && length(getDnippetsAll())>0 && 
+  if(length(input$pages)>0 && length(getDnippetsAll())>0 && 
     any(sapply(c('ptr','javascript'), function(x)identical( getModeX(),x )))
   ){
     showElement('selectedDnippetButtonBoxContainer')
