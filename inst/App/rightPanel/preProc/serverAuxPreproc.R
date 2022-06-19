@@ -120,7 +120,7 @@ populatePreProcEditMenu<-function(type=points){
       entry=afterEntry,
       submenu=
         do.call(
-          function(...){ menuDropdown( label,...) },
+          function(...){ subMenuDropdown( label,...) },
           kids
         )
     )

@@ -6,9 +6,9 @@ buildLeftMenu<-function(version){
     menuBarId="editNavBar",
     menuDropdown(
       "File", 
-      shinyDMDMenu::menuDropdown(
+      shinyDMDMenu::subMenuDropdown(
         "New File",
-        shinyDMDMenu::menuDropdown('ptR script',
+        shinyDMDMenu::subMenuDropdown('ptR script',
               shinyDMDMenu::menuItem("ptR list containing a tibble", value="newPtrTibScript"),
               shinyDMDMenu::menuItem("ptR list containing a matrix", value="newPtRMatScript"),
               shinyDMDMenu::menuItem("svgR without a ptR list", value="newPtRSVGScript")
@@ -24,16 +24,16 @@ buildLeftMenu<-function(version){
         # menuDivider(),
         # shinyDMDMenu::menuItem('Plain Text Doc', value='newText')
       ),
-      menuDropdown('New Project',
+      subMenuDropdown('New Project',
         # shinyDMDMenu::menuItem('New Basic Project', value='newBasicProject'),
         shinyDMDMenu::menuItem('Clone of Existing Project', value='newCloneProject'),
         # shinyDMDMenu::menuItem('svgR-based ShinyInput Control', value='newSimpleInputWidget'),
         UIProjectTemplateMenu()
       ), 
-      menuDropdown("Recent Projects"),
+      subMenuDropdown("Recent Projects"),
       menuDivider(),
       shinyDMDMenu::menuItem("Open File", value='openFile'),
-      menuDropdown("Recent Files"),
+      subMenuDropdown("Recent Files"),
       menuDivider( id='recentProjDivider'),
       shinyDMDMenu::menuItem("Open Project...", value='openProject'),
       
@@ -60,7 +60,7 @@ buildLeftMenu<-function(version){
     # ),
     menuDropdown(
       'Options',
-      menuDropdown(
+      subMenuDropdown(
         "Editor", 
         shinyDMDMenu::menuItem("Theme" ),
         shinyDMDMenu::menuItem("Font Size"), 
@@ -69,15 +69,15 @@ buildLeftMenu<-function(version){
         shinyDMDMenu::menuItem(defaultOpts$tabType)
       ),
       #menuDivider(),
-      menuDropdown(
+      subMenuDropdown(
         "Import Addin",
         shinyDMDMenu::menuItem("Snippets",   value="importSnippetFile"),
         shinyDMDMenu::menuItem("Drag&Drops",   value='importDndSnippetsFile')
       ),
-      menuDropdown(
+      subMenuDropdown(
         "Manage Template Menu",
         shinyDMDMenu::menuItem("Add Current Project",   value="addTemplate"),
-        shinyDMDMenu::menuDropdown("Remove from Menu",   UIRemoveUserTemplate())
+        shinyDMDMenu::subMenuDropdown("Remove from Menu",   UIRemoveUserTemplate())
       )
     ),
     menuDropdown(
@@ -91,7 +91,7 @@ buildLeftMenu<-function(version){
         shinyDMDMenu::menuItem(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/User_Guide.html\"  target=\"_blank\" >svgR User Guide </a></li>"))
       },
       if(usingElectron){
-        menuDropdown(
+        subMenuDropdown(
           "Preprocessing", 
           shinyDMDMenu::menuItem(HTML("attribute"), value="preprocAttrHelp"),
           shinyDMDMenu::menuItem(HTML("point"),     value="preprocPtHelp")
@@ -100,15 +100,14 @@ buildLeftMenu<-function(version){
         NULL
       },
       if(usingElectron){
-        menuDropdown(
+        subMenuDropdown(
           "Useful Links", 
           shinyDMDMenu::menuItem(HTML("io.svgR")),
           shinyDMDMenu::menuItem(HTML("W3C SVG reference"))
         )
       } else{
-        menuDropdown(
+        subMenuDropdown(
           "Useful Links", 
-          
           shinyDMDMenu::menuItem(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/\"  target=\"_blank\" >io.svgR</a></li>")),
           shinyDMDMenu::menuItem(HTML("<li><a  href=\"https://www.w3.org/TR/SVG/intro.html\"  target=\"_blank\" >W3C SVG reference</a></li>"))
         )

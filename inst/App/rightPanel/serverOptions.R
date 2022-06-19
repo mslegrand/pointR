@@ -123,7 +123,7 @@ mkFileSubMenu<-function(subMenuLabel, prefix, fullFilePaths){
     }
     items<-mapply(mkmenuitem, label=labels, value=values, hint=hints,
                   SIMPLIFY = FALSE, USE.NAMES = FALSE)
-    submenu=do.call( function(...){ menuDropdown(subMenuLabel,...) }, items)
+    submenu=do.call( function(...){ subMenuDropdown(subMenuLabel,...) }, items)
   } else{
     submenu=NULL
   }
@@ -154,7 +154,7 @@ observeEvent( editOption$recentProjects ,{
 
 # must both add and delete entries.
 observeEvent( editOption$recentFiles ,{
-  # 1 remove menuDropdown
+  # 1 remove subMenuDropdown
   subMenuLabel= "Recent Files"
   removeDMDM(session=session, menuBarId="editNavBar", entry=subMenuLabel)
   # 2 get files to populate submenu

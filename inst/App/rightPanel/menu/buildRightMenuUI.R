@@ -13,21 +13,21 @@ buildRightMenu<-function(){
   dmdMenuBarPage(
     menuBarId="plotNavBar",
     menuDropdown('Display', 
-                 menuDropdown('Points',
+                 subMenuDropdown('Points',
                               shinyDMDMenu::menuItem( checkBoxInput4Menu('cmdLabelPoints', 'Label Points', FALSE, width="100px"), value="consolidate"),
                               shinyDMDMenu::menuItem( checkBoxInput4Menu('cmdRestrictRows', 'Restrict to Current Row', FALSE, width="150px"), value="consolidate"),
                               shinyDMDMenu::menuItem( checkBoxInput4Menu('cmdInsertEnabled', 'Insertion Enabled', TRUE, width="120px"), value="consolidate")
                               # shinyDMDMenu::menuItem('Show Points without Labels', value='cmdShowPointsNoLabels'),
                               # shinyDMDMenu::menuItem('Show Points with Labels',    value='cmdShowPointLabels')
                  ),
-                 menuDropdown( 'Grid',
+                 subMenuDropdown( 'Grid',
                                #shinyDMDMenu::menuItem('Show', value='cmdShowGrid'),
                                shinyDMDMenu::menuItem( checkBoxInput4Menu('cmdShowGrid', 'Show', FALSE, width="100px"), value="consolidate"),
                                shinyDMDMenu::menuItem('Spacing', value='cmdAdjustGridSpacing')
                  )
                  ,
-                 menuDropdown( 'Backdrop',
-                               shinyDMDMenu::menuDropdown('colour',
+                 subMenuDropdown( 'Backdrop',
+                               shinyDMDMenu::subMenuDropdown('colour',
                                  menuItem(div(id='bullfrog', style='width:80px;',
                                    colourInput( "backdropColour", NULL, palette = "limited", 
                                      allowedCols = 
@@ -45,26 +45,26 @@ buildRightMenu<-function(){
     ),
     menuDropdown(
       "Tools",
-      shinyDMDMenu::menuDropdown(
+      shinyDMDMenu::subMenuDropdown(
         "Point Preprocessor", 
         shinyDMDMenu::menuItem('New', value='cmdNewPP'),
-        shinyDMDMenu::menuDropdown(id='dropDown-editPreProc-points','Edit preproc points'),
+        shinyDMDMenu::subMenuDropdown(id='dropDown-editPreProc-points','Edit preproc points'),
         shinyDMDMenu::menuItem('Import', value='cmdImportPP')#,
         #shinyDMDMenu::menuItem('Export', value='cmdExportPP'),
         #shinyDMDMenu::menuItem('Remove', value='cmdRemovePP')
       ),
-      shinyDMDMenu::menuDropdown(
+      shinyDMDMenu::subMenuDropdown(
         "Attribute Preprocessor",
         shinyDMDMenu::menuItem('New', value='cmdNewAP'),
-        shinyDMDMenu::menuDropdown(id='dropDown-editPreProc-attrs','Edit preproc attrs'),
+        shinyDMDMenu::subMenuDropdown(id='dropDown-editPreProc-attrs','Edit preproc attrs'),
         shinyDMDMenu::menuItem('Import', value='cmdImportAP')
         #shinyDMDMenu::menuItem('Export', value='cmdExportAP'),
         #shinyDMDMenu::menuItem('Remove', value='cmdRemoveAP')
       ),
-      shinyDMDMenu::menuDropdown(
+      shinyDMDMenu::subMenuDropdown(
         "Column Choice Sets", 
         shinyDMDMenu::menuItem('New', value='cmdNewColumnChoices'),
-        shinyDMDMenu::menuDropdown(id='dropDown-cmdEditColumnChoices', 'Edit Choices'),
+        shinyDMDMenu::subMenuDropdown(id='dropDown-cmdEditColumnChoices', 'Edit Choices'),
         shinyDMDMenu::menuItem('Import', value='cmdImportColumnChoices')
       )
     )

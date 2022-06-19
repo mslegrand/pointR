@@ -4,6 +4,21 @@ This inherits from the default bootstrap style
  an existing style and modify it.
 */
 
+span.dmdm-dropdown-toggle{
+  color: #5D5D5D;
+  font-weight: normal;
+  padding-left: 20px;
+  padding-right: 15px;
+}
+.drop-down-list:hover{
+  background-color: #EEEEEE;
+  font-weight: normal;
+}
+ul.nav > .drop-down-list:hover{
+  background-color: transparent;
+  font-weight: bold;
+}
+
 .navbar-default .navbar-brand:hover,
 .navbar-default .navbar-brand:focus {
   color: #5E5E5E;
@@ -14,6 +29,7 @@ This inherits from the default bootstrap style
   padding: 7px 7px;
   
 }
+
 .navbar .nav > li > a {
   color: #BBBBFF;
   padding-top: 7px;
@@ -22,7 +38,7 @@ This inherits from the default bootstrap style
 .navbar .nav > li > a:hover {
   float: none;
   color: #FFFFFF;
-    background-color: transparent;
+  background-color: transparent;
 }
 .navbar-default .navbar-nav > li > a:focus {
   color: white;
@@ -54,7 +70,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4c4c', end
                                                                                                      
 .nav li a.disabled {
   color: #888 !important;
-    cursor: not-allowed !important;
+  cursor: not-allowed !important;
   border-color: #aaa !important;
 }
 .nav li.disabled {

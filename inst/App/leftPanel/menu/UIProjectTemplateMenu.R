@@ -33,10 +33,10 @@ UIRemoveUserTemplate<-function(){
 
 
 updateNewProjectMenu<-function(session){
-  # 1 remove menuDropdown
+  # 1 remove subMenuDropdown
   removeDMDM(session=session, menuBarId="editNavBar", entry='New Project')
   #recreate dropdow
-  submenu<-menuDropdown('New Project',
+  submenu<-subMenuDropdown('New Project',
                # shinyDMDMenu::menuItem('New Basic Project', value='newBasicProject'),
                shinyDMDMenu::menuItem('Clone of Existing Project', value='newCloneProject'),
                # shinyDMDMenu::menuItem('svgR-based ShinyInput Control', value='newSimpleInputWidget'),
@@ -51,11 +51,11 @@ updateNewProjectMenu<-function(session){
   }
 }
 updateRemoveTemplateMenu<-function(session){
-  # 1 remove menuDropdown
+  # 1 remove subMenuDropdown
   removeDMDM(session=session, menuBarId="editNavBar", entry="Remove from Menu")
   #recreate dropdown
   templateMenuList<-UIRemoveUserTemplate()
-  submenu<-menuDropdown("Remove from Menu",
+  submenu<-subMenuDropdown("Remove from Menu",
                         templateMenuList
   ) 
   # 4 insertsubmenu
