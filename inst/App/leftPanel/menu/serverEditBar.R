@@ -211,6 +211,12 @@ observeEvent( input$editNavBar, {
     }
     
     if(usingElectron){
+      if(identical(fileCmd,"youtube playlist")){
+        href='https://www.youtube.com/playlist?list=PLpvG89XJyQhlucHJxb9pr708NY1hTqSun'
+        sendPtRManagerMessage(sender='cmd.electron', openLink= href)
+        # sendPtRManagerMessage(sender='cmd.electron', openWindow= "svgRUserGuide")
+        dirtyDMDM(session, "editNavBar")
+      }
       if(identical(fileCmd,"svgRUserGuide")){
         #href='http://mslegrand.github.io/svgR/User_Guide.html'
         #sendPtRManagerMessage(sender='cmd.electron', openLink= href)

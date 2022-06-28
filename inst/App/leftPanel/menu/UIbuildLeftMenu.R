@@ -102,12 +102,14 @@ buildLeftMenu<-function(version){
       if(usingElectron){
         subMenuDropdown(
           "Useful Links", 
+          shinyDMDMenu::menuItem(HTML("youtube playlist")),
           shinyDMDMenu::menuItem(HTML("io.svgR")),
           shinyDMDMenu::menuItem(HTML("W3C SVG reference"))
         )
       } else{
         subMenuDropdown(
           "Useful Links", 
+          shinyDMDMenu::menuItem(HTML("<li><a  href=\"https://www.youtube.com/playlist?list=PLpvG89XJyQhlucHJxb9pr708NY1hTqSun\"  target=\"_blank\" >youtube playlist</a></li>")),
           shinyDMDMenu::menuItem(HTML("<li><a  href=\"http://mslegrand.github.io/svgR/\"  target=\"_blank\" >io.svgR</a></li>")),
           shinyDMDMenu::menuItem(HTML("<li><a  href=\"https://www.w3.org/TR/SVG/intro.html\"  target=\"_blank\" >W3C SVG reference</a></li>"))
         )
