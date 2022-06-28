@@ -21,9 +21,11 @@ dripplets2Rmd<-function( drps ){
   unlist(str_split(drps, '\n'))->drps
   indx<-m[2,]
   drps[indx]<-paste(
-    "temp$root$setAttr('width',480)",
-    "temp$root$setAttr('height',320)",
-    "temp$root$setAttr('viewBox','0 0  48 32')",
+     "temp$root$setAttr('width',48)",
+     "temp$root$setAttr('height',32)",
+    # "temp$root$setAttr('viewBox','0 0  48 32')",
+    "temp$root$setAttr('stroke','#00FFFF')",
+    "temp$root$setAttr('fill','#00FFFF')",
     "temp$root$prependChildren(
       svgR:::use(filter=svgR:::filter( filterUnits='userSpaceOnUse', svgR:::feFlood(flood.color='black') ) )
     )",
@@ -35,7 +37,7 @@ dripplets2Rmd<-function( drps ){
   drps<-str_replace(drps, "\noutput: dnd_snippet", "\noutput: html_document")
   drps<-str_replace_all(drps, "POPUP\\s*\n```\n(.+)\n```", "### \\1")
   drps<-str_replace_all(drps, "\nSNIPPET\\s*","\n")
-  drps<-str_replace_all(drps, "\nSVGR\\s*\n```\n", '\n\n```\\{r, echo=FALSE, results=\'asis\'\\}\n')
+  drps<-str_replace_all(drps, "\nSVGR\\s*\n```\n", '\n\n```\\{r, echo=FALSE, results=\'asis\'\\}\nWH=c(48,32)\n')
   drps
 }
 
@@ -95,7 +97,15 @@ extractDripplet<-function(dr ){
   if(all(m>0)){
     rtv<-tt
     rtv<-tryCatch({
-       svg<-as.character(eval(parse(text=tt['SVGR']), new.env()))
+       # svg<-as.character(eval(parse(text=tt['SVGR']), new.env()))
+       # svg<-eval(parse(text=tt['SVGR']), new.env())
+       svg<-eval(parse(text=tt['SVGR']), list(WH=c(48,32)))
+       svg$root$setAttr('stroke','#00FFFF')
+       svg$root$setAttr('fill','#00FFFF')
+       svg$root$setAttr('width',48)
+       svg$root$setAttr('height',32)
+       #set width, height???
+       svg<-as.character(svg)
        rtv["SVGR"]<-svg
        names(rtv)<-c('hint','snip','logo')[m]
        rtv
@@ -119,10 +129,20 @@ dripplets2List2<-function(drps){
     rtv<-extractDripplet(dr)
     rtv
   })
-  
+  s.upper<-function(s){
+    paste(toupper(substring(s, 1, 1)), substring(s, 2),
+          sep = "", collapse = " ")
+  }
+  drps<-lapply(drps, function(dr){
+    dr['snip']<-gsub("\\```","```" , dr['snip'])
+    dr
+  })
   if(!is.null(editOption$currentProjectName)){
+    cname<-sub('\\.pprj$','', editOption$currentProjectName)
+    Cname<-s.upper(cname)
     drps<-lapply(drps, function(dr){
-      dr['snip']<-gsub('@projectName@', editOption$currentProjectName, dr['snip'])
+      dr['snip']<-gsub('@projectName@', cname , dr['snip'])
+      dr['snip']<-gsub('@ProjectName@', Cname , dr['snip'])
       dr
     })
   }

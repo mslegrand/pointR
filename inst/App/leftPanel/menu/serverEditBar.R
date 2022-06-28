@@ -5,7 +5,32 @@ observeEvent( input$editNavBar, {
   fileCmd<-getLeftMenuCmd()
   
   if(length(fileCmd)>0){
-    
+    if( fileCmd =="addTemplate"){
+       # cat('******* addTemplate\n')
+      # get projectPath
+      source<-getProjectFullPath()
+      source=dirname(source)
+      # getProject Name
+      name<-basename(source) # should be same as editOption$currentProjectName)
+      name<-sub("\\.pprj$",'',name)
+      target<-file.path(homeDir, '.ptR','.templates',name)
+      # cat('source=',source,"\n")
+      # cat('target=',target,"\n")
+      copyDirectory(from=source, to=target,  private=TRUE, recursive=TRUE)
+      # copy to .ptR
+      # update menus
+      updateNewProjectMenu(session)
+      updateRemoveTemplateMenu(session)
+    }
+    if(grepl("removeTemplate-",fileCmd)){
+      target<- str_split(fileCmd,'-')[[1]][2]
+     # delete templatePath
+      # file.remove(target,recursive=TRUE)
+      dir_delete(target)
+      # update menus
+      updateNewProjectMenu(session)
+      updateRemoveTemplateMenu(session)
+    }
     if( fileCmd %in% c("newPtrTibScript", "newPtRMatScript", "newPtRSVGScript", "newRScript" )){ #-----new
       cmdFileNewPtR(fileCmd)
       dirtyDMDM(session, "editNavBar")
@@ -43,13 +68,11 @@ observeEvent( input$editNavBar, {
       dirtyDMDM(session, "editNavBar")
     }
     if(grepl("projectTemplate-",fileCmd)){
-      templateName<- str_split(fileCmd,'-')[[1]][2]
-      showModal(newProjShinyCntrlModal(projTemplateName=templateName))
-      dirtyDMDM(session, "editNavBar")
-    }
-    if(grepl("projectSample-",fileCmd)){
-      projectName<- str_split(fileCmd,'-')[[1]][2]
-      showModal(sampleProjModal(projectName=projectName))
+      # cat('fileCmd=',fileCmd,'\n')
+      #templatePath<- str_split(fileCmd,'-')[[1]][2]
+      templatePath<-sub('^projectTemplate-','',fileCmd)
+      # cat('templatePath=',templatePath,'\n' )
+      showModal(newProjShinyCntrlModal(projTemplatePath=templatePath))
       dirtyDMDM(session, "editNavBar")
     }
     if(fileCmd=="openProject"){ #-----open
@@ -84,7 +107,7 @@ observeEvent( input$editNavBar, {
       editOption$currentProjectDirectory<-NULL
       editOption$currentProjectName<-NULL
       dirtyDMDM(session, "editNavBar")
-      #delay(500, {request$sender='startup'})
+      #delay(500, {request$cmd='startup'})
       #delay(500, {setRequestSender('startup')})
       delay(500, {requestStartUp()})
     }
@@ -188,10 +211,28 @@ observeEvent( input$editNavBar, {
     }
     
     if(usingElectron){
+      if(identical(fileCmd,"youtube playlist")){
+        href='https://www.youtube.com/playlist?list=PLpvG89XJyQhlucHJxb9pr708NY1hTqSun'
+        sendPtRManagerMessage(sender='cmd.electron', openLink= href)
+        # sendPtRManagerMessage(sender='cmd.electron', openWindow= "svgRUserGuide")
+        dirtyDMDM(session, "editNavBar")
+      }
       if(identical(fileCmd,"svgRUserGuide")){
         #href='http://mslegrand.github.io/svgR/User_Guide.html'
         #sendPtRManagerMessage(sender='cmd.electron', openLink= href)
         sendPtRManagerMessage(sender='cmd.electron', openWindow= "svgRUserGuide")
+        dirtyDMDM(session, "editNavBar")
+      }
+      if(identical(fileCmd,"preprocPtHelp")){
+        #href='http://mslegrand.github.io/svgR/User_Guide.html'
+        #sendPtRManagerMessage(sender='cmd.electron', openLink= href)
+        sendPtRManagerMessage(sender='cmd.electron', openWindow= "preprocPtHelp")
+        dirtyDMDM(session, "editNavBar")
+      }
+      if(identical(fileCmd,"preprocAttrHelp")){
+        #href='http://mslegrand.github.io/svgR/User_Guide.html'
+        #sendPtRManagerMessage(sender='cmd.electron', openLink= href)
+        sendPtRManagerMessage(sender='cmd.electron', openWindow= "preprocAttrHelp")
         dirtyDMDM(session, "editNavBar")
       }
       if(identical(fileCmd,"io.svgR")){
@@ -225,10 +266,8 @@ observeEvent( input$editNavBar, {
     }
     
     if(grepl("recentProj-",fileCmd)){
-      # cat('>---> recentProjects\n')
       #get the name
       name<-sub("recentProj-","",fileCmd)
-      #cat('>---> recentProjects: name=', format(name),"\n")
       #if file fails to exist remove
       dirtyDMDM(session, "editNavBar")
       if(!file.exists(name)){
@@ -241,8 +280,6 @@ observeEvent( input$editNavBar, {
       } else {
         projName<-basename(name)
         pathToProj<-dirname(name)
-        # cat('recentFiles:: pathToProj', format(pathToProj),"\n")
-        # pathToProj<-path_rel(pathToProj, path_home() )
         openProj(projName, pathToProj )
       }
       dirtyDMDM(session, "editNavBar")
@@ -307,13 +344,14 @@ observeEvent( editOption$currentProjectName, {
   if(length(editOption$currentProjectName)==0){
     title='project: <none>'
     disableDMDM(session, "editNavBar", 'closeProject')
+    disableDMDM(session, "editNavBar", 'addTemplate')
   } else {
     title=paste0('project: ', editOption$currentProjectName)
     enableDMDM(session, "editNavBar", 'closeProject')
+    enableDMDM(session, "editNavBar", 'addTemplate')
   }
   renameDMDM(session, menuBarId="editNavBar", 
                        entry='project', newLabel=title, newValue='project')
-  
 }, ignoreNULL = FALSE)
 # -----------ACE EDITOR------------------------
 

@@ -47,10 +47,11 @@ notNull<-function(...) {
 
 
 sapply(
-       c('shiny','shinyjs', 'R.utils', 'svgR', 'shinyAce', 'rowPicker', 'stringr', 'jsonlite', 'fs',
-          'shinyDMDMenu', 'shinyFiles', 'shinythemes', 'colourpicker', 'shinyWidgets', 
-          'bsplus','shinyjqui', 'knitr', 'tidyverse'), 
+       c('shiny','shinyjs', 'shinyalert', 'R.utils', 'svgR', 'shinyAce', 'jsonlite', 'rowPicker', 'fs',
+          'shinyDMDMenu', 'shinyFiles', 'shinythemes', 'colourpicker', 'shinyWidgets', 'jqScrollBar',
+          'bsplus','shinyjqui', 'rmarkdown', 'knitr', 'tidyverse'), 
        library, character.only=TRUE)
+# 'stringr', , in "tidyverse"
 
 #library("RColorBrewer")
 # options(shiny.error = recover)
@@ -61,20 +62,28 @@ sapply(
 # the following constants would be better if placed in a list or 
 # alteratively use lockBinding to fix the value
 defTag<-"ptR"
+
+# appears in serverPanelDispatch
 transformTag<-"Transforms"
+svgPanelTag<-'svgPanel'
 errorPanelTag<-"errorPanel"
 RPanelTag='RPanel'
-svgPanelTag<-'svgPanel'
-rmdPanelTag<-'rmdPanel'
-textPanelTag<-'textPanel'
-javascriptPanelTag<-'javascriptPanel'
-snippetPanelTag<-'snippetPanel'
 appPanelTag<-'appPanel'
+rmdPanelTag<-'rmdPanel'  
+textPanelTag<-'textPanel'
+snippetPanelTag<-'snippetPanel'
+javascriptPanelTag<-'javascriptPanel'
+
+
+
 tibTag<-'tib'
 resourceDir='aux' 
 
 
-preprocChoices<-list(points=c("onNewPt",  "onMovePt", "onMoveMat"), attrs=c('onNewRow', 'onChangeRow'))
+preprocChoices<-list(
+  points=c("onNewPt",  "onMovePt", "onMoveMat"), 
+  attrs=c('onNewRow', 'onChangeRow')
+)
 
 #----begin external resources loaded prior to server------------
 # must be loaded prior to alles
@@ -84,11 +93,10 @@ source("util/extNmode.R")
 source("util/logger.R")
 
 #---used to build the UI portion
-
+source('util/pointRLogoSVG.R')
 source("fileIO/genShinyFilesOpenButtons.R")
 source("fileIO/genShinyFilesSaveButtons.R")
 source("leftPanel/menu/UIProjectTemplateMenu.R")
-source("leftPanel/menu/UIProjectSampleMenu.R")
 
 source("leftPanel/menu/UIbuildLeftMenu.R")
 source("leftPanel/mid/UIcontextMenu.R")

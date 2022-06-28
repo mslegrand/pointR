@@ -32,21 +32,20 @@ Snippet Insert:
 SVGR Image:
 ```
 library(svgR)
-WH<-c(48,32)
+
 # Defined by mouse: edit with care!
 ptR<-list(
   x=tribble(
    ~points,
-   matrix(NA,2,0)
+   matrix(0,2,0)
   )
 )
-svgR(wh=WH,
+svgR(
             path(
               d=list(
                 M=c(.5,.2)*WH, 
                 A=c(.3*WH, 180,1,0,c(.8,.5)*WH)
               ),
-              stroke='#00FFFF',
               stroke.width=2,
               fill='none'
             ) 
@@ -71,16 +70,15 @@ circle(
 SVGR Image:
 ```
 library(svgR)
-WH<-c(48,32)
+
 ptR<-list(
   x=matrix(0,2,0)
 )
-svgR(wh=WH,
-#your custom code goes here
+svgR(
+
   circle(
     cxy=WH/2,
     r=WH[2]/3,
-    stroke='#00FFFF',
     stroke.width=2,
     fill='none'
   )

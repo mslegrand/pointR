@@ -1,30 +1,64 @@
 
 
 #--------NEW COLUMN------------------------------
-addNewColModal <- function(errMssg=NULL) {
+addNewColModal <- function(errMssg=NULL, init=TRUE, treatAsSelect='string') {
+  #log.val(treatAsSelect)
+  if(init){
+    is.Non.Blank.Name(FALSE)
+    is.Non.Blank.Value(FALSE)
+  }
+  
   doOk<-"shinyjs.triggerButtonOnEnter(event,\"commitNewCol\")"
   ppscriptChoices<-unique(preProcScriptDB$attrs$scriptName)
+  colChoices<-names(aux$colChoiceSet)
+  colChoices<-unique(colChoices)
+  choices<-list(  
+    ' a single character string'='string','a single number'='number','a vector'='expression',
+    'a matrix of points'='points')
+  if(length(ppscriptChoices)>0){
+    choices<-c(choices,list('using a preprocessing script'='script'))
+  }
+  if(length(aux$colChoiceSet)>0){
+    choices<-c(choices,list('using a choice set'='choiceSet'))
+  }
+  
   modalDialog(
+    size='l',
     onkeypress=doOk, 
     span('Enter both a name for the new column and a value for its entries'), 
     textInput("modalAttrName", "Enter the name for the new column"),
-     div( class='ptR2',
-       awesomeRadio('modalColTreatAs', 'Initialize Column Values as ', 
-          choices = list(  
-            ' a character string'='string','a single number'='number','a vector or list'='expression',
-            'a matrix of points'='points' , 'the result of a preprocessing script'='script'
-            ) ,
-          inline = TRUE
+    div( class='ptR2',id='modalColTreatAsDiv',  
+          awesomeRadio('modalColTreatAs', 'Initialize Column Values as ', 
+          choices = choices ,
+          inline = TRUE,
+          selected=treatAsSelect
       )
     ),
-    textInput("modalAttrValue", "Enter an entry value for the new column"),
+    div( 
+      textInput("modalAttrValue", "Enter an entry value for the new column" )
+    ),
+    
     # pick from preproc list
     if(length(ppscriptChoices)>0){
-      div( class='ptR2',
-         awesomeRadio('modalColPreProcScript', 'Set entry values using the script:', 
+      div( class='ptR2', #awesomeRadio
+           pickerInput('modalColPreProcScript', 'Set entry values using the script:', 
                       choices = ppscriptChoices,
-                      inline = TRUE
+                      inline = FALSE
          )
+      )
+    } else {
+      NULL
+    },
+    if(length(aux$colChoiceSet)>0){
+      div( style=paste0("display:inline-block;"),
+          div(style="float:left;",pickerInput('modalColChooserSet', 'Choiceset:', 
+                       choices = colChoices,
+                       inline = FALSE
+          )),
+          div(style="float:right;",pickerInput('modalColChooserValue', 'Choice value:', 
+                      choices = aux$colChoiceSet[[1]],
+                      inline = FALSE
+          ))
       )
     } else {
       NULL
@@ -40,57 +74,120 @@ addNewColModal <- function(errMssg=NULL) {
   ) 
 }
 
+is.Non.Blank.Name<-reactiveVal(FALSE)
+is.Non.Blank.Value<-reactiveVal(FALSE)
 
-observeEvent(input$modalColTreatAs,{
-  if(input$modalColTreatAs=='points'){
-    hideElement('modalAttrValue')
-    hideElement('modalColPreProcScript')
-  } else if (input$modalColTreatAs=='script') {
-    hideElement('modalAttrValue')
-    showElement('modalColPreProcScript')
+observeEvent(input$modalAttrName,{
+  str<-input$modalAttrName
+  if(goodRName(str) && !(str %in% c( names(getTib()), 'svgPanel', 'RPanel' ) )){
+    is.Non.Blank.Name(TRUE)
+    # showElement('modalColTreatAsDiv')
   } else {
-    showElement('modalAttrValue')
+    is.Non.Blank.Name(FALSE)
+  }
+  # is.Non.Blank.Name(nchar(str)>0)
+})
+
+observeEvent(input$modalAttrValue,{
+  str<-input$modalAttrValue
+  is.Non.Blank.Value(nchar(str)>0)
+})
+
+observeEvent(input$modalColChooserSet,{
+  name<-input$modalColChooserSet
+  choices<-getChoiceSetElements(name)
+  updatePickerInput(session,inputId ="modalColChooserValue",  choices=choices, selected=choices[[1]])
+})
+
+
+observeEvent(c(is.Non.Blank.Name(),input$modalColTreatAs, is.Non.Blank.Value() , input$modalAttrValue),{
+  if( is.Non.Blank.Name()){
+    showElement('modalColTreatAsDiv')
+    if(  !(input$modalColTreatAs %in% c('string','number','expression')) || 
+         (is.Non.Blank.Value() && input$modalColTreatAs!='number') ||
+         isNumericString(input$modalAttrValue)
+         ){
+      showElement('commitNewCol')
+    } else {
+      hideElement('commitNewCol')
+    }
+    
+    if(input$modalColTreatAs=='points'){
+      hideElement('modalAttrValue')
+      hideElement('modalColPreProcScript')
+      hideElement('modalColChooserSet')
+      hideElement('modalColChooserValue')
+    } else if (input$modalColTreatAs=='script') {
+      hideElement('modalAttrValue')
+      showElement('modalColPreProcScript')
+      hideElement('modalColChooserSet')
+      hideElement('modalColChooserValue')
+    } else if (input$modalColTreatAs=='choiceSet') {
+      hideElement('modalAttrValue')
+      hideElement('modalColPreProcScript')
+      showElement('modalColChooserSet')
+      showElement('modalColChooserValue')
+    } else {
+      showElement('modalAttrValue')
+      hideElement('modalColPreProcScript')
+      hideElement('modalColChooserSet')
+      hideElement('modalColChooserValue')
+    }
+  } else {
+    hideElement('modalColTreatAsDiv')
+    hideElement('modalAttrValue')
     hideElement('modalColPreProcScript')
+    hideElement('modalColChooserSet')
+    hideElement('modalColChooserValue')
+    hideElement('commitNewCol')
   }
 })
 
+
+
+
+# observeEvent(input$cancel, {
+#     # set as blank? modalAttrValue
+#     hideElement('modalAttrValue')
+#     hideElement('modalColPreProcScript')
+#     hideElement('modalColChooserSet')
+#     hideElement('modalColChooserValue')
+#     removeModal() #close dialog
+# })
+
 observeEvent(input$commitNewCol, {
-     
+  
   badExpr<-function(txt){
     rtv<-TRUE
     tryCatch({
       eval(parse(text=txt))
-      # parse(text=txt)
       rtv<-FALSE
     }, 
     error = function(e) {})
     rtv
   }
-  # browser()
   treatAs<-input$modalColTreatAs
   newVal<-input$modalAttrValue
   #checks
     if(!grepl(pattern = "^[[:alpha:]]", input$modalAttrName)){
+    #if(!goodRName(input$modalAttrName)){
       # check name syntax
-      showModal(addNewColModal( errMssg="Invalid Column Name: must begin with a character") )
+      showModal(addNewColModal( errMssg="Invalid Column Name: must begin with a character", treatAsSelect=treatAs) )
     } else if( input$modalAttrName %in% names(getTib()) ){ 
       # check name uniqueness
-      showModal(addNewColModal( errMssg="Invalid Column Name: this name is already taken!") )
+      showModal(addNewColModal( errMssg="Invalid Column Name: this name is already taken!", treatAsSelect=treatAs) )
     } else if(
-        (!(treatAs %in% c('script', 'points'  ))) &&
+        (!(treatAs %in% c('script', 'points',  'choiceSet' ))) &&
         (!grepl(pattern = "^[[:graph:]]", input$modalAttrValue))
     ){
         # check value is printable
-        showModal(addNewColModal( errMssg="Invalid Column Value: must begin with printable character other than space") )
+        showModal(addNewColModal( errMssg="Invalid Column Value: must begin with printable character other than space", treatAsSelect=treatAs) )
     } else if( treatAs=='expression' && badExpr( input$modalAttrValue )==TRUE ){
-      showModal(addNewColModal( errMssg="Unable to evaluate expression") )
+      showModal(addNewColModal( errMssg="Unable to evaluate expression", treatAsSelect=treatAs) )
     } else { # checks passed
       #add name to tib
-      cat('treatAs=', format(treatAs),'\n')
-      cat('newVal=', format(newVal),'\n')
       newPtDefs<-getPtDefs()
       newColName<-input$modalAttrName
-      # browser()
       if(treatAs=='script'){ # apply script sequentially to newPtDefs
         # extract onNewRowScript
         script_Name<-input$modalColPreProcScript
@@ -103,9 +200,7 @@ observeEvent(input$commitNewCol, {
         #One strategy
         tryCatch({
         # 1. newPtDefs<-getPtDefs()
-            #newPtDefs<-getPtDefs()
-            #browser()
-            
+
         # 2. 
             tibs<-newPtDefs$tib
         # 3. 
@@ -132,37 +227,54 @@ observeEvent(input$commitNewCol, {
               keys=list(altKey=FALSE, shiftKey=FALSE, ctrlKey=FALSE, metaKey=FALSE, keycode=NULL)
             )
             for(rowIndex in 1:nrow(tib)){
-              #browser()
               ppenv$context$row<-rowIndex
               ppenv$context$tibs<-tibs
               tibs<-eval(parse(text=txt), ppenv )
               #ppenv$tibs<-tibs
+
             }
         # 7. check if tibs is valid
           validateTibLists(getPtDefs()$tib, tibs)
           newPtDefs$tib<-tibs
           sender='cmd.add.column'
-          #browser()
-          #updateAceExtDef(newPtDefs, sender=sender, selector=list( name=newColName ) )
+          #set the column to use specified script
+          setPreProcScriptName(tab_Id=getTibTabId(), tib_Name= getAssetName(), column_Name=newColName,  script_Name=script_Name)
         }, error=function(e){
-          e<-c('preproErr',e)
+          e<-c('preproErr',e$message)
           err<-paste(unlist(e), collapse="\n", sep="\n")
-          alert(err)
+          shinyalert("preproc new column Error",err, type="error") # may want to put this in a scrollable modal
         })        
       } else { #not scripting
-        # browser()
+        if(treatAs=='choiceSet'){
+          newVal<-input$modalColChooserValue
+          # restrict that value is restiricted to this list
+          colSet_Name<-input$modalColChooserSet
+          #To do: perform additional checks !!!
+          log.val(colSet_Name)
+          # populate widgetDB
+          db<-widgetDB()
+          pageId<-  input$pages
+          tibName<-getAssetName()
+          columnName<-input$modalAttrName
+          db1<-db
+          db2<-tibble_row( tabId=pageId, name=tibName, column=columnName, 
+                           type='choiceSet' , minVal=NA, maxVal=NA, step=1, selectedWidget=colSet_Name)
+          db3<-bind_rows(db1,db2)
+          widgetDB(db3)
+        }
         if(treatAs=='number'){
           newVal<-as.numeric(newVal)
         } else if ( treatAs=='points'){
           newVal<-list(matrix(0,2,0)) 
         } else if ( treatAs=='expression'){
           newVal<-list(eval(parse(text=newVal))) # to do: validate!!!
-        }
+        } 
+        
         # newVal is ready to insert
         newPtDefs$tib[[getAssetName()]]<-add_column(newPtDefs$tib[[getAssetName()]], 
                                                   !!(newColName):=newVal   )   
       }
-        
+      
       # updateAce and set selection to this column
       sender<-'cmd.add.column'
       updateAceExtDef(newPtDefs, sender=sender, selector=list( columnName = newColName   ) )

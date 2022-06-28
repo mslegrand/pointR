@@ -4,7 +4,14 @@ observeEvent( input$tbNewFile ,{
 }, ignoreInit = TRUE)
 
 observeEvent( input$tbSaveFile ,{
-  cmdFileSave()
+  tabId<-input$pages
+  docFilePath<-getFileDescriptor(tabId )$filePath
+  if(!is.null(docFilePath) && !docFilePath=='?'){
+    cmdFileSave()
+  } else {
+    cmdFileSaveAs()
+  }
+  
 }, ignoreInit = TRUE)
 
 observeEvent( input$tbCloseFile ,{
@@ -37,7 +44,7 @@ hBaRR<-reactiveValues(
   observers=list()
 )
 
-#observeEvent( request$sender, {
+#observeEvent( request$cmd, {
 observeEvent( getCode(), {
     genTBObserver<-function(tbId, cmd){
       return(observeEvent(

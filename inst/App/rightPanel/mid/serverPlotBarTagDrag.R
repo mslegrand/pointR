@@ -8,10 +8,17 @@
     ptName=NULL, 
     pts=NULL, 
     rowIndex=NULL,
-    ptDisplayMode,
-    vbScaleFactor=1
+    displayOptions=NULL, 
+    vbScaleFactor=1,
+    labelColor='black'
     ){
-    if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
+    #if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
+    
+    if(is.null(displayOptions)){
+      return(NULL)
+    }
+    displayOpt<-displayOptions
+    if(is.null(displayOpt)||is.null(displayOpt$labelMode) || is.null(displayOpt$restrictMode)){ return(NULL)}
     
     onMouseDownTxt="ptRPlotter_ptR_SVG_TagDrag.selectElement(evt)" 
     
@@ -30,7 +37,8 @@
     offRows<-rowNums[-rowIndex]
     mRow<-pts[[rowIndex]]
       
-    list( 
+    list(
+      if(displayOptions$restrictMode==FALSE){
         lapply(offRows, function(i){ #non-selected rows
           m<-pts[[i]]
           if(length(m)==0){
@@ -45,8 +53,8 @@
                pt=m[,j]
                g(
                   circle(cxy=c(0,0), r=8),
-                  if(ptDisplayMode=="Labeled"){
-                    text( paste(i), xy=c(10,-10),  stroke='black', font.size=12)
+                  if(displayOpt$labelMode==TRUE){
+                    text( paste(i), xy=c(10,-10),  stroke=labelColor, font.size=12)
                   } else {
                     NULL
                   },
@@ -55,7 +63,9 @@
              })
             )
           }
-        }),
+        })} else {
+          NULL
+        },
         if(length( mRow)==0){
           NULL
         } else { #selected row=rowIndex
@@ -68,8 +78,8 @@
              pt=mRow[,j]
             g(
                 circle(cxy=c(0,0), r=8),
-                if(ptDisplayMode=="Labeled"){
-                    text( paste(rowIndex), xy=c(10,-10),  stroke='black', font.size=12)
+                if(displayOpt$labelMode==TRUE){
+                    text( paste(rowIndex), xy=c(10,-10),  stroke=labelColor, font.size=12)
                 } else {
                     NULL
                 },
@@ -89,24 +99,27 @@ statusPlotTagDrag<-callModule(
   id="svgTagDragMod",
   svgID='ptR_SVG_TagDrag',
   showPts.compound=reactive({
-    function(vbScaleFactor){
+    function(vbScaleFactor, labelColor){
       showPts.dragTag(
       ptName=getAssetName(), 
       pts=getTibPts(), 
       rowIndex=getTibRow(),
-      ptDisplayMode=getDisplayMode(),
-      vbScaleFactor
+      displayOptions=getDisplayOptions(),
+      vbScaleFactor,
+      labelColor
       )
     }
   }),
   ptrDisplayScript = reactive({ svgToolsScript( "TagDrag") }), 
   useKeyMouseScript=TRUE,
-  getSVGWH=getSVGWH,
+  # getSVGWH=getSVGWH, #extraneous???
   getSvgGrid=getSvgGrid,
   getBackDrop=getBackDrop,
   getCode= getCode4Rendering, 
+  getEnvList=getEnvList,
   getErrorMssg=getErrorMssg,
-  getTibNRow=getTibNRow,
+  #getTibNRow=getTibNRow, #extraneous???
+  getParMode=getParMode,
   getDirPath=getDirPath
 )
 
@@ -117,7 +130,7 @@ observeEvent(c(statusPlotTagDrag$status(),   statusPlotPoint$WH()), {
     # switch to log 
   } else {
     wh<-statusPlotPoint$WH()
-    getSVGWH(wh)
+    getSVGWH(wh) #sets the wh value for later use
   }
 })
 

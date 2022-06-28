@@ -11,8 +11,15 @@
 # - observeEvent of *customFileDialog*
 #  for the time being we just close
 closeCurrentProj<-function(){
-  storeAssetState()
-  savePage(input$pages)
+  log.fin(closeCurrentProj)
+  # check if current page has a parId
+  # if so,  set current tab to par Id
+  # 
+  if( is.na(getFileDescriptor(input$pages )$parId )){
+    storeAssetState() # this stores the selectedAsset ubti db
+    savePage(input$pages) # this saves the current page
+  }
+  
   pprj(NULL)
   if(!is.null(editOption$currentProjectName)){
     addToRecentProjects(editOption$currentProjectDirectory, editOption$currentProjectName )
@@ -22,23 +29,32 @@ closeCurrentProj<-function(){
   opts<-sapply(opts,unlist, USE.NAMES = T, simplify = F )
   writeOptionsJSON(opts)
   
-  # close all open tabs
-  # stopifnot('tabId' %in% names(fileDescDB()) )
-  tabIds<-fileDescDB()$tabId
+  if("parId" %in% names( fileDescDB() )){
+    aids<-filter(fileDescDB(), !is.na(parId) & filePath=="?")$tabId
+    tabIds<-filter(fileDescDB(), is.na(parId) | filePath!="?")$tabId  #fileDescDB()$tabId
+  } else {
+    aids=NULL
+    tabIds<-fileDescDB()$tabId
+  }
+  if(length(aids)>0){
+    tabs<-aceID2TabID(aids)
+    closeTabsNow(tabs)
+  }
   for( tabId in tabIds){
     removeTab(inputId = "pages", tabId)
   }  
   # reinit dbs
 
   resetDnippetsDB()
-  # preProcDB$points<-initialPreprocDB()
+  preProcScriptDB$points=initialPreProcScriptDB()
+  preProcScriptDB$attrs= initialPreProcScriptDB()
   fileDescDB(initialFileDescDB())
   svgGridDB( initialSvgGridDB() )
   useTribbleFormatDB( initialTribbleDB() )
   backDropDB( initialBackDropDB() )
   svgGridDB( initialSvgGridDB() )
   serverAssetDB$tib<-initialServerAsset()
-
+  log.fout(closeCurrentProj)
 }
 
 # used only by resetShinyFilesIOPaths
@@ -81,7 +97,7 @@ resetShinyFilesIOPaths<-function(pathToProj, resources='aux'){
                "buttonSnippetImport",    "buttonDnippetImport",
                "buttonPreProcPtImport",  "buttonPreprocPtExport",
                "buttonPreprocAtExport",  "buttonPreProcAtImport",
-               "buttonSvgExport")
+               "buttonChoiceSetImport", "buttonSvgExport")
   # first set to root
   for(id in c(fileIOIds, saveButtonFileNames)){
     jscode<-setSfDir(id, path="")
@@ -99,6 +115,8 @@ resetShinyFilesIOPaths<-function(pathToProj, resources='aux'){
         jscode<-setSfDir(id, path= path_join( c(pathToProj, resourceDir, 'dnds' )))
       } else if(id %in% c("buttonSnippetImport")){
         jscode<-setSfDir(id, path= path_join( c(pathToProj,resourceDir, 'snip' )))
+      } else if(id %in% c("buttonChoiceSetImport")){
+        jscode<-setSfDir(id, path= path_join( c(pathToProj,resourceDir, 'choices' )))
       } else {
         jscode<-setSfDir(id, path=pathToProj)
       }

@@ -9,10 +9,21 @@
       pts=NULL,  
       rowIndex=NULL,
       matColIndex=NULL,
-      ptDisplayMode="Normal",
-      vbScaleFactor
+      displayOptions=NULL, 
+      vbScaleFactor,
+      labelColor="black"
   ){
-    if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
+    
+    
+    if(is.null(displayOptions)){
+      return(NULL)
+    }
+   
+    displayOpt<-displayOptions
+    if(is.null(displayOpt)||is.null(displayOpt$labelMode) || is.null(displayOpt$restrictMode)){ return(NULL)}
+    
+    
+    # if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
     onMouseDownTxt='ptRPlotter_ptR_SVG_Point.selectPoint(evt)'
     if(is.null(pts) ){ return(NULL) } 
     if(length(unlist(pts))<2){ return(NULL)}
@@ -23,16 +34,19 @@
     opacity[rowIndex]<-1
     
     #form list of  all point renderings
+    if(displayOptions$restrictMode==TRUE){
+      rows=rowIndex
+    } else {
+      rows=1:length(pts)
+    }
     g(
-      lapply(seq(length(pts)), function(i){
+      lapply(rows, function(i){
       m<-pts[[i]]
       if(length(m)==0){ # or !is(m,'matrix')
         NULL
       } else {
         lapply(seq(ncol(m)), function(j){ #j is the matCol index
-          
           id<-paste("pd",ptName,i,j,sep="-")
-          
           pt<-m[,j]
           color=colorScheme['default']
           
@@ -54,9 +68,9 @@
                      onmousedown=onMouseDownTxt
               )
             },
-            if(ptDisplayMode=="Labeled"){
+            if(displayOpt$labelMode==TRUE){
               text(paste0(i,",",j), xy=c(10,-10),  
-                   stroke='black', font.size=12, opacity=1,
+                   stroke=labelColor, font.size=12, opacity=1,
                    transform=list(scale=1/vbScaleFactor,translate=vbScaleFactor*pt)) 
             } else {
               NULL
@@ -81,7 +95,7 @@
 newPtLayer %<c-% function(insert, wh=c(1200,800)){
   if(insert==TRUE){
     onmousedownNewPt="ptRPlotter_ptR_SVG_Point.newPoint(evt)"
-    rect(xy=c(0,0), wh=wh, fill="#ADADFF", stroke='black', 
+    rect(xy=c(0,0), wh=wh, fill="#ADADFF", stroke='black', cursor='crosshair',
          opacity=.0, onmousedown=onmousedownNewPt
     )
   } else {
@@ -96,7 +110,7 @@ statusPlotPoint<-callModule(
   id="svgPointsMod",
   svgID='ptR_SVG_Point',
   showPts.compound=reactive({
-    function(vbScaleFactor){
+    function(vbScaleFactor, labelColor){
       list(
         newPtLayer( getInsertMode(), getSVGWH() ),
         showPts.PtCmd(
@@ -104,20 +118,23 @@ statusPlotPoint<-callModule(
           pts=getTibPts(), #getPtDefs()$pts[[getPtName()]],
           rowIndex=getTibRow(),
           matColIndex=getTibMatCol(),
-          ptDisplayMode=getDisplayMode(),
-          vbScaleFactor=vbScaleFactor
+          displayOptions=getDisplayOptions(),
+          vbScaleFactor=vbScaleFactor,
+          labelColor
         )
       )
     }
   }),
   ptrDisplayScript = reactive({ svgToolsScript( "Points") }), 
   useKeyMouseScript=FALSE,
-  getSVGWH,
+  # getSVGWH, #extraneous???
   getSvgGrid,
   getBackDrop,
   getCode4Rendering,
+  getEnvList=getEnvList,
   getErrorMssg,
-  getTibNRow=getTibNRow,
+  #getTibNRow=getTibNRow,  #extraneous
+  getParMode=getParMode,
   getDirPath=getDirPath
 )
 
@@ -128,7 +145,7 @@ observeEvent(c(statusPlotPoint$status(), statusPlotPoint$WH()), {
     mssg$err<-paste(mssg$err, status$message, "cannot plot: code02\n", collapse="\n")
   } else {
     wh<-statusPlotPoint$WH()
-    getSVGWH(wh)
+    getSVGWH(wh) #sets the wh value for later use
   }
 })
 

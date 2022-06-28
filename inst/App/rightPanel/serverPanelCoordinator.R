@@ -59,12 +59,15 @@ getNameType<-reactive({
 #   3. getTibEntry, getTibEntryChoices
 # and use it only for whether or not the column is a 'points' column.
 getColumnType<-reactive({
-  colName<-getTibColumnName()
-  columnValues<-getTib()[[colName]]
-  if(!is.null(columnValues)){
-    return(extractColType(columnValues))
+  ctype=NULL
+  colName<-getTibColumnName() # i.e. selectedAsset$columnName
+  if(!is.null(colName)){
+    columnValues<-getTib()[[colName]]
+    if(!is.null(columnValues)){
+      ctype=extractColType(columnValues)
+    }
   }
-  return(NULL)
+  return(ctype)
 })
 
 # returns the state: 'point', 'matrix', 'value',  transformTag, RPanelTag, errorPanelTag
@@ -75,13 +78,18 @@ getColumnType<-reactive({
 getPlotState<-reactive({
   nameType<-getNameType()
   if(identical(nameType,tibTag)){
+    # Tools
+    enableDMDM(session, 'plotNavBar','Tools')
     colType<-getColumnType()
-    if(identical(colType,'point')){
+    if(is.null(colType)){
+      rtv<-NULL #should never happen!!!
+    } else if(identical(colType,'point')){
       rtv<-c('point', 'matrix')[ getSelIndex() ]
     } else {
       rtv<-'value'
     }
   } else {
+    disableDMDM(session, 'plotNavBar','Tools')
     rtv<-nameType
   }
   rtv
@@ -147,18 +155,43 @@ label= 'getRightPanelChoices'
 )
 
 
-observeEvent(c(getSourceType(), hasError()),{
+observeEvent(c(getSourceType(), hasError(), getParMode() ),{
   if(!hasError() && identical(getSourceType(), svgPanelTag)){
     enableDMDM(
       session, 
       menuBarId="plotNavBar", 
       entry="Grid"
     )
-    enableDMDM(
-      session, 
-      menuBarId="plotNavBar", 
-      entry="Backdrop"
-    )
+    if(is.null(getParMode()) ){
+      enableDMDM(
+        session, 
+        menuBarId="plotNavBar", 
+        entry="Backdrop"
+      )
+      enableDMDM(
+        session, 
+        menuBarId="plotNavBar", 
+        entry="cmdAdjustGridSpacing"
+      )
+      enable(id='tagValBar-newColumnButton')
+    } else {
+      disableDMDM(
+        session, 
+        menuBarId="plotNavBar", 
+        entry="Backdrop"
+      )
+      disableDMDM(
+        session, 
+        menuBarId="plotNavBar", 
+        entry="cmdAdjustGridSpacing"
+      )
+      if(identical(getParMode(), 'dnippets')){
+        disable(id='tagValBar-newColumnButton')
+      } else {
+        enable(id='tagValBar-newColumnButton')
+      }
+      
+    }
   } else {
     disableDMDM(
       session, 

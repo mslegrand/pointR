@@ -12,12 +12,14 @@ statusPlotTransform<-callModule(
     svgToolsScript(type) 
   }),
   useKeyMouseScript=FALSE,
-  getSVGWH,
+  # getSVGWH, #extraneous???
   getSvgGrid,
   getBackDrop,
   getCode = getCode4RenderingTransform,
+  getEnvList=getEnvList,
   getErrorMssg,
-  getTibNRow=getTibNRow,
+  #getTibNRow=getTibNRow, #extraneous
+  getParMode=getParMode,
   getDirPath=getDirPath
 )
 

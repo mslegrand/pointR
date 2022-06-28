@@ -14,11 +14,12 @@
 
 # this is used to locate the user pointR options dir
 optionDirPath<-function(){
-  dirPath<-switch(Sys.info()[['sysname']],
-         Windows= '%localappdata%/ptR',
-         Linux  = '~/.ptR',
-         Darwin = '~/.ptR'
-  ) 
+  # dirPath<-switch(Sys.info()[['sysname']],
+  #        Windows= '%localappdata%/ptR',
+  #        Linux  = '~/.ptR',
+  #        Darwin = '~/.ptR'
+  # )
+  dirPath<-paste0(homeDir,'/.ptR')
   # alternatively, using package fs: 
   # dirPath=path_home('.ptR')
   # dir_create(path_home('.ptR'))
@@ -33,6 +34,10 @@ optionDirPath<-function(){
   workSpaceDir<-file.path(dirPath,'.workspace')
   if(!file.exists(workSpaceDir)){
     dir.create(workSpaceDir)
+  }
+  templateDir<-file.path(dirPath,'.templates')
+  if(!file.exists(templateDir)){
+    dir.create(templateDir)
   }
   pth<-file.path(dirPath,'aux') #file,pa
   if(!file.exists(pth)){ dir.create(pth) }

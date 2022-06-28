@@ -14,12 +14,25 @@ font-style: normal;
 .irs-min, .irs-max{
   color: #00FFFF;
 }
-
+.unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
 h1{
 font-family: 'Arial', cursive;
 font-weight: 400;
 line-height: 1.1;
 color: #48ca3b;
+}
+.btn .ptR3{
+background-color: #FFFFFF; 
+color: #000000; 
+border-radius: 0px; 
+font-size: 12px;
 }
 .btn{
 background-color: #222244; 
@@ -186,10 +199,23 @@ padding-right: 2px;
 display: inline-block;
 overflow: hidden;
 }
+.nav-tabs>li.active{
+padding-top: 0; 
+padding-bottom: 0; 
+}
 .nav-tabs>li.active>a{
-background-color: #111122; 
+/* background-color: #111122;
 font-weight: bold;
 color: #99ffff; 
+*/ 
+margin-top: 0; 
+margin-bottom: 0; 
+padding-top: 0; 
+padding-bottom: 0; 
+background: transparent url(images/ptr_selected_tab_bg.jpg) no-repeat -25px -3px;
+font-size: 18px;
+color: black;
+height: 35px;
 }
 .nav-tabs>li>a{
 background-color: #222244; 
@@ -212,6 +238,18 @@ overflow-y: auto;
   background-color: #222244;
   color: #00ffff; 
   width: 110px;
+}
+.ptRFootertText {
+  font-size: 14px;
+  color: #00ffff; 
+}
+#modalColChooserSet button..btn.dropdown-toggle.btn-default{
+   background-color:#FFFFFF;
+}
+button.btn.dropdown-toggle.btn-default{
+   background-color:#FFFFFF;
+   color: #000000;
+   border-radius: 0; 
 }
 #tagValBar-entryValue .formControl.selectized {
   width:260px;

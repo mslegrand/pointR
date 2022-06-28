@@ -28,10 +28,10 @@
 tagTib<-function(tib, ptColIndex,  rowIndex=nrow(tib), matCol){
   # cat('-----------------inside tagTib-------------')
   tmp<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
-  pts<-tmp[[rowIndex, ptColIndex]]
+  pts<-tmp[[ ptColIndex]][[rowIndex]]
   if(matCol>0){
-    tmp[[rowIndex,ptColIndex]]<-matrix(pts[,1:(matCol)],2)
-    tmp[[(rowIndex+1),ptColIndex]]<-matrix(pts[,-(1:(matCol))],2)
+    tmp[[ ptColIndex]][[rowIndex]]<-matrix(pts[,1:(matCol)],2)
+    tmp[[ ptColIndex]][[rowIndex+1]]<-matrix(pts[,-(1:(matCol))],2)
   }
   
   tmp

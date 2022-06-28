@@ -13,6 +13,7 @@ removeFromDnippetsSelectionAll<-function(dnName ){
 
 
 observeEvent(c( getDnippetsAll(), dnippetsDB$usage, input$pages),{
+  log.fout(c( getDnippetsAll(), getDnippetsSelected(), input$pages))
   if(!is.null(input$pages)){
     selected<-getDnippetsSelected()
     mode<-getMode()
@@ -25,7 +26,7 @@ observeEvent(c( getDnippetsAll(), dnippetsDB$usage, input$pages),{
     )
     
     dnippets<-dnippetSelection$all[selected]
-    dnippets<-unlist(dnippets,recursive=F)
+    dnippets<-unlist(dnippets,recursive=FALSE)
     names(dnippets)<-NULL
     if(length(dnippets)==0){ 
       sendPtRManagerMessage(sender='cmd.dnippet.file.load', removeDrippets=runif(1));
@@ -34,7 +35,7 @@ observeEvent(c( getDnippetsAll(), dnippetsDB$usage, input$pages),{
     }
   }
   
-  if(length(input$pages) && length(getDnippetsAll())>0 && 
+  if(length(input$pages)>0 && length(getDnippetsAll())>0 && 
     any(sapply(c('ptr','javascript'), function(x)identical( getModeX(),x )))
   ){
     showElement('selectedDnippetButtonBoxContainer')
@@ -42,7 +43,7 @@ observeEvent(c( getDnippetsAll(), dnippetsDB$usage, input$pages),{
     hideElement('selectedDnippetButtonBoxContainer')
   }
   log.fout(c( getDnippetsAll(), getDnippetsSelected(), input$pages))
-}, label='getDnippetsAll+usage+pages')
+}, label='getDnippetsAll+usage+pages', ignoreNULL = FALSE,)
 
 observeEvent(input$selectedDDDnippets,{
   if(!is.null(input$pages)){
@@ -50,6 +51,6 @@ observeEvent(input$selectedDDDnippets,{
     setDnippetsSelected(input$pages , selected)
   }
   
-}, ignoreInit = TRUE, ignoreNULL = TRUE, label='selectedDDDnippets')
+}, ignoreInit = TRUE, ignoreNULL = FALSE, label='selectedDDDnippets')
 
 

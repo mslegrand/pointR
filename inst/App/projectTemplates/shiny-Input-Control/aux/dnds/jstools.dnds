@@ -1,0 +1,532 @@
+---
+title: "Dnd Snippet"
+author: "Anonymous"
+date:   "TODAY"
+output: dnd_snippet
+---
+******************
+POPUP 
+```
+extract attribute (Steps 2.3.1)
+```
+SNIPPET
+```
+        let value = $(el).attr('${0:value}');
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+R<-.06*WH[1]
+d<-list(M=WH*c(.65,.2), Q=WH*c(c(.25,.15),c(.25,.4)))
+R<-.06*WH[1]
+#d<-list(M=WH*c(.2,.42), Q=WH*c(c(.2,.8),c(.5,.8)))
+
+svgR(wh=WH, #stroke.width=1, stroke="#00FFFF",  fill="none",
+  #polygon(points=WH*c(c(.05,.5), c(.15,.3),c(.15,.7)),fill='#00FFFF'),
+  
+  #rect(cxy=WH*c(.2,.5), wh=WH*c(.1,.1),fill="#00FFFF"),
+  path(d=d, stroke="#00FFFF", stroke.width=2,
+        marker.end=marker(viewBox=c(0, 0, 10, 10), 
+        refXY=c(1,5), stroke.width=1, fill="#00FFFF",
+        markerWidth=4, markerHeight=5, orient="auto",
+        path( d=c("M", 0, 0, "L", 9, 5, "L", 0, 9, "z") )
+    ) ),
+  text(xy=WH*c(.05,.9),'attr', fill="#00FFFF"),
+  text(xy=WH*c(.7,.4),'el', fill="#00FFFF")
+)
+```
+******************
+
+*********************
+                        
+
+POPUP 
+```
+From String (steps 3.2 3.3.2?)
+```
+SNIPPET
+```
+JSON.parse(${1:'{x:1, y:1\}'})
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+r=WH[2]/3
+lft=WH[1]/2-1.5*r
+top<-WH[2]/2-r
+bot<-WH[2]/2+r
+svgR(wh=WH, 
+  polygon(points=WH*c(c(.05,.5), c(.15,.3),c(.15,.7)),fill='#00FFFF'),
+  rect(cxy=WH*c(.2,.5), wh=WH*c(.1,.1),fill="#00FFFF"),
+  circle(
+    cxy=WH/2,
+    r=WH[2]/3,
+    stroke='none',
+    fill='#00FFFF'
+  ),
+  path(
+    d=list(
+      M=c(.4,.8)*WH, 
+      C=c( c(.6,1.2),c(.9,.2), c(.8,.9))*WH
+    ),
+    stroke='#00FFFF',
+    stroke.width=1,
+    fill='none'
+  ),
+  g(
+      lapply(1:3, function(i){
+        ellipse(cxy=WH*c(.5, .1), rxy=i*c(8,3), fill='none', stroke='#000000', stroke.width=.5)
+      }),
+      mask=mask(circle(cxy=WH/2, r=WH[2]/3), fill='white' )
+  ),
+  g(
+    lapply(1:5, function(i){
+      ellipse(cxy=WH*c(.7, .5), rxy=i*c(3,5), fill='none', stroke='#000000', stroke.width=.5)
+    }), 
+    mask=mask(
+      circle(cxy=WH/2, r=WH[2]/3, fill='white'),
+      ellipse(cxy=WH*c(.5, .1), rxy=3*c(8,3), fill='black')
+    )
+  ),
+   g(
+    lapply(1:5, function(i){
+      ellipse(cxy=WH*c(.3, .3), rxy=i*c(3,5), fill='none', stroke='#000000', stroke.width=.5)
+    }), 
+    mask=mask(
+      circle(cxy=WH/2, r=WH[2]/3, fill='white'),
+      ellipse(cxy=WH*c(.5, .1), rxy=3*c(8,3), fill='black'),
+      ellipse(cxy=WH*c(.7, .5), rxy=5*c(3,5), fill='black')
+    )
+  )
+)
+```
+*********************
+******************
+POPUP 
+```
+set element data (Step 3.3.3)
+```
+SNIPPET
+```
+        $(el).data('${1:value'}, ${0:value});
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+R<-.06*WH[1]
+d<-list(M=WH*c(.8,.85), Q=WH*c(c(.12,.85),c(.12,.52)))
+
+svgR(wh=WH, #stroke.width=1, stroke="#00FFFF",  fill="none",
+  polygon(points=WH*c(c(.25,.5), c(.15,.3),c(.15,.7)),fill='#00FFFF'),
+  rect(cxy=WH*c(.1,.5), wh=WH*c(.1,.1),fill="#00FFFF"),
+   lapply(1:5, function(i){
+       ellipse(
+       cxy=c(.6, .8-i*.1)*WH,
+       rxy=c(.2,.1)*WH,
+       stroke='black',
+       fill='#00FFFF',
+       stroke='black',
+       stroke.width=.5
+      )
+     })
+)
+```
+
+******************
+POPUP 
+```
+get element data 
+```
+SNIPPET
+```
+        $(el).data('${0:value}');
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+R<-.06*WH[1]
+d<-list(M=WH*c(.8,.42), Q=WH*c(c(.8,.8),c(.2,.8)))
+
+svgR(wh=WH, #stroke.width=1, stroke="#00FFFF",  fill="none",
+  polygon(points=WH*c(c(.05,.5), c(.15,.3),c(.15,.7)),fill='#00FFFF'),
+  rect(cxy=WH*c(.2,.5), wh=WH*c(.1,.1),fill="#00FFFF"),
+   lapply(1:5, function(i){
+       ellipse(
+       cxy=c(.6, .8-i*.1)*WH,
+       rxy=c(.2,.1)*WH,
+       stroke='black',
+       fill='#00FFFF',
+       stroke='black',
+       stroke.width=.5
+      )
+     })
+)
+```
+******************
+
+
+*********************
+
+POPUP 
+```
+add mouse click handler (step 5.1)
+```
+SNIPPET
+```
+clicked: function(ctrlId, ${1:value,} evt ){
+  alert('hi from '+  ctrlId +" my value is " + ${0:value}); //for testing
+  let el='#'+ctrlId;
+  // add code here
+}, 
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+R<-WH[1]*.2
+CXY=WH*c(.3,.5)
+svgR(wh=WH,  stroke="#00FFFF",  fill="none",
+    circle(cxy=CXY+c(-R,-R), r=R/4,  fill='#00FFFF'),
+    circle(cxy=CXY+c(-R,+R), r=R/4,  fill='#00FFFF'),
+    g(
+        polygon(
+            points=c(WH)*c(
+                c(.0,.0),c(.2,.5), c(.05,.3), c(.05,.6),
+                c(-.05,.6),c(-.05,.3), c(-.2,.5)
+            ),
+            stroke="#00FFFF"
+        ),
+        lapply(c(0,45,135,180), function(theta){
+            line(xy1=c(.1,0)*WH, xy2=c(.3,0)*WH, stroke="#00FFFF",
+            transform=list(rotate=-theta)
+            )
+        }),
+        transform=list( translate=WH*c(.6,.45), rotate=65)
+    )
+)
+```
+
+
+
+******************
+*********************
+                        
+
+POPUP 
+```
+add mouse2pt function
+```
+SNIPPET
+```
+mouse2pt: function(id, x, y){ //method to convert mouse coord to svg coord
+      let thisSVG=document.querySelector("#" + id +" svg"); 
+      let pt= thisSVG.createSVGPoint();
+      pt.x = x;
+      pt.y = y;
+      return pt.matrixTransform(thisSVG.getScreenCTM().inverse());
+}
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+R<-WH[1]*.2
+CXY=WH*c(.3,.5)
+
+
+svgR(wh=WH, 
+  circle(cxy=CXY+c(-R,-R), r=R/4,  fill='#00FFFF'),
+  circle(cxy=CXY+c(-R,+R), r=R/4,  fill='#00FFFF'),
+  circle(
+    cxy=CXY,
+    r=R,
+    fill='#00FFFF'
+  ),
+  rect(xy=CXY-c(0,R), wh=c(.5,.6)*WH, fill='#00FFFF'),
+  line(xy1=CXY-c(0,R),xy2=CXY+c(0,R), stroke='black'),
+  line(xy1=CXY-c(R,0),xy2=CXY, stroke='black'),
+  text(cxy=WH/2, "xy")
+)
+```
+*********************
+********************
+POPUP 
+```
+Trigger
+```
+SNIPPET
+```
+${1:$(el)}.trigger(${0:"change"});
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+X=c(.2,.4,.6,.8)
+D<-list(
+  M=c(.2,.2),
+  Q=c( )
+)
+svgR(wh=WH, #stroke.width=1, stroke="#00FFFF",  fill="none",
+  path(d=c("M",c(10,5), "Q", c(5,20), c(25,25) , "T", c(40,5)) ,  fill='#00FFFF'),
+  path(d=c("M",c(12,8), "Q", c(8,20),  c(25,22) , "T", c(36,8)) ,  fill='black'), 
+  path(d=c( "M", c(24,8), "C", c(22,10),  c(30,10), c( 18,18), "Q" , c(30,15), c(28,10), c(32,10), c(32,8)),fill='#00FFFF')
+
+    
+)
+```
+******************
+
+POPUP 
+```
+extract value from data (6.3.1)
+```
+SNIPPET
+```
+let value = data.value;
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+svgR(wh=WH, 
+  text(cxy=WH/2, "Xval", stroke='#00FFFF', fill='#00FFFF')
+)
+```
+*********************
+*********************
+
+POPUP 
+```
+set this value  (6.3.3)
+```
+SNIPPET
+```
+this.setValue($(el), value);
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+svgR(wh=WH, 
+  text(cxy=WH/2, "Sval", stroke='#00FFFF', fill='#00FFFF')
+)
+```
+*********************
+*********************
+
+POPUP 
+```
+replace svg tree (Step 6.4.3)
+```
+SNIPPET
+```
+let node=data.${0:node}; //value
+$(el).empty().append(node);
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+R<-.06*WH[1]
+d<-list(M=WH*c(.2,.42), Q=WH*c(c(.2,.8),c(.5,.8)))
+
+svgR(wh=WH, stroke.width=2, stroke="#00FFFF",  fill="none",
+    text(xy=WH*c(.16,.38),'svg', stroke.width=1, fill="#00FFFF"),
+    ellipse(cxy=WH*(c(1,1)-c(.2,.55)),  rxy=R*c(2,1), fill="#00FFFF"),
+    line(xy1=WH*(c(1,1)-c(.2,.1)), xy2=WH*(c(1,1)-c(.2,.3)) ),
+    line(xy1=WH*(c(1,1)-c(.2,.3)), xy2=WH*(c(1,1)-c(.25,.5)),stroke.width=1.5 ),
+    line(xy1=WH*(c(1,1)-c(.2,.3)), xy2=WH*(c(1,1)-c(.15,.5)),stroke.width=1.9 ),
+    path(d=d, stroke="#00FFFF", 
+        marker.end=marker(viewBox=c(0, 0, 10, 10), refXY=c(1,5), stroke.width=1, fill="#00FFFF",
+        markerWidth=4, markerHeight=5, orient="auto",
+        path( d=c("M", 0, 0, "L", 9, 5, "L", 0, 9, "z") )
+    ) 
+    )
+)
+```
+******************
+******************
+POPUP 
+```
+set svg node attribute  
+```
+SNIPPET
+```
+let node=document.getElementById( ${1:nodeId});
+node.setAttribute('${2:attrName}', ${0:attrValue});
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+R<-.06*WH[1]
+d<-list(M=WH*c(.2,.42), Q=WH*c(c(.2,.8),c(.5,.8)))
+
+svgR(wh=WH, stroke.width=2, stroke="#00FFFF",  fill="none",
+    text(xy=WH*c(.05,.38),'attr', stroke.width=1, fill="#00FFFF"),
+    text(xy=WH*c(.6,.9),'n', stroke.width=.5, fill="#00FFFF"),
+    path(d=d, stroke="#00FFFF", 
+        marker.end=marker(viewBox=c(0, 0, 10, 10), refXY=c(1,5), stroke.width=1, fill="#00FFFF",
+        markerWidth=4, markerHeight=5, orient="auto",
+        path( d=c("M", 0, 0, "L", 9, 5, "L", 0, 9, "z") )
+    ) 
+    )
+)
+```
+******************
+
+*********************
+
+
+*********************
+                        
+
+POPUP 
+```
+To string 
+```
+SNIPPET
+```
+JSON.stringify(${1:{x:1, y:1}})
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+r=WH[2]/3
+lft=WH[1]/2-1.5*r
+top<-WH[2]/2-r
+bot<-WH[2]/2+r
+svgR(wh=WH, 
+  polygon(points=WH*c(c(.25,.5), c(.15,.3),c(.15,.7)),fill='#00FFFF'),
+  rect(cxy=WH*c(.1,.5), wh=WH*c(.1,.1),fill="#00FFFF"),
+  circle(
+    cxy=WH/2,
+    r=WH[2]/3,
+    stroke='none',
+    fill='#00FFFF'
+  ),
+  path(
+    d=list(
+      M=c(.4,.8)*WH, 
+      C=c( c(.6,1.2),c(.9,.2), c(.8,.9))*WH
+    ),
+    stroke='#00FFFF',
+    stroke.width=1,
+    fill='none'
+  ),
+  g(
+      lapply(1:3, function(i){
+        ellipse(cxy=WH*c(.5, .1), rxy=i*c(8,3), fill='none', stroke='#000000', stroke.width=.5)
+      }),
+      mask=mask(circle(cxy=WH/2, r=WH[2]/3), fill='white' )
+  ),
+  g(
+    lapply(1:5, function(i){
+      ellipse(cxy=WH*c(.7, .5), rxy=i*c(3,5), fill='none', stroke='#000000', stroke.width=.5)
+    }), 
+    mask=mask(
+      circle(cxy=WH/2, r=WH[2]/3, fill='white'),
+      ellipse(cxy=WH*c(.5, .1), rxy=3*c(8,3), fill='black')
+    )
+  ),
+   g(
+    lapply(1:5, function(i){
+      ellipse(cxy=WH*c(.3, .3), rxy=i*c(3,5), fill='none', stroke='#000000', stroke.width=.5)
+    }), 
+    mask=mask(
+      circle(cxy=WH/2, r=WH[2]/3, fill='white'),
+      ellipse(cxy=WH*c(.5, .1), rxy=3*c(8,3), fill='black'),
+      ellipse(cxy=WH*c(.7, .5), rxy=5*c(3,5), fill='black')
+    )
+  )
+)
+```
+*********************
+
+*********************
+                        
+
+POPUP 
+```
+LOG
+```
+SNIPPET
+```
+console.log(${1:'value='+} ${0:value})
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+svgR(wh=WH,
+  rect(xy=c(.3,.35)*WH, wh=WH*c(.5,.3), fill='#00FFFF'),
+  ellipse(
+    cxy=c(.8,.5)*WH,
+    rxy=c(.05,.15)*WH,
+    fill='#00FFFF'
+  ),
+  ellipse(
+    cxy=c(.3,.5)*WH,
+    rxy=c(.05,.15)*WH,
+    fill='#00FFFF',
+    stroke='black',
+    stroke.width=.5
+  ),
+  ellipse(
+    cxy=c(.3,.5)*WH,
+    rxy=.5*c(.05,.15)*WH,
+    fill='#00FFFF',
+    stroke='black',
+    stroke.width=.5
+  ),
+  polygon(points=c( c(.5,.35), c(.6,.4), c(.7,.2), c(.6,.15))*WH, 
+   fill='#00FFFF')
+)
+```
+*********************
+

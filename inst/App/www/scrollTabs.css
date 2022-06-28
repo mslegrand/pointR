@@ -132,3 +132,7 @@
   content:"*";
   color: #AAFFFF;
 }
+.active .star::after {
+  content:"*";
+  color: #000000;
+}

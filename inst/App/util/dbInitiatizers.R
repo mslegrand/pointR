@@ -4,20 +4,20 @@ initialFileDescDB<-function(){tibble(
   isSaved=FALSE,
   filePath="?",
   anonNo =1,
-  mode='ptr'
+  mode='ptr',
+  parId=NA, # points to the parent tab (if any)
+  parMode=NA
 )[0,]
 }
 
 
-initialPreprocDB<-function(){
-  points=tibble( tabId="bogus", tibName="bogus", ptColName='bogus', cmd="bogus", script='bogus')[0,]
-  points
+initialPreProcScriptDB<-function(){
+  tibble( scriptName='bogus', cmd="bogus", script='bogus')[0,]
 }
 
 initialPreProcPageDB<-function(){
   tibble( tabId="bogus", tibName="bogus", colName='bogus', scriptName='bogus')[0,]
 }
-
 
 initialTribbleDB<-function(){
   tibble(
@@ -66,7 +66,7 @@ initialServerAssetDB<-function(){
 }
 
 initialWidgetDB<-function(){
-  tibble(tabId='Tab0', name='x',column='y',type='character',minVal=NA, maxVal=NA,step=1, selectedWidget=NA)[0,]
+  tibble(tabId='Tab0', name='x',column='y',type='character',minVal=NA, maxVal=NA,step=1, selectedWidget='radio')[0,]
 }
 
 initialRowGroupDB<-function(){

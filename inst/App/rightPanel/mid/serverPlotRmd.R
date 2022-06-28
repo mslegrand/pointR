@@ -11,17 +11,14 @@ modulePlotRmd<-function(input, output, session,
   output$rmd_Html <- renderUI({ 
     if(getPanelName() %in% rmdPanelTag){
       src<-getCode()
-      # src<-request$code
       if(grepl("output: dnd_snippet",src)){
-        # cat("founds\n")
-        # cat('>--> dripplets2Rmd\n')
         src<-dripplets2Rmd(src)
-        # cat(src)
-        # cat('<--< dripplets2Rmd\n')
       }
-      #  knit2html(text = src, fragment.only = FALSE, quiet = TRUE)
       div( style='background-color: #FFFFFF;',
-        HTML(knit2html(text =src , fragment.only = TRUE, quiet = TRUE))
+        HTML(
+          knit2html(text = src, fragment.only = TRUE, quiet = TRUE, envir=getEnvList() )
+          # knit2html(text =src , fragment.only = TRUE, quiet = TRUE
+        )
       )
      } else {
       HTML('')
@@ -36,3 +33,37 @@ rmdModuleList<-callModule(
   getPanelName=getRightMidPanel,
   getCode=getCode4Rendering
 )
+
+
+extractCodeBlocksFromRmd<-function(txt){
+  
+  lines<-unlist(str_split(txt, '\n'))
+  # print(lines)
+  pos<-grep('^```', lines)
+  np<-length(pos)
+  # cat('np=',format(np),"\n")
+  blocks<-NULL
+  if(np>=2){
+    if(np%%2==1){
+      np=np-1
+    }
+    pow<-pos[1:np]
+    pos<-matrix(pow,2)
+    # print(pos)
+    i<-pos[1,]
+    ll<-lines[i]
+    
+    cols<-grep('^```\\s*\\{\\s*r[,[:space:]]',lines[i])
+    # cat('cols=',format(cols),'\n')
+    pos<-pos[,cols]
+    if(length(cols)>0){
+      pos<-matrix(pos,2)
+      # print(pos)
+      blocks<-apply(pos,2, function(x){
+        paste0(lines[(x[1]+1):(x[2]-1)], collapse="\n")
+      })
+      # print(blocks)
+    }
+  } 
+  blocks
+}

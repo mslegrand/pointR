@@ -23,6 +23,7 @@ rowGroupsDB.addRow<-function(pageId, aname, cname, row_index ){
 # so, the control cannot determine what was the initial trigger 
 
 observeEvent(  getTibRow(), {
+  # log.fin(  getTibRow())
   rowIndex<-input$myTibRowCntrl$selected
   if(!is.null(getTibRow()) &&
      identical(rowIndex,getTibRow()) &&
@@ -32,6 +33,7 @@ observeEvent(  getTibRow(), {
     return(NULL)
   }
   updateRowPicker(session, "myTibRowCntrl",selectRow = getTibRow() )
+  # log.fout( getTibRow())
 })
 
 
@@ -44,6 +46,7 @@ observeEvent(  getTibRow(), {
 #  5. user code change (USER COMMIT)
 # the number of rows is determined from ptDefs after ace update 
 resetRowPickeR<-function(){
+  # log.fin(resetRowPickeR)
   rowIndex<-input$myTibRowCntrl$selected
   if(!is.null(getTibRow()) &&
      identical(rowIndex,getTibRow()) &&
@@ -61,6 +64,7 @@ resetRowPickeR<-function(){
   # CLONE
   # SPLIT
   # DELETE
+  # log.fout(resetRowPickeR)
 }
 
 
@@ -82,12 +86,12 @@ observeEvent( input$myTibRowCntrl$selected, {
       # else
         # cat('group is empty\n')
         # cat('bailing\n')
-        #  log.fout(input$myTibRowCntrl$selected)
+          # log.fout(input$myTibRowCntrl$selected)
       return(NULL)  #bail
     }
     rowIndex<-min(getTibNRow(),rowIndex)
     # compute matColIndex and update rowIndex, matColIndex
-    if(getColumnType()=='point'){
+    if(identical(getColumnType(),'point')){
       pts<-getTibPts()
       matColIndex<-length(pts[[rowIndex]])/2
       updateSelected( matCol=matColIndex, rowIndex=rowIndex)
@@ -100,19 +104,22 @@ observeEvent( input$myTibRowCntrl$selected, {
         updateSelected( rowIndex=rowIndex)
       }
     }
-    # log.fout(input$myTibRowCntrl$selected)
+     # log.fout(input$myTibRowCntrl$selected)
   }
 })
 
 # rowPicker => the tib row order
 observeEvent( input$myTibRowCntrl$order,{
   log.fin(input$myTibRowCntrl$order)
-  if( getTibEditState()==TRUE &  !all(diff(input$myTibRowCntrl$order)==1)){
+  if( getTibEditState()==TRUE &  !all(diff(input$myTibRowCntrl$order)==1)){ 
     ordering<-input$myTibRowCntrl$order
     log.val(ordering)
     name<-getAssetName()
     row<-getTibRow()
     columnName<-getTibColumnName()
+    if(is.null(columnName)){
+      return(NULL)
+    }
     newPtDefs<-getPtDefs()
     tib<-newPtDefs$tib[[name]]
     tib<-tib[ordering,]
@@ -131,8 +138,8 @@ observeEvent( input$myTibRowCntrl$order,{
 
 # rowPicker => rowGroupsDB 
 observeEvent( input$myTibRowCntrl$group,{
-  if( getTibEditState()==TRUE ){
-    # log.fin(input$myTibRowCntrl$group)
+  if( getTibEditState()==TRUE &&  !is.null(getTibColumnName())){
+    log.fin(input$myTibRowCntrl$group)
     group<-input$myTibRowCntrl$group
     # if(length(group)>0)
     # log.val(format(paste(group,collapse=",")))
@@ -149,70 +156,45 @@ observeEvent( input$myTibRowCntrl$group,{
     rowGroupsDB(db)
     # cat('now rowGroupsDB=')
     # print(rowGroupsDB())
-    # log.fout(input$myTibRowCntrl$group)
+    log.fout(input$myTibRowCntrl$group)
   }
 })
 
 # new asset , reload rowCntrl from rowGroupsDB
 # selector$name + rowGroupsDB => rowPicker
 observeEvent(getAssetName(),{ #reload rowpicker
+  
   aname<-getAssetName()
-  if(!is.null(aname)){
+  pageId<-getTibTabId()
+  count<-getTibNRow()
+  cname<-getTibColumnName()
+  if(!is.null(aname) && !is.null(pageId) && length(count)>0 && length(cname)>0 ){
     # log.fin("reload rowpicker")
-    # log.val(aname)
-    # group<-input$myTibRowCntrl$group
-    # if(length(group)>0){
-    #   cat('groups=\n')
-    #   log.val(format(paste(group,collapse=",")))
-    # } else {
-    #   cat('group is empty\n')
-    # }
     
-    # print(rowGroupsDB())
     pageId<-getTibTabId()
     count<-getTibNRow()
-    aname<-getAssetName()
     cname<-getTibColumnName()
     
     group<-filter(rowGroupsDB(), tabId==pageId,  name==aname, colName==cname)$rows
     row<-getTibRow()
-    #browser()
+    
     if(length(group)>0 && !(row %in% group)){
       row<-tail(group,1)
       updateSelected(rowIndex=row)
     }
       
-    #browser()
-    # cat('class of group is ',class(group),'\n')
-    # updateRowPicker(session, "myTibRowCntrl",
-    #                 count= count
-    # )
-    # cat('************ (getAssetName count=count\n')
-    # print(rowGroupsDB())
-    # cat('*********before**************\n')
     updateRowPicker(session, "myTibRowCntrl",
                     count= count,
                     selectRow = row,
                     addToGroup=group
     )
-    # cat('*********after**************\n')
-    # print(rowGroupsDB())
-    # if(length(group)>0){
-    #   cat('groups=\n')
-    #   log.val(format(paste(group,collapse=",")))
-    # } else {
-    #   cat('group is empty\n')
-    # }
-    # log.fout("reload picker")
+    # log.fout("reload rowpicker")
   }
 })
 
 
 observeEvent(getTibTabId(),{
   # log.fin(getTibTabId())
-  # cat('-----initializing rowGroupDB-----\n')
-  # count=getTibNRow()
-  # log.val(count)
   rowGroupsDB(initialRowGroupDB())
   updateRowPicker(session, "myTibRowCntrl",
                   selectRow=getTibRow(),

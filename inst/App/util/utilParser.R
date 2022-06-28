@@ -158,9 +158,9 @@ extractPositions<-function(csnCharLines, df){
 #   })
 # }
 
-# extractSVGRDF<-function(p.df, tag="svgR"){
-#   df1<-subset(p.df, token=='SYMBOL_FUNCTION_CALL' & text ==tag & ggid==0)
-#   stopifnot(nrow(df1)==1)  
-#   subset(p.df, id==df1$gid)
-# }
+extractSVGRDF<-function(p.df, tag="svgR"){
+  df1<-subset(p.df, token=='SYMBOL_FUNCTION_CALL' & text ==tag & ggid==0)
+  stopifnot(nrow(df1)==1)
+  subset(p.df, id==df1$gid)
+}
 

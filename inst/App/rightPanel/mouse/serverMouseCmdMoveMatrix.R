@@ -4,6 +4,7 @@ mouseCmdMoveMatrix<-function(mssg){
     vec<- as.numeric(unlist(mssg$vec))
   }
   src<-getCode()
+  
   replacementList<-list()
   newPtDefs<-getPtDefs() 
   tibs<-getPtDefs()$tib
@@ -13,8 +14,8 @@ mouseCmdMoveMatrix<-function(mssg){
   tmp<-unlist(str_split(id,"_")) 
   row<-as.numeric(tail(tmp,1)) #this should be the same as selected row index
   selection<-getAssetName() 
-  matColIndx<-ncol(newPtDefs$tib[[selection]][[ row, getTibPtColPos() ]])
-  
+  matColIndx<-ncol(newPtDefs$tib[[selection]][[getTibPtColPos()]][[ row  ]])
+
   # Todo: for inter tib move support
   # selection -> 1 or more selections
   # row (currently corresponding to single name) - sets of rows
@@ -56,8 +57,7 @@ mouseCmdMoveMatrix<-function(mssg){
     colName=getTibColumnName()
   )
   pageId<-getTibTabId()
-  
-  if( mssg$ctrlKey==TRUE){ 
+  if( mssg$shiftKey==TRUE){ 
     if(getTibRow()!=row){
       updateRowPicker(session, "myTibRowCntrl", addToGroup = row, selectRow = row )
     } else {
@@ -72,7 +72,6 @@ mouseCmdMoveMatrix<-function(mssg){
   }  else {
     updateRowPicker(session, "myTibRowCntrl", removeEntireGroup=TRUE)
   }
- 
   contextList<-pmap(cntx, function(name, rows, colName){
     # to check that tib has names
     ctype<-extractColType(tibs[[name]][[colName]])
@@ -84,12 +83,13 @@ mouseCmdMoveMatrix<-function(mssg){
     }
   })
   contextList<-Filter(function(x){!is.null(x)}, contextList)
-  
   tryCatch({
     matCol<-NULL
     getDxy<-function(){names(dxy)<-c('dx','dy'); dxy}
     ppenv<-list(
-      keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey),
+      getDxy=getDxy,
+      moveMatrix=moveMatrix,
+      keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey, keycode=mssg$keycode),
       WH=getSVGWH()
     )
     for(ctx in contextList){
@@ -99,20 +99,20 @@ mouseCmdMoveMatrix<-function(mssg){
         column_Name= names( tibs[[ctx$name]] )[ ctx$column ]  
       )['onMoveMat']
       if(is.null(txt)){
-        m<-tibs[[ctx$name]][[ ctx$row, ctx$column ]]
-        tibs[[ctx$name]][[ ctx$row, ctx$column ]]<-m+dxy 
+        m<-tibs[[ctx$name]][[ctx$column ]][[ctx$row ]]
+        tibs[[ctx$name]][[ctx$column ]][[ctx$row ]]<-m+dxy 
       } else {
         context<-c(ctx, list(tibs=tibs))
-        tibs<-eval(parse(text=txt), ppenv )
+        tppenv<-c(ppenv,context)
+        tibs<-eval(parse(text=txt), tppenv )
         validateTibLists(getPtDefs()$tib, tibs)
       }
     }
-    matCol<-ncol(tibs[[getAssetName()]][row, getTibPtColPos()] )
+    matCol<-ncol(tibs[[getAssetName()]][[getTibPtColPos()]][[row]] )
     newPtDefs$tib<-tibs
-    # cat('ContextList updateAceExtDef\n')
     updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=row, matCol=matCol))
   }, error=function(e){
-    e<-c('preproErr',unlist(e))
+    e<-c('preproErr',e$message)
     err<-paste(unlist(e), collapse="\n", sep="\n")
     alert(err)
   })

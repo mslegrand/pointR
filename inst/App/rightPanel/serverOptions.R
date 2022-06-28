@@ -14,8 +14,8 @@ pprj<-reactiveVal(initialProj)
 getDirPath<-reactive({
   if(!is.null(editOption$currentProjectName) && !is.null(editOption$currentProjectDirectory)){
     dirPath<-editOption$currentProjectDirectory
-    if(!file.exists(dirPath)){
-      dirPath<-optionDirPath()
+    if(!file.exists(dirPath)){ # currentProjectDirectory not found!!
+      dirPath<-optionDirPath() # this sets dirPath to ~/ptr
       editOption$currentProjectName=NULL
       editOption$currentProjectDirectory=NULL
     }
@@ -109,6 +109,7 @@ mkFileSubMenu<-function(subMenuLabel, prefix, fullFilePaths){
   }
   if(length(files)>0){
     # 4 make submenu
+    files<-normalizePath(files)
     files<-unique(files)
     values<-paste(prefix,files, sep="-")
     labels<-basename(files)
@@ -116,13 +117,13 @@ mkFileSubMenu<-function(subMenuLabel, prefix, fullFilePaths){
     mkmenuitem<-function(label, value, hint){
       shinyDMDMenu::menuItem(
         label=label, 
-        value=value,
-        span(hint, class='tooltiptext')
+        value=value # ,
+       # span(hint, class='tooltiptext')
       )
     }
     items<-mapply(mkmenuitem, label=labels, value=values, hint=hints,
                   SIMPLIFY = FALSE, USE.NAMES = FALSE)
-    submenu=do.call( function(...){ menuDropdown(subMenuLabel,...) }, items)
+    submenu=do.call( function(...){ subMenuDropdown(subMenuLabel,...) }, items)
   } else{
     submenu=NULL
   }
@@ -135,34 +136,43 @@ observeEvent( editOption$recentProjects ,{
   removeDMDM(session=session, menuBarId="editNavBar", entry=subMenuLabel)
   # 2 get files to populate submenu
   files<-unlist(editOption$recentProjects)
+  # NEED TO CHECK IF FILES STILL EXIST!!!
+  files<-files[file.exists(files)]
   # 3 create submenu
+  if(length(files)>0){
   submenu<-mkFileSubMenu( subMenuLabel= subMenuLabel, prefix='recentProj', files) 
   # 4 insertsubmenu
-  if(!is.null(submenu)){
-    insertAfterDMDM(
-      session, menuBarId = "editNavBar", 
-      entry="openProject", submenu= submenu
-    )
+    if(!is.null(submenu)){
+      insertAfterDMDM(
+        session, menuBarId = "editNavBar", 
+        entry="openProject", submenu= submenu
+      )
+    }
   }
-})
+}, ignoreNULL=FALSE) #menu item is remove if editOption$recentPproj is null
 
 
 # must both add and delete entries.
 observeEvent( editOption$recentFiles ,{
-  # 1 remove menuDropdown
-  removeDMDM(session=session, menuBarId="editNavBar", entry="Recent Files")
+  # 1 remove subMenuDropdown
+  subMenuLabel= "Recent Files"
+  removeDMDM(session=session, menuBarId="editNavBar", entry=subMenuLabel)
   # 2 get files to populate submenu
   files<-unlist(editOption$recentFiles)
+  # NEED TO CHECK IF FILES STILL EXIST!!!
+  files<-files[file.exists(files)]
   # 3 create submenu
-  submenu<-mkFileSubMenu( subMenuLabel= "Recent Files", prefix="recentFile", files) 
-  # 4 insertsubmenu
-  if(!is.null(submenu)){
-    insertAfterDMDM(
-      session, menuBarId = "editNavBar", 
-      entry="openFile", submenu= submenu
-    )
+  if(length(files)>0){
+    submenu<-mkFileSubMenu( subMenuLabel= subMenuLabel, prefix="recentFile", files) 
+    # 4 insertsubmenu
+    if(!is.null(submenu)){
+      insertAfterDMDM(
+        session, menuBarId = "editNavBar", 
+        entry="openFile", submenu= submenu
+      )
+    }
   }
-})
+}, ignoreNULL=FALSE) #menu item is remove if editOption$recentFiles is null
 
 # observeEvent(editOption$whiteSpace,{
 #   newLabel<-ifelse(editOption$whiteSpace, "Hide White Space",  "Show White Space")

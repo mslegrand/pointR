@@ -6,11 +6,13 @@ cmdAbout<-function(){
 
 modalAbout <- function(..., size = "m" ) {
   modalDialog(
-    div( img(src="ptR/pointRLogo.SVG")),
+    # div( pointRLogoSVG()),
+    div(img(src="ptR/pointRlogo.svg")),
     div( p(version, align="right")),
     div( width="100%",
       p(paste(
        "The purpose of this application is to provide an open-flexible tool for creating SVG using the svgR package.",
+       "This tool is built using the RStudio Shiny server and Electron as a wrapper",
        "The svgR package is an R package to for creating SVG graphics.",
        "SVG is short for scalar vector graphics.",
        "Applications include Shiny apps, Rdocs, or even generating a plain SVG file.")),

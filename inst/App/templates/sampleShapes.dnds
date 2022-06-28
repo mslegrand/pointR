@@ -31,16 +31,15 @@ circle(
 SVGR
 ```
 library(svgR)
-WH<-c(48,32)
+
 ptR<-list(
   x=matrix(0,2,0)
 )
-svgR(wh=WH,
+svgR(
 #your custom code goes here
   circle(
     cxy=WH/2,
     r=WH[2]/3,
-    stroke='#00FFFF',
     stroke.width=2,
     fill='none'
   )
@@ -66,16 +65,15 @@ ellipse(
 SVGR
 ```
 library(svgR)
-WH<-c(48,32)
+
 ptR<-list(
   x=matrix(0,2,0)
 )
-svgR(wh=WH,
+svgR(
 #your custom code goes here
   ellipse(
 	cxy=WH/2,
 	rxy=c(.3,.2)*WH,
-	stroke='#00FFFF',
 	stroke.width=2,
 	fill='none'
    )
@@ -95,7 +93,7 @@ SNIPPET
 ```
 rect(
     xy=${1:WH/2},
-    wh=${2:c(.47,.3)*WH},
+    wh=${2:c(.4,.3)*WH},
     stroke='black',
     fill=${3:'none'}
 )${0:}
@@ -103,17 +101,16 @@ rect(
 SVGR
 ```
 library(svgR)
-WH<-c(48,32)
+
 ptR<-list(
   x=matrix(0,2,0)
 )
-svgR(wh=WH,
-  line(xy1=c(.5,0)*WH, xy2=c(.5,1)*WH, stroke.dasharray=2, stroke="#00FFFF"),
-  line(xy1=c(0,.5)*WH, xy2=c(1,.5)*WH, stroke.dasharray=2, stroke="#00FFFF"),  
+svgR(
+  line(xy1=c(.5,0)*WH, xy2=c(.5,1)*WH, stroke.dasharray=2),
+  line(xy1=c(0,.5)*WH, xy2=c(1,.5)*WH, stroke.dasharray=2),  
   rect(
     xy=WH/2,
     wh=c(.4,.2)*WH,
-    stroke='#00FFFF',
     stroke.width=2,
     fill='none'
   )
@@ -132,7 +129,7 @@ SNIPPET
 ```
 rect(
     cxy=${1:WH/2},
-    wh=${2:c(.47,.3)*WH},
+    wh=${2:c(.45,.3)*WH},
     stroke='black',
     fill=${3:'none'}
 )${0:}
@@ -140,17 +137,16 @@ rect(
 SVGR
 ```
 library(svgR)
-WH<-c(48,32)
+
 ptR<-list(
   x=matrix(0,2,0)
 )
 svgR(wh=WH,
-  line(xy1=c(.5,0)*WH, xy2=c(.5,1)*WH, stroke.dasharray=2, stroke="#00FFFF"),
-  line(xy1=c(0,.5)*WH, xy2=c(1,.5)*WH, stroke.dasharray=2, stroke="#00FFFF"),  
+  line(xy1=c(.5,0)*WH, xy2=c(.5,1)*WH, stroke.dasharray=2),
+  line(xy1=c(0,.5)*WH, xy2=c(1,.5)*WH, stroke.dasharray=2),  
   rect(
     cxy=WH/2,
     wh=c(.4,.2)*WH,
-    stroke='#00FFFF',
     stroke.width=2,
     fill='none'
   )
@@ -173,15 +169,14 @@ line(
 SVGR
 ```
 library(svgR)
-WH<-c(48,32)
+
 ptR<-list(
   x=matrix(0,2,0)
 )
-svgR(wh=WH,
+svgR(
     line(
         xy1=c(.2,0.8)*WH,
         xy2=c(.8,0.2)*WH,
-        stroke='#00FFFF',
         stroke.width=2
     )
 )
@@ -197,14 +192,14 @@ SNIPPET
 polyline(
 	points=${1:WH*matrix(c(.25,.25,.5,.5,.75,.25),2)},
 	stroke=${2:'black'},
-	stroke.width=${2:1},
-	fill=${3:'none'}
+	stroke.width=${3:1},
+	fill=${4:'none'}
 )${0:}
 ```
 SVGR
 ```
 library(svgR)
-WH<-c(48,32)
+
 ptR<-list(
   x=matrix(0,2,0)
 )
@@ -212,7 +207,6 @@ svgR(wh=WH,
     polyline(
         points=WH*matrix(c(.25,.25,.5,.8,.75,.25),2),
         stroke.width=2,
-        stroke='#00FFFF',
         fill='none'
     )
 )
@@ -228,21 +222,20 @@ SNIPPET
 polygon(
     points=${1:WH*matrix(c(.25,.75,.5,.5,.75,.75),2)},
     stroke=${2:'black'},
-    stroke.width=${2:1},
-    fill=${3:'none'}
+    stroke.width=${3:1},
+    fill=${4:'none'}
 )${0:}
 ```
 SVGR
 ```
 library(svgR)
-WH<-c(48,32)
+
 ptR<-list(
   x=matrix(0,2,0)
 )
-svgR(wh=WH,
+svgR(
     polygon(
         points=WH*matrix(c(.25,.75,.5,.25,.75,.75),2),
-        stroke='#00FFFF',
         stroke.width=2,
         fill='none'
     )
@@ -267,17 +260,16 @@ text(
 SVGR
 ```
 library(svgR)
-WH<-c(48,32)
+
 ptR<-list(
   x=matrix(0,2,0)
 )
-svgR(wh=WH,
-    line(xy1=c(.5,0)*WH, xy2=c(.5,1)*WH, stroke.dasharray=2, stroke="#00FFFF"),
-    line(xy1=c(0,.5)*WH, xy2=c(1,.5)*WH, stroke.dasharray=2, stroke="#00FFFF"),  
+svgR(
+    line(xy1=c(.5,0)*WH, xy2=c(.5,1)*WH, stroke.dasharray=2),
+    line(xy1=c(0,.5)*WH, xy2=c(1,.5)*WH, stroke.dasharray=2),  
     text(
         'Text',
         xy=WH/2,
-        stroke='#00FFFF',
         font.size=10,
         fill='#00FFFF'
     ) 
@@ -302,17 +294,16 @@ SNIPPET
 SVGR
 ```
 library(svgR)
-WH<-c(48,32)
+
 ptR<-list(
   x=matrix(0,2,0)
 )
-svgR(wh=WH,
-    line(xy1=c(.5,0)*WH, xy2=c(.5,1)*WH, stroke.dasharray=2, stroke="#00FFFF"),
-    line(xy1=c(0,.5)*WH, xy2=c(1,.5)*WH, stroke.dasharray=2, stroke="#00FFFF"),  
+svgR(
+    line(xy1=c(.5,0)*WH, xy2=c(.5,1)*WH, stroke.dasharray=2),
+    line(xy1=c(0,.5)*WH, xy2=c(1,.5)*WH, stroke.dasharray=2),  
     text(
         'Text',
         cxy=WH/2,
-        stroke='#00FFFF',
         font.size=10,
         fill='#00FFFF'
     ) 
@@ -339,21 +330,19 @@ SNIPPET
 SVGR
 ```
 library(svgR)
-WH<-c(48,32)
-# Defined by mouse: edit with care!
+
 ptR<-list(
   x=tribble(
    ~points,
-   matrix(NA,2,0)
+   matrix(0,2,0)
   )
 )
-svgR(wh=WH,
+svgR(
             path(
               d=list(
                 M=c(.5,.2)*WH, 
                 A=c(.3*WH, 180,1,0,c(.8,.5)*WH)
               ),
-              stroke='#00FFFF',
               stroke.width=2,
               fill='none'
             ) 
@@ -380,21 +369,20 @@ path(
 SVGR
 ```
 library(svgR)
-WH<-c(48,32)
+
 # Defined by mouse: edit with care!
 ptR<-list(
   x=tribble(
    ~points,
-   matrix(NA,2,0)
+   matrix(0,2,0)
   )
 )
-svgR(wh=WH,
+svgR(
     path(
       d=list(
         M=c(.2,.2)*WH, 
         Q=c( c(.5,1.5)*WH,c(.8,.2)*WH)
       ),
-      stroke='#00FFFF',
       stroke.width=2,
       fill='none'
     ) 
@@ -422,22 +410,21 @@ path(
 SVGR
 ```
 library(svgR)
-WH<-c(48,32)
+
 # Defined by mouse: edit with care!
 ptR<-list(
   x=tribble(
    ~points,
-   matrix(NA,2,0)
+   matrix(0,2,0)
   )
 )
-svgR(wh=WH,
+svgR(
     path(
         d=list(
             M=c(.3,.1)*WH, 
             Q=c( c(1,.7),c(.5,.7))*WH,
             T=c(.7,.1)*WH
         ),
-        stroke='#00FFFF',
         stroke.width=2,
         fill='none'
     ) 
@@ -464,18 +451,17 @@ path(
 SVGR
 ```
 library(svgR)
-WH<-c(48,32)
+
 ptR<-list(
   x=matrix(0,2,0)
 )
-svgR(wh=WH,
+svgR(
 #your custom code goes here
   path(
               d=list(
                 M=c(.2,.9)*WH, 
                 C=c( c(.3,-1),c(.7,2), c(.8,.2))*WH
               ),
-              stroke='#00FFFF',
               stroke.width=2,
               fill='none'
             ) 
@@ -504,11 +490,11 @@ path(
 SVGR
 ```
 library(svgR)
-WH<-c(48,32)
+
 ptR<-list(
   x=matrix(0,2,0)
 )
-svgR(wh=WH,
+svgR(
 #your custom code goes here
     path(
         d=list(
@@ -516,7 +502,6 @@ svgR(wh=WH,
             C=c( c(.4,.0),c(.4,.8), c(.5,.8))*WH,
             S=c( c(.6,.0),c(.8,.6))*WH
         ),
-        stroke='#00FFFF',
         stroke.width=2,
         fill='none'
     ) 

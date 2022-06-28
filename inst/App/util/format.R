@@ -1,12 +1,6 @@
 
 
-# used solely in fmtTribble
-getTibColClass<-function(tib){ #used by fmtTribble
-  colTypes<-sapply(1:ncol(tib), function(j)class(tib[[j]]))
-  mats<-sapply(1:ncol(tib), function(j)"matrix"==class(tib[[1,j]]))
-  colTypes[mats]<-'matrix'
-  colTypes
-}
+
 
 toStrPtR0<-function(x,...){ UseMethod("toStrPtR0") }
 
@@ -68,21 +62,22 @@ toStrPtR0.list<-function(x, digits=0, ...){
 # the set tib to be cbind( tib[[,-ind]], tib[[,ind]])
 # to do: tibble name 
 # used by fmtTibbleList (below)
-fmtTribble<-function(tib, tibName, movePtsBack=TRUE, indent="  ", ...){
+fmtTribble<-function(tib, tibName, movePts2Back=TRUE, indent="  ", ...){
   #this moves the points to the rear
+  
   n=2 # indent factor of 2 tabs
   indentName<-paste0(rep(indent, n=n),collapse="")
 
-  if(movePtsBack){
-    cl<-getTibColClass(tib)
-    indx<-c(which(cl!='matrix'), which(cl=='matrix'))
+  if(movePts2Back){
+    cl<-sapply(1:ncol(tib), function(n)isPoints(tib[[n]]) )
+    indx<-c(which(cl==FALSE), which(cl==TRUE)) #reorders the indices
+    tib<-tib[,indx] #reorder tib columns
   }
-  tib<-tib[,indx]
   n<-names(tib)
   nn<-matrix(paste0("~",n),1)
   tmp<-sapply(1:ncol(tib), function(j){
     sapply(1:nrow(tib),function(i){
-      toStrPtR0(tib[[i,j]])
+      toStrPtR0( tib[[j]][[i]] )
     })
   })
   tmp<-rbind(nn,tmp)
@@ -121,13 +116,15 @@ fmtTibble<-function(tib, tibName, is.mat=FALSE, indent="  ", ...){
 fmtMat<-function(tib, tibName, indent="  ", ...){ 
   n=2 # indent factor of 2 tabs
   indentName<-paste0(rep(indent, n=n),collapse="")
-  m<-tib[[1,tibName]]
+  # m<-tib[[1,tibName]]
+  m<-tib[[tibName]][[1]]
   tmp<-paste0(indentName, tibName, "= ", toStrPtR0.matrix(m))
   tmp  
 }
 
 # used only by ptDef2ReplacementList
 fmtTibbleList<-function(tibList, mats, as.Tribble){
+  
   as.Tribble<-unlist(as.Tribble)
   tmp<-sapply(names(tibList), function(nm){
     if(mats[nm]==TRUE){

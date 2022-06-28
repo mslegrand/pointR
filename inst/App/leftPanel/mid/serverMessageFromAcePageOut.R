@@ -1,20 +1,23 @@
 
 rmdOut<-function(docFilePath){
-  if(usingElectron==TRUE){
-    docFilePath<-gsub('~',homeDir,docFilePath)
-    # TODO:: add check for Pandoc!!! 
-    rmarkdown::render(docFilePath )
-    href<-sub('\\.Rmd$','\\.html',docFilePath)
-    href<-paste0('file://',href)
-    
-    sendPtRManagerMessage(sender='cmd.electron',  openLink= href)
+  if (pandoc_available()){
+    if(usingElectron==TRUE){
+      docFilePath<-gsub('~',homeDir,docFilePath)
+      # TODO:: add check for Pandoc!!! 
+      rmarkdown::render(docFilePath )
+      href<-sub('\\.Rmd$','\\.html',docFilePath)
+      href<-paste0('file://',href)
+      
+      sendPtRManagerMessage(sender='cmd.electron',  openLink= href)
+    } else {
+      
+      rmarkdown::render(docFilePath )
+      htmlPath<-sub('\\.Rmd$','\\.html',docFilePath)
+      browseURL(htmlPath)
+    }
   } else {
-   
-    rmarkdown::render(docFilePath )
-    htmlPath<-sub('\\.Rmd$','\\.html',docFilePath)
-    browseURL(htmlPath)
+    disable("writeNOpen") # no pandoc
   }
-  
 }
 
 

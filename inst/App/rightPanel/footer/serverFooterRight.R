@@ -12,7 +12,10 @@ returnValue4ModuleRtFtr<-callModule(
     rtv<-getRightMidPanel(); 
     rtv
   }),
-  hasPreProcChoices=hasPreProcChoices 
+  hasPreProcChoices=hasPreProcChoices ,
+  getScriptName=reactive({
+    getPreProcScriptName(tab_Id=getTibTabId(), tib_Name=getAssetName(),column_Name= getTibColumnName())
+  })
 )
 
 #-----------BUTTON EVENTS--------------------
@@ -29,7 +32,7 @@ observeEvent(
     updateRowPicker(session, "myTibRowCntrl", insertRow=rowIndex+1, selectRow=rowIndex+1)
     newTib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
     rowIndex=rowIndex+1
-    matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
+    matCol<-ncol(newTib[[ getTibPtColPos()]][[rowIndex]])
     pts<-newTib[[getTibPtColPos()]] #!!!!  NOT USED?????
     ptDefs$tib[[selection]]<-newTib
     tabId<-getTibTabId()
@@ -60,7 +63,7 @@ observeEvent(
 
     #adjust position
     rowIndex<-min(rowIndex, nrow(newTib))
-    matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
+    matCol<-ncol(newTib[[getTibPtColPos()]][[rowIndex]])
     if(length(matCol)==0){matCol=0}
     updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matCol   ) )
   }
@@ -81,7 +84,7 @@ observeEvent( returnValue4ModuleRtFtr$tagMoveUp(),{
 
     #adjust position
     rowIndex<-rowIndex-1
-    matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
+    matCol<-ncol(newTib[[ getTibPtColPos()]][[rowIndex]])
     if(length(matCol)==0){matCol=0}
     updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matCol   ) )
   }
@@ -102,7 +105,7 @@ observeEvent( returnValue4ModuleRtFtr$tagMoveDown(),{
 
     #adjust position
     rowIndex<-rowIndex+1
-    matCol<-ncol(newTib[[rowIndex, getTibPtColPos()]])
+    matCol<-ncol(newTib[[getTibPtColPos()]][[rowIndex]])
     if(length(matCol)==0){matCol=0}
     updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matCol   ) )
   }
@@ -121,9 +124,9 @@ observeEvent( returnValue4ModuleRtFtr$removePt(), {
     #get row, col
     if(matCol>=1){
       row<-getTibRow()
-      m<-matrix(ptDefs$tib[[selection]][[ row, getTibPtColPos() ]][,-matCol],2)
+      m<-matrix(ptDefs$tib[[selection]][[getTibPtColPos() ]][[row]] [,-matCol],2)
       #!!! probably need some checking here
-      ptDefs$tib[[selection]][[ row, getTibPtColPos() ]]<-m
+      ptDefs$tib[[selection]] [[getTibPtColPos() ]][[ row]]<-m
       matCol<-min(matCol, length(m)/2)
       newPtDefs<-ptDefs
       sender='points.deletePoint'
@@ -149,13 +152,13 @@ observeEvent( returnValue4ModuleRtFtr$tagPt(), {
   
   updateRowPicker(session, "myTibRowCntrl", insertRow=rowIndex+1, selectRow=rowIndex+1)
   
-  m<-tib[[ rowIndex, getTibPtColPos() ]]
+  m<-tib[[getTibPtColPos() ]][[ rowIndex]]
   ptDefs$mats[selection]<-FALSE # no longer a matrix input!
   newTib<-tagTib(tib, getTibPtColPos(), rowIndex, matCol)
   
   
   rowIndex<-rowIndex+1
-  matCol<-length(newTib[[rowIndex, getTibPtColPos()]])/2
+  matCol<-length(newTib[[getTibPtColPos()]][[rowIndex]])/2
   ptDefs$tib[[selection]]<-newTib
   
   tabId<-getTibTabId()
@@ -217,5 +220,4 @@ observeEvent( returnValue4ModuleRtFtr$tagSetValue(),{
   sender<-'setTibValue'
   updateAceExtDef(newPtDefs, sender=sender )
 })
-
 

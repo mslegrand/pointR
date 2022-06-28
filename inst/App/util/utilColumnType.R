@@ -15,10 +15,10 @@ isColorString <- function(x) {
   }))
 }
 
-# sole caller: listColType (below)
+# takes a  column x and checks if the entries are all 2x* matrices of numerics
 isPoints<-function(x){
-  points<-!is.null(x) && all(unlist(lapply(x, function(m){
-    is.matrix(m) && dim(m)[1]==2
+  points<-is.list(x) &&  all(unlist(lapply(x, function(m){
+    is.matrix(m) && dim(m)[1]==2 # && all(apply(m,1,is.numeric))
   })))
   points
 }
@@ -37,6 +37,7 @@ charColType<-function(x){
 
 #sole caller: extractColType (below)
 listColType<-function(x){
+  
   lens<- sapply(x, length)
   if(isPoints(x)){
     return("point")
@@ -68,8 +69,15 @@ listColType<-function(x){
   return(paste0('other.list'))
 }
 
-# callers: PanelCoordinator::getColumnType, preProcValidate::assertConsistantTibPair
+# callers: 
+#  PanelCoordinator::getColumnType, 
+#  preProcValidate::assertConsistantTibPair
+#  serverPreProcDB::extractPreProcScript
+#  serverMouseCmdFindPoint::mouseCmdFindPoint
+#  serverMouseCmdMoveMatrix::mouseCmdMoveMatrix
+
 extractColType<-function( column ){
+  
   if(is.list(column)){
     return(listColType(column))
   } else {

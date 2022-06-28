@@ -1,0 +1,228 @@
+---
+title: "Dnd Snippet"
+author: "Anonymous"
+date:   "TODAY"
+output: dnd_snippet
+---
+
+*********************
+
+POPUP 
+```
+mouse click
+```
+SNIPPET
+```
+onclick=CMDS[${0:1}]
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+R<-WH[1]*.2
+CXY=WH*c(.3,.5)
+svgR(wh=WH,  stroke="#00FFFF",  fill="none",
+    g(
+        polygon(
+            points=c(WH)*c(
+                c(.0,.0),c(.2,.5), c(.05,.3), c(.05,.6),
+                c(-.05,.6),c(-.05,.3), c(-.2,.5)
+            ),
+            stroke="#00FFFF"
+        ),
+        lapply(c(0,45,135,180), function(theta){
+            line(xy1=c(.1,0)*WH, xy2=c(.3,0)*WH, stroke="#00FFFF",
+            transform=list(rotate=-theta)
+            )
+        }),
+        transform=list( translate=WH*c(.6,.45), rotate=65)
+    )
+)
+```
+
+******************
+*********************
+                        
+
+POPUP 
+```
+mouse down
+```
+SNIPPET
+```
+onmousedown=CMDS[${0:1}]
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+R<-WH[2]*.2
+CXY=WH*c(.5,.7)
+
+
+svgR(wh=WH, 
+ circle(
+    cxy=CXY,
+    r=R,
+    fill='#00FFFF'
+  ),
+  rect(xy=CXY-c(R,2*R), wh=c(2*R,2*R), fill='#00FFFF'),
+  line(xy1=CXY-c(R,0),xy2=CXY+c(R,0), stroke='black'),
+  line(xy1=CXY+c(0,R),xy2=CXY, stroke='black')
+  
+)
+```
+*********************
+
+
+*********************
+                        
+
+POPUP 
+```
+mouse up
+```
+SNIPPET
+```
+onmouseup=CMDS[${0:1}]
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+R<-WH[2]*.2
+CXY=WH*c(.5,.3)
+
+
+svgR(wh=WH, 
+ circle(
+    cxy=CXY,
+    r=R,
+    fill='#00FFFF'
+  ),
+  rect(xy=CXY-c(R,0), wh=c(2*R,2*R), fill='#00FFFF'),
+  line(xy1=CXY-c(R,0),xy2=CXY+c(R,0), stroke='black'),
+  line(xy1=CXY-c(0,R),xy2=CXY, stroke='black')
+  
+)
+```
+*********************
+
+*********************
+                        
+
+POPUP 
+```
+mouse over
+```
+SNIPPET
+```
+onmouseover=CMDS[${0:1}]
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+R<-WH[2]*.2
+CXY=WH*c(.6,.4)
+
+
+svgR(wh=WH, 
+ rect(xy=WH*c(.2,.1), wh=c(.6,.8)*WH, stroke='#00FFFF', fill='none'),
+ circle(
+    cxy=CXY,
+    r=R,
+    fill='#00FFFF'
+  ),
+  rect(xy=CXY-c(2*R,R), wh=c(2*R,2*R), fill='#00FFFF'),
+  line(xy1=CXY-c(0,R),xy2=CXY+c(0,R), stroke='black'),
+  line(xy1=CXY+c(R,0),xy2=CXY, stroke='black')
+  
+)
+```
+*********************
+
+*********************
+
+POPUP 
+```
+mouse move
+```
+SNIPPET
+```
+onmousemove=CMDS[${0:1}]
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+R<-WH[2]*.2
+CXY=WH*c(.6,.5)
+
+
+svgR(wh=WH, 
+ circle(
+    cxy=CXY,
+    r=R,
+    fill='#00FFFF'
+  ),
+  rect(xy=CXY-c(2*R,R), wh=c(2*R,2*R), fill='#00FFFF'),
+  line(xy1=CXY-c(0,R),xy2=CXY+c(0,R), stroke='black'),
+  line(xy1=CXY+c(R,0),xy2=CXY, stroke='black'),
+  line(xy1=CXY+c(-4*R,-R),xy2=CXY+c(-4*R,R), stroke='#00FFFF'),
+  line(xy1=CXY+c(-3*R,-R),xy2=CXY+c(-3*R,R), stroke='#00FFFF'),
+  line(xy1=CXY+c(-2.5*R,-R),xy2=CXY+c(-2.5*R,R), stroke='#00FFFF')
+)
+```
+******************
+*********************
+
+POPUP 
+```
+mouse out
+```
+SNIPPET
+```
+onmouseout=CMDS[${0:1}]
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+R<-WH[2]*.2
+CXY=WH*c(.5,.5)
+
+
+svgR(wh=WH, 
+ circle(
+    cxy=CXY,
+    r=R,
+    fill='none'
+    , stroke='#00FFFF'
+  ),
+  rect(xy=CXY-c(2*R,R), wh=c(2*R,2*R), fill='black', stroke='#00FFFF'),
+  line(xy1=CXY-c(0,R),xy2=CXY+c(0,R), stroke='#00FFFF'),
+  line(xy1=CXY+c(R,0),xy2=CXY, stroke='#00FFFF')
+  
+)
+```
+******************
+

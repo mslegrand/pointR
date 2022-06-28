@@ -14,7 +14,7 @@ shinyServer(function(input, output,session) {
   
 # utility functions---------------
   setwd(path_join(c(ptRPath,"App")))
-  cat("--------------begin server-------------\ngetwd()=",getwd(),"\n")
+  # cat("--------------begin server-------------\ngetwd()=",getwd(),"\n")
   source("util/dbInitiatizers.R") 
   
   source("util/format.R")
@@ -108,11 +108,12 @@ shinyServer(function(input, output,session) {
   source("rightPanel/mouse/serverMouseClicks.R",                 local=TRUE)
   source("rightPanel/menu/cmdNewColumn.R",                       local=TRUE)
   source("rightPanel/menu/cmdNewAsset.R",                        local=TRUE)
-  
+  source("rightPanel/choiceSet/modalChoiceSet.R",                local=TRUE)
   source("rightPanel/menu/cmdDeleteColumn.R",                    local=TRUE)
   source("rightPanel/menu/cmdFileImportPreProc.R",               local=TRUE)
   source("rightPanel/menu/cmdFileExportPreProc.R",               local=TRUE)
   source("rightPanel/menu/cmdRemovePreProc.R",                   local=TRUE)
+  source("rightPanel/choiceSet/cmdChoiceSetImport.R",            local=TRUE)
   source("rightPanel/menu/serverPlotBar.R",                      local=TRUE)
   source("rightPanel/serverPanelCoordinator.R",                  local=TRUE)
   source("rightPanel/serverPanelDispatch.R",                     local=TRUE)
@@ -147,7 +148,6 @@ shinyServer(function(input, output,session) {
   source("leftPanel/pproj/pprojOpen.R",                         local=TRUE)   
   source("leftPanel/pproj/pprojClose.R",                        local=TRUE)  
   source("leftPanel/pproj/pprojModalNew.R",                     local=TRUE)  
-  source("leftPanel/pproj/pprojModalSample.R",                  local=TRUE)  
   
   source("leftPanel/menu/cmdFileExportSvg.R",                   local=TRUE) 
   source("leftPanel/menu/cmdOptionsTheme.R",                    local=TRUE)
@@ -164,7 +164,7 @@ shinyServer(function(input, output,session) {
   
 
 
-  # exportTestValues( request.sender=request$sender)
+  # exportTestValues( request.cmd=request$cmd)
   # exportTestValues(request.code=request$code)
   # exportTestValues(selectedAsset.tabId=selectedAsset$tabId)
   if(usingElectron){

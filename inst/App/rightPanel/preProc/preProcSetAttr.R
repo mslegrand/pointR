@@ -11,7 +11,7 @@ setAttrValue<-function( value, context){
     tib<-tibs[[ assetName ]]
     rowIndex<-   context$row
     columnIndex<-context$column
-    tib[[rowIndex,columnIndex]]<-value
+    tib[[columnIndex]][[rowIndex]]<-value
     tibs[[ assetName ]]<-tib
   }
   return(tibs)

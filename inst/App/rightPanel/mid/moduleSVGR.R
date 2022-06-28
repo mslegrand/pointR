@@ -22,12 +22,14 @@ svgToolsScript<-function(type){
     showPts.compound, # =showsvgRPoints.pts2
     ptrDisplayScript, # =js.scripts[[ "Points"]]
     useKeyMouseScript, #  
-    getSVGWH, 
+    # getSVGWH, #not used here???
     getSvgGrid,
     getBackDrop,
-    getCode,
+    getCode, 
+    getEnvList,
     getErrorMssg, 
-    getTibNRow, # doesnot appear
+    # getTibNRow, # doesnot appear
+    getParMode,
     getDirPath
   ){
   ns <- session$ns
@@ -55,13 +57,15 @@ svgToolsScript<-function(type){
                                          xy=scaleFactor*c(x,0)+c(5,5),
                                          x, 
                                          text.anchor="start", alignment.baseline="hanging" ,
-                                         transform=paste0('scale(',1/scaleFactor ,')') 
+                                         transform=paste0('scale(',1/scaleFactor ,')'),
+                                         class="unselectable"
                                          )
                      ),
               lapply(ys, function(y)text(font.size=10, 
                                          xy=scaleFactor*c(0,y)+c(5,-5),
                                          y, 
                                          text.anchor="start", alignment.baseline="baseline",
+                                         class="unselectable",
                                          transform=paste0('scale(',1/scaleFactor ,')') ))
       )
     }
@@ -75,7 +79,7 @@ svgToolsScript<-function(type){
  
   
   output$svghtml <- renderUI({ # renderUI is probably not the most efficient approach!!!
-    WH<-getSVGWH()
+    #WH<-getSVGWH() # not used here???
     codeTxt<-getCode()
     if(is.null(getSvgGrid())){return(NULL)}
     
@@ -96,59 +100,101 @@ svgToolsScript<-function(type){
           wd<-paste0('\nsetwd("',dpath,'")\n\n')
           
           parsedCode<-parse(text=paste0(wd,codeTxt))
-          svg<-eval(parsedCode, new.env() )
-          w<-svg$root$getAttr('width')
-          h<-svg$root$getAttr('height')
-          rtv$WH<-c(w,h)
-          vbWH<-svg$root$getAttr('viewBox')
-          vbWH<-str_split(vbWH,',')
-          vbWH<-unlist(vbWH)[3:4]
-          vbScaleFactor<-1
-          gWH<-c(w,h)
-          tryCatch({
-            if(length(vbWH)==2  ){
-              vbWH<-as.numeric(vbWH)
-              if(min(vbWH)>0){
-                vbScaleFactor<-mean(rtv$WH/vbWH)
-                gWH<-vbWH
-              } else {
-                vbScaleFactor<-1
-              }
-            } 
-            }, error=function(e){
-              vbScaleFactor<-1
-          }) 
-          svg$root$setAttr('id',svgID)
-          if(getSvgGrid()$show==TRUE){ 
-            dxy<-c( getSvgGrid()$dx, getSvgGrid()$dy)
-            
-            #svg$root$prependNode(svgR:::graphPaper( wh=c(w,h), dxy=dxy, labels=TRUE )) #need to replace with vbScaleFactor-scalable version
-            #svg$root$prependNode( graphPaper2( wh=c(w,h), dxy=dxy, labels=TRUE, scaleFactor= vbScaleFactor))
-            svg$root$prependNode( graphPaper2( wh=gWH, dxy=dxy, labels=TRUE, scaleFactor= vbScaleFactor))
+          parentMode<-getParMode()
+          env3<-getEnvList()
+          if(identical(parentMode, 'dnippets')){
+            env3<-c(env3, list(WH=c(48,32)))
           }
-          if(getBackDrop()$checked==FALSE){
+          svg<-eval(parsedCode, env3 )
+          
+          # cat('parentMode= ')
+          # cat(format(parentMode))
+          svg$root$setAttr('id',svgID)
+          if(identical(parentMode, 'dnippets')){
+            svg$root$setAttr('width',480)
+            svg$root$setAttr('height',320)
+            svg$root$setAttr('viewBox','0 0  48 32')
+            svg$root$setAttr('stroke','#00FFFF')
+            svg$root$setAttr('fill','#00FFFF')
+            rtv$WH<-c(480,320)
+            vbScaleFactor<-10
+            if(getSvgGrid()$show==TRUE){ 
+              dxy=c(4,4)
+              svg$root$prependNode( graphPaper2( wh=c(48,32), dxy=dxy, labels=TRUE, scaleFactor= vbScaleFactor) )
+            }
+            svg$root$prependChildren(
+              svgR:::use(filter=svgR:::filter( filterUnits='userSpaceOnUse', svgR:::feFlood(flood.color='black') ) )
+            )
+            
+          } else {
+            # record width, height
+            w<-svg$root$getAttr('width')
+            h<-svg$root$getAttr('height')
+            rtv$WH<-c(w,h)
+            
+            # if viewBox, calculate vbScaleFactor, else vbScaleFactor=1
+            vbWH<-svg$root$getAttr('viewBox')
+            vbWH<-str_split(vbWH,',')
+            vbWH<-unlist(vbWH)[3:4]
+            vbScaleFactor<-1
+            gWH<-c(w,h)
+            tryCatch({
+              if(length(vbWH)==2  ){
+                vbWH<-as.numeric(vbWH)
+                if(min(vbWH)>0){
+                  vbScaleFactor<-mean(rtv$WH/vbWH)
+                  gWH<-vbWH
+                } else {
+                  vbScaleFactor<-1
+                }
+              } 
+            }, 
+            error=function(e){
+              vbScaleFactor<-1
+            }) 
+            if(getSvgGrid()$show==TRUE){ 
+              dxy<-c( getSvgGrid()$dx, getSvgGrid()$dy)
+              
+              #svg$root$prependNode(svgR:::graphPaper( wh=c(w,h), dxy=dxy, labels=TRUE )) #need to replace with vbScaleFactor-scalable version
+              #svg$root$prependNode( graphPaper2( wh=c(w,h), dxy=dxy, labels=TRUE, scaleFactor= vbScaleFactor))
+              svg$root$prependNode( graphPaper2( wh=gWH, dxy=dxy, labels=TRUE, scaleFactor= vbScaleFactor) )
+            }
+            
+            if(getBackDrop()$checked==FALSE){ #solid
               svg$root$prependChildren(
                 svgR:::use(filter=svgR:::filter(xy=c(0,0), wh=c(w,h), filterUnits="userSpaceOnUse", svgR:::feFlood(flood.color=getBackDrop()$color)))
               )
-          } else {
-             wh2=c(20,20)/vbScaleFactor
-             wh1=c(10,10)/vbScaleFactor
-             svg$root$prependChildren(
-               svgR:::rect(xy=c(0,0), wh=c(w,h),
-                  fill=svgR:::pattern( xy=c(0,0), wh=wh2, patternUnits="userSpaceOnUse",
-                    svgR:::g(
-                      svgR:::rect(xy=c(0,0), wh=wh1, fill=getBackDrop()$color),
-                      svgR:::rect(xy=wh1, wh=wh1, fill=getBackDrop()$color)
-                    )
-                  )
+            } else { # checkered
+              wh2=c(20,20)/vbScaleFactor
+              wh1=c(10,10)/vbScaleFactor
+              svg$root$prependChildren(
+                svgR:::rect(xy=c(0,0), wh=c(w,h),
+                            fill=svgR:::pattern( xy=c(0,0), wh=wh2, patternUnits="userSpaceOnUse",
+                                                 svgR:::g(
+                                                   svgR:::rect(xy=c(0,0), wh=wh1, fill=getBackDrop()$color),
+                                                   svgR:::rect(xy=wh1, wh=wh1, fill=getBackDrop()$color)
+                                                 )
+                            )
                 )
               )
+            }
+            
           }
+          
+          
+          
+          # svg$root$setAttr('id',svgID)
+          
+          
           svg$root$prependNode(svgR:::script(ptrDisplyScriptTxt))
           svg$root$prependNode( svgR:::style(".draggable {','cursor: move;','}"))
             
           if(!is.null(showPts.compound()) ){
-              temp<-svgR(showPts.compound()(vbScaleFactor))$root$xmlChildren()
+              labelColor='black'
+              if(!is.null(parentMode) || getBackDrop()$color %in% c('#000000','#FF0000','#0000FF','#333333'   )){
+                labelColor="white"
+              }
+              temp<-svgR(showPts.compound()(vbScaleFactor, labelColor))$root$xmlChildren()
               svg$root$appendChildren(temp)
           }
           if(useKeyMouseScript){
@@ -156,10 +202,7 @@ svgToolsScript<-function(type){
             keyMouseScript=paste0('onKeyMouseDown(evt, "', svgID, '")')
             svg$root$addAttributes(list(onmousedown=keyMouseScript))
           }
-          
-          
-           
-         as.character(svg)->svgOut 
+          as.character(svg)->svgOut 
           res<-HTML(svgOut)
           rtv$status<-list(
             state="PASS",

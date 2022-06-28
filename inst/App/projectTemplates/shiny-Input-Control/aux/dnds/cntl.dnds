@@ -1,0 +1,174 @@
+---
+title: "Dnd Snippet"
+author: "Anonymous"
+date:   "TODAY"
+output: dnd_snippet
+---
+
+- Individual drippets are seperate by lines consisting of three or more stars (*)
+- Each drippet consists of 3 entries, with each entry having a title and a value (block)
+    - The title consists of a single line followed by a colon (:)
+        - titles are *POPUP*, *SNIPPET*, *SVGR*
+        - The values are blocks defined by 3 backtics *````*
+- Two drippets are shown below to help you get started
+   
+******************
+POPUP 
+```
+toJSON (Steps 2,2.1 3.2.1?)
+```
+SNIPPET
+```
+        toJSON('${1:value'}});
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+R<-.06*WH[1]
+d<-list(M=WH*c(.8,.85), Q=WH*c(c(.12,.85),c(.12,.52)))
+
+svgR(wh=WH, #stroke.width=1, stroke="#00FFFF",  fill="none",
+  polygon(points=WH*c(c(.25,.5), c(.15,.3),c(.15,.7)),fill='#00FFFF'),
+  rect(cxy=WH*c(.1,.5), wh=WH*c(.1,.1),fill="#00FFFF"),
+  text(cxy=WH*c(.6,.5),'JSon', fill="#00FFFF", stroke="#00FFFF",
+  stroke.width=1)
+)
+```
+
+*********************
+*********************
+                        
+
+POPUP 
+```
+Forward click cmd (Step 5.2)
+```
+SNIPPET
+```
+sprintf('@projectName@Binding.clicked("%s", "%s", evt)',params\$ID, mssg)
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+R<-WH[1]*.2
+CXY=WH*c(.3,.5)
+svgR(wh=WH,  stroke="#00FFFF",  fill="none",
+    text(xy=c(.05,.3)*WH,'CMDS', font.size=9),
+    g( 
+        polygon(
+            points=c(WH)*c(
+                c(.0,.0),c(.2,.5), c(.05,.3), c(.05,.6),
+                c(-.05,.6),c(-.05,.3), c(-.2,.5)
+            ),
+            stroke="#00FFFF"
+        ),
+        lapply(c(0,45,135), function(theta){
+            line(xy1=c(.1,0)*WH, xy2=c(.3,0)*WH, stroke="#00FFFF",
+            transform=list(rotate=-theta)
+            )
+        }),
+        transform=list( translate=WH*c(.6,.45), rotate=65)
+    )
+)
+```
+*********************
+******************
+POPUP 
+```
+fromJSON (Step 6.1?)
+```
+SNIPPET
+```
+        fromJSON('${0:(value)});
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+R<-.06*WH[1]
+d<-list(M=WH*c(.8,.85), Q=WH*c(c(.12,.85),c(.12,.52)))
+
+svgR(wh=WH, #stroke.width=1, stroke="#00FFFF",  fill="none",
+  polygon(points=WH*c(c(.05,.5), c(.15,.3),c(.15,.7)),fill='#00FFFF'),
+  rect(cxy=WH*c(.2,.5), wh=WH*c(.1,.1),fill="#00FFFF"),
+  text(cxy=WH*c(.6,.5),'JSon', fill="#00FFFF", stroke="#00FFFF",
+  stroke.width=1)
+)
+```
+
+*********************
+
+POPUP 
+```
+Update (Step 3.2)
+```
+SNIPPET
+```
+      #1. Recreate svg Tree
+          node<-as.character(@projectName@SvgWrapper(
+            params=list(ID=inputId,  ${1:value}=value) # <<--
+          ))
+      # 2. Form message
+          mssg<-list(node=node, value=value) 
+      # 3. Send message to client
+          session\$sendInputMessage(inputId, mssg)
+
+```
+SVGR
+```
+library(svgR)
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+X=c(.2,.4,.6,.8)
+
+svgR(wh=WH, stroke.width=3, stroke="#00FFFF",  fill="#00FFFF",
+  #
+  line(xy1=WH*c(.1,.1), xy2=WH*c(.9,.1)   ),
+  line(xy1=WH*c(.1,.23), xy2=WH*c(.9,.23) ),
+  line(xy1=WH*c(.5,.4), xy2=WH*c(.5,.9) ),
+  polygon(points=WH*c( .5,.3, .7,.5, .3,.5))
+
+)
+```
+******************
+
+******************
+POPUP 
+```
+update svg (Step 7)
+```
+SNIPPET
+```
+update@ProjectName@(session=shinysession, inputId=inputId, value=value )
+```
+SVGR
+```
+library(svgR) 
+WH<-c(48,32)
+ptR<-list(
+  x=matrix(0,2,0)
+)
+
+
+svgR(wh=WH, stroke.width=3, stroke="#00FFFF",  fill="#00FFFF",
+  line(xy1=WH*c(.1,.1), xy2=WH*c(.9,.1) ),
+  line(xy1=WH*c(.1,.23), xy2=WH*c(.9,.23) ),
+  polygon(points=WH*c( .5,.3, .7,.5, .3,.5)),
+  polyline(points=WH*c(.1, .5, .1,.85, .5,.85, .5,.4 ) , fill="none")
+)
+```
+*********************
+

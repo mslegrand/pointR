@@ -1,6 +1,6 @@
 			NOTICE
 
-Copyright (c) 2020 M. S. Legrand. All rights reserved
+Copyright (c) 2021 M. S. Legrand. All rights reserved
 
 The pointR package as a whole is distributed under the GPL-3 License,
 GNU GENERAL PUBLIC LICENSE version 3, see below.

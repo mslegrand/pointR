@@ -27,7 +27,7 @@ observeEvent(returnValue4ModuleEdAsset$name(),{
     }
   }
 }
-,ignoreInit = TRUE)
+,ignoreInit = FALSE)
 
 observeEvent( returnValue4ModuleEdAsset$newAsset(),{
   showModal( addNewAssetModal() )

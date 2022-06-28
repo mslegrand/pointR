@@ -54,7 +54,7 @@ modalPreProcEditor <- function( preprocScripts, preprocName, type='points'  ) {
 
 observeEvent(input$modalPreprocName,{
   preprocName<-input$modalPreprocName
-  if(length(preprocName)==0 || nchar(preprocName)<8){
+  if(length(preprocName)==0 || nchar(preprocName)<6){
     hideElement("modalPreprocEditorCommitOk")
   } else {
     showElement("modalPreprocEditorCommitOk")
@@ -71,13 +71,15 @@ observeEvent( input$modalPreprocEditorCommitOk,{
   cmds<-preprocChoices[[type]]
   aceIds<-paste0('preProcAce-', cmds)
   scripts<-lapply(aceIds, function(x){input[[x]]})
+
   names(scripts)<-cmds
   if(type=='points'){
     filePath<-file.path(getPreProcPPAuxPath(), preprocName)
   } else {
     filePath<-file.path(getPreProcPAAuxPath(), preprocName)
   }
-  writeAuxPreprocPoints(filePath, scripts)
+  writeAuxPreprocList(filePath, scripts)
+  
   readAuxPreProcs()
   removeModal()
   

@@ -1,12 +1,12 @@
 library(svgR)
 library(tidyverse)
-WH<-c(600,400)
+WH<-c(500,350)
 
 # Defined by mouse: edit with care!
 ptR<-list(
   x=tribble(
     ~points,
-    matrix(NA,2,0)
+    matrix(0,2,0)
   )
 )
 

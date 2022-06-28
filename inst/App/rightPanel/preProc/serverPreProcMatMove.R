@@ -14,11 +14,11 @@ moveMatrix<-function(dxy=getDxy(), context=context  ){
     if(  is_scalar_numeric(rowIndex) &&
       rowIndex>0 && 
       rowIndex<=nrow(tib) &&
-      is_scalar_numeric(ncol( tib[[ rowIndex, columnIndex]]))
+      is_scalar_numeric(ncol( tib[[columnIndex]][[rowIndex]]))
     ){
-      m<- tib[[rowIndex, columnIndex ]]
-      m<-m+dxy
-      tib[[rowIndex, columnIndex ]]<-tib[[rowIndex, columnIndex ]]+dxy
+      # m<- tib[[columnIndex]][[rowIndex]]
+      # m<-m+dxy
+      tib[[columnIndex]][[rowIndex]]<-tib[[columnIndex]][[rowIndex]]+dxy
     } 
     
     tibs[[assetName]]<-tib

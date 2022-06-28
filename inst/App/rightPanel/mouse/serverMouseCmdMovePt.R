@@ -3,6 +3,7 @@ mouseCmdMovePt<- function(mssg){
     vec<- as.numeric(unlist(mssg$vec))
   }
   src<-getCode()
+  keycode=mssg$keycode
   replacementList<-list()
   ptDefs<-getPtDefs() 
   updateRowPicker(session, "myTibRowCntrl", removeEntireGroup=TRUE)
@@ -27,8 +28,11 @@ mouseCmdMovePt<- function(mssg){
           ptIndex=matColIndx,
           tibs=getPtDefs()$tib
       )
-      ppenv<-list(
-        keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey),
+      ppenv<-list(          
+        getPoint=getPoint,
+        movePoint=movePoint,
+        context=context,
+        keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey, keycode=mssg$keycode),
         WH=getSVGWH()
       )
       tibs<-eval(parse(text=txt), ppenv )
@@ -38,12 +42,12 @@ mouseCmdMovePt<- function(mssg){
         updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx))
       }
     },error=function(e){
-      e<-c('preproErr',unlist(e))
-      err<-paste(unlist(e), collapse="\n", sep="\n")
+      e<-c('preproErr',e$message)
+      err<-paste(e$message, collapse="\n", sep="\n")
       alert(err)
     })
   } else {
-    newPtDefs$tib[[selection]][[ rowIndex, getTibPtColPos() ]][,matColIndx]<-newPt
+    newPtDefs$tib[[selection]][[getTibPtColPos()]][[ rowIndex ]][,matColIndx]<-newPt
     if(!is.null(newPtDefs)){ #update only upon success
       updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx))
     }

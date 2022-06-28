@@ -30,7 +30,7 @@ preprocTrySetAttrValue<-function( cmd.Row, ptDefs, rowIndex, selection, mssg=NUL
       appendLastRow=appendLastRow,
       appendAttrValues=appendAttrValues,
       context=context,
-      keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey, keycode=mssg$keycode)
+      keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey, keycode=mssg$keycode, char=mssg$char)
     )
     tibs<-eval(parse(text=txt), ppenv )
     validateTibLists(getPtDefs()$tib, tibs)
@@ -38,9 +38,9 @@ preprocTrySetAttrValue<-function( cmd.Row, ptDefs, rowIndex, selection, mssg=NUL
     sender='applyTibEdit'
     updateAceExtDef(ptDefs, sender=sender, selector=list( name=context$name, rowIndex=context$row   ) )
   }, error=function(e){
-    e<-c('preproErr',e)
+    e<-c('onChangeRow:',e$message)
     err<-paste(unlist(e), collapse="\n", sep="\n")
-    alert(err)
+    shinyalert("preproc value Errpr",err, type="error")
   })
   log.fin(preprocTrySetAttrValue)
 }
@@ -75,7 +75,8 @@ preprocTrySetAttrValueS<-function(scripts,  ptDefs, rowIndex, selection){
           appendLastRow=appendLastRow,
           appendAttrValues=appendAttrValues,
           context=context,
-          keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey, mssg$keycode)
+          #keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey, mssg$keycode)
+          keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey, keycode=mssg$keycode, char=mssg$char)
         )
         tibs<-eval(parse(text=txt), ppenv )
         validateTibLists(getPtDefs()$tib, tibs)
@@ -87,9 +88,9 @@ preprocTrySetAttrValueS<-function(scripts,  ptDefs, rowIndex, selection){
       }
     }
   }, error=function(e){
-    e<-c('preproErr',e)
+    e<-c('preprocErr',e$message)
     err<-paste(unlist(e), collapse="\n", sep="\n")
-    alert(err)
+    shinyalert("preproc value Errpr",err, type="error")
   })
 }
   

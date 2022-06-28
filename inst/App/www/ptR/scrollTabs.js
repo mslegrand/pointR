@@ -279,8 +279,8 @@ $(document).ready(function(){
 Shiny.addCustomMessageHandler(
   "scrollManager",
   function(data){
-    console.log("----------entering  scrollManager------------");
-    console.log("data is" + JSON.stringify(data));
+    //console.log("----------entering  scrollManager------------");
+    //console.log("data is" + JSON.stringify(data));
     if(!!data.resize){
       $(window).resize();
     }
@@ -305,6 +305,6 @@ Shiny.addCustomMessageHandler(
         rnd: Math.random().toString(36).substring(7)
       } );
     }
-    console.log("----------exiting  scrollManager------------");
+    //console.log("----------exiting  scrollManager------------");
   }
 );

@@ -47,6 +47,25 @@ closeTabNow<-function(tabId2X){
   removeTab(inputId = "pages", tabId2X)
 }
 
+closeTabsNow<-function(tabIds2Close){
+  if(length(tabIds2Close)>0){
+    serverAssetDB$tib<-filter(serverAssetDB$tib, !(tabId %in% tabIds2Close))
+    db<-widgetDB()
+    db<-filter(db, !(tabId %in% tabIds2Close))
+    widgetDB(db)
+    fdDB<-fileDescDB()
+    fdDB<-filter(fdDB, !(tabId %in% tabIds2Close))
+    fileDescDB(fdDB)
+    path=getWorkSpaceDir()
+    for(id in tabIds2Close){
+      pth<-paste0(path,"/",id,".rda")
+      file.remove(pth)
+      removeTab(inputId = "pages", id)
+    }
+  }
+  
+  
+}
 
 
 
@@ -54,18 +73,24 @@ closeTabNow<-function(tabId2X){
 
 # TODO!!!! , add input parameters for:   autocomplete
 # fontsize should be read from options 
-addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FALSE){
+addFileTab<-function(title, txt,  docFilePath='?', mode='ptr', fileSaveStatus=FALSE, link=NULL, parMode=NA){
   log.fin(addFileTab)
   tabId<-getNextTabId()
   
   if(is.null(tabId)){ cat("tabId is null\n"); browser() } #should never happen
-  addFileDesc(pageId=tabId, docFilePath=docFilePath, fileSaveStatus, fileMode=mode)
+  parId=NULL
+  if(!is.null(link)){
+    parId<-unlist(strsplit(link,'\\.'))[[1]]
+  }
+  cat(format(parMode))
+  addFileDesc(pageId=tabId, docFilePath=docFilePath, fileSaveStatus, fileMode=mode, parId, parMode)
   setUseTribble( pageId=tabId, value=TRUE)
   addNewPage2dnippetsDB(tabId)
   
   aceId<-newPage(tabId=tabId, title=title, txt=txt,
                  docFilePath=docFilePath, mode=mode,
-                 fileSaveStatus=fileSaveStatus)
+                 fileSaveStatus=fileSaveStatus,
+                 link=link)
   
   #sendFileTabsMessage(tabId=pageId, sender='savedStatus', saveStatus=fileSaveStatus,resize=runif(1))
   sendFileTabsMessage(resize=runif(1))
@@ -93,8 +118,8 @@ observeEvent(input$pages,{
 # updated by scrollManager and relays sender with tabs to request
 observeEvent(input$tabManager,{
   tabs=unlist(input$tabManager$tabs)
-  sender=input$tabManager$sender
-  setTabRequest(sender=sender, tabs=tabs)
+  cmd=input$tabManager$sender
+  setTabRequest(cmd=cmd, tabs=tabs)
 }, label='tabManager')
 
 # request$tabs is updated by either
@@ -131,3 +156,49 @@ observeEvent(c(request$trigger,request$tabs), {
   }
 }, label='request-tabs-trigger')
 
+observeEvent(input$messageContextMenu, {
+  cmd=input$messageContextMenu$cmd
+  # cat('cmd=')
+  # cat(format(cmd))
+  parMode<-input$messageContextMenu$parMode
+  # cat('\ninput$messageContextMenu$parMode return value=')
+  # cat(format(parMode))
+  # cat("\n")
+  if(cmd=="newTab"){
+    # print(start_row)
+    # print(end_row)
+    start_row=input$messageContextMenu$start_row
+    end_row=input$messageContextMenu$end_row
+    src<-input$messageContextMenu$code
+    rid<-input$messageContextMenu$id
+    tabName<-input$messageContextMenu$label
+    rmdAceId<-tabID2aceID(input$pages)
+    link<-paste(rmdAceId,rid, sep=".")
+    
+    # we update Ace with code
+    # + all prior code as a hidden portion
+    # and keep a hidden copy of full text for later reinsertion.
+    # BUT widget handler then has a problem, would need to know which ptR we are refering to.
+    if(tabName==""){
+      tabName<-getNextAnonymousFileName()
+    }
+    tabId<-addFileTab(title=tabName, txt=src,  docFilePath="?", mode='ptr', fileSaveStatus=FALSE, link=link, parMode=parMode)
+    # 
+    aceId<-tabID2aceID(tabId)
+    # alternatively set ace content of to code, and save full txt somewhere
+    
+    mssg$error<-""
+  } else if(cmd=="openTab"){
+    id<-input$messageContextMenu$id
+    tabId=aceID2TabID(id)
+    
+    updateTabsetPanel(session, "pages", selected = tabId)
+    # change to tabId
+    #sendFileTabsMessage(selected=tabId, resize=runif(1))
+    
+    #setTabRequest(cmd="tabChange", tabs=tabId)
+    
+  }
+  
+  # log.fout(cmdFileNewPtR)
+})

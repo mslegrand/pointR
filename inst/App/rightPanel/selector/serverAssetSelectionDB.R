@@ -1,17 +1,5 @@
 
-# serverAssetDB<-reactiveValues(
-#   tib=tibble(
-#     tabId="NULL",
-#     name="NULL",
-#     rowIndex=1,         # row in tibble
-#     columnName="NULL",  # currently used only by tibbleEditor and could be placed there.
-#     matCol=0,           # colIndex of the current matrix.
-#     ptColName="NULL",   # !!! KLUDGE for now. should this default to last col?
-#     selIndex=1,         # only used when current col is points,
-#     transformType='Translate',
-#     ptScriptSel=preprocChoices[1]
-#   )[0,]
-# )
+
 
 serverAssetDB<-reactiveValues( tib=initialServerAssetDB() )
 
@@ -49,11 +37,13 @@ restoreAssetState<-function(nextTabId){
          row.tib<-serverAssetDB$tib
        }
       if(length(row.tib)==0){
-        cat(" length(row.tib)==0\n"); browser() #should never happen
+        cat(" length(row.tib)==0\n"); 
+        browser() #should never happen
       }
-      if(nrow(row.tib)==0){
+
+      if(nrow(row.tib)==0 || length(row.tib) <length(names(selectedAsset))){
+
         choices<-getRightPanelChoices() 
-        
         row.tib<-newAssetSelection(tabId=nextTabId, choices=choices, tibs=getPtDefs()$tib)
       }
       if(!is.null(row.tib)){
@@ -75,6 +65,7 @@ newAssetSelection<-function( tabId, choices, tibs){
   }
   #create a tibble
   name=choices[1]
+  
   if( is.null(tibs)){
     rowIndex=1
     columnName='x' #bogus
@@ -83,22 +74,20 @@ newAssetSelection<-function( tabId, choices, tibs){
   } else {
     tib<-tibs[[name]]
     rowIndex=nrow( tib )
-    ptIndxs<-sapply(  seq_along(names(tib)),function(j){
-        is.matrix(tib[[rowIndex,j]]) && dim(tib[[rowIndex,j]])[1]==2
-      } 
-    )
-    ptIndxs<-which(ptIndxs==T)
+    columnName<-tail(names(tib),1)
+    ptIndxs<-extractPointColumnIndices(tib)
     if(length(ptIndxs)>0){
       ptColIndex<-ptIndxs[1]
       entry<-tib[[rowIndex,ptColIndex]]
       ptColName<- names(tib)[ptColIndex]
+      columnName<-ptColName
       matCol<-ncol(entry)
       selIndex=1
     } else {
       ptColName<-NULL
       matCol<-0
     }
-    columnName<-ptColName
+    
     if(name==transformTag){
       transformType='Translate'
     }

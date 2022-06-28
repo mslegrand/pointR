@@ -1,10 +1,25 @@
 
 
 observeEvent(input$messageFromAce, {
-  cat("\n>----> messageFromAce", '*****       sender=',format(input$messageFromAce$sender),"\n")
+   # cat("\n>----> messageFromAce", '*****       sender=',format(input$messageFromAce$sender),"\n")
+    
     if(length(input$messageFromAce$sender)>0){
+      if(length(input$messageFromAce$preDoc)>0){
+        # cat('has preDoc\n')
+        pDoc<-input$messageFromAce$preDoc
+        if(!identical(pDoc, request$pDoc)){
+          pBlocks<-NULL
+          if(!identical(pDoc, "")){
+            pBlocks<-extractCodeBlocksFromRmd(pDoc)
+          }
+          if(!identical(theBlocks(), pBlocks)){
+            theBlocks(pBlocks)
+          }
+        }
+      } 
       if(length(input$messageFromAce$code)>0){ # returning code  
         setCode(input$messageFromAce$code)  # only place where request$code is set
+        
         sender<-input$messageFromAce$sender # ace returns sender from call to update
         aceId<-input$messageFromAce$id
         tabId<-aceID2TabID(aceId)
@@ -56,7 +71,7 @@ observeEvent(input$messageFromAce, {
         }
       }
     }
-   # cat("<----< messageFromAce",'*****       sender=',format(input$messageFromAce$sender),"\n\n")
+    # cat("<----< messageFromAce",'*****       sender=',format(input$messageFromAce$sender),"\n\n")
 }, priority = 90, ignoreNULL = TRUE, ignoreInit = TRUE, label='messageFromAce')
 
 

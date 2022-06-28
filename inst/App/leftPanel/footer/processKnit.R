@@ -3,6 +3,8 @@ processKnit<-reactive({
   # cat_list<<-c( cat_list,">---> processKnit\n")
   clearErrorMssg()
   #src<-request$code
+  updateAceExt( id= getAceEditorId(), sender='commit.removeMarkers', removeAllMarkers='removeAllMarkers', updateRmdDependents=getAceEditorId() )
+  
   src<-getCode()
   
   setSourceType(rmdPanelTag)
@@ -15,12 +17,14 @@ processKnit<-reactive({
     }
     tryCatch({
       # cat_list<<-c( cat_list,'>--> knit2html\n')
-      knit2html(text = src, fragment.only = FALSE, quiet = TRUE, envir=new.env())
+      # knit2html(text = src, fragment.only = FALSE, quiet = TRUE, envir=new.env())
+      knit2html(text = src, fragment.only = FALSE, quiet = TRUE, envir=getEnvList() )
       # cat_list<<-c( cat_list,'<--< knit2html\n')
       setSourceType(sourceType=rmdPanelTag)
      } 
      , #end of try
       error=function(e){
+        e<-e$message
         if(all(!str_detect(e,'Output:'))){
           e<-c(e,traceback())
         }

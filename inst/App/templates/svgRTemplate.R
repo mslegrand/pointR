@@ -1,6 +1,6 @@
 library(svgR)
-WH<-c(600,400)
-
+library(tidyverse)
+WH<-c(500,350)
 
 svgR(wh=WH,
      #your custom code goes here

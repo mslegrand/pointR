@@ -10,9 +10,10 @@ library(shiny)
 
 
 
-# style="position: fixed; top: -100em" to keep hidden
+# style="position: fixed; top: -100em" to keep hiddenj
 shinyUI(  
   div( class="pretty-split-pane-frame", id="mySplitter",
+       #ondrop="dropHandler(ev)",
     singleton(
       tags$head(
         initResourcePaths(),
@@ -47,8 +48,9 @@ shinyUI(
     div(
       class="split-pane vertical-percent",
       useShinyjs(),
+      #useShinyalert(),
       # extendShinyjs(script="www/menuHelper.js"), 
-      extendShinyjs(script="www/menuHelper.js", functions="triggerButtonOnEnter"), # used in cmdNewColumn.R; cmdNewAsset.R
+      extendShinyjs(script="menuHelper.js", functions="triggerButtonOnEnter"), # used in cmdNewColumn.R; cmdNewAsset.R
       
       #-------------left panel begin--------------------------------------------------
       #------- left component begin-----------
@@ -62,7 +64,7 @@ shinyUI(
           buildLeftMenu(if(usingElectron){""} else {version}),
           #-------left menu end------------
           #-------left content begin--------
-
+          # absolutePanel(id="logo.left", top=145, left=0, width="100%", img(src="ptR/pointRLogo.SVG") ),
           div( id='aceTabSet', class="container",
                tabsetPanel(id='pages') 
           ),
@@ -74,7 +76,10 @@ shinyUI(
               top=105, left=0, width="100%", "class"="headerPanel", draggable=FALSE, height="30px",
               buildHToolBar(bar2)
            ),
-          absolutePanel(id="logo.left", top=145, left=0, width="100%", img(src="ptR/pointRLogo.SVG") ),
+          absolutePanel(id="logo.left", top=145, left=0, width="100%", #pointRLogoSVG()),
+                        div(img(src="ptR/pointRlogo.svg"))),
+                                                #img(id="logo.left", src="ptR/pointRLogo.SVG") ,
+                        #),
           div( id='snippetToolBarContainer', "class"="cSnippetToolBarContainer", #draggable=FALSE ,
                 tags$ul( id='dndSnippetList', "class"="cSnippetToolBarList",
                   NULL
@@ -103,8 +108,9 @@ shinyUI(
                               actionButton("stopShinyApp", label = "Stop App", style="font-weight: 800; color: white; background-color: red; ") %>% bs_embed_tooltip(title = "Stop Shiny App")
               )
              },
-             absolutePanel( id='tribblePanel', left=180, bottom=-10,
+             absolutePanel( id='tribblePanel', left=180, bottom=-10, class='ptRFootertText',
                awesomeRadio('useTribble', NULL, choices=c('Tribble','Tibble'),
+                            
                                     selected = "Tribble", 
                                     inline = TRUE, status='success')
              ),
@@ -117,8 +123,8 @@ shinyUI(
                          label = NULL, 
                          choices = c(),
                          selected = c()
-                       )
-                    ),
+                       ) 
+                    ) ,
                        #style = "unite", 
                        icon=icon("option-vertical", lib = "glyphicon"),
                        #icon=icon("wrench", lib = "glyphicon"),
@@ -129,7 +135,7 @@ shinyUI(
                          enter = animations$fading_entrances$fadeInLeftBig,
                          exit = animations$fading_exits$fadeOutRightBig
                        )
-                 )
+                 ) %>% bs_embed_tooltip(title="dnds selection tool", placement = "top")
              )
              
           ),
@@ -170,8 +176,10 @@ shinyUI(
         #---right bootstrap page begin--------------
         bootstrapPage(
           buildRightMenu(),
-          absolutePanel(id="logo.left", top=145, left=0, width="100%", img(src="ptR/pointRLogo.SVG") ),
-          div(newPreProcDropDown()),
+          absolutePanel(id="logo.right", top=145, left=0, width="100%",  #pointRLogoSVG()),
+                        div(img(src="ptR/pointRlogo.svg"))),
+                        # HTML(' <img src="ptR/pointRLogo.SVG">' )),
+          div(newPreProcDropDown())%>% bs_embed_tooltip(title="preproc selection tool", placement = "top"),
           uiOutput("BottomRightPanel"),
           uiOutput("TopRightPanel"),
           div( id="midRightPanels", class="cMidPanel ctop140",

@@ -8,10 +8,17 @@ showPts.valTag %<c-% function(
   ptName=NULL, 
   pts=NULL, 
   rowIndex=NULL,
-  ptDisplayMode ,
-  vbScaleFactor=1
+  displayOptions=NULL ,
+  vbScaleFactor=1,
+  labelColor='black'
   ){
-  if(is.null(ptDisplayMode) || ptDisplayMode=="Hidden"){ return(NULL) } 
+  if(is.null(displayOptions)){
+    return(NULL)
+  }
+  displayOpt<-displayOptions
+  if(is.null(displayOpt)||is.null(displayOpt$labelMode) || is.null(displayOpt$restrictMode)){ return(NULL)}
+  
+  
   onMouseDownTxt<-"ptRPlotter_ptR_SVG_TagVal.selectElement(evt)"
   if(length(ptName)<1){return(NULL)}
   if(length(pts)<1)  {return(NULL) }
@@ -40,8 +47,8 @@ showPts.valTag %<c-% function(
          lapply(seq(ncol(m)), function(j){
            list(
              circle(cxy=m[,j], r=8),
-             if(ptDisplayMode=="Labeled"){
-               text( paste(i), cxy=m[,j]+10*c(1,-1),  stroke='black', font.size=12) 
+             if(displayOpt$labelMode==TRUE){
+               text( paste(i), cxy=m[,j]+10*c(1,-1),  stroke=labelColor, font.size=12) # need to allow stroke to be white
              } else {
                NULL
              }
@@ -61,8 +68,8 @@ showPts.valTag %<c-% function(
        lapply(seq(ncol(mRow)), function(j){
          list(
            circle(   cxy=mRow[,j], r=8),
-           if(ptDisplayMode=="Labeled"){
-             text(paste(rowIndex), cxy=mRow[,j]+10*c(1,-1),  stroke='black', font.size=12) #opac)
+           if(displayOpt$labelMode==TRUE){
+             text(paste(rowIndex), cxy=mRow[,j]+10*c(1,-1),  stroke=labelColor, font.size=12) #opac)
            } else {
              NULL
            }
@@ -80,24 +87,27 @@ statusPlotTagVal<-callModule(
   id="svgTagValsMod",
   svgID='ptR_SVG_TagVal',
   showPts.compound=reactive({
-    function(vbScaleFactor=1){
+    function(vbScaleFactor=1, labelColor){
       showPts.valTag(
         ptName=getAssetName(), 
         pts=getTibPts(), 
         rowIndex=getTibRow(),
-        ptDisplayMode=getDisplayMode() ,
-        vbScaleFactor
+        displayOptions=getDisplayOptions(),
+        vbScaleFactor,
+        labelColor
       )
     }
   }),
   ptrDisplayScript = reactive({ svgToolsScript( "TagVal") }), 
   useKeyMouseScript=TRUE,
-  getSVGWH,
+  # getSVGWH, #extraneous???
   getSvgGrid,
   getBackDrop,
   getCode4Rendering,
+  getEnvList=getEnvList,
   getErrorMssg,
-  getTibNRow=getTibNRow,
+  #getTibNRow=getTibNRow, #extraneous
+  getParMode=getParMode,
   getDirPath=getDirPath
 )
 

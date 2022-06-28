@@ -1,8 +1,8 @@
 Package: pointR
 Type: Package
-Date: 2019-12-30
+Date: 2021-08-20
 Title: pointR
-Version: 0.4.1.11
+Version: 0.5.3
 Author: M.S.Legrand
 Maintainer: M.S.Legrand <slegrand3.14@gmail.com>
 Description: pointR is a shiny-based IDE for svgR
@@ -20,6 +20,7 @@ Imports:
     shinyDMDMenu,
     shinyFiles,
     shinythemes,
+    shinyalert,
     colourpicker,
     shinyWidgets,
     bsplus,
@@ -29,7 +30,7 @@ Imports:
     shinyjqui
 Suggests:
     testthat
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 Remotes: 
   mslegrand/shinyDMDMenu,
   mslegrand/svgR,

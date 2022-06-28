@@ -4,6 +4,8 @@ processDnip<-reactive({
   clearErrorMssg()
   # src<-request$code
   src<-getCode()
+  updateAceExt( id= getAceEditorId(), sender='commit.removeMarkers', removeAllMarkers='removeAllMarkers', updateRmdDependents=getAceEditorId() )
+  
   setSourceType(rmdPanelTag)
   if(length(src)==1 && nchar(src)>0){
     
@@ -12,12 +14,13 @@ processDnip<-reactive({
       src<-dripplets2Rmd(src)
       # cat_list<<-c( cat_list,'<--< dripplets2Rmd\n')
       # cat_list<<-c( cat_list,'>-->> knit2html\n')
-      knit2html(text = src, fragment.only = FALSE, quiet = TRUE)
+      knit2html(text = src, fragment.only = FALSE, quiet = TRUE, envir=getEnvList() )
       # cat_list<<-c( cat_list,'<--<< knit2html\n')
       setSourceType(sourceType=rmdPanelTag)
     } 
     , #end of try
     error=function(e){
+      e<-e$message
       if(all(!str_detect(e,'Output:'))){
         e<-c(e,traceback())
       }

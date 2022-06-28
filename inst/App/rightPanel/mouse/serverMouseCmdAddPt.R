@@ -7,22 +7,24 @@ mouseCmdAddPt<-function(mssg){
   replacementList<-list()
   ptDefs<-getPtDefs() 
   updateRowPicker(session, "myTibRowCntrl", removeEntireGroup=TRUE)
-  # tibs<-getPtDefs()$tib
+  
   sender='PointsBar.mouse.add'
   
-  
+  keycode=mssg$keycode
   newPt<-vec
   
   selection<-getAssetName() 
   rowIndex<-getTibRow()
   matColIndx<-getTibMatCol()
   
+  
   if( length( getPointMax())>1){ stop('getPointMax is too big')} #should never happen
-  pts<-ptDefs[[ selection]][[rowIndex,getTibColPos()]]
+
   if(!is.na(getPointMax()) && getTibMatColMax() >= getPointMax() ){ #need to split?
       #split
+      updateRowPicker(session, "myTibRowCntrl", insertRow=rowIndex+1, selectRow=rowIndex+1)
       tibs<-ptDefs$tib
-      tib<-tibs[[selection]]
+      tib<-tibs[[selection]]      
       tib<-bind_rows(tib[1:rowIndex,], tib[rowIndex:nrow(tib),])
       rowIndex<-rowIndex+1
       tib[[getTibColumnName()]][[rowIndex]]<-matrix(0,2,0)
@@ -31,7 +33,8 @@ mouseCmdAddPt<-function(mssg){
       ptDefs$tib<-tibs
       # since we just added a new row we must check if we need to
       # modify (preproc) the values in that row
-    
+      
+      
       scripts<-getPreProcOnNewRowScripts( getTibTabId(), selection)
       if(length(scripts)>0){
           newTibs<-tibs # backup tibs, 
@@ -53,16 +56,15 @@ mouseCmdAddPt<-function(mssg){
                   setAttrValue=setAttrValue,
                   getAttrValue=getAttrValue,
                   context=context,
-                  keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey)
+                  keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey, keycode=mssg$keycode)
                 )
                 tibs<-eval(parse(text=txt), ppenv )
                 validateTibLists(getPtDefs()$tib, tibs)
             } # all cols done  successfully
             ptDefs$tib<-tibs # success, reset ptDefs
           }, error=function(e){
-            e<-c('preproErr',e)
-            err<-paste(unlist(e), collapse="\n", sep="\n")
-            alert(err)
+            err<-paste(e$message, collapse="\n", sep="\n")
+            shinyalert("preproc new point Error",err, type="error")
           })
       } #end of scripts
   } # end of split
@@ -73,6 +75,7 @@ mouseCmdAddPt<-function(mssg){
   txt<-getPreProcScript()['onNewPt']
   if( !is.null(txt) ){ #preproc pts 
       tryCatch({
+        
         getPoint<-function(){names(newPt)<-c('x','y'); newPt}
         context<-list(
           name=getAssetName(),
@@ -83,8 +86,9 @@ mouseCmdAddPt<-function(mssg){
         )
         ppenv<-list(
           getPoint=getPoint,
+          insertPoint=insertPoint,
           context=context,
-          keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey),
+          keys=list(alt=mssg$altKey, shift=mssg$shiftKey, ctrl=mssg$ctrlKey, meta=mssg$metaKey, keycode=mssg$keycode),
           WH=getSVGWH()
         )
         tibs<-eval(parse(text=txt), ppenv )
@@ -94,9 +98,8 @@ mouseCmdAddPt<-function(mssg){
           updateAceExtDef(newPtDefs, sender=sender, selector=list( rowIndex=rowIndex, matCol=matColIndx+1))
         }
       },error=function(e){
-        e<-c('preproErr',e)
-        err<-paste(unlist(e), collapse="\n", sep="\n")
-        alert(err)
+        err<-paste(e$message, collapse="\n", sep="\n")
+        shinyalert("preproc new point Error",err, type="error")
       })
   } else { #no prepoc pts
       tib<-tibs[[selection]]

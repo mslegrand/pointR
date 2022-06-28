@@ -18,6 +18,9 @@ reOrgPanels<-function(id, mode){
     hideElement("aceTabSet")
     hideElement("midRightPanels")
     hideElement("BottomRightPanel")
+    hide(id="rmd-edit-code")
+    hide(id="rmd-insert-svgR")
+    hide(id="rmd-insert-ptR")
     addCssClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
     showElement("logo.right")
     showElement("logo.left")
@@ -32,6 +35,11 @@ reOrgPanels<-function(id, mode){
       showElement("commitButton")
       showElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble
       addCssClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
+      hide(id="rmd-edit-code")
+      hide(id="rmd-insert-svgR")
+      hide(id="rmd-insert-ptR")
+      hide(id="dnd-edit-svgR")
+      hide(id="dnd-insert-block")
       if(usingElectron){
         addCssClass( id= "runAppPanel", class="hiddenPanel")
         addCssClass( id= "stopAppPanel", class="hiddenPanel")
@@ -43,16 +51,29 @@ reOrgPanels<-function(id, mode){
       } else {
         hideElement("snippetToolBarContainer")
       }
-      
       removeCssClass( id= 'midRightPanels', class='ctop140')
       hideElement("TopRightPanel")
       
       hideElement("useTribble") # todo!!! show only if mode==ptR and there is a tribble or tibble
       # now consider which mode it is
+      if(identical(mode,'dnippets')){
+        show(id="dnd-edit-svgR")
+        show(id="dnd-insert-block")
+      } else {
+        hide(id="dnd-edit-svgR")
+        hide(id="dnd-insert-block")
+      }
       if(identical(mode,'ptrrmd')){
+        show(id="rmd-edit-code")
+        show(id="rmd-insert-svgR")
+        show(id="rmd-insert-ptR")
+        
         removeCssClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
       }
       else{
+        hide(id="rmd-edit-code")
+        hide(id="rmd-insert-svgR")
+        hide(id="rmd-insert-ptR")
         addCssClass( id= "rmdBrowserButtonPanel", class="hiddenPanel")
       }
       if(usingElectron){

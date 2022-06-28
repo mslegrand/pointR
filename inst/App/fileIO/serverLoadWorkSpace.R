@@ -27,7 +27,6 @@ restoreWorkSpace<-reactive({
   }
   wsPages<-list()
   
-
   ptRproj<-pprj()
   
   selectedTab<-readCurrentTab()
@@ -35,12 +34,16 @@ restoreWorkSpace<-reactive({
   
   # 1. load all pages into a list.
   for(filePath in fileWSPaths){
+    
     page<-readRDS(filePath)
     # A. assign tabIds to each page
     id=basename(filePath)
     if(!is.null(ptRproj$pathToProj)){
       docFilePath=page$fileDescriptor.filePath
       page$fileDescriptor.filePath<-sub( ptRproj$pathToProj, editOption$currentProjectDirectory, docFilePath)
+      if(!file.exists(page$fileDescriptor.filePath)){
+        next # omit this, else saving will cause an error
+      }
       saveRDS(page,filePath)
     }
     wsPages[[id]]<-page
@@ -53,10 +56,14 @@ restoreWorkSpace<-reactive({
       if(length(tibAs)>0){
         names(tibAs)<-gsub(pattern, '', names(tibAs))
         tibAs[sapply(tibAs,is.null)]<-NA
+        setdiff(names(initTib),names(tibAs))->tmp
+        if(length(tmp)>0){
+          tmp<-sapply(tmp, function(x){NA}, USE.NAMES = T)
+          tibAs<-c(tibAs,tmp)
+        }
       }
       tibAs
     })
-    
     rtv<-bind_rows( rtv)
     if(ncol(rtv)==0){
       rtv<-initTib
@@ -88,10 +95,12 @@ restoreWorkSpace<-reactive({
     fileSaveStatus=page$fileDescriptor.isSaved
     
     txt=page$code
-    if(fileSaveStatus==TRUE && file.exists(docFilePath)){ 
+    
+    if(identical(fileSaveStatus,TRUE) && file.exists(docFilePath)){ 
       tryCatch(
         {txt<-paste(readLines(docFilePath), collapse="\n")},
         error=function(e){
+          e<-e$message
           cat("Unable to read file:", paste(e, collapse="\n"))
           return(NULL) #bail
         }

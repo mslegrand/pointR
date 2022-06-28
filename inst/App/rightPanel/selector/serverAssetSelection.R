@@ -8,16 +8,15 @@
 
 selectedAsset <- reactiveValues(
   tabId="bogus",
-  name=NULL,        # name of current point array
+  name=NULL,        # name of current point array aka. assetName
   rowIndex=1,
-  columnName=NULL, # currently used only by tibbleEditor and could be placed there.
+  columnName=NULL, # 
   matCol=0, #
   ptColName=NULL,      # !!! KLUDGE for now. should this default to last col? probably not
   selIndex=1, # only used is to determine if in matrix or point mode !! 
   transformType='Translate', # TODO!!! replace this with selIndex
   ptScriptSel=preprocChoices$points[1] #assigned but not used?
 )
-
 
 
 getSelIndex<-reactive({
@@ -33,8 +32,22 @@ observeEvent(getTibNRow(),{
 
 getAssetName<-reactive({selectedAsset$name}) #allow to be null only if tib is null  
 getTibTabId<-reactive({ selectedAsset$tabId})
-getTibColumnName<-reactive({ selectedAsset$columnName })
-getTib<-reactive({ getPtDefs() %$$% 'tib' %$$%  getAssetName() })
+
+getAssetNames<-reactive({ names(getPtDefs()$tib) })
+
+getTibColumnName<-reactive({
+  # if(is.null( selectedAsset$columnName)|| !(selectedAsset$columnName %in% names(tib))){
+  #   selectedAsset$columnName<-tail(names(getTib()),1)
+  # }
+  selectedAsset$columnName 
+})
+
+# returns the tib corresponding to selectedAsset$name
+# ie. getPtDefs$tib[[  selectedAsset$name ]]
+getTib<-reactive({ 
+  getPtDefs() %$$% 'tib' %$$%  getAssetName() 
+})
+
 getTibColPos<-reactive({ which(names(getTib())==selectedAsset$columnName )})
 getTibPtColPos<-reactive({ which(names(getTib())==selectedAsset$ptColName )})
 getTibNRow<-reactive({
@@ -50,7 +63,12 @@ atLeast2Rows<-reactive({
 })
 
 getTibRow<-reactive({selectedAsset$rowIndex})
-getTibMatCol<-reactive({ selectedAsset$matCol })
+getTibMatCol<-reactive({ 
+  if(is.null(selectedAsset$matCol)){
+    selectedAsset$matCol<-0 
+    }
+  selectedAsset$matCol 
+})
 getTibPtsNCol<-reactive({ sapply(getTibPts(),ncol)}  )
 
 getTransformType<-reactive({ 
@@ -81,12 +99,21 @@ getTibMatColMax<-reactive({
 #'        cmd.add.asset
 #'
 resetSelectedTibbleName<-function(tibs, name){
-    # log.fin(resetSelectedTibbleName)
+     # log.fin(resetSelectedTibbleName)
     if(hasError()){
       return(NULL) # never change selection when in error state
     }
+  
       choices<-getRightPanelChoices()
-      # cat("resetSelectedTibbleName:: choices=", paste(choices, collapse=", "),"\n")
+      aName<-getAssetName()
+      if( !is.null(aName) && !is.null(getTibRow()) 
+          && !is.null(tibs[[aName]]) && getTibRow()<nrow(tibs[[aName]])
+      ){
+         srchVal<-tibs[[aName]][[getTibColumnName()]][[getTibRow()]]
+       } else {
+         srchVal<-NULL
+       }
+
       if(is.null(name) || !(name %in% choices)){
         name<-getAssetName() #pick the last name
       }
@@ -98,15 +125,26 @@ resetSelectedTibbleName<-function(tibs, name){
         selectedAsset$rowIndex=0
         selectedAsset$ptColName=NULL
         selectedAsset$columnName=NULL
-        selectedAsset$matCol=NULL
+        selectedAsset$matCol=1
       } else {
         tib<-getPtDefs()$tib[[selectedAsset$name]]
         # set row
-        rowIndex=nrow( tib )
+        if(length(selectedAsset$rowIndex)>0 && selectedAsset$rowIndex>0){
+          rowIndex<-min( selectedAsset$rowIndex,nrow( tib ))
+        } else {
+          rowIndex<-nrow( tib )
+        }
+          
+        if(length(srchVal)==1 && !identical(aName, selectedAsset$name)){
+          pos<-grep(srchVal,tib[[selectedAsset$columnName]])
+          if(length(pos)>0){ 
+            rowIndex<-tail(pos)
+          }
+        }
+        
         selectedAsset$rowIndex=rowIndex
         # next we try to extract a pt column for the selected tib
-        ptIndxs<-sapply(seq_along(names(tib)),function(j) is.matrix(tib[[rowIndex,j]]) && dim(tib[[rowIndex,j]])[1]==2)
-        ptIndxs<-which(ptIndxs==TRUE)
+        ptIndxs<-extractPointColumnIndices(tib)
         if(length(ptIndxs)>0){
           ptColNames<-names(tib)[ptIndxs]
           if(!is.null(selectedAsset$columnName) && selectedAsset$columnName %in% ptColNames){
@@ -141,11 +179,11 @@ resetSelectedTibbleName<-function(tibs, name){
           }
         }
       }
+      
       resetRowPickeR()
       if( selectedAsset$name==transformTag){
         selectedAsset$transformType='Translate'
       }
-      # log.fout(resetSelectedTibbleName)
 }
 
 
@@ -179,7 +217,6 @@ updateSelected<-function( name, rowIndex, columnName, matCol,  ptColName, selInd
       if(!is.null(selectedAsset$row) && !is.null(columnName ) && !is.null(selectedAsset$name )){
         m<-getPtDefs()$tib[[ selectedAsset$name ]][[columnName]][[selectedAsset$row]]
         matCol<-selectedAsset$matCol
-        # cat('matCol=',format(matCol),'\n')
         if(length(m>0)){
           matCol=min(matCol, ncol(m))
         } else {
@@ -201,24 +238,40 @@ getTibEntry<-reactive({
   if( identical(getColumnType(), 'point')){
     return( c('point','matrix')[getSelIndex()] )
   } 
+  entry<-NULL
   rowNum<-getTibRow()
-  if(is.null(rowNum)){ return( NULL)}
-  columnValues<-getTibEntryChoices()
-  if(1<=rowNum && rowNum<=length(columnValues) ){
-    entry<-columnValues[[rowNum]]
-  } else {
-    entry<-NULL
+  if(length(rowNum)>0){
+    columnValues<-getTib() %$$%  getTibColumnName()
+    if(length(columnValues)>0){
+      columnValues<-as.list(columnValues)
+      if(1<=rowNum && rowNum<=length(columnValues) ){
+        entry<-columnValues[[rowNum]]
+      }
+    }
   }
   entry
 })
 
 getTibEntryChoices<-reactive({
+  
   if( identical(getColumnType(), 'point')){
     return( c('point', 'matrix'))
   } 
   columnValues<-getTib() %$$%  getTibColumnName()
-  if(!is.null(columnValues)){
-    columnValues <-  as.list(columnValues)
+
+  tab_Id<-getTibTabId()
+  tib_Name<-getAssetName()
+  column_Name<-getTibColumnName()
+  if( length(tab_Id)>0 && length(tib_Name)>0){
+    choiceSetName<-getWidget()
+    if(length(choiceSetName)>0){
+      choices<-aux$colChoiceSet[[choiceSetName]] # this is a check to insure consistancy
+      if(length(choices)>0 && length(setdiff(columnValues, choices))==0  ){
+        return(choices)
+      } else {#if it the check fails should remove from choiceSetPage
+        #removePageWidgetDB(tab_Id)
+      }
+    }
   }
   columnValues
 })
@@ -241,6 +294,19 @@ getTibMatColChoices<-reactive({
     }
   }
   rtv
+})
+
+getCompatibleChoicesSets<-reactive({
+  cs<-aux$colChoiceSet
+  columnValues<-getTib() %$$%  getTibColumnName()
+  if(length(cs)>0 && length(columnValues)>0){
+    fn<-function(choices){
+      length(choices)>0 && length(setdiff(columnValues, choices))==0 
+    }
+    names(Filter(fn,cs))
+  } else {
+    NULL
+  }
 })
 
 
